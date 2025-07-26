@@ -9,15 +9,15 @@
   <script>tailwind.config = { darkMode: 'class' }</script>
   <!-- Animate.css -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
-  <!-- Three.js & Vanta.js -->
+  <!-- Three.js & Vanta.js for neural network effect -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r121/three.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/vanta@0.5.21/dist/vanta.net.min.js"></script>
   <!-- Particles.js -->
   <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
-  <!-- AOS.js -->
+  <!-- AOS.js for scroll animations -->
   <link rel="stylesheet" href="https://unpkg.com/aos@2.3.1/dist/aos.css" />
   <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-  <!-- Vanilla Tilt -->
+  <!-- Vanilla Tilt.js -->
   <script src="https://cdn.jsdelivr.net/npm/vanilla-tilt@1.7.3/dist/vanilla-tilt.min.js"></script>
   <style>
     @keyframes drive { 0% { transform: translateX(-20%); } 100% { transform: translateX(120%); } }
@@ -27,7 +27,10 @@
   </style>
 </head>
 <body class="bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-gray-100 font-sans">
+  <!-- Particle background -->
   <div id="particles-js" class="fixed top-0 left-0 w-full h-full -z-20"></div>
+
+  <!-- Navbar -->
   <nav class="fixed top-0 w-full bg-white dark:bg-gray-800 shadow z-30 animate__animated animate__fadeInDown">
     <div class="max-w-6xl mx-auto flex items-center justify-between p-4">
       <a href="#" class="text-2xl font-bold animate__animated animate__zoomIn">Mohamed Ansar</a>
@@ -43,130 +46,263 @@
     </div>
   </nav>
 
+  <!-- Hero Section -->
   <header id="hero" class="relative h-screen overflow-hidden">
     <div id="vanta-bg" class="absolute inset-0 -z-10"></div>
-    <img src="https://upload.wikimedia.org/wikipedia/commons/3/3f/Formula_One_car_silhouette.svg" alt="F1 Car" class="f1-car" />
+    <img src="https://upload.wikimedia.org/wikipedia/commons/3/3f/Formula_One_car_silhouette.svg"
+         alt="F1 Car" class="f1-car" />
     <div class="relative z-10 flex flex-col items-center justify-center h-full text-center px-4">
-      <h1 class="text-5xl md:text-6xl font-extrabold text-white mb-4 animate__animated animate__fadeInDown">👋 Hi, I'm Mohamed Ansar</h1>
-      <p class="text-xl md:text-2xl text-gray-200 mb-6 animate__animated animate__fadeInUp animate__delay-1s">ML Engineer & Data Analyst | Ex-Amazon | Data-Driven Innovator</p>
-      <a href="#projects" class="inline-block bg-white text-blue-600 px-8 py-3 rounded-full shadow-lg hover:bg-gray-100 transition animate__animated animate__delay-2s animate__pulse animate__infinite">Explore Projects</a>
+      <h1 class="text-5xl md:text-6xl font-extrabold text-white mb-4 animate__animated animate__fadeInDown">
+        👋 Hi, I'm Mohamed Ansar
+      </h1>
+      <p class="text-xl md:text-2xl text-gray-200 mb-6 animate__animated animate__fadeInUp animate__delay-1s">
+        Data-Driven Business Analyst | Tech Support Specialist @ Datasembly | Ex-Amazon | Ex-Spongelii
+      </p>
+      <p class="text-gray-300 mb-4">Based in Mississauga</p>
+      <a href="#about"
+         class="inline-block bg-white text-blue-600 px-8 py-3 rounded-full shadow-lg hover:bg-gray-100 transition
+                animate__animated animate__delay-2s animate__pulse animate__infinite">
+        Learn More
+      </a>
     </div>
     <script>
       VANTA.NET({ el: "#vanta-bg", color: 0xffffff, backgroundColor: 0x111827, points:20, maxDistance:25, spacing:18 });
     </script>
   </header>
 
+  <!-- ML Keywords -->
   <div class="ml-keywords"><span id="mlWords"></span></div>
 
-  <section id="about" class="max-w-4xl mx-auto px-4 py-16 animate__animated animate__fadeInUp animate__delay-1s">
+  <!-- About -->
+  <section id="about" class="max-w-4xl mx-auto px-4 py-16 animate__animated animate__fadeInUp">
     <h2 class="text-3xl font-semibold mb-4">About Me</h2>
-    <p class="text-gray-700 dark:text-gray-300 mb-4 leading-relaxed">I’m a data-driven Business Analyst with 4+ years in corporate (Amazon) and startup environments. Currently at Datasembly, I deliver SQL analytics, dashboarding, and incident management for CPG clients. Passionate about building scalable ML pipelines, explainable AI, and user-friendly applications.</p>
-    <p class="text-gray-700 dark:text-gray-300 leading-relaxed">Core stack: Python, scikit-learn, Streamlit, Hugging Face, SQL, Tableau, MLOps, ETL tools.</p>
+    <p class="text-gray-700 dark:text-gray-300 leading-relaxed mb-4">
+      I’m a data-driven Business Analyst with 4+ years of experience delivering scalable tech solutions and
+      actionable insights in both fast-paced corporate (Amazon Prime Video) and startup (Spongelii) environments.
+      Currently at Datasembly, I specialize in SQL, Big Data Analysis, Tableau, and Incident Management.
+    </p>
+    <p class="text-gray-700 dark:text-gray-300 leading-relaxed">
+      At Amazon Prime Video, I led quality and performance initiatives for global content publishing,
+      introduced productivity automations with VBA, and handled critical escalations under tight SLAs.
+      At Spongelii, I contributed to both product and marketing analysis while supporting tech and design
+      initiatives including blockchain payments and NFT-tier development. I thrive in Agile teams and
+      love turning complex data into clear stories and processes.
+    </p>
+    <p class="mt-6 text-gray-600"><a href="#contact" class="underline">Connect with me on LinkedIn</a></p>
   </section>
 
-  <section id="projects" class="max-w-6xl mx-auto px-4 py-16 animate__animated animate__fadeInUp animate__delay-2s">
-    <h2 class="text-3xl font-semibold mb-8 text-center">🚀 Featured Projects</h2>
+  <!-- Projects -->
+  <section id="projects" class="max-w-6xl mx-auto px-4 py-16 animate__animated animate__fadeInUp animate__delay-1s">
+    <h2 class="text-3xl font-semibold mb-8 text-center">🚀 Projects</h2>
     <div class="grid gap-8 md:grid-cols-2">
+      <!-- TaskMaster -->
       <div class="tilt bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-lg transition duration-300" data-aos="fade-up">
-        <h3 class="text-xl font-bold mb-2">🔁 TaskMaster: ML Job Scheduler</h3>
-        <p class="text-gray-700 dark:text-gray-300 text-sm mb-2">Orchestrates a reliable data pipeline with retry logic, trains a Random Forest classifier, and delivers real-time inference via Gradio.</p>
-        <a href="https://huggingface.co/spaces/kmsmohamedansar/TaskMaster-Job-Scheduler" target="_blank" class="text-blue-600 underline">Live Demo</a>
-        <p class="mt-4 text-xs text-gray-400">Skills: Python, scikit-learn, Gradio, Hugging Face Spaces, concurrent.futures, retry logic</p>
+        <h3 class="text-xl font-bold mb-2">🔁 TaskMaster: Automated Task Orchestration & Random Forest Prediction</h3>
+        <p class="text-sm mb-4">
+          Automates a two-step data pipeline with retry logic and alerts, trains a Random Forest classifier on synthetic data,
+          and deploys a Gradio-based inference app.
+        </p>
+        <p class="text-xs text-gray-400 mb-2">
+          <strong>Tech:</strong> Python, scikit‑learn, Gradio, Hugging Face Spaces, concurrent.futures, retry logic, logging, concurrency, StandardScaler
+        </p>
+        <a href="#" class="text-blue-600 underline">Read more</a>
       </div>
+      <!-- High-Value Customer Predictor -->
       <div class="tilt bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-lg transition duration-300" data-aos="fade-up" data-aos-delay="100">
         <h3 class="text-xl font-bold mb-2">💎 High-Value Customer Predictor</h3>
-        <p class="text-gray-700 dark:text-gray-300 text-sm mb-2">Classifies high-value buyers using RFM metrics, Random Forest, and SHAP explainability. Tracked with MLflow and deployed via Streamlit.</p>
-        <a href="https://huggingface.co/spaces/kmsmohamedansar/high-value-customer-predictor" target="_blank" class="text-blue-600 underline">Live Demo</a>
-        <p class="mt-4 text-xs text-gray-400">Skills: DuckDB, Pandera, RandomForestClassifier, SHAP, MLflow, Streamlit</p>
+        <p class="text-sm mb-4">
+          Predicts high-value buyers using RFM metrics, features engineering, and SHAP explainability.
+          Tracked with MLflow and deployed via Streamlit on Hugging Face Spaces.
+        </p>
+        <p class="text-xs text-gray-400 mb-2">
+          <strong>Tech:</strong> DuckDB, Pandera, Data Cleaning, Feature Engineering, RFM, Random Forest, SHAP, MLflow, Streamlit, Pytest, Git
+        </p>
+        <a href="#" class="text-blue-600 underline">Read more</a>
       </div>
+      <!-- Grocery AI Assistant -->
       <div class="tilt bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-lg transition duration-300" data-aos="fade-up" data-aos-delay="200">
         <h3 class="text-xl font-bold mb-2">🛒 Grocery AI Assistant</h3>
-        <p class="text-gray-700 dark:text-gray-300 text-sm mb-2">Local RAG app that answers Instacart queries using FAISS embeddings and Flan-T5. Fully offline semantic search with Gradio UI.</p>
-        <a href="https://huggingface.co/spaces/kmsmohamedansar/grocery-ai-assistant" target="_blank" class="text-blue-600 underline">Live Demo</a>
-        <p class="mt-4 text-xs text-gray-400">Skills: FAISS, LangChain, Sentence Transformers, Transformers, Gradio</p>
+        <p class="text-sm mb-4">
+          Local RAG app for Instacart data using FAISS embeddings and Flan‑T5. Offline semantic search with
+          a Gradio frontend for Q&A.
+        </p>
+        <p class="text-xs text-gray-400 mb-2">
+          <strong>Tech:</strong> Python, Pandas, FAISS, LangChain, Sentence Transformers, Hugging Face Transformers, Gradio, Local LLMs, Vector DB
+        </p>
+        <a href="#" class="text-blue-600 underline">Read more</a>
       </div>
+      <!-- Sentiment Analysis -->
       <div class="tilt bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-lg transition duration-300" data-aos="fade-up" data-aos-delay="300">
-        <h3 class="text-xl font-bold mb-2">📝 Sentiment Analysis on Amazon Reviews</h3>
-        <p class="text-gray-700 dark:text-gray-300 text-sm mb-2">Built a binary sentiment classifier using TF-IDF + Logistic Regression baseline and fine-tuned DistilBERT. Deployed with Gradio.</p>
-        <a href="https://huggingface.co/spaces/kmsmohamedansar/amazon-sentiment-distilbert" target="_blank" class="text-blue-600 underline">Live Demo</a>
-        <p class="mt-4 text-xs text-gray-400">Skills: pandas, scikit-learn, Transformers, TF-IDF, DistilBERT, Gradio</p>
+        <h3 class="text-xl font-bold mb-2">📝 Sentiment Analysis on Amazon Fine Food Reviews</h3>
+        <p class="text-sm mb-4">
+          Built a sentiment classifier using TF-IDF + Logistic Regression and fine‑tuned DistilBERT.
+          Includes data cleaning, EDA, imbalance handling, and interactive Gradio UI.
+        </p>
+        <p class="text-xs text-gray-400 mb-2">
+          <strong>Tech:</strong> Python, pandas, scikit‑learn, TF‑IDF, Logistic Regression, Transformers, DistilBERT, matplotlib, seaborn, Gradio
+        </p>
+        <a href="#" class="text-blue-600 underline">Read more</a>
       </div>
+      <!-- Yahoo Finance Scraper -->
       <div class="tilt bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-lg transition duration-300" data-aos="fade-up" data-aos-delay="400">
         <h3 class="text-xl font-bold mb-2">💡 Yahoo Finance News Scraper</h3>
-        <p class="text-gray-700 dark:text-gray-300 text-sm mb-2">Extracted dynamic news content using Selenium and BeautifulSoup. Parsed headlines, dates, authors, and content into structured DataFrames.</p>
-        <p class="mt-4 text-xs text-gray-400">Skills: Selenium, BeautifulSoup, Pandas, Web Scraping</p>
+        <p class="text-sm mb-4">
+          Python scraper using Selenium & BeautifulSoup to extract the latest headlines, dates, authors, and article content from Yahoo Finance.
+        </p>
+        <p class="text-xs text-gray-400 mb-2">
+          <strong>Tech:</strong> Python, Selenium, BeautifulSoup, Pandas
+        </p>
+        <a href="#" class="text-blue-600 underline">Read more</a>
       </div>
+      <!-- Smart Product Categorization -->
       <div class="tilt bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-lg transition duration-300" data-aos="fade-up" data-aos-delay="500">
         <h3 class="text-xl font-bold mb-2">📦 Smart Product Categorization</h3>
-        <p class="text-gray-700 dark:text-gray-300 text-sm mb-2">Applied zero-shot NLP using BART-large-MNLI to categorize e-commerce products. Combined simple rules with AI for scalable accuracy.</p>
-        <p class="mt-4 text-xs text-gray-400">Skills: NLP, Zero-Shot Learning, Transformers, E-commerce Data</p>
+        <p class="text-sm mb-4">
+          Zero‑shot NLP using BART-large‑MNLI to categorize e-commerce products at scale with simple rules + AI.
+        </p>
+        <p class="text-xs text-gray-400 mb-2">
+          <strong>Tech:</strong> Python, pandas, Hugging Face Transformers, Zero‑Shot Learning, Google Colab
+        </p>
+        <a href="#" class="text-blue-600 underline">Read more</a>
       </div>
+      <!-- Spotify Trends -->
       <div class="tilt bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-lg transition duration-300" data-aos="fade-up" data-aos-delay="600">
-        <h3 class="text-xl font-bold mb-2">🎵 Spotify Music Trends Analysis</h3>
-        <p class="text-gray-700 dark:text-gray-300 text-sm mb-2">Analyzed audio features and popularity from 1920–2020. Visualized trends in tempo, energy, danceability, and valence using seaborn.</p>
-        <p class="mt-4 text-xs text-gray-400">Skills: pandas, matplotlib, seaborn, Statistical Analysis</p>
+        <h3 class="text-xl font-bold mb-2">🎵 Statistical Analysis on Spotify Trends</h3>
+        <p class="text-sm mb-4">
+          Explored audio feature trends (tempo, energy, danceability, valence) from 1920–2020 using EDA and visualization.
+        </p>
+        <p class="text-xs text-gray-400 mb-2">
+          <strong>Tech:</strong> Python, pandas, matplotlib, seaborn, statistical analysis
+        </p>
+        <a href="#" class="text-blue-600 underline">Read more</a>
       </div>
+      <!-- CPL Dream Team -->
       <div class="tilt bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-lg transition duration-300" data-aos="fade-up" data-aos-delay="700">
-        <h3 class="text-xl font-bold mb-2">⚽ CPL Dream Team Dashboard</h3>
-        <p class="text-gray-700 dark:text-gray-300 text-sm mb-2">Developed Power BI dashboard and Python analysis to select the Canadian Premier League Dream Team using KPIs.</p>
-        <p class="mt-4 text-xs text-gray-400">Skills: Power BI, Python, KPI Design, Data Visualization</p>
+        <h3 class="text-xl font-bold mb-2">⚽ Canadian Premier League: Dream Team Dashboard</h3>
+        <p class="text-sm mb-4">
+          Combined Python & Power BI to identify the CPL Dream Team for 2019, providing actionable insights for managers and fans.
+        </p>
+        <p class="text-xs text-gray-400 mb-2">
+          <strong>Tech:</strong> Python, Power BI, statistical analysis
+        </p>
+        <a href="#" class="text-blue-600 underline">Read more</a>
       </div>
     </div>
   </section>
 
-  <section id="skills" class="bg-gray-200 dark:bg-gray-800 py-16 animate__animated animate__fadeInUp animate__delay-3s">
+  <!-- Skills -->
+  <section id="skills" class="bg-gray-200 dark:bg-gray-800 py-16 animate__animated animate__fadeInUp animate__delay-2s">
     <div class="max-w-5xl mx-auto px-4">
       <h2 class="text-3xl font-semibold mb-6 text-center">🛠️ Skills</h2>
-      <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-6">
-        <div class="bg-white dark:bg-gray-700 p-4 rounded-lg shadow text-center animate__animated animate__zoomIn animate__delay-1s"><span class="text-4xl">🐍</span><p class="mt-2">Python</p></div>
-        <div class="bg-white dark:bg-gray-700 p-4 rounded-lg shadow text-center animate__animated animate__zoomIn animate__delay-2s"><span class="text-4xl">📊</span><p class="mt-2">SQL & Tableau</p></div>
-        <div class="bg-white dark:bg-gray-700 p-4 rounded-lg shadow text-center animate__animated animate__zoomIn animate__delay-3s"><span class="text-4xl">⚙️</span><p class="mt-2">ETL & dbt</p></div>
-        <div class="bg-white dark:bg-gray-700 p-4 rounded-lg shadow text-center animate__animated animate__zoomIn animate__delay-4s"><span class="text-4xl">🧪</span><p class="mt-2">MLOps & SHAP</p></div>
+      <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+        <div class="bg-white dark:bg-gray-700 p-6 rounded-lg shadow">
+          <h3 class="font-bold mb-2">Languages & Scripting</h3>
+          <p>Python, HTML, CSS, VBA</p>
+        </div>
+        <div class="bg-white dark:bg-gray-700 p-6 rounded-lg shadow">
+          <h3 class="font-bold mb-2">Data Analytics</h3>
+          <p>SQL, Power BI, Tableau, Excel</p>
+        </div>
+        <div class="bg-white dark:bg-gray-700 p-6 rounded-lg shadow">
+          <h3 class="font-bold mb-2">Databases & ETL</h3>
+          <p>Data Modeling, ETL Pipelines</p>
+        </div>
+        <div class="bg-white dark:bg-gray-700 p-6 rounded-lg shadow">
+          <h3 class="font-bold mb-2">Tools & Technologies</h3>
+          <p>Confluence, WordPress</p>
+        </div>
+        <div class="bg-white dark:bg-gray-700 p-6 rounded-lg shadow">
+          <h3 class="font-bold mb-2">Methodologies</h3>
+          <p>Agile, Six Sigma, RCA, FMEA, SWOT</p>
+        </div>
+        <div class="bg-white dark:bg-gray-700 p-6 rounded-lg shadow">
+          <h3 class="font-bold mb-2">Soft Skills</h3>
+          <p>Client Management, Cross‑Functional Collaboration</p>
+        </div>
       </div>
     </div>
   </section>
 
+  <!-- Experience -->
   <section id="experience" class="max-w-5xl mx-auto px-4 py-16 animate__animated animate__fadeInUp">
-    <h2 class="text-3xl font-semibold mb-4">💼 Experience</h2>
-    <div class="space-y-6">
-      <div>
-        <h3 class="font-bold">Tech Support Specialist @ Datasembly</h3>
-        <p class="text-sm text-gray-600 dark:text-gray-400">2023 – Present</p>
-        <ul class="list-disc ml-5 text-gray-700 dark:text-gray-300">
-          <li>Delivered SQL analytics & dashboards for CPG clients, improving insight delivery by 30%.</li>
-          <li>Managed incident response & SLA adherence, reducing critical outages by 40%.</li>
+    <h2 class="text-3xl font-semibold mb-6">💼 Experience</h2>
+    <div class="space-y-8">
+      <div data-aos="fade-up">
+        <h3 class="font-bold text-xl">Business Analyst, Customer Success</h3>
+        <p class="text-sm text-gray-600 dark:text-gray-400 mb-2">2019 – 2022</p>
+        <ul class="list-disc ml-6 text-gray-700 dark:text-gray-300">
+          <li>Created Power BI dashboards on operator performance & quality metrics for weekly business reviews.</li>
+          <li>Handled ad-hoc queries on headcount utilization, budget creation, project testing & execution.</li>
+          <li>Developed VBA scripts to automate productivity reporting and email distributions.</li>
+          <li>Resolved customer escalations on payment errors via ServiceNow.</li>
+          <li>Built Excel macros for daily ETL upload task sorting.</li>
+          <li>Authored BRDs, conducted SWOT & FMEA risk analyses for Prime Day operations.</li>
+        </ul>
+        <p class="mt-2 text-xs text-gray-500 dark:text-gray-400">
+          <strong>Key skills:</strong> SQL, Tableau, Power BI, Excel, Macros, VBA, Selenium, AWS Redshift, QA Testing, Root Cause Analysis
+        </p>
+      </div>
+      <div data-aos="fade-up" data-aos-delay="100">
+        <h3 class="font-bold text-xl">Business Analyst, Intern</h3>
+        <p class="text-sm text-gray-600 dark:text-gray-400 mb-2">Jan 2024 – Apr 2024</p>
+        <ul class="list-disc ml-6 text-gray-700 dark:text-gray-300">
+          <li>Analyzed real-time customer engagement data with Python to uncover trends and inform mitigation plans.</li>
+          <li>Collaborated on a new landing page with CSS animations for improved UX.</li>
+          <li>Investigated payment discrepancies; proposed a blockchain wallet solution for transparency.</li>
+          <li>Designed process roadmaps and workflow charts in Lucidchart for spatial web to metaverse data flows.</li>
         </ul>
       </div>
-      <div>
-        <h3 class="font-bold">Business Analyst @ Amazon Prime Video</h3>
-        <p class="text-sm text-gray-600 dark:text-gray-400">2020 – 2023</p>
-        <ul class="list-disc ml-5 text-gray-700 dark:text-gray-300">
-          <li>Automated 50+ recurring reports using SQL/Python, reducing manual effort by 40%.</li>
-          <li>Optimized Spark & Hive ETL jobs, improving data pipeline efficiency by 25%.</li>
+      <div data-aos="fade-up" data-aos-delay="200">
+        <h3 class="font-bold text-xl">Tech Support Specialist</h3>
+        <p class="text-sm text-gray-600 dark:text-gray-400 mb-2">2024 – Present</p>
+        <ul class="list-disc ml-6 text-gray-700 dark:text-gray-300">
+          <li>Partnered with Customer Success & Sales to onboard clients onto Datasembly's real-time pricing platform.</li>
+          <li>Wrote SQL queries for custom data exports aligned to client workflows.</li>
+          <li>Delivered data samples and analyses for pre-sales evaluations and POCs.</li>
+          <li>Investigated pricing discrepancies to explain edge cases and build trust.</li>
+          <li>Designed interactive Tableau dashboards to track pricing trends over time.</li>
         </ul>
+        <p class="mt-2 text-xs text-gray-500 dark:text-gray-400">
+          <strong>Key skills:</strong> SQL, Big Data Analysis, Tableau, Python, CSS
+        </p>
       </div>
     </div>
   </section>
 
-  <section id="education" class="bg-gray-200 dark:bg-gray-800 py-16">
+  <!-- Education -->
+  <section id="education" class="bg-gray-200 dark:bg-gray-800 py-16 animate__animated animate__fadeInUp">
     <div class="max-w-5xl mx-auto px-4">
       <h2 class="text-3xl font-semibold mb-4">🎓 Education</h2>
-      <p class="text-gray-700 dark:text-gray-300">B.Sc. in Data Science, University of XYZ – 2019</p>
+      <h3 class="font-bold text-xl">Postgraduate Diploma in Business Analytics</h3>
+      <p class="text-sm text-gray-600 dark:text-gray-400 mb-2">2022 – 2024</p>
+      <p class="text-gray-700 dark:text-gray-300">
+        Two-year program with co-op term. Hands-on experience with SQL, Salesforce, Power BI.
+        Applied data analysis, project management, and process improvement in real-world settings.
+      </p>
     </div>
   </section>
 
+  <!-- Contact -->
   <section id="contact" class="max-w-5xl mx-auto px-4 py-16 animate__animated animate__fadeInUp">
     <h2 class="text-3xl font-semibold mb-4">📧 Contact</h2>
     <p>Email: <a href="mailto:mohamedansarkms@gmail.com" class="underline">mohamedansarkms@gmail.com</a></p>
     <p>LinkedIn: <a href="https://linkedin.com/in/mohamedansar" target="_blank" class="underline">linkedin.com/in/mohamedansar</a></p>
   </section>
 
+  <!-- Initialization Scripts -->
   <script>
-    particlesJS("particles-js",{particles:{number:{value:75},size:{value:3},move:{speed:1.2},line_linked:{enable:true},color:{value:"#ffffff"}},interactivity:{events:{onhover:{enable:true,mode:"repulse"}}}});
-    AOS.init({once:true, duration:800});
-    VanillaTilt.init(document.querySelectorAll('.tilt'),{max:15,speed:400,glare:true, "max-glare":0.3});
-    const keywords=["Neural Networks","Transfer Learning","Data Pipelines","MLOps","Explainable AI","RAG","SHAP","Random Forests","Embeddings","Vector DBs"];
-    let idx=0;setInterval(()=>{document.getElementById('mlWords').innerText=keywords[idx];idx=(idx+1)%keywords.length;},2000);
+    particlesJS("particles-js", {
+      particles: { number:{value:75}, size:{value:3}, move:{speed:1.2}, line_linked:{enable:true}, color:{value:"#ffffff"} },
+      interactivity:{ events:{ onhover:{ enable:true, mode:"repulse" } } }
+    });
+    AOS.init({ once:true, duration:800 });
+    VanillaTilt.init(document.querySelectorAll('.tilt'), { max:15, speed:400, glare:true, "max-glare":0.3 });
+    const keywords = ["Neural Networks","Transfer Learning","Data Pipelines","MLOps","Explainable AI","RAG","SHAP","Random Forests","Embeddings","Vector DBs"];
+    let idx = 0;
+    setInterval(() => {
+      document.getElementById('mlWords').innerText = keywords[idx];
+      idx = (idx + 1) % keywords.length;
+    }, 2000);
   </script>
 </body>
 </html>
