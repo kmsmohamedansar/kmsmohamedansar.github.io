@@ -19,9 +19,7 @@
   <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
   <!-- Vanilla Tilt -->
   <script src="https://cdn.jsdelivr.net/npm/vanilla-tilt@1.7.3/dist/vanilla-tilt.min.js"></script>
-
   <style>
-    /* Racetrack Background Animation */
     @keyframes road { 0% { background-position-y: 0; } 100% { background-position-y: 40px; } }
     .racetrack {
       position: absolute; bottom: 0; left: 0;
@@ -34,7 +32,6 @@
       animation: road 5s linear infinite;
       opacity: 0.6; z-index: 10;
     }
-    /* ML Keywords Ticker */
     .ml-keywords {
       position: fixed; bottom: 20px; right: 20px;
       font-size: 0.9rem; color: #00ffc3;
@@ -102,43 +99,69 @@
     </p>
   </section>
 
-  <!-- Projects Section -->
+  <!-- Projects Section WITH SHOW MORE/Less TOGGLES-->
   <section id="projects" class="max-w-6xl mx-auto px-4 py-16 animate__animated animate__fadeInUp animate__delay-100">
     <h2 class="text-3xl font-semibold mb-8 text-center">🚀 Projects</h2>
     <div class="grid gap-8 md:grid-cols-2">
       <!-- TaskMaster -->
-      <div class="tilt bg-gray-800 p-6 rounded-2xl shadow-lg" data-aos="fade-up">
-        <h3 class="text-xl font-bold mb-2 text-white">
-          🔁 TaskMaster: Automated Pipeline & Random Forest
-        </h3>
-        <p class="text-gray-400 mb-2">
-          Retry-enabled pipeline, Random Forest on synthetic data, Gradio deployment.
-        </p>
+      <div class="tilt bg-gray-800 p-6 rounded-2xl shadow-lg relative" data-aos="fade-up">
+        <h3 class="text-xl font-bold mb-2 text-white">🔁 TaskMaster: Automated Pipeline & Random Forest</h3>
+        <p class="text-gray-400 mb-2">Retry-enabled pipeline, Random Forest on synthetic data, Gradio deployment.</p>
         <p class="text-xs text-gray-500 mb-2"><strong>Tech:</strong> Python, scikit‑learn, Gradio</p>
+        <button onclick="toggleDetails(this)" class="text-sm text-blue-400 underline focus:outline-none">Show More</button>
+        <div class="hidden text-gray-300 mt-2">
+          <p>Simulates a real-world pipeline with retry logic, structured logging, and user-friendly ML predictions.</p>
+          <ul class="list-disc ml-5">
+            <li>Built with <code>concurrent.futures</code>, email alerts on failure</li>
+            <li>Gradio app with interactive sliders for input</li>
+            <li>Streamlined deployment on Hugging Face Spaces</li>
+          </ul>
+        </div>
       </div>
       <!-- High-Value Customer Predictor -->
-      <div class="tilt bg-gray-800 p-6 rounded-2xl shadow-lg" data-aos="fade-up" data-aos-delay="100">
+      <div class="tilt bg-gray-800 p-6 rounded-2xl shadow-lg relative" data-aos="fade-up" data-aos-delay="100">
         <h3 class="text-xl font-bold mb-2 text-white">💎 High-Value Customer Predictor</h3>
-        <p class="text-gray-400 mb-2">
-          RFM classification, SHAP explainability, MLflow tracking, Streamlit UI.
-        </p>
+        <p class="text-gray-400 mb-2">RFM classification, SHAP explainability, MLflow tracking, Streamlit UI.</p>
         <p class="text-xs text-gray-500 mb-2"><strong>Tech:</strong> DuckDB, SHAP, MLflow, Streamlit</p>
+        <button onclick="toggleDetails(this)" class="text-sm text-blue-400 underline focus:outline-none">Show More</button>
+        <div class="hidden text-gray-300 mt-2">
+          <p>Flags valuable customers using RFM and behavioral metrics.</p>
+          <ul class="list-disc ml-5">
+            <li>Model accuracy: 97%, ROC AUC: 99%</li>
+            <li>Features: Recency, Frequency, Monetary value, Profit margin</li>
+            <li>Explained decisions with SHAP waterfall plots</li>
+          </ul>
+        </div>
       </div>
       <!-- Grocery AI Assistant -->
-      <div class="tilt bg-gray-800 p-6 rounded-2xl shadow-lg" data-aos="fade-up" data-aos-delay="200">
+      <div class="tilt bg-gray-800 p-6 rounded-2xl shadow-lg relative" data-aos="fade-up" data-aos-delay="200">
         <h3 class="text-xl font-bold mb-2 text-white">🛒 Grocery AI Assistant</h3>
-        <p class="text-gray-400 mb-2">
-          Local RAG with FAISS & Flan‑T5, offline Gradio Q&A.
-        </p>
+        <p class="text-gray-400 mb-2">Local RAG with FAISS & Flan‑T5, offline Gradio Q&A.</p>
         <p class="text-xs text-gray-500 mb-2"><strong>Tech:</strong> FAISS, LangChain, Transformers</p>
+        <button onclick="toggleDetails(this)" class="text-sm text-blue-400 underline focus:outline-none">Show More</button>
+        <div class="hidden text-gray-300 mt-2">
+          <p>Built a local semantic search system on Instacart data.</p>
+          <ul class="list-disc ml-5">
+            <li>Semantic embeddings with MiniLM, context generation with LangChain</li>
+            <li>Used Flan‑T5 for local Q&A inference</li>
+            <li>Lightweight offline RAG pipeline</li>
+          </ul>
+        </div>
       </div>
       <!-- Sentiment Analysis -->
-      <div class="tilt bg-gray-800 p-6 rounded-2xl shadow-lg" data-aos="fade-up" data-aos-delay="300">
+      <div class="tilt bg-gray-800 p-6 rounded-2xl shadow-lg relative" data-aos="fade-up" data-aos-delay="300">
         <h3 class="text-xl font-bold mb-2 text-white">📝 Sentiment Analysis on Amazon Reviews</h3>
-        <p class="text-gray-400 mb-2">
-          TF‑IDF & Logistic Regression baseline + fine-tuned DistilBERT, Gradio UI.
-        </p>
+        <p class="text-gray-400 mb-2">TF‑IDF & Logistic Regression baseline + fine-tuned DistilBERT, Gradio UI.</p>
         <p class="text-xs text-gray-500 mb-2"><strong>Tech:</strong> TF‑IDF, DistilBERT, Gradio</p>
+        <button onclick="toggleDetails(this)" class="text-sm text-blue-400 underline focus:outline-none">Show More</button>
+        <div class="hidden text-gray-300 mt-2">
+          <p>Compared classical and transformer-based sentiment models.</p>
+          <ul class="list-disc ml-5">
+            <li>Baseline: Logistic Regression with TF-IDF features</li>
+            <li>Transformer: DistilBERT fine-tuned on food review sentiment</li>
+            <li>Deployed on Gradio for real-time predictions</li>
+          </ul>
+        </div>
       </div>
       <!-- …other project cards… -->
     </div>
@@ -255,6 +278,14 @@
       document.getElementById('mlWords').innerText = keywords[idx];
       idx = (idx + 1) % keywords.length;
     }, 2500);
+
+    // Show More / Less toggle for projects
+    function toggleDetails(button) {
+      const details = button.nextElementSibling;
+      const isHidden = details.classList.contains('hidden');
+      details.classList.toggle('hidden');
+      button.innerText = isHidden ? 'Show Less' : 'Show More';
+    }
   </script>
 </body>
 </html>
