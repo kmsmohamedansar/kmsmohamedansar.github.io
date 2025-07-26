@@ -99,71 +99,440 @@
     </p>
   </section>
 
-  <!-- Projects Section WITH SHOW MORE/Less TOGGLES-->
+  <!-- Projects Section (with advanced toggles) -->
   <section id="projects" class="max-w-6xl mx-auto px-4 py-16 animate__animated animate__fadeInUp animate__delay-100">
     <h2 class="text-3xl font-semibold mb-8 text-center">🚀 Projects</h2>
     <div class="grid gap-8 md:grid-cols-2">
-      <!-- TaskMaster -->
+
+      <!-- TaskMaster Project Card -->
       <div class="tilt bg-gray-800 p-6 rounded-2xl shadow-lg relative" data-aos="fade-up">
         <h3 class="text-xl font-bold mb-2 text-white">🔁 TaskMaster: Automated Pipeline & Random Forest</h3>
         <p class="text-gray-400 mb-2">Retry-enabled pipeline, Random Forest on synthetic data, Gradio deployment.</p>
         <p class="text-xs text-gray-500 mb-2"><strong>Tech:</strong> Python, scikit‑learn, Gradio</p>
         <button onclick="toggleDetails(this)" class="text-sm text-blue-400 underline focus:outline-none">Show More</button>
-        <div class="hidden text-gray-300 mt-2">
-          <p>Simulates a real-world pipeline with retry logic, structured logging, and user-friendly ML predictions.</p>
-          <ul class="list-disc ml-5">
-            <li>Built with <code>concurrent.futures</code>, email alerts on failure</li>
-            <li>Gradio app with interactive sliders for input</li>
-            <li>Streamlined deployment on Hugging Face Spaces</li>
+        <div class="hidden text-gray-300 mt-2 space-y-3 text-sm leading-relaxed">
+          <p>
+            <strong>End-to-End ML Pipeline Orchestration & Deployment:</strong><br>
+            Demonstrates a production-inspired ML pipeline with retries, structured logging, and live Gradio inference. Mirrors real MLOps best practices.
+          </p>
+          <ul class="list-disc ml-5 space-y-2">
+            <li>
+              <b>Pipeline Orchestration:</b><br>
+              Multi-stage with <code>concurrent.futures</code> for parallel jobs and robust retry (up to 3 times). Every step logs failures and auto-emails on persistent errors.
+            </li>
+            <li>
+              <b>Modeling & Training:</b><br>
+              RandomForestClassifier (100 estimators) on synthetic data with <code>StandardScaler</code> normalization and reproducible pickle serialization.
+            </li>
+            <li>
+              <b>Deployment:</b><br>
+              Interactive Gradio web UI (5 feature sliders, instant prediction). Live on Hugging Face Spaces with pinned requirements for deterministic builds.
+            </li>
+            <li>
+              <b>Testing & Monitoring:</b><br>
+              Unit tests (PyTest), pipeline metrics, error logs—extensible to MLflow/Sentry.
+            </li>
+            <li>
+              <b>Business Analogy:</b><br>
+              Coffee Shop: Grinder (extraction w/ retry), Brewer (transformation w/ error-handling), Taste Tester (model), Customer Touchscreen (UI).
+            </li>
+            <li>
+              <b>Skills:</b> Python, scikit-learn, Gradio, Hugging Face Spaces, logging, retry logic, deployment best practices.
+            </li>
+            <li>
+              <a href="https://huggingface.co/spaces/kmsmohamedansar/TaskMaster-Job-Scheduler" target="_blank" class="text-blue-400 underline">Live Demo</a> | 
+              <a href="https://github.com/kmsmohamedansar/TaskMaster-Job-Scheduler" target="_blank" class="text-blue-400 underline">GitHub</a>
+            </li>
           </ul>
         </div>
       </div>
+
       <!-- High-Value Customer Predictor -->
       <div class="tilt bg-gray-800 p-6 rounded-2xl shadow-lg relative" data-aos="fade-up" data-aos-delay="100">
         <h3 class="text-xl font-bold mb-2 text-white">💎 High-Value Customer Predictor</h3>
         <p class="text-gray-400 mb-2">RFM classification, SHAP explainability, MLflow tracking, Streamlit UI.</p>
         <p class="text-xs text-gray-500 mb-2"><strong>Tech:</strong> DuckDB, SHAP, MLflow, Streamlit</p>
         <button onclick="toggleDetails(this)" class="text-sm text-blue-400 underline focus:outline-none">Show More</button>
-        <div class="hidden text-gray-300 mt-2">
-          <p>Flags valuable customers using RFM and behavioral metrics.</p>
-          <ul class="list-disc ml-5">
-            <li>Model accuracy: 97%, ROC AUC: 99%</li>
-            <li>Features: Recency, Frequency, Monetary value, Profit margin</li>
-            <li>Explained decisions with SHAP waterfall plots</li>
+        <div class="hidden text-gray-300 mt-2 space-y-3 text-sm leading-relaxed">
+          <p>
+            <strong>Business Value Identification with Explainable AI:</strong><br>
+            End-to-end ML pipeline for detecting high-value customers using RFM and behavior metrics, transparent explainability with SHAP, and full MLOps tracking.
+          </p>
+          <ul class="list-disc ml-5 space-y-2">
+            <li>
+              <b>Data Engineering:</b><br>
+              SQL-style aggregation with DuckDB; features include recency, frequency, profit margin, tenure, and discount habits.
+            </li>
+            <li>
+              <b>Modeling:</b><br>
+              RandomForestClassifier, tuned for high accuracy (97%) and ROC AUC (0.99), with Pandera validation and PyTest checks.
+            </li>
+            <li>
+              <b>Explainability:</b><br>
+              SHAP waterfall plots for per-customer and global insight, easily understood by non-technical users.
+            </li>
+            <li>
+              <b>MLOps & Deployment:</b><br>
+              MLflow logs all models/metrics/plots; Streamlit UI lets users predict and see SHAP explanations interactively. Deployed to Hugging Face Spaces.
+            </li>
+            <li>
+              <b>Skills:</b> Feature engineering, model tracking, explainable ML, modern Streamlit UI.
+            </li>
+            <li>
+              <a href="https://huggingface.co/spaces/kmsmohamedansar/high-value-customer-predictor" target="_blank" class="text-blue-400 underline">Live Demo</a> | 
+              <a href="https://github.com/kmsmohamedansar/high-value-customer-predictor" target="_blank" class="text-blue-400 underline">GitHub</a>
+            </li>
           </ul>
         </div>
       </div>
+
       <!-- Grocery AI Assistant -->
       <div class="tilt bg-gray-800 p-6 rounded-2xl shadow-lg relative" data-aos="fade-up" data-aos-delay="200">
         <h3 class="text-xl font-bold mb-2 text-white">🛒 Grocery AI Assistant</h3>
         <p class="text-gray-400 mb-2">Local RAG with FAISS & Flan‑T5, offline Gradio Q&A.</p>
         <p class="text-xs text-gray-500 mb-2"><strong>Tech:</strong> FAISS, LangChain, Transformers</p>
         <button onclick="toggleDetails(this)" class="text-sm text-blue-400 underline focus:outline-none">Show More</button>
-        <div class="hidden text-gray-300 mt-2">
-          <p>Built a local semantic search system on Instacart data.</p>
-          <ul class="list-disc ml-5">
-            <li>Semantic embeddings with MiniLM, context generation with LangChain</li>
-            <li>Used Flan‑T5 for local Q&A inference</li>
-            <li>Lightweight offline RAG pipeline</li>
+        <div class="hidden text-gray-300 mt-2 space-y-3 text-sm leading-relaxed">
+          <p>
+            <strong>Semantic Search & Q&A (Local RAG):</strong><br>
+            A privacy-friendly, fully local question-answering assistant over Instacart data, combining FAISS vector search, semantic embeddings, and local LLM generation.
+          </p>
+          <ul class="list-disc ml-5 space-y-2">
+            <li>
+              <b>Data & Pipeline:</b><br>
+              Merges Instacart product, aisle, department data; product descriptions embedded using MiniLM and stored in FAISS index.
+            </li>
+            <li>
+              <b>Retrieval & Generation:</b><br>
+              LangChain retrieves context, Flan-T5 (running locally) generates answers—no API keys, works entirely offline.
+            </li>
+            <li>
+              <b>Deployment:</b><br>
+              Gradio UI for user queries, full semantic RAG workflow on user’s device.
+            </li>
+            <li>
+              <b>Skills:</b> RAG, embeddings, vector databases, open-source LLMs, Gradio deployment.
+            </li>
+            <li>
+              <a href="https://github.com/kmsmohamedansar/grocery-ai-assistant" target="_blank" class="text-blue-400 underline">GitHub</a>
+            </li>
           </ul>
         </div>
       </div>
-      <!-- Sentiment Analysis -->
+
+      <!-- Sentiment Analysis on Amazon Reviews -->
       <div class="tilt bg-gray-800 p-6 rounded-2xl shadow-lg relative" data-aos="fade-up" data-aos-delay="300">
         <h3 class="text-xl font-bold mb-2 text-white">📝 Sentiment Analysis on Amazon Reviews</h3>
         <p class="text-gray-400 mb-2">TF‑IDF & Logistic Regression baseline + fine-tuned DistilBERT, Gradio UI.</p>
         <p class="text-xs text-gray-500 mb-2"><strong>Tech:</strong> TF‑IDF, DistilBERT, Gradio</p>
         <button onclick="toggleDetails(this)" class="text-sm text-blue-400 underline focus:outline-none">Show More</button>
-        <div class="hidden text-gray-300 mt-2">
-          <p>Compared classical and transformer-based sentiment models.</p>
-          <ul class="list-disc ml-5">
-            <li>Baseline: Logistic Regression with TF-IDF features</li>
-            <li>Transformer: DistilBERT fine-tuned on food review sentiment</li>
-            <li>Deployed on Gradio for real-time predictions</li>
+        <div class="hidden text-gray-300 mt-2 space-y-3 text-sm leading-relaxed">
+          <p>
+            <strong>Classical vs Transformer NLP, Fully Deployed:</strong><br>
+            An end-to-end binary sentiment classifier on Amazon Fine Food Reviews, showing practical differences between traditional ML and transformer models.
+          </p>
+          <ul class="list-disc ml-5 space-y-2">
+            <li>
+              <b>Data:</b> 500k+ real Amazon reviews, cleaned and balanced (binary labels: positive/negative).
+            </li>
+            <li>
+              <b>Baseline Model:</b> TF-IDF vectorization (unigrams, bigrams) + Logistic Regression, full EDA and metric visualization.
+            </li>
+            <li>
+              <b>Transformer Model:</b> Fine-tuned DistilBERT (Hugging Face) on tokenized reviews (max_len=128, 3 epochs), robust performance (F1 = 0.91, ROC AUC near 1).
+            </li>
+            <li>
+              <b>Deployment:</b> Gradio app for instant sentiment prediction from user text input, with model confidence displayed.
+            </li>
+            <li>
+              <b>Skills:</b> Data cleaning, class imbalance handling, TF-IDF, logistic regression, Hugging Face transformers, fine-tuning, evaluation metrics, Gradio UI.
+            </li>
+            <li>
+              <a href="https://github.com/kmsmohamedansar/sentiment-amazon-reviews" target="_blank" class="text-blue-400 underline">GitHub</a>
+            </li>
           </ul>
         </div>
       </div>
-      <!-- …other project cards… -->
+
+    </div>
+  </section>
+
+  <!-- Skills Section -->
+  <section id="skills" class="bg-gray-800 py-16 animate__animated animate__fadeInUp animate__delay-200">
+    <div class="max-w-5xl mx-auto px-4">
+      <h2 class="text-3xl font-semibold mb-6 text-center text-white">🛠️ Skills</h2>
+      <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+        <div class="bg-gray-700 p-6 rounded-lg shadow text-white">
+          <h3 class="font-bold mb-2">Languages & Scripting</h3>
+          <p>Python, HTML, CSS, VBA</p>
+        </div>
+        <div class="bg-gray-700 p-6 rounded-lg shadow text-white">
+          <h3 class="font-bold mb-2">Data Analytics</h3>
+          <p>SQL, Power BI, Tableau, Excel</p>
+        </div>
+        <div class="bg-gray-700 p-6 rounded-lg shadow text-white">
+          <h3 class="font-bold mb-2">Databases & ETL</h3>
+          <p>Data Modeling, ETL Pipelines</p>
+        </div>
+        <div class="bg-gray-700 p-6 rounded-lg shadow text-white">
+          <h3 class="font-bold mb-2">Tools & Tech</h3>
+          <p>Confluence, WordPress</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Experience Section -->
+  <section id="experience" class="max-w-5xl mx-auto px-4 py-16 animate__animated animate__fadeInUp">
+    <Here’s your **complete HTML file** with all sections—including **detailed, “show more” project descriptions for all 4 projects** and everything in one place (including navbar, hero, backgrounds, skills, experience, education, contact, and the interactive project toggles). You can copy and use this directly as `index.html`!
+
+---
+
+```html
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mohamed Ansar — ML Portfolio</title>
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>tailwind.config = { darkMode: 'class' }</script>
+  <!-- Animate.css -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
+  <!-- Three.js & Vanta.js (Neural Net) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r121/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vanta@0.5.21/dist/vanta.net.min.js"></script>
+  <!-- Particles.js -->
+  <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
+  <!-- AOS.js -->
+  <link rel="stylesheet" href="https://unpkg.com/aos@2.3.1/dist/aos.css" />
+  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+  <!-- Vanilla Tilt -->
+  <script src="https://cdn.jsdelivr.net/npm/vanilla-tilt@1.7.3/dist/vanilla-tilt.min.js"></script>
+  <style>
+    @keyframes road { 0% { background-position-y: 0; } 100% { background-position-y: 40px; } }
+    .racetrack {
+      position: absolute; bottom: 0; left: 0;
+      width: 100%; height: 25%;
+      background: repeating-linear-gradient(
+        to bottom,
+        #333 0, #333 20px,
+        #111 20px, #111 40px
+      );
+      animation: road 5s linear infinite;
+      opacity: 0.6; z-index: 10;
+    }
+    .ml-keywords {
+      position: fixed; bottom: 20px; right: 20px;
+      font-size: 0.9rem; color: #00ffc3;
+      animation: flicker 1s infinite alternate;
+      z-index: 50;
+    }
+    @keyframes flicker { from { opacity: 0.2; } to { opacity: 1; } }
+    body { overflow-x: hidden; }
+  </style>
+</head>
+<body class="bg-gray-900 text-gray-100">
+
+  <!-- Particles background -->
+  <div id="particles-js" class="fixed inset-0 -z-40"></div>
+
+  <!-- Navbar -->
+  <nav class="fixed top-0 w-full bg-gray-800 bg-opacity-80 backdrop-blur-md shadow z-50 animate__animated animate__fadeInDown">
+    <div class="max-w-6xl mx-auto flex items-center justify-between p-4">
+      <a href="#" class="text-2xl font-bold">Mohamed Ansar</a>
+      <div class="space-x-6">
+        <a href="#about" class="hover:text-white transition">About</a>
+        <a href="#projects" class="hover:text-white transition">Projects</a>
+        <a href="#skills" class="hover:text-white transition">Skills</a>
+        <a href="#experience" class="hover:text-white transition">Experience</a>
+        <a href="#education" class="hover:text-white transition">Education</a>
+        <a href="#contact" class="hover:text-white transition">Contact</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <header id="hero" class="relative h-screen flex items-center justify-center">
+    <div id="vanta-bg" class="absolute inset-0 -z-30"></div>
+    <div class="racetrack"></div>
+    <div class="relative z-50 text-center px-4">
+      <h1 class="text-5xl md:text-6xl font-extrabold mb-4 animate__animated animate__fadeInDown
+                 text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-purple-500 to-pink-500">
+        👋 Hi, I'm Mohamed Ansar
+      </h1>
+      <p class="text-xl md:text-2xl mb-6 animate__animated animate__fadeInUp text-gray-200">
+        Data‑Driven Business Analyst | Tech Support Specialist @ Datasembly | Ex‑Amazon | Ex‑Spongelii
+      </p>
+      <p class="text-gray-300 mb-4">Based in Mississauga</p>
+      <a href="#about"
+         class="inline-block bg-white text-gray-900 px-8 py-3 rounded-full shadow-lg hover:scale-105 transform transition
+                animate__animated animate__pulse animate__infinite">
+        Learn More
+      </a>
+    </div>
+  </header>
+
+  <!-- ML Keywords Ticker -->
+  <div class="ml-keywords"><span id="mlWords"></span></div>
+
+  <!-- About Section -->
+  <section id="about" class="max-w-4xl mx-auto px-4 py-16 animate__animated animate__fadeInUp">
+    <h2 class="text-3xl font-semibold mb-4">About Me</h2>
+    <p class="text-gray-300 leading-relaxed mb-4">
+      I’m a data-driven Business Analyst with 4+ years delivering scalable solutions & insights at  
+      Amazon Prime Video (QA & automation), Spongelii (blockchain/NFT), and now Datasembly (Tech Support Specialist).
+    </p>
+    <p class="text-gray-300 leading-relaxed">
+      I specialize in SQL, Big Data Analysis, Tableau, Incident Management, and thrive in Agile teams transforming
+      data into actionable stories.
+    </p>
+  </section>
+
+  <!-- Projects Section (with advanced toggles) -->
+  <section id="projects" class="max-w-6xl mx-auto px-4 py-16 animate__animated animate__fadeInUp animate__delay-100">
+    <h2 class="text-3xl font-semibold mb-8 text-center">🚀 Projects</h2>
+    <div class="grid gap-8 md:grid-cols-2">
+
+      <!-- TaskMaster Project Card -->
+      <div class="tilt bg-gray-800 p-6 rounded-2xl shadow-lg relative" data-aos="fade-up">
+        <h3 class="text-xl font-bold mb-2 text-white">🔁 TaskMaster: Automated Pipeline & Random Forest</h3>
+        <p class="text-gray-400 mb-2">Retry-enabled pipeline, Random Forest on synthetic data, Gradio deployment.</p>
+        <p class="text-xs text-gray-500 mb-2"><strong>Tech:</strong> Python, scikit‑learn, Gradio</p>
+        <button onclick="toggleDetails(this)" class="text-sm text-blue-400 underline focus:outline-none">Show More</button>
+        <div class="hidden text-gray-300 mt-2 space-y-3 text-sm leading-relaxed">
+          <p>
+            <strong>End-to-End ML Pipeline Orchestration & Deployment:</strong><br>
+            Demonstrates a production-inspired ML pipeline with retries, structured logging, and live Gradio inference. Mirrors real MLOps best practices.
+          </p>
+          <ul class="list-disc ml-5 space-y-2">
+            <li>
+              <b>Pipeline Orchestration:</b> Multi-stage with <code>concurrent.futures</code> for parallel jobs and robust retry (up to 3 times). Every step logs failures and auto-emails on persistent errors.
+            </li>
+            <li>
+              <b>Modeling & Training:</b> RandomForestClassifier (100 estimators) on synthetic data with <code>StandardScaler</code> normalization and reproducible pickle serialization.
+            </li>
+            <li>
+              <b>Deployment:</b> Interactive Gradio web UI (5 feature sliders, instant prediction). Live on Hugging Face Spaces with pinned requirements for deterministic builds.
+            </li>
+            <li>
+              <b>Testing & Monitoring:</b> Unit tests (PyTest), pipeline metrics, error logs—extensible to MLflow/Sentry.
+            </li>
+            <li>
+              <b>Business Analogy:</b> Coffee Shop: Grinder (extraction w/ retry), Brewer (transformation w/ error-handling), Taste Tester (model), Customer Touchscreen (UI).
+            </li>
+            <li>
+              <b>Skills:</b> Python, scikit-learn, Gradio, Hugging Face Spaces, logging, retry logic, deployment best practices.
+            </li>
+            <li>
+              <a href="https://huggingface.co/spaces/kmsmohamedansar/TaskMaster-Job-Scheduler" target="_blank" class="text-blue-400 underline">Live Demo</a> | 
+              <a href="https://github.com/kmsmohamedansar/TaskMaster-Job-Scheduler" target="_blank" class="text-blue-400 underline">GitHub</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- High-Value Customer Predictor -->
+      <div class="tilt bg-gray-800 p-6 rounded-2xl shadow-lg relative" data-aos="fade-up" data-aos-delay="100">
+        <h3 class="text-xl font-bold mb-2 text-white">💎 High-Value Customer Predictor</h3>
+        <p class="text-gray-400 mb-2">RFM classification, SHAP explainability, MLflow tracking, Streamlit UI.</p>
+        <p class="text-xs text-gray-500 mb-2"><strong>Tech:</strong> DuckDB, SHAP, MLflow, Streamlit</p>
+        <button onclick="toggleDetails(this)" class="text-sm text-blue-400 underline focus:outline-none">Show More</button>
+        <div class="hidden text-gray-300 mt-2 space-y-3 text-sm leading-relaxed">
+          <p>
+            <strong>Business Value Identification with Explainable AI:</strong><br>
+            End-to-end ML pipeline for detecting high-value customers using RFM and behavior metrics, transparent explainability with SHAP, and full MLOps tracking.
+          </p>
+          <ul class="list-disc ml-5 space-y-2">
+            <li>
+              <b>Data Engineering:</b> SQL-style aggregation with DuckDB; features include recency, frequency, profit margin, tenure, and discount habits.
+            </li>
+            <li>
+              <b>Modeling:</b> RandomForestClassifier, tuned for high accuracy (97%) and ROC AUC (0.99), with Pandera validation and PyTest checks.
+            </li>
+            <li>
+              <b>Explainability:</b> SHAP waterfall plots for per-customer and global insight, easily understood by non-technical users.
+            </li>
+            <li>
+              <b>MLOps & Deployment:</b> MLflow logs all models/metrics/plots; Streamlit UI lets users predict and see SHAP explanations interactively. Deployed to Hugging Face Spaces.
+            </li>
+            <li>
+              <b>Skills:</b> Feature engineering, model tracking, explainable ML, modern Streamlit UI.
+            </li>
+            <li>
+              <a href="https://huggingface.co/spaces/kmsmohamedansar/high-value-customer-predictor" target="_blank" class="text-blue-400 underline">Live Demo</a> | 
+              <a href="https://github.com/kmsmohamedansar/high-value-customer-predictor" target="_blank" class="text-blue-400 underline">GitHub</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Grocery AI Assistant -->
+      <div class="tilt bg-gray-800 p-6 rounded-2xl shadow-lg relative" data-aos="fade-up" data-aos-delay="200">
+        <h3 class="text-xl font-bold mb-2 text-white">🛒 Grocery AI Assistant</h3>
+        <p class="text-gray-400 mb-2">Local RAG with FAISS & Flan‑T5, offline Gradio Q&A.</p>
+        <p class="text-xs text-gray-500 mb-2"><strong>Tech:</strong> FAISS, LangChain, Transformers</p>
+        <button onclick="toggleDetails(this)" class="text-sm text-blue-400 underline focus:outline-none">Show More</button>
+        <div class="hidden text-gray-300 mt-2 space-y-3 text-sm leading-relaxed">
+          <p>
+            <strong>Semantic Search & Q&A (Local RAG):</strong><br>
+            A privacy-friendly, fully local question-answering assistant over Instacart data, combining FAISS vector search, semantic embeddings, and local LLM generation.
+          </p>
+          <ul class="list-disc ml-5 space-y-2">
+            <li>
+              <b>Data & Pipeline:</b> Merges Instacart product, aisle, department data; product descriptions embedded using MiniLM and stored in FAISS index.
+            </li>
+            <li>
+              <b>Retrieval & Generation:</b> LangChain retrieves context, Flan-T5 (running locally) generates answers—no API keys, works entirely offline.
+            </li>
+            <li>
+              <b>Deployment:</b> Gradio UI for user queries, full semantic RAG workflow on user’s device.
+            </li>
+            <li>
+              <b>Skills:</b> RAG, embeddings, vector databases, open-source LLMs, Gradio deployment.
+            </li>
+            <li>
+              <a href="https://github.com/kmsmohamedansar/grocery-ai-assistant" target="_blank" class="text-blue-400 underline">GitHub</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Sentiment Analysis on Amazon Reviews -->
+      <div class="tilt bg-gray-800 p-6 rounded-2xl shadow-lg relative" data-aos="fade-up" data-aos-delay="300">
+        <h3 class="text-xl font-bold mb-2 text-white">📝 Sentiment Analysis on Amazon Reviews</h3>
+        <p class="text-gray-400 mb-2">TF‑IDF & Logistic Regression baseline + fine-tuned DistilBERT, Gradio UI.</p>
+        <p class="text-xs text-gray-500 mb-2"><strong>Tech:</strong> TF‑IDF, DistilBERT, Gradio</p>
+        <button onclick="toggleDetails(this)" class="text-sm text-blue-400 underline focus:outline-none">Show More</button>
+        <div class="hidden text-gray-300 mt-2 space-y-3 text-sm leading-relaxed">
+          <p>
+            <strong>Classical vs Transformer NLP, Fully Deployed:</strong><br>
+            An end-to-end binary sentiment classifier on Amazon Fine Food Reviews, showing practical differences between traditional ML and transformer models.
+          </p>
+          <ul class="list-disc ml-5 space-y-2">
+            <li>
+              <b>Data:</b> 500k+ real Amazon reviews, cleaned and balanced (binary labels: positive/negative).
+            </li>
+            <li>
+              <b>Baseline Model:</b> TF-IDF vectorization (unigrams, bigrams) + Logistic Regression, full EDA and metric visualization.
+            </li>
+            <li>
+              <b>Transformer Model:</b> Fine-tuned DistilBERT (Hugging Face) on tokenized reviews (max_len=128, 3 epochs), robust performance (F1 = 0.91, ROC AUC near 1).
+            </li>
+            <li>
+              <b>Deployment:</b> Gradio app for instant sentiment prediction from user text input, with model confidence displayed.
+            </li>
+            <li>
+              <b>Skills:</b> Data cleaning, class imbalance handling, TF-IDF, logistic regression, Hugging Face transformers, fine-tuning, evaluation metrics, Gradio UI.
+            </li>
+            <li>
+              <a href="https://github.com/kmsmohamedansar/sentiment-amazon-reviews" target="_blank" class="text-blue-400 underline">GitHub</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+
     </div>
   </section>
 
@@ -196,96 +565,166 @@
   <section id="experience" class="max-w-5xl mx-auto px-4 py-16 animate__animated animate__fadeInUp">
     <h2 class="text-3xl font-semibold mb-6 text-white">💼 Experience</h2>
     <div class="space-y-8">
-      <div data-aos="fade-up">
-        <h3 class="font-bold text-xl text-white">
-          Business Analyst, Customer Success @ Amazon Prime Video
-        </h3>
-        <p class="text-sm text-gray-400 mb-2">2019 – 2022</p>
-        <ul class="list-disc ml-6 text-gray-300">
-          <li>Created Power BI dashboards & VBA automations for weekly reviews.</li>
-          <li>Authored BRDs, performed SWOT & FMEA analyses.</li>
-          <li>Resolved escalations via ServiceNow.</li>
-        </ul>
-      </div>
-      <div data-aos="fade-up" data-aos-delay="100">
-        <h3 class="font-bold text-xl text-white">Business Analyst, Intern @ Spongelii</h3>
-        <p class="text-sm text-gray-400 mb-2">Jan 2024 – Apr 2024</p>
-        <ul class="list-disc ml-6 text-gray-300">
-          <li>Analyzed engagement data in Python; built CSS‑animated landing page.</li>
-          <li>Proposed blockchain wallet solution; mapped processes in Lucidchart.</li>
-        </ul>
-      </div>
-      <div data-aos="fade-up" data-aos-delay="200">
-        <h3 class="font-bold text-xl text-white">Tech Support Specialist @ Datasembly</h3>
-        <p class="text-sm text-gray-400 mb-2">2024 – Present</p>
-        <ul class="list-disc ml-6 text-gray-300">
-          <li>Onboarded clients, wrote custom SQL exports, built Tableau dashboards.</li>
-          <li>Investigated pricing discrepancies; delivered deep-dive analyses.</li>
+      <div data-aos="fade-upYour current canvas file (the “Projects” section) is **almost complete** and has the interactive toggle working!  
+**But** you asked for much **more detailed project descriptions** for all 4 projects, like those in your last requests.
+
+Below is the **full HTML for just the Projects section**, keeping your toggle logic but **replacing each card’s “Show More” content with full, detailed project writeups**.  
+_(You can copy-paste this directly into your canvas.)_
+
+---
+
+```html
+<!-- Projects Section -->
+<section id="projects" class="max-w-6xl mx-auto px-4 py-16 animate__animated animate__fadeInUp animate__delay-100">
+  <h2 class="text-3xl font-semibold mb-8 text-center">🚀 Projects</h2>
+  <div class="grid gap-8 md:grid-cols-2">
+
+    <!-- TaskMaster Project Card -->
+    <div class="tilt bg-gray-800 p-6 rounded-2xl shadow-lg relative" data-aos="fade-up">
+      <h3 class="text-xl font-bold mb-2 text-white">🔁 TaskMaster: Automated Pipeline & Random Forest</h3>
+      <p class="text-gray-400 mb-2">Retry-enabled pipeline, Random Forest on synthetic data, Gradio deployment.</p>
+      <p class="text-xs text-gray-500 mb-2"><strong>Tech:</strong> Python, scikit‑learn, Gradio</p>
+      <button onclick="toggleDetails(this)" class="text-sm text-blue-400 underline focus:outline-none">Show More</button>
+      <div class="hidden text-gray-300 mt-2 space-y-3 text-sm leading-relaxed">
+        <p>
+          <b>End-to-End ML Pipeline Orchestration & Deployment:</b><br>
+          Demonstrates a production-inspired ML pipeline with retries, structured logging, monitoring, and live inference. Mirrors real MLOps best practices.
+        </p>
+        <ul class="list-disc ml-5 space-y-2">
+          <li>
+            <b>Pipeline Orchestration:</b> Multi-stage with <code>concurrent.futures</code> for parallel jobs and robust retry (up to 3 times). Every step logs failures and auto-emails on persistent errors.
+          </li>
+          <li>
+            <b>Modeling & Training:</b> RandomForestClassifier (100 estimators) on synthetic data with <code>StandardScaler</code> normalization and reproducible pickle serialization.
+          </li>
+          <li>
+            <b>Deployment:</b> Interactive Gradio web UI (5 feature sliders, instant prediction). Live on Hugging Face Spaces with pinned requirements for deterministic builds.
+          </li>
+          <li>
+            <b>Testing & Monitoring:</b> Unit tests (PyTest), pipeline metrics, error logs—extensible to MLflow/Sentry.
+          </li>
+          <li>
+            <b>Business Analogy:</b> Coffee Shop: Grinder (extraction w/ retry), Brewer (transformation w/ error-handling), Taste Tester (model), Customer Touchscreen (UI).
+          </li>
+          <li>
+            <b>Skills:</b> Python, scikit-learn, Gradio, Hugging Face Spaces, logging, retry logic, deployment best practices.
+          </li>
+          <li>
+            <a href="https://huggingface.co/spaces/kmsmohamedansar/TaskMaster-Job-Scheduler" target="_blank" class="text-blue-400 underline">Live Demo</a> | 
+            <a href="https://github.com/kmsmohamedansar/TaskMaster-Job-Scheduler" target="_blank" class="text-blue-400 underline">GitHub</a>
+          </li>
         </ul>
       </div>
     </div>
-  </section>
 
-  <!-- Education Section -->
-  <section id="education" class="bg-gray-800 py-16 animate__animated animate__fadeInUp">
-    <div class="max-w-5xl mx-auto px-4 text-white">
-      <h2 class="text-3xl font-semibold mb-4">🎓 Education</h2>
-      <h3 class="font-bold text-xl">Postgraduate Diploma in Business Analytics @ XYZ Institute</h3>
-      <p class="text-sm text-gray-400 mb-2">2022 – 2024</p>
-      <p>
-        Two‑year co‑op program covering SQL, Salesforce, Power BI, project management, and process improvement.
-      </p>
+    <!-- High-Value Customer Predictor Project Card -->
+    <div class="tilt bg-gray-800 p-6 rounded-2xl shadow-lg relative" data-aos="fade-up" data-aos-delay="100">
+      <h3 class="text-xl font-bold mb-2 text-white">💎 High-Value Customer Predictor</h3>
+      <p class="text-gray-400 mb-2">RFM classification, SHAP explainability, MLflow tracking, Streamlit UI.</p>
+      <p class="text-xs text-gray-500 mb-2"><strong>Tech:</strong> DuckDB, SHAP, MLflow, Streamlit</p>
+      <button onclick="toggleDetails(this)" class="text-sm text-blue-400 underline focus:outline-none">Show More</button>
+      <div class="hidden text-gray-300 mt-2 space-y-3 text-sm leading-relaxed">
+        <p>
+          <b>Business Value Identification with Explainable AI:</b><br>
+          End-to-end ML pipeline for detecting high-value customers using RFM and behavior metrics, transparent explainability with SHAP, and full MLOps tracking.
+        </p>
+        <ul class="list-disc ml-5 space-y-2">
+          <li>
+            <b>Data Engineering:</b> SQL-style aggregation with DuckDB; features include recency, frequency, profit margin, tenure, and discount habits.
+          </li>
+          <li>
+            <b>Modeling:</b> RandomForestClassifier, tuned for high accuracy (97%) and ROC AUC (0.99), with Pandera validation and PyTest checks.
+          </li>
+          <li>
+            <b>Explainability:</b> SHAP waterfall plots for per-customer and global insight, easily understood by non-technical users.
+          </li>
+          <li>
+            <b>MLOps & Deployment:</b> MLflow logs all models/metrics/plots; Streamlit UI lets users predict and see SHAP explanations interactively. Deployed to Hugging Face Spaces.
+          </li>
+          <li>
+            <b>Skills:</b> Feature engineering, model tracking, explainable ML, modern Streamlit UI.
+          </li>
+          <li>
+            <a href="https://huggingface.co/spaces/kmsmohamedansar/high-value-customer-predictor" target="_blank" class="text-blue-400 underline">Live Demo</a> | 
+            <a href="https://github.com/kmsmohamedansar/high-value-customer-predictor" target="_blank" class="text-blue-400 underline">GitHub</a>
+          </li>
+        </ul>
+      </div>
     </div>
-  </section>
 
-  <!-- Contact Section -->
-  <section id="contact" class="max-w-5xl mx-auto px-4 py-16 animate__animated animate__fadeInUp">
-    <h2 class="text-3xl font-semibold mb-4 text-white">📧 Contact</h2>
-    <p>Email: <a href="mailto:mohamedansarkms@gmail.com" class="underline">mohamedansarkms@gmail.com</a></p>
-    <p>LinkedIn: <a href="https://linkedin.com/in/mohamedansar" class="underline" target="_blank">linkedin.com/in/mohamedansar</a></p>
-  </section>
+    <!-- Grocery AI Assistant -->
+    <div class="tilt bg-gray-800 p-6 rounded-2xl shadow-lg relative" data-aos="fade-up" data-aos-delay="200">
+      <h3 class="text-xl font-bold mb-2 text-white">🛒 Grocery AI Assistant</h3>
+      <p class="text-gray-400 mb-2">Local RAG with FAISS & Flan‑T5, offline Gradio Q&A.</p>
+      <p class="text-xs text-gray-500 mb-2"><strong>Tech:</strong> FAISS, LangChain, Transformers</p>
+      <button onclick="toggleDetails(this)" class="text-sm text-blue-400 underline focus:outline-none">Show More</button>
+      <div class="hidden text-gray-300 mt-2 space-y-3 text-sm leading-relaxed">
+        <p>
+          <b>Semantic Search & Q&A (Local RAG):</b><br>
+          Privacy-friendly, fully local question-answering assistant over Instacart data, combining FAISS vector search, semantic embeddings, and local LLM generation.
+        </p>
+        <ul class="list-disc ml-5 space-y-2">
+          <li>
+            <b>Data & Pipeline:</b> Merges Instacart product, aisle, department data; product descriptions embedded using MiniLM and stored in FAISS index.
+          </li>
+          <li>
+            <b>Retrieval & Generation:</b> LangChain retrieves context, Flan-T5 (running locally) generates answers—no API keys, works entirely offline.
+          </li>
+          <li>
+            <b>Deployment:</b> Gradio UI for user queries, full semantic RAG workflow on user’s device.
+          </li>
+          <li>
+            <b>Skills:</b> RAG, embeddings, vector databases, open-source LLMs, Gradio deployment.
+          </li>
+          <li>
+            <a href="https://github.com/kmsmohamedansar/grocery-ai-assistant" target="_blank" class="text-blue-400 underline">GitHub</a>
+          </li>
+        </ul>
+      </div>
+    </div>
 
-  <!-- Scripts Initialization -->
-  <script>
-    VANTA.NET({
-      el: '#vanta-bg',
-      color: 0xffffff,
-      backgroundColor: 0x111827,
-      points: 25,
-      maxDistance: 30,
-      spacing: 20
-    });
-    particlesJS('particles-js', {
-      particles: {
-        number: { value: 80 },
-        size: { value: 3 },
-        move: { speed: 1.5 },
-        line_linked: { enable: true },
-        color: { value: '#ffffff' }
-      },
-      interactivity: { events: { onhover: { enable: true, mode: 'repulse' } } }
-    });
-    AOS.init({ once: true, duration: 800 });
-    VanillaTilt.init(document.querySelectorAll('.tilt'), {
-      max: 15,
-      speed: 400,
-      glare: true,
-      'max-glare': 0.3
-    });
-    const keywords = ['Neural Networks','Transfer Learning','Data Pipelines','MLOps','Explainable AI','RAG','SHAP'];
-    let idx = 0;
-    setInterval(() => {
-      document.getElementById('mlWords').innerText = keywords[idx];
-      idx = (idx + 1) % keywords.length;
-    }, 2500);
+    <!-- Sentiment Analysis -->
+    <div class="tilt bg-gray-800 p-6 rounded-2xl shadow-lg relative" data-aos="fade-up" data-aos-delay="300">
+      <h3 class="text-xl font-bold mb-2 text-white">📝 Sentiment Analysis on Amazon Reviews</h3>
+      <p class="text-gray-400 mb-2">TF‑IDF & Logistic Regression baseline + fine-tuned DistilBERT, Gradio UI.</p>
+      <p class="text-xs text-gray-500 mb-2"><strong>Tech:</strong> TF‑IDF, DistilBERT, Gradio</p>
+      <button onclick="toggleDetails(this)" class="text-sm text-blue-400 underline focus:outline-none">Show More</button>
+      <div class="hidden text-gray-300 mt-2 space-y-3 text-sm leading-relaxed">
+        <p>
+          <b>Classical vs Transformer NLP, Fully Deployed:</b><br>
+          End-to-end binary sentiment classifier on Amazon Fine Food Reviews, showing practical differences between traditional ML and transformer models.
+        </p>
+        <ul class="list-disc ml-5 space-y-2">
+          <li>
+            <b>Data:</b> 500k+ real Amazon reviews, cleaned and balanced (binary labels: positive/negative).
+          </li>
+          <li>
+            <b>Baseline Model:</b> TF-IDF vectorization (unigrams, bigrams) + Logistic Regression, full EDA and metric visualization.
+          </li>
+          <li>
+            <b>Transformer Model:</b> Fine-tuned DistilBERT (Hugging Face) on tokenized reviews (max_len=128, 3 epochs), robust performance (F1 = 0.91, ROC AUC near 1).
+          </li>
+          <li>
+            <b>Deployment:</b> Gradio app for instant sentiment prediction from user text input, with model confidence displayed.
+          </li>
+          <li>
+            <b>Skills:</b> Data cleaning, class imbalance handling, TF-IDF, logistic regression, Hugging Face transformers, fine-tuning, evaluation metrics, Gradio UI.
+          </li>
+          <li>
+            <a href="https://github.com/kmsmohamedansar/sentiment-amazon-reviews" target="_blank" class="text-blue-400 underline">GitHub</a>
+          </li>
+        </ul>
+      </div>
+    </div>
 
-    // Show More / Less toggle for projects
-    function toggleDetails(button) {
-      const details = button.nextElementSibling;
-      const isHidden = details.classList.contains('hidden');
-      details.classList.toggle('hidden');
-      button.innerText = isHidden ? 'Show Less' : 'Show More';
-    }
-  </script>
-</body>
-</html>
+  </div>
+</section>
+
+<script>
+  function toggleDetails(button) {
+    const details = button.nextElementSibling;
+    const isHidden = details.classList.contains('hidden');
+    details.classList.toggle('hidden');
+    button.innerText = isHidden ? 'Show Less' : 'Show More';
+  }
+</script>
