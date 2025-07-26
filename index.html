@@ -1,56 +1,66 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Mohamed Ansar — ML Portfolio</title>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <style>
-    body { font-family: Arial, sans-serif; margin: 40px; background-color: #f8f9fa; }
-    h1 { color: #222; }
-    .project { margin-bottom: 30px; padding: 15px; background: #fff; border-radius: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
-    a { color: #0077cc; text-decoration: none; }
-    a:hover { text-decoration: underline; }
-  </style>
+  <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
+<body class="bg-gray-50 text-gray-900 font-sans">
 
-<h1>👋 Hi, I'm Mohamed Ansar</h1>
-<p><strong>ML Engineer | Python | Streamlit | Hugging Face</strong></p>
-<p>This is my personal portfolio — showcasing live ML projects and deployed apps.</p>
+  <header class="text-center py-12">
+    <h1 class="text-4xl font-bold">👋 I'm Mohamed Ansar</h1>
+    <p class="mt-2 text-lg text-gray-600">ML Engineer | Python | Streamlit | Hugging Face</p>
+    <p class="mt-2 text-sm text-gray-500">Building real-world AI solutions — check out my live projects below!</p>
+  </header>
 
-<h2>🧠 Projects</h2>
+  <main class="max-w-4xl mx-auto px-4">
 
-<div class="project">
-  <h3>🔁 TaskMaster: ML Job Scheduler</h3>
-  <p>End-to-end pipeline simulating job retries and failure prediction. Random Forest + Gradio.</p>
-  <p>
-    🔗 <a href="https://huggingface.co/spaces/kmsmohamedansar/TaskMaster-Job-Scheduler" target="_blank">Live Demo</a> |
-    <a href="https://github.com/kmsmohamedansar/TaskMaster-Job-Scheduler">GitHub</a>
-  </p>
-</div>
+    <h2 class="text-2xl font-semibold mb-6">🚀 Projects</h2>
 
-<div class="project">
-  <h3>💎 High-Value Customer Predictor</h3>
-  <p>Predicts VIP customers using RFM and profit metrics. Streamlit + SHAP explainability.</p>
-  <p>
-    🔗 <a href="https://huggingface.co/spaces/kmsmohamedansar/High-Value-Customer-Predictor" target="_blank">Live Demo</a> |
-    <a href="https://github.com/kmsmohamedansar/high-value-customer-predictor">GitHub</a>
-  </p>
-</div>
+    <!-- TaskMaster -->
+    <div class="bg-white rounded-2xl shadow-md p-6 mb-6 hover:shadow-xl transition">
+      <h3 class="text-xl font-bold mb-2">🔁 TaskMaster: ML Job Scheduler</h3>
+      <p class="text-gray-700 mb-2">
+        Simulates a production ML pipeline with retry logic and failure prediction using Random Forest.
+        Deployed with Gradio on Hugging Face Spaces.
+      </p>
+      <div class="flex gap-4 text-sm">
+        <a href="https://huggingface.co/spaces/kmsmohamedansar/TaskMaster-Job-Scheduler" target="_blank" class="text-blue-600 hover:underline">🔗 Live Demo</a>
+        <a href="https://github.com/kmsmohamedansar/TaskMaster-Job-Scheduler" target="_blank" class="text-blue-600 hover:underline">📂 GitHub</a>
+      </div>
+    </div>
 
-<div class="project">
-  <h3>🧠 Reddit Topic & Sentiment Analyzer</h3>
-  <p>Classifies Reddit comments by topic and tone. Uses zero-shot classification + Transformers.</p>
-  <p>
-    🔗 <a href="https://huggingface.co/spaces/kmsmohamedansar/Reddit-Topic-Sentiment-Analyzer" target="_blank">Live Demo</a> |
-    <a href="https://github.com/kmsmohamedansar/reddit-topic-sentiment-analyzer">GitHub</a>
-  </p>
-</div>
+    <!-- High Value Customer Predictor -->
+    <div class="bg-white rounded-2xl shadow-md p-6 mb-6 hover:shadow-xl transition">
+      <h3 class="text-xl font-bold mb-2">💎 High-Value Customer Predictor</h3>
+      <p class="text-gray-700 mb-2">
+        Predicts VIP customers using RFM segmentation and SHAP explainability. Built with Streamlit and deployed on Hugging Face.
+      </p>
+      <div class="flex gap-4 text-sm">
+        <a href="https://huggingface.co/spaces/kmsmohamedansar/High-Value-Customer-Predictor" target="_blank" class="text-blue-600 hover:underline">🔗 Live Demo</a>
+        <a href="https://github.com/kmsmohamedansar/high-value-customer-predictor" target="_blank" class="text-blue-600 hover:underline">📂 GitHub</a>
+      </div>
+    </div>
 
-<footer>
-  <p>📫 <a href="mailto:mohamedansarkms@gmail.com">mohamedansarkms@gmail.com</a> |
-     <a href="https://www.linkedin.com/in/kmsmohamedansar">LinkedIn</a></p>
-</footer>
+    <!-- Reddit Sentiment Analyzer -->
+    <div class="bg-white rounded-2xl shadow-md p-6 mb-6 hover:shadow-xl transition">
+      <h3 class="text-xl font-bold mb-2">🧠 Reddit Topic & Sentiment Analyzer</h3>
+      <p class="text-gray-700 mb-2">
+        Uses zero-shot classification to analyze Reddit comment sentiment and categorize topics with a transformer model.
+      </p>
+      <div class="flex gap-4 text-sm">
+        <a href="https://huggingface.co/spaces/kmsmohamedansar/Reddit-Topic-Sentiment-Analyzer" target="_blank" class="text-blue-600 hover:underline">🔗 Live Demo</a>
+        <a href="https://github.com/kmsmohamedansar/reddit-topic-sentiment-analyzer" target="_blank" class="text-blue-600 hover:underline">📂 GitHub</a>
+      </div>
+    </div>
+
+  </main>
+
+  <footer class="text-center text-sm text-gray-500 py-8">
+    📫 <a href="mailto:mohamedansarkms@gmail.com" class="underline">mohamedansarkms@gmail.com</a> • 
+    <a href="https://www.linkedin.com/in/kmsmohamedansar" class="underline" target="_blank">LinkedIn</a>
+  </footer>
 
 </body>
 </html>
