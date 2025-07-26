@@ -21,15 +21,7 @@
   <script src="https://cdn.jsdelivr.net/npm/vanilla-tilt@1.7.3/dist/vanilla-tilt.min.js"></script>
 
   <style>
-    /* F1 Car animation */
-    @keyframes drive { 0% { transform: translateX(-30%); } 100% { transform: translateX(130%); } }
-    .f1-car {
-      position: absolute; bottom: 5%; left: -20%;
-      width: 200px; opacity: 0.9;
-      animation: drive 12s linear infinite;
-      z-index: 20;
-    }
-    /* Racetrack */
+    /* Racetrack Background Animation */
     @keyframes road { 0% { background-position-y: 0; } 100% { background-position-y: 40px; } }
     .racetrack {
       position: absolute; bottom: 0; left: 0;
@@ -42,7 +34,7 @@
       animation: road 5s linear infinite;
       opacity: 0.6; z-index: 10;
     }
-    /* ML ticker */
+    /* ML Keywords Ticker */
     .ml-keywords {
       position: fixed; bottom: 20px; right: 20px;
       font-size: 0.9rem; color: #00ffc3;
@@ -73,20 +65,17 @@
     </div>
   </nav>
 
-  <!-- Hero -->
+  <!-- Hero Section -->
   <header id="hero" class="relative h-screen flex items-center justify-center">
     <div id="vanta-bg" class="absolute inset-0 -z-30"></div>
     <div class="racetrack"></div>
-    <!-- Correct F1 car URL -->
-    <img src="https://upload.wikimedia.org/wikipedia/commons/3/3f/Formula_One_car_silhouette.svg"
-         alt="F1 Car" class="f1-car" />
     <div class="relative z-50 text-center px-4">
       <h1 class="text-5xl md:text-6xl font-extrabold mb-4 animate__animated animate__fadeInDown
                  text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-purple-500 to-pink-500">
         👋 Hi, I'm Mohamed Ansar
       </h1>
       <p class="text-xl md:text-2xl mb-6 animate__animated animate__fadeInUp text-gray-200">
-        Data-Driven Business Analyst | Tech Support Specialist @ Datasembly | Ex-Amazon | Ex-Spongelii
+        Data‑Driven Business Analyst | Tech Support Specialist @ Datasembly | Ex‑Amazon | Ex‑Spongelii
       </p>
       <p class="text-gray-300 mb-4">Based in Mississauga</p>
       <a href="#about"
@@ -97,10 +86,10 @@
     </div>
   </header>
 
-  <!-- ML ticker -->
+  <!-- ML Keywords Ticker -->
   <div class="ml-keywords"><span id="mlWords"></span></div>
 
-  <!-- About -->
+  <!-- About Section -->
   <section id="about" class="max-w-4xl mx-auto px-4 py-16 animate__animated animate__fadeInUp">
     <h2 class="text-3xl font-semibold mb-4">About Me</h2>
     <p class="text-gray-300 leading-relaxed mb-4">
@@ -113,46 +102,49 @@
     </p>
   </section>
 
-  <!-- Projects -->
+  <!-- Projects Section -->
   <section id="projects" class="max-w-6xl mx-auto px-4 py-16 animate__animated animate__fadeInUp animate__delay-100">
     <h2 class="text-3xl font-semibold mb-8 text-center">🚀 Projects</h2>
     <div class="grid gap-8 md:grid-cols-2">
       <!-- TaskMaster -->
       <div class="tilt bg-gray-800 p-6 rounded-2xl shadow-lg" data-aos="fade-up">
         <h3 class="text-xl font-bold mb-2 text-white">
-          🔁 TaskMaster: Automated Task Orchestration & Random Forest
+          🔁 TaskMaster: Automated Pipeline & Random Forest
         </h3>
         <p class="text-gray-400 mb-2">
           Retry-enabled pipeline, Random Forest on synthetic data, Gradio deployment.
         </p>
-        <p class="text-xs text-gray-500 mb-2"><strong>Tech:</strong> Python, scikit-learn, Gradio</p>
+        <p class="text-xs text-gray-500 mb-2"><strong>Tech:</strong> Python, scikit‑learn, Gradio</p>
       </div>
+      <!-- High-Value Customer Predictor -->
       <div class="tilt bg-gray-800 p-6 rounded-2xl shadow-lg" data-aos="fade-up" data-aos-delay="100">
         <h3 class="text-xl font-bold mb-2 text-white">💎 High-Value Customer Predictor</h3>
         <p class="text-gray-400 mb-2">
-          Classifies buyers via RFM, SHAP explainability, MLflow tracking, Streamlit UI.
+          RFM classification, SHAP explainability, MLflow tracking, Streamlit UI.
         </p>
         <p class="text-xs text-gray-500 mb-2"><strong>Tech:</strong> DuckDB, SHAP, MLflow, Streamlit</p>
       </div>
+      <!-- Grocery AI Assistant -->
       <div class="tilt bg-gray-800 p-6 rounded-2xl shadow-lg" data-aos="fade-up" data-aos-delay="200">
         <h3 class="text-xl font-bold mb-2 text-white">🛒 Grocery AI Assistant</h3>
         <p class="text-gray-400 mb-2">
-          Local RAG with FAISS & Flan-T5, offline Gradio Q&A.
+          Local RAG with FAISS & Flan‑T5, offline Gradio Q&A.
         </p>
         <p class="text-xs text-gray-500 mb-2"><strong>Tech:</strong> FAISS, LangChain, Transformers</p>
       </div>
+      <!-- Sentiment Analysis -->
       <div class="tilt bg-gray-800 p-6 rounded-2xl shadow-lg" data-aos="fade-up" data-aos-delay="300">
         <h3 class="text-xl font-bold mb-2 text-white">📝 Sentiment Analysis on Amazon Reviews</h3>
         <p class="text-gray-400 mb-2">
-          TF-IDF & Logistic Regression baseline + fine-tuned DistilBERT, Gradio UI.
+          TF‑IDF & Logistic Regression baseline + fine-tuned DistilBERT, Gradio UI.
         </p>
-        <p class="text-xs text-gray-500 mb-2"><strong>Tech:</strong> TF-IDF, DistilBERT, Gradio</p>
+        <p class="text-xs text-gray-500 mb-2"><strong>Tech:</strong> TF‑IDF, DistilBERT, Gradio</p>
       </div>
       <!-- …other project cards… -->
     </div>
   </section>
 
-  <!-- Skills -->
+  <!-- Skills Section -->
   <section id="skills" class="bg-gray-800 py-16 animate__animated animate__fadeInUp animate__delay-200">
     <div class="max-w-5xl mx-auto px-4">
       <h2 class="text-3xl font-semibold mb-6 text-center text-white">🛠️ Skills</h2>
@@ -177,7 +169,7 @@
     </div>
   </section>
 
-  <!-- Experience -->
+  <!-- Experience Section -->
   <section id="experience" class="max-w-5xl mx-auto px-4 py-16 animate__animated animate__fadeInUp">
     <h2 class="text-3xl font-semibold mb-6 text-white">💼 Experience</h2>
     <div class="space-y-8">
@@ -187,7 +179,7 @@
         </h3>
         <p class="text-sm text-gray-400 mb-2">2019 – 2022</p>
         <ul class="list-disc ml-6 text-gray-300">
-          <li>Built Power BI dashboards & VBA automations for weekly reviews.</li>
+          <li>Created Power BI dashboards & VBA automations for weekly reviews.</li>
           <li>Authored BRDs, performed SWOT & FMEA analyses.</li>
           <li>Resolved escalations via ServiceNow.</li>
         </ul>
@@ -197,7 +189,7 @@
         <p class="text-sm text-gray-400 mb-2">Jan 2024 – Apr 2024</p>
         <ul class="list-disc ml-6 text-gray-300">
           <li>Analyzed engagement data in Python; built CSS‑animated landing page.</li>
-          <li>Proposed blockchain wallet solution; mapped process flows in Lucidchart.</li>
+          <li>Proposed blockchain wallet solution; mapped processes in Lucidchart.</li>
         </ul>
       </div>
       <div data-aos="fade-up" data-aos-delay="200">
@@ -205,13 +197,13 @@
         <p class="text-sm text-gray-400 mb-2">2024 – Present</p>
         <ul class="list-disc ml-6 text-gray-300">
           <li>Onboarded clients, wrote custom SQL exports, built Tableau dashboards.</li>
-          <li>Investigated pricing discrepancies and delivered deep-dive analyses.</li>
+          <li>Investigated pricing discrepancies; delivered deep-dive analyses.</li>
         </ul>
       </div>
     </div>
   </section>
 
-  <!-- Education -->
+  <!-- Education Section -->
   <section id="education" class="bg-gray-800 py-16 animate__animated animate__fadeInUp">
     <div class="max-w-5xl mx-auto px-4 text-white">
       <h2 class="text-3xl font-semibold mb-4">🎓 Education</h2>
@@ -223,14 +215,14 @@
     </div>
   </section>
 
-  <!-- Contact -->
+  <!-- Contact Section -->
   <section id="contact" class="max-w-5xl mx-auto px-4 py-16 animate__animated animate__fadeInUp">
     <h2 class="text-3xl font-semibold mb-4 text-white">📧 Contact</h2>
     <p>Email: <a href="mailto:mohamedansarkms@gmail.com" class="underline">mohamedansarkms@gmail.com</a></p>
     <p>LinkedIn: <a href="https://linkedin.com/in/mohamedansar" class="underline" target="_blank">linkedin.com/in/mohamedansar</a></p>
   </section>
 
-  <!-- Scripts -->
+  <!-- Scripts Initialization -->
   <script>
     VANTA.NET({
       el: '#vanta-bg',
