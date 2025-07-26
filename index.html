@@ -4,17 +4,29 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Mohamed Ansar — ML Portfolio</title>
+  <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
-  <script>
-    tailwind.config = { darkMode: 'class' }
-  </script>
+  <script>tailwind.config = { darkMode: 'class' }</script>
+  <!-- Animate.css -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
+  <!-- Three.js & Vanta.js for neural network effect -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r121/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vanta@0.5.21/dist/vanta.net.min.js"></script>
   <style>
-    @keyframes bounceCTA {
-      0%, 100% { transform: translateY(0); }
-      50% { transform: translateY(-8px); }
+    /* F1 car driving animation */
+    @keyframes drive {
+      0% { transform: translateX(-20%); }
+      100% { transform: translateX(120%); }
     }
-    .bounce-cta { animation: bounceCTA 2s infinite; }
+    .f1-car {
+      position: absolute;
+      bottom: 10%;
+      width: 180px;
+      opacity: 0.8;
+      animation: drive 15s linear infinite;
+      filter: drop-shadow(0 4px 6px rgba(0,0,0,0.3));
+      z-index: 10;
+    }
   </style>
 </head>
 <body class="bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-gray-100 font-sans">
@@ -35,11 +47,29 @@
     </div>
   </nav>
 
-  <!-- HERO -->
-  <header id="hero" class="pt-28 text-center py-20 bg-gradient-to-r from-blue-600 to-indigo-700">
-    <h1 class="text-5xl font-extrabold text-white mb-4 animate__animated animate__fadeInDown">👋 Hi, I'm Mohamed Ansar</h1>
-    <p class="text-xl text-gray-200 mb-6 animate__animated animate__fadeInUp animate__delay-1s">ML Engineer & Data Analyst | Ex-Amazon | Data-Driven Innovator</p>
-    <a href="#projects" class="inline-block bg-white text-blue-600 px-6 py-3 rounded-full shadow-lg hover:bg-gray-100 transition bounce-cta animate__animated animate__delay-2s">Explore Projects</a>
+  <!-- HERO with Vanta.js background and F1 car -->
+  <header id="hero" class="relative h-screen overflow-hidden">
+    <!-- Neural network lines -->
+    <div id="vanta-bg" class="absolute inset-0 -z-10"></div>
+    <!-- F1 car silhouette -->
+    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/3f/Formula_One_car_silhouette.svg/800px-Formula_One_car_silhouette.svg.png" alt="F1 Car" class="f1-car" />
+    <!-- Hero Content -->
+    <div class="relative z-10 flex flex-col items-center justify-center h-full text-center px-4">
+      <h1 class="text-5xl md:text-6xl font-extrabold text-white mb-4 animate__animated animate__fadeInDown">👋 Hi, I'm Mohamed Ansar</h1>
+      <p class="text-xl md:text-2xl text-gray-200 mb-6 animate__animated animate__fadeInUp animate__delay-1s">ML Engineer & Data Analyst | Ex-Amazon | Data-Driven Innovator</p>
+      <a href="#projects" class="inline-block bg-white text-blue-600 px-8 py-3 rounded-full shadow-lg hover:bg-gray-100 transition animate__animated animate__delay-2s animate__pulse animate__infinite">Explore Projects</a>
+    </div>
+    <!-- Initialize Vanta.Net -->
+    <script>
+      VANTA.NET({
+        el: "#vanta-bg",
+        color: 0xffffff,
+        backgroundColor: 0x111827,
+        points: 20.00,
+        maxDistance: 25.00,
+        spacing: 18.00
+      });
+    </script>
   </header>
 
   <!-- ABOUT -->
@@ -134,55 +164,4 @@
   </section>
 
   <!-- EXPERIENCE -->
-  <section id="experience" class="max-w-5xl mx-auto px-4 py-16 animate__animated animate__fadeInUp">
-    <h2 class="text-3xl font-semibold mb-6 text-center">📈 Experience</h2>
-    <div class="space-y-6">
-      <div>
-        <h3 class="text-xl font-bold">Tech Support Specialist — Datasembly <span class="text-sm text-gray-400">(2024–Present)</span></h3>
-        <ul class="list-disc ml-5 text-gray-700 dark:text-gray-300">
-          <li>Generated SQL extracts, built Tableau dashboards, and managed incident triage for CPG clients.</li>
-          <li>Collaborated with Sales, Engineering, and Customer Success to optimize data workflows.</li>
-        </ul>
-      </div>
-      <div>
-        <h3 class="text-xl font-bold">Business Analyst — Amazon Prime Video <span class="text-sm text-gray-400">(2019–2022)</span></h3>
-        <ul class="list-disc ml-5 text-gray-700 dark:text-gray-300">
-          <li>Automated 50+ recurring reports with SQL, Python, and VBA, reducing manual effort by 40%.</li>
-          <li>Led RCA and quality improvement initiatives for global content publishing.</li>
-        </ul>
-      </div>
-      <div>
-        <h3 class="text-xl font-bold">Business Analyst Intern — Spongelii <span class="text-sm text-gray-400">(2024)</span></h3>
-        <ul class="list-disc ml-5 text-gray-700 dark:text-gray-300">
-          <li>Designed animated CSS landing page and proposed blockchain-based wallet enhancements.</li>
-        </ul>
-      </div>
-    </div>
-  </section>
-
-  <!-- EDUCATION -->
-  <section id="education" class="max-w-5xl mx-auto px-4 py-16 animate__animated animate__fadeInUp">
-    <h2 class="text-3xl font-semibold mb-6 text-center">🎓 Education</h2>
-    <div>
-      <h3 class="text-xl font-bold">PG Diploma in Business Analytics — 2022–2024</h3>
-      <p class="text-gray-700 dark:text-gray-300">Hands-on training with SQL, Salesforce, and Power BI; completed co-op in data analysis and reporting.</p>
-    </div>
-  </section>
-
-  <!-- CONTACT -->
-  <section id="contact" class="max-w-4xl mx-auto px-4 py-16 text-center animate__animated animate__fadeInUp">
-    <h2 class="text-3xl font-semibold mb-4">📬 Contact</h2>
-    <p>Email: <a href="mailto:mohamedansarkms@gmail.com" class="text-blue-600 underline">mohamedansarkms@gmail.com</a></p>
-    <p>LinkedIn: <a href="https://www.linkedin.com/in/kmsmohamedansar" target="_blank" class="text-blue-600 underline">linkedin.com/in/kmsmohamedansar</a></p>
-  </section>
-
-  <!-- DARK MODE TOGGLE SCRIPT -->
-  <script>
-    const btn = document.getElementById('theme-toggle');
-    btn.addEventListener('click', () => {
-      document.documentElement.classList.toggle('dark');
-      btn.textContent = document.documentElement.classList.contains('dark') ? '☀️' : '🌙';
-    });
-  </script>
-</body>
-</html>
+  <section id="experience" class="max-w-5xl mx-auto px-4 py-16 animate__animated animate__fadeInUp">\
