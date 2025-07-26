@@ -9,7 +9,7 @@
   <script>tailwind.config = { darkMode: 'class' }</script>
   <!-- Animate.css -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
-  <!-- Three.js & Vanta.js -->
+  <!-- Three.js & Vanta.js (Neural Net) -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r121/three.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/vanta@0.5.21/dist/vanta.net.min.js"></script>
   <!-- Particles.js -->
@@ -19,15 +19,22 @@
   <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
   <!-- Vanilla Tilt -->
   <script src="https://cdn.jsdelivr.net/npm/vanilla-tilt@1.7.3/dist/vanilla-tilt.min.js"></script>
+
   <style>
+    /* Racetrack Background Animation */
     @keyframes road { 0% { background-position-y: 0; } 100% { background-position-y: 40px; } }
     .racetrack {
       position: absolute; bottom: 0; left: 0;
       width: 100%; height: 25%;
-      background: repeating-linear-gradient(to bottom, #333 0, #333 20px, #111 20px, #111 40px);
+      background: repeating-linear-gradient(
+        to bottom,
+        #333 0, #333 20px,
+        #111 20px, #111 40px
+      );
       animation: road 5s linear infinite;
       opacity: 0.6; z-index: 10;
     }
+    /* ML Keywords Ticker */
     .ml-keywords {
       position: fixed; bottom: 20px; right: 20px;
       font-size: 0.9rem; color: #00ffc3;
@@ -63,7 +70,8 @@
     <div id="vanta-bg" class="absolute inset-0 -z-30"></div>
     <div class="racetrack"></div>
     <div class="relative z-50 text-center px-4">
-      <h1 class="text-5xl md:text-6xl font-extrabold mb-4 animate__animated animate__fadeInDown text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-purple-500 to-pink-500">
+      <h1 class="text-5xl md:text-6xl font-extrabold mb-4 animate__animated animate__fadeInDown
+                 text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-purple-500 to-pink-500">
         👋 Hi, I'm Mohamed Ansar
       </h1>
       <p class="text-xl md:text-2xl mb-6 animate__animated animate__fadeInUp text-gray-200">
@@ -71,7 +79,8 @@
       </p>
       <p class="text-gray-300 mb-4">Based in Mississauga</p>
       <a href="#about"
-         class="inline-block bg-white text-gray-900 px-8 py-3 rounded-full shadow-lg hover:scale-105 transform transition animate__animated animate__pulse animate__infinite">
+         class="inline-block bg-white text-gray-900 px-8 py-3 rounded-full shadow-lg hover:scale-105 transform transition
+                animate__animated animate__pulse animate__infinite">
         Learn More
       </a>
     </div>
@@ -97,9 +106,41 @@
   <section id="projects" class="max-w-6xl mx-auto px-4 py-16 animate__animated animate__fadeInUp animate__delay-100">
     <h2 class="text-3xl font-semibold mb-8 text-center">🚀 Projects</h2>
     <div class="grid gap-8 md:grid-cols-2">
-      <!-- Project Cards (unchanged) -->
-      <!-- TaskMaster, High-Value Customer Predictor, Grocery AI Assistant, Sentiment Analysis -->
-      <!-- ... [Your project cards as in your code above] ... -->
+      <!-- TaskMaster -->
+      <div class="tilt bg-gray-800 p-6 rounded-2xl shadow-lg" data-aos="fade-up">
+        <h3 class="text-xl font-bold mb-2 text-white">
+          🔁 TaskMaster: Automated Pipeline & Random Forest
+        </h3>
+        <p class="text-gray-400 mb-2">
+          Retry-enabled pipeline, Random Forest on synthetic data, Gradio deployment.
+        </p>
+        <p class="text-xs text-gray-500 mb-2"><strong>Tech:</strong> Python, scikit‑learn, Gradio</p>
+      </div>
+      <!-- High-Value Customer Predictor -->
+      <div class="tilt bg-gray-800 p-6 rounded-2xl shadow-lg" data-aos="fade-up" data-aos-delay="100">
+        <h3 class="text-xl font-bold mb-2 text-white">💎 High-Value Customer Predictor</h3>
+        <p class="text-gray-400 mb-2">
+          RFM classification, SHAP explainability, MLflow tracking, Streamlit UI.
+        </p>
+        <p class="text-xs text-gray-500 mb-2"><strong>Tech:</strong> DuckDB, SHAP, MLflow, Streamlit</p>
+      </div>
+      <!-- Grocery AI Assistant -->
+      <div class="tilt bg-gray-800 p-6 rounded-2xl shadow-lg" data-aos="fade-up" data-aos-delay="200">
+        <h3 class="text-xl font-bold mb-2 text-white">🛒 Grocery AI Assistant</h3>
+        <p class="text-gray-400 mb-2">
+          Local RAG with FAISS & Flan‑T5, offline Gradio Q&A.
+        </p>
+        <p class="text-xs text-gray-500 mb-2"><strong>Tech:</strong> FAISS, LangChain, Transformers</p>
+      </div>
+      <!-- Sentiment Analysis -->
+      <div class="tilt bg-gray-800 p-6 rounded-2xl shadow-lg" data-aos="fade-up" data-aos-delay="300">
+        <h3 class="text-xl font-bold mb-2 text-white">📝 Sentiment Analysis on Amazon Reviews</h3>
+        <p class="text-gray-400 mb-2">
+          TF‑IDF & Logistic Regression baseline + fine-tuned DistilBERT, Gradio UI.
+        </p>
+        <p class="text-xs text-gray-500 mb-2"><strong>Tech:</strong> TF‑IDF, DistilBERT, Gradio</p>
+      </div>
+      <!-- …other project cards… -->
     </div>
   </section>
 
@@ -132,7 +173,33 @@
   <section id="experience" class="max-w-5xl mx-auto px-4 py-16 animate__animated animate__fadeInUp">
     <h2 class="text-3xl font-semibold mb-6 text-white">💼 Experience</h2>
     <div class="space-y-8">
-      <!-- Experience Cards (unchanged) -->
+      <div data-aos="fade-up">
+        <h3 class="font-bold text-xl text-white">
+          Business Analyst, Customer Success @ Amazon Prime Video
+        </h3>
+        <p class="text-sm text-gray-400 mb-2">2019 – 2022</p>
+        <ul class="list-disc ml-6 text-gray-300">
+          <li>Created Power BI dashboards & VBA automations for weekly reviews.</li>
+          <li>Authored BRDs, performed SWOT & FMEA analyses.</li>
+          <li>Resolved escalations via ServiceNow.</li>
+        </ul>
+      </div>
+      <div data-aos="fade-up" data-aos-delay="100">
+        <h3 class="font-bold text-xl text-white">Business Analyst, Intern @ Spongelii</h3>
+        <p class="text-sm text-gray-400 mb-2">Jan 2024 – Apr 2024</p>
+        <ul class="list-disc ml-6 text-gray-300">
+          <li>Analyzed engagement data in Python; built CSS‑animated landing page.</li>
+          <li>Proposed blockchain wallet solution; mapped processes in Lucidchart.</li>
+        </ul>
+      </div>
+      <div data-aos="fade-up" data-aos-delay="200">
+        <h3 class="font-bold text-xl text-white">Tech Support Specialist @ Datasembly</h3>
+        <p class="text-sm text-gray-400 mb-2">2024 – Present</p>
+        <ul class="list-disc ml-6 text-gray-300">
+          <li>Onboarded clients, wrote custom SQL exports, built Tableau dashboards.</li>
+          <li>Investigated pricing discrepancies; delivered deep-dive analyses.</li>
+        </ul>
+      </div>
     </div>
   </section>
 
@@ -142,7 +209,9 @@
       <h2 class="text-3xl font-semibold mb-4">🎓 Education</h2>
       <h3 class="font-bold text-xl">Postgraduate Diploma in Business Analytics @ XYZ Institute</h3>
       <p class="text-sm text-gray-400 mb-2">2022 – 2024</p>
-      <p>Two‑year co‑op program covering SQL, Salesforce, Power BI, project management, and process improvement.</p>
+      <p>
+        Two‑year co‑op program covering SQL, Salesforce, Power BI, project management, and process improvement.
+      </p>
     </div>
   </section>
 
@@ -153,32 +222,39 @@
     <p>LinkedIn: <a href="https://linkedin.com/in/mohamedansar" class="underline" target="_blank">linkedin.com/in/mohamedansar</a></p>
   </section>
 
-  <!-- Scripts -->
+  <!-- Scripts Initialization -->
   <script>
-    // Toggle Show More
-    function toggleDetails(btn) {
-      const content = btn.nextElementSibling;
-      content.classList.toggle('hidden');
-      btn.textContent = content.classList.contains('hidden') ? 'Show More' : 'Show Less';
-    }
-
-    // ML Keywords ticker
-    const keywords = ['Python', 'scikit-learn', 'Transformers', 'DuckDB', 'Streamlit', 'MLflow', 'ETL Pipelines', 'Gradio', 'LangChain', 'SHAP', 'SQL', 'Hugging Face'];
-    let i = 0;
-    const ticker = document.getElementById('mlWords');
-    setInterval(() => { ticker.textContent = keywords[i]; i = (i + 1) % keywords.length; }, 1200);
-
-    // Vanta background
-    VANTA.NET({ el: '#vanta-bg', color: 0xffffff, backgroundColor: 0x111827, points: 25, maxDistance: 30, spacing: 20 });
-
-    // Particles background
+    VANTA.NET({
+      el: '#vanta-bg',
+      color: 0xffffff,
+      backgroundColor: 0x111827,
+      points: 25,
+      maxDistance: 30,
+      spacing: 20
+    });
     particlesJS('particles-js', {
-      particles: { number: { value: 80 }, size: { value: 3 }, move: { speed: 1.5 }, line_linked: { enable: true, color: '#ffffff' } },
+      particles: {
+        number: { value: 80 },
+        size: { value: 3 },
+        move: { speed: 1.5 },
+        line_linked: { enable: true },
+        color: { value: '#ffffff' }
+      },
       interactivity: { events: { onhover: { enable: true, mode: 'repulse' } } }
     });
-
     AOS.init({ once: true, duration: 800 });
-    VanillaTilt.init(document.querySelectorAll('.tilt'), { max: 15, speed: 400, glare: true, 'max-glare': 0.3 });
+    VanillaTilt.init(document.querySelectorAll('.tilt'), {
+      max: 15,
+      speed: 400,
+      glare: true,
+      'max-glare': 0.3
+    });
+    const keywords = ['Neural Networks','Transfer Learning','Data Pipelines','MLOps','Explainable AI','RAG','SHAP'];
+    let idx = 0;
+    setInterval(() => {
+      document.getElementById('mlWords').innerText = keywords[idx];
+      idx = (idx + 1) % keywords.length;
+    }, 2500);
   </script>
 </body>
 </html>
