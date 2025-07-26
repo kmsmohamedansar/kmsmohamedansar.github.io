@@ -3,20 +3,10 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Mohamed Ansar — ML & F1 Insights</title>
+  <title>Mohamed Ansar — ML Portfolio</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
-    tailwind.config = {
-      darkMode: 'class',
-      theme: {
-        extend: {
-          colors: {
-            f1red: '#e10600',
-            f1black: '#000000'
-          }
-        }
-      }
-    }
+    tailwind.config = { darkMode: 'class' }
   </script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
   <style>
@@ -25,27 +15,20 @@
       50% { transform: translateY(-8px); }
     }
     .bounce-cta { animation: bounceCTA 2s infinite; }
-    .chequered {
-      background-image: url('https://example.com/chequered-flag.png');
-      background-size: cover;
-      opacity: 0.1;
-    }
   </style>
 </head>
-<body class="bg-white dark:bg-f1black text-f1black dark:text-gray-100 font-sans">
+<body class="bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-gray-100 font-sans">
 
   <!-- NAVBAR -->
-  <nav class="fixed top-0 w-full bg-white dark:bg-f1black shadow z-30 animate__animated animate__fadeInDown">
+  <nav class="fixed top-0 w-full bg-white dark:bg-gray-800 shadow z-30 animate__animated animate__fadeInDown">
     <div class="max-w-6xl mx-auto flex items-center justify-between p-4">
-      <a href="#" class="flex items-center text-2xl font-bold animate__animated animate__zoomIn">
-        <img src="https://upload.wikimedia.org/wikipedia/commons/3/3c/F1_Logo.svg" alt="F1 Logo" class="w-8 h-8 mr-2" />
-        Mohamed Ansar
-      </a>
+      <a href="#" class="text-2xl font-bold animate__animated animate__zoomIn">Mohamed Ansar</a>
       <div class="flex items-center space-x-4">
         <a href="#about" class="hover:underline">About</a>
         <a href="#projects" class="hover:underline">Projects</a>
         <a href="#skills" class="hover:underline">Skills</a>
         <a href="#experience" class="hover:underline">Experience</a>
+        <a href="#education" class="hover:underline">Education</a>
         <a href="#contact" class="hover:underline">Contact</a>
         <button id="theme-toggle" class="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 transition">🌙</button>
       </div>
@@ -53,20 +36,20 @@
   </nav>
 
   <!-- HERO -->
-  <header id="hero" class="pt-28 text-center py-20 bg-gradient-to-r from-f1black to-f1red chequered">
-    <h1 class="text-5xl font-extrabold text-white mb-4 animate__animated animate__fadeInDown">🏎️ Hi, I'm Mohamed Ansar</h1>
-    <p class="text-xl text-gray-200 mb-6 animate__animated animate__fadeInUp animate__delay-1s">ML Engineer & F1 Data Enthusiast | Ex-Amazon | Data-Driven Innovator</p>
-    <a href="#projects" class="inline-block bg-white text-f1red px-6 py-3 rounded-full shadow-lg hover:bg-gray-100 transition bounce-cta animate__animated animate__delay-2s">Explore Projects 🏁</a>
+  <header id="hero" class="pt-28 text-center py-20 bg-gradient-to-r from-blue-600 to-indigo-700">
+    <h1 class="text-5xl font-extrabold text-white mb-4 animate__animated animate__fadeInDown">👋 Hi, I'm Mohamed Ansar</h1>
+    <p class="text-xl text-gray-200 mb-6 animate__animated animate__fadeInUp animate__delay-1s">ML Engineer & Data Analyst | Ex-Amazon | Data-Driven Innovator</p>
+    <a href="#projects" class="inline-block bg-white text-blue-600 px-6 py-3 rounded-full shadow-lg hover:bg-gray-100 transition bounce-cta animate__animated animate__delay-2s">Explore Projects</a>
   </header>
 
   <!-- ABOUT -->
   <section id="about" class="max-w-4xl mx-auto px-4 py-16 animate__animated animate__fadeInUp animate__delay-1s">
     <h2 class="text-3xl font-semibold mb-4">About Me</h2>
     <p class="text-gray-700 dark:text-gray-300 mb-4 leading-relaxed">
-      I’m a data-driven Business Analyst and ML Engineer with 4+ years in corporate (Amazon) and startup environments. Currently at Datasembly, I deliver SQL analytics, dashboarding, and incident management for CPG clients. Passionate about building scalable ML pipelines, explainable AI, and uncovering insights from Formula 1 data.
+      I’m a data-driven Business Analyst with 4+ years in corporate (Amazon) and startup environments. Currently at Datasembly, I deliver SQL analytics, dashboarding, and incident management for CPG clients. Passionate about building scalable ML pipelines, explainable AI, and user-friendly applications.
     </p>
     <p class="text-gray-700 dark:text-gray-300 leading-relaxed">
-      Core stack: Python, scikit-learn, Streamlit, Hugging Face, SQL, Tableau, MLOps, ETL tools, and F1 data visualization.
+      Core stack: Python, scikit-learn, Streamlit, Hugging Face, SQL, Tableau, MLOps, ETL tools.
     </p>
   </section>
 
@@ -74,41 +57,63 @@
   <section id="projects" class="max-w-6xl mx-auto px-4 py-16 animate__animated animate__fadeInUp animate__delay-2s">
     <h2 class="text-3xl font-semibold mb-8 text-center">🚀 Featured Projects</h2>
     <div class="grid gap-8 md:grid-cols-2">
-      <!-- F1 Lap Time Analysis -->
-      <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-lg hover:scale-105 transition duration-300">
-        <h3 class="text-xl font-bold mb-2">⏱️ F1 Lap Time Analyzer</h3>
-        <p class="text-gray-700 dark:text-gray-300 text-sm mb-2">Visualize and compare lap times across drivers and circuits using historical F1 data. Deployed via Streamlit.</p>
-        <a href="#" class="text-f1red underline">View Code</a>
-        <p class="mt-4 text-xs text-gray-400">Skills: Python, pandas, matplotlib, Streamlit</p>
-      </div>
-      <!-- Existing TaskMaster -->
+      <!-- TaskMaster -->
       <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-lg hover:scale-105 transition duration-300">
         <h3 class="text-xl font-bold mb-2">🔁 TaskMaster: ML Job Scheduler</h3>
         <p class="text-gray-700 dark:text-gray-300 text-sm mb-2">Orchestrates a reliable data pipeline with retry logic, trains a Random Forest classifier, and delivers real-time inference via Gradio.</p>
-        <a href="https://huggingface.co/spaces/kmsmohamedansar/TaskMaster-Job-Scheduler" target="_blank" class="text-f1red underline">Live Demo</a>
+        <a href="https://huggingface.co/spaces/kmsmohamedansar/TaskMaster-Job-Scheduler" target="_blank" class="text-blue-600 underline">Live Demo</a>
         <p class="mt-4 text-xs text-gray-400">Skills: Python, scikit-learn, Gradio, Hugging Face Spaces, concurrent.futures, retry logic</p>
       </div>
-      <!-- Other projects... -->
       <!-- High-Value Customer Predictor -->
       <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-lg hover:scale-105 transition duration-300">
         <h3 class="text-xl font-bold mb-2">💎 High-Value Customer Predictor</h3>
         <p class="text-gray-700 dark:text-gray-300 text-sm mb-2">Classifies high-value buyers using RFM metrics, Random Forest, and SHAP explainability. Tracked with MLflow and deployed via Streamlit.</p>
-        <a href="https://huggingface.co/spaces/kmsmohamedansar/high-value-customer-predictor" target="_blank" class="text-f1red underline">Live Demo</a>
+        <a href="https://huggingface.co/spaces/kmsmohamedansar/high-value-customer-predictor" target="_blank" class="text-blue-600 underline">Live Demo</a>
         <p class="mt-4 text-xs text-gray-400">Skills: DuckDB, Pandera, RandomForestClassifier, SHAP, MLflow, Streamlit</p>
       </div>
       <!-- Grocery AI Assistant -->
       <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-lg hover:scale-105 transition duration-300">
         <h3 class="text-xl font-bold mb-2">🛒 Grocery AI Assistant</h3>
         <p class="text-gray-700 dark:text-gray-300 text-sm mb-2">Local RAG app that answers Instacart queries using FAISS embeddings and Flan-T5. Fully offline semantic search with Gradio UI.</p>
-        <a href="https://huggingface.co/spaces/kmsmohamedansar/grocery-ai-assistant" target="_blank" class="text-f1red underline">Live Demo</a>
+        <a href="https://huggingface.co/spaces/kmsmohamedansar/grocery-ai-assistant" target="_blank" class="text-blue-600 underline">Live Demo</a>
         <p class="mt-4 text-xs text-gray-400">Skills: FAISS, LangChain, Sentence Transformers, Transformers, Gradio</p>
       </div>
-      <!-- Add additional projects as desired -->
+      <!-- Amazon Sentiment Classifier -->
+      <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-lg hover:scale-105 transition duration-300">
+        <h3 class="text-xl font-bold mb-2">📝 Sentiment Analysis on Amazon Reviews</h3>
+        <p class="text-gray-700 dark:text-gray-300 text-sm mb-2">Built a binary sentiment classifier using TF-IDF + Logistic Regression baseline and fine-tuned DistilBERT. Deployed with Gradio.</p>
+        <a href="https://huggingface.co/spaces/kmsmohamedansar/amazon-sentiment-distilbert" target="_blank" class="text-blue-600 underline">Live Demo</a>
+        <p class="mt-4 text-xs text-gray-400">Skills: pandas, scikit-learn, Transformers, TF-IDF, DistilBERT, Gradio</p>
+      </div>
+      <!-- Yahoo Finance Scraper -->
+      <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-lg hover:scale-105 transition duration-300">
+        <h3 class="text-xl font-bold mb-2">💡 Yahoo Finance News Scraper</h3>
+        <p class="text-gray-700 dark:text-gray-300 text-sm mb-2">Extracted dynamic news content using Selenium and BeautifulSoup. Parsed headlines, dates, authors, and content into structured DataFrames.</p>
+        <p class="mt-4 text-xs text-gray-400">Skills: Selenium, BeautifulSoup, Pandas, Web Scraping</p>
+      </div>
+      <!-- Smart Product Categorization -->
+      <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-lg hover:scale-105 transition duration-300">
+        <h3 class="text-xl font-bold mb-2">📦 Smart Product Categorization</h3>
+        <p class="text-gray-700 dark:text-gray-300 text-sm mb-2">Applied zero-shot NLP using BART-large-MNLI to categorize e-commerce products. Combined simple rules with AI for scalable accuracy.</p>
+        <p class="mt-4 text-xs text-gray-400">Skills: NLP, Zero-Shot Learning, Transformers, E-commerce Data</p>
+      </div>
+      <!-- Spotify Trends Analysis -->
+      <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-lg hover:scale-105 transition duration-300">
+        <h3 class="text-xl font-bold mb-2">🎵 Spotify Music Trends Analysis</h3>
+        <p class="text-gray-700 dark:text-gray-300 text-sm mb-2">Analyzed audio features and popularity from 1920–2020. Visualized trends in tempo, energy, danceability, and valence using seaborn.</p>
+        <p class="mt-4 text-xs text-gray-400">Skills: pandas, matplotlib, seaborn, Statistical Analysis</p>
+      </div>
+      <!-- CPL Dream Team -->
+      <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-lg hover:scale-105 transition duration-300">
+        <h3 class="text-xl font-bold mb-2">⚽ CPL Dream Team Dashboard</h3>
+        <p class="text-gray-700 dark:text-gray-300 text-sm mb-2">Developed Power BI dashboard and Python analysis to select the Canadian Premier League Dream Team using KPIs.</p>
+        <p class="mt-4 text-xs text-gray-400">Skills: Power BI, Python, KPI Design, Data Visualization</p>
+      </div>
     </div>
   </section>
 
   <!-- SKILLS -->
-  <section id="skills" class="bg-gray-200 dark:bg-gray-800 py-16 animate__animated animate__fadeInUp animate__delay-3s chequered">
+  <section id="skills" class="bg-gray-200 dark:bg-gray-800 py-16 animate__animated animate__fadeInUp animate__delay-3s">
     <div class="max-w-5xl mx-auto px-4">
       <h2 class="text-3xl font-semibold mb-6 text-center">🛠️ Skills</h2>
       <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-6">
@@ -119,10 +124,10 @@
           <span class="text-4xl">📊</span><p class="mt-2">SQL & Tableau</p>
         </div>
         <div class="bg-white dark:bg-gray-700 p-4 rounded-lg shadow text-center animate__animated animate__zoomIn animate__delay-3s">
-          <span class="text-4xl">🏎️</span><p class="mt-2">F1 Data Viz</p>
+          <span class="text-4xl">⚙️</span><p class="mt-2">ETL & dbt</p>
         </div>
         <div class="bg-white dark:bg-gray-700 p-4 rounded-lg shadow text-center animate__animated animate__zoomIn animate__delay-4s">
-          <span class="text-4xl">⚙️</span><p class="mt-2">MLOps & SHAP</p>
+          <span class="text-4xl">🧪</span><p class="mt-2">MLOps & SHAP</p>
         </div>
       </div>
     </div>
@@ -146,14 +151,29 @@
           <li>Led RCA and quality improvement initiatives for global content publishing.</li>
         </ul>
       </div>
+      <div>
+        <h3 class="text-xl font-bold">Business Analyst Intern — Spongelii <span class="text-sm text-gray-400">(2024)</span></h3>
+        <ul class="list-disc ml-5 text-gray-700 dark:text-gray-300">
+          <li>Designed animated CSS landing page and proposed blockchain-based wallet enhancements.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- EDUCATION -->
+  <section id="education" class="max-w-5xl mx-auto px-4 py-16 animate__animated animate__fadeInUp">
+    <h2 class="text-3xl font-semibold mb-6 text-center">🎓 Education</h2>
+    <div>
+      <h3 class="text-xl font-bold">PG Diploma in Business Analytics — 2022–2024</h3>
+      <p class="text-gray-700 dark:text-gray-300">Hands-on training with SQL, Salesforce, and Power BI; completed co-op in data analysis and reporting.</p>
     </div>
   </section>
 
   <!-- CONTACT -->
   <section id="contact" class="max-w-4xl mx-auto px-4 py-16 text-center animate__animated animate__fadeInUp">
     <h2 class="text-3xl font-semibold mb-4">📬 Contact</h2>
-    <p>Email: <a href="mailto:mohamedansarkms@gmail.com" class="text-f1red underline">mohamedansarkms@gmail.com</a></p>
-    <p>LinkedIn: <a href="https://www.linkedin.com/in/kmsmohamedansar" target="_blank" class="text-f1red underline">linkedin.com/in/kmsmohamedansar</a></p>
+    <p>Email: <a href="mailto:mohamedansarkms@gmail.com" class="text-blue-600 underline">mohamedansarkms@gmail.com</a></p>
+    <p>LinkedIn: <a href="https://www.linkedin.com/in/kmsmohamedansar" target="_blank" class="text-blue-600 underline">linkedin.com/in/kmsmohamedansar</a></p>
   </section>
 
   <!-- DARK MODE TOGGLE SCRIPT -->
