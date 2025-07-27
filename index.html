@@ -314,7 +314,7 @@ chat_interface.launch(share=True, debug=True)
           </pre>
           <p class="mb-3"><strong>Key Skills:</strong> Python, Pandas, Semantic Search, Vector Embeddings, FAISS, Local LLMs, RAG, Gradio, Data Cleaning</p>
           <p class="mb-3"><strong>Try It Yourself:</strong><br>
-            <a href="https://huggingface.co/spaces/kmsmohamedansar/grocery-ai-assistant" target="_blank" class="underline text-blue-300">Grocery AI Assistant Demo (Hugging Face Spaces)</a>
+            <a href="https://huggingface.co/spaces/kmsmohamedansar/ai_knowledge_assistant" target="_blank" class="underline text-blue-300">Grocery AI Assistant Demo (Hugging Face Spaces)</a>
           </p>
           <p class="mb-2"><strong>Repo + Code Access:</strong><br>
             <a href="https://github.com/kmsmohamedansar/grocery-ai-assistant" target="_blank" class="underline text-blue-300">GitHub: Grocery AI Assistant</a>
@@ -322,16 +322,53 @@ chat_interface.launch(share=True, debug=True)
         </div>
       </div>
 
-<!-- Sentiment Analysis Card (unchanged) -->
-<div class="tilt bg-gray-800 p-6 rounded-2xl shadow hover:scale-105 transition duration-300" data-aos="fade-up" data-aos-delay="300">
-  <h3 class="text-xl font-bold mb-2 text-white">📝 Sentiment Analysis on Amazon Reviews</h3>
-  <p class="text-gray-400 mb-2">TF‑IDF & Logistic Regression baseline + fine-tuned DistilBERT, Gradio UI.</p>
-  <p class="text-xs text-gray-500 mb-2"><strong>Tech:</strong> TF‑IDF, DistilBERT, Gradio</p>
+<div class="tilt bg-gray-800 p-6 rounded-2xl shadow hover:scale-105 transition duration-300 relative" data-aos="fade-up" data-aos-delay="300">
+  <h3 class="text-xl font-bold mb-2 text-white">📝 Sentiment Analysis on Amazon Fine Food Reviews Using DistilBERT</h3>
+  <!-- Optional Project Image (uncomment & update src if you have one) -->
+  <!-- <img src="https://raw.githubusercontent.com/kmsmohamedansar/sentiment-analysis-amazon-finefood/main/assets/demo_screenshot.png" alt="Sentiment Demo" class="rounded-xl mb-4 w-full object-cover" style="max-height:200px;"> -->
+  <p class="text-gray-400 mb-2">End-to-end NLP pipeline with classical ML baseline, fine-tuned transformer, and interactive web app for real-time sentiment prediction.</p>
+  <p class="text-xs text-gray-500 mb-2"><strong>Tech:</strong> Data Cleaning, TF‑IDF, Logistic Regression, DistilBERT, Transformers, Gradio</p>
   <div class="mt-4 space-x-2">
-    <a href="https://github.com/yourrepo/sentiment-analysis" target="_blank" class="px-4 py-2 text-sm bg-blue-500 hover:bg-blue-600 text-white rounded-lg">GitHub</a>
-    <a href="https://sentiment.demo" target="_blank" class="px-4 py-2 text-sm bg-green-500 hover:bg-green-600 text-white rounded-lg">Live Demo</a>
+    <a href="https://github.com/kmsmohamedansar/sentiment-analysis-amazon-finefood" target="_blank" class="px-4 py-2 text-sm bg-blue-500 hover:bg-blue-600 text-white rounded-lg">GitHub</a>
+    <a href="https://huggingface.co/spaces/kmsmohamedansar/amazon-sentiment-distilbert" target="_blank" class="px-4 py-2 text-sm bg-green-500 hover:bg-green-600 text-white rounded-lg">Live Demo</a>
+    <button onclick="document.getElementById('sentiment-details').classList.toggle('hidden'); this.textContent = this.textContent === 'Show More' ? 'Show Less' : 'Show More';"
+      class="px-4 py-2 text-sm bg-gray-700 hover:bg-gray-600 text-white rounded-lg">Show More</button>
+  </div>
+  <!-- Expandable Write-up Section -->
+  <div id="sentiment-details" class="hidden bg-gray-900 border border-gray-700 rounded-xl mt-6 p-4 text-gray-200 text-sm max-h-[600px] overflow-y-auto">
+    <h4 class="font-semibold mb-2 text-lg text-blue-300">Project Highlights</h4>
+    <ul class="list-disc pl-6 mb-3">
+      <li>500,000+ Amazon food reviews, class-balanced for robust binary classification.</li>
+      <li>Baseline: TF-IDF + Logistic Regression (scikit-learn); evaluated with F1, confusion matrix, ROC-AUC.</li>
+      <li>Fine-tuned <b>DistilBERT</b> for improved performance (F1 = 0.91), using Hugging Face Trainer API.</li>
+      <li>Deployed interactive demo using Gradio (real-time text prediction & confidence score).</li>
+    </ul>
+    <p class="mb-3"><strong>Tech Stack:</strong> Python, pandas, scikit-learn, seaborn, Hugging Face Transformers, Datasets, Gradio, Kagglehub.</p>
+    <pre class="bg-gray-800 text-gray-100 rounded-md p-2 overflow-x-auto mb-2 text-xs">
+# TF-IDF + Logistic Regression
+vectorizer = TfidfVectorizer(stop_words='english', max_features=10000)
+X_train_tfidf = vectorizer.fit_transform(X_train)
+clf = LogisticRegression(max_iter=1000).fit(X_train_tfidf, y_train)
+
+# DistilBERT fine-tuning (Trainer API)
+from transformers import DistilBertTokenizerFast, DistilBertForSequenceClassification, Trainer
+tokenizer = DistilBertTokenizerFast.from_pretrained('distilbert-base-uncased')
+model = DistilBertForSequenceClassification.from_pretrained("distilbert-base-uncased", num_labels=2)
+# (Trainer setup...)
+
+# Gradio deployment
+sentiment_pipeline = pipeline("sentiment-analysis", model=model, tokenizer=tokenizer)
+def analyze_sentiment(text):
+    result = sentiment_pipeline(text)[0]
+    return f"{result['label']} ({result['score']*100:.2f}%)"
+    </pre>
+    <p>
+      <a href="https://huggingface.co/spaces/kmsmohamedansar/amazon-sentiment-distilbert" target="_blank" class="underline text-blue-300">Try Live Demo</a> &nbsp;|&nbsp;
+      <a href="https://github.com/kmsmohamedansar/sentiment-analysis-amazon-finefood" target="_blank" class="underline text-blue-300">GitHub Repo</a>
+    </p>
   </div>
 </div>
+
 
   </section>
 
