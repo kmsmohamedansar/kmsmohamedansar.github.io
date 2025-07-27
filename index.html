@@ -396,24 +396,33 @@ def analyze_sentiment(text):
     <div class="max-w-5xl mx-auto px-4">
       <h2 class="text-3xl font-semibold mb-6 text-center text-white">🛠️ Skills</h2>
       <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-        <div class="bg-gray-700 p-6 rounded-lg shadow text-white">
-          <h3 class="font-bold mb-2">Languages & Scripting</h3>
-          <p>Python, HTML, CSS, VBA</p>
-        </div>
-        <div class="bg-gray-700 p-6 rounded-lg shadow text-white">
-          <h3 class="font-bold mb-2">Data Analytics</h3>
-          <p>SQL, Power BI, Tableau, Excel</p>
-        </div>
-        <div class="bg-gray-700 p-6 rounded-lg shadow text-white">
-          <h3 class="font-bold mb-2">Databases & ETL</h3>
-          <p>Snowflake, BigQuery, DuckDB, ETL Pipelines</p>
-        </div>
-        <div class="bg-gray-700 p-6 rounded-lg shadow text-white">
-          <h3 class="font-bold mb-2">Tools & DevOps</h3>
-          <p>AWS, Docker, GitHub Actions, Terraform</p>
-        </div>
-      </div>
-    </div>
+  <div class="bg-gray-700 p-6 rounded-lg shadow text-white">
+    <h3 class="font-bold mb-2">Languages & Scripting</h3>
+    <p>Python, R, SQL, HTML, CSS, Bash, VBA</p>
+  </div>
+  <div class="bg-gray-700 p-6 rounded-lg shadow text-white">
+    <h3 class="font-bold mb-2">Data Analytics</h3>
+    <p>Tableau, Power BI, Excel, KPI Dashboards</p>
+  </div>
+  <div class="bg-gray-700 p-6 rounded-lg shadow text-white">
+    <h3 class="font-bold mb-2">Databases & ETL</h3>
+    <p>Snowflake, BigQuery, DuckDB, ETL Pipelines</p>
+  </div>
+  <div class="bg-gray-700 p-6 rounded-lg shadow text-white">
+    <h3 class="font-bold mb-2">ML & AI</h3>
+    <p>scikit-learn, Transformers, Streamlit, MLflow, SHAP, Gradio</p>
+  </div>
+  <div class="bg-gray-700 p-6 rounded-lg shadow text-white">
+    <h3 class="font-bold mb-2">Orchestration</h3>
+    <p>Airflow, dbt, CI/CD, GitHub Actions</p>
+  </div>
+  <div class="bg-gray-700 p-6 rounded-lg shadow text-white">
+    <h3 class="font-bold mb-2">Cloud & DevOps</h3>
+    <p>AWS, Docker, Terraform, Serverless</p>
+  </div>
+</div>
+
+      
   </section>
 
   <section id="experience" class="max-w-5xl mx-auto px-4 py-16 animate__animated animate__fadeInUp">
@@ -537,14 +546,18 @@ uninterrupted financial and logistics operations.</li>
     // UI libraries, keywords, typing
     AOS.init({ once: true, duration: 800 });
     VanillaTilt.init(document.querySelectorAll('.tilt'), { max: 15, speed: 400, glare: true, 'max-glare': 0.3 });
-    const keywords = ['Neural Networks','Transfer Learning','Data Pipelines','MLOps','Explainable AI','RAG','SHAP'];
+    const keywords = [
+  'Neural Networks', 'Transfer Learning', 'Data Pipelines', 'MLOps', 'Explainable AI', 'RAG',
+  'Model Deployment', 'Feature Engineering', 'Hugging Face', 'Streamlit', 'Airflow', 'MLflow',
+  'Prompt Engineering', 'LLMOps', 'Semantic Search', 'Vector Databases', 'Databricks', 'Snowflake'
+];
     let idx = 0;
     setInterval(() => {
       document.getElementById('mlWords').innerText = keywords[idx];
       idx = (idx + 1) % keywords.length;
     }, 2500);
     new Typed("#typed", {
-      strings: ["Mohamed Ansar", "Business Analyst", "Tech Support Specialist", "ML/AI Enthusiast"],
+      strings: ["Mohamed Ansar", "a Business Analyst", "a Tech Support Specialist", "a ML/AI Enthusiast"],
       typeSpeed: 80,
       backSpeed: 40,
       loop: true
