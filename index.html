@@ -90,15 +90,57 @@
   <section id="projects" class="max-w-6xl mx-auto px-4 py-16 animate__animated animate__fadeInUp animate__delay-100">
     <h2 class="text-3xl font-semibold mb-8 text-center">🚀 Projects</h2>
     <div class="grid gap-8 md:grid-cols-2">
-      <div class="tilt bg-gray-800 p-6 rounded-2xl shadow hover:scale-105 transition duration-300" data-aos="fade-up">
+      <!-- TaskMaster Card with Show More/Show Less Toggle -->
+      <div class="tilt bg-gray-800 p-6 rounded-2xl shadow hover:scale-105 transition duration-300 relative" data-aos="fade-up">
         <h3 class="text-xl font-bold mb-2 text-white">🔁 TaskMaster: Automated Pipeline & Random Forest</h3>
         <p class="text-gray-400 mb-2">Retry-enabled pipeline, Random Forest on synthetic data, Gradio deployment.</p>
         <p class="text-xs text-gray-500 mb-2"><strong>Tech:</strong> Python, scikit‑learn, Gradio</p>
         <div class="mt-4 space-x-2">
-          <a href="https://github.com/yourrepo/taskmaster" target="_blank" class="px-4 py-2 text-sm bg-blue-500 hover:bg-blue-600 text-white rounded-lg">GitHub</a>
-          <a href="https://taskmaster.demo" target="_blank" class="px-4 py-2 text-sm bg-green-500 hover:bg-green-600 text-white rounded-lg">Live Demo</a>
+          <a href="https://github.com/kmsmohamedansar/TaskMaster-Job-Scheduler" target="_blank" class="px-4 py-2 text-sm bg-blue-500 hover:bg-blue-600 text-white rounded-lg">GitHub</a>
+          <a href="https://huggingface.co/spaces/kmsmohamedansar/TaskMaster-Job-Scheduler" target="_blank" class="px-4 py-2 text-sm bg-green-500 hover:bg-green-600 text-white rounded-lg">Live Demo</a>
+          <button onclick="document.getElementById('taskmaster-details').classList.toggle('hidden'); this.textContent = this.textContent === 'Show More' ? 'Show Less' : 'Show More';"
+            class="px-4 py-2 text-sm bg-gray-700 hover:bg-gray-600 text-white rounded-lg">Show More</button>
+        </div>
+        <!-- Expandable Write-up Section -->
+        <div id="taskmaster-details" class="hidden bg-gray-900 border border-gray-700 rounded-xl mt-6 p-4 text-gray-200 text-sm max-h-[600px] overflow-y-auto">
+          <h4 class="font-semibold mb-2 text-lg text-blue-300">TaskMaster: End-to-End ML Pipeline Orchestration & Deployment</h4>
+          <p class="mb-3"><strong>1. Executive Summary:</strong><br>
+            TaskMaster showcases a production‑ready ML engineering workflow: it orchestrates a reliable data pipeline with automated retries and monitoring, trains a Random Forest classifier on synthetic data, and delivers real‑time inference through a user‑friendly web interface.
+          </p>
+          <p class="mb-3"><strong>1.1 Use Case & Real-World Relevance:</strong><br>
+            Many machine learning systems fail silently or unpredictably in production due to missing retry logic, improper error handling, and lack of modular deployment. TaskMaster simulates a real‑world ML pipeline (like ETL or IoT inference) that can self‑heal, log errors, and make reliable predictions.
+            <br><em>Example:</em> Imagine a churn prediction system or a recommendation engine where some data sources intermittently fail. This system ensures reliability, observability, and scalable inference without manual intervention.
+          </p>
+          <p class="mb-3"><strong>2. Architecture & Implementation:</strong></p>
+          <ul class="list-disc pl-6 mb-3">
+            <li>
+              <b>2.1 Data Pipeline Orchestration:</b> Developed a two‑stage pipeline (Data Extraction & Data Transformation) using Python’s <code>concurrent.futures</code> for parallel execution. Implemented robust retry logic (up to 3 attempts) with structured logging to capture execution details and failure reasons. Integrated email notifications to alert on persistent failures, ensuring end‑to‑end reliability.
+            </li>
+            <li>
+              <b>2.2 Model Development:</b> Generated a labeled synthetic dataset (1,000 samples, 5 numerical features) using <code>sklearn.datasets.make_classification</code>. Trained a RandomForestClassifier (100 estimators, random_state=42) and serialized it with pickle for reproducible inference. Applied StandardScaler to normalize feature ranges, ensuring consistent model input distribution. Wrote unit tests for model output and pipeline logic to validate correctness across scenarios.
+            </li>
+            <li>
+              <b>2.3 Deployment & Inference Service:</b> Built an interactive Gradio application with five sliders, directly mapping user inputs to model features. Deployed the inference endpoint on Hugging Face Spaces (CPU‑optimized), providing zero‑infrastructure web access via a public URL. Managed dependencies via a pinned requirements.txt, ensuring deterministic builds and easy reproducibility. Designed for easy migration to a production REST API using FastAPI or Flask.
+            </li>
+          </ul>
+          <p class="mb-3"><strong>3. Coffee‑Shop Analogy:</strong><br>
+            <b>Bean Grinder (Data Extraction):</b> Automatically grinds beans, retries on jams up to three times, logs each attempt, and sends an alert if it still fails.<br>
+            <b>Coffee Brewer (Data Transformation):</b> Brews the ground beans, self‑heals on temperature or timing errors with retry logic, and records process metrics.<br>
+            <b>Taste Tester (Random Forest Model):</b> Learned from past “good” vs. “bad” brews to predict cup quality—outputs “Good (1)” or “Bad (0).”<br>
+            <b>Customer Touchscreen:</b> Five sliders let you choose grind size, water temperature, brew time, foam level, and sugar amount. Tap “Make Coffee” to instantly see the taste prediction.<br>
+            <span class="text-gray-400">This analogy helps non-technical stakeholders understand that TaskMaster automates data processes, ensures robustness, and provides actionable ML predictions in a simple and reliable format.</span>
+          </p>
+          <p class="mb-3"><strong>4. Core Skills & Technologies:</strong> <br>
+            Python, scikit‑learn, Gradio, Hugging Face Spaces, <code>concurrent.futures</code>, retry logic, logging, email alerts, StandardScaler, model serialization, deployment best practices, unit testing, pipeline monitoring, API-readiness
+          </p>
+          <p class="mb-2"><strong>5. Live Demo:</strong><br>
+            <a href="https://huggingface.co/spaces/kmsmohamedansar/TaskMaster-Job-Scheduler" target="_blank" class="underline text-blue-300">▶ Try it here (Hugging Face Spaces)</a>
+            <br>
+            <span class="text-gray-400">No setup required. Use the sliders to explore how different feature combinations affect the prediction.</span>
+          </p>
         </div>
       </div>
+      <!-- Repeat similar blocks for other projects if you want show-more toggles -->
       <div class="tilt bg-gray-800 p-6 rounded-2xl shadow hover:scale-105 transition duration-300" data-aos="fade-up" data-aos-delay="100">
         <h3 class="text-xl font-bold mb-2 text-white">💎 High-Value Customer Predictor</h3>
         <p class="text-gray-400 mb-2">RFM classification, SHAP explainability, MLflow tracking, Streamlit UI.</p>
