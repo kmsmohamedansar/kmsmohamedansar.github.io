@@ -140,17 +140,99 @@
           </p>
         </div>
       </div>
-      <!-- Repeat similar blocks for other projects if you want show-more toggles -->
-      <div class="tilt bg-gray-800 p-6 rounded-2xl shadow hover:scale-105 transition duration-300" data-aos="fade-up" data-aos-delay="100">
-        <h3 class="text-xl font-bold mb-2 text-white">💎 High-Value Customer Predictor</h3>
-        <p class="text-gray-400 mb-2">RFM classification, SHAP explainability, MLflow tracking, Streamlit UI.</p>
-        <p class="text-xs text-gray-500 mb-2"><strong>Tech:</strong> DuckDB, SHAP, MLflow, Streamlit</p>
-        <div class="mt-4 space-x-2">
-          <a href="https://github.com/yourrepo/customer-predictor" target="_blank" class="px-4 py-2 text-sm bg-blue-500 hover:bg-blue-600 text-white rounded-lg">GitHub</a>
-          <a href="https://customer-predictor.demo" target="_blank" class="px-4 py-2 text-sm bg-green-500 hover:bg-green-600 text-white rounded-lg">Live Demo</a>
-        </div>
-      </div>
-      <div class="tilt bg-gray-800 p-6 rounded-2xl shadow hover:scale-105 transition duration-300" data-aos="fade-up" data-aos-delay="200">
+     <!-- High-Value Customer Predictor Card with Show More/Show Less Toggle -->
+<div class="tilt bg-gray-800 p-6 rounded-2xl shadow hover:scale-105 transition duration-300 relative" data-aos="fade-up" data-aos-delay="100">
+  <h3 class="text-xl font-bold mb-2 text-white">💎 High-Value Customer Predictor</h3>
+  <p class="text-gray-400 mb-2">End-to-End ML + MLOps solution for identifying your best customers, with explainable AI and deployment.</p>
+  <p class="text-xs text-gray-500 mb-2"><strong>Tech:</strong> DuckDB, Pandera, Data Cleaning, Feature Engineering, Data Analysis, RandomForest, Streamlit, SHAP, MLflow</p>
+  <div class="mt-4 space-x-2">
+    <a href="https://github.com/kmsmohamedansar/high-value-customer-predictor" target="_blank" class="px-4 py-2 text-sm bg-blue-500 hover:bg-blue-600 text-white rounded-lg">GitHub</a>
+    <a href="https://huggingface.co/spaces/kmsmohamedansar/high-value-customer-predictor" target="_blank" class="px-4 py-2 text-sm bg-green-500 hover:bg-green-600 text-white rounded-lg">Live Demo</a>
+    <button onclick="document.getElementById('customer-details').classList.toggle('hidden'); this.textContent = this.textContent === 'Show More' ? 'Show Less' : 'Show More';"
+      class="px-4 py-2 text-sm bg-gray-700 hover:bg-gray-600 text-white rounded-lg">Show More</button>
+  </div>
+  <!-- Expandable Write-up Section -->
+  <div id="customer-details" class="hidden bg-gray-900 border border-gray-700 rounded-xl mt-6 p-4 text-gray-200 text-sm max-h-[600px] overflow-y-auto">
+    <h4 class="font-semibold mb-2 text-lg text-blue-300">High-Value Customer Predictor (End-to-End ML + MLOps)</h4>
+    <p class="mb-3"><strong>Problem Statement:</strong><br>
+      Businesses often struggle to identify customers who contribute the most to their revenue. Our goal: build an intelligent system that flags “high-value customers” based on their purchase behavior — so businesses can retain and nurture them.
+    </p>
+    <p class="mb-3"><strong>Steps Involved:</strong></p>
+    <ul class="list-disc pl-6 mb-3">
+      <li><b>Cleaned raw sales data:</b> Turned messy spreadsheet data into clean, usable information</li>
+      <li><b>Built features:</b> Created smart customer metrics like: how often they order, total profit, etc.</li>
+      <li><b>Trained a model:</b> Taught a machine to classify which customers are "high-value"</li>
+      <li><b>Evaluated performance:</b> Measured how well the model performs using accuracy and confidence scores</li>
+      <li><b>Explained predictions:</b> Used SHAP to visually explain why the model made each prediction</li>
+      <li><b>Built a UI:</b> Created a Streamlit web app where anyone can try predictions interactively</li>
+      <li><b>Logged with MLflow:</b> Tracked model version, metrics, and SHAP insights in a model registry</li>
+      <li><b>Deployed to Hugging Face:</b> Put everything live on the web so it’s publicly accessible</li>
+    </ul>
+    <p class="mb-3"><strong>Key ML Techniques:</strong><br>
+      <b>Data Engineering:</b> DuckDB used for SQL-style cleaning inside Python<br>
+      <b>Feature Engineering:</b> RFM score, discount habits, tenure, profit margin<br>
+      <b>Model:</b> RandomForestClassifier (with tuning)<br>
+      <b>Metrics:</b> Accuracy = 97%, F1 = 95%, ROC AUC = 99%<br>
+      <b>Explainability:</b> SHAP waterfall plot shows which features drove the decision<br>
+      <b>Deployment:</b> Streamlit UI + public link on Hugging Face Spaces<br>
+      <b>Versioning:</b> MLflow tracks all models + metrics + SHAP plots<br>
+      <b>Testing:</b> Validated data with Pandera, tested pipeline with PyTest
+    </p>
+    <p class="mb-3"><strong>Model Results:</strong><br>
+      <b>Accuracy:</b> 0.97 ✅<br>
+      <b>F1-Score:</b> 0.95 ✅<br>
+      <b>ROC AUC:</b> 0.99 ✅<br>
+      The model performs extremely well on both accuracy and confidence — making it reliable for real-world business decisions.
+    </p>
+    <p class="mb-3"><strong>Try It Yourself:</strong><br>
+      Visit the app on Hugging Face Spaces:<br>
+      <a href="https://huggingface.co/spaces/kmsmohamedansar/high-value-customer-predictor" target="_blank" class="underline text-blue-300">High-Value Customer Predictor Demo</a><br>
+      Enter sample customer data → Get a prediction → See why the model said so (via SHAP!)
+    </p>
+    <p class="mb-3"><strong>Core Code Highlights:</strong></p>
+    <pre class="bg-gray-800 text-gray-100 rounded-md p-2 overflow-x-auto mb-2 text-xs">
+# Feature Engineering (RFM + profit behavior)
+df_features = df_raw.groupby("Customer ID").agg(
+    recency_days=("Order Date", lambda x: (today - x.max()).days),
+    frequency=("Order ID", "nunique"),
+    monetary_value=("Sales", "sum"),
+    avg_order_value=("Sales", "mean"),
+    total_profit=("Profit", "sum"),
+    avg_days_between_orders=("Order Date", lambda x: x.diff().dt.days.mean() if len(x) > 1 else 0),
+    region=("Region", "first"),
+    segment=("Segment", "first"),
+).reset_index()
+# Model Training + Evaluation
+model = RandomForestClassifier(
+    n_estimators=100, max_depth=11, max_features='log2',
+    min_samples_leaf=2, min_samples_split=5, random_state=42
+)
+model.fit(X_train, y_train)
+y_pred = model.predict(X_test)
+print(classification_report(y_test, y_pred))
+# SHAP Explainability
+explainer = shap.Explainer(model)
+shap_values = explainer(X_test[:1])
+shap.plots.waterfall(shap_values[0])
+# Streamlit App
+st.title("High-Value Customer Predictor")
+recency_days = st.number_input("Recency", min_value=0, value=30)
+...
+if st.button("Predict"):
+    pred = model.predict(input_df)[0]
+    st.success("HIGH VALUE ✅" if pred else "Not High Value")
+# MLflow Logging
+with mlflow.start_run():
+    mlflow.log_param("model_type", "RandomForest")
+    mlflow.log_metric("accuracy", accuracy_score(y_test, y_pred))
+    mlflow.sklearn.log_model(model, "model")
+    </pre>
+    <p class="mb-2"><strong>Repo + Code Access:</strong><br>
+      <a href="https://github.com/kmsmohamedansar/high-value-customer-predictor" target="_blank" class="underline text-blue-300">GitHub: High-Value Customer Predictor</a>
+    </p>
+  </div>
+</div>
+
         <h3 class="text-xl font-bold mb-2 text-white">🛒 Grocery AI Assistant</h3>
         <p class="text-gray-400 mb-2">Local RAG with FAISS & Flan‑T5, offline Gradio Q&A.</p>
         <p class="text-xs text-gray-500 mb-2"><strong>Tech:</strong> FAISS, LangChain, Transformers</p>
