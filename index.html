@@ -13,9 +13,7 @@
   <meta property="og:url" content="https://kmsmohamedansar.github.io">
   <script src="https://cdn.tailwindcss.com"></script>
   <script>tailwind.config = { darkMode: 'class' }</script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r121/three.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/vanta@0.5.21/dist/vanta.net.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
   <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/vanilla-tilt@1.7.3/dist/vanilla-tilt.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/typed.js@2.0.12"></script>
@@ -37,7 +35,7 @@
   </style>
 </head>
 <body class="bg-gray-900 text-gray-100">
-  <div id="particles-js" class="fixed inset-0 -z-40"></div>
+  <canvas id="anime-bg" style="position:fixed;top:0;left:0;width:100vw;height:100vh;z-index:-1"></canvas>
   <button onclick="document.documentElement.classList.toggle('dark')" class="fixed top-5 right-5 z-50 p-2 rounded-full bg-gray-200 dark:bg-gray-700 shadow-md">
     🌓
   </button>
@@ -57,7 +55,6 @@
   </nav>
 
   <header id="hero" class="relative h-screen flex items-center justify-center">
-    <div id="vanta-bg" class="absolute inset-0 -z-30"></div>
     <div class="relative z-50 text-center px-4">
       <h1 class="text-5xl md:text-6xl font-extrabold mb-4 animate__animated animate__fadeInDown text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-purple-500 to-pink-500">
         👋 Hi, I'm <span id="typed"></span>
@@ -468,11 +465,62 @@ uninterrupted financial and logistics operations.</li>
   </section>
 
   <script>
-    VANTA.NET({ el: '#vanta-bg', color: 0xffffff, backgroundColor: 0x111827, points: 25, maxDistance: 30, spacing: 20 });
-    particlesJS('particles-js', {
-      particles: { number: { value: 80 }, size: { value: 3 }, move: { speed: 1.5 }, line_linked: { enable: true, color: '#ffffff' } },
-      interactivity: { events: { onhover: { enable: true, mode: 'repulse' } } }
-    });
+    // ---- ANIME.JS BACKGROUND: Floating Anime Orbs ----
+const canvas = document.getElementById('anime-bg');
+const ctx = canvas.getContext('2d');
+let w = window.innerWidth, h = window.innerHeight;
+canvas.width = w;
+canvas.height = h;
+
+const orbs = [];
+const colors = ["#a78bfa", "#60a5fa", "#f472b6", "#facc15", "#10b981", "#38bdf8", "#f87171"];
+for (let i = 0; i < 17; i++) {
+  orbs.push({
+    x: Math.random() * w,
+    y: Math.random() * h,
+    r: 36 + Math.random() * 44,
+    dx: (Math.random() - 0.5) * 0.9,
+    dy: (Math.random() - 0.5) * 0.7,
+    alpha: 0.20 + Math.random() * 0.18,
+    color: colors[Math.floor(Math.random()*colors.length)]
+  });
+}
+
+function draw() {
+  ctx.clearRect(0, 0, w, h);
+  orbs.forEach(orb => {
+    ctx.save();
+    ctx.globalAlpha = orb.alpha;
+    ctx.beginPath();
+    ctx.arc(orb.x, orb.y, orb.r, 0, 2 * Math.PI);
+    // anime-style inner glow
+    let g = ctx.createRadialGradient(orb.x, orb.y, orb.r*0.1, orb.x, orb.y, orb.r);
+    g.addColorStop(0, "#fff");
+    g.addColorStop(0.2, orb.color);
+    g.addColorStop(1, "#0f172a");
+    ctx.fillStyle = g;
+    ctx.shadowBlur = 24;
+    ctx.shadowColor = orb.color;
+    ctx.fill();
+    ctx.restore();
+  });
+}
+function animate() {
+  orbs.forEach(orb => {
+    orb.x += orb.dx;
+    orb.y += orb.dy;
+    if (orb.x < orb.r || orb.x > w - orb.r) orb.dx *= -1;
+    if (orb.y < orb.r || orb.y > h - orb.r) orb.dy *= -1;
+  });
+  draw();
+  requestAnimationFrame(animate);
+}
+window.addEventListener('resize', () => {
+  w = window.innerWidth; h = window.innerHeight;
+  canvas.width = w; canvas.height = h;
+});
+animate();
+
     AOS.init({ once: true, duration: 800 });
     VanillaTilt.init(document.querySelectorAll('.tilt'), { max: 15, speed: 400, glare: true, 'max-glare': 0.3 });
     const keywords = ['Neural Networks','Transfer Learning','Data Pipelines','MLOps','Explainable AI','RAG','SHAP'];
