@@ -466,60 +466,78 @@ uninterrupted financial and logistics operations.</li>
 
   <script>
     // ---- ANIME.JS BACKGROUND: Floating Anime Orbs ----
+// ---- DATA ENGINEERING / ML NODES BACKGROUND ----
 const canvas = document.getElementById('anime-bg');
 const ctx = canvas.getContext('2d');
 let w = window.innerWidth, h = window.innerHeight;
-canvas.width = w;
-canvas.height = h;
+canvas.width = w; canvas.height = h;
 
-const orbs = [];
-const colors = ["#a78bfa", "#60a5fa", "#f472b6", "#facc15", "#10b981", "#38bdf8", "#f87171"];
-for (let i = 0; i < 17; i++) {
-  orbs.push({
-    x: Math.random() * w,
-    y: Math.random() * h,
-    r: 36 + Math.random() * 44,
-    dx: (Math.random() - 0.5) * 0.9,
-    dy: (Math.random() - 0.5) * 0.7,
-    alpha: 0.20 + Math.random() * 0.18,
-    color: colors[Math.floor(Math.random()*colors.length)]
+function resize() {
+  w = window.innerWidth; h = window.innerHeight;
+  canvas.width = w; canvas.height = h;
+}
+window.addEventListener('resize', resize);
+
+// Generate "nodes"
+const NODES = 12;
+const nodes = [];
+for(let i=0;i<NODES;i++) {
+  nodes.push({
+    x: Math.random()*w,
+    y: Math.random()*h,
+    vx: (Math.random()-0.5)*0.7,
+    vy: (Math.random()-0.5)*0.7,
+    r: 9+Math.random()*7,
   });
 }
 
-function draw() {
-  ctx.clearRect(0, 0, w, h);
-  orbs.forEach(orb => {
+function drawLinks() {
+  for(let i=0;i<NODES;i++) {
+    for(let j=i+1;j<NODES;j++) {
+      let a = nodes[i], b = nodes[j];
+      let dist = Math.hypot(a.x-b.x, a.y-b.y);
+      if(dist < 220) {
+        ctx.save();
+        ctx.globalAlpha = 0.16;
+        ctx.strokeStyle = "#38bdf8";
+        ctx.beginPath();
+        ctx.moveTo(a.x,a.y);
+        ctx.lineTo(b.x,b.y);
+        ctx.stroke();
+        ctx.restore();
+      }
+    }
+  }
+}
+
+function drawNodes() {
+  nodes.forEach(n => {
     ctx.save();
-    ctx.globalAlpha = orb.alpha;
+    ctx.globalAlpha = 0.75;
     ctx.beginPath();
-    ctx.arc(orb.x, orb.y, orb.r, 0, 2 * Math.PI);
-    // anime-style inner glow
-    let g = ctx.createRadialGradient(orb.x, orb.y, orb.r*0.1, orb.x, orb.y, orb.r);
-    g.addColorStop(0, "#fff");
-    g.addColorStop(0.2, orb.color);
-    g.addColorStop(1, "#0f172a");
-    ctx.fillStyle = g;
-    ctx.shadowBlur = 24;
-    ctx.shadowColor = orb.color;
+    ctx.arc(n.x, n.y, n.r, 0, 2*Math.PI);
+    ctx.fillStyle = "#38bdf8";
+    ctx.shadowColor = "#a78bfa";
+    ctx.shadowBlur = 18;
     ctx.fill();
     ctx.restore();
   });
 }
-function animate() {
-  orbs.forEach(orb => {
-    orb.x += orb.dx;
-    orb.y += orb.dy;
-    if (orb.x < orb.r || orb.x > w - orb.r) orb.dx *= -1;
-    if (orb.y < orb.r || orb.y > h - orb.r) orb.dy *= -1;
+
+function animateBG() {
+  ctx.clearRect(0,0,w,h);
+  drawLinks();
+  drawNodes();
+  nodes.forEach(n => {
+    n.x += n.vx;
+    n.y += n.vy;
+    // bounce on edge
+    if(n.x < n.r || n.x > w-n.r) n.vx *= -1;
+    if(n.y < n.r || n.y > h-n.r) n.vy *= -1;
   });
-  draw();
-  requestAnimationFrame(animate);
+  requestAnimationFrame(animateBG);
 }
-window.addEventListener('resize', () => {
-  w = window.innerWidth; h = window.innerHeight;
-  canvas.width = w; canvas.height = h;
-});
-animate();
+animateBG();
 
     AOS.init({ once: true, duration: 800 });
     VanillaTilt.init(document.querySelectorAll('.tilt'), { max: 15, speed: 400, glare: true, 'max-glare': 0.3 });
