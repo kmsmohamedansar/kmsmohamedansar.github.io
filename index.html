@@ -233,16 +233,94 @@ with mlflow.start_run():
   </div>
 </div>
 
-<!-- Grocery AI Assistant Card -->
-<div class="tilt bg-gray-800 p-6 rounded-2xl shadow hover:scale-105 transition duration-300" data-aos="fade-up" data-aos-delay="200">
-  <h3 class="text-xl font-bold mb-2 text-white">🛒 Grocery AI Assistant</h3>
-  <p class="text-gray-400 mb-2">Local RAG with FAISS & Flan‑T5, offline Gradio Q&A.</p>
-  <p class="text-xs text-gray-500 mb-2"><strong>Tech:</strong> FAISS, LangChain, Transformers</p>
-  <div class="mt-4 space-x-2">
-    <a href="https://github.com/yourrepo/grocery-ai" target="_blank" class="px-4 py-2 text-sm bg-blue-500 hover:bg-blue-600 text-white rounded-lg">GitHub</a>
-    <a href="https://grocery-ai.demo" target="_blank" class="px-4 py-2 text-sm bg-green-500 hover:bg-green-600 text-white rounded-lg">Live Demo</a>
-  </div>
-</div>
+<!-- Grocery AI Assistant Card (Detailed) -->
+      <div class="tilt bg-gray-800 p-6 rounded-2xl shadow hover:scale-105 transition duration-300 relative" data-aos="fade-up" data-aos-delay="200">
+        <h3 class="text-xl font-bold mb-2 text-white">🛒 Grocery AI Assistant — Semantic Search & Q&amp;A Over Instacart Data (Local RAG App)</h3>
+        <p class="text-gray-400 mb-2">Offline Q&amp;A with Instacart data using FAISS, semantic search, and a local LLM (Flan‑T5) — built end-to-end in Python.</p>
+        <p class="text-xs text-gray-500 mb-2"><strong>Tech:</strong> Python, Pandas, FAISS, LangChain, Sentence Transformers, Transformers</p>
+        <div class="mt-4 space-x-2">
+          <a href="https://github.com/kmsmohamedansar/grocery-ai-assistant" target="_blank" class="px-4 py-2 text-sm bg-blue-500 hover:bg-blue-600 text-white rounded-lg">GitHub</a>
+          <a href="https://huggingface.co/spaces/kmsmohamedansar/grocery-ai-assistant" target="_blank" class="px-4 py-2 text-sm bg-green-500 hover:bg-green-600 text-white rounded-lg">Live Demo</a>
+          <button onclick="document.getElementById('grocery-details').classList.toggle('hidden'); this.textContent = this.textContent === 'Show More' ? 'Show Less' : 'Show More';"
+            class="px-4 py-2 text-sm bg-gray-700 hover:bg-gray-600 text-white rounded-lg">Show More</button>
+        </div>
+        <!-- Expandable Write-up Section -->
+        <div id="grocery-details" class="hidden bg-gray-900 border border-gray-700 rounded-xl mt-6 p-4 text-gray-200 text-sm max-h-[600px] overflow-y-auto">
+          <h4 class="font-semibold mb-2 text-lg text-blue-300">How I Built a Local Grocery Product Q&amp;A Assistant Using Instacart Data and RAG</h4>
+          <p class="mb-3"><strong>Introduction:</strong><br>
+            I built a fully local AI assistant that answers grocery-related questions using the Instacart Market Basket Analysis dataset. It combines semantic search and a lightweight Q&amp;A model, all running offline — no API calls, no cloud required.
+          </p>
+          <p class="mb-3"><strong>Steps Involved:</strong></p>
+          <ul class="list-disc pl-6 mb-3">
+            <li><b>Installed all dependencies:</b> langchain, faiss-cpu, sentence-transformers, transformers, gradio, kagglehub.</li>
+            <li><b>Downloaded the dataset:</b> Used <code>kagglehub</code> to fetch Instacart’s open grocery dataset.</li>
+            <li><b>Loaded product, aisle, and department CSVs:</b> Cleaned and previewed with pandas.</li>
+            <li><b>Merged metadata:</b> Combined human-readable aisle and department names into the product table.</li>
+            <li><b>Generated semantic product descriptions:</b> Created a <code>combined_text</code> column for every product.</li>
+            <li><b>Embedded descriptions:</b> Used <code>sentence-transformers/all-MiniLM-L6-v2</code> for fast vectorization.</li>
+            <li><b>Built FAISS index:</b> Enabled millisecond similarity search over all products locally.</li>
+            <li><b>Loaded a local LLM:</b> Hugging Face’s <code>flan-t5-base</code> for natural language answer generation.</li>
+            <li><b>Created semantic search Q&amp;A:</b> For every query, pulled top 4 most similar products and used them as context for the LLM.</li>
+            <li><b>Launched with Gradio:</b> Deployed an interactive chat UI for users to ask grocery questions and get instant, explainable answers.</li>
+          </ul>
+          <p class="mb-3"><strong>Core Code Highlights:</strong></p>
+          <pre class="bg-gray-800 text-gray-100 rounded-md p-2 overflow-x-auto mb-2 text-xs">
+# Install libraries (in notebook)
+!pip install -q langchain langchain-community faiss-cpu sentence-transformers transformers accelerate gradio kagglehub
+
+# Download and load dataset
+import kagglehub
+data_path = kagglehub.dataset_download("yasserh/instacart-online-grocery-basket-analysis-dataset")
+
+import pandas as pd, os
+products_df = pd.read_csv(os.path.join(data_path, "products.csv"))
+aisles_df = pd.read_csv(os.path.join(data_path, "aisles.csv"))
+departments_df = pd.read_csv(os.path.join(data_path, "departments.csv"))
+
+# Merge metadata and create descriptions
+products_full = products_df.merge(aisles_df, how="left", on="aisle_id")
+products_full = products_full.merge(departments_df, how="left", on="department_id")
+products_full["combined_text"] = products_full.apply(
+    lambda row: f"Product: {row['product_name']}. Aisle: {row['aisle']}. Department: {row['department']}.", axis=1
+)
+
+# Build embeddings and FAISS index
+from langchain.embeddings import HuggingFaceEmbeddings
+from langchain.vectorstores import FAISS
+local_embedder = HuggingFaceEmbeddings(model_name="sentence-transformers/all-MiniLM-L6-v2")
+vector_store = FAISS.from_texts(products_full["combined_text"].tolist(), local_embedder)
+
+# Local LLM and Q&A function
+from transformers import pipeline
+qa_pipeline = pipeline("text2text-generation", model="google/flan-t5-base", max_length=256)
+
+def local_answer_question(query):
+    docs = vector_store.similarity_search(query, k=4)
+    context = "\n".join([doc.page_content for doc in docs])
+    prompt = f"Answer the question using the context below:\n\nContext:\n{context}\n\nQuestion: {query}"
+    result = qa_pipeline(prompt)[0]["generated_text"]
+    return result
+
+# Launch Gradio UI
+import gradio as gr
+chat_interface = gr.Interface(
+    fn=local_answer_question,
+    inputs="text",
+    outputs="text",
+    title="Grocery AI Assistant (Fully Local)",
+    description="Ask about grocery products — answers generated using FAISS + flan-t5-base!"
+)
+chat_interface.launch(share=True, debug=True)
+          </pre>
+          <p class="mb-3"><strong>Key Skills:</strong> Python, Pandas, Semantic Search, Vector Embeddings, FAISS, Local LLMs, RAG, Gradio, Data Cleaning</p>
+          <p class="mb-3"><strong>Try It Yourself:</strong><br>
+            <a href="https://huggingface.co/spaces/kmsmohamedansar/grocery-ai-assistant" target="_blank" class="underline text-blue-300">Grocery AI Assistant Demo (Hugging Face Spaces)</a>
+          </p>
+          <p class="mb-2"><strong>Repo + Code Access:</strong><br>
+            <a href="https://github.com/kmsmohamedansar/grocery-ai-assistant" target="_blank" class="underline text-blue-300">GitHub: Grocery AI Assistant</a>
+          </p>
+        </div>
+      </div>
 
 <!-- Sentiment Analysis Card (unchanged) -->
 <div class="tilt bg-gray-800 p-6 rounded-2xl shadow hover:scale-105 transition duration-300" data-aos="fade-up" data-aos-delay="300">
