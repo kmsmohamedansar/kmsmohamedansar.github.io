@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mohamed Ansar — Portfolio</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
+  <link rel="stylesheet" href="https://unpkg.com/aos@2.3.1/dist/aos.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+  <meta name="description" content="Mohamed Ansar — ML Engineer Portfolio with AI Projects, Dashboards, and Technical Skills.">
+  <meta property="og:title" content="Mohamed Ansar — Portfolio">
+  <meta property="og:image" content="https://kmsmohamedansartest.github.io/preview.png">
+  <meta property="og:url" content="https://kmsmohamedansartest.github.io">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>tailwind.config = { darkMode: 'class' }</script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r121/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vanta@0.5.21/dist/vanta.net.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
+  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vanilla-tilt@1.7.3/dist/vanilla-tilt.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/typed.js@2.0.12"></script>
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      background: linear-gradient(135deg, #232526 0%, #414345 100%);
+      min-height: 100vh;
+      color: #e0e7ef;
+      overflow-x: hidden;
+    }
+    .glass {
+      background: rgba(30, 41, 59, 0.62);
+      box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.10);
+      backdrop-filter: blur(9px) saturate(180%);
+      -webkit-backdrop-filter: blur(9px) saturate(180%);
+      border-radius: 20px;
+      border: 1.5px solid rgba(255, 255, 255, 0.14);
+      transition: box-shadow .3s, transform .2s;
+    }
+    .glass:hover {
+      box-shadow: 0 12px 36px 0 rgba(80, 195, 255, 0.14), 0 1.5px 6px 0 rgba(0,0,0,0.05);
+      transform: scale(1.025);
+    }
+    .section-title {
+      background: linear-gradient(90deg, #60a5fa 20%, #818cf8 70%, #f472b6 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      text-fill-color: transparent;
+    }
+    .ml-keywords {
+      position: fixed;
+      bottom: 18px;
+      right: 26px;
+      font-size: 0.95rem;
+      font-weight: 500;
+      color: #65e0e0;
+      text-shadow: 0 1px 10px #0ff,0 1px 2px #111;
+      animation: flicker 1.1s infinite alternate;
+      z-index: 50;
+    }
+    @keyframes flicker {
+      from { opacity: 0.3; }
+      to { opacity: 1; }
+    }
+    .glass-nav {
+      background: rgba(17, 24, 39, 0.7);
+      backdrop-filter: blur(10px) saturate(180%);
+      -webkit-backdrop-filter: blur(10px) saturate(180%);
+      border-bottom: 1px solid rgba(99,102,241,.09);
+      box-shadow: 0 2px 20px 0 rgba(30,41,59,.07);
+    }
+    .glass-section {
+      background: rgba(34, 40, 49, 0.66);
+      border-radius: 18px;
+      margin-bottom: 1.5rem;
+      padding: 2.5rem 1rem;
+    }
+    .glass-details {
+      background: rgba(20, 27, 34, 0.82);
+      border: 1px solid rgba(95,175,255,0.06);
+      box-shadow: 0 4px 20px 0 rgba(80, 195, 255, 0.10);
+    }
+  </style>
+</head>
+<body>
+  <div id="particles-js" class="fixed inset-0 -z-40"></div>
+  <button onclick="document.documentElement.classList.toggle('dark')" class="fixed top-5 right-5 z-50 p-2 rounded-full bg-gray-200 dark:bg-gray-700 shadow-md">
+    🌓
+  </button>
+
+  <!-- GLASS NAV -->
+  <nav class="glass-nav fixed top-0 w-full z-50 animate__animated animate__fadeInDown">
+    <div class="max-w-6xl mx-auto flex items-center justify-between p-4">
+      <a href="#" class="text-2xl font-bold">Portfolio</a>
+      <div class="space-x-6">
+        <a href="#about" class="hover:text-white transition">About</a>
+        <a href="#projects" class="hover:text-white transition">Projects</a>
+        <a href="#skills" class="hover:text-white transition">Skills</a>
+        <a href="#experience" class="hover:text-white transition">Experience</a>
+        <a href="#education" class="hover:text-white transition">Education</a>
+        <a href="#contact" class="hover:text-white transition">Contact</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <header id="hero" class="relative h-screen flex items-center justify-center">
+    <div id="vanta-bg" class="absolute inset-0 -z-30"></div>
+    <div class="relative z-50 text-center px-4">
+      <h1 class="text-5xl md:text-6xl font-extrabold mb-4 animate__animated animate__fadeInDown text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-purple-500 to-pink-500">
+        👋 Hi, I'm <span id="typed"></span>
+      </h1>
+      <p class="text-xl md:text-2xl mb-6 animate__animated animate__fadeInUp text-gray-200">
+        Data‑Driven Business Analyst | Tech Support Specialist @ Datasembly | Ex‑Amazon | Ex‑Spongelii
+      </p>
+      <p class="text-gray-300 mb-4">Based in Mississauga</p>
+      <a href="#about" class="inline-block bg-white text-gray-900 px-8 py-3 rounded-full shadow-lg hover:scale-105 transform transition animate__animated animate__pulse animate__infinite">
+        Learn More
+      </a>
+    </div>
+    <div class="absolute bottom-10 left-1/2 transform -translate-x-1/2 text-white animate-bounce">↓</div>
+  </header>
+
+  <div class="ml-keywords"><span id="mlWords"></span></div>
+
+  <!-- ABOUT -->
+  <section id="about" class="glass-section max-w-4xl mx-auto px-4 py-16 animate__animated animate__fadeInUp">
+    <h2 class="section-title text-3xl font-semibold mb-4">About Me</h2>
+    <p class="text-gray-300 leading-relaxed mb-4">
+     I work at the intersection of data, technology, and client strategy. 
+    At Datasembly, I help major retailers and CPG brands leverage hyperlocal data to stay ahead of the competition. 
+    My role involves building custom reports, managing client data exports using SQL, and solving technical issues — all aimed at helping our clients make faster, data-driven decisions.
+    <br><br>
+    Previously, I was a Business Analyst at Amazon Prime Video in India, where I built process automations and optimized database workflows that boosted team efficiency and improved customer satisfaction. 
+      I’ve also worked in business development at Spongelii, giving me hands-on experience across the full business lifecycle — from growing customer relationships to delivering technical solutions.
+    </p>
+    <p class="text-gray-300 leading-relaxed">
+      I specialize in SQL, Big Data Analysis, Tableau, Incident Management, and thrive in Agile teams transforming
+      data into actionable stories.
+    </p>
+  </section>
+
+  <!-- PROJECTS -->
+  <section id="projects" class="max-w-6xl mx-auto px-4 py-16 animate__animated animate__fadeInUp animate__delay-100">
+    <h2 class="section-title text-3xl font-semibold mb-8 text-center">🚀 Projects</h2>
+    <div class="grid gap-8 md:grid-cols-2">
+      <!-- Project Card 1 -->
+      <div class="glass tilt p-6 rounded-2xl shadow transition duration-300 relative" data-aos="fade-up">
+        <h3 class="text-xl font-bold mb-2 text-white">🔁 TaskMaster: Automated Pipeline & Random Forest</h3>
+        <p class="text-gray-400 mb-2">Retry-enabled pipeline, Random Forest on synthetic data, Gradio deployment.</p>
+        <p class="text-xs text-gray-500 mb-2"><strong>Tech:</strong> Python, scikit‑learn, Gradio</p>
+        <div class="mt-4 space-x-2">
+          <a href="https://github.com/kmsmohamedansar/TaskMaster-Job-Scheduler" target="_blank" class="px-4 py-2 text-sm bg-blue-500 hover:bg-blue-600 text-white rounded-lg">GitHub</a>
+          <a href="https://huggingface.co/spaces/kmsmohamedansar/TaskMaster-Job-Scheduler" target="_blank" class="px-4 py-2 text-sm bg-green-500 hover:bg-green-600 text-white rounded-lg">Live Demo</a>
+          <button onclick="document.getElementById('taskmaster-details').classList.toggle('hidden'); this.textContent = this.textContent === 'Show More' ? 'Show Less' : 'Show More';"
+            class="px-4 py-2 text-sm bg-gray-700 hover:bg-gray-600 text-white rounded-lg">Show More</button>
+        </div>
+        <!-- Expandable Write-up Section -->
+        <div id="taskmaster-details" class="glass-details hidden bg-gray-900 border border-gray-700 rounded-xl mt-6 p-4 text-gray-200 text-sm max-h-[600px] overflow-y-auto">
+          <!-- ... your detailed TaskMaster writeup ... -->
+          <!-- (You can paste your full TaskMaster details here as previously written) -->
+          <h4 class="font-semibold mb-2 text-lg text-blue-300">TaskMaster: End-to-End ML Pipeline Orchestration & Deployment</h4>
+          <p class="mb-3"><strong>1. Executive Summary:</strong><br>
+            TaskMaster showcases a production‑ready ML engineering workflow: it orchestrates a reliable data pipeline with automated retries and monitoring, trains a Random Forest classifier on synthetic data, and delivers real‑time inference through a user‑friendly web interface.
+          </p>
+          <!-- ... Rest of details ... -->
+        </div>
+      </div>
+      <!-- Project Card 2 -->
+      <div class="glass tilt p-6 rounded-2xl shadow transition duration-300 relative" data-aos="fade-up" data-aos-delay="100">
+        <h3 class="text-xl font-bold mb-2 text-white">💎 High-Value Customer Predictor</h3>
+        <p class="text-gray-400 mb-2">End-to-End ML + MLOps solution for identifying your best customers, with explainable AI and deployment.</p>
+        <p class="text-xs text-gray-500 mb-2"><strong>Tech:</strong> DuckDB, Pandera, Data Cleaning, Feature Engineering, Data Analysis, RandomForest, Streamlit, SHAP, MLflow</p>
+        <div class="mt-4 space-x-2">
+          <a href="https://github.com/kmsmohamedansar/high-value-customer-predictor" target="_blank" class="px-4 py-2 text-sm bg-blue-500 hover:bg-blue-600 text-white rounded-lg">GitHub</a>
+          <a href="https://huggingface.co/spaces/kmsmohamedansar/high-value-customer-predictor" target="_blank" class="px-4 py-2 text-sm bg-green-500 hover:bg-green-600 text-white rounded-lg">Live Demo</a>
+          <button onclick="document.getElementById('customer-details').classList.toggle('hidden'); this.textContent = this.textContent === 'Show More' ? 'Show Less' : 'Show More';"
+            class="px-4 py-2 text-sm bg-gray-700 hover:bg-gray-600 text-white rounded-lg">Show More</button>
+        </div>
+        <div id="customer-details" class="glass-details hidden bg-gray-900 border border-gray-700 rounded-xl mt-6 p-4 text-gray-200 text-sm max-h-[600px] overflow-y-auto">
+          <!-- ... your detailed High-Value Customer writeup ... -->
+        </div>
+      </div>
+      <!-- Project Card 3 -->
+      <div class="glass tilt p-6 rounded-2xl shadow transition duration-300 relative" data-aos="fade-up" data-aos-delay="200">
+        <h3 class="text-xl font-bold mb-2 text-white">🛒 Grocery AI Assistant — Semantic Search & Q&amp;A Over Instacart Data (Local RAG App)</h3>
+        <p class="text-gray-400 mb-2">Offline Q&amp;A with Instacart data using FAISS, semantic search, and a local LLM (Flan‑T5) — built end-to-end in Python.</p>
+        <p class="text-xs text-gray-500 mb-2"><strong>Tech:</strong> Python, Pandas, FAISS, LangChain, Sentence Transformers, Transformers</p>
+        <div class="mt-4 space-x-2">
+          <a href="https://github.com/kmsmohamedansar/grocery-ai-assistant" target="_blank" class="px-4 py-2 text-sm bg-blue-500 hover:bg-blue-600 text-white rounded-lg">GitHub</a>
+          <a href="https://huggingface.co/spaces/kmsmohamedansar/ai_knowledge_assistant" target="_blank" class="px-4 py-2 text-sm bg-green-500 hover:bg-green-600 text-white rounded-lg">Live Demo</a>
+          <button onclick="document.getElementById('grocery-details').classList.toggle('hidden'); this.textContent = this.textContent === 'Show More' ? 'Show Less' : 'Show More';"
+            class="px-4 py-2 text-sm bg-gray-700 hover:bg-gray-600 text-white rounded-lg">Show More</button>
+        </div>
+        <div id="grocery-details" class="glass-details hidden bg-gray-900 border border-gray-700 rounded-xl mt-6 p-4 text-gray-200 text-sm max-h-[600px] overflow-y-auto">
+          <!-- ... your detailed Grocery AI Assistant writeup ... -->
+        </div>
+      </div>
+      <!-- Project Card 4 -->
+      <div class="glass tilt p-6 rounded-2xl shadow transition duration-300 relative" data-aos="fade-up" data-aos-delay="300">
+        <h3 class="text-xl font-bold mb-2 text-white">📝 Sentiment Analysis on Amazon Fine Food Reviews Using DistilBERT</h3>
+        <p class="text-gray-400 mb-2">End-to-end NLP pipeline with classical ML baseline, fine-tuned transformer, and interactive web app for real-time sentiment prediction.</p>
+        <p class="text-xs text-gray-500 mb-2"><strong>Tech:</strong> Data Cleaning, TF‑IDF, Logistic Regression, DistilBERT, Transformers, Gradio</p>
+        <div class="mt-4 space-x-2">
+          <a href="https://github.com/kmsmohamedansar/sentiment-analysis-amazon-finefood" target="_blank" class="px-4 py-2 text-sm bg-blue-500 hover:bg-blue-600 text-white rounded-lg">GitHub</a>
+          <a href="https://huggingface.co/spaces/kmsmohamedansar/amazon-sentiment-distilbert" target="_blank" class="px-4 py-2 text-sm bg-green-500 hover:bg-green-600 text-white rounded-lg">Live Demo</a>
+          <button onclick="document.getElementById('sentiment-details').classList.toggle('hidden'); this.textContent = this.textContent === 'Show More' ? 'Show Less' : 'Show More';"
+            class="px-4 py-2 text-sm bg-gray-700 hover:bg-gray-600 text-white rounded-lg">Show More</button>
+        </div>
+        <div id="sentiment-details" class="glass-details hidden bg-gray-900 border border-gray-700 rounded-xl mt-6 p-4 text-gray-200 text-sm max-h-[600px] overflow-y-auto">
+          <!-- ... your detailed Sentiment Analysis writeup ... -->
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SKILLS -->
+  <section id="skills" class="glass-section bg-gray-800 py-16 animate__animated animate__fadeInUp animate__delay-200">
+    <div class="max-w-5xl mx-auto px-4">
+      <h2 class="section-title text-3xl font-semibold mb-6 text-center">🛠️ Skills</h2>
+      <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+        <div class="glass p-6 rounded-lg shadow text-white">
+          <h3 class="font-bold mb-2">Languages & Scripting</h3>
+          <p>Python, HTML, CSS, VBA</p>
+        </div>
+        <div class="glass p-6 rounded-lg shadow text-white">
+          <h3 class="font-bold mb-2">Data Analytics</h3>
+          <p>SQL, Power BI, Tableau, Excel</p>
+        </div>
+        <div class="glass p-6 rounded-lg shadow text-white">
+          <h3 class="font-bold mb-2">Databases & ETL</h3>
+          <p>Snowflake, BigQuery, DuckDB, ETL Pipelines</p>
+        </div>
+        <div class="glass p-6 rounded-lg shadow text-white">
+          <h3 class="font-bold mb-2">Tools & DevOps</h3>
+          <p>AWS, Docker, GitHub Actions, Terraform</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- EXPERIENCE -->
+  <section id="experience" class="glass-section max-w-5xl mx-auto px-4 py-16 animate__animated animate__fadeInUp">
+    <h2 class="section-title text-3xl font-semibold mb-6">💼 Experience</h2>
+    <div class="space-y-8">
+      <!-- Amazon -->
+      <div data-aos="fade-up">
+        <h3 class="font-bold text-xl text-white">Business Analyst @ Amazon Prime Video</h3>
+        <p class="text-sm text-gray-400 mb-2">2019 – 2022</p>
+        <ul class="list-disc ml-6 text-gray-300">
+          <li>Created Power BI & Tableau dashboards on operator performance, quality metrics for weekly business review.</li>
+          <li>Attended ad-hoc queries on HC utilization, budget creation, project testing and execution.</li>
+          <li>Developed VBA script to automate development of team’s productivity and emailing it to managers.</li>
+          <li>Resolved customer escalations on payment errors in IN for prime day with AMZ ticketing (ServiceNow).</li>
+          <li>Developed Excel reports for daily task sorting for ETL upload using Macros and Excel functionalities.</li>
+          <li>Prepared the Business Requirement Document (BRD) to outline project scope, objectives, functional requirements, timeline, cost, and benefits and conducted SWOT analysis.</li>
+          <li>Conducted FMEA, Risk analysis, on prime day operations, implementing mitigation measures for uninterrupted financial and logistics operations.</li>
+          <li>Led customer onboarding and account set-up procedures for 200+ customer/vendor accounts, with customer satisfaction over 90% in all individual evaluations. </li>
+          <li>Utilized QA team KPIs to efficiently monitor customers' contracts with assets, ensuring any customer related issues were addressed immediately and goals were met. </li>
+          <li>Conducted multiple GEMBA walkthrough of QAP team’s services, resulting in 60% increase in new clients wanting QC services. • Acted as on-call for customer escalations, performed RCA, troubleshooting the error, resolving issues within 12 hrs SLA. </li>
+          <li>Streamlined customer issue resolution process, introduced new practices in SOP document, reduced SLA by 50% to 6 hrs SLA for Sev2 tickets, resulting in average rating increase of 40%.</li>
+        </ul>
+      </div>
+      <!-- Spongelii -->
+      <div data-aos="fade-up" data-aos-delay="100">
+        <h3 class="font-bold text-xl text-white">Business Analyst, Intern @ Spongelii</h3>
+        <p class="text-sm text-gray-400 mb-2">Jan 2024 – Apr 2024</p>
+        <ul class="list-disc ml-6 text-gray-300">
+          <li>Developed and launched NFT subscription program, setting fixed membership prices, creating 3 tiered stages, including benefits by Market research and competitor analysis.</li>
+          <li>Managed client onboarding for instructors, negotiated annual contracts, discussed payments, and ensured budget compliance.</li>
+          <li>Performed analysis on real time data from customer engagement, finding problems, creating mitigation plans for future sessions.</li>
+          <li>Collaborated with IT team, developed new landing page with CSS animations, for better appeal.</li>
+          <li>Analyzed previous customer complaints on payment discrepancies, suggested new wallet mechanism for payment efficiency contributing to process improvement.</li>
+          <li>Analyzed customer complaints regarding payment discrepancies and recommended the implementation of a blockchain-based wallet system to enhance payment efficiency and transparency.</li>
+          <li>Created workflow charts using LucidChart, depicting end-to-end data flow from spatial web to metaverse.</li>
+        </ul>
+      </div>
+      <!-- Datasembly -->
+      <div data-aos="fade-up" data-aos-delay="200">
+        <h3 class="font-bold text-xl text-white">Tech Support Specialist @ Datasembly</h3>
+        <p class="text-sm text-gray-400 mb-2">2024 – Present</p>
+        <ul class="list-disc ml-6 text-gray-300">
+          <li>Partner with Customer Success and Sales teams to support smooth technical onboarding and implementation for clients.</li>
+          <li>Write and optimize SQL queries to generate custom data exports aligned with customer workflows and reporting needs.</li>
+          <li>Create and deliver data samples and analysis to support pre-sales evaluations and proof of concept phases.</li>
+          <li>Investigate pricing discrepancies using data deep dives, helping explain edge cases and build customer trust.</li>
+          <li>Help design interactive dashboards in Tableau to help teams visualize and track pricing trends over time.</li>
+          <li>Regularly use Snowflake, DataGrip, and Retool for data access, analysis, and internal tooling support.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- EDUCATION -->
+  <section id="education" class="glass-section bg-gray-800 py-16 animate__animated animate__fadeInUp">
+    <div class="max-w-5xl mx-auto px-4 text-white">
+      <h2 class="section-title text-3xl font-semibold mb-4">🎓 Education</h2>
+      <h3 class="font-bold text-xl">Postgraduate Diploma in Business Analytics - Lambton College, Mississauga, Canada </h3>
+      <p class="text-sm text-gray-400 mb-2">2022 – 2024</p>
+      <p>This two-year post graduation program, which included a co-op term, gave me hands-on experience with tools like SQL, Microsoft Power BI and Python. 
+        I learned how to analyze data, manage projects, and improve business processes, applying these skills in real-world business settings. 
+        This experience has prepared me well for a career in business analytics, combining both technical know-how and practical application.</p>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section id="contact" class="glass-section max-w-5xl mx-auto px-4 py-16 animate__animated animate__fadeInUp">
+    <h2 class="section-title text-3xl font-semibold mb-4">📧 Contact</h2>
+    <p>Email: <a href="mailto:mohamedansarkms@gmail.com" class="underline">mohamedansarkms@gmail.com</a></p>
+    <p>LinkedIn: <a href="https://www.linkedin.com/in/kmsmohamedansar/" class="underline" target="_blank">linkedin.com/kmsmohamedansar</a></p>
+  </section>
+
+  <script>
+    VANTA.NET({ el: '#vanta-bg', color: 0xffffff, backgroundColor: 0x111827, points: 25, maxDistance: 30, spacing: 20 });
+    particlesJS('particles-js', {
+      particles: { number: { value: 80 }, size: { value: 3 }, move: { speed: 1.5 }, line_linked: { enable: true, color: '#ffffff' } },
+      interactivity: { events: { onhover: { enable: true, mode: 'repulse' } } }
+    });
+    AOS.init({ once: true, duration: 800 });
+    VanillaTilt.init(document.querySelectorAll('.tilt'), { max: 15, speed: 400, glare: true, 'max-glare': 0.3 });
+    const keywords = ['Neural Networks','Transfer Learning','Data Pipelines','MLOps','Explainable AI','RAG','SHAP'];
+    let idx = 0;
+    setInterval(() => {
+      document.getElementById('mlWords').innerText = keywords[idx];
+      idx = (idx + 1) % keywords.length;
+    }, 2500);
+    new Typed("#typed", {
+      strings: ["Mohamed Ansar", "Business Analyst", "Tech Support Specialist", "ML/AI Enthusiast"],
+      typeSpeed: 80,
+      backSpeed: 40,
+      loop: true
+    });
+  </script>
+</body>
+</html>
