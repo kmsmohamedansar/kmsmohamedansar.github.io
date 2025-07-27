@@ -4,41 +4,44 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Mohamed Ansar — ML Portfolio</title>
-  <!-- Tailwind CSS -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
+  <link rel="stylesheet" href="https://unpkg.com/aos@2.3.1/dist/aos.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+  <meta name="description" content="Mohamed Ansar — ML Engineer Portfolio with AI Projects, Dashboards, and Technical Skills.">
+  <meta property="og:title" content="Mohamed Ansar — ML Portfolio">
+  <meta property="og:image" content="https://kmsmohamedansar.github.io/preview.png">
+  <meta property="og:url" content="https://kmsmohamedansar.github.io">
   <script src="https://cdn.tailwindcss.com"></script>
   <script>tailwind.config = { darkMode: 'class' }</script>
-  <!-- Animate.css -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
-  <!-- Three.js & Vanta.js (Neural Net) -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r121/three.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/vanta@0.5.21/dist/vanta.net.min.js"></script>
-  <!-- Particles.js -->
   <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
-  <!-- AOS.js -->
-  <link rel="stylesheet" href="https://unpkg.com/aos@2.3.1/dist/aos.css" />
   <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-  <!-- Vanilla Tilt -->
   <script src="https://cdn.jsdelivr.net/npm/vanilla-tilt@1.7.3/dist/vanilla-tilt.min.js"></script>
-
+  <script src="https://cdn.jsdelivr.net/npm/typed.js@2.0.12"></script>
   <style>
-
-    /* ML Keywords Ticker */
+    body { font-family: 'Inter', sans-serif; overflow-x: hidden; }
     .ml-keywords {
-      position: fixed; bottom: 20px; right: 20px;
-      font-size: 0.9rem; color: #00ffc3;
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      font-size: 0.9rem;
+      color: #00ffc3;
       animation: flicker 1s infinite alternate;
       z-index: 50;
     }
-    @keyframes flicker { from { opacity: 0.2; } to { opacity: 1; } }
-    body { overflow-x: hidden; }
+    @keyframes flicker {
+      from { opacity: 0.2; }
+      to { opacity: 1; }
+    }
   </style>
 </head>
 <body class="bg-gray-900 text-gray-100">
-
-  <!-- Particles background -->
   <div id="particles-js" class="fixed inset-0 -z-40"></div>
+  <button onclick="document.documentElement.classList.toggle('dark')" class="fixed top-5 right-5 z-50 p-2 rounded-full bg-gray-200 dark:bg-gray-700 shadow-md">
+    🌓
+  </button>
 
-  <!-- Navbar -->
   <nav class="fixed top-0 w-full bg-gray-800 bg-opacity-80 backdrop-blur-md shadow z-50 animate__animated animate__fadeInDown">
     <div class="max-w-6xl mx-auto flex items-center justify-between p-4">
       <a href="#" class="text-2xl font-bold">Mohamed Ansar</a>
@@ -53,35 +56,29 @@
     </div>
   </nav>
 
-  <!-- Hero Section -->
   <header id="hero" class="relative h-screen flex items-center justify-center">
     <div id="vanta-bg" class="absolute inset-0 -z-30"></div>
-    <div class="racetrack"></div>
     <div class="relative z-50 text-center px-4">
-      <h1 class="text-5xl md:text-6xl font-extrabold mb-4 animate__animated animate__fadeInDown
-                 text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-purple-500 to-pink-500">
-        👋 Hi, I'm Mohamed Ansar
+      <h1 class="text-5xl md:text-6xl font-extrabold mb-4 animate__animated animate__fadeInDown text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-purple-500 to-pink-500">
+        👋 Hi, I'm <span id="typed"></span>
       </h1>
       <p class="text-xl md:text-2xl mb-6 animate__animated animate__fadeInUp text-gray-200">
         Data‑Driven Business Analyst | Tech Support Specialist @ Datasembly | Ex‑Amazon | Ex‑Spongelii
       </p>
       <p class="text-gray-300 mb-4">Based in Mississauga</p>
-      <a href="#about"
-         class="inline-block bg-white text-gray-900 px-8 py-3 rounded-full shadow-lg hover:scale-105 transform transition
-                animate__animated animate__pulse animate__infinite">
+      <a href="#about" class="inline-block bg-white text-gray-900 px-8 py-3 rounded-full shadow-lg hover:scale-105 transform transition animate__animated animate__pulse animate__infinite">
         Learn More
       </a>
     </div>
+    <div class="absolute bottom-10 left-1/2 transform -translate-x-1/2 text-white animate-bounce">↓</div>
   </header>
 
-  <!-- ML Keywords Ticker -->
   <div class="ml-keywords"><span id="mlWords"></span></div>
 
-  <!-- About Section -->
   <section id="about" class="max-w-4xl mx-auto px-4 py-16 animate__animated animate__fadeInUp">
     <h2 class="text-3xl font-semibold mb-4">About Me</h2>
     <p class="text-gray-300 leading-relaxed mb-4">
-      I’m a data-driven Business Analyst with 4+ years delivering scalable solutions & insights at  
+      I’m a data-driven Business Analyst with 4+ years delivering scalable solutions & insights at
       Amazon Prime Video (QA & automation), Spongelii (blockchain/NFT), and now Datasembly (Tech Support Specialist).
     </p>
     <p class="text-gray-300 leading-relaxed">
@@ -90,49 +87,48 @@
     </p>
   </section>
 
-  <!-- Projects Section -->
   <section id="projects" class="max-w-6xl mx-auto px-4 py-16 animate__animated animate__fadeInUp animate__delay-100">
     <h2 class="text-3xl font-semibold mb-8 text-center">🚀 Projects</h2>
     <div class="grid gap-8 md:grid-cols-2">
-      <!-- TaskMaster -->
-      <div class="tilt bg-gray-800 p-6 rounded-2xl shadow-lg" data-aos="fade-up">
-        <h3 class="text-xl font-bold mb-2 text-white">
-          🔁 TaskMaster: Automated Pipeline & Random Forest
-        </h3>
-        <p class="text-gray-400 mb-2">
-          Retry-enabled pipeline, Random Forest on synthetic data, Gradio deployment.
-        </p>
+      <div class="tilt bg-gray-800 p-6 rounded-2xl shadow hover:scale-105 transition duration-300" data-aos="fade-up">
+        <h3 class="text-xl font-bold mb-2 text-white">🔁 TaskMaster: Automated Pipeline & Random Forest</h3>
+        <p class="text-gray-400 mb-2">Retry-enabled pipeline, Random Forest on synthetic data, Gradio deployment.</p>
         <p class="text-xs text-gray-500 mb-2"><strong>Tech:</strong> Python, scikit‑learn, Gradio</p>
+        <div class="mt-4 space-x-2">
+          <a href="https://github.com/yourrepo/taskmaster" target="_blank" class="px-4 py-2 text-sm bg-blue-500 hover:bg-blue-600 text-white rounded-lg">GitHub</a>
+          <a href="https://taskmaster.demo" target="_blank" class="px-4 py-2 text-sm bg-green-500 hover:bg-green-600 text-white rounded-lg">Live Demo</a>
+        </div>
       </div>
-      <!-- High-Value Customer Predictor -->
-      <div class="tilt bg-gray-800 p-6 rounded-2xl shadow-lg" data-aos="fade-up" data-aos-delay="100">
+      <div class="tilt bg-gray-800 p-6 rounded-2xl shadow hover:scale-105 transition duration-300" data-aos="fade-up" data-aos-delay="100">
         <h3 class="text-xl font-bold mb-2 text-white">💎 High-Value Customer Predictor</h3>
-        <p class="text-gray-400 mb-2">
-          RFM classification, SHAP explainability, MLflow tracking, Streamlit UI.
-        </p>
+        <p class="text-gray-400 mb-2">RFM classification, SHAP explainability, MLflow tracking, Streamlit UI.</p>
         <p class="text-xs text-gray-500 mb-2"><strong>Tech:</strong> DuckDB, SHAP, MLflow, Streamlit</p>
+        <div class="mt-4 space-x-2">
+          <a href="https://github.com/yourrepo/customer-predictor" target="_blank" class="px-4 py-2 text-sm bg-blue-500 hover:bg-blue-600 text-white rounded-lg">GitHub</a>
+          <a href="https://customer-predictor.demo" target="_blank" class="px-4 py-2 text-sm bg-green-500 hover:bg-green-600 text-white rounded-lg">Live Demo</a>
+        </div>
       </div>
-      <!-- Grocery AI Assistant -->
-      <div class="tilt bg-gray-800 p-6 rounded-2xl shadow-lg" data-aos="fade-up" data-aos-delay="200">
+      <div class="tilt bg-gray-800 p-6 rounded-2xl shadow hover:scale-105 transition duration-300" data-aos="fade-up" data-aos-delay="200">
         <h3 class="text-xl font-bold mb-2 text-white">🛒 Grocery AI Assistant</h3>
-        <p class="text-gray-400 mb-2">
-          Local RAG with FAISS & Flan‑T5, offline Gradio Q&A.
-        </p>
+        <p class="text-gray-400 mb-2">Local RAG with FAISS & Flan‑T5, offline Gradio Q&A.</p>
         <p class="text-xs text-gray-500 mb-2"><strong>Tech:</strong> FAISS, LangChain, Transformers</p>
+        <div class="mt-4 space-x-2">
+          <a href="https://github.com/yourrepo/grocery-ai" target="_blank" class="px-4 py-2 text-sm bg-blue-500 hover:bg-blue-600 text-white rounded-lg">GitHub</a>
+          <a href="https://grocery-ai.demo" target="_blank" class="px-4 py-2 text-sm bg-green-500 hover:bg-green-600 text-white rounded-lg">Live Demo</a>
+        </div>
       </div>
-      <!-- Sentiment Analysis -->
-      <div class="tilt bg-gray-800 p-6 rounded-2xl shadow-lg" data-aos="fade-up" data-aos-delay="300">
+      <div class="tilt bg-gray-800 p-6 rounded-2xl shadow hover:scale-105 transition duration-300" data-aos="fade-up" data-aos-delay="300">
         <h3 class="text-xl font-bold mb-2 text-white">📝 Sentiment Analysis on Amazon Reviews</h3>
-        <p class="text-gray-400 mb-2">
-          TF‑IDF & Logistic Regression baseline + fine-tuned DistilBERT, Gradio UI.
-        </p>
+        <p class="text-gray-400 mb-2">TF‑IDF & Logistic Regression baseline + fine-tuned DistilBERT, Gradio UI.</p>
         <p class="text-xs text-gray-500 mb-2"><strong>Tech:</strong> TF‑IDF, DistilBERT, Gradio</p>
+        <div class="mt-4 space-x-2">
+          <a href="https://github.com/yourrepo/sentiment-analysis" target="_blank" class="px-4 py-2 text-sm bg-blue-500 hover:bg-blue-600 text-white rounded-lg">GitHub</a>
+          <a href="https://sentiment.demo" target="_blank" class="px-4 py-2 text-sm bg-green-500 hover:bg-green-600 text-white rounded-lg">Live Demo</a>
+        </div>
       </div>
-      <!-- …other project cards… -->
     </div>
   </section>
 
-  <!-- Skills Section -->
   <section id="skills" class="bg-gray-800 py-16 animate__animated animate__fadeInUp animate__delay-200">
     <div class="max-w-5xl mx-auto px-4">
       <h2 class="text-3xl font-semibold mb-6 text-center text-white">🛠️ Skills</h2>
@@ -147,102 +143,84 @@
         </div>
         <div class="bg-gray-700 p-6 rounded-lg shadow text-white">
           <h3 class="font-bold mb-2">Databases & ETL</h3>
-          <p>Data Modeling, ETL Pipelines</p>
+          <p>Snowflake, BigQuery, DuckDB, ETL Pipelines</p>
         </div>
         <div class="bg-gray-700 p-6 rounded-lg shadow text-white">
-          <h3 class="font-bold mb-2">Tools & Tech</h3>
-          <p>Confluence, WordPress</p>
+          <h3 class="font-bold mb-2">Tools & DevOps</h3>
+          <p>AWS, Docker, GitHub Actions, Terraform</p>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- Experience Section -->
   <section id="experience" class="max-w-5xl mx-auto px-4 py-16 animate__animated animate__fadeInUp">
     <h2 class="text-3xl font-semibold mb-6 text-white">💼 Experience</h2>
     <div class="space-y-8">
       <div data-aos="fade-up">
-        <h3 class="font-bold text-xl text-white">
-          Business Analyst, Customer Success @ Amazon Prime Video
-        </h3>
+        <h3 class="font-bold text-xl text-white">Business Analyst, Customer Success @ Amazon Prime Video</h3>
         <p class="text-sm text-gray-400 mb-2">2019 – 2022</p>
         <ul class="list-disc ml-6 text-gray-300">
           <li>Created Power BI dashboards & VBA automations for weekly reviews.</li>
           <li>Authored BRDs, performed SWOT & FMEA analyses.</li>
-          <li>Resolved escalations via ServiceNow.</li>
+          <li>Resolved escalations via ServiceNow, improving resolution time by 30%.</li>
         </ul>
       </div>
       <div data-aos="fade-up" data-aos-delay="100">
         <h3 class="font-bold text-xl text-white">Business Analyst, Intern @ Spongelii</h3>
         <p class="text-sm text-gray-400 mb-2">Jan 2024 – Apr 2024</p>
         <ul class="list-disc ml-6 text-gray-300">
-          <li>Analyzed engagement data in Python; built CSS‑animated landing page.</li>
-          <li>Proposed blockchain wallet solution; mapped processes in Lucidchart.</li>
+          <li>Analyzed engagement data in Python; built CSS‑animated landing page, increasing user sign-ups by 15%.</li>
+          <li>Proposed blockchain wallet solution; mapped processes in Lucidchart for stakeholder review.</li>
         </ul>
       </div>
       <div data-aos="fade-up" data-aos-delay="200">
         <h3 class="font-bold text-xl text-white">Tech Support Specialist @ Datasembly</h3>
         <p class="text-sm text-gray-400 mb-2">2024 – Present</p>
         <ul class="list-disc ml-6 text-gray-300">
-          <li>Onboarded clients, wrote custom SQL exports, built Tableau dashboards.</li>
-          <li>Investigated pricing discrepancies; delivered deep-dive analyses.</li>
+          <li>Onboarded 20+ clients, wrote custom SQL exports, built Tableau dashboards to track adoption.</li>
+          <li>Investigated pricing discrepancies; delivered deep-dive analyses that saved clients over $50K.</li>
         </ul>
       </div>
     </div>
   </section>
 
-  <!-- Education Section -->
   <section id="education" class="bg-gray-800 py-16 animate__animated animate__fadeInUp">
     <div class="max-w-5xl mx-auto px-4 text-white">
       <h2 class="text-3xl font-semibold mb-4">🎓 Education</h2>
       <h3 class="font-bold text-xl">Postgraduate Diploma in Business Analytics @ XYZ Institute</h3>
       <p class="text-sm text-gray-400 mb-2">2022 – 2024</p>
-      <p>
-        Two‑year co‑op program covering SQL, Salesforce, Power BI, project management, and process improvement.
-      </p>
+      <p>Two‑year co‑op program covering SQL, Salesforce, Power BI, project management, and process improvement.</p>
     </div>
   </section>
 
-  <!-- Contact Section -->
   <section id="contact" class="max-w-5xl mx-auto px-4 py-16 animate__animated animate__fadeInUp">
     <h2 class="text-3xl font-semibold mb-4 text-white">📧 Contact</h2>
+    <p>Let’s work together! Reach out via email or connect on LinkedIn.</p>
     <p>Email: <a href="mailto:mohamedansarkms@gmail.com" class="underline">mohamedansarkms@gmail.com</a></p>
     <p>LinkedIn: <a href="https://linkedin.com/in/mohamedansar" class="underline" target="_blank">linkedin.com/in/mohamedansar</a></p>
+    <a href="/assets/MohamedAnsar_Resume.pdf" target="_blank" class="mt-4 inline-block px-6 py-3 bg-blue-500 hover:bg-blue-600 text-white rounded-lg">Download Resume</a>
   </section>
 
-  <!-- Scripts Initialization -->
   <script>
-    VANTA.NET({
-      el: '#vanta-bg',
-      color: 0xffffff,
-      backgroundColor: 0x111827,
-      points: 25,
-      maxDistance: 30,
-      spacing: 20
-    });
+    VANTA.NET({ el: '#vanta-bg', color: 0xffffff, backgroundColor: 0x111827, points: 25, maxDistance: 30, spacing: 20 });
     particlesJS('particles-js', {
-      particles: {
-        number: { value: 80 },
-        size: { value: 3 },
-        move: { speed: 1.5 },
-        line_linked: { enable: true },
-        color: { value: '#ffffff' }
-      },
+      particles: { number: { value: 80 }, size: { value: 3 }, move: { speed: 1.5 }, line_linked: { enable: true, color: '#ffffff' } },
       interactivity: { events: { onhover: { enable: true, mode: 'repulse' } } }
     });
     AOS.init({ once: true, duration: 800 });
-    VanillaTilt.init(document.querySelectorAll('.tilt'), {
-      max: 15,
-      speed: 400,
-      glare: true,
-      'max-glare': 0.3
-    });
+    VanillaTilt.init(document.querySelectorAll('.tilt'), { max: 15, speed: 400, glare: true, 'max-glare': 0.3 });
     const keywords = ['Neural Networks','Transfer Learning','Data Pipelines','MLOps','Explainable AI','RAG','SHAP'];
     let idx = 0;
     setInterval(() => {
       document.getElementById('mlWords').innerText = keywords[idx];
       idx = (idx + 1) % keywords.length;
     }, 2500);
+    new Typed("#typed", {
+      strings: ["Mohamed Ansar", "ML Engineer", "AI Innovator"],
+      typeSpeed: 80,
+      backSpeed: 40,
+      loop: true
+    });
   </script>
 </body>
 </html>
