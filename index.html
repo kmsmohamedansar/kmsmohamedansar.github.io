@@ -489,6 +489,111 @@ print(df[["product_name","last_category","category_match_score"]].head())
           <!-- <p class="mb-2"><a href="YOUR_MEDIUM_LINK" class="underline text-blue-300" target="_blank">Medium Article</a> · <a href="https://huggingface.co/tasks/zero-shot-classification" class="underline text-blue-300" target="_blank">HF Zero-Shot Docs</a></p> -->
         </div>
       </div>
+
+       <!-- NEW 1: Spotify Music Trends Analysis -->
+      <div class="tilt bg-gray-800 p-6 rounded-2xl shadow hover:scale-105 transition duration-300 relative" data-aos="fade-up" data-aos-delay="600">
+        <h3 class="text-xl font-bold mb-2 text-white">🎧 Spotify Music Trends — Statistical Analysis &amp; Viz</h3>
+        <p class="text-gray-400 mb-2">EDA of audio features and popularity trends across decades; correlations &amp; visual insights.</p>
+        <p class="text-xs text-gray-500 mb-2"><strong>Tech:</strong> Python, pandas, NumPy, Matplotlib, Seaborn</p>
+        <div class="mt-4 space-x-2">
+          <!-- Optional links -->
+          <!-- <a href="YOUR_REPO_LINK" target="_blank" class="px-4 py-2 text-sm bg-blue-500 hover:bg-blue-600 text-white rounded-lg">GitHub</a> -->
+          <button data-toggle="#spotify-details" class="px-4 py-2 text-sm bg-gray-700 hover:bg-gray-600 text-white rounded-lg">Show More</button>
+        </div>
+        <div id="spotify-details" class="hidden bg-gray-900 border border-gray-700 rounded-xl mt-6 p-4 text-gray-200 text-sm max-h-[600px] overflow-y-auto">
+          <h4 class="font-semibold mb-3 text-lg text-blue-300">Identifying Music Trends on Spotify</h4>
+          <p class="mb-2"><strong>What I explored:</strong></p>
+          <ul class="list-disc pl-6 mb-3">
+            <li>Top tracks by popularity across the dataset.</li>
+            <li>How song length (minutes) changed by year/decade.</li>
+            <li>Trends in audio characteristics: danceability, energy, valence, liveness, instrumentalness, etc.</li>
+            <li>Which features correlate most with popularity (scatter grids + heatmap).</li>
+          </ul>
+          <p class="mb-2"><strong>Highlights:</strong></p>
+          <ul class="list-disc pl-6 mb-3">
+            <li>1970–1980 had the longest average track lengths; 1920–1940 the shortest.</li>
+            <li>Strong positive correlation between energy and loudness (~0.78); negative with acousticness (~−0.74).</li>
+            <li>Danceability and valence moderately positive (~0.56) — “happier” songs often danceable.</li>
+          </ul>
+          <p class="mb-2"><strong>Code snippets:</strong></p>
+          <pre class="bg-gray-800 text-gray-100 rounded-md p-2 overflow-x-auto mb-2 text-xs">
+# Top 10 tracks by popularity
+top10 = df.groupby("name")["popularity"].mean().sort_values(ascending=False).head(10)
+top10.plot(kind="bar", figsize=(15,5))
+
+# Song length over years
+sns.set_style("whitegrid")
+fig, ax = plt.subplots(figsize=(15,7))
+sns.lineplot(x=df["year"], y=df["duration_min"], ax=ax).set(title="Song length (mins) over the years")
+
+# Audio characteristics by year
+cols = ["acousticness","danceability","energy","speechiness","liveness","valence","instrumentalness"]
+plt.figure(figsize=(30,30)); sns.set(font_scale=4)
+for c in cols:
+    x = df.groupby("year")[c].mean()
+    sns.lineplot(x=x, linewidth=3.5, label=c)
+plt.title("Change in audio characteristics over the years")
+          </pre>
+          <p class="mb-2"><strong>Correlation work:</strong> scatter grids vs. popularity + full correlation heatmap to spot drivers and trade-offs.</p>
+          <pre class="bg-gray-800 text-gray-100 rounded-md p-2 overflow-x-auto mb-2 text-xs">
+plt.figure(figsize=(20,7))
+sns.heatmap(df.corr(numeric_only=True), cmap="RdBu", annot=True)
+          </pre>
+          <p class="text-green-400"><strong>Takeaway:</strong> A repeatable template for content analytics—feature trends, rankers, and correlation → quick product or playlist insights.</p>
+        </div>
+      </div>
+
+      <!-- NEW 2: Canadian Premier League Dream Team -->
+      <div class="tilt bg-gray-800 p-6 rounded-2xl shadow hover:scale-105 transition duration-300 relative" data-aos="fade-up" data-aos-delay="700">
+        <h3 class="text-xl font-bold mb-2 text-white">⚽ Canadian Premier League — Dream Team (2019)</h3>
+        <p class="text-gray-400 mb-2">Data-driven XI selection using Python KPIs + interactive Power BI dashboard.</p>
+        <p class="text-xs text-gray-500 mb-2"><strong>Tech:</strong> Python (pandas, matplotlib, seaborn), Power BI, CSV/ETL</p>
+        <div class="mt-4 space-x-2">
+          <!-- Optional links -->
+          <!-- <a href="YOUR_POWERBI_LINK" target="_blank" class="px-4 py-2 text-sm bg-blue-500 hover:bg-blue-600 text-white rounded-lg">Dashboard</a> -->
+          <button data-toggle="#cpl-details" class="px-4 py-2 text-sm bg-gray-700 hover:bg-gray-600 text-white rounded-lg">Show More</button>
+        </div>
+        <div id="cpl-details" class="hidden bg-gray-900 border border-gray-700 rounded-xl mt-6 p-4 text-gray-200 text-sm max-h-[600px] overflow-y-auto">
+          <h4 class="font-semibold mb-3 text-lg text-blue-300">CPL 2019 — Dream Team: Method &amp; KPIs</h4>
+          <p class="mb-2"><strong>Goal:</strong> Build a best‑XI using transparent, explainable KPIs for each role.</p>
+          <p class="mb-2"><strong>Team-level analytics:</strong></p>
+          <ul class="list-disc pl-6 mb-3">
+            <li>Total goals (bar rank), shots‑on‑target ratio (in‑box vs out‑of‑box), pass completion, fouls committed, touches in opposition box.</li>
+            <li>Composite “overall score” = goals + SOT ratio + pass completion + touches − fouls − cards.</li>
+          </ul>
+          <pre class="bg-gray-800 text-gray-100 rounded-md p-2 overflow-x-auto mb-2 text-xs">
+# Example: shots on target ratio per team
+shots_on_target = (df.groupby('team')['SOTInBox'].sum() /
+                   df.groupby('team')['SOTOBox'].sum()).sort_values(ascending=False)
+plt.stem(shots_on_target.index, shots_on_target.values); plt.xticks(rotation=45)
+          </pre>
+          <p class="mb-2"><strong>Role heuristics (players):</strong></p>
+          <ul class="list-disc pl-6 mb-3">
+            <li><b>CF:</b> score = goals + penalties − expected goals</li>
+            <li><b>LW/RW:</b> score = 2×assists + expected assists + 0.5×chances</li>
+            <li><b>CAM:</b> score = 2×goals + assists + 0.5×chances</li>
+            <li><b>DM:</b> score = assists + 2×successful tackles + 0.5×interceptions</li>
+            <li><b>LB/RB:</b> score = 2×interceptions + 0.5×tackles + duels won</li>
+            <li><b>CB:</b> score = interceptions + 2×tackles + 3×clearances</li>
+            <li><b>GK:</b> score = 2×saves + 3×clean sheets</li>
+          </ul>
+          <pre class="bg-gray-800 text-gray-100 rounded-md p-2 overflow-x-auto mb-2 text-xs">
+# Left back ranking example
+def rank_left_back(df):
+    sub = df[df["Position"]=="Left Back"].copy()
+    sub["score"] = 2*sub["Int"] + 0.5*sub["SucflTkls"] + sub["SucflDuels"]
+    return sub.sort_values("score", ascending=False)[["firstName","lastName","score"]].head(5)
+          </pre>
+          <p class="mb-2"><strong>Deliverables:</strong></p>
+          <ul class="list-disc pl-6 mb-3">
+            <li>Python notebook for KPI computation and shortlists.</li>
+            <li>Power BI dashboard: Dream XI view, player stats, team comparison, and index.</li>
+          </ul>
+          <p class="text-green-400"><strong>Outcome:</strong> A reproducible, critique‑friendly selection process that balances output (goals/assists), creation (xA/chances), and defensive contribution.</p>
+          <p class="text-gray-400 text-xs">Names shown in the write-up (e.g., Tristan Borges, Nathan Ingham) reflect 2019 CPL performances used for illustration.</p>
+        </div>
+      </div>
+      
     </div>
   </section>
 
