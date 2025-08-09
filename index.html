@@ -205,7 +205,7 @@ sv = explainer(X_test[:1]); shap.plots.waterfall(sv[0])
 # MLflow
 import mlflow, mlflow.sklearn
 with mlflow.start_run():
-  mlflow.log_params({"model":"RandomForest","max_depth":12,"n_estimators":200})
+  mlflow.log_params({"model":"RandomForest","max_depth":12","n_estimators":200})
   mlflow.log_metric("roc_auc", roc_auc_score(y_test, model.predict_proba(X_test)[:,1]))
   mlflow.sklearn.log_model(model, "model")
           </pre>
@@ -407,6 +407,88 @@ pd.DataFrame(rows).to_csv("yahoo_finance_news_detailed.csv", index=False)
           <p class="text-green-400"><b>Impact:</b> Automates JS-heavy news collection reliably—useful for alerts, trend tracking, or downstream NLP.</p>
         </div>
       </div>
+
+      <!-- NEW: Smart Product Categorization (Zero-Shot) -->
+      <div class="tilt bg-gray-800 p-6 rounded-2xl shadow hover:scale-105 transition duration-300 relative" data-aos="fade-up" data-aos-delay="500">
+        <h3 class="text-xl font-bold mb-2 text-white">🧠 Smart Product Categorization — Zero-Shot NLP</h3>
+        <p class="text-gray-400 mb-2">Automatic product-to-category matching for e-commerce using zero-shot learning and simple rules.</p>
+        <p class="text-xs text-gray-500 mb-2"><strong>Tech:</strong> Python, pandas, ast, Transformers (facebook/bart-large-mnli), Zero-Shot Learning</p>
+        <div class="mt-4 space-x-2">
+          <!-- Optional links: add when ready -->
+          <!-- <a href="YOUR_REPO_LINK" target="_blank" class="px-4 py-2 text-sm bg-blue-500 hover:bg-blue-600 text-white rounded-lg">GitHub</a> -->
+          <!-- <a href="YOUR_COLAB_LINK" target="_blank" class="px-4 py-2 text-sm bg-green-500 hover:bg-green-600 text-white rounded-lg">Colab</a> -->
+          <button data-toggle="#zero-shot-details" class="px-4 py-2 text-sm bg-gray-700 hover:bg-gray-600 text-white rounded-lg">Show More</button>
+        </div>
+        <div id="zero-shot-details" class="hidden bg-gray-900 border border-gray-700 rounded-xl mt-6 p-4 text-gray-200 text-sm max-h-[600px] overflow-y-auto">
+          <h4 class="font-semibold mb-2 text-lg text-blue-300">Smart Product Categorization with NLP and Zero-Shot Learning</h4>
+
+          <p class="mb-3"><strong>Problem:</strong> Large catalogs get miscategorized; manual QA is slow and costly. We need a scalable way to verify (and improve) product→category mapping.</p>
+
+          <p class="mb-2"><strong>Data:</strong> Walmart product dataset with product names and category paths.</p>
+
+          <p class="mb-2"><strong>Approach:</strong></p>
+          <ol class="list-decimal pl-6 mb-3">
+            <li><b>Parse categories:</b> Convert category-path strings → Python lists; extract the last (most specific) category.</li>
+            <li><b>Simple rule:</b> Case-insensitive keyword inclusion check (<em>quick baseline</em>).</li>
+            <li><b>Zero-shot check:</b> Use <code>facebook/bart-large-mnli</code> to score how well the product name fits the last category (0–1 confidence).</li>
+            <li><b>Review:</b> Low scores → likely miscategorized → flag for correction.</li>
+          </ol>
+
+          <p class="mb-2"><strong>Sample Output:</strong></p>
+          <div class="overflow-x-auto mb-3">
+            <table class="min-w-full text-left text-xs md:text-sm">
+              <thead class="text-gray-400">
+                <tr><th class="pr-6 py-1">Product Name</th><th class="pr-6 py-1">Last Category</th><th class="py-1">Match Score</th></tr>
+              </thead>
+              <tbody class="text-gray-200">
+                <tr><td class="pr-6 py-1">Laura Mercier Caviar Stick Eye Color...</td><td class="pr-6 py-1">Eye Shadow Stick</td><td class="py-1">0.23</td></tr>
+                <tr><td class="pr-6 py-1">Grey Blackout Curtains for Living Room</td><td class="pr-6 py-1">Blackout Curtains</td><td class="py-1">0.99</td></tr>
+                <tr><td class="pr-6 py-1">Women's Plus Size Stretch Knit Top</td><td class="pr-6 py-1">Plus Size Tops</td><td class="py-1">0.00</td></tr>
+                <tr><td class="pr-6 py-1">100% Cotton King Percale Duvet Set</td><td class="pr-6 py-1">King Duvet Covers</td><td class="py-1">0.98</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <p class="mb-2"><strong>Core Code Highlights:</strong></p>
+          <pre class="bg-gray-800 text-gray-100 rounded-md p-2 overflow-x-auto mb-2 text-xs">
+import pandas as pd, ast
+df = pd.read_csv("/content/walmart-products.csv")
+
+def parse_categories(cat_str):
+    try: return ast.literal_eval(cat_str)
+    except: return []
+
+df["categories_list"] = df["categories"].apply(parse_categories)
+df["last_category"] = df["categories_list"].apply(lambda x: x[-1] if x else None)
+
+def keyword_match(row):
+    if not row["last_category"]: return False
+    return row["last_category"].lower().replace(" ","") in row["product_name"].lower().replace(" ","")
+
+df["simple_match"] = df.apply(keyword_match, axis=1)
+
+# Zero-shot classification
+!pip -q install transformers
+from transformers import pipeline
+zshot = pipeline("zero-shot-classification", model="facebook/bart-large-mnli")
+
+def match_score(row):
+    if not row["last_category"] or not isinstance(row["product_name"], str):
+        return None
+    res = zshot(row["product_name"], row["last_category"])
+    return res["scores"][0]
+
+df["category_match_score"] = df.apply(match_score, axis=1)
+print(df[["product_name","last_category","category_match_score"]].head())
+          </pre>
+
+          <p class="mb-2"><strong>Performance Notes:</strong> Zero-shot on CPU is slow (minutes per batch). For scale: batch inputs, run on GPU, cache model, or pre-screen with keyword/embedding filters.</p>
+          <p class="mb-3 text-green-400"><strong>Impact:</strong> Flags subtle misclassifications that rules miss; improves findability and reduces catalog QA time.</p>
+
+          <!-- Optional: external write-ups or docs -->
+          <!-- <p class="mb-2"><a href="YOUR_MEDIUM_LINK" class="underline text-blue-300" target="_blank">Medium Article</a> · <a href="https://huggingface.co/tasks/zero-shot-classification" class="underline text-blue-300" target="_blank">HF Zero-Shot Docs</a></p> -->
+        </div>
+      </div>
     </div>
   </section>
 
@@ -574,7 +656,7 @@ pd.DataFrame(rows).to_csv("yahoo_finance_news_detailed.csv", index=False)
       'Neural Networks','Transfer Learning','Data Pipelines','MLOps','Explainable AI','RAG',
       'Model Deployment','Feature Engineering','Hugging Face','Streamlit','Airflow','MLflow',
       'Prompt Engineering','LLMOps','Semantic Search','Vector Databases','Databricks','Snowflake',
-      'Selenium','BeautifulSoup'
+      'Selenium','BeautifulSoup','Zero-Shot Learning','BART-MNLI'
     ];
     let idx = 0;
     setInterval(() => {
