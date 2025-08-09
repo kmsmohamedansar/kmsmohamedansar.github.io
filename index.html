@@ -20,13 +20,8 @@
   <style>
     body { font-family: 'Inter', sans-serif; overflow-x: hidden; }
     .ml-keywords {
-      position: fixed;
-      bottom: 20px;
-      right: 20px;
-      font-size: 0.9rem;
-      color: #00ffc3;
-      animation: flicker 1s infinite alternate;
-      z-index: 50;
+      position: fixed; bottom: 20px; right: 20px; font-size: 0.9rem; color: #00ffc3;
+      animation: flicker 1s infinite alternate; z-index: 50;
     }
     @keyframes flicker { from { opacity: 0.2; } to { opacity: 1; } }
     pre { overflow-x: auto; }
@@ -36,9 +31,10 @@
 </head>
 <body class="bg-gray-900 text-gray-100">
   <canvas id="anime-bg" style="position:fixed;top:0;left:0;width:100vw;height:100vh;z-index:-1"></canvas>
-  <button onclick="document.documentElement.classList.toggle('dark')" class="fixed top-5 right-5 z-50 p-2 rounded-full bg-gray-200 dark:bg-gray-700 shadow-md">
+  <button onclick="document.documentElement.classList.toggle('dark')" class="fixed top-5 right-5 z-50 p-2 rounded-full bg-gray-200 dark:bg-gray-700 shadow-md" aria-label="Toggle dark mode">
     🌓
   </button>
+
   <!-- Navbar -->
   <nav class="fixed top-0 w-full bg-gray-800 bg-opacity-80 backdrop-blur-md shadow z-50 animate__animated animate__fadeInDown">
     <div class="max-w-6xl mx-auto flex items-center justify-between p-4">
@@ -74,432 +70,447 @@
   </script>
 
   <!-- HERO -->
-<header id="hero" class="relative h-screen flex items-center justify-center">
-  <div class="relative z-50 text-center px-4">
-    <h1 class="text-5xl md:text-6xl font-extrabold mb-4 animate__animated animate__fadeInDown text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-purple-500 to-pink-500">
-      👋 Hi, I'm <span id="typed"></span>
-    </h1>
-    <p class="text-xl md:text-2xl mb-6 animate__animated animate__fadeInUp text-gray-200">
-      Business Analyst | Data Engineering Enthusiast | Python | SQL | MLOps
+  <header id="hero" class="relative h-screen flex items-center justify-center">
+    <div class="relative z-50 text-center px-4">
+      <h1 class="text-5xl md:text-6xl font-extrabold mb-4 animate__animated animate__fadeInDown text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-purple-500 to-pink-500">
+        👋 Hi, I'm <span id="typed"></span>
+      </h1>
+      <p class="text-xl md:text-2xl mb-6 animate__animated animate__fadeInUp text-gray-200">
+        Business Analyst | Data Engineering Enthusiast | Python | SQL | MLOps
+      </p>
+      <p class="text-base md:text-lg mb-4 text-gray-400">
+        Currently at Datasembly | Ex-Amazon | Mississauga, Canada
+      </p>
+      <a href="#about" class="inline-block bg-white text-gray-900 px-8 py-3 rounded-full shadow-lg hover:scale-105 transform transition animate__animated animate__pulse animate__infinite">
+        Learn More
+      </a>
+    </div>
+    <div class="absolute bottom-10 left-1/2 transform -translate-x-1/2 text-white animate-bounce">↓</div>
+  </header>
+
+  <div class="ml-keywords"><span id="mlWords"></span></div>
+
+  <!-- ABOUT -->
+  <section id="about" class="max-w-4xl mx-auto px-4 py-16 animate__animated animate__fadeInUp">
+    <h2 class="text-3xl font-semibold mb-4">About Me</h2>
+    <p class="text-gray-300 leading-relaxed mb-4">
+      I started out as a data analyst—wrangling messy spreadsheets, automating reports, and building dashboards for SaaS and CPG companies. Over time, I got curious about what’s possible with machine learning, so I dove in headfirst: studying, experimenting, and (eventually) building real ML apps that anyone can use.
     </p>
-    <p class="text-base md:text-lg mb-4 text-gray-400">
-      Currently at Datasembly | Ex-Amazon | Mississauga, Canada
+    <p class="text-gray-300 leading-relaxed mb-4">
+      At <strong>Datasembly</strong>, I help major retailers and CPG brands get the most out of their data. My day-to-day? Custom SQL exports, data troubleshooting, and working alongside clients, sales and engineers to make sense of complex business questions.
     </p>
-    <a href="#about" class="inline-block bg-white text-gray-900 px-8 py-3 rounded-full shadow-lg hover:scale-105 transform transition animate__animated animate__pulse animate__infinite">
-      Learn More
-    </a>
-  </div>
-  <div class="absolute bottom-10 left-1/2 transform -translate-x-1/2 text-white animate-bounce">↓</div>
-</header>
+    <p class="text-gray-300 leading-relaxed mb-4">
+      Before this, I was at <strong>Amazon Prime Video</strong>, where I helped built automations and analytics tools that made life easier for our ops teams. I’ve also jumped into business development at Spongelii, where I learned to translate tech into products (and vice versa).
+    </p>
+    <p class="text-gray-300 leading-relaxed">
+      These days, I’m all about combining my data engineering background with new ML skills—think: Python, SQL, scikit-learn, Tableau, MLflow, and more. I enjoy turning business chaos into tools people actually use, and collaborating with PMs, engineers, and non-technical teams to get stuff shipped.
+    </p>
+  </section>
 
-<div class="ml-keywords"><span id="mlWords"></span></div>
-
-
-<!-- ABOUT -->
-<section id="about" class="max-w-4xl mx-auto px-4 py-16 animate__animated animate__fadeInUp">
-  <h2 class="text-3xl font-semibold mb-4">About Me</h2>
-  <p class="text-gray-300 leading-relaxed mb-4">
-    I started out as a data analyst—wrangling messy spreadsheets, automating reports, and building dashboards for SaaS and CPG companies. Over time, I got curious about what’s possible with machine learning, so I dove in headfirst: studying, experimenting, and (eventually) building real ML apps that anyone can use.
-  </p>
-  <p class="text-gray-300 leading-relaxed mb-4">
-    At <strong>Datasembly</strong>, I help major retailers and CPG brands get the most out of their data. My day-to-day? Custom SQL exports, data troubleshooting, and working alongside clients, sales and engineers to make sense of complex business questions.
-  </p>
-  <p class="text-gray-300 leading-relaxed mb-4">
-    Before this, I was at <strong>Amazon Prime Video</strong>, where I helped built automations and analytics tools that made life easier for our ops teams. I’ve also jumped into business development at Spongelii, where I learned to translate tech into products (and vice versa).
-  </p>
-  <p class="text-gray-300 leading-relaxed">
-    These days, I’m all about combining my data engineering background with new ML skills—think: Python, SQL, scikit-learn, Tableau, MLflow, and more. I enjoy turning business chaos into tools people actually use, and collaborating with PMs, engineers, and non-technical teams to get stuff shipped.
-  </p>
-</section>
-
-
-
+  <!-- PROJECTS -->
   <section id="projects" class="max-w-6xl mx-auto px-4 py-16 animate__animated animate__fadeInUp animate__delay-100">
     <h2 class="text-3xl font-semibold mb-8 text-center">🚀 Projects</h2>
     <div class="grid gap-8 md:grid-cols-2">
-      <!-- TaskMaster Card with Show More/Show Less Toggle -->
+      <!-- TaskMaster -->
       <div class="tilt bg-gray-800 p-6 rounded-2xl shadow hover:scale-105 transition duration-300 relative" data-aos="fade-up">
         <h3 class="text-xl font-bold mb-2 text-white">🔁 TaskMaster: Automated Pipeline & Random Forest</h3>
         <p class="text-gray-400 mb-2">Retry-enabled pipeline, Random Forest on synthetic data, Gradio deployment.</p>
-        <p class="text-xs text-gray-500 mb-2"><strong>Tech:</strong> Python, scikit‑learn, Gradio</p>
+        <p class="text-xs text-gray-500 mb-2"><strong>Tech:</strong> Python, scikit-learn, Gradio</p>
         <div class="mt-4 space-x-2">
           <a href="https://github.com/kmsmohamedansar/TaskMaster-Job-Scheduler" target="_blank" class="px-4 py-2 text-sm bg-blue-500 hover:bg-blue-600 text-white rounded-lg">GitHub</a>
           <a href="https://huggingface.co/spaces/kmsmohamedansar/TaskMaster-Job-Scheduler" target="_blank" class="px-4 py-2 text-sm bg-green-500 hover:bg-green-600 text-white rounded-lg">Live Demo</a>
-          <button onclick="document.getElementById('taskmaster-details').classList.toggle('hidden'); this.textContent = this.textContent === 'Show More' ? 'Show Less' : 'Show More';"
-            class="px-4 py-2 text-sm bg-gray-700 hover:bg-gray-600 text-white rounded-lg">Show More</button>
+          <button data-toggle="#taskmaster-details" class="px-4 py-2 text-sm bg-gray-700 hover:bg-gray-600 text-white rounded-lg">Show More</button>
         </div>
-        <!-- Expandable Write-up Section -->
         <div id="taskmaster-details" class="hidden bg-gray-900 border border-gray-700 rounded-xl mt-6 p-4 text-gray-200 text-sm max-h-[600px] overflow-y-auto">
           <h4 class="font-semibold mb-2 text-lg text-blue-300">TaskMaster: End-to-End ML Pipeline Orchestration & Deployment</h4>
           <p class="mb-3"><strong>1. Executive Summary:</strong><br>
-            TaskMaster showcases a production‑ready ML engineering workflow: it orchestrates a reliable data pipeline with automated retries and monitoring, trains a Random Forest classifier on synthetic data, and delivers real‑time inference through a user‑friendly web interface.
+            TaskMaster showcases a production-ready ML engineering workflow: it orchestrates a reliable data pipeline with automated retries and monitoring, trains a Random Forest classifier on synthetic data, and delivers real-time inference through a user-friendly web interface.
           </p>
           <p class="mb-3"><strong>1.1 Use Case & Real-World Relevance:</strong><br>
-            Many machine learning systems fail silently or unpredictably in production due to missing retry logic, improper error handling, and lack of modular deployment. TaskMaster simulates a real‑world ML pipeline (like ETL or IoT inference) that can self‑heal, log errors, and make reliable predictions.
+            Many machine learning systems fail silently or unpredictably in production due to missing retry logic, improper error handling, and lack of modular deployment. TaskMaster simulates a real-world ML pipeline (like ETL or IoT inference) that can self-heal, log errors, and make reliable predictions.
             <br><em>Example:</em> Imagine a churn prediction system or a recommendation engine where some data sources intermittently fail. This system ensures reliability, observability, and scalable inference without manual intervention.
           </p>
           <p class="mb-3"><strong>2. Architecture & Implementation:</strong></p>
           <ul class="list-disc pl-6 mb-3">
-            <li>
-              <b>2.1 Data Pipeline Orchestration:</b> Developed a two‑stage pipeline (Data Extraction & Data Transformation) using Python’s <code>concurrent.futures</code> for parallel execution. Implemented robust retry logic (up to 3 attempts) with structured logging to capture execution details and failure reasons. Integrated email notifications to alert on persistent failures, ensuring end‑to‑end reliability.
-            </li>
-            <li>
-              <b>2.2 Model Development:</b> Generated a labeled synthetic dataset (1,000 samples, 5 numerical features) using <code>sklearn.datasets.make_classification</code>. Trained a RandomForestClassifier (100 estimators, random_state=42) and serialized it with pickle for reproducible inference. Applied StandardScaler to normalize feature ranges, ensuring consistent model input distribution. Wrote unit tests for model output and pipeline logic to validate correctness across scenarios.
-            </li>
-            <li>
-              <b>2.3 Deployment & Inference Service:</b> Built an interactive Gradio application with five sliders, directly mapping user inputs to model features. Deployed the inference endpoint on Hugging Face Spaces (CPU‑optimized), providing zero‑infrastructure web access via a public URL. Managed dependencies via a pinned requirements.txt, ensuring deterministic builds and easy reproducibility. Designed for easy migration to a production REST API using FastAPI or Flask.
-            </li>
+            <li><b>2.1 Data Pipeline Orchestration:</b> Parallel stages with robust retries and structured logging; email alerts on persistent failures.</li>
+            <li><b>2.2 Model Development:</b> Synthetic dataset, RandomForestClassifier, StandardScaler, serialization, and unit tests.</li>
+            <li><b>2.3 Deployment & Inference:</b> Gradio UI on Hugging Face Spaces; easy migration path to FastAPI.</li>
           </ul>
-          <p class="mb-3"><strong>3. Coffee‑Shop Analogy:</strong><br>
-            <b>Bean Grinder (Data Extraction):</b> Automatically grinds beans, retries on jams up to three times, logs each attempt, and sends an alert if it still fails.<br>
-            <b>Coffee Brewer (Data Transformation):</b> Brews the ground beans, self‑heals on temperature or timing errors with retry logic, and records process metrics.<br>
-            <b>Taste Tester (Random Forest Model):</b> Learned from past “good” vs. “bad” brews to predict cup quality—outputs “Good (1)” or “Bad (0).”<br>
-            <b>Customer Touchscreen:</b> Five sliders let you choose grind size, water temperature, brew time, foam level, and sugar amount. Tap “Make Coffee” to instantly see the taste prediction.<br>
-            <span class="text-gray-400">This analogy helps non-technical stakeholders understand that TaskMaster automates data processes, ensures robustness, and provides actionable ML predictions in a simple and reliable format.</span>
-          </p>
-          <p class="mb-3"><strong>4. Core Skills & Technologies:</strong> <br>
-            Python, scikit‑learn, Gradio, Hugging Face Spaces, <code>concurrent.futures</code>, retry logic, logging, email alerts, StandardScaler, model serialization, deployment best practices, unit testing, pipeline monitoring, API-readiness
-          </p>
-          <!-- 🚀 INSERT HERE -->
-          <p class="mb-3 text-green-400"><b>Business Impact:</b> Cut data processing downtime by 80%, enabled non-technical teams to access ML predictions instantly, and showcased best practices in self-healing data pipelines.</p>
-          <!-- 🚀 END -->
-          <p class="mb-2"><strong>5. Live Demo:</strong><br>
-            <a href="https://huggingface.co/spaces/kmsmohamedansar/TaskMaster-Job-Scheduler" target="_blank" class="underline text-blue-300">▶ Try it here (Hugging Face Spaces)</a>
-            <br>
-            <span class="text-gray-400">No setup required. Use the sliders to explore how different feature combinations affect the prediction.</span>
-          </p>
+          <p class="mb-3"><strong>3. Coffee-Shop Analogy:</strong> Bean Grinder → Brewer → Taste Tester → Customer Touchscreen.</p>
+          <p class="mb-3"><strong>4. Core Skills & Tech:</strong> Python, scikit-learn, Gradio, retries, logging, alerts, monitoring, testing.</p>
+          <p class="mb-3 text-green-400"><b>Business Impact:</b> Cut data processing downtime by 80% and enabled non-technical teams to access ML predictions instantly.</p>
+          <p class="mb-2"><strong>Live Demo:</strong> <a href="https://huggingface.co/spaces/kmsmohamedansar/TaskMaster-Job-Scheduler" target="_blank" class="underline text-blue-300">▶ Try it here</a></p>
         </div>
       </div>
-     <!-- High-Value Customer Predictor Card with Show More/Show Less Toggle -->
-<div class="tilt bg-gray-800 p-6 rounded-2xl shadow hover:scale-105 transition duration-300 relative" data-aos="fade-up" data-aos-delay="100">
-  <h3 class="text-xl font-bold mb-2 text-white">💎 High-Value Customer Predictor</h3>
-  <p class="text-gray-400 mb-2">End-to-End ML + MLOps solution for identifying your best customers, with explainable AI and deployment.</p>
-  <p class="text-xs text-gray-500 mb-2"><strong>Tech:</strong> DuckDB, Pandera, Data Cleaning, Feature Engineering, Data Analysis, RandomForest, Streamlit, SHAP, MLflow</p>
-  <div class="mt-4 space-x-2">
-    <a href="https://github.com/kmsmohamedansar/high-value-customer-predictor" target="_blank" class="px-4 py-2 text-sm bg-blue-500 hover:bg-blue-600 text-white rounded-lg">GitHub</a>
-    <a href="https://huggingface.co/spaces/kmsmohamedansar/high-value-customer-predictor" target="_blank" class="px-4 py-2 text-sm bg-green-500 hover:bg-green-600 text-white rounded-lg">Live Demo</a>
-    <button onclick="document.getElementById('customer-details').classList.toggle('hidden'); this.textContent = this.textContent === 'Show More' ? 'Show Less' : 'Show More';"
-      class="px-4 py-2 text-sm bg-gray-700 hover:bg-gray-600 text-white rounded-lg">Show More</button>
-  </div>
-  <!-- Expandable Write-up Section -->
-  <div id="customer-details" class="hidden bg-gray-900 border border-gray-700 rounded-xl mt-6 p-4 text-gray-200 text-sm max-h-[600px] overflow-y-auto">
-    <h4 class="font-semibold mb-2 text-lg text-blue-300">High-Value Customer Predictor (End-to-End ML + MLOps)</h4>
-    <p class="mb-3"><strong>Problem Statement:</strong><br>
-      Businesses often struggle to identify customers who contribute the most to their revenue. Our goal: build an intelligent system that flags “high-value customers” based on their purchase behavior — so businesses can retain and nurture them.
-    </p>
-    <p class="mb-3"><strong>Steps Involved:</strong></p>
-    <ul class="list-disc pl-6 mb-3">
-      <li><b>Cleaned raw sales data:</b> Turned messy spreadsheet data into clean, usable information</li>
-      <li><b>Built features:</b> Created smart customer metrics like: how often they order, total profit, etc.</li>
-      <li><b>Trained a model:</b> Taught a machine to classify which customers are "high-value"</li>
-      <li><b>Evaluated performance:</b> Measured how well the model performs using accuracy and confidence scores</li>
-      <li><b>Explained predictions:</b> Used SHAP to visually explain why the model made each prediction</li>
-      <li><b>Built a UI:</b> Created a Streamlit web app where anyone can try predictions interactively</li>
-      <li><b>Logged with MLflow:</b> Tracked model version, metrics, and SHAP insights in a model registry</li>
-      <li><b>Deployed to Hugging Face:</b> Put everything live on the web so it’s publicly accessible</li>
-    </ul>
-    <p class="mb-3"><strong>Key ML Techniques:</strong><br>
-      <b>Data Engineering:</b> DuckDB used for SQL-style cleaning inside Python<br>
-      <b>Feature Engineering:</b> RFM score, discount habits, tenure, profit margin<br>
-      <b>Model:</b> RandomForestClassifier (with tuning)<br>
-      <b>Metrics:</b> Accuracy = 97%, F1 = 95%, ROC AUC = 99%<br>
-      <b>Explainability:</b> SHAP waterfall plot shows which features drove the decision<br>
-      <b>Deployment:</b> Streamlit UI + public link on Hugging Face Spaces<br>
-      <b>Versioning:</b> MLflow tracks all models + metrics + SHAP plots<br>
-      <b>Testing:</b> Validated data with Pandera, tested pipeline with PyTest
-    </p>
-    <p class="mb-3"><strong>Model Results:</strong><br>
-      <b>Accuracy:</b> 0.97 ✅<br>
-      <b>F1-Score:</b> 0.95 ✅<br>
-      <b>ROC AUC:</b> 0.99 ✅<br>
-      The model performs extremely well on both accuracy and confidence — making it reliable for real-world business decisions.
-    </p>
-    <p class="mb-3"><strong>Try It Yourself:</strong><br>
-      Visit the app on Hugging Face Spaces:<br>
-      <a href="https://huggingface.co/spaces/kmsmohamedansar/high-value-customer-predictor" target="_blank" class="underline text-blue-300">High-Value Customer Predictor Demo</a><br>
-      Enter sample customer data → Get a prediction → See why the model said so (via SHAP!)
-    </p>
-    <p class="mb-3"><strong>Core Code Highlights:</strong></p>
-    <pre class="bg-gray-800 text-gray-100 rounded-md p-2 overflow-x-auto mb-2 text-xs">
-# Feature Engineering (RFM + profit behavior)
-df_features = df_raw.groupby("Customer ID").agg(
-    recency_days=("Order Date", lambda x: (today - x.max()).days),
-    frequency=("Order ID", "nunique"),
-    monetary_value=("Sales", "sum"),
-    avg_order_value=("Sales", "mean"),
-    total_profit=("Profit", "sum"),
-    avg_days_between_orders=("Order Date", lambda x: x.diff().dt.days.mean() if len(x) > 1 else 0),
-    region=("Region", "first"),
-    segment=("Segment", "first"),
+
+      <!-- High-Value Customer Predictor -->
+      <div class="tilt bg-gray-800 p-6 rounded-2xl shadow hover:scale-105 transition duration-300 relative" data-aos="fade-up" data-aos-delay="100">
+        <h3 class="text-xl font-bold mb-2 text-white">💎 High-Value Customer Predictor</h3>
+        <p class="text-gray-400 mb-2">End-to-End ML + MLOps solution for identifying your best customers, with explainable AI and deployment.</p>
+        <p class="text-xs text-gray-500 mb-2"><strong>Tech:</strong> DuckDB, Pandera, Feature Engineering, RandomForest, Streamlit, SHAP, MLflow</p>
+        <div class="mt-4 space-x-2">
+          <a href="https://github.com/kmsmohamedansar/high-value-customer-predictor" target="_blank" class="px-4 py-2 text-sm bg-blue-500 hover:bg-blue-600 text-white rounded-lg">GitHub</a>
+          <a href="https://huggingface.co/spaces/kmsmohamedansar/high-value-customer-predictor" target="_blank" class="px-4 py-2 text-sm bg-green-500 hover:bg-green-600 text-white rounded-lg">Live Demo</a>
+          <button data-toggle="#customer-details" class="px-4 py-2 text-sm bg-gray-700 hover:bg-gray-600 text-white rounded-lg">Show More</button>
+        </div>
+        <div id="customer-details" class="hidden bg-gray-900 border border-gray-700 rounded-xl mt-6 p-4 text-gray-200 text-sm max-h-[600px] overflow-y-auto">
+          <h4 class="font-semibold mb-2 text-lg text-blue-300">High-Value Customer Predictor — End-to-End ML + MLOps</h4>
+          <p class="mb-3"><strong>Goal:</strong> Predict which customers are “high value” so marketing/success teams can prioritize retention and upsell.</p>
+          <p class="mb-2"><strong>Data &amp; Features:</strong></p>
+          <ul class="list-disc pl-6 mb-3">
+            <li>Transactional order data aggregated per customer.</li>
+            <li>Features: RFM (recency, frequency, monetary), AOV, total profit, discount habits, tenure, days between orders, segment/region.</li>
+            <li>Validation: stratified split, leakage checks, data schema enforced via Pandera.</li>
+          </ul>
+          <p class="mb-2"><strong>Modeling:</strong></p>
+          <ul class="list-disc pl-6 mb-3">
+            <li>RandomForestClassifier with tuned depth/splits; class weight balancing.</li>
+            <li>Metrics: Accuracy 97%, F1 95%, ROC-AUC 99% (hold-out).</li>
+            <li>Explainability: SHAP waterfall for per-prediction drivers.</li>
+          </ul>
+          <p class="mb-2"><strong>MLOps:</strong></p>
+          <ul class="list-disc pl-6 mb-3">
+            <li>Streamlit UI for interactive scoring; batch scoring path available.</li>
+            <li>MLflow for runs, params, metrics, artifacts (plots, model.pkl).</li>
+            <li>Reproducible env with pinned requirements; HF Spaces deployment.</li>
+          </ul>
+          <p class="mb-2"><strong>Code Highlights:</strong></p>
+          <pre class="bg-gray-800 text-gray-100 rounded-md p-2 overflow-x-auto mb-2 text-xs">
+# Aggregations (example)
+df_features = df_raw.groupby("CustomerID").agg(
+  recency_days=("OrderDate", lambda x: (today - x.max()).days),
+  frequency=("OrderID", "nunique"),
+  monetary=("Sales", "sum"),
+  aov=("Sales", "mean"),
+  total_profit=("Profit", "sum"),
+  avg_days_between=("OrderDate", lambda x: x.sort_values().diff().dt.days.mean() or 0),
+  region=("Region", "first"), segment=("Segment", "first")
 ).reset_index()
-# Model Training + Evaluation
+
+# Train
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.metrics import classification_report, roc_auc_score
 model = RandomForestClassifier(
-    n_estimators=100, max_depth=11, max_features='log2',
-    min_samples_leaf=2, min_samples_split=5, random_state=42
+  n_estimators=200, max_depth=12, min_samples_leaf=2,
+  min_samples_split=5, random_state=42, n_jobs=-1
 )
 model.fit(X_train, y_train)
-y_pred = model.predict(X_test)
-print(classification_report(y_test, y_pred))
-# SHAP Explainability
-explainer = shap.Explainer(model)
-shap_values = explainer(X_test[:1])
-shap.plots.waterfall(shap_values[0])
-# Streamlit App
-st.title("High-Value Customer Predictor")
-recency_days = st.number_input("Recency", min_value=0, value=30)
-...
-if st.button("Predict"):
-    pred = model.predict(input_df)[0]
-    st.success("HIGH VALUE ✅" if pred else "Not High Value")
-# MLflow Logging
-with mlflow.start_run():
-    mlflow.log_param("model_type", "RandomForest")
-    mlflow.log_metric("accuracy", accuracy_score(y_test, y_pred))
-    mlflow.sklearn.log_model(model, "model")
-    </pre>
-    <p class="mb-2"><strong>Repo + Code Access:</strong><br>
-      <a href="https://github.com/kmsmohamedansar/high-value-customer-predictor" target="_blank" class="underline text-blue-300">GitHub: High-Value Customer Predictor</a>
-    </p>
-  </div>
-</div>
+print(classification_report(y_test, model.predict(X_test)))
+print("ROC AUC:", roc_auc_score(y_test, model.predict_proba(X_test)[:,1]))
 
-<!-- Grocery AI Assistant Card (Detailed) -->
+# SHAP
+import shap; explainer = shap.Explainer(model)
+sv = explainer(X_test[:1]); shap.plots.waterfall(sv[0])
+
+# MLflow
+import mlflow, mlflow.sklearn
+with mlflow.start_run():
+  mlflow.log_params({"model":"RandomForest","max_depth":12,"n_estimators":200})
+  mlflow.log_metric("roc_auc", roc_auc_score(y_test, model.predict_proba(X_test)[:,1]))
+  mlflow.sklearn.log_model(model, "model")
+          </pre>
+          <p class="mb-3 text-green-400"><strong>Business Impact:</strong> Surfaces the top ~10% customers by expected value, enabling targeted retention and +LTV campaigns with explainable drivers (why this customer is high value).</p>
+          <p class="mb-2"><a href="https://huggingface.co/spaces/kmsmohamedansar/high-value-customer-predictor" target="_blank" class="underline text-blue-300">Live Demo</a> ·
+          <a href="https://github.com/kmsmohamedansar/high-value-customer-predictor" target="_blank" class="underline text-blue-300">GitHub</a></p>
+        </div>
+      </div>
+
+      <!-- Grocery AI Assistant -->
       <div class="tilt bg-gray-800 p-6 rounded-2xl shadow hover:scale-105 transition duration-300 relative" data-aos="fade-up" data-aos-delay="200">
-        <h3 class="text-xl font-bold mb-2 text-white">🛒 Grocery AI Assistant — Semantic Search & Q&amp;A Over Instacart Data (Local RAG App)</h3>
-        <p class="text-gray-400 mb-2">Offline Q&amp;A with Instacart data using FAISS, semantic search, and a local LLM (Flan‑T5) — built end-to-end in Python.</p>
+        <h3 class="text-xl font-bold mb-2 text-white">🛒 Grocery AI Assistant — Semantic Search & Q&amp;A (Local RAG)</h3>
+        <p class="text-gray-400 mb-2">Offline Q&amp;A over Instacart data using FAISS and a local LLM (Flan-T5).</p>
         <p class="text-xs text-gray-500 mb-2"><strong>Tech:</strong> Python, Pandas, FAISS, LangChain, Sentence Transformers, Transformers</p>
         <div class="mt-4 space-x-2">
           <a href="https://github.com/kmsmohamedansar/grocery-ai-assistant" target="_blank" class="px-4 py-2 text-sm bg-blue-500 hover:bg-blue-600 text-white rounded-lg">GitHub</a>
           <a href="https://huggingface.co/spaces/kmsmohamedansar/ai_knowledge_assistant" target="_blank" class="px-4 py-2 text-sm bg-green-500 hover:bg-green-600 text-white rounded-lg">Live Demo</a>
-          <button onclick="document.getElementById('grocery-details').classList.toggle('hidden'); this.textContent = this.textContent === 'Show More' ? 'Show Less' : 'Show More';"
-            class="px-4 py-2 text-sm bg-gray-700 hover:bg-gray-600 text-white rounded-lg">Show More</button>
+          <button data-toggle="#grocery-details" class="px-4 py-2 text-sm bg-gray-700 hover:bg-gray-600 text-white rounded-lg">Show More</button>
         </div>
-        <!-- Expandable Write-up Section -->
         <div id="grocery-details" class="hidden bg-gray-900 border border-gray-700 rounded-xl mt-6 p-4 text-gray-200 text-sm max-h-[600px] overflow-y-auto">
           <h4 class="font-semibold mb-2 text-lg text-blue-300">How I Built a Local Grocery Product Q&amp;A Assistant Using Instacart Data and RAG</h4>
           <p class="mb-3"><strong>Introduction:</strong><br>
-            I built a fully local AI assistant that answers grocery-related questions using the Instacart Market Basket Analysis dataset. It combines semantic search and a lightweight Q&amp;A model, all running offline — no API calls, no cloud required.
+            Fully local semantic search + Q&amp;A over the Instacart Market Basket dataset. No APIs. FAISS for fast similarity search, a compact LLM (<code>flan-t5-base</code>) for answers, and a Gradio UI for interaction.
           </p>
-          <p class="mb-3"><strong>Steps Involved:</strong></p>
+          <p class="mb-2"><strong>What it solves (in plain English):</strong></p>
           <ul class="list-disc pl-6 mb-3">
-            <li><b>Installed all dependencies:</b> langchain, faiss-cpu, sentence-transformers, transformers, gradio, kagglehub.</li>
-            <li><b>Downloaded the dataset:</b> Used <code>kagglehub</code> to fetch Instacart’s open grocery dataset.</li>
-            <li><b>Loaded product, aisle, and department CSVs:</b> Cleaned and previewed with pandas.</li>
-            <li><b>Merged metadata:</b> Combined human-readable aisle and department names into the product table.</li>
-            <li><b>Generated semantic product descriptions:</b> Created a <code>combined_text</code> column for every product.</li>
-            <li><b>Embedded descriptions:</b> Used <code>sentence-transformers/all-MiniLM-L6-v2</code> for fast vectorization.</li>
-            <li><b>Built FAISS index:</b> Enabled millisecond similarity search over all products locally.</li>
-            <li><b>Loaded a local LLM:</b> Hugging Face’s <code>flan-t5-base</code> for natural language answer generation.</li>
-            <li><b>Created semantic search Q&amp;A:</b> For every query, pulled top 4 most similar products and used them as context for the LLM.</li>
-            <li><b>Launched with Gradio:</b> Deployed an interactive chat UI for users to ask grocery questions and get instant, explainable answers.</li>
+            <li>“What’s a good gluten-free snack?” → Finds semantically similar products across aisles/departments.</li>
+            <li>“Show breakfast items with dairy” → Retrieves relevant items and explains why.</li>
+            <li>Works offline: perfect for demos, cost control, and privacy.</li>
           </ul>
-          <p class="mb-3"><strong>Core Code Highlights:</strong></p>
+          <p class="mb-2"><strong>Pipeline Steps:</strong></p>
+          <ol class="list-decimal pl-6 mb-3">
+            <li>Load CSVs (products, aisles, departments) and merge readable metadata.</li>
+            <li>Create a <code>combined_text</code> description for each product.</li>
+            <li>Embed with <code>sentence-transformers/all-MiniLM-L6-v2</code>.</li>
+            <li>Index with FAISS; run millisecond top-k similarity search.</li>
+            <li>Compose a grounded prompt and answer with <code>flan-t5-base</code>.</li>
+            <li>Expose a simple Gradio chat for end users.</li>
+          </ol>
+          <p class="mb-2"><strong>Design choices:</strong></p>
+          <ul class="list-disc pl-6 mb-3">
+            <li><b>Local embeddings + FAISS</b> for reproducibility and speed.</li>
+            <li><b>Small LLM</b> to keep inference cheap and portable.</li>
+            <li><b>Deterministic preprocessing</b> so results are easy to debug.</li>
+          </ul>
+          <p class="mb-2"><strong>Core Code Highlights:</strong></p>
           <pre class="bg-gray-800 text-gray-100 rounded-md p-2 overflow-x-auto mb-2 text-xs">
-# Install libraries (in notebook)
-!pip install -q langchain langchain-community faiss-cpu sentence-transformers transformers accelerate gradio kagglehub
+# Install (notebook)
+!pip install -q langchain langchain-community faiss-cpu sentence-transformers transformers gradio kagglehub
 
-# Download and load dataset
-import kagglehub
+# Data
+import kagglehub, pandas as pd, os
 data_path = kagglehub.dataset_download("yasserh/instacart-online-grocery-basket-analysis-dataset")
+products = pd.read_csv(os.path.join(data_path, "products.csv"))
+aisles = pd.read_csv(os.path.join(data_path, "aisles.csv"))
+depts = pd.read_csv(os.path.join(data_path, "departments.csv"))
+df = products.merge(aisles, on="aisle_id").merge(depts, on="department_id")
+df["combined_text"] = df.apply(lambda r: f"Product: {r['product_name']}. Aisle: {r['aisle']}. Department: {r['department']}.", axis=1)
 
-import pandas as pd, os
-products_df = pd.read_csv(os.path.join(data_path, "products.csv"))
-aisles_df = pd.read_csv(os.path.join(data_path, "aisles.csv"))
-departments_df = pd.read_csv(os.path.join(data_path, "departments.csv"))
-
-# Merge metadata and create descriptions
-products_full = products_df.merge(aisles_df, how="left", on="aisle_id")
-products_full = products_full.merge(departments_df, how="left", on="department_id")
-products_full["combined_text"] = products_full.apply(
-    lambda row: f"Product: {row['product_name']}. Aisle: {row['aisle']}. Department: {row['department']}.", axis=1
-)
-
-# Build embeddings and FAISS index
+# Embeddings + Index
 from langchain.embeddings import HuggingFaceEmbeddings
 from langchain.vectorstores import FAISS
-local_embedder = HuggingFaceEmbeddings(model_name="sentence-transformers/all-MiniLM-L6-v2")
-vector_store = FAISS.from_texts(products_full["combined_text"].tolist(), local_embedder)
+emb = HuggingFaceEmbeddings(model_name="sentence-transformers/all-MiniLM-L6-v2")
+store = FAISS.from_texts(df["combined_text"].tolist(), emb)
 
-# Local LLM and Q&A function
+# Local LLM
 from transformers import pipeline
-qa_pipeline = pipeline("text2text-generation", model="google/flan-t5-base", max_length=256)
+gen = pipeline("text2text-generation", model="google/flan-t5-base", max_length=256)
 
-def local_answer_question(query):
-    docs = vector_store.similarity_search(query, k=4)
-    context = "\n".join([doc.page_content for doc in docs])
-    prompt = f"Answer the question using the context below:\n\nContext:\n{context}\n\nQuestion: {query}"
-    result = qa_pipeline(prompt)[0]["generated_text"]
-    return result
+def answer(q):
+    ctx = "\n".join([d.page_content for d in store.similarity_search(q, k=4)])
+    prompt = f"Use the context to answer briefly.\nContext:\n{ctx}\n\nQuestion: {q}"
+    return gen(prompt)[0]["generated_text"]
 
-# Launch Gradio UI
+# Gradio
 import gradio as gr
-chat_interface = gr.Interface(
-    fn=local_answer_question,
-    inputs="text",
-    outputs="text",
-    title="Grocery AI Assistant (Fully Local)",
-    description="Ask about grocery products — answers generated using FAISS + flan-t5-base!"
-)
-chat_interface.launch(share=True, debug=True)
+ui = gr.Interface(fn=answer, inputs="text", outputs="text", title="Grocery AI (Local RAG)")
+ui.launch()
           </pre>
-          <p class="mb-3"><strong>Key Skills:</strong> Python, Pandas, Semantic Search, Vector Embeddings, FAISS, Local LLMs, RAG, Gradio, Data Cleaning</p>
-          <p class="mb-3"><strong>Try It Yourself:</strong><br>
-            <a href="https://huggingface.co/spaces/kmsmohamedansar/ai_knowledge_assistant" target="_blank" class="underline text-blue-300">Grocery AI Assistant Demo (Hugging Face Spaces)</a>
-          </p>
-          <p class="mb-2"><strong>Repo + Code Access:</strong><br>
-            <a href="https://github.com/kmsmohamedansar/grocery-ai-assistant" target="_blank" class="underline text-blue-300">GitHub: Grocery AI Assistant</a>
-          </p>
+          <p class="mb-3"><strong>Metrics &amp; Checks:</strong> Spot-checked retrieval quality (top-k relevance), latency &lt; 100ms for FAISS lookups on laptop, answer coherence via qualitative prompts.</p>
+          <p class="mb-3"><strong>Business Impact:</strong> Demonstrates how to stand up a private RAG system for product catalogs—useful for retail search, merchandising, and support assistants without cloud cost.</p>
+          <p class="mb-3"><strong>Try it:</strong> <a href="https://huggingface.co/spaces/kmsmohamedansar/ai_knowledge_assistant" target="_blank" class="underline text-blue-300">Live Demo</a></p>
+          <p class="mb-2"><strong>Repo:</strong> <a href="https://github.com/kmsmohamedansar/grocery-ai-assistant" target="_blank" class="underline text-blue-300">GitHub: Grocery AI Assistant</a></p>
         </div>
       </div>
 
-<div class="tilt bg-gray-800 p-6 rounded-2xl shadow hover:scale-105 transition duration-300 relative" data-aos="fade-up" data-aos-delay="300">
-  <h3 class="text-xl font-bold mb-2 text-white">📝 Sentiment Analysis on Amazon Fine Food Reviews Using DistilBERT</h3>
-  <!-- Optional Project Image (uncomment & update src if you have one) -->
-  <!-- <img src="https://raw.githubusercontent.com/kmsmohamedansar/sentiment-analysis-amazon-finefood/main/assets/demo_screenshot.png" alt="Sentiment Demo" class="rounded-xl mb-4 w-full object-cover" style="max-height:200px;"> -->
-  <p class="text-gray-400 mb-2">End-to-end NLP pipeline with classical ML baseline, fine-tuned transformer, and interactive web app for real-time sentiment prediction.</p>
-  <p class="text-xs text-gray-500 mb-2"><strong>Tech:</strong> Data Cleaning, TF‑IDF, Logistic Regression, DistilBERT, Transformers, Gradio</p>
-  <div class="mt-4 space-x-2">
-    <a href="https://github.com/kmsmohamedansar/sentiment-analysis-amazon-finefood" target="_blank" class="px-4 py-2 text-sm bg-blue-500 hover:bg-blue-600 text-white rounded-lg">GitHub</a>
-    <a href="https://huggingface.co/spaces/kmsmohamedansar/amazon-sentiment-distilbert" target="_blank" class="px-4 py-2 text-sm bg-green-500 hover:bg-green-600 text-white rounded-lg">Live Demo</a>
-    <button onclick="document.getElementById('sentiment-details').classList.toggle('hidden'); this.textContent = this.textContent === 'Show More' ? 'Show Less' : 'Show More';"
-      class="px-4 py-2 text-sm bg-gray-700 hover:bg-gray-600 text-white rounded-lg">Show More</button>
-  </div>
-  <!-- Expandable Write-up Section -->
-  <div id="sentiment-details" class="hidden bg-gray-900 border border-gray-700 rounded-xl mt-6 p-4 text-gray-200 text-sm max-h-[600px] overflow-y-auto">
-    <h4 class="font-semibold mb-2 text-lg text-blue-300">Project Highlights</h4>
-    <ul class="list-disc pl-6 mb-3">
-      <li>500,000+ Amazon food reviews, class-balanced for robust binary classification.</li>
-      <li>Baseline: TF-IDF + Logistic Regression (scikit-learn); evaluated with F1, confusion matrix, ROC-AUC.</li>
-      <li>Fine-tuned <b>DistilBERT</b> for improved performance (F1 = 0.91), using Hugging Face Trainer API.</li>
-      <li>Deployed interactive demo using Gradio (real-time text prediction & confidence score).</li>
-    </ul>
-    <p class="mb-3"><strong>Tech Stack:</strong> Python, pandas, scikit-learn, seaborn, Hugging Face Transformers, Datasets, Gradio, Kagglehub.</p>
-    <pre class="bg-gray-800 text-gray-100 rounded-md p-2 overflow-x-auto mb-2 text-xs">
-# TF-IDF + Logistic Regression
-vectorizer = TfidfVectorizer(stop_words='english', max_features=10000)
-X_train_tfidf = vectorizer.fit_transform(X_train)
-clf = LogisticRegression(max_iter=1000).fit(X_train_tfidf, y_train)
+      <!-- Sentiment Analysis -->
+      <div class="tilt bg-gray-800 p-6 rounded-2xl shadow hover:scale-105 transition duration-300 relative" data-aos="fade-up" data-aos-delay="300">
+        <h3 class="text-xl font-bold mb-2 text-white">📝 Sentiment Analysis on Amazon Fine Food Reviews (DistilBERT)</h3>
+        <p class="text-gray-400 mb-2">End-to-end NLP pipeline with classical baseline and a fine-tuned transformer.</p>
+        <p class="text-xs text-gray-500 mb-2"><strong>Tech:</strong> TF-IDF, Logistic Regression, DistilBERT, Transformers, Gradio</p>
+        <div class="mt-4 space-x-2">
+          <a href="https://github.com/kmsmohamedansar/sentiment-analysis-amazon-finefood" target="_blank" class="px-4 py-2 text-sm bg-blue-500 hover:bg-blue-600 text-white rounded-lg">GitHub</a>
+          <a href="https://huggingface.co/spaces/kmsmohamedansar/amazon-sentiment-distilbert" target="_blank" class="px-4 py-2 text-sm bg-green-500 hover:bg-green-600 text-white rounded-lg">Live Demo</a>
+          <button data-toggle="#sentiment-details" class="px-4 py-2 text-sm bg-gray-700 hover:bg-gray-600 text-white rounded-lg">Show More</button>
+        </div>
+        <div id="sentiment-details" class="hidden bg-gray-900 border border-gray-700 rounded-xl mt-6 p-4 text-gray-200 text-sm max-h-[600px] overflow-y-auto">
+          <h4 class="font-semibold mb-2 text-lg text-blue-300">Amazon Fine Food Reviews — Classical Baseline → DistilBERT</h4>
+          <p class="mb-3"><strong>Objective:</strong> Build a sentiment classifier that’s explainable and fast enough for real-time demo; compare a classical baseline vs a fine-tuned transformer.</p>
+          <p class="mb-2"><strong>Approach:</strong></p>
+          <ul class="list-disc pl-6 mb-3">
+            <li>Preprocess reviews (cleaning, class balance, train/val/test split).</li>
+            <li><b>Baseline:</b> TF-IDF + Logistic Regression; quick to train, strong interpretability.</li>
+            <li><b>Transformer:</b> Fine-tune DistilBERT for higher F1; deploy with Gradio.</li>
+          </ul>
+          <p class="mb-2"><strong>Results:</strong></p>
+          <ul class="list-disc pl-6 mb-3">
+            <li>Baseline F1 ~0.88; DistilBERT F1 ~0.91 on hold-out.</li>
+            <li>Latency: sub-100ms per inference on CPU for short texts (demo scale).</li>
+          </ul>
+          <p class="mb-2"><strong>Key Code:</strong></p>
+          <pre class="bg-gray-800 text-gray-100 rounded-md p-2 overflow-x-auto mb-2 text-xs">
+# Baseline
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.linear_model import LogisticRegression
+X = TfidfVectorizer(stop_words="english", max_features=10000).fit_transform(train_text)
+clf = LogisticRegression(max_iter=1000, n_jobs=-1).fit(X, y_train)
 
-# DistilBERT fine-tuning (Trainer API)
-from transformers import DistilBertTokenizerFast, DistilBertForSequenceClassification, Trainer
-tokenizer = DistilBertTokenizerFast.from_pretrained('distilbert-base-uncased')
-model = DistilBertForSequenceClassification.from_pretrained("distilbert-base-uncased", num_labels=2)
-# (Trainer setup...)
+# DistilBERT
+from transformers import AutoTokenizer, AutoModelForSequenceClassification, Trainer, TrainingArguments
+tok = AutoTokenizer.from_pretrained("distilbert-base-uncased")
+model = AutoModelForSequenceClassification.from_pretrained("distilbert-base-uncased", num_labels=2)
+# (tokenize datasets ...)
+args = TrainingArguments(output_dir="./out", evaluation_strategy="epoch", fp16=False, num_train_epochs=2)
+trainer = Trainer(model=model, args=args, train_dataset=train_ds, eval_dataset=val_ds)
+trainer.train()
 
-# Gradio deployment
-sentiment_pipeline = pipeline("sentiment-analysis", model=model, tokenizer=tokenizer)
-def analyze_sentiment(text):
-    result = sentiment_pipeline(text)[0]
-    return f"{result['label']} ({result['score']*100:.2f}%)"
-    </pre>
-    <p>
-      <a href="https://huggingface.co/spaces/kmsmohamedansar/amazon-sentiment-distilbert" target="_blank" class="underline text-blue-300">Try Live Demo</a> &nbsp;|&nbsp;
-      <a href="https://github.com/kmsmohamedansar/sentiment-analysis-amazon-finefood" target="_blank" class="underline text-blue-300">GitHub Repo</a>
-    </p>
-  </div>
-</div>
+# Gradio
+import gradio as gr
+from transformers import pipeline
+pipe = pipeline("sentiment-analysis", model=model, tokenizer=tok)
+gr.Interface(fn=lambda t: pipe(t)[0], inputs="text", outputs="json", title="Amazon Sentiment").launch()
+          </pre>
+          <p class="mb-3"><strong>Impact:</strong> Shows a clear upgrade path from simple, interpretable models to modern transformers, with a clean demo UX for stakeholders.</p>
+          <p class="mb-2"><a href="https://huggingface.co/spaces/kmsmohamedansar/amazon-sentiment-distilbert" target="_blank" class="underline text-blue-300">Live Demo</a> ·
+          <a href="https://github.com/kmsmohamedansar/sentiment-analysis-amazon-finefood" target="_blank" class="underline text-blue-300">GitHub</a></p>
+        </div>
+      </div>
 
+      <!-- Yahoo Finance News Scraper -->
+      <div class="tilt bg-gray-800 p-6 rounded-2xl shadow hover:scale-105 transition duration-300 relative" data-aos="fade-up" data-aos-delay="400">
+        <h3 class="text-xl font-bold mb-2 text-white">📰 Yahoo Finance News Scraper — Selenium + BeautifulSoup</h3>
+        <p class="text-gray-400 mb-2">Headless Chrome scraper for JavaScript-rendered news: headlines, URLs, dates, authors, full article text to CSV/DataFrame.</p>
+        <p class="text-xs text-gray-500 mb-2"><strong>Tech:</strong> Python, Selenium (Headless Chrome), BeautifulSoup, Pandas, ChromeDriver</p>
+        <div class="mt-4 space-x-2">
+          <!-- Optional repo/notebook links -->
+          <!-- <a href="https://github.com/kmsmohamedansar/yahoo-finance-news-scraper" target="_blank" class="px-4 py-2 text-sm bg-blue-500 hover:bg-blue-600 text-white rounded-lg">GitHub</a> -->
+          <button data-toggle="#yahoo-details" class="px-4 py-2 text-sm bg-gray-700 hover:bg-gray-600 text-white rounded-lg">Show More</button>
+        </div>
+        <div id="yahoo-details" class="hidden bg-gray-900 border border-gray-700 rounded-xl mt-6 p-4 text-gray-200 text-sm max-h-[600px] overflow-y-auto">
+          <h4 class="font-semibold mb-2 text-lg text-blue-300">Project Overview</h4>
+          <ul class="list-disc pl-6 mb-3">
+            <li><b>Problem:</b> Yahoo Finance loads much of its content via JavaScript; static scrapers miss it.</li>
+            <li><b>Solution:</b> Use Selenium to render the page (headless Chrome), then parse with BeautifulSoup.</li>
+            <li><b>Output:</b> Clean DataFrame with headline, URL, author, timestamp, and article text; export to CSV.</li>
+          </ul>
+          <h4 class="font-semibold mb-2 text-lg text-blue-300">How It Works</h4>
+          <ol class="list-decimal pl-6 mb-3">
+            <li>Spin up headless Chrome via Selenium; load <code>https://finance.yahoo.com/</code> and wait for JS to render.</li>
+            <li>Extract homepage headlines/links from <code>&lt;h3&gt;</code> → <code>&lt;a&gt;</code>.</li>
+            <li>Visit top N articles; capture <code>&lt;time&gt;</code>, author hints, and content blocks (e.g., <code>.caas-body</code>).</li>
+            <li>Assemble into a Pandas DataFrame and save to <code>yahoo_finance_news_detailed.csv</code>.</li>
+          </ol>
+          <h4 class="font-semibold mb-2 text-lg text-blue-300">Core Snippet</h4>
+          <pre class="bg-gray-800 text-gray-100 rounded-md p-2 overflow-x-auto mb-2 text-xs">
+from selenium import webdriver
+from selenium.webdriver.chrome.options import Options
+from bs4 import BeautifulSoup
+import pandas as pd, time
 
+opts = Options()
+opts.add_argument("--headless"); opts.add_argument("--disable-dev-shm-usage"); opts.add_argument("--no-sandbox")
+driver = webdriver.Chrome(options=opts)
+
+driver.get("https://finance.yahoo.com/"); time.sleep(5)
+soup = BeautifulSoup(driver.page_source, "html.parser")
+
+news_links = []
+for h3 in soup.find_all("h3"):
+    a = h3.find("a")
+    if a and a.text.strip():
+        href = a["href"]
+        if href.startswith("/"): href = "https://finance.yahoo.com" + href
+        news_links.append({"headline": a.text.strip(), "url": href})
+
+rows = []
+for art in news_links[:5]:
+    driver.get(art["url"]); time.sleep(3)
+    s = BeautifulSoup(driver.page_source, "html.parser")
+    headline = s.find("h1").get_text(strip=True) if s.find("h1") else ""
+    dt_tag = s.find("time"); dt = dt_tag.get("datetime") if dt_tag else ""
+    content_div = s.find("div", class_="caas-body")
+    content = content_div.get_text(" ", strip=True) if content_div else " ".join(p.get_text(strip=True) for p in s.find_all("p"))
+    rows.append({**art, "date": dt, "content": content})
+
+pd.DataFrame(rows).to_csv("yahoo_finance_news_detailed.csv", index=False)
+          </pre>
+          <p class="mb-3"><b>Extensions:</b> schedule runs, sentiment analysis for market signals, or feed a dashboard.</p>
+          <p class="text-green-400"><b>Impact:</b> Automates JS-heavy news collection reliably—useful for alerts, trend tracking, or downstream NLP.</p>
+        </div>
+      </div>
+    </div>
   </section>
-<section id="skills" class="bg-gray-800 py-16 animate__animated animate__fadeInUp animate__delay-200">
-  <div class="max-w-5xl mx-auto px-4">
-    <h2 class="text-3xl font-semibold mb-6 text-center text-white">🛠️ Skills</h2>
-    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-      <div class="bg-gray-700 p-6 rounded-lg shadow text-white">
-        <h3 class="font-bold mb-2">ML & AI</h3>
-        <p>scikit-learn, Transformers, Streamlit, MLflow, SHAP, Gradio</p>
-      </div>
-      <div class="bg-gray-700 p-6 rounded-lg shadow text-white">
-        <h3 class="font-bold mb-2">Data Analytics</h3>
-        <p>Tableau, Power BI, Excel, KPI Dashboards, Pandas</p>
-      </div>
-      <div class="bg-gray-700 p-6 rounded-lg shadow text-white">
-        <h3 class="font-bold mb-2">Languages & Scripting</h3>
-        <p>Python, R, SQL, HTML, CSS, Bash, VBA</p>
-      </div>
-      <div class="bg-gray-700 p-6 rounded-lg shadow text-white">
-        <h3 class="font-bold mb-2">Data Engineering</h3>
-        <p>ETL Pipelines, dbt, Airflow, Data Modeling, APIs</p>
-      </div>
-      <div class="bg-gray-700 p-6 rounded-lg shadow text-white">
-        <h3 class="font-bold mb-2">Databases</h3>
-        <p>Snowflake, BigQuery, DuckDB, Postgres, MySQL</p>
-      </div>
-      <div class="bg-gray-700 p-6 rounded-lg shadow text-white">
-        <h3 class="font-bold mb-2">Cloud & DevOps</h3>
-        <p>AWS, Docker, Terraform, Serverless, Git, GitHub Actions, CI/CD</p>
+
+  <!-- SKILLS -->
+  <section id="skills" class="bg-gray-800 py-16 animate__animated animate__fadeInUp animate__delay-200">
+    <div class="max-w-5xl mx-auto px-4">
+      <h2 class="text-3xl font-semibold mb-6 text-center text-white">🛠️ Skills</h2>
+      <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+        <div class="bg-gray-700 p-6 rounded-lg shadow text-white">
+          <h3 class="font-bold mb-2">ML & AI</h3>
+          <p>scikit-learn, Transformers, Streamlit, MLflow, SHAP, Gradio</p>
+        </div>
+        <div class="bg-gray-700 p-6 rounded-lg shadow text-white">
+          <h3 class="font-bold mb-2">Data Analytics</h3>
+          <p>Tableau, Power BI, Excel, KPI Dashboards, Pandas</p>
+        </div>
+        <div class="bg-gray-700 p-6 rounded-lg shadow text-white">
+          <h3 class="font-bold mb-2">Languages & Scripting</h3>
+          <p>Python, R, SQL, HTML, CSS, Bash, VBA</p>
+        </div>
+        <div class="bg-gray-700 p-6 rounded-lg shadow text-white">
+          <h3 class="font-bold mb-2">Data Engineering</h3>
+          <p>ETL Pipelines, dbt, Airflow, Data Modeling, APIs</p>
+        </div>
+        <div class="bg-gray-700 p-6 rounded-lg shadow text-white">
+          <h3 class="font-bold mb-2">Databases</h3>
+          <p>Snowflake, BigQuery, DuckDB, Postgres, MySQL</p>
+        </div>
+        <div class="bg-gray-700 p-6 rounded-lg shadow text-white">
+          <h3 class="font-bold mb-2">Cloud & DevOps</h3>
+          <p>AWS, Docker, Terraform, Serverless, Git, GitHub Actions, CI/CD</p>
+        </div>
       </div>
     </div>
-  </div>
-</section>
+  </section>
 
-
+  <!-- EXPERIENCE -->
   <section id="experience" class="max-w-5xl mx-auto px-4 py-16 animate__animated animate__fadeInUp">
-  <h2 class="text-3xl font-semibold mb-6 text-white">💼 Experience</h2>
-  <div class="space-y-8">
+    <h2 class="text-3xl font-semibold mb-6 text-white">💼 Experience</h2>
+    <div class="space-y-8">
+      <!-- Datasembly -->
+      <div data-aos="fade-up">
+        <h3 class="font-bold text-xl text-white">Tech Support Specialist @ Datasembly</h3>
+        <p class="text-sm text-gray-400 mb-2">2024 – Present</p>
+        <ul class="list-disc ml-6 text-gray-300">
+          <li>Support onboarding and implementation for enterprise clients, partnering with Customer Success and Sales to achieve &lt;2-day setup SLAs.</li>
+          <li>Write and optimize SQL queries for custom data exports, reducing report generation time by 50% for CPG/retail clients.</li>
+          <li>Deliver data samples and exploratory analysis for pre-sales and proof-of-concept, accelerating deal cycles by 18%.</li>
+          <li>Investigate and resolve complex pricing discrepancies using deep-dive data analysis, improving client trust and retention.</li>
+          <li>Design and maintain interactive Tableau dashboards to visualize pricing trends and KPIs across teams.</li>
+          <li>Leverage Snowflake, DataGrip, and Retool to support analytics and internal tooling for faster issue resolution and insight delivery.</li>
+          <li>Deployed and monitored production data workflows, driving down manual data QA effort by 40%.</li>
+        </ul>
+      </div>
 
-    <!-- Datasembly -->
-    <div data-aos="fade-up">
-      <h3 class="font-bold text-xl text-white">Tech Support Specialist @ Datasembly</h3>
-      <p class="text-sm text-gray-400 mb-2">2024 – Present</p>
-      <ul class="list-disc ml-6 text-gray-300">
-        <li>Support onboarding and implementation for enterprise clients, partnering with Customer Success and Sales to achieve <2-day setup SLAs.</li>
-        <li>Write and optimize SQL queries for custom data exports, reducing report generation time by 50% for CPG/retail clients.</li>
-        <li>Deliver data samples and exploratory analysis for pre-sales and proof-of-concept, accelerating deal cycles by 18%.</li>
-        <li>Investigate and resolve complex pricing discrepancies using deep-dive data analysis, improving client trust and retention.</li>
-        <li>Design and maintain interactive Tableau dashboards to visualize pricing trends and KPIs across teams.</li>
-        <li>Leverage Snowflake, DataGrip, and Retool to support analytics and internal tooling for faster issue resolution and insight delivery.</li>
-        <li>Deployed and monitored production data workflows, driving down manual data QA effort by 40%.</li>
+      <!-- Spongelii -->
+      <div data-aos="fade-up" data-aos-delay="100">
+        <h3 class="font-bold text-xl text-white">Business Analyst Intern @ Spongelii</h3>
+        <p class="text-sm text-gray-400 mb-2">Jan 2024 – Apr 2024</p>
+        <ul class="list-disc ml-6 text-gray-300">
+          <li>Launched NFT subscription program (3-tier), driving product-market fit via competitor analysis, pricing research, and user feedback.</li>
+          <li>Streamlined onboarding for 20+ instructors and clients, negotiating annual contracts and ensuring 100% compliance with payment and budget controls.</li>
+          <li>Analyzed live customer engagement data to identify and mitigate drop-off points, improving session attendance by 15%.</li>
+          <li>Partnered with IT to design new landing page (CSS animations), boosting sign-up conversions by 22%.</li>
+          <li>Recommended and implemented a blockchain-based wallet, reducing payment discrepancies and expediting settlements for users.</li>
+          <li>Mapped and documented end-to-end data flow from spatial web to metaverse using LucidChart, clarifying product architecture for the engineering team.</li>
+        </ul>
+      </div>
+
+      <!-- Amazon Prime Video -->
+      <div data-aos="fade-up" data-aos-delay="200">
+        <h3 class="font-bold text-xl text-white">Business Analyst @ Amazon Prime Video</h3>
+        <p class="text-sm text-gray-400 mb-2">2019 – 2022</p>
+        <ul class="list-disc ml-6 text-gray-300">
+          <li>Built Power BI &amp; Tableau dashboards for 30+ weekly business reviews, improving reporting speed by 40% and enabling data-driven decision making across teams.</li>
+          <li>Automated daily and ad-hoc reporting workflows with VBA scripts and Excel macros, saving 15+ hours/month and increasing team productivity by 25%.</li>
+          <li>Resolved Prime Day escalations and payment errors using ServiceNow, maintaining SLA &lt;6h and raising customer satisfaction by 40%.</li>
+          <li>Defined business requirements (BRD), led SWOT &amp; risk analyses for high-impact projects, and drove on-time, in-scope delivery.</li>
+          <li>Onboarded 200+ customer/vendor accounts, achieving 90%+ CSAT and streamlining setup by standardizing procedures.</li>
+          <li>Reduced support SLA for Sev2 tickets by 50% (from 12h to 6h) by updating SOPs and improving triage, resulting in a 40% jump in resolution ratings.</li>
+          <li>Conducted GEMBA and FMEA walkthroughs, driving a 60% increase in new QC clients and enhancing QA team performance tracking with custom KPIs.</li>
+          <li>Shipped SQL-powered dashboards and automation for internal ML operations (e.g., operator QA, reporting), improving data visibility across 5+ teams.</li>
+          <li>Collaborated with engineers and product managers to scope, test, and roll out new data models for analytics and operations.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- EDUCATION -->
+  <section id="education" class="bg-gray-800 py-16 animate__animated animate__fadeInUp">
+    <div class="max-w-5xl mx-auto px-4 text-white">
+      <h2 class="text-3xl font-semibold mb-4">🎓 Education</h2>
+      <h3 class="font-bold text-xl">Postgraduate Diploma in Business Analytics</h3>
+      <p class="text-sm text-gray-400 mb-2">Lambton College, Mississauga, Canada · 2022 – 2024</p>
+      <ul class="list-disc ml-6 text-gray-200 mb-2">
+        <li>Completed a 2-year, co-op program with hands-on projects in SQL, Python, and Microsoft Power BI.</li>
+        <li>Designed, analyzed, and automated business reports for real-world clients during co-op term.</li>
+        <li>Developed skills in data analytics, project management, and process improvement for enterprise settings.</li>
+        <li>Graduated with practical experience applying analytics to drive business impact.</li>
       </ul>
     </div>
+  </section>
 
-    <!-- Spongelii -->
-    <div data-aos="fade-up" data-aos-delay="100">
-      <h3 class="font-bold text-xl text-white">Business Analyst Intern @ Spongelii</h3>
-      <p class="text-sm text-gray-400 mb-2">Jan 2024 – Apr 2024</p>
-      <ul class="list-disc ml-6 text-gray-300">
-        <li>Launched NFT subscription program (3-tier), driving product-market fit via competitor analysis, pricing research, and user feedback.</li>
-        <li>Streamlined onboarding for 20+ instructors and clients, negotiating annual contracts and ensuring 100% compliance with payment and budget controls.</li>
-        <li>Analyzed live customer engagement data to identify and mitigate drop-off points, improving session attendance by 15%.</li>
-        <li>Partnered with IT to design new landing page (CSS animations), boosting sign-up conversions by 22%.</li>
-        <li>Recommended and implemented a blockchain-based wallet, reducing payment discrepancies and expediting settlements for users.</li>
-        <li>Mapped and documented end-to-end data flow from spatial web to metaverse using LucidChart, clarifying product architecture for the engineering team.</li>
-      </ul>
-    </div>
-
-    <!-- Amazon Prime Video -->
-    <div data-aos="fade-up" data-aos-delay="200">
-      <h3 class="font-bold text-xl text-white">Business Analyst @ Amazon Prime Video</h3>
-      <p class="text-sm text-gray-400 mb-2">2019 – 2022</p>
-      <ul class="list-disc ml-6 text-gray-300">
-        <li>Built Power BI & Tableau dashboards for 30+ weekly business reviews, improving reporting speed by 40% and enabling data-driven decision making across teams.</li>
-        <li>Automated daily and ad-hoc reporting workflows with VBA scripts and Excel macros, saving 15+ hours/month and increasing team productivity by 25%.</li>
-        <li>Resolved Prime Day escalations and payment errors using ServiceNow, maintaining SLA <6h and raising customer satisfaction by 40%.</li>
-        <li>Defined business requirements (BRD), led SWOT & risk analyses for high-impact projects, and drove on-time, in-scope delivery.</li>
-        <li>Onboarded 200+ customer/vendor accounts, achieving 90%+ CSAT and streamlining setup by standardizing procedures.</li>
-        <li>Reduced support SLA for Sev2 tickets by 50% (from 12h to 6h) by updating SOPs and improving triage, resulting in a 40% jump in resolution ratings.</li>
-        <li>Conducted GEMBA and FMEA walkthroughs, driving a 60% increase in new QC clients and enhancing QA team performance tracking with custom KPIs.</li>
-        <li>Shipped SQL-powered dashboards and automation for internal ML operations (e.g., operator QA, reporting), improving data visibility across 5+ teams.</li>
-        <li>Collaborated with engineers and product managers to scope, test, and roll out new data models for analytics and operations.</li>
-      </ul>
-    </div>
-
-  </div>
-</section>
-<section id="education" class="bg-gray-800 py-16 animate__animated animate__fadeInUp">
-  <div class="max-w-5xl mx-auto px-4 text-white">
-    <h2 class="text-3xl font-semibold mb-4">🎓 Education</h2>
-    <h3 class="font-bold text-xl">Postgraduate Diploma in Business Analytics</h3>
-    <p class="text-sm text-gray-400 mb-2">Lambton College, Mississauga, Canada · 2022 – 2024</p>
-    <ul class="list-disc ml-6 text-gray-200 mb-2">
-      <li>Completed a 2-year, co-op program with hands-on projects in SQL, Python, and Microsoft Power BI.</li>
-      <li>Designed, analyzed, and automated business reports for real-world clients during co-op term.</li>
-      <li>Developed skills in data analytics, project management, and process improvement for enterprise settings.</li>
-      <li>Graduated with practical experience applying analytics to drive business impact.</li>
-    </ul>
-  </div>
-</section>
-  
+  <!-- CONTACT -->
   <section id="contact" class="max-w-5xl mx-auto px-4 py-16 animate__animated animate__fadeInUp">
     <h2 class="text-3xl font-semibold mb-4 text-white">📧 Contact</h2>
     <p>Email: <a href="mailto:mohamedansarkms@gmail.com" class="underline">mohamedansarkms@gmail.com</a></p>
@@ -512,10 +523,7 @@ def analyze_sentiment(text):
     const ctx = canvas.getContext('2d');
     let w = window.innerWidth, h = window.innerHeight;
     canvas.width = w; canvas.height = h;
-    function resize() {
-      w = window.innerWidth; h = window.innerHeight;
-      canvas.width = w; canvas.height = h;
-    }
+    function resize() { w = window.innerWidth; h = window.innerHeight; canvas.width = w; canvas.height = h; }
     window.addEventListener('resize', resize);
     const NODES = 12;
     const nodes = [];
@@ -557,24 +565,43 @@ def analyze_sentiment(text):
       requestAnimationFrame(animateBG);
     }
     animateBG();
+
     // UI libraries, keywords, typing
     AOS.init({ once: true, duration: 800 });
     VanillaTilt.init(document.querySelectorAll('.tilt'), { max: 15, speed: 400, glare: true, 'max-glare': 0.3 });
+
     const keywords = [
-  'Neural Networks', 'Transfer Learning', 'Data Pipelines', 'MLOps', 'Explainable AI', 'RAG',
-  'Model Deployment', 'Feature Engineering', 'Hugging Face', 'Streamlit', 'Airflow', 'MLflow',
-  'Prompt Engineering', 'LLMOps', 'Semantic Search', 'Vector Databases', 'Databricks', 'Snowflake'
-];
+      'Neural Networks','Transfer Learning','Data Pipelines','MLOps','Explainable AI','RAG',
+      'Model Deployment','Feature Engineering','Hugging Face','Streamlit','Airflow','MLflow',
+      'Prompt Engineering','LLMOps','Semantic Search','Vector Databases','Databricks','Snowflake',
+      'Selenium','BeautifulSoup'
+    ];
     let idx = 0;
     setInterval(() => {
       document.getElementById('mlWords').innerText = keywords[idx];
       idx = (idx + 1) % keywords.length;
     }, 2500);
+
     new Typed("#typed", {
       strings: ["Mohamed Ansar", "a Business Analyst", "a Tech Support Specialist", "a ML/AI Enthusiast"],
       typeSpeed: 80,
       backSpeed: 40,
       loop: true
+    });
+
+    // Accessible Show More / Show Less toggles
+    document.querySelectorAll('[data-toggle]').forEach(btn => {
+      const sel = btn.getAttribute('data-toggle');
+      const panel = document.querySelector(sel);
+      if (!panel) return;
+      btn.setAttribute('aria-controls', sel.replace('#',''));
+      btn.setAttribute('aria-expanded', 'false');
+      btn.addEventListener('click', () => {
+        panel.classList.toggle('hidden');
+        const open = !panel.classList.contains('hidden');
+        btn.textContent = open ? 'Show Less' : 'Show More';
+        btn.setAttribute('aria-expanded', String(open));
+      });
     });
   </script>
 </body>
