@@ -4,30 +4,19 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Mohamed Ansar — Portfolio</title>
-
-  <!-- Fonts & CSS -->
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script>tailwind.config = { darkMode: 'class' }</script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
   <link rel="stylesheet" href="https://unpkg.com/aos@2.3.1/dist/aos.css" />
-
-  <!-- Meta -->
-  <meta name="description" content="Mohamed Ansar — ML/AI projects, dashboards, and data engineering work." />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+  <meta name="description" content="Mohamed Ansar — ML Engineer Portfolio with AI Projects, Dashboards, and Technical Skills.">
   <meta property="og:title" content="Mohamed Ansar — Portfolio">
-  <meta property="og:description" content="ML/AI projects, dashboards, and data engineering work by Mohamed Ansar.">
   <meta property="og:image" content="https://kmsmohamedansar.github.io/preview.png">
   <meta property="og:url" content="https://kmsmohamedansar.github.io">
-  <meta name="twitter:card" content="summary_large_image">
-  <meta name="theme-color" content="#111827">
-  <link rel="icon" href="/favicon.ico">
-
-  <!-- JS libs (deferred) -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" defer></script>
-  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js" defer></script>
-  <script src="https://cdn.jsdelivr.net/npm/vanilla-tilt@1.7.3/dist/vanilla-tilt.min.js" defer></script>
-  <script src="https://cdn.jsdelivr.net/npm/typed.js@2.0.12" defer></script>
-
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>tailwind.config = { darkMode: 'class' }</script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vanilla-tilt@1.7.3/dist/vanilla-tilt.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/typed.js@2.0.12"></script>
   <style>
     body { font-family: 'Inter', sans-serif; overflow-x: hidden; }
     .ml-keywords {
@@ -41,8 +30,6 @@
   </style>
 </head>
 <body class="bg-gray-900 text-gray-100">
-  <a href="#about" class="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 bg-white text-gray-900 px-3 py-2 rounded">Skip to content</a>
-
   <canvas id="anime-bg" style="position:fixed;top:0;left:0;width:100vw;height:100vh;z-index:-1"></canvas>
   <button onclick="document.documentElement.classList.toggle('dark')" class="fixed top-5 right-5 z-50 p-2 rounded-full bg-gray-200 dark:bg-gray-700 shadow-md" aria-label="Toggle dark mode">
     🌓
@@ -52,8 +39,8 @@
   <nav class="fixed top-0 w-full bg-gray-800 bg-opacity-80 backdrop-blur-md shadow z-50 animate__animated animate__fadeInDown">
     <div class="max-w-6xl mx-auto flex items-center justify-between p-4">
       <a href="#" class="text-xl md:text-2xl font-bold">Portfolio</a>
-      <button id="nav-toggle" class="md:hidden text-white focus:outline-none" aria-label="Open Menu" aria-expanded="false">
-        <svg class="w-7 h-7" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
+      <button id="nav-toggle" class="md:hidden text-white focus:outline-none" aria-label="Open Menu">
+        <svg class="w-7 h-7" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" />
         </svg>
       </button>
@@ -67,6 +54,20 @@
       </div>
     </div>
   </nav>
+  <script>
+    const navToggle = document.getElementById('nav-toggle');
+    const navLinks = document.getElementById('nav-links');
+    navToggle.addEventListener('click', () => {
+      navLinks.classList.toggle('hidden');
+      navLinks.classList.toggle('mobile-nav-open');
+    });
+    navLinks.querySelectorAll('a').forEach(link => {
+      link.addEventListener('click', () => {
+        navLinks.classList.add('hidden');
+        navLinks.classList.remove('mobile-nav-open');
+      });
+    });
+  </script>
 
   <!-- HERO -->
   <header id="hero" class="relative h-screen flex items-center justify-center">
@@ -84,7 +85,7 @@
         Learn More
       </a>
     </div>
-    <div class="absolute bottom-10 left-1/2 transform -translate-x-1/2 text-white animate-bounce" aria-hidden="true">↓</div>
+    <div class="absolute bottom-10 left-1/2 transform -translate-x-1/2 text-white animate-bounce">↓</div>
   </header>
 
   <div class="ml-keywords"><span id="mlWords"></span></div>
@@ -116,8 +117,8 @@
         <p class="text-gray-400 mb-2">Retry-enabled pipeline, Random Forest on synthetic data, Gradio deployment.</p>
         <p class="text-xs text-gray-500 mb-2"><strong>Tech:</strong> Python, scikit-learn, Gradio</p>
         <div class="mt-4 space-x-2">
-          <a href="https://github.com/kmsmohamedansar/TaskMaster-Job-Scheduler" target="_blank" rel="noopener noreferrer" class="px-4 py-2 text-sm bg-blue-500 hover:bg-blue-600 text-white rounded-lg">GitHub</a>
-          <a href="https://huggingface.co/spaces/kmsmohamedansar/TaskMaster-Job-Scheduler" target="_blank" rel="noopener noreferrer" class="px-4 py-2 text-sm bg-green-500 hover:bg-green-600 text-white rounded-lg">Live Demo</a>
+          <a href="https://github.com/kmsmohamedansar/TaskMaster-Job-Scheduler" target="_blank" class="px-4 py-2 text-sm bg-blue-500 hover:bg-blue-600 text-white rounded-lg">GitHub</a>
+          <a href="https://huggingface.co/spaces/kmsmohamedansar/TaskMaster-Job-Scheduler" target="_blank" class="px-4 py-2 text-sm bg-green-500 hover:bg-green-600 text-white rounded-lg">Live Demo</a>
           <button data-toggle="#taskmaster-details" class="px-4 py-2 text-sm bg-gray-700 hover:bg-gray-600 text-white rounded-lg">Show More</button>
         </div>
         <div id="taskmaster-details" class="hidden bg-gray-900 border border-gray-700 rounded-xl mt-6 p-4 text-gray-200 text-sm max-h-[600px] overflow-y-auto">
@@ -138,7 +139,7 @@
           <p class="mb-3"><strong>3. Coffee-Shop Analogy:</strong> Bean Grinder → Brewer → Taste Tester → Customer Touchscreen.</p>
           <p class="mb-3"><strong>4. Core Skills & Tech:</strong> Python, scikit-learn, Gradio, retries, logging, alerts, monitoring, testing.</p>
           <p class="mb-3 text-green-400"><b>Business Impact:</b> Cut data processing downtime by 80% and enabled non-technical teams to access ML predictions instantly.</p>
-          <p class="mb-2"><strong>Live Demo:</strong> <a href="https://huggingface.co/spaces/kmsmohamedansar/TaskMaster-Job-Scheduler" target="_blank" rel="noopener noreferrer" class="underline text-blue-300">▶ Try it here</a></p>
+          <p class="mb-2"><strong>Live Demo:</strong> <a href="https://huggingface.co/spaces/kmsmohamedansar/TaskMaster-Job-Scheduler" target="_blank" class="underline text-blue-300">▶ Try it here</a></p>
         </div>
       </div>
 
@@ -148,8 +149,8 @@
         <p class="text-gray-400 mb-2">End-to-End ML + MLOps solution for identifying your best customers, with explainable AI and deployment.</p>
         <p class="text-xs text-gray-500 mb-2"><strong>Tech:</strong> DuckDB, Pandera, Feature Engineering, RandomForest, Streamlit, SHAP, MLflow</p>
         <div class="mt-4 space-x-2">
-          <a href="https://github.com/kmsmohamedansar/high-value-customer-predictor" target="_blank" rel="noopener noreferrer" class="px-4 py-2 text-sm bg-blue-500 hover:bg-blue-600 text-white rounded-lg">GitHub</a>
-          <a href="https://huggingface.co/spaces/kmsmohamedansar/high-value-customer-predictor" target="_blank" rel="noopener noreferrer" class="px-4 py-2 text-sm bg-green-500 hover:bg-green-600 text-white rounded-lg">Live Demo</a>
+          <a href="https://github.com/kmsmohamedansar/high-value-customer-predictor" target="_blank" class="px-4 py-2 text-sm bg-blue-500 hover:bg-blue-600 text-white rounded-lg">GitHub</a>
+          <a href="https://huggingface.co/spaces/kmsmohamedansar/high-value-customer-predictor" target="_blank" class="px-4 py-2 text-sm bg-green-500 hover:bg-green-600 text-white rounded-lg">Live Demo</a>
           <button data-toggle="#customer-details" class="px-4 py-2 text-sm bg-gray-700 hover:bg-gray-600 text-white rounded-lg">Show More</button>
         </div>
         <div id="customer-details" class="hidden bg-gray-900 border border-gray-700 rounded-xl mt-6 p-4 text-gray-200 text-sm max-h-[600px] overflow-y-auto">
@@ -204,24 +205,24 @@ sv = explainer(X_test[:1]); shap.plots.waterfall(sv[0])
 # MLflow
 import mlflow, mlflow.sklearn
 with mlflow.start_run():
-  mlflow.log_params({"model":"RandomForest","max_depth":12,"n_estimators":200})
+  mlflow.log_params({"model":"RandomForest","max_depth":12","n_estimators":200})
   mlflow.log_metric("roc_auc", roc_auc_score(y_test, model.predict_proba(X_test)[:,1]))
   mlflow.sklearn.log_model(model, "model")
           </pre>
           <p class="mb-3 text-green-400"><strong>Business Impact:</strong> Surfaces the top ~10% customers by expected value, enabling targeted retention and +LTV campaigns with explainable drivers (why this customer is high value).</p>
-          <p class="mb-2"><a href="https://huggingface.co/spaces/kmsmohamedansar/high-value-customer-predictor" target="_blank" rel="noopener noreferrer" class="underline text-blue-300">Live Demo</a> ·
-          <a href="https://github.com/kmsmohamedansar/high-value-customer-predictor" target="_blank" rel="noopener noreferrer" class="underline text-blue-300">GitHub</a></p>
+          <p class="mb-2"><a href="https://huggingface.co/spaces/kmsmohamedansar/high-value-customer-predictor" target="_blank" class="underline text-blue-300">Live Demo</a> ·
+          <a href="https://github.com/kmsmohamedansar/high-value-customer-predictor" target="_blank" class="underline text-blue-300">GitHub</a></p>
         </div>
       </div>
 
       <!-- Grocery AI Assistant -->
       <div class="tilt bg-gray-800 p-6 rounded-2xl shadow hover:scale-105 transition duration-300 relative" data-aos="fade-up" data-aos-delay="200">
-        <h3 class="text-xl font-bold mb-2 text-white">🛒 Grocery AI Assistant — Semantic Search &amp; Q&amp;A (Local RAG)</h3>
+        <h3 class="text-xl font-bold mb-2 text-white">🛒 Grocery AI Assistant — Semantic Search & Q&amp;A (Local RAG)</h3>
         <p class="text-gray-400 mb-2">Offline Q&amp;A over Instacart data using FAISS and a local LLM (Flan-T5).</p>
         <p class="text-xs text-gray-500 mb-2"><strong>Tech:</strong> Python, Pandas, FAISS, LangChain, Sentence Transformers, Transformers</p>
         <div class="mt-4 space-x-2">
-          <a href="https://github.com/kmsmohamedansar/grocery-ai-assistant" target="_blank" rel="noopener noreferrer" class="px-4 py-2 text-sm bg-blue-500 hover:bg-blue-600 text-white rounded-lg">GitHub</a>
-          <a href="https://huggingface.co/spaces/kmsmohamedansar/ai_knowledge_assistant" target="_blank" rel="noopener noreferrer" class="px-4 py-2 text-sm bg-green-500 hover:bg-green-600 text-white rounded-lg">Live Demo</a>
+          <a href="https://github.com/kmsmohamedansar/grocery-ai-assistant" target="_blank" class="px-4 py-2 text-sm bg-blue-500 hover:bg-blue-600 text-white rounded-lg">GitHub</a>
+          <a href="https://huggingface.co/spaces/kmsmohamedansar/ai_knowledge_assistant" target="_blank" class="px-4 py-2 text-sm bg-green-500 hover:bg-green-600 text-white rounded-lg">Live Demo</a>
           <button data-toggle="#grocery-details" class="px-4 py-2 text-sm bg-gray-700 hover:bg-gray-600 text-white rounded-lg">Show More</button>
         </div>
         <div id="grocery-details" class="hidden bg-gray-900 border border-gray-700 rounded-xl mt-6 p-4 text-gray-200 text-sm max-h-[600px] overflow-y-auto">
@@ -286,8 +287,8 @@ ui.launch()
           </pre>
           <p class="mb-3"><strong>Metrics &amp; Checks:</strong> Spot-checked retrieval quality (top-k relevance), latency &lt; 100ms for FAISS lookups on laptop, answer coherence via qualitative prompts.</p>
           <p class="mb-3"><strong>Business Impact:</strong> Demonstrates how to stand up a private RAG system for product catalogs—useful for retail search, merchandising, and support assistants without cloud cost.</p>
-          <p class="mb-3"><strong>Try it:</strong> <a href="https://huggingface.co/spaces/kmsmohamedansar/ai_knowledge_assistant" target="_blank" rel="noopener noreferrer" class="underline text-blue-300">Live Demo</a></p>
-          <p class="mb-2"><strong>Repo:</strong> <a href="https://github.com/kmsmohamedansar/grocery-ai-assistant" target="_blank" rel="noopener noreferrer" class="underline text-blue-300">GitHub: Grocery AI Assistant</a></p>
+          <p class="mb-3"><strong>Try it:</strong> <a href="https://huggingface.co/spaces/kmsmohamedansar/ai_knowledge_assistant" target="_blank" class="underline text-blue-300">Live Demo</a></p>
+          <p class="mb-2"><strong>Repo:</strong> <a href="https://github.com/kmsmohamedansar/grocery-ai-assistant" target="_blank" class="underline text-blue-300">GitHub: Grocery AI Assistant</a></p>
         </div>
       </div>
 
@@ -297,8 +298,8 @@ ui.launch()
         <p class="text-gray-400 mb-2">End-to-end NLP pipeline with classical baseline and a fine-tuned transformer.</p>
         <p class="text-xs text-gray-500 mb-2"><strong>Tech:</strong> TF-IDF, Logistic Regression, DistilBERT, Transformers, Gradio</p>
         <div class="mt-4 space-x-2">
-          <a href="https://github.com/kmsmohamedansar/sentiment-analysis-amazon-finefood" target="_blank" rel="noopener noreferrer" class="px-4 py-2 text-sm bg-blue-500 hover:bg-blue-600 text-white rounded-lg">GitHub</a>
-          <a href="https://huggingface.co/spaces/kmsmohamedansar/amazon-sentiment-distilbert" target="_blank" rel="noopener noreferrer" class="px-4 py-2 text-sm bg-green-500 hover:bg-green-600 text-white rounded-lg">Live Demo</a>
+          <a href="https://github.com/kmsmohamedansar/sentiment-analysis-amazon-finefood" target="_blank" class="px-4 py-2 text-sm bg-blue-500 hover:bg-blue-600 text-white rounded-lg">GitHub</a>
+          <a href="https://huggingface.co/spaces/kmsmohamedansar/amazon-sentiment-distilbert" target="_blank" class="px-4 py-2 text-sm bg-green-500 hover:bg-green-600 text-white rounded-lg">Live Demo</a>
           <button data-toggle="#sentiment-details" class="px-4 py-2 text-sm bg-gray-700 hover:bg-gray-600 text-white rounded-lg">Show More</button>
         </div>
         <div id="sentiment-details" class="hidden bg-gray-900 border border-gray-700 rounded-xl mt-6 p-4 text-gray-200 text-sm max-h-[600px] overflow-y-auto">
@@ -339,8 +340,8 @@ pipe = pipeline("sentiment-analysis", model=model, tokenizer=tok)
 gr.Interface(fn=lambda t: pipe(t)[0], inputs="text", outputs="json", title="Amazon Sentiment").launch()
           </pre>
           <p class="mb-3"><strong>Impact:</strong> Shows a clear upgrade path from simple, interpretable models to modern transformers, with a clean demo UX for stakeholders.</p>
-          <p class="mb-2"><a href="https://huggingface.co/spaces/kmsmohamedansar/amazon-sentiment-distilbert" target="_blank" rel="noopener noreferrer" class="underline text-blue-300">Live Demo</a> ·
-          <a href="https://github.com/kmsmohamedansar/sentiment-analysis-amazon-finefood" target="_blank" rel="noopener noreferrer" class="underline text-blue-300">GitHub</a></p>
+          <p class="mb-2"><a href="https://huggingface.co/spaces/kmsmohamedansar/amazon-sentiment-distilbert" target="_blank" class="underline text-blue-300">Live Demo</a> ·
+          <a href="https://github.com/kmsmohamedansar/sentiment-analysis-amazon-finefood" target="_blank" class="underline text-blue-300">GitHub</a></p>
         </div>
       </div>
 
@@ -351,7 +352,7 @@ gr.Interface(fn=lambda t: pipe(t)[0], inputs="text", outputs="json", title="Amaz
         <p class="text-xs text-gray-500 mb-2"><strong>Tech:</strong> Python, Selenium (Headless Chrome), BeautifulSoup, Pandas, ChromeDriver</p>
         <div class="mt-4 space-x-2">
           <!-- Optional repo/notebook links -->
-          <!-- <a href="https://github.com/kmsmohamedansar/yahoo-finance-news-scraper" target="_blank" rel="noopener noreferrer" class="px-4 py-2 text-sm bg-blue-500 hover:bg-blue-600 text-white rounded-lg">GitHub</a> -->
+          <!-- <a href="https://github.com/kmsmohamedansar/yahoo-finance-news-scraper" target="_blank" class="px-4 py-2 text-sm bg-blue-500 hover:bg-blue-600 text-white rounded-lg">GitHub</a> -->
           <button data-toggle="#yahoo-details" class="px-4 py-2 text-sm bg-gray-700 hover:bg-gray-600 text-white rounded-lg">Show More</button>
         </div>
         <div id="yahoo-details" class="hidden bg-gray-900 border border-gray-700 rounded-xl mt-6 p-4 text-gray-200 text-sm max-h-[600px] overflow-y-auto">
@@ -407,21 +408,24 @@ pd.DataFrame(rows).to_csv("yahoo_finance_news_detailed.csv", index=False)
         </div>
       </div>
 
-      <!-- Smart Product Categorization (Zero-Shot) -->
+      <!-- NEW: Smart Product Categorization (Zero-Shot) -->
       <div class="tilt bg-gray-800 p-6 rounded-2xl shadow hover:scale-105 transition duration-300 relative" data-aos="fade-up" data-aos-delay="500">
         <h3 class="text-xl font-bold mb-2 text-white">🧠 Smart Product Categorization — Zero-Shot NLP</h3>
         <p class="text-gray-400 mb-2">Automatic product-to-category matching for e-commerce using zero-shot learning and simple rules.</p>
         <p class="text-xs text-gray-500 mb-2"><strong>Tech:</strong> Python, pandas, ast, Transformers (facebook/bart-large-mnli), Zero-Shot Learning</p>
         <div class="mt-4 space-x-2">
-          <!-- Optional links -->
-          <!-- <a href="YOUR_REPO_LINK" target="_blank" rel="noopener noreferrer" class="px-4 py-2 text-sm bg-blue-500 hover:bg-blue-600 text-white rounded-lg">GitHub</a> -->
-          <!-- <a href="YOUR_COLAB_LINK" target="_blank" rel="noopener noreferrer" class="px-4 py-2 text-sm bg-green-500 hover:bg-green-600 text-white rounded-lg">Colab</a> -->
+          <!-- Optional links: add when ready -->
+          <!-- <a href="YOUR_REPO_LINK" target="_blank" class="px-4 py-2 text-sm bg-blue-500 hover:bg-blue-600 text-white rounded-lg">GitHub</a> -->
+          <!-- <a href="YOUR_COLAB_LINK" target="_blank" class="px-4 py-2 text-sm bg-green-500 hover:bg-green-600 text-white rounded-lg">Colab</a> -->
           <button data-toggle="#zero-shot-details" class="px-4 py-2 text-sm bg-gray-700 hover:bg-gray-600 text-white rounded-lg">Show More</button>
         </div>
         <div id="zero-shot-details" class="hidden bg-gray-900 border border-gray-700 rounded-xl mt-6 p-4 text-gray-200 text-sm max-h-[600px] overflow-y-auto">
           <h4 class="font-semibold mb-2 text-lg text-blue-300">Smart Product Categorization with NLP and Zero-Shot Learning</h4>
+
           <p class="mb-3"><strong>Problem:</strong> Large catalogs get miscategorized; manual QA is slow and costly. We need a scalable way to verify (and improve) product→category mapping.</p>
+
           <p class="mb-2"><strong>Data:</strong> Walmart product dataset with product names and category paths.</p>
+
           <p class="mb-2"><strong>Approach:</strong></p>
           <ol class="list-decimal pl-6 mb-3">
             <li><b>Parse categories:</b> Convert category-path strings → Python lists; extract the last (most specific) category.</li>
@@ -429,6 +433,7 @@ pd.DataFrame(rows).to_csv("yahoo_finance_news_detailed.csv", index=False)
             <li><b>Zero-shot check:</b> Use <code>facebook/bart-large-mnli</code> to score how well the product name fits the last category (0–1 confidence).</li>
             <li><b>Review:</b> Low scores → likely miscategorized → flag for correction.</li>
           </ol>
+
           <p class="mb-2"><strong>Sample Output:</strong></p>
           <div class="overflow-x-auto mb-3">
             <table class="min-w-full text-left text-xs md:text-sm">
@@ -443,6 +448,7 @@ pd.DataFrame(rows).to_csv("yahoo_finance_news_detailed.csv", index=False)
               </tbody>
             </table>
           </div>
+
           <p class="mb-2"><strong>Core Code Highlights:</strong></p>
           <pre class="bg-gray-800 text-gray-100 rounded-md p-2 overflow-x-auto mb-2 text-xs">
 import pandas as pd, ast
@@ -475,18 +481,23 @@ def match_score(row):
 df["category_match_score"] = df.apply(match_score, axis=1)
 print(df[["product_name","last_category","category_match_score"]].head())
           </pre>
+
           <p class="mb-2"><strong>Performance Notes:</strong> Zero-shot on CPU is slow (minutes per batch). For scale: batch inputs, run on GPU, cache model, or pre-screen with keyword/embedding filters.</p>
           <p class="mb-3 text-green-400"><strong>Impact:</strong> Flags subtle misclassifications that rules miss; improves findability and reduces catalog QA time.</p>
+
+          <!-- Optional: external write-ups or docs -->
+          <!-- <p class="mb-2"><a href="YOUR_MEDIUM_LINK" class="underline text-blue-300" target="_blank">Medium Article</a> · <a href="https://huggingface.co/tasks/zero-shot-classification" class="underline text-blue-300" target="_blank">HF Zero-Shot Docs</a></p> -->
         </div>
       </div>
 
-      <!-- Spotify Music Trends Analysis -->
+       <!-- NEW 1: Spotify Music Trends Analysis -->
       <div class="tilt bg-gray-800 p-6 rounded-2xl shadow hover:scale-105 transition duration-300 relative" data-aos="fade-up" data-aos-delay="600">
         <h3 class="text-xl font-bold mb-2 text-white">🎧 Spotify Music Trends — Statistical Analysis &amp; Viz</h3>
         <p class="text-gray-400 mb-2">EDA of audio features and popularity trends across decades; correlations &amp; visual insights.</p>
         <p class="text-xs text-gray-500 mb-2"><strong>Tech:</strong> Python, pandas, NumPy, Matplotlib, Seaborn</p>
         <div class="mt-4 space-x-2">
-          <!-- <a href="YOUR_REPO_LINK" target="_blank" rel="noopener noreferrer" class="px-4 py-2 text-sm bg-blue-500 hover:bg-blue-600 text-white rounded-lg">GitHub</a> -->
+          <!-- Optional links -->
+          <!-- <a href="YOUR_REPO_LINK" target="_blank" class="px-4 py-2 text-sm bg-blue-500 hover:bg-blue-600 text-white rounded-lg">GitHub</a> -->
           <button data-toggle="#spotify-details" class="px-4 py-2 text-sm bg-gray-700 hover:bg-gray-600 text-white rounded-lg">Show More</button>
         </div>
         <div id="spotify-details" class="hidden bg-gray-900 border border-gray-700 rounded-xl mt-6 p-4 text-gray-200 text-sm max-h-[600px] overflow-y-auto">
@@ -532,21 +543,22 @@ sns.heatmap(df.corr(numeric_only=True), cmap="RdBu", annot=True)
         </div>
       </div>
 
-      <!-- Canadian Premier League Dream Team -->
+      <!-- NEW 2: Canadian Premier League Dream Team -->
       <div class="tilt bg-gray-800 p-6 rounded-2xl shadow hover:scale-105 transition duration-300 relative" data-aos="fade-up" data-aos-delay="700">
         <h3 class="text-xl font-bold mb-2 text-white">⚽ Canadian Premier League — Dream Team (2019)</h3>
         <p class="text-gray-400 mb-2">Data-driven XI selection using Python KPIs + interactive Power BI dashboard.</p>
         <p class="text-xs text-gray-500 mb-2"><strong>Tech:</strong> Python (pandas, matplotlib, seaborn), Power BI, CSV/ETL</p>
         <div class="mt-4 space-x-2">
-          <!-- <a href="YOUR_POWERBI_LINK" target="_blank" rel="noopener noreferrer" class="px-4 py-2 text-sm bg-blue-500 hover:bg-blue-600 text-white rounded-lg">Dashboard</a> -->
+          <!-- Optional links -->
+          <!-- <a href="YOUR_POWERBI_LINK" target="_blank" class="px-4 py-2 text-sm bg-blue-500 hover:bg-blue-600 text-white rounded-lg">Dashboard</a> -->
           <button data-toggle="#cpl-details" class="px-4 py-2 text-sm bg-gray-700 hover:bg-gray-600 text-white rounded-lg">Show More</button>
         </div>
         <div id="cpl-details" class="hidden bg-gray-900 border border-gray-700 rounded-xl mt-6 p-4 text-gray-200 text-sm max-h-[600px] overflow-y-auto">
           <h4 class="font-semibold mb-3 text-lg text-blue-300">CPL 2019 — Dream Team: Method &amp; KPIs</h4>
-          <p class="mb-2"><strong>Goal:</strong> Build a best-XI using transparent, explainable KPIs for each role.</p>
+          <p class="mb-2"><strong>Goal:</strong> Build a best‑XI using transparent, explainable KPIs for each role.</p>
           <p class="mb-2"><strong>Team-level analytics:</strong></p>
           <ul class="list-disc pl-6 mb-3">
-            <li>Total goals (bar rank), shots-on-target ratio (in-box vs out-of-box), pass completion, fouls committed, touches in opposition box.</li>
+            <li>Total goals (bar rank), shots‑on‑target ratio (in‑box vs out‑of‑box), pass completion, fouls committed, touches in opposition box.</li>
             <li>Composite “overall score” = goals + SOT ratio + pass completion + touches − fouls − cards.</li>
           </ul>
           <pre class="bg-gray-800 text-gray-100 rounded-md p-2 overflow-x-auto mb-2 text-xs">
@@ -577,7 +589,7 @@ def rank_left_back(df):
             <li>Python notebook for KPI computation and shortlists.</li>
             <li>Power BI dashboard: Dream XI view, player stats, team comparison, and index.</li>
           </ul>
-          <p class="text-green-400"><strong>Outcome:</strong> A reproducible, critique-friendly selection process that balances output (goals/assists), creation (xA/chances), and defensive contribution.</p>
+          <p class="text-green-400"><strong>Outcome:</strong> A reproducible, critique‑friendly selection process that balances output (goals/assists), creation (xA/chances), and defensive contribution.</p>
           <p class="text-gray-400 text-xs">Names shown in the write-up (e.g., Tristan Borges, Nathan Ingham) reflect 2019 CPL performances used for illustration.</p>
         </div>
       </div>
@@ -689,28 +701,10 @@ def rank_left_back(df):
   <section id="contact" class="max-w-5xl mx-auto px-4 py-16 animate__animated animate__fadeInUp">
     <h2 class="text-3xl font-semibold mb-4 text-white">📧 Contact</h2>
     <p>Email: <a href="mailto:mohamedansarkms@gmail.com" class="underline">mohamedansarkms@gmail.com</a></p>
-    <p>LinkedIn: <a href="https://www.linkedin.com/in/kmsmohamedansar/" class="underline" target="_blank" rel="noopener noreferrer">linkedin.com/kmsmohamedansar</a></p>
+    <p>LinkedIn: <a href="https://www.linkedin.com/in/kmsmohamedansar/" class="underline" target="_blank">linkedin.com/kmsmohamedansar</a></p>
   </section>
 
   <script>
-    // ---- NAV ----
-    const navToggle = document.getElementById('nav-toggle');
-    const navLinks = document.getElementById('nav-links');
-    navToggle.setAttribute('aria-expanded', 'false');
-    navToggle.addEventListener('click', () => {
-      navLinks.classList.toggle('hidden');
-      navLinks.classList.toggle('mobile-nav-open');
-      const open = !navLinks.classList.contains('hidden');
-      navToggle.setAttribute('aria-expanded', String(open));
-    });
-    navLinks.querySelectorAll('a').forEach(link => {
-      link.addEventListener('click', () => {
-        navLinks.classList.add('hidden');
-        navLinks.classList.remove('mobile-nav-open');
-        navToggle.setAttribute('aria-expanded', 'false');
-      });
-    });
-
     // ---- ANIME.JS DATA/ML NODES BG ----
     const canvas = document.getElementById('anime-bg');
     const ctx = canvas.getContext('2d');
@@ -757,10 +751,9 @@ def rank_left_back(df):
       });
       requestAnimationFrame(animateBG);
     }
-    const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if (!prefersReduced) animateBG();
+    animateBG();
 
-    // ---- AOS / Tilt / Typed ----
+    // UI libraries, keywords, typing
     AOS.init({ once: true, duration: 800 });
     VanillaTilt.init(document.querySelectorAll('.tilt'), { max: 15, speed: 400, glare: true, 'max-glare': 0.3 });
 
@@ -772,19 +765,18 @@ def rank_left_back(df):
     ];
     let idx = 0;
     setInterval(() => {
-      const el = document.getElementById('mlWords');
-      if (el) el.innerText = keywords[idx];
+      document.getElementById('mlWords').innerText = keywords[idx];
       idx = (idx + 1) % keywords.length;
     }, 2500);
 
     new Typed("#typed", {
-      strings: ["Mohamed Ansar", "a Business Analyst", "a Tech Support Specialist", "an ML/AI Enthusiast"],
+      strings: ["Mohamed Ansar", "a Business Analyst", "a Tech Support Specialist", "a ML/AI Enthusiast"],
       typeSpeed: 80,
       backSpeed: 40,
       loop: true
     });
 
-    // ---- Accessible Show More / Show Less toggles ----
+    // Accessible Show More / Show Less toggles
     document.querySelectorAll('[data-toggle]').forEach(btn => {
       const sel = btn.getAttribute('data-toggle');
       const panel = document.querySelector(sel);
