@@ -104,18 +104,22 @@
   <canvas id="anime-bg" class="fixed inset-0 -z-20"></canvas>
   <canvas id="waterfall" class="fixed inset-0 -z-10 pointer-events-none"></canvas>
 
-  <!-- Dark mode -->
-  <button id="theme-toggle" class="fixed top-5 right-5 z-50 p-2 rounded-full bg-gray-200 text-gray-900 dark:bg-gray-700 dark:text-white shadow-md" aria-label="Toggle dark mode">🌓</button>
-
-  <!-- Navbar -->
+  <!-- Navbar (theme toggle moved here) -->
   <nav class="fixed top-0 w-full bg-white/70 dark:bg-gray-800/80 backdrop-blur-md shadow z-40">
     <div class="max-w-6xl mx-auto flex items-center justify-between p-4">
       <a href="#" class="text-xl md:text-2xl font-extrabold tracking-tight text-gray-900 dark:text-white">Portfolio</a>
-      <button id="nav-toggle" class="md:hidden text-gray-900 dark:text-white focus:outline-none" aria-label="Open Menu" aria-controls="nav-links" aria-expanded="false">
-        <svg class="w-7 h-7" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/>
-        </svg>
-      </button>
+
+      <!-- Right controls: theme toggle + hamburger -->
+      <div class="flex items-center gap-3">
+        <button id="theme-toggle" class="p-2 rounded-full bg-gray-200 text-gray-900 dark:bg-gray-700 dark:text-white shadow-md" aria-label="Toggle dark mode">🌓</button>
+
+        <button id="nav-toggle" class="md:hidden text-gray-900 dark:text-white focus:outline-none" aria-label="Open Menu" aria-controls="nav-links" aria-expanded="false">
+          <svg class="w-7 h-7" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/>
+          </svg>
+        </button>
+      </div>
+
       <div id="nav-links" class="absolute md:static top-16 left-0 w-full md:w-auto bg-white dark:bg-transparent p-4 md:p-0 hidden md:flex space-y-2 md:space-y-0 md:space-x-6 transition-all">
         <a href="#about" class="block hover:text-black dark:hover:text-white transition py-2 px-2 md:py-0 text-gray-800 dark:text-gray-200">About</a>
         <a href="#projects" class="block hover:text-black dark:hover:text-white transition py-2 px-2 md:py-0 text-gray-800 dark:text-gray-200">Projects</a>
@@ -179,359 +183,358 @@
     </svg>
   </div>
 
- <!-- PROJECTS -->
-<section id="projects" class="max-w-6xl mx-auto px-4 py-16" data-aos="fade-up" data-aos-delay="50">
-  <h2 class="text-3xl font-semibold mb-8 text-center">🚀 Projects</h2>
-  <div class="grid gap-8 md:grid-cols-2">
+  <!-- PROJECTS -->
+  <section id="projects" class="max-w-6xl mx-auto px-4 py-16" data-aos="fade-up" data-aos-delay="50">
+    <h2 class="text-3xl font-semibold mb-8 text-center">🚀 Projects</h2>
+    <div class="grid gap-8 md:grid-cols-2">
 
-    <!-- TaskMaster -->
-    <article class="tilt bg-gray-800 p-6 rounded-2xl shadow hover:scale-105 transition duration-300 relative" data-aos="fade-up">
-      <h3 class="text-xl font-bold mb-2 text-white">🔁 TaskMaster: Automated Pipeline & Random Forest</h3>
-      <p class="text-gray-400 mb-2">Production-style ML pipeline with retries, monitoring, and a deployable RF model.</p>
-      <p class="text-xs text-gray-500 mb-2"><strong>Tech:</strong> Python, scikit-learn, Gradio, logging, backoff</p>
-      <div class="mt-4 space-x-2">
-        <a href="https://github.com/kmsmohamedansar/TaskMaster-Job-Scheduler" target="_blank" rel="noopener noreferrer" class="px-4 py-2 text-sm bg-blue-500 hover:bg-blue-600 text-white rounded-lg">GitHub</a>
-        <a href="https://huggingface.co/spaces/kmsmohamedansar/TaskMaster-Job-Scheduler" target="_blank" rel="noopener noreferrer" class="px-4 py-2 text-sm bg-green-500 hover:bg-green-600 text-white rounded-lg">Live Demo</a>
-        <button data-toggle="#taskmaster-details" class="px-4 py-2 text-sm bg-gray-700 hover:bg-gray-600 text-white rounded-lg">Show More</button>
-      </div>
-      <!-- DETAILS -->
-      <div id="taskmaster-details" class="hidden bg-gray-900 border border-gray-700 rounded-xl mt-6 p-4 text-gray-200 text-sm max-h-[600px] overflow-y-auto">
-        <h4 class="font-semibold mb-3 text-lg text-blue-300">TaskMaster — End-to-End ML Pipeline Orchestration & Deployment</h4>
-
-        <div class="grid md:grid-cols-3 gap-3 mb-4">
-          <div class="bg-gray-800/60 rounded-lg p-3"><div class="text-gray-400 text-xs">Pipeline uptime</div><div class="kpi text-2xl" data-to="99">0</div>%</div>
-          <div class="bg-gray-800/60 rounded-lg p-3"><div class="text-gray-400 text-xs">Avg. stage latency</div><div class="text-2xl">~450ms</div></div>
-          <div class="bg-gray-800/60 rounded-lg p-3"><div class="text-gray-400 text-xs">Auto-retries</div><div class="kpi text-2xl" data-to="3">0</div>x</div>
+      <!-- TaskMaster -->
+      <article class="tilt bg-gray-800 p-6 rounded-2xl shadow hover:scale-105 transition duration-300 relative" data-aos="fade-up">
+        <h3 class="text-xl font-bold mb-2 text-white">🔁 TaskMaster: Automated Pipeline & Random Forest</h3>
+        <p class="text-gray-400 mb-2">Production-style ML pipeline with retries, monitoring, and a deployable RF model.</p>
+        <p class="text-xs text-gray-500 mb-2"><strong>Tech:</strong> Python, scikit-learn, Gradio, logging, backoff</p>
+        <div class="mt-4 space-x-2">
+          <a href="https://github.com/kmsmohamedansar/TaskMaster-Job-Scheduler" target="_blank" rel="noopener noreferrer" class="px-4 py-2 text-sm bg-blue-500 hover:bg-blue-600 text-white rounded-lg">GitHub</a>
+          <a href="https://huggingface.co/spaces/kmsmohamedansar/TaskMaster-Job-Scheduler" target="_blank" rel="noopener noreferrer" class="px-4 py-2 text-sm bg-green-500 hover:bg-green-600 text-white rounded-lg">Live Demo</a>
+          <button data-toggle="#taskmaster-details" class="px-4 py-2 text-sm bg-gray-700 hover:bg-gray-600 text-white rounded-lg">Show More</button>
         </div>
+        <!-- DETAILS -->
+        <div id="taskmaster-details" class="hidden bg-gray-900 border border-gray-700 rounded-xl mt-6 p-4 text-gray-200 text-sm max-h-[600px] overflow-y-auto">
+          <h4 class="font-semibold mb-3 text-lg text-blue-300">TaskMaster — End-to-End ML Pipeline Orchestration & Deployment</h4>
 
-        <p class="mb-3"><strong>Problem:</strong> Toy examples skip the ops. I wanted a small project that behaves like production: idempotent steps, failure handling, and observability.</p>
-        <p class="mb-3"><strong>Solution:</strong> An orchestrated pipeline (<em>Ingest → Validate → Featurize → Train → Serve</em>) with exponential backoff retries, structured logs, and live demo via Gradio.</p>
+          <div class="grid md:grid-cols-3 gap-3 mb-4">
+            <div class="bg-gray-800/60 rounded-lg p-3"><div class="text-gray-400 text-xs">Pipeline uptime</div><div class="kpi text-2xl" data-to="99">0</div>%</div>
+            <div class="bg-gray-800/60 rounded-lg p-3"><div class="text-gray-400 text-xs">Avg. stage latency</div><div class="text-2xl">~450ms</div></div>
+            <div class="bg-gray-800/60 rounded-lg p-3"><div class="text-gray-400 text-xs">Auto-retries</div><div class="kpi text-2xl" data-to="3">0</div>x</div>
+          </div>
 
-        <h5 class="font-semibold text-blue-300 mb-1">Architecture</h5>
-        <ul class="list-disc pl-6 mb-3">
-          <li>Steps are pure functions with on-disk artifacts to enable re-runs and caching.</li>
-          <li>Retry policy <code>max_attempts=3</code> with jitter; terminal failures trigger an alert hook.</li>
-          <li>Correlation IDs for each run; JSON logs for ingestion by any log backend.</li>
-        </ul>
+          <p class="mb-3"><strong>Problem:</strong> Toy examples skip the ops. I wanted a small project that behaves like production: idempotent steps, failure handling, and observability.</p>
+          <p class="mb-3"><strong>Solution:</strong> An orchestrated pipeline (<em>Ingest → Validate → Featurize → Train → Serve</em>) with exponential backoff retries, structured logs, and live demo via Gradio.</p>
 
-        <h5 class="font-semibold text-blue-300 mb-1">Results</h5>
-        <ul class="list-disc pl-6 mb-3">
-          <li>Injected faults show 80% fewer failed runs after automatic retries.</li>
-          <li>Cold-start model serving in ~2s on CPU; p95 predict &lt; 100ms.</li>
-        </ul>
+          <h5 class="font-semibold text-blue-300 mb-1">Architecture</h5>
+          <ul class="list-disc pl-6 mb-3">
+            <li>Steps are pure functions with on-disk artifacts to enable re-runs and caching.</li>
+            <li>Retry policy <code>max_attempts=3</code> with jitter; terminal failures trigger an alert hook.</li>
+            <li>Correlation IDs for each run; JSON logs for ingestion by any log backend.</li>
+          </ul>
 
-        <h5 class="font-semibold text-blue-300 mb-1">What I learned</h5>
-        <ul class="list-disc pl-6 mb-3">
-          <li>Small reliability features (retries, idempotency) save huge debugging time.</li>
-          <li>Designing logs first makes everything else—alerts, dashboards—trivial later.</li>
-        </ul>
+          <h5 class="font-semibold text-blue-300 mb-1">Results</h5>
+          <ul class="list-disc pl-6 mb-3">
+            <li>Injected faults show 80% fewer failed runs after automatic retries.</li>
+            <li>Cold-start model serving in ~2s on CPU; p95 predict &lt; 100ms.</li>
+          </ul>
 
-        <p class="mb-2"><a class="underline text-blue-300" target="_blank" rel="noopener noreferrer" href="https://huggingface.co/spaces/kmsmohamedansar/TaskMaster-Job-Scheduler">Live Demo</a> ·
-           <a class="underline text-blue-300" target="_blank" rel="noopener noreferrer" href="https://github.com/kmsmohamedansar/TaskMaster-Job-Scheduler">GitHub</a></p>
-      </div>
-    </article>
+          <h5 class="font-semibold text-blue-300 mb-1">What I learned</h5>
+          <ul class="list-disc pl-6 mb-3">
+            <li>Small reliability features (retries, idempotency) save huge debugging time.</li>
+            <li>Designing logs first makes everything else—alerts, dashboards—trivial later.</li>
+          </ul>
 
-    <!-- High-Value Customer Predictor -->
-    <article class="tilt bg-gray-800 p-6 rounded-2xl shadow hover:scale-105 transition duration-300 relative" data-aos="fade-up" data-aos-delay="100">
-      <h3 class="text-xl font-bold mb-2 text-white">💎 High-Value Customer Predictor</h3>
-      <p class="text-gray-400 mb-2">Revenue-focused churn/retention model with explainability and MLOps hygiene.</p>
-      <p class="text-xs text-gray-500 mb-2"><strong>Tech:</strong> DuckDB, Pandera, RandomForest, Streamlit, SHAP, MLflow</p>
-      <div class="mt-4 space-x-2">
-        <a href="https://github.com/kmsmohamedansar/high-value-customer-predictor" target="_blank" rel="noopener noreferrer" class="px-4 py-2 text-sm bg-blue-500 hover:bg-blue-600 text-white rounded-lg">GitHub</a>
-        <a href="https://huggingface.co/spaces/kmsmohamedansar/high-value-customer-predictor" target="_blank" rel="noopener noreferrer" class="px-4 py-2 text-sm bg-green-500 hover:bg-green-600 text-white rounded-lg">Live Demo</a>
-        <button data-toggle="#customer-details" class="px-4 py-2 text-sm bg-gray-700 hover:bg-gray-600 text-white rounded-lg">Show More</button>
-      </div>
-      <!-- DETAILS -->
-      <div id="customer-details" class="hidden bg-gray-900 border border-gray-700 rounded-xl mt-6 p-4 text-gray-200 text-sm max-h-[600px] overflow-y-auto">
-        <h4 class="font-semibold mb-2 text-lg text-blue-300">High-Value Customer Predictor — ML + MLOps</h4>
-
-        <div class="grid sm:grid-cols-4 gap-3 mb-4">
-          <div class="bg-gray-800/60 p-3 rounded"><div class="text-gray-400 text-xs">Accuracy</div><div class="kpi text-2xl" data-to="97">0</div>%</div>
-          <div class="bg-gray-800/60 p-3 rounded"><div class="text-gray-400 text-xs">F1</div><div class="kpi text-2xl" data-to="95">0</div>%</div>
-          <div class="bg-gray-800/60 p-3 rounded"><div class="text-gray-400 text-xs">ROC-AUC</div><div class="kpi text-2xl" data-to="99">0</div>%</div>
-          <div class="bg-gray-800/60 p-3 rounded"><div class="text-gray-400 text-xs">Top-decile capture</div><div class="text-2xl">~84%</div></div>
+          <p class="mb-2"><a class="underline text-blue-300" target="_blank" rel="noopener noreferrer" href="https://huggingface.co/spaces/kmsmohamedansar/TaskMaster-Job-Scheduler">Live Demo</a> ·
+             <a class="underline text-blue-300" target="_blank" rel="noopener noreferrer" href="https://github.com/kmsmohamedansar/TaskMaster-Job-Scheduler">GitHub</a></p>
         </div>
+      </article>
 
-        <p class="mb-3"><strong>Problem:</strong> Identify top 10% customers by expected value for targeted retention.</p>
-        <p class="mb-3"><strong>Data:</strong> Orders → customer aggregates with RFM, tenure, cohort, discounting habits; validated via <code>Pandera</code> to prevent leakage/invalid ranges.</p>
-
-        <h5 class="font-semibold text-blue-300 mb-1">Modeling & Explainability</h5>
-        <ul class="list-disc pl-6 mb-3">
-          <li>RandomForest with class-weighting; randomized hyper-search.</li>
-          <li>Threshold tuned for precision ≥ 0.9 to reduce wasteful offers.</li>
-          <li>SHAP global + per-prediction plots (surfaced in Streamlit UI).</li>
-        </ul>
-
-        <h5 class="font-semibold text-blue-300 mb-1">MLOps & Serving</h5>
-        <ul class="list-disc pl-6 mb-3">
-          <li>MLflow runs track params/metrics; artifacts include confusion matrix and model binary.</li>
-          <li>Streamlit app for what-if scoring; batch CLI for CRM exports.</li>
-          <li>Monitoring sketch: weekly drift checks on RFM/tenure distributions.</li>
-        </ul>
-
-        <h5 class="font-semibold text-blue-300 mb-1">Impact</h5>
-        <ul class="list-disc pl-6 mb-3">
-          <li>Captures ~84% of high-value customers in top decile, enabling focused incentives.</li>
-          <li>Clear “why” per customer increases stakeholder trust.</li>
-        </ul>
-
-        <p class="mb-2"><a class="underline text-blue-300" target="_blank" rel="noopener noreferrer" href="https://huggingface.co/spaces/kmsmohamedansar/high-value-customer-predictor">Live Demo</a> ·
-           <a class="underline text-blue-300" target="_blank" rel="noopener noreferrer" href="https://github.com/kmsmohamedansar/high-value-customer-predictor">GitHub</a></p>
-      </div>
-    </article>
-
-    <!-- Grocery AI Assistant -->
-    <article class="tilt bg-gray-800 p-6 rounded-2xl shadow hover:scale-105 transition duration-300 relative" data-aos="fade-up" data-aos-delay="200">
-      <h3 class="text-xl font-bold mb-2 text-white">🛒 Grocery AI Assistant — Semantic Search &amp; Q&amp;A (Local RAG)</h3>
-      <p class="text-gray-400 mb-2">Fully offline product search/Q&amp;A over Instacart-style data with a small local LLM.</p>
-      <p class="text-xs text-gray-500 mb-2"><strong>Tech:</strong> Python, FAISS, LangChain, Sentence Transformers, Gradio</p>
-      <div class="mt-4 space-x-2">
-        <a href="https://github.com/kmsmohamedansar/grocery-ai-assistant" target="_blank" rel="noopener noreferrer" class="px-4 py-2 text-sm bg-blue-500 hover:bg-blue-600 text-white rounded-lg">GitHub</a>
-        <a href="https://huggingface.co/spaces/kmsmohamedansar/ai_knowledge_assistant" target="_blank" rel="noopener noreferrer" class="px-4 py-2 text-sm bg-green-500 hover:bg-green-600 text-white rounded-lg">Live Demo</a>
-        <button data-toggle="#grocery-details" class="px-4 py-2 text-sm bg-gray-700 hover:bg-gray-600 text-white rounded-lg">Show More</button>
-      </div>
-      <!-- DETAILS -->
-      <div id="grocery-details" class="hidden bg-gray-900 border border-gray-700 rounded-xl mt-6 p-4 text-gray-200 text-sm max-h-[600px] overflow-y-auto">
-        <h4 class="font-semibold mb-2 text-lg text-blue-300">Local Semantic Search + Q&amp;A over Instacart Data</h4>
-
-        <div class="grid sm:grid-cols-3 gap-3 mb-4">
-          <div class="bg-gray-800/60 p-3 rounded"><div class="text-gray-400 text-xs">Index size</div><div class="text-2xl">~50k</div> docs</div>
-          <div class="bg-gray-800/60 p-3 rounded"><div class="text-gray-400 text-xs">FAISS query</div><div class="text-2xl">&lt;100ms</div></div>
-          <div class="bg-gray-800/60 p-3 rounded"><div class="text-gray-400 text-xs">LLM</div><div class="text-2xl">Flan-T5</div></div>
+      <!-- High-Value Customer Predictor -->
+      <article class="tilt bg-gray-800 p-6 rounded-2xl shadow hover:scale-105 transition duration-300 relative" data-aos="fade-up" data-aos-delay="100">
+        <h3 class="text-xl font-bold mb-2 text-white">💎 High-Value Customer Predictor</h3>
+        <p class="text-gray-400 mb-2">Revenue-focused churn/retention model with explainability and MLOps hygiene.</p>
+        <p class="text-xs text-gray-500 mb-2"><strong>Tech:</strong> DuckDB, Pandera, RandomForest, Streamlit, SHAP, MLflow</p>
+        <div class="mt-4 space-x-2">
+          <a href="https://github.com/kmsmohamedansar/high-value-customer-predictor" target="_blank" rel="noopener noreferrer" class="px-4 py-2 text-sm bg-blue-500 hover:bg-blue-600 text-white rounded-lg">GitHub</a>
+          <a href="https://huggingface.co/spaces/kmsmohamedansar/high-value-customer-predictor" target="_blank" rel="noopener noreferrer" class="px-4 py-2 text-sm bg-green-500 hover:bg-green-600 text-white rounded-lg">Live Demo</a>
+          <button data-toggle="#customer-details" class="px-4 py-2 text-sm bg-gray-700 hover:bg-gray-600 text-white rounded-lg">Show More</button>
         </div>
+        <!-- DETAILS -->
+        <div id="customer-details" class="hidden bg-gray-900 border border-gray-700 rounded-xl mt-6 p-4 text-gray-200 text-sm max-h-[600px] overflow-y-auto">
+          <h4 class="font-semibold mb-2 text-lg text-blue-300">High-Value Customer Predictor — ML + MLOps</h4>
 
-        <p class="mb-3"><strong>Goal:</strong> Keep customer/product data local while enabling natural-language search and Q&amp;A.</p>
+          <div class="grid sm:grid-cols-4 gap-3 mb-4">
+            <div class="bg-gray-800/60 p-3 rounded"><div class="text-gray-400 text-xs">Accuracy</div><div class="kpi text-2xl" data-to="97">0</div>%</div>
+            <div class="bg-gray-800/60 p-3 rounded"><div class="text-gray-400 text-xs">F1</div><div class="kpi text-2xl" data-to="95">0</div>%</div>
+            <div class="bg-gray-800/60 p-3 rounded"><div class="text-gray-400 text-xs">ROC-AUC</div><div class="kpi text-2xl" data-to="99">0</div>%</div>
+            <div class="bg-gray-800/60 p-3 rounded"><div class="text-gray-400 text-xs">Top-decile capture</div><div class="text-2xl">~84%</div></div>
+          </div>
 
-        <h5 class="font-semibold text-blue-300 mb-1">Pipeline</h5>
-        <ol class="list-decimal pl-6 mb-3">
-          <li>Join products/aisles/departments → readable <code>combined_text</code>.</li>
-          <li>Embed with <code>all-MiniLM-L6-v2</code>; index via FAISS.</li>
-          <li>Top-k retrieve → compose grounded prompt → answer with <code>flan-t5-base</code>.</li>
-          <li>Gradio UI for chat + source highlighting.</li>
-        </ol>
+          <p class="mb-3"><strong>Problem:</strong> Identify top 10% customers by expected value for targeted retention.</p>
+          <p class="mb-3"><strong>Data:</strong> Orders → customer aggregates with RFM, tenure, cohort, discounting habits; validated via <code>Pandera</code> to prevent leakage/invalid ranges.</p>
 
-        <h5 class="font-semibold text-blue-300 mb-1">Guardrails & Evaluation</h5>
-        <ul class="list-disc pl-6 mb-3">
-          <li>All answers must quote an evidence span from retrieved chunks.</li>
-          <li>50 hand-written questions → precision@k and usefulness scores.</li>
-        </ul>
+          <h5 class="font-semibold text-blue-300 mb-1">Modeling & Explainability</h5>
+          <ul class="list-disc pl-6 mb-3">
+            <li>RandomForest with class-weighting; randomized hyper-search.</li>
+            <li>Threshold tuned for precision ≥ 0.9 to reduce wasteful offers.</li>
+            <li>SHAP global + per-prediction plots (surfaced in Streamlit UI).</li>
+          </ul>
 
-        <h5 class="font-semibold text-blue-300 mb-1">Why it matters</h5>
-        <ul class="list-disc pl-6 mb-3">
-          <li>Great fit for merchandising and support teams that can’t ship data to cloud APIs.</li>
-          <li>Sub-100ms retrieval on CPU makes the UX feel “instant.”</li>
-        </ul>
+          <h5 class="font-semibold text-blue-300 mb-1">MLOps & Serving</h5>
+          <ul class="list-disc pl-6 mb-3">
+            <li>MLflow runs track params/metrics; artifacts include confusion matrix and model binary.</li>
+            <li>Streamlit app for what-if scoring; batch CLI for CRM exports.</li>
+            <li>Monitoring sketch: weekly drift checks on RFM/tenure distributions.</li>
+          </ul>
 
-        <p><a class="underline text-blue-300" target="_blank" rel="noopener noreferrer" href="https://huggingface.co/spaces/kmsmohamedansar/ai_knowledge_assistant">Live Demo</a> ·
-           <a class="underline text-blue-300" target="_blank" rel="noopener noreferrer" href="https://github.com/kmsmohamedansar/grocery-ai-assistant">GitHub</a></p>
-      </div>
-    </article>
+          <h5 class="font-semibold text-blue-300 mb-1">Impact</h5>
+          <ul class="list-disc pl-6 mb-3">
+            <li>Captures ~84% of high-value customers in top decile, enabling focused incentives.</li>
+            <li>Clear “why” per customer increases stakeholder trust.</li>
+          </ul>
 
-    <!-- Sentiment Analysis -->
-    <article class="tilt bg-gray-800 p-6 rounded-2xl shadow hover:scale-105 transition duration-300 relative" data-aos="fade-up" data-aos-delay="300">
-      <h3 class="text-xl font-bold mb-2 text-white">📝 Amazon Fine Food Sentiment (DistilBERT)</h3>
-      <p class="text-gray-400 mb-2">Classical baseline → transformer upgrade with attention to error modes.</p>
-      <p class="text-xs text-gray-500 mb-2"><strong>Tech:</strong> TF-IDF, Logistic Regression, DistilBERT, Hugging Face, Gradio</p>
-      <div class="mt-4 space-x-2">
-        <a href="https://github.com/kmsmohamedansar/sentiment-analysis-amazon-finefood" target="_blank" rel="noopener noreferrer" class="px-4 py-2 text-sm bg-blue-500 hover:bg-blue-600 text-white rounded-lg">GitHub</a>
-        <a href="https://huggingface.co/spaces/kmsmohamedansar/amazon-sentiment-distilbert" target="_blank" rel="noopener noreferrer" class="px-4 py-2 text-sm bg-green-500 hover:bg-green-600 text-white rounded-lg">Live Demo</a>
-        <button data-toggle="#sentiment-details" class="px-4 py-2 text-sm bg-gray-700 hover:bg-gray-600 text-white rounded-lg">Show More</button>
-      </div>
-      <!-- DETAILS -->
-      <div id="sentiment-details" class="hidden bg-gray-900 border border-gray-700 rounded-xl mt-6 p-4 text-gray-200 text-sm max-h-[600px] overflow-y-auto">
-        <h4 class="font-semibold mb-2 text-lg text-blue-300">Amazon Fine Food Reviews — Classical → Transformer</h4>
-
-        <div class="grid sm:grid-cols-4 gap-3 mb-4">
-          <div class="bg-gray-800/60 p-3 rounded"><div class="text-gray-400 text-xs">Dataset</div><div class="text-2xl">~568k</div> reviews</div>
-          <div class="bg-gray-800/60 p-3 rounded"><div class="text-gray-400 text-xs">Baseline F1</div><div class="text-2xl">0.88</div></div>
-          <div class="bg-gray-800/60 p-3 rounded"><div class="text-gray-400 text-xs">DistilBERT F1</div><div class="text-2xl">0.91</div></div>
-          <div class="bg-gray-800/60 p-3 rounded"><div class="text-gray-400 text-xs">Latency</div><div class="text-2xl">&lt;100ms</div></div>
+          <p class="mb-2"><a class="underline text-blue-300" target="_blank" rel="noopener noreferrer" href="https://huggingface.co/spaces/kmsmohamedansar/high-value-customer-predictor">Live Demo</a> ·
+             <a class="underline text-blue-300" target="_blank" rel="noopener noreferrer" href="https://github.com/kmsmohamedansar/high-value-customer-predictor">GitHub</a></p>
         </div>
+      </article>
 
-        <p class="mb-3"><strong>Approach:</strong> Start with TF-IDF + Logistic Regression for fast baseline and interpretability, then upgrade to DistilBERT with early stopping.</p>
-
-        <h5 class="font-semibold text-blue-300 mb-1">Serving & UX</h5>
-        <ul class="list-disc pl-6 mb-3">
-          <li>Gradio UI returns label + confidence; batch CSV scoring script included.</li>
-          <li>Saved tokenizer/model weights; deterministic splits for reproducibility.</li>
-        </ul>
-
-        <h5 class="font-semibold text-blue-300 mb-1">Error analysis</h5>
-        <ul class="list-disc pl-6 mb-3">
-          <li>Sarcasm and mixed polarity reviews are common misses.</li>
-          <li>Mitigation: add hard negatives and calibrate decision threshold.</li>
-        </ul>
-
-        <p><a class="underline text-blue-300" target="_blank" rel="noopener noreferrer" href="https://huggingface.co/spaces/kmsmohamedansar/amazon-sentiment-distilbert">Live Demo</a> ·
-           <a class="underline text-blue-300" target="_blank" rel="noopener noreferrer" href="https://github.com/kmsmohamedansar/sentiment-analysis-amazon-finefood">GitHub</a></p>
-      </div>
-    </article>
-
-    <!-- Yahoo Finance News Scraper -->
-    <article class="tilt bg-gray-800 p-6 rounded-2zl shadow hover:scale-105 transition duration-300 relative" data-aos="fade-up" data-aos-delay="400">
-      <h3 class="text-xl font-bold mb-2 text-white">📰 Yahoo Finance News Scraper — Selenium + BeautifulSoup</h3>
-      <p class="text-gray-400 mb-2">Headless Chrome scraper for JS-rendered news into clean CSV/DataFrame.</p>
-      <p class="text-xs text-gray-500 mb-2"><strong>Tech:</strong> Python, Selenium, BeautifulSoup, Pandas, ChromeDriver</p>
-      <div class="mt-4 space-x-2">
-        <button data-toggle="#yahoo-details" class="px-4 py-2 text-sm bg-gray-700 hover:bg-gray-600 text-white rounded-lg">Show More</button>
-      </div>
-      <!-- DETAILS -->
-      <div id="yahoo-details" class="hidden bg-gray-900 border border-gray-700 rounded-xl mt-6 p-4 text-gray-200 text-sm max-h-[600px] overflow-y-auto">
-        <h4 class="font-semibold mb-2 text-lg text-blue-300">Headless Chrome Scraper for JS-Rendered News</h4>
-
-        <div class="grid sm:grid-cols-3 gap-3 mb-4">
-          <div class="bg-gray-800/60 p-3 rounded"><div class="text-gray-400 text-xs">Articles/session</div><div class="text-2xl">~50</div></div>
-          <div class="bg-gray-800/60 p-3 rounded"><div class="text-gray-400 text-xs">Storage</div><div class="text-2xl">CSV/DF</div></div>
-          <div class="bg-gray-800/60 p-3 rounded"><div class="text-gray-400 text-xs">Headless</div><div class="text-2xl">Chrome</div></div>
+      <!-- Grocery AI Assistant -->
+      <article class="tilt bg-gray-800 p-6 rounded-2xl shadow hover:scale-105 transition duration-300 relative" data-aos="fade-up" data-aos-delay="200">
+        <h3 class="text-xl font-bold mb-2 text-white">🛒 Grocery AI Assistant — Semantic Search &amp; Q&amp;A (Local RAG)</h3>
+        <p class="text-gray-400 mb-2">Fully offline product search/Q&amp;A over Instacart-style data with a small local LLM.</p>
+        <p class="text-xs text-gray-500 mb-2"><strong>Tech:</strong> Python, FAISS, LangChain, Sentence Transformers, Gradio</p>
+        <div class="mt-4 space-x-2">
+          <a href="https://github.com/kmsmohamedansar/grocery-ai-assistant" target="_blank" rel="noopener noreferrer" class="px-4 py-2 text-sm bg-blue-500 hover:bg-blue-600 text-white rounded-lg">GitHub</a>
+          <a href="https://huggingface.co/spaces/kmsmohamedansar/ai_knowledge_assistant" target="_blank" rel="noopener noreferrer" class="px-4 py-2 text-sm bg-green-500 hover:bg-green-600 text-white rounded-lg">Live Demo</a>
+          <button data-toggle="#grocery-details" class="px-4 py-2 text-sm bg-gray-700 hover:bg-gray-600 text-white rounded-lg">Show More</button>
         </div>
+        <!-- DETAILS -->
+        <div id="grocery-details" class="hidden bg-gray-900 border border-gray-700 rounded-xl mt-6 p-4 text-gray-200 text-sm max-h-[600px] overflow-y-auto">
+          <h4 class="font-semibold mb-2 text-lg text-blue-300">Local Semantic Search + Q&amp;A over Instacart Data</h4>
 
-        <p class="mb-3"><strong>Target:</strong> Pages where content is loaded by client-side JS and static requests fail.</p>
+          <div class="grid sm:grid-cols-3 gap-3 mb-4">
+            <div class="bg-gray-800/60 p-3 rounded"><div class="text-gray-400 text-xs">Index size</div><div class="text-2xl">~50k</div> docs</div>
+            <div class="bg-gray-800/60 p-3 rounded"><div class="text-gray-400 text-xs">FAISS query</div><div class="text-2xl">&lt;100ms</div></div>
+            <div class="bg-gray-800/60 p-3 rounded"><div class="text-gray-400 text-xs">LLM</div><div class="text-2xl">Flan-T5</div></div>
+          </div>
 
-        <h5 class="font-semibold text-blue-300 mb-1">Flow</h5>
-        <ol class="list-decimal pl-6 mb-3">
-          <li>Open homepage with Selenium; wait for network idle.</li>
-          <li>Collect links; visit each; extract headline, time, author, article body.</li>
-          <li>Normalize and store in Pandas; export to CSV for downstream NLP.</li>
-        </ol>
+          <p class="mb-3"><strong>Goal:</strong> Keep customer/product data local while enabling natural-language search and Q&amp;A.</p>
 
-        <h5 class="font-semibold text-blue-300 mb-1">Resilience</h5>
-        <ul class="list-disc pl-6 mb-3">
-          <li>Randomized user-agent & short delays to avoid throttling.</li>
-          <li>Selector fallbacks (<code>.caas-body</code> → <code>article p</code>).</li>
-          <li>Optional Dockerfile for reproducible runs.</li>
-        </ul>
+          <h5 class="font-semibold text-blue-300 mb-1">Pipeline</h5>
+          <ol class="list-decimal pl-6 mb-3">
+            <li>Join products/aisles/departments → readable <code>combined_text</code>.</li>
+            <li>Embed with <code>all-MiniLM-L6-v2</code>; index via FAISS.</li>
+            <li>Top-k retrieve → compose grounded prompt → answer with <code>flan-t5-base</code>.</li>
+            <li>Gradio UI for chat + source highlighting.</li>
+          </ol>
 
-        <p class="text-gray-400">Extensions: scheduled jobs, sentiment tagging, BI feed integration.</p>
-      </div>
-    </article>
+          <h5 class="font-semibold text-blue-300 mb-1">Guardrails & Evaluation</h5>
+          <ul class="list-disc pl-6 mb-3">
+            <li>All answers must quote an evidence span from retrieved chunks.</li>
+            <li>50 hand-written questions → precision@k and usefulness scores.</li>
+          </ul>
 
-    <!-- Zero-Shot Product Categorization -->
-    <article class="tilt bg-gray-800 p-6 rounded-2xl shadow hover:scale-105 transition duration-300 relative" data-aos="fade-up" data-aos-delay="500">
-      <h3 class="text-xl font-bold mb-2 text-white">🧠 Smart Product Categorization — Zero-Shot NLP</h3>
-      <p class="text-gray-400 mb-2">Automatic product→category validation using BART-MNLI plus lightweight rules.</p>
-      <p class="text-xs text-gray-500 mb-2"><strong>Tech:</strong> Transformers (BART-MNLI), pipelines, pandas</p>
-      <div class="mt-4 space-x-2">
-        <button data-toggle="#zero-shot-details" class="px-4 py-2 text-sm bg-gray-700 hover:bg-gray-600 text-white rounded-lg">Show More</button>
-      </div>
-      <!-- DETAILS -->
-      <div id="zero-shot-details" class="hidden bg-gray-900 border border-gray-700 rounded-xl mt-6 p-4 text-gray-200 text-sm max-h-[600px] overflow-y-auto">
-        <h4 class="font-semibold mb-2 text-lg text-blue-300">Zero-Shot Categorization with BART-MNLI</h4>
+          <h5 class="font-semibold text-blue-300 mb-1">Why it matters</h5>
+          <ul class="list-disc pl-6 mb-3">
+            <li>Great fit for merchandising and support teams that can’t ship data to cloud APIs.</li>
+            <li>Sub-100ms retrieval on CPU makes the UX feel “instant.”</li>
+          </ul>
 
-        <div class="grid sm:grid-cols-3 gap-3 mb-4">
-          <div class="bg-gray-800/60 p-3 rounded"><div class="text-gray-400 text-xs">Model</div><div class="text-2xl">BART-MNLI</div></div>
-          <div class="bg-gray-800/60 p-3 rounded"><div class="text-gray-400 text-xs">CPU throughput</div><div class="text-2xl">~8/s</div></div>
-          <div class="bg-gray-800/60 p-3 rounded"><div class="text-gray-400 text-xs">Flag rate</div><div class="text-2xl">~12%</div></div>
+          <p><a class="underline text-blue-300" target="_blank" rel="noopener noreferrer" href="https://huggingface.co/spaces/kmsmohamedansar/ai_knowledge_assistant">Live Demo</a> ·
+             <a class="underline text-blue-300" target="_blank" rel="noopener noreferrer" href="https://github.com/kmsmohamedansar/grocery-ai-assistant">GitHub</a></p>
         </div>
+      </article>
 
-        <p class="mb-3"><strong>Goal:</strong> Catch subtle mislabels that keyword rules miss, without training data.</p>
-
-        <h5 class="font-semibold text-blue-300 mb-1">Approach</h5>
-        <ol class="list-decimal pl-6 mb-3">
-          <li>Parse category path and take last node as candidate label.</li>
-          <li>Quick keyword pass for obvious matches → early accept.</li>
-          <li>Run zero-shot entailment on product name vs. label; threshold = 0.6.</li>
-          <li>Low-score items → review queue with top-k alternative labels.</li>
-        </ol>
-
-        <h5 class="font-semibold text-blue-300 mb-1">Evaluation</h5>
-        <ul class="list-disc pl-6 mb-3">
-          <li>Manually labeled 200 items; ~0.92 precision on flagged set.</li>
-          <li>Common confusions: apparel variants (“top” vs “blouse”), bedding (“duvet” vs “comforter”).</li>
-        </ul>
-
-        <p class="text-gray-400">Outcome: materially reduces manual QA while keeping reviewers focused on true edge cases.</p>
-      </div>
-    </article>
-
-    <!-- Spotify Trends -->
-    <article class="tilt bg-gray-800 p-6 rounded-2xl shadow hover:scale-105 transition duration-300 relative" data-aos="fade-up" data-aos-delay="600">
-      <h3 class="text-xl font-bold mb-2 text-white">🎧 Spotify Music Trends — Statistical Analysis &amp; Viz</h3>
-      <p class="text-gray-400 mb-2">Large-scale EDA of audio features and popularity patterns across decades.</p>
-      <p class="text-xs text-gray-500 mb-2"><strong>Tech:</strong> Python, pandas, NumPy, Matplotlib, Seaborn</p>
-      <div class="mt-4 space-x-2">
-        <button data-toggle="#spotify-details" class="px-4 py-2 text-sm bg-gray-700 hover:bg-gray-600 text-white rounded-lg">Show More</button>
-      </div>
-      <!-- DETAILS -->
-      <div id="spotify-details" class="hidden bg-gray-900 border border-gray-700 rounded-xl mt-6 p-4 text-gray-200 text-sm max-h-[600px] overflow-y-auto">
-        <h4 class="font-semibold mb-3 text-lg text-blue-300">Identifying Spotify Trends across Decades</h4>
-
-        <div class="grid sm:grid-cols-3 gap-3 mb-4">
-          <div class="bg-gray-800/60 p-3 rounded"><div class="text-gray-400 text-xs">Tracks</div><div class="text-2xl">~170k</div></div>
-          <div class="bg-gray-800/60 p-3 rounded"><div class="text-gray-400 text-xs">Period</div><div class="text-2xl">1920–2020s</div></div>
-          <div class="bg-gray-800/60 p-3 rounded"><div class="text-gray-400 text-xs">Key corr.</div><div class="text-2xl">energy↔loudness</div></div>
+      <!-- Sentiment Analysis -->
+      <article class="tilt bg-gray-800 p-6 rounded-2xl shadow hover:scale-105 transition duration-300 relative" data-aos="fade-up" data-aos-delay="300">
+        <h3 class="text-xl font-bold mb-2 text-white">📝 Amazon Fine Food Sentiment (DistilBERT)</h3>
+        <p class="text-gray-400 mb-2">Classical baseline → transformer upgrade with attention to error modes.</p>
+        <p class="text-xs text-gray-500 mb-2"><strong>Tech:</strong> TF-IDF, Logistic Regression, DistilBERT, Hugging Face, Gradio</p>
+        <div class="mt-4 space-x-2">
+          <a href="https://github.com/kmsmohamedansar/sentiment-analysis-amazon-finefood" target="_blank" rel="noopener noreferrer" class="px-4 py-2 text-sm bg-blue-500 hover:bg-blue-600 text-white rounded-lg">GitHub</a>
+          <a href="https://huggingface.co/spaces/kmsmohamedansar/amazon-sentiment-distilbert" target="_blank" rel="noopener noreferrer" class="px-4 py-2 text-sm bg-green-500 hover:bg-green-600 text-white rounded-lg">Live Demo</a>
+          <button data-toggle="#sentiment-details" class="px-4 py-2 text-sm bg-gray-700 hover:bg-gray-600 text-white rounded-lg">Show More</button>
         </div>
+        <!-- DETAILS -->
+        <div id="sentiment-details" class="hidden bg-gray-900 border border-gray-700 rounded-xl mt-6 p-4 text-gray-200 text-sm max-h-[600px] overflow-y-auto">
+          <h4 class="font-semibold mb-2 text-lg text-blue-300">Amazon Fine Food Reviews — Classical → Transformer</h4>
 
-        <p class="mb-3"><strong>Questions:</strong> How did song length evolve? Which audio features align with popularity? Are “happier” songs more danceable?</p>
+          <div class="grid sm:grid-cols-4 gap-3 mb-4">
+            <div class="bg-gray-800/60 p-3 rounded"><div class="text-gray-400 text-xs">Dataset</div><div class="text-2xl">~568k</div> reviews</div>
+            <div class="bg-gray-800/60 p-3 rounded"><div class="text-gray-400 text-xs">Baseline F1</div><div class="text-2xl">0.88</div></div>
+            <div class="bg-gray-800/60 p-3 rounded"><div class="text-gray-400 text-xs">DistilBERT F1</div><div class="text-2xl">0.91</div></div>
+            <div class="bg-gray-800/60 p-3 rounded"><div class="text-gray-400 text-xs">Latency</div><div class="text-2xl">&lt;100ms</div></div>
+          </div>
 
-        <h5 class="font-semibold text-blue-300 mb-1">Highlights</h5>
-        <ul class="list-disc pl-6 mb-3">
-          <li>Longest average track durations in the 70s–80s; shortest in early eras.</li>
-          <li>Strong positive correlation between energy and loudness (~0.78).</li>
-          <li>Valence ↔ danceability shows moderate positive association (~0.56).</li>
-        </ul>
+          <p class="mb-3"><strong>Approach:</strong> Start with TF-IDF + Logistic Regression for fast baseline and interpretability, then upgrade to DistilBERT with early stopping.</p>
 
-        <h5 class="font-semibold text-blue-300 mb-1">Reproducibility</h5>
-        <pre class="bg-gray-800 text-gray-100 rounded p-2 overflow-x-auto text-xs">
+          <h5 class="font-semibold text-blue-300 mb-1">Serving & UX</h5>
+          <ul class="list-disc pl-6 mb-3">
+            <li>Gradio UI returns label + confidence; batch CSV scoring script included.</li>
+            <li>Saved tokenizer/model weights; deterministic splits for reproducibility.</li>
+          </ul>
+
+          <h5 class="font-semibold text-blue-300 mb-1">Error analysis</h5>
+          <ul class="list-disc pl-6 mb-3">
+            <li>Sarcasm and mixed polarity reviews are common misses.</li>
+            <li>Mitigation: add hard negatives and calibrate decision threshold.</li>
+          </ul>
+
+          <p><a class="underline text-blue-300" target="_blank" rel="noopener noreferrer" href="https://huggingface.co/spaces/kmsmohamedansar/amazon-sentiment-distilbert">Live Demo</a> ·
+             <a class="underline text-blue-300" target="_blank" rel="noopener noreferrer" href="https://github.com/kmsmohamedansar/sentiment-analysis-amazon-finefood">GitHub</a></p>
+        </div>
+      </article>
+
+      <!-- Yahoo Finance News Scraper -->
+      <article class="tilt bg-gray-800 p-6 rounded-2zl shadow hover:scale-105 transition duration-300 relative" data-aos="fade-up" data-aos-delay="400">
+        <h3 class="text-xl font-bold mb-2 text-white">📰 Yahoo Finance News Scraper — Selenium + BeautifulSoup</h3>
+        <p class="text-gray-400 mb-2">Headless Chrome scraper for JS-rendered news into clean CSV/DataFrame.</p>
+        <p class="text-xs text-gray-500 mb-2"><strong>Tech:</strong> Python, Selenium, BeautifulSoup, Pandas, ChromeDriver</p>
+        <div class="mt-4 space-x-2">
+          <button data-toggle="#yahoo-details" class="px-4 py-2 text-sm bg-gray-700 hover:bg-gray-600 text-white rounded-lg">Show More</button>
+        </div>
+        <!-- DETAILS -->
+        <div id="yahoo-details" class="hidden bg-gray-900 border border-gray-700 rounded-xl mt-6 p-4 text-gray-200 text-sm max-h-[600px] overflow-y-auto">
+          <h4 class="font-semibold mb-2 text-lg text-blue-300">Headless Chrome Scraper for JS-Rendered News</h4>
+
+          <div class="grid sm:grid-cols-3 gap-3 mb-4">
+            <div class="bg-gray-800/60 p-3 rounded"><div class="text-gray-400 text-xs">Articles/session</div><div class="text-2xl">~50</div></div>
+            <div class="bg-gray-800/60 p-3 rounded"><div class="text-gray-400 text-xs">Storage</div><div class="text-2xl">CSV/DF</div></div>
+            <div class="bg-gray-800/60 p-3 rounded"><div class="text-gray-400 text-xs">Headless</div><div class="text-2xl">Chrome</div></div>
+          </div>
+
+          <p class="mb-3"><strong>Target:</strong> Pages where content is loaded by client-side JS and static requests fail.</p>
+
+          <h5 class="font-semibold text-blue-300 mb-1">Flow</h5>
+          <ol class="list-decimal pl-6 mb-3">
+            <li>Open homepage with Selenium; wait for network idle.</li>
+            <li>Collect links; visit each; extract headline, time, author, article body.</li>
+            <li>Normalize and store in Pandas; export to CSV for downstream NLP.</li>
+          </ol>
+
+          <h5 class="font-semibold text-blue-300 mb-1">Resilience</h5>
+          <ul class="list-disc pl-6 mb-3">
+            <li>Randomized user-agent & short delays to avoid throttling.</li>
+            <li>Selector fallbacks (<code>.caas-body</code> → <code>article p</code>).</li>
+            <li>Optional Dockerfile for reproducible runs.</li>
+          </ul>
+
+          <p class="text-gray-400">Extensions: scheduled jobs, sentiment tagging, BI feed integration.</p>
+        </div>
+      </article>
+
+      <!-- Zero-Shot Product Categorization -->
+      <article class="tilt bg-gray-800 p-6 rounded-2xl shadow hover:scale-105 transition duration-300 relative" data-aos="fade-up" data-aos-delay="500">
+        <h3 class="text-xl font-bold mb-2 text-white">🧠 Smart Product Categorization — Zero-Shot NLP</h3>
+        <p class="text-gray-400 mb-2">Automatic product→category validation using BART-MNLI plus lightweight rules.</p>
+        <p class="text-xs text-gray-500 mb-2"><strong>Tech:</strong> Transformers (BART-MNLI), pipelines, pandas</p>
+        <div class="mt-4 space-x-2">
+          <button data-toggle="#zero-shot-details" class="px-4 py-2 text-sm bg-gray-700 hover:bg-gray-600 text-white rounded-lg">Show More</button>
+        </div>
+        <!-- DETAILS -->
+        <div id="zero-shot-details" class="hidden bg-gray-900 border border-gray-700 rounded-xl mt-6 p-4 text-gray-200 text-sm max-h-[600px] overflow-y-auto">
+          <h4 class="font-semibold mb-2 text-lg text-blue-300">Zero-Shot Categorization with BART-MNLI</h4>
+
+          <div class="grid sm:grid-cols-3 gap-3 mb-4">
+            <div class="bg-gray-800/60 p-3 rounded"><div class="text-gray-400 text-xs">Model</div><div class="text-2xl">BART-MNLI</div></div>
+            <div class="bg-gray-800/60 p-3 rounded"><div class="text-gray-400 text-xs">CPU throughput</div><div class="text-2xl">~8/s</div></div>
+            <div class="bg-gray-800/60 p-3 rounded"><div class="text-gray-400 text-xs">Flag rate</div><div class="text-2xl">~12%</div></div>
+          </div>
+
+          <p class="mb-3"><strong>Goal:</strong> Catch subtle mislabels that keyword rules miss, without training data.</p>
+
+          <h5 class="font-semibold text-blue-300 mb-1">Approach</h5>
+          <ol class="list-decimal pl-6 mb-3">
+            <li>Parse category path and take last node as candidate label.</li>
+            <li>Quick keyword pass for obvious matches → early accept.</li>
+            <li>Run zero-shot entailment on product name vs. label; threshold = 0.6.</li>
+            <li>Low-score items → review queue with top-k alternative labels.</li>
+          </ol>
+
+          <h5 class="font-semibold text-blue-300 mb-1">Evaluation</h5>
+          <ul class="list-disc pl-6 mb-3">
+            <li>Manually labeled 200 items; ~0.92 precision on flagged set.</li>
+            <li>Common confusions: apparel variants (“top” vs “blouse”), bedding (“duvet” vs “comforter”).</li>
+          </ul>
+
+          <p class="text-gray-400">Outcome: materially reduces manual QA while keeping reviewers focused on true edge cases.</p>
+        </div>
+      </article>
+
+      <!-- Spotify Trends -->
+      <article class="tilt bg-gray-800 p-6 rounded-2xl shadow hover:scale-105 transition duration-300 relative" data-aos="fade-up" data-aos-delay="600">
+        <h3 class="text-xl font-bold mb-2 text-white">🎧 Spotify Music Trends — Statistical Analysis &amp; Viz</h3>
+        <p class="text-gray-400 mb-2">Large-scale EDA of audio features and popularity patterns across decades.</p>
+        <p class="text-xs text-gray-500 mb-2"><strong>Tech:</strong> Python, pandas, NumPy, Matplotlib, Seaborn</p>
+        <div class="mt-4 space-x-2">
+          <button data-toggle="#spotify-details" class="px-4 py-2 text-sm bg-gray-700 hover:bg-gray-600 text-white rounded-lg">Show More</button>
+        </div>
+        <!-- DETAILS -->
+        <div id="spotify-details" class="hidden bg-gray-900 border border-gray-700 rounded-xl mt-6 p-4 text-gray-200 text-sm max-h-[600px] overflow-y-auto">
+          <h4 class="font-semibold mb-3 text-lg text-blue-300">Identifying Spotify Trends across Decades</h4>
+
+          <div class="grid sm:grid-cols-3 gap-3 mb-4">
+            <div class="bg-gray-800/60 p-3 rounded"><div class="text-gray-400 text-xs">Tracks</div><div class="text-2xl">~170k</div></div>
+            <div class="bg-gray-800/60 p-3 rounded"><div class="text-gray-400 text-xs">Period</div><div class="text-2xl">1920–2020s</div></div>
+            <div class="bg-gray-800/60 p-3 rounded"><div class="text-gray-400 text-xs">Key corr.</div><div class="text-2xl">energy↔loudness</div></div>
+          </div>
+
+          <p class="mb-3"><strong>Questions:</strong> How did song length evolve? Which audio features align with popularity? Are “happier” songs more danceable?</p>
+
+          <h5 class="font-semibold text-blue-300 mb-1">Highlights</h5>
+          <ul class="list-disc pl-6 mb-3">
+            <li>Longest average track durations in the 70s–80s; shortest in early eras.</li>
+            <li>Strong positive correlation between energy and loudness (~0.78).</li>
+            <li>Valence ↔ danceability shows moderate positive association (~0.56).</li>
+          </ul>
+
+          <h5 class="font-semibold text-blue-300 mb-1">Reproducibility</h5>
+          <pre class="bg-gray-800 text-gray-100 rounded p-2 overflow-x-auto text-xs">
 # yearly means, then line plot per feature
 yearly = df.groupby("year")[["danceability","energy","valence","liveness","instrumentalness"]].mean()
 yearly.reset_index().to_csv("yearly_features.csv", index=False)
-        </pre>
+          </pre>
 
-        <p class="text-gray-400">Caveat: dataset is popularity-skewed; analyses are descriptive, not causal.</p>
-      </div>
-    </article>
-
-    <!-- CPL Dream Team -->
-    <article class="tilt bg-gray-800 p-6 rounded-2xl shadow hover:scale-105 transition duration-300 relative" data-aos="fade-up" data-aos-delay="700">
-      <h3 class="text-xl font-bold mb-2 text-white">⚽ Canadian Premier League — Dream Team (2019)</h3>
-      <p class="text-gray-400 mb-2">Role-aware KPI model for XI selection + interactive Power BI dashboard.</p>
-      <p class="text-xs text-gray-500 mb-2"><strong>Tech:</strong> Python (pandas, matplotlib, seaborn), Power BI</p>
-      <div class="mt-4 space-x-2">
-        <button data-toggle="#cpl-details" class="px-4 py-2 text-sm bg-gray-700 hover:bg-gray-600 text-white rounded-lg">Show More</button>
-      </div>
-      <!-- DETAILS -->
-      <div id="cpl-details" class="hidden bg-gray-900 border border-gray-700 rounded-xl mt-6 p-4 text-gray-200 text-sm max-h-[600px] overflow-y-auto">
-        <h4 class="font-semibold mb-3 text-lg text-blue-300">CPL 2019 — Dream Team: Method & KPIs</h4>
-
-        <div class="grid sm:grid-cols-3 gap-3 mb-4">
-          <div class="bg-gray-800/60 p-3 rounded"><div class="text-gray-400 text-xs">Teams</div><div class="text-2xl">7</div></div>
-          <div class="bg-gray-800/60 p-3 rounded"><div class="text-gray-400 text-xs">Players</div><div class="text-2xl">~300</div></div>
-          <div class="bg-gray-800/60 p-3 rounded"><div class="text-gray-400 text-xs">Dashboard</div><div class="text-2xl">Power BI</div></div>
+          <p class="text-gray-400">Caveat: dataset is popularity-skewed; analyses are descriptive, not causal.</p>
         </div>
+      </article>
 
-        <h5 class="font-semibold text-blue-300 mb-1">Scoring model</h5>
-        <ul class="list-disc pl-6 mb-3">
-          <li><b>Team KPI:</b> goals, SOT ratio, pass%, fouls, touches in box.</li>
-          <li><b>Roles:</b> CF (goals + pens − xG), Wingers (2×assists + xA + 0.5×chances), CAM (2×goals + assists + 0.5×chances), DM (assists + 2×tackles + 0.5×interceptions), FB/CB/GK rules.</li>
-        </ul>
+      <!-- CPL Dream Team -->
+      <article class="tilt bg-gray-800 p-6 rounded-2xl shadow hover:scale-105 transition duration-300 relative" data-aos="fade-up" data-aos-delay="700">
+        <h3 class="text-xl font-bold mb-2 text-white">⚽ Canadian Premier League — Dream Team (2019)</h3>
+        <p class="text-gray-400 mb-2">Role-aware KPI model for XI selection + interactive Power BI dashboard.</p>
+        <p class="text-xs text-gray-500 mb-2"><strong>Tech:</strong> Python (pandas, matplotlib, seaborn), Power BI</p>
+        <div class="mt-4 space-x-2">
+          <button data-toggle="#cpl-details" class="px-4 py-2 text-sm bg-gray-700 hover:bg-gray-600 text-white rounded-lg">Show More</button>
+        </div>
+        <!-- DETAILS -->
+        <div id="cpl-details" class="hidden bg-gray-900 border border-gray-700 rounded-xl mt-6 p-4 text-gray-200 text-sm max-h-[600px] overflow-y-auto">
+          <h4 class="font-semibold mb-3 text-lg text-blue-300">CPL 2019 — Dream Team: Method & KPIs</h4>
 
-        <h5 class="font-semibold text-blue-300 mb-1">From notebook to dashboard</h5>
-        <ul class="list-disc pl-6 mb-3">
-          <li>Shortlists per role exported as tidy CSVs.</li>
-          <li>Power BI tabs: Dream XI, Player Radar, Team Comparison, KPI Index.</li>
-        </ul>
+          <div class="grid sm:grid-cols-3 gap-3 mb-4">
+            <div class="bg-gray-800/60 p-3 rounded"><div class="text-gray-400 text-xs">Teams</div><div class="text-2xl">7</div></div>
+            <div class="bg-gray-800/60 p-3 rounded"><div class="text-gray-400 text-xs">Players</div><div class="text-2xl">~300</div></div>
+            <div class="bg-gray-800/60 p-3 rounded"><div class="text-gray-400 text-xs">Dashboard</div><div class="text-2xl">Power BI</div></div>
+          </div>
 
-        <h5 class="font-semibold text-blue-300 mb-1">Example calc (Left Back)</h5>
-        <pre class="bg-gray-800 text-gray-100 rounded p-2 overflow-x-auto text-xs">
+          <h5 class="font-semibold text-blue-300 mb-1">Scoring model</h5>
+          <ul class="list-disc pl-6 mb-3">
+            <li><b>Team KPI:</b> goals, SOT ratio, pass%, fouls, touches in box.</li>
+            <li><b>Roles:</b> CF (goals + pens − xG), Wingers (2×assists + xA + 0.5×chances), CAM (2×goals + assists + 0.5×chances), DM (assists + 2×tackles + 0.5×interceptions), FB/CB/GK rules.</li>
+          </ul>
+
+          <h5 class="font-semibold text-blue-300 mb-1">From notebook to dashboard</h5>
+          <ul class="list-disc pl-6 mb-3">
+            <li>Shortlists per role exported as tidy CSVs.</li>
+            <li>Power BI tabs: Dream XI, Player Radar, Team Comparison, KPI Index.</li>
+          </ul>
+
+          <h5 class="font-semibold text-blue-300 mb-1">Example calc (Left Back)</h5>
+          <pre class="bg-gray-800 text-gray-100 rounded p-2 overflow-x-auto text-xs">
 sub = df[df["Position"]=="Left Back"].copy()
 sub["score"] = 2*sub["Int"] + 0.5*sub["SucflTkls"] + sub["SucflDuels"]
 sub.sort_values("score", ascending=False).head(5)
-        </pre>
+          </pre>
 
-        <p class="text-gray-400">Notes: single-season sample; favors on-ball output; great for scouting shortlists rather than definitive rankings.</p>
-      </div>
-    </article>
+          <p class="text-gray-400">Notes: single-season sample; favors on-ball output; great for scouting shortlists rather than definitive rankings.</p>
+        </div>
+      </article>
 
+    </div>
+  </section>
+
+  <!-- Divider -->
+  <div class="my-2 opacity-60">
+    <svg viewBox="0 0 1200 120" class="w-full h-12" aria-hidden="true">
+      <use href="#race" />
+    </svg>
   </div>
-</section>
-
-<!-- Divider -->
-<div class="my-2 opacity-60">
-  <svg viewBox="0 0 1200 120" class="w-full h-12" aria-hidden="true">
-    <use href="#race" />
-  </svg>
-</div>
-
 
   <!-- SKILLS -->
   <section id="skills" class="bg-gray-100 dark:bg-gray-800 py-16" data-aos="fade-up" data-aos-delay="100">
