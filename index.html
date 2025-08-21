@@ -188,6 +188,51 @@
     <h2 class="text-3xl font-semibold mb-8 text-center">🚀 Projects</h2>
     <div class="grid gap-8 md:grid-cols-2">
 
+      <!-- SQL Playground -->
+<article class="tilt bg-gray-800 p-6 rounded-2xl shadow hover:scale-105 transition duration-300 relative" data-aos="fade-up">
+  <h3 class="text-xl font-bold mb-2 text-white">🧠 SQL Playground — Snowflake Style in Browser</h3>
+  <p class="text-gray-400 mb-2">Practice Snowflake-flavored SQL right in your browser with a SQLite engine + translation layer.</p>
+  <p class="text-xs text-gray-500 mb-2"><strong>Tech:</strong> SQL.js (SQLite WASM), Tailwind, PapaParse</p>
+  <div class="mt-4 space-x-2">
+    <a href="https://github.com/kmsmohamedansar/sql-playground" target="_blank" rel="noopener noreferrer" class="px-4 py-2 text-sm bg-blue-500 hover:bg-blue-600 text-white rounded-lg">GitHub</a>
+    <a href="https://kmsmohamedansar.github.io/sql-playground" target="_blank" rel="noopener noreferrer" class="px-4 py-2 text-sm bg-green-500 hover:bg-green-600 text-white rounded-lg">Live Demo</a>
+    <button data-toggle="#sql-details" class="px-4 py-2 text-sm bg-gray-700 hover:bg-gray-600 text-white rounded-lg">Show More</button>
+  </div>
+  <!-- DETAILS -->
+  <div id="sql-details" class="hidden bg-gray-900 border border-gray-700 rounded-xl mt-6 p-4 text-gray-200 text-sm max-h-[600px] overflow-y-auto">
+    <h4 class="font-semibold mb-2 text-lg text-blue-300">Interactive SQL Playground — Snowflake Syntax</h4>
+
+    <div class="grid sm:grid-cols-3 gap-3 mb-4">
+      <div class="bg-gray-800/60 p-3 rounded"><div class="text-gray-400 text-xs">Tables</div><div class="text-2xl">6+</div></div>
+      <div class="bg-gray-800/60 p-3 rounded"><div class="text-gray-400 text-xs">Syntax</div><div class="text-2xl">Snowflake-ish</div></div>
+      <div class="bg-gray-800/60 p-3 rounded"><div class="text-gray-400 text-xs">Practice Tasks</div><div class="text-2xl">5+</div></div>
+    </div>
+
+    <p class="mb-3"><strong>Goal:</strong> Build an in-browser SQL sandbox for interview prep, supporting Snowflake-style commands like <code>DESCRIBE</code>, <code>SHOW TABLES</code>, <code>ILIKE</code>, and <code>DATE_TRUNC</code>.</p>
+
+    <h5 class="font-semibold text-blue-300 mb-1">Features</h5>
+    <ul class="list-disc pl-6 mb-3">
+      <li>Snowflake-to-SQLite translation layer (<code>DESCRIBE</code>, <code>SHOW</code>, <code>QUALIFY</code>, etc.).</li>
+      <li>Preloaded schema: <code>employees</code>, <code>departments</code>, <code>orders</code>, <code>customers</code>.</li>
+      <li>CSV import → create your own tables on the fly.</li>
+      <li>Save, re-run, and share queries locally with persistence.</li>
+      <li>Practice tasks: joins, window functions, date truncation, CLV calc, anti-joins.</li>
+    </ul>
+
+    <h5 class="font-semibold text-blue-300 mb-1">Why it matters</h5>
+    <ul class="list-disc pl-6 mb-3">
+      <li>Makes SQL interview prep fun, portable, and visual.</li>
+      <li>No backend — everything runs fully client-side in the browser.</li>
+      <li>Simulates Snowflake flavor while remaining SQLite-compatible.</li>
+    </ul>
+
+    <p class="mb-2">
+      <a class="underline text-blue-300" target="_blank" rel="noopener noreferrer" href="https://kmsmohamedansar/sql-playground">Live Demo</a> ·
+      <a class="underline text-blue-300" target="_blank" rel="noopener noreferrer" href="https://github.com/kmsmohamedansar/sql-playground">GitHub</a>
+    </p>
+  </div>
+</article>
+
       <!-- TaskMaster -->
       <article class="tilt bg-gray-800 p-6 rounded-2xl shadow hover:scale-105 transition duration-300 relative" data-aos="fade-up">
         <h3 class="text-xl font-bold mb-2 text-white">🔁 TaskMaster: Automated Pipeline & Random Forest</h3>
@@ -525,50 +570,7 @@ sub.sort_values("score", ascending=False).head(5)
         </div>
       </article>
 
-<!-- SQL Playground -->
-<article class="tilt bg-gray-800 p-6 rounded-2xl shadow hover:scale-105 transition duration-300 relative" data-aos="fade-up">
-  <h3 class="text-xl font-bold mb-2 text-white">🧠 SQL Playground — Snowflake Style in Browser</h3>
-  <p class="text-gray-400 mb-2">Practice Snowflake-flavored SQL right in your browser with a SQLite engine + translation layer.</p>
-  <p class="text-xs text-gray-500 mb-2"><strong>Tech:</strong> SQL.js (SQLite WASM), Tailwind, PapaParse</p>
-  <div class="mt-4 space-x-2">
-    <a href="https://github.com/kmsmohamedansar/sql-playground" target="_blank" rel="noopener noreferrer" class="px-4 py-2 text-sm bg-blue-500 hover:bg-blue-600 text-white rounded-lg">GitHub</a>
-    <a href="https://kmsmohamedansar.github.io/sql-playground" target="_blank" rel="noopener noreferrer" class="px-4 py-2 text-sm bg-green-500 hover:bg-green-600 text-white rounded-lg">Live Demo</a>
-    <button data-toggle="#sql-details" class="px-4 py-2 text-sm bg-gray-700 hover:bg-gray-600 text-white rounded-lg">Show More</button>
-  </div>
-  <!-- DETAILS -->
-  <div id="sql-details" class="hidden bg-gray-900 border border-gray-700 rounded-xl mt-6 p-4 text-gray-200 text-sm max-h-[600px] overflow-y-auto">
-    <h4 class="font-semibold mb-2 text-lg text-blue-300">Interactive SQL Playground — Snowflake Syntax</h4>
 
-    <div class="grid sm:grid-cols-3 gap-3 mb-4">
-      <div class="bg-gray-800/60 p-3 rounded"><div class="text-gray-400 text-xs">Tables</div><div class="text-2xl">6+</div></div>
-      <div class="bg-gray-800/60 p-3 rounded"><div class="text-gray-400 text-xs">Syntax</div><div class="text-2xl">Snowflake-ish</div></div>
-      <div class="bg-gray-800/60 p-3 rounded"><div class="text-gray-400 text-xs">Practice Tasks</div><div class="text-2xl">5+</div></div>
-    </div>
-
-    <p class="mb-3"><strong>Goal:</strong> Build an in-browser SQL sandbox for interview prep, supporting Snowflake-style commands like <code>DESCRIBE</code>, <code>SHOW TABLES</code>, <code>ILIKE</code>, and <code>DATE_TRUNC</code>.</p>
-
-    <h5 class="font-semibold text-blue-300 mb-1">Features</h5>
-    <ul class="list-disc pl-6 mb-3">
-      <li>Snowflake-to-SQLite translation layer (<code>DESCRIBE</code>, <code>SHOW</code>, <code>QUALIFY</code>, etc.).</li>
-      <li>Preloaded schema: <code>employees</code>, <code>departments</code>, <code>orders</code>, <code>customers</code>.</li>
-      <li>CSV import → create your own tables on the fly.</li>
-      <li>Save, re-run, and share queries locally with persistence.</li>
-      <li>Practice tasks: joins, window functions, date truncation, CLV calc, anti-joins.</li>
-    </ul>
-
-    <h5 class="font-semibold text-blue-300 mb-1">Why it matters</h5>
-    <ul class="list-disc pl-6 mb-3">
-      <li>Makes SQL interview prep fun, portable, and visual.</li>
-      <li>No backend — everything runs fully client-side in the browser.</li>
-      <li>Simulates Snowflake flavor while remaining SQLite-compatible.</li>
-    </ul>
-
-    <p class="mb-2">
-      <a class="underline text-blue-300" target="_blank" rel="noopener noreferrer" href="https://kmsmohamedansar/sql-playground">Live Demo</a> ·
-      <a class="underline text-blue-300" target="_blank" rel="noopener noreferrer" href="https://github.com/kmsmohamedansar/sql-playground">GitHub</a>
-    </p>
-  </div>
-</article>
 
 
     </div>
