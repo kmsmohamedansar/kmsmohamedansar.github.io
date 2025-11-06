@@ -3,24 +3,62 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Mohamed Ansar — Portfolio</title>
-  <meta name="description" content="Mohamed Ansar — data/ML projects, dashboards, and the tools I build with Python, SQL, and MLOps." />
-  <link rel="canonical" href="https://kmsmohamedansar.github.io/" />
-  <meta property="og:title" content="Mohamed Ansar — Portfolio" />
-  <meta property="og:description" content="Data/ML projects, dashboards, and things I've shipped." />
-  <meta property="og:image" content="https://kmsmohamedansar.github.io/preview.png" />
-  <meta property="og:url" content="https://kmsmohamedansar.github.io" />
-  <meta name="theme-color" content="#0f172a" />
 
-  <!-- ✅ Google Analytics tracking -->
+  <title>Mohamed Ansar — Data Engineer & ML Projects Portfolio</title>
+
+  <!-- ✅ SEO -->
+  <meta name="description"
+        content="Portfolio of Mohamed Ansar — Data Engineer & Analyst. Explore data and ML projects built with Python, SQL, Airflow, Snowflake, and Tableau." />
+  <meta name="keywords"
+        content="Mohamed Ansar, Data Engineer, Data Analyst, Machine Learning, SQL, Python, Airflow, Snowflake, Tableau, MLOps, Canada" />
+  <link rel="canonical" href="https://kmsmohamedansar.github.io/" />
+
+  <!-- ✅ Open Graph / Social -->
+  <meta property="og:title" content="Mohamed Ansar — Data Engineer Portfolio" />
+  <meta property="og:description"
+        content="Data & ML projects, dashboards, and tools built with Python, SQL, and modern cloud data stacks." />
+  <meta property="og:image" content="https://kmsmohamedansar.github.io/preview.png" />
+  <meta property="og:url" content="https://kmsmohamedansar.github.io/" />
+  <meta property="og:type" content="website" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Mohamed Ansar — Data Engineer Portfolio" />
+  <meta name="twitter:description"
+        content="Explore Mohamed Ansar’s data pipelines, dashboards, and ML demos — powered by Python, SQL, and cloud platforms." />
+  <meta name="twitter:image" content="https://kmsmohamedansar.github.io/preview.png" />
+
+  <!-- ✅ Branding -->
+  <meta name="theme-color" content="#0f172a" />
+  <link rel="icon" href="/favicon.ico" type="image/x-icon" />
+
+  <!-- ✅ Fonts -->
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+
+  <!-- ✅ AOS & Tailwind -->
+  <link rel="stylesheet" href="https://unpkg.com/aos@2.3.1/dist/aos.css" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          boxShadow: { glow: '0 0 30px rgba(168,139,250,.35)' }
+        }
+      }
+    }
+  </script>
+
+  <!-- ✅ Analytics -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-4Q19SYV1YJ"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
+    function gtag(){ dataLayer.push(arguments); }
     gtag('js', new Date());
     gtag('config', 'G-4Q19SYV1YJ');
   </script>
-  <!-- ✅ End Google Analytics -->
+</head>
+
 
   <!-- Initial theme: run BEFORE CSS to avoid FOUC -->
   <script>
@@ -144,19 +182,31 @@
   </nav>
 
   <!-- HERO -->
-  <header id="hero" class="relative h-screen flex items-center justify-center">
-    <div class="relative z-10 text-center px-4">
-      <h1 class="text-5xl md:text-6xl font-extrabold mb-4 text-transparent bg-clip-text bg-gradient-to-r from-blue-500 via-purple-600 to-pink-500 dark:from-blue-400 dark:via-purple-500 dark:to-pink-500">
-        👋 Hi, I'm <span id="typed" class="whitespace-nowrap"></span>
-      </h1>
-      <p class="text-xl md:text-2xl mb-6 text-gray-700 dark:text-gray-200">I build practical data & ML tools with Python and SQL.</p>
-      <p class="text-base md:text-lg mb-4 text-gray-500 dark:text-gray-400">Currently at Datasembly • Previously worked at Amazon • Based in Mississauga, Ontario, Canada</p>
-      <a href="#about" class="inline-block bg-gray-900 text-white dark:bg-white dark:text-gray-900 px-8 py-3 rounded-full shadow-lg hover:scale-105 hover:shadow-glow transition">Learn more</a>
-    </div>
-    <div class="absolute bottom-10 left-1/2 -translate-x-1/2 text-gray-700 dark:text-white animate-bounce" aria-hidden="true">↓</div>
-  </header>
+<header id="hero" class="relative h-screen flex items-center justify-center">
+  <div class="relative z-10 text-center px-4">
+    <h1 class="text-5xl md:text-6xl font-extrabold mb-4 text-transparent bg-clip-text bg-gradient-to-r from-blue-500 via-purple-600 to-pink-500 dark:from-blue-400 dark:via-purple-500 dark:to-pink-500">
+      👋 Hi, I'm <span id="typed" class="whitespace-nowrap"></span>
+    </h1>
 
-  <div class="ml-keywords" aria-live="polite"><span id="mlWords"></span></div>
+    <p class="text-xl md:text-2xl mb-6 text-gray-700 dark:text-gray-200">
+      I design and build reliable data pipelines and ML tools with <b>Python</b> and <b>SQL</b>.
+    </p>
+
+    <p class="text-base md:text-lg mb-4 text-gray-500 dark:text-gray-400">
+      Currently at <b>Datasembly</b> • Previously at <b>Amazon</b> • Based in <b>Mississauga, Ontario</b>
+    </p>
+
+    <a href="#about"
+       class="inline-block bg-gray-900 text-white dark:bg-white dark:text-gray-900 px-8 py-3 rounded-full shadow-lg hover:scale-105 hover:shadow-glow transition">
+       Learn more
+    </a>
+  </div>
+
+  <div class="absolute bottom-10 left-1/2 -translate-x-1/2 text-gray-700 dark:text-white animate-bounce" aria-hidden="true">↓</div>
+</header>
+
+<div class="ml-keywords" aria-live="polite"><span id="mlWords"></span></div>
+
 
   <!-- Divider -->
   <div class="my-2 opacity-60" aria-hidden="true">
@@ -488,20 +538,45 @@
     </svg>
   </div>
 
-  <!-- SKILLS -->
-  <section id="skills" class="bg-gray-100 dark:bg-gray-800 py-16" data-aos="fade-up" data-aos-delay="100">
-    <div class="max-w-5xl mx-auto px-4">
-      <h2 class="text-3xl font-semibold mb-6 text-center text-gray-900 dark:text-white">Skills</h2>
-      <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-        <div class="bg-white dark:bg-gray-700 p-6 rounded-lg shadow text-gray-900 dark:text-white"><h3 class="font-bold mb-2">ML & AI</h3><p>scikit‑learn, Transformers, Streamlit, MLflow, SHAP, Gradio</p></div>
-        <div class="bg-white dark:bg-gray-700 p-6 rounded-lg shadow text-gray-900 dark:text-white"><h3 class="font-bold mb-2">Data analytics</h3><p>Tableau, Power BI, Excel, KPI dashboards, pandas</p></div>
-        <div class="bg-white dark:bg-gray-700 p-6 rounded-lg shadow text-gray-900 dark:text-white"><h3 class="font-bold mb-2">Languages & scripting</h3><p>Python, R, SQL, HTML, CSS, Bash, VBA</p></div>
-        <div class="bg-white dark:bg-gray-700 p-6 rounded-lg shadow text-gray-900 dark:text-white"><h3 class="font-bold mb-2">Data engineering</h3><p>ETL, dbt, Airflow, data modeling, APIs</p></div>
-        <div class="bg-white dark:bg-gray-700 p-6 rounded-lg shadow text-gray-900 dark:text-white"><h3 class="font-bold mb-2">Databases</h3><p>Snowflake, BigQuery, DuckDB, Postgres, MySQL</p></div>
-        <div class="bg-white dark:bg-gray-700 p-6 rounded-lg shadow text-gray-900 dark:text-white"><h3 class="font-bold mb-2">Cloud & DevOps</h3><p>AWS, Docker, Terraform, serverless, Git, GitHub Actions, CI/CD</p></div>
+ <!-- SKILLS -->
+<section id="skills" class="bg-gray-100 dark:bg-gray-800 py-16" data-aos="fade-up" data-aos-delay="100">
+  <div class="max-w-5xl mx-auto px-4">
+    <h2 class="text-3xl font-semibold mb-6 text-center text-gray-900 dark:text-white">Skills</h2>
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+
+      <div class="bg-white dark:bg-gray-700 p-6 rounded-lg shadow text-gray-900 dark:text-white">
+        <h3 class="font-bold mb-2">Machine Learning & AI</h3>
+        <p>scikit-learn, Transformers, MLflow, SHAP, Streamlit, Gradio</p>
       </div>
+
+      <div class="bg-white dark:bg-gray-700 p-6 rounded-lg shadow text-gray-900 dark:text-white">
+        <h3 class="font-bold mb-2">Data Analytics & Visualization</h3>
+        <p>Tableau, Power BI, Excel (Power Query, Pivot Tables), pandas, KPI dashboards</p>
+      </div>
+
+      <div class="bg-white dark:bg-gray-700 p-6 rounded-lg shadow text-gray-900 dark:text-white">
+        <h3 class="font-bold mb-2">Languages & Scripting</h3>
+        <p>Python, SQL, R, HTML/CSS, Bash, VBA</p>
+      </div>
+
+      <div class="bg-white dark:bg-gray-700 p-6 rounded-lg shadow text-gray-900 dark:text-white">
+        <h3 class="font-bold mb-2">Data Engineering</h3>
+        <p>ETL/ELT, dbt, Apache Airflow, data modeling, API integration, validation frameworks</p>
+      </div>
+
+      <div class="bg-white dark:bg-gray-700 p-6 rounded-lg shadow text-gray-900 dark:text-white">
+        <h3 class="font-bold mb-2">Databases</h3>
+        <p>Snowflake, BigQuery, DuckDB, PostgreSQL, MySQL</p>
+      </div>
+
+      <div class="bg-white dark:bg-gray-700 p-6 rounded-lg shadow text-gray-900 dark:text-white">
+        <h3 class="font-bold mb-2">Cloud & DevOps</h3>
+        <p>AWS, Docker, Terraform, serverless, Git, GitHub Actions, CI/CD pipelines</p>
+      </div>
+
     </div>
-  </section>
+  </div>
+</section>
 
   <!-- Divider -->
   <div class="my-2 opacity-60" aria-hidden="true">
@@ -547,86 +622,90 @@
 </article>
 
 
-    <!-- Spongelii -->
-    <article class="rounded-2xl bg-white/70 dark:bg-gray-800/60 backdrop-blur p-6 shadow hover:shadow-lg transition" data-aos="fade-up" data-aos-delay="100">
-      <header class="flex items-start justify-between gap-4">
-        <div>
-          <h3 class="font-bold text-xl text-gray-900 dark:text-white">Business Analyst Intern · Spongelii</h3>
-          <p class="text-sm text-gray-600 dark:text-gray-400">Jan 2024 – Apr 2024 · Remote (Canada)</p>
-        </div>
-        <div class="hidden md:flex flex-wrap gap-2" aria-hidden="true">
-          <span class="px-2 py-1 text-xs rounded-full bg-gray-100 dark:bg-gray-700">Product</span>
-          <span class="px-2 py-1 text-xs rounded-full bg-gray-100 dark:bg-gray-700">Pricing</span>
-          <span class="px-2 py-1 text-xs rounded-full bg-gray-100 dark:bg-gray-700">CSS</span>
-        </div>
-      </header>
+<!-- Spongelii -->
+<article class="rounded-2xl bg-white/70 dark:bg-gray-800/60 backdrop-blur p-6 shadow hover:shadow-lg transition" data-aos="fade-up" data-aos-delay="100">
+  <header class="flex items-start justify-between gap-4">
+    <div>
+      <h3 class="font-bold text-xl text-gray-900 dark:text-white">Business Analyst Intern · Spongelii</h3>
+      <p class="text-sm text-gray-600 dark:text-gray-400">Jan 2024 – Apr 2024 · Remote (Canada)</p>
+    </div>
+    <div class="hidden md:flex flex-wrap gap-2" aria-hidden="true">
+      <span class="px-2 py-1 text-xs rounded-full bg-gray-100 dark:bg-gray-700">SQL</span>
+      <span class="px-2 py-1 text-xs rounded-full bg-gray-100 dark:bg-gray-700">Snowflake</span>
+      <span class="px-2 py-1 text-xs rounded-full bg-gray-100 dark:bg-gray-700">Tableau</span>
+    </div>
+  </header>
 
-      <ul class="mt-4 list-disc ml-5 space-y-2 text-gray-700 dark:text-gray-300">
-        <li>Launched a simple 3‑tier subscription and tested pricing with user feedback.</li>
-        <li>Onboarded 20+ instructors/clients with reliable payment setup.</li>
-        <li>Improved class attendance with clearer reminders and sign‑up flows.</li>
-        <li>Refreshed the landing page with small CSS animations to highlight key actions.</li>
-      </ul>
-    </article>
+  <ul class="mt-4 list-disc ml-5 space-y-2 text-gray-700 dark:text-gray-300">
+    <li>Developed and tested 2+ <b>ETL workflows</b> using SQL and Snowflake to automate client data ingestion, reducing onboarding time by <b>40%</b>.</li>
+    <li>Built <b>Tableau dashboards</b> analyzing financial KPIs and product engagement; optimized queries to improve refresh time by <b>13%</b>.</li>
+    <li>Partnered with product managers to translate requirements into technical specifications for analytics and reporting tools.</li>
+    <li>Created documentation outlining data pipeline architecture, ensuring collaboration and long-term maintainability.</li>
+  </ul>
+</article>
 
-    <!-- Amazon Prime Video -->
-    <article class="rounded-2xl bg-white/70 dark:bg-gray-800/60 backdrop-blur p-6 shadow hover:shadow-lg transition" data-aos="fade-up" data-aos-delay="200">
-      <header class="flex items-start justify-between gap-4">
-        <div>
-          <h3 class="font-bold text-xl text-gray-900 dark:text-white">Business Data Analyst · Amazon Prime Video</h3>
-          <p class="text-sm text-gray-600 dark:text-gray-400">2019 – 2022 · Hybrid (India)</p>
-        </div>
-        <div class="hidden md:flex flex-wrap gap-2" aria-hidden="true">
-          <span class="px-2 py-1 text-xs rounded-full bg-gray-100 dark:bg-gray-700">Tableau</span>
-          <span class="px-2 py-1 text-xs rounded-full bg-gray-100 dark:bg-gray-700">Power BI</span>
-          <span class="px-2 py-1 text-xs rounded-full bg-gray-100 dark:bg-gray-700">VBA</span>
-        </div>
-      </header>
+<!-- Amazon Prime Video -->
+<article class="rounded-2xl bg-white/70 dark:bg-gray-800/60 backdrop-blur p-6 shadow hover:shadow-lg transition" data-aos="fade-up" data-aos-delay="200">
+  <header class="flex items-start justify-between gap-4">
+    <div>
+      <h3 class="font-bold text-xl text-gray-900 dark:text-white">Business Data Analyst · Amazon Prime Video</h3>
+      <p class="text-sm text-gray-600 dark:text-gray-400">Aug 2019 – Aug 2022 · Hybrid (India)</p>
+    </div>
+    <div class="hidden md:flex flex-wrap gap-2" aria-hidden="true">
+      <span class="px-2 py-1 text-xs rounded-full bg-gray-100 dark:bg-gray-700">SQL</span>
+      <span class="px-2 py-1 text-xs rounded-full bg-gray-100 dark:bg-gray-700">Power BI</span>
+      <span class="px-2 py-1 text-xs rounded-full bg-gray-100 dark:bg-gray-700">Tableau</span>
+    </div>
+  </header>
 
-      <ul class="mt-4 list-disc ml-5 space-y-2 text-gray-700 dark:text-gray-300">
-        <li>Built dashboards used in weekly reviews; cut reporting time for the team.</li>
-        <li>Automated repetitive Excel work with VBA/macros to reduce manual steps.</li>
-        <li>Handled event escalations (e.g., Prime Day) within tight SLAs.</li>
-        <li>Onboarded 200+ accounts with a consistent playbook and follow‑ups.</li>
-      </ul>
+  <ul class="mt-4 list-disc ml-5 space-y-2 text-gray-700 dark:text-gray-300">
+    <li>Designed and automated <b>SQL-based ETL pipelines</b> to process 1M+ transactions weekly, improving data accuracy and reporting latency by <b>45%</b>.</li>
+    <li>Built <b>Power BI dashboards</b> tracking operational KPIs and campaign performance; reduced manual reporting time by <b>35%</b>.</li>
+    <li>Collaborated with engineering and product teams to implement <b>data quality checks</b> and workflow automations across ServiceNow and Salesforce.</li>
+    <li>Led technical onboarding for <b>200+ internal accounts</b> with standardized SOPs and documentation, improving data consistency and compliance.</li>
+  </ul>
 
-      <button class="mt-4 text-sm font-medium text-indigo-600 dark:text-indigo-300 hover:underline"
-              data-toggle="#more-amz" aria-controls="more-amz" aria-expanded="false">
-        Show more
-      </button>
-      <div id="more-amz" class="hidden mt-3">
-        <ul class="list-disc ml-5 space-y-2 text-gray-700 dark:text-gray-300">
-          <li>Reduced Sev2 SLA from ~12h to ~6h through SOP changes and workflow automation.</li>
-          <li>Created SQL/Excel automations for KPI tracking to speed up decisions.</li>
-          <li>Supported UAT for ServiceNow/Salesforce automations with basic quality gates.</li>
-        </ul>
-      </div>
-    </article>
+  <button class="mt-4 text-sm font-medium text-indigo-600 dark:text-indigo-300 hover:underline"
+          data-toggle="#more-amz" aria-controls="more-amz" aria-expanded="false">
+    Show more
+  </button>
+  <div id="more-amz" class="hidden mt-3">
+    <ul class="list-disc ml-5 space-y-2 text-gray-700 dark:text-gray-300">
+      <li>Reduced Sev2 SLA from ~12h to ~6h through process optimization and workflow automation.</li>
+      <li>Developed SQL and Excel scripts for <b>KPI tracking</b> across finance and operations, speeding up decision cycles.</li>
+      <li>Supported <b>UAT and QA</b> for data integrations and internal dashboards, identifying 100+ defects before release.</li>
+    </ul>
+  </div>
+</article>
 
+
+
+
+ <!-- EDUCATION -->
+<section id="education" class="bg-gray-100 dark:bg-gray-800 py-16" data-aos="fade-up">
+  <div class="max-w-5xl mx-auto px-4">
+    <h2 class="text-3xl font-semibold mb-4 text-gray-900 dark:text-white">Education</h2>
+
+    <h3 class="font-bold text-xl text-gray-900 dark:text-white">Postgraduate Diploma — Business Analytics</h3>
+    <p class="text-sm text-gray-500 dark:text-gray-400 mb-2">
+      Lambton College · Mississauga, Canada · 2022 – 2024
+    </p>
+    <ul class="list-disc ml-6 text-gray-700 dark:text-gray-300 mb-6">
+      <li>Completed hands-on coursework in <b>SQL</b>, <b>Python</b>, and <b>Power BI</b> focused on building reproducible analytics pipelines and dashboards.</li>
+      <li>Applied statistical and business methods to real datasets, emphasizing <b>data cleaning</b>, <b>ETL</b>, and <b>report automation</b> during co-op projects.</li>
+    </ul>
+
+    <h3 class="font-bold text-xl text-gray-900 dark:text-white">Bachelor of Business Administration (BBA)</h3>
+    <p class="text-sm text-gray-500 dark:text-gray-400 mb-2">
+      The New College · Chennai, India · 2015 – 2018
+    </p>
+    <ul class="list-disc ml-6 text-gray-700 dark:text-gray-300">
+      <li>Studied core business disciplines with exposure to <b>Excel modeling</b>, <b>data visualization</b>, and <b>SQL fundamentals</b>.</li>
+      <li>Completed case studies and a short internship applying analytics concepts to business scenarios.</li>
+    </ul>
   </div>
 </section>
 
-
-
-  <!-- EDUCATION -->
-  <section id="education" class="bg-gray-100 dark:bg-gray-800 py-16" data-aos="fade-up">
-    <div class="max-w-5xl mx-auto px-4">
-      <h2 class="text-3xl font-semibold mb-4 text-gray-900 dark:text-white">Education</h2>
-      <h3 class="font-bold text-xl text-gray-900 dark:text-white">Postgraduate Diploma — Business Analytics</h3>
-      <p class="text-sm text-gray-500 dark:text-gray-400 mb-2">Lambton College, Mississauga, Canada · 2022 – 2024</p>
-      <ul class="list-disc ml-6 text-gray-700 dark:text-gray-300 mb-6">
-        <li>Projects in SQL, Python, and Power BI with a focus on clean, repeatable analysis.</li>
-        <li>Automated business reports during co‑op.</li>
-      </ul>
-
-      <h3 class="font-bold text-xl text-gray-900 dark:text-white">Bachelor of Business Administration (BBA)</h3>
-      <p class="text-sm text-gray-500 dark:text-gray-400 mb-2">The New College, Chennai, India · 2015 – 2018</p>
-      <ul class="list-disc ml-6 text-gray-700 dark:text-gray-300">
-        <li>Core business topics with applied analytics (Excel modeling, data viz, basic SQL).</li>
-        <li>Case studies and a short internship for hands‑on practice.</li>
-      </ul>
-    </div>
-  </section>
 
   <!-- Divider -->
   <div class="my-2 opacity-60" aria-hidden="true">
