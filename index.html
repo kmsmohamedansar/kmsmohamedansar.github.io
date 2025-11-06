@@ -154,41 +154,55 @@
   <canvas id="anime-bg" class="fixed inset-0 -z-20" aria-hidden="true"></canvas>
   <canvas id="waterfall" class="fixed inset-0 -z-10 pointer-events-none" aria-hidden="true"></canvas>
 
-  <!-- Navbar (theme toggle moved here) -->
-  <nav class="fixed top-0 w-full bg-white/70 dark:bg-gray-800/80 backdrop-blur-md shadow z-40" role="navigation" aria-label="Main">
-    <div class="max-w-6xl mx-auto flex items-center justify-between p-4">
-      <a href="#hero" class="text-xl md:text-2xl font-extrabold tracking-tight text-gray-900 dark:text-white">Portfolio</a>
+  <!-- Navbar -->
+<nav class="fixed top-0 w-full bg-white/70 dark:bg-gray-800/80 backdrop-blur-md shadow z-40" role="navigation" aria-label="Main">
+  <div class="max-w-6xl mx-auto flex items-center justify-between p-4">
+    <!-- Left: Logo -->
+    <a href="#hero" class="text-xl md:text-2xl font-extrabold tracking-tight text-gray-900 dark:text-white">
+      Portfolio
+    </a>
 
-     <!-- Right controls: theme toggle + hamburger -->
-<div class="hidden md:flex items-center gap-3">
-  <div class="flex items-center gap-2">
-    <span class="text-sm font-medium leading-none text-gray-600 dark:text-gray-300">Theme</span>
-    <button id="theme-toggle"
-      class="flex items-center justify-center w-9 h-9 rounded-full bg-gray-200 text-gray-900 dark:bg-gray-700 dark:text-white shadow-md hover:scale-105 hover:shadow-[0_0_10px_#38bdf8] transition"
-      aria-label="Toggle dark mode" title="Toggle dark mode">
-      🌓
-    </button>
-  </div>
-</div>
-
-
-        <button id="nav-toggle" class="md:hidden text-gray-900 dark:text-white focus:outline-none" aria-label="Open menu" aria-controls="nav-links" aria-expanded="false">
-          <svg class="w-7 h-7" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/>
-          </svg>
-        </button>
-      </div>
-
-      <div id="nav-links" class="absolute md:static top-16 left-0 w-full md:w-auto bg-white dark:bg-transparent p-4 md:p-0 hidden md:flex space-y-2 md:space-y-0 md:space-x-6 transition-all">
-        <a href="#about" class="block hover:text-black dark:hover:text-white transition py-2 px-2 md:py-0 text-gray-800 dark:text-gray-200">About</a>
-        <a href="#projects" class="block hover:text-black dark:hover:text-white transition py-2 px-2 md:py-0 text-gray-800 dark:text-gray-200">Projects</a>
-        <a href="#skills" class="block hover:text-black dark:hover:text-white transition py-2 px-2 md:py-0 text-gray-800 dark:text-gray-200">Skills</a>
-        <a href="#experience" class="block hover:text-black dark:hover:text-white transition py-2 px-2 md:py-0 text-gray-800 dark:text-gray-200">Experience</a>
-        <a href="#education" class="block hover:text-black dark:hover:text-white transition py-2 px-2 md:py-0 text-gray-800 dark:text-gray-200">Education</a>
-        <a href="#contact" class="block hover:text-black dark:hover:text-white transition py-2 px-2 md:py-0 text-gray-800 dark:text-gray-200">Contact</a>
-      </div>
+    <!-- Center: Nav links -->
+    <div id="nav-links" class="hidden md:flex space-x-6 text-gray-800 dark:text-gray-200">
+      <a href="#about" class="hover:text-black dark:hover:text-white transition">About</a>
+      <a href="#projects" class="hover:text-black dark:hover:text-white transition">Projects</a>
+      <a href="#skills" class="hover:text-black dark:hover:text-white transition">Skills</a>
+      <a href="#experience" class="hover:text-black dark:hover:text-white transition">Experience</a>
+      <a href="#education" class="hover:text-black dark:hover:text-white transition">Education</a>
+      <a href="#contact" class="hover:text-black dark:hover:text-white transition">Contact</a>
     </div>
-  </nav>
+
+    <!-- Right: Theme toggle + Hamburger -->
+    <div class="flex items-center gap-3">
+      <!-- Theme toggle -->
+      <div class="hidden md:flex items-center gap-2">
+        <span class="text-sm font-medium leading-none text-gray-600 dark:text-gray-300">Theme</span>
+        <button id="theme-toggle"
+          class="flex items-center justify-center w-9 h-9 rounded-full bg-gray-200 text-gray-900 dark:bg-gray-700 dark:text-white shadow-md hover:scale-105 hover:shadow-[0_0_10px_#38bdf8] transition"
+          aria-label="Toggle dark mode"
+          title="Toggle dark mode">🌓</button>
+      </div>
+
+      <!-- Hamburger icon -->
+      <button id="nav-toggle" class="md:hidden text-gray-900 dark:text-white focus:outline-none" aria-label="Open menu" aria-controls="mobile-nav" aria-expanded="false">
+        <svg class="w-7 h-7" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/>
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- Mobile Nav (hidden on desktop) -->
+  <div id="mobile-nav" class="md:hidden hidden flex-col bg-white/90 dark:bg-gray-900/95 backdrop-blur-md p-4 space-y-2 shadow-lg transition-all duration-300 ease-in-out">
+    <a href="#about" class="block text-gray-800 dark:text-gray-200 hover:text-black dark:hover:text-white transition">About</a>
+    <a href="#projects" class="block text-gray-800 dark:text-gray-200 hover:text-black dark:hover:text-white transition">Projects</a>
+    <a href="#skills" class="block text-gray-800 dark:text-gray-200 hover:text-black dark:hover:text-white transition">Skills</a>
+    <a href="#experience" class="block text-gray-800 dark:text-gray-200 hover:text-black dark:hover:text-white transition">Experience</a>
+    <a href="#education" class="block text-gray-800 dark:text-gray-200 hover:text-black dark:hover:text-white transition">Education</a>
+    <a href="#contact" class="block text-gray-800 dark:text-gray-200 hover:text-black dark:hover:text-white transition">Contact</a>
+  </div>
+</nav>
+
 
   <!-- HERO -->
 <header id="hero" class="relative h-screen flex items-center justify-center">
