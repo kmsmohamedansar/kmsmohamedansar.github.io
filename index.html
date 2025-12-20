@@ -4,35 +4,43 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-  <title>Mohamed Ansar — Portfolio</title>
+  <title>Mohamed Ansar — Solutions / Data Engineering</title>
 
   <!-- ✅ SEO -->
-  <meta name="description"
-        content="Portfolio of Mohamed Ansar — Data Engineer & Analyst. Explore data and ML projects built with Python, SQL, Airflow, Snowflake, and Tableau." />
-  <meta name="keywords"
-        content="Mohamed Ansar, Data Engineer, Data Analyst, Machine Learning, SQL, Python, Airflow, Snowflake, Tableau, MLOps, Canada" />
+  <meta name="description" content="Mohamed Ansar — Solutions & Data Engineering. I build reliable data products, pipelines, and stakeholder-ready dashboards using SQL, Python, Snowflake, Airflow, and cloud platforms." />
+  <meta name="keywords" content="Mohamed Ansar, Solutions Engineer, Data Engineer, Data Analyst, SQL, Python, Airflow, Snowflake, BigQuery, dbt, Tableau, Power BI, Canada" />
   <link rel="canonical" href="https://kmsmohamedansar.github.io/" />
 
   <!-- ✅ Open Graph / Social -->
-  <meta property="og:title" content="Mohamed Ansar — Data Engineer Portfolio" />
-  <meta property="og:description"
-        content="Data & ML projects, dashboards, and tools built with Python, SQL, and modern cloud data stacks." />
+  <meta property="og:title" content="Mohamed Ansar — Portfolio" />
+  <meta property="og:description" content="Pipelines, data products, dashboards, and technical solutions shipped end-to-end." />
   <meta property="og:image" content="https://kmsmohamedansar.github.io/preview.png" />
   <meta property="og:url" content="https://kmsmohamedansar.github.io/" />
   <meta property="og:type" content="website" />
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="Mohamed Ansar — Data Engineer Portfolio" />
-  <meta name="twitter:description"
-        content="Explore Mohamed Ansar’s data pipelines, dashboards, and ML demos — powered by Python, SQL, and cloud platforms." />
+  <meta name="twitter:title" content="Mohamed Ansar Portfolio" />
+  <meta name="twitter:description" content="Explore pipelines, dashboards, and ML demos — built with SQL, Python, and modern data stacks." />
   <meta name="twitter:image" content="https://kmsmohamedansar.github.io/preview.png" />
 
   <!-- ✅ Branding -->
-  <meta name="theme-color" content="#0f172a" />
+  <meta name="theme-color" content="#0b1222" />
   <link rel="icon" href="/favicon.ico" type="image/x-icon" />
 
+  <!-- ✅ Theme: run BEFORE CSS to avoid FOUC -->
+  <script>
+    (function () {
+      try {
+        const ls = localStorage.getItem('theme');
+        const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+        const wantDark = ls ? (ls === 'dark') : prefersDark;
+        document.documentElement.classList.toggle('dark', wantDark);
+      } catch(_) {}
+    })();
+  </script>
+
   <!-- ✅ Fonts -->
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
 
   <!-- ✅ AOS & Tailwind -->
@@ -43,7 +51,7 @@
       darkMode: 'class',
       theme: {
         extend: {
-          boxShadow: { glow: '0 0 30px rgba(168,139,250,.35)' }
+          boxShadow: { glow: '0 0 30px rgba(56,189,248,.25)' }
         }
       }
     }
@@ -57,65 +65,33 @@
     gtag('js', new Date());
     gtag('config', 'G-4Q19SYV1YJ');
   </script>
-</head>
 
-
-  <!-- Initial theme: run BEFORE CSS to avoid FOUC -->
-  <script>
-  (function () {
-    try {
-      const ls = localStorage.getItem('theme');
-      const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-      const wantDark = ls ? (ls === 'dark') : prefersDark;
-      document.documentElement.classList.toggle('dark', wantDark);
-    } catch(_) {}
-  })();
-  </script>
-
-  <!-- Fonts perf -->
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
-
-  <!-- AOS CSS -->
-  <link rel="stylesheet" href="https://unpkg.com/aos@2.3.1/dist/aos.css" />
-
-  <!-- Tailwind -->
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script>
-    tailwind.config = {
-      darkMode: 'class',
-      theme: {
-        extend: {
-          boxShadow: { glow: '0 0 30px rgba(168,139,250,.35)' }
-        }
-      }
-    }
-  </script>
-
-  <!-- Libs (deferred) -->
+  <!-- ✅ Libs (deferred) -->
   <script defer src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
   <script defer src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
   <script defer src="https://cdn.jsdelivr.net/npm/vanilla-tilt@1.7.3/dist/vanilla-tilt.min.js"></script>
   <script defer src="https://cdn.jsdelivr.net/npm/typed.js@2.0.12"></script>
 
   <style>
-    /* Respect theme for native form controls, etc. */
     html { color-scheme: light; }
     html.dark { color-scheme: dark; }
-
     body{ font-family:'Inter',system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif; overflow-x:hidden; }
+
     @media (prefers-reduced-motion: reduce){
       *{ animation:none !important; transition:none !important; scroll-behavior:auto !important; }
     }
-    .mobile-nav-open{ display:block !important; }
-    .mobile-nav-closed{ display:none !important; }
+
+    /* Subtle grid background (more enterprise feel) */
+    .bg-grid{
+      background-image: radial-gradient(circle at 1px 1px, rgba(148,163,184,.18) 1px, transparent 0);
+      background-size: 28px 28px;
+    }
 
     /* Holographic tilt sheen */
     .tilt{ position:relative; overflow:hidden; }
     .tilt::after{
       content:""; position:absolute; inset:-150% -150% auto auto; width:50%; height:300%;
-      background: linear-gradient(60deg, transparent, rgba(255,255,255,.15), transparent);
+      background: linear-gradient(60deg, transparent, rgba(255,255,255,.12), transparent);
       transform: rotate(20deg); pointer-events:none;
     }
     .tilt:hover::after{ animation: sheen 1.2s ease forwards; }
@@ -140,14 +116,17 @@
       padding:.4rem .6rem; background:rgba(0,0,0,.35); border:1px solid rgba(0,255,195,.35); border-radius:.6rem;
     }
     html:not(.dark) .ml-keywords{
-      background:rgba(255,255,255,.6); border-color:rgba(0,255,195,.35);
+      background:rgba(255,255,255,.75); color:#0b1222; border-color:rgba(2,132,199,.35);
     }
+    @media (max-width: 640px){ .ml-keywords{ display:none; } }
   </style>
 </head>
 
-<body class="bg-white text-gray-900 dark:bg-gray-900 dark:text-gray-100">
+<body class="bg-white text-gray-900 dark:bg-gray-950 dark:text-gray-100">
   <noscript>
-    <div class="bg-red-600 text-white p-3 text-center">This site uses a little JavaScript for animations and the mobile nav. It still works without it; some effects are simply turned off.</div>
+    <div class="bg-red-600 text-white p-3 text-center">
+      This site uses a little JavaScript for animations and the mobile nav. It still works without it; some effects are simply turned off.
+    </div>
   </noscript>
 
   <!-- Background canvases -->
@@ -155,81 +134,117 @@
   <canvas id="waterfall" class="fixed inset-0 -z-10 pointer-events-none" aria-hidden="true"></canvas>
 
   <!-- Navbar -->
-<nav class="fixed top-0 w-full bg-white/70 dark:bg-gray-800/80 backdrop-blur-md shadow z-40" role="navigation" aria-label="Main">
-  <div class="max-w-6xl mx-auto flex items-center justify-between p-4">
-    <!-- Left: Logo -->
-    <a href="#hero" class="text-xl md:text-2xl font-extrabold tracking-tight text-gray-900 dark:text-white">
-      Portfolio
-    </a>
+  <nav class="fixed top-0 w-full bg-white/70 dark:bg-gray-900/80 backdrop-blur-md shadow z-40" role="navigation" aria-label="Main">
+    <div class="max-w-6xl mx-auto flex items-center justify-between p-4">
+      <!-- Left -->
+      <a href="#hero" class="text-xl md:text-2xl font-extrabold tracking-tight text-gray-900 dark:text-white">
+        Ansar
+      </a>
 
-    <!-- Center: Nav links -->
-    <div id="nav-links" class="hidden md:flex space-x-6 text-gray-800 dark:text-gray-200">
-      <a href="#about" class="hover:text-black dark:hover:text-white transition">About</a>
-      <a href="#projects" class="hover:text-black dark:hover:text-white transition">Projects</a>
-      <a href="#skills" class="hover:text-black dark:hover:text-white transition">Skills</a>
-      <a href="#experience" class="hover:text-black dark:hover:text-white transition">Experience</a>
-      <a href="#education" class="hover:text-black dark:hover:text-white transition">Education</a>
-      <a href="#contact" class="hover:text-black dark:hover:text-white transition">Contact</a>
-    </div>
-
-    <!-- Right: Theme toggle + Hamburger -->
-    <div class="flex items-center gap-3">
-      <!-- Theme toggle -->
-      <div class="hidden md:flex items-center gap-2">
-        <span class="text-sm font-medium leading-none text-gray-600 dark:text-gray-300">Theme</span>
-        <button id="theme-toggle"
-          class="flex items-center justify-center w-9 h-9 rounded-full bg-gray-200 text-gray-900 dark:bg-gray-700 dark:text-white shadow-md hover:scale-105 hover:shadow-[0_0_10px_#38bdf8] transition"
-          aria-label="Toggle dark mode"
-          title="Toggle dark mode">🌓</button>
+      <!-- Center -->
+      <div id="nav-links" class="hidden md:flex space-x-6 text-gray-800 dark:text-gray-200">
+        <a href="#about" class="hover:text-black dark:hover:text-white transition">About</a>
+        <a href="#solutions" class="hover:text-black dark:hover:text-white transition">Solutions</a>
+        <a href="#projects" class="hover:text-black dark:hover:text-white transition">Case Studies</a>
+        <a href="#skills" class="hover:text-black dark:hover:text-white transition">Skills</a>
+        <a href="#experience" class="hover:text-black dark:hover:text-white transition">Experience</a>
+        <a href="#education" class="hover:text-black dark:hover:text-white transition">Education</a>
+        <a href="#contact" class="hover:text-black dark:hover:text-white transition">Contact</a>
       </div>
 
-      <!-- Hamburger icon -->
-      <button id="nav-toggle" class="md:hidden text-gray-900 dark:text-white focus:outline-none" aria-label="Open menu" aria-controls="mobile-nav" aria-expanded="false">
-        <svg class="w-7 h-7" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/>
-        </svg>
-      </button>
+      <!-- Right -->
+      <div class="flex items-center gap-3">
+        <div class="hidden md:flex items-center gap-2">
+          <span class="text-sm font-medium leading-none text-gray-600 dark:text-gray-300">Theme</span>
+          <button id="theme-toggle"
+            class="flex items-center justify-center w-9 h-9 rounded-full bg-gray-200 text-gray-900 dark:bg-gray-800 dark:text-white shadow-md hover:scale-105 hover:shadow-[0_0_10px_#38bdf8] transition"
+            aria-label="Toggle dark mode"
+            title="Toggle dark mode">🌓</button>
+        </div>
+
+        <button id="nav-toggle" class="md:hidden text-gray-900 dark:text-white focus:outline-none"
+          aria-label="Open menu" aria-controls="mobile-nav" aria-expanded="false">
+          <svg class="w-7 h-7" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/>
+          </svg>
+        </button>
+      </div>
     </div>
-  </div>
 
-  <!-- Mobile Nav (hidden on desktop) -->
-  <div id="mobile-nav" class="md:hidden hidden flex-col bg-white/90 dark:bg-gray-900/95 backdrop-blur-md p-4 space-y-2 shadow-lg transition-all duration-300 ease-in-out">
-    <a href="#about" class="block text-gray-800 dark:text-gray-200 hover:text-black dark:hover:text-white transition">About</a>
-    <a href="#projects" class="block text-gray-800 dark:text-gray-200 hover:text-black dark:hover:text-white transition">Projects</a>
-    <a href="#skills" class="block text-gray-800 dark:text-gray-200 hover:text-black dark:hover:text-white transition">Skills</a>
-    <a href="#experience" class="block text-gray-800 dark:text-gray-200 hover:text-black dark:hover:text-white transition">Experience</a>
-    <a href="#education" class="block text-gray-800 dark:text-gray-200 hover:text-black dark:hover:text-white transition">Education</a>
-    <a href="#contact" class="block text-gray-800 dark:text-gray-200 hover:text-black dark:hover:text-white transition">Contact</a>
-  </div>
-</nav>
-
+    <!-- Mobile Nav -->
+    <div id="mobile-nav" class="md:hidden hidden flex-col bg-white/90 dark:bg-gray-950/95 backdrop-blur-md p-4 space-y-2 shadow-lg transition-all duration-300 ease-in-out">
+      <a href="#about" class="block text-gray-800 dark:text-gray-200 hover:text-black dark:hover:text-white transition">About</a>
+      <a href="#solutions" class="block text-gray-800 dark:text-gray-200 hover:text-black dark:hover:text-white transition">Solutions</a>
+      <a href="#projects" class="block text-gray-800 dark:text-gray-200 hover:text-black dark:hover:text-white transition">Case Studies</a>
+      <a href="#skills" class="block text-gray-800 dark:text-gray-200 hover:text-black dark:hover:text-white transition">Skills</a>
+      <a href="#experience" class="block text-gray-800 dark:text-gray-200 hover:text-black dark:hover:text-white transition">Experience</a>
+      <a href="#education" class="block text-gray-800 dark:text-gray-200 hover:text-black dark:hover:text-white transition">Education</a>
+      <a href="#contact" class="block text-gray-800 dark:text-gray-200 hover:text-black dark:hover:text-white transition">Contact</a>
+    </div>
+  </nav>
 
   <!-- HERO -->
-<header id="hero" class="relative h-screen flex items-center justify-center">
-  <div class="relative z-10 text-center px-4">
-    <h1 class="text-5xl md:text-6xl font-extrabold mb-4 text-transparent bg-clip-text bg-gradient-to-r from-blue-500 via-purple-600 to-pink-500 dark:from-blue-400 dark:via-purple-500 dark:to-pink-500">
-      👋 Hi, I'm <span id="typed" class="whitespace-nowrap"></span>
-    </h1>
+  <header id="hero" class="relative min-h-screen flex items-center justify-center bg-grid">
+    <div class="absolute inset-0 -z-10 bg-gradient-to-b from-white via-white to-slate-50 dark:from-slate-950 dark:via-slate-950 dark:to-slate-900"></div>
 
-    <p class="text-xl md:text-2xl mb-6 text-gray-700 dark:text-gray-200">
-      I design and build reliable data pipelines and ML tools with <b>Python</b> and <b>SQL</b>.
-    </p>
+    <div class="relative z-10 max-w-6xl mx-auto text-center px-4 pt-20">
+      <p class="inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm
+                bg-slate-900/5 dark:bg-white/10 text-slate-700 dark:text-slate-200 border border-slate-200/70 dark:border-white/10">
+        Solutions / Data Engineering • SQL • Snowflake • Airflow • Python
+      </p>
 
-    <p class="text-base md:text-lg mb-4 text-gray-500 dark:text-gray-400">
-      Currently at <b>Datasembly</b> • Previously at <b>Amazon</b> • Based in <b>Mississauga, Ontario</b>
-    </p>
+      <h1 class="mt-5 text-5xl md:text-6xl font-extrabold tracking-tight text-slate-900 dark:text-white">
+        I build <span class="text-transparent bg-clip-text bg-gradient-to-r from-sky-500 via-indigo-500 to-fuchsia-500">reliable data products</span>
+        that teams can trust.
+      </h1>
 
-    <a href="#about"
-       class="inline-block bg-gray-900 text-white dark:bg-white dark:text-gray-900 px-8 py-3 rounded-full shadow-lg hover:scale-105 hover:shadow-glow transition">
-       Learn more
-    </a>
-  </div>
+      <p class="mt-5 text-lg md:text-xl text-slate-600 dark:text-slate-300 max-w-3xl mx-auto">
+        I partner with stakeholders to scope requirements, ship pipelines + dashboards, and keep systems healthy
+        (monitoring, data quality, documentation, handoff).
+      </p>
 
-  <div class="absolute bottom-10 left-1/2 -translate-x-1/2 text-gray-700 dark:text-white animate-bounce" aria-hidden="true">↓</div>
-</header>
+      <p class="mt-4 text-base md:text-lg text-slate-500 dark:text-slate-400">
+        Currently at <b>Datasembly</b> • Previously at <b>Amazon Prime Video</b> • Based in <b>Mississauga, Ontario</b>
+      </p>
 
-<div class="ml-keywords" aria-live="polite"><span id="mlWords"></span></div>
+      <div class="mt-6 flex flex-col sm:flex-row items-center justify-center gap-3">
+        <a href="#projects" class="px-6 py-3 rounded-xl bg-slate-900 text-white dark:bg-white dark:text-slate-900 shadow hover:shadow-glow transition">
+          View case studies
+        </a>
+        <a href="#contact" class="px-6 py-3 rounded-xl bg-white/70 dark:bg-slate-900/50 border border-slate-200 dark:border-white/10
+                                 text-slate-900 dark:text-white hover:bg-white dark:hover:bg-slate-900 transition">
+          Contact me
+        </a>
+        <a href="https://www.linkedin.com/in/kmsmohamedansar/" target="_blank" rel="noopener noreferrer"
+           class="px-6 py-3 rounded-xl bg-transparent border border-slate-300 dark:border-white/20
+                  text-slate-900 dark:text-white hover:border-slate-400 dark:hover:border-white/30 transition">
+          LinkedIn
+        </a>
+      </div>
 
+      <div class="mt-10 grid grid-cols-1 sm:grid-cols-3 gap-4 text-left">
+        <div class="rounded-2xl p-5 bg-white/70 dark:bg-slate-900/40 border border-slate-200/70 dark:border-white/10">
+          <div class="text-sm text-slate-500 dark:text-slate-400">Current</div>
+          <div class="mt-1 font-semibold text-slate-900 dark:text-white">Datasembly · Data workflows</div>
+          <div class="mt-1 text-sm text-slate-600 dark:text-slate-300">Snowflake / BigQuery / Airflow</div>
+        </div>
+        <div class="rounded-2xl p-5 bg-white/70 dark:bg-slate-900/40 border border-slate-200/70 dark:border-white/10">
+          <div class="text-sm text-slate-500 dark:text-slate-400">Strength</div>
+          <div class="mt-1 font-semibold text-slate-900 dark:text-white">Stakeholder → shipped solution</div>
+          <div class="mt-1 text-sm text-slate-600 dark:text-slate-300">Requirements, delivery, docs</div>
+        </div>
+        <div class="rounded-2xl p-5 bg-white/70 dark:bg-slate-900/40 border border-slate-200/70 dark:border-white/10">
+          <div class="text-sm text-slate-500 dark:text-slate-400">Based in</div>
+          <div class="mt-1 font-semibold text-slate-900 dark:text-white">Mississauga, Ontario</div>
+          <div class="mt-1 text-sm text-slate-600 dark:text-slate-300">Open to Canada roles</div>
+        </div>
+      </div>
+
+      <div class="mt-10 text-slate-400 dark:text-slate-500 animate-bounce" aria-hidden="true">↓</div>
+    </div>
+  </header>
+
+  <div class="ml-keywords" aria-live="polite"><span id="mlWords"></span></div>
 
   <!-- Divider -->
   <div class="my-2 opacity-60" aria-hidden="true">
@@ -245,26 +260,31 @@
   </div>
 
   <!-- ABOUT -->
-<section id="about" class="max-w-4xl mx-auto px-4 py-16" data-aos="fade-up">
-  <h2 class="text-3xl font-semibold mb-4 text-gray-900 dark:text-white">About me</h2>
+  <section id="about" class="max-w-4xl mx-auto px-4 py-16" data-aos="fade-up">
+    <h2 class="text-3xl font-semibold mb-4 text-gray-900 dark:text-white">About me</h2>
 
-  <p class="leading-relaxed mb-4 text-gray-700 dark:text-gray-300">
-    I started out as a data analyst — cleaning messy spreadsheets, automating reports, and building dashboards for SaaS and CPG teams. That curiosity eventually pushed me toward data engineering, where I began creating real pipelines and small apps people could actually use.
-  </p>
+    <p class="leading-relaxed mb-4 text-gray-700 dark:text-gray-300">
+      I started out as a business analyst — cleaning messy spreadsheets, automating reports, and building dashboards for SaaS and CPG teams.
+      That curiosity eventually pushed me toward data engineering, where I began creating real pipelines and small apps people could actually use.
+    </p>
 
-  <p class="leading-relaxed mb-4 text-gray-700 dark:text-gray-300">
-    At <strong>Datasembly</strong>, I help retailers and CPG brands unlock value from large-scale pricing and product datasets. Most days I’m writing optimized SQL, monitoring workflows in <strong>Snowflake</strong> and <strong>Airflow</strong>, and collaborating with sales, customer success, and engineering to deliver reliable, data-driven solutions.
-  </p>
+    <p class="leading-relaxed mb-4 text-gray-700 dark:text-gray-300">
+      At <strong>Datasembly</strong>, I help retailers and CPG brands unlock value from large-scale pricing and product datasets.
+      Most days I’m writing optimized SQL, monitoring workflows in <strong>Snowflake</strong> and <strong>Airflow</strong>, and collaborating with sales,
+      customer success, and engineering to deliver reliable, data-driven solutions.
+    </p>
 
-  <p class="leading-relaxed mb-4 text-gray-700 dark:text-gray-300">
-    Before that, I worked at <strong>Amazon Prime Video</strong> on internal analytics tools and automations that helped operations teams work faster and more accurately. I also spent time at a startup, <strong>Spongelii</strong>, bridging product ideas and what’s technically feasible to build.
-  </p>
+    <p class="leading-relaxed mb-4 text-gray-700 dark:text-gray-300">
+      Before that, I worked at <strong>Amazon Prime Video</strong> on internal analytics tools and automations that helped operations teams work faster and more accurately.
+      I also spent time at a startup, <strong>Spongelii</strong>, bridging product ideas and what’s technically feasible to build.
+    </p>
 
-  <p class="leading-relaxed text-gray-700 dark:text-gray-300">
-    These days, I enjoy the intersection of analytics, data engineering, and applied ML — using tools like <strong>Python</strong>, <strong>SQL</strong>, <strong>scikit-learn</strong>, <strong>Tableau</strong>, and <strong>MLflow</strong> to turn complex questions into simple, useful solutions. My focus is on building clean, reliable data systems and collaborating with PMs and engineers to ship them end-to-end.
-  </p>
-</section>
-
+    <p class="leading-relaxed text-gray-700 dark:text-gray-300">
+      These days, I enjoy the intersection of analytics, data engineering, and applied ML — using tools like <strong>Python</strong>, <strong>SQL</strong>,
+      <strong>Tableau</strong>, and <strong>MLflow</strong> to turn complex questions into simple, useful solutions.
+      My focus is on building clean, reliable data systems and collaborating with PMs and engineers to ship them end-to-end.
+    </p>
+  </section>
 
   <!-- Divider -->
   <div class="my-2 opacity-60" aria-hidden="true">
@@ -273,387 +293,38 @@
     </svg>
   </div>
 
-<!-- PROJECTS -->
-<section id="projects" class="max-w-6xl mx-auto px-4 py-20" data-aos="fade-up" data-aos-delay="50">
-  <header class="text-center mb-12">
-    <h2 class="text-3xl font-extrabold tracking-tight text-gray-900 dark:text-white">Projects</h2>
-    <p class="mt-2 text-gray-600 dark:text-gray-300">Pipelines, ML demos, and tooling I’ve shipped end-to-end.</p>
-  </header>
+  <!-- SOLUTIONS -->
+  <section id="solutions" class="max-w-6xl mx-auto px-4 py-16" data-aos="fade-up">
+    <header class="mb-10">
+      <h2 class="text-3xl font-extrabold text-gray-900 dark:text-white">How I work (Solutions mindset)</h2>
+      <p class="mt-2 text-gray-600 dark:text-gray-300 max-w-3xl">
+        I’m strongest when there’s an ambiguous problem, real stakeholders, and a need for a reliable delivery.
+      </p>
+    </header>
 
-  <div class="grid gap-8 md:grid-cols-2">
-
-    <!-- Card helper: gradient outline + glass -->
-    <!-- SQL Playground -->
-    <article class="tilt relative rounded-2xl transition duration-300 hover:scale-[1.02]">
-      <div class="absolute inset-0 rounded-2xl bg-gradient-to-br from-cyan-400/60 via-fuchsia-400/40 to-purple-500/60 blur-[14px] opacity-40 -z-10"></div>
-      <div class="bg-gray-900/80 dark:bg-gray-800/70 backdrop-blur border border-white/10 rounded-2xl p-6 shadow">
-        <div class="flex items-start gap-3">
-          <svg class="w-6 h-6 text-cyan-400 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M3 5h18M3 12h18M3 19h18" stroke-width="2" stroke-linecap="round"/></svg>
-          <div>
-            <h3 class="text-xl font-bold text-white">SQL Playground — Snowflake style in your browser</h3>
-            <p class="text-gray-400 mt-1">Practice Snowflake-flavoured SQL in the browser using a SQLite engine plus a small translation layer.</p>
-            <p class="text-xs text-gray-500 mt-1"><strong>Tech:</strong> SQL.js (SQLite WASM), Tailwind, PapaParse</p>
-          </div>
-        </div>
-        <div class="mt-4 flex flex-wrap gap-2">
-          <a href="https://github.com/kmsmohamedansar/sql-playground" target="_blank" rel="noopener noreferrer" class="px-4 py-2 text-sm rounded-lg bg-cyan-600 hover:bg-cyan-500 text-white">GitHub</a>
-          <a href="https://kmsmohamedansar.github.io/sql-playground" target="_blank" rel="noopener noreferrer" class="px-4 py-2 text-sm rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white">Live demo</a>
-          <button data-toggle="#sql-details" class="px-4 py-2 text-sm rounded-lg bg-white/10 hover:bg-white/15 text-white">Show more</button>
-        </div>
-        <!-- DETAILS -->
-        <div id="sql-details" class="hidden bg-gray-950/60 border border-white/10 rounded-xl mt-6 p-4 text-gray-200 text-sm max-h-[600px] overflow-y-auto">
-          <h4 class="font-semibold mb-2 text-lg text-cyan-300">Interactive SQL Playground — Snowflake syntax</h4>
-          <div class="grid sm:grid-cols-3 gap-3 mb-4">
-            <div class="bg-white/5 p-3 rounded"><div class="text-gray-400 text-xs">Tables</div><div class="text-2xl">6+</div></div>
-            <div class="bg-white/5 p-3 rounded"><div class="text-gray-400 text-xs">Syntax</div><div class="text-2xl">Snowflake-ish</div></div>
-            <div class="bg-white/5 p-3 rounded"><div class="text-gray-400 text-xs">Practice tasks</div><div class="text-2xl">5+</div></div>
-          </div>
-          <p class="mb-3"><strong>Goal:</strong> An in-browser SQL sandbox for interview prep, supporting commands like <code>DESCRIBE</code>, <code>SHOW TABLES</code>, <code>ILIKE</code>, and <code>DATE_TRUNC</code>.</p>
-          <h5 class="font-semibold text-cyan-300 mb-1">Features</h5>
-          <ul class="list-disc pl-6 mb-3">
-            <li>Snowflake→SQLite translation (<code>DESCRIBE</code>, <code>SHOW</code>, <code>QUALIFY</code>, etc.).</li>
-            <li>Preloaded schema: <code>employees</code>, <code>departments</code>, <code>orders</code>, <code>customers</code>.</li>
-            <li>CSV import to create your own tables.</li>
-            <li>Save and re-run queries locally.</li>
-            <li>Practice tasks: joins, windows, date truncation, CLV, anti-joins.</li>
-          </ul>
-          <p class="mb-2">
-            <a class="underline text-cyan-300" target="_blank" rel="noopener noreferrer" href="https://kmsmohamedansar.github.io/sql-playground">Live demo</a> ·
-            <a class="underline text-cyan-300" target="_blank" rel="noopener noreferrer" href="https://github.com/kmsmohamedansar/sql-playground">GitHub</a>
-          </p>
-        </div>
-      </div>
-    </article>
-
-    <!-- TaskMaster -->
-    <article class="tilt relative rounded-2xl transition duration-300 hover:scale-[1.02]">
-      <div class="absolute inset-0 rounded-2xl bg-gradient-to-br from-cyan-400/60 via-fuchsia-400/40 to-purple-500/60 blur-[14px] opacity-40 -z-10"></div>
-      <div class="bg-gray-900/80 dark:bg-gray-800/70 backdrop-blur border border-white/10 rounded-2xl p-6 shadow">
-        <div class="flex items-start gap-3">
-          <svg class="w-6 h-6 text-purple-400 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 6v12M6 12h12" stroke-width="2" stroke-linecap="round"/></svg>
-          <div>
-            <h3 class="text-xl font-bold text-white">TaskMaster — small ML pipeline with retries</h3>
-            <p class="text-gray-400 mt-1">Production-style pipeline with idempotent steps, backoff retries, and a simple RF model served via Gradio.</p>
-            <p class="text-xs text-gray-500 mt-1"><strong>Tech:</strong> Python, scikit-learn, Gradio, logging, backoff</p>
-          </div>
-        </div>
-        <div class="mt-4 flex flex-wrap gap-2">
-          <a href="https://huggingface.co/spaces/kmsmohamedansar/TaskMaster-Job-Scheduler" target="_blank" rel="noopener noreferrer" class="px-4 py-2 text-sm rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white">Live demo</a>
-          <button data-toggle="#taskmaster-details" class="px-4 py-2 text-sm rounded-lg bg-white/10 hover:bg-white/15 text-white">Show more</button>
-        </div>
-        <!-- DETAILS -->
-        <div id="taskmaster-details" class="hidden bg-gray-950/60 border border-white/10 rounded-xl mt-6 p-4 text-gray-200 text-sm max-h-[600px] overflow-y-auto">
-          <h4 class="font-semibold mb-3 text-lg text-purple-300">End-to-end orchestration & deployment</h4>
-          <div class="grid md:grid-cols-3 gap-3 mb-4">
-            <div class="bg-white/5 rounded-lg p-3"><div class="text-gray-400 text-xs">Pipeline uptime</div><div class="kpi text-2xl" data-to="99">0</div>%</div>
-            <div class="bg-white/5 rounded-lg p-3"><div class="text-gray-400 text-xs">Avg. stage latency</div><div class="text-2xl">~450ms</div></div>
-            <div class="bg-white/5 rounded-lg p-3"><div class="text-gray-400 text-xs">Auto-retries</div><div class="kpi text-2xl" data-to="3">0</div>x</div>
-          </div>
-          <p class="mb-3"><strong>Why:</strong> Toy examples skip the ops. I wanted something small that behaves like production.</p>
-          <p class="mb-3"><strong>How:</strong> Orchestrated steps (<em>Ingest → Validate → Featurize → Train → Serve</em>) with exponential backoff, structured logs, and a live demo.</p>
-          <h5 class="font-semibold text-purple-300 mb-1">Architecture</h5>
-          <ul class="list-disc pl-6 mb-3">
-            <li>Pure-function steps with on-disk artifacts for re-runs and caching.</li>
-            <li>Retry policy (<code>max_attempts=3</code> with jitter); terminal failures trigger an alert hook.</li>
-            <li>Correlation IDs for each run; JSON logs for any backend.</li>
-          </ul>
-        </div>
-      </div>
-    </article>
-
-    <!-- High-Value Customer Predictor -->
-    <article class="tilt relative rounded-2xl transition duration-300 hover:scale-[1.02]">
-      <div class="absolute inset-0 rounded-2xl bg-gradient-to-br from-cyan-400/60 via-fuchsia-400/40 to-purple-500/60 blur-[14px] opacity-40 -z-10"></div>
-      <div class="bg-gray-900/80 dark:bg-gray-800/70 backdrop-blur border border-white/10 rounded-2xl p-6 shadow">
-        <div class="flex items-start gap-3">
-          <svg class="w-6 h-6 text-emerald-400 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M4 19h16M4 5h16M7 5v14M12 5v14M17 5v14" stroke-width="2" stroke-linecap="round"/></svg>
-          <div>
-            <h3 class="text-xl font-bold text-white">High-value customer predictor</h3>
-            <p class="text-gray-400 mt-1">Retention model with explainability and basic MLOps hygiene.</p>
-            <p class="text-xs text-gray-500 mt-1"><strong>Tech:</strong> DuckDB, Pandera, RandomForest, Streamlit, SHAP, MLflow</p>
-          </div>
-        </div>
-        <div class="mt-4 flex flex-wrap gap-2">
-          <a href="https://github.com/kmsmohamedansar/high-value-customer-predictor" target="_blank" rel="noopener noreferrer" class="px-4 py-2 text-sm rounded-lg bg-cyan-600 hover:bg-cyan-500 text-white">GitHub</a>
-          <a href="https://huggingface.co/spaces/kmsmohamedansar/high-value-customer-predictor" target="_blank" rel="noopener noreferrer" class="px-4 py-2 text-sm rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white">Live demo</a>
-          <button data-toggle="#customer-details" class="px-4 py-2 text-sm rounded-lg bg-white/10 hover:bg-white/15 text-white">Show more</button>
-        </div>
-        <!-- DETAILS -->
-        <div id="customer-details" class="hidden bg-gray-950/60 border border-white/10 rounded-xl mt-6 p-4 text-gray-200 text-sm max-h-[600px] overflow-y-auto">
-          <h4 class="font-semibold mb-2 text-lg text-emerald-300">Model + MLOps</h4>
-          <div class="grid sm:grid-cols-4 gap-3 mb-4">
-            <div class="bg-white/5 p-3 rounded"><div class="text-gray-400 text-xs">Accuracy</div><div class="kpi text-2xl" data-to="97">0</div>%</div>
-            <div class="bg-white/5 p-3 rounded"><div class="text-gray-400 text-xs">F1</div><div class="kpi text-2xl" data-to="95">0</div>%</div>
-            <div class="bg-white/5 p-3 rounded"><div class="text-gray-400 text-xs">ROC-AUC</div><div class="kpi text-2xl" data-to="99">0</div>%</div>
-            <div class="bg-white/5 p-3 rounded"><div class="text-gray-400 text-xs">Top-decile capture</div><div class="text-2xl">~84%</div></div>
-          </div>
-          <p class="mb-3"><strong>Problem:</strong> Find the top 10% of customers by expected value for targeted retention.</p>
-          <p class="mb-3"><strong>Data:</strong> Orders → customer aggregates (RFM, tenure, cohorts, discounting). Validated with <code>Pandera</code> to avoid leakage and bad ranges.</p>
-          <h5 class="font-semibold text-emerald-300 mb-1">Model & explainability</h5>
-          <ul class="list-disc pl-6 mb-3">
-            <li>RandomForest with class weighting; randomized search.</li>
-            <li>Threshold tuned for precision ≥ 0.9 to cut wasteful offers.</li>
-            <li>SHAP for global and per-prediction context in the UI.</li>
-          </ul>
-          <h5 class="font-semibold text-emerald-300 mb-1">MLOps</h5>
-          <ul class="list-disc pl-6 mb-3">
-            <li>MLflow tracking for params/metrics; artifacts include model and confusion matrix.</li>
-            <li>Streamlit app for what-if scoring; batch CLI for CRM exports.</li>
-          </ul>
-        </div>
-      </div>
-    </article>
-
-    <!-- Grocery AI Assistant -->
-    <article class="tilt relative rounded-2xl transition duration-300 hover:scale-[1.02]">
-      <div class="absolute inset-0 rounded-2xl bg-gradient-to-br from-cyan-400/60 via-fuchsia-400/40 to-purple-500/60 blur-[14px] opacity-40 -z-10"></div>
-      <div class="bg-gray-900/80 dark:bg-gray-800/70 backdrop-blur border border-white/10 rounded-2xl p-6 shadow">
-        <div class="flex items-start gap-3">
-          <svg class="w-6 h-6 text-cyan-400 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M4 7h16M4 12h16M4 17h10" stroke-width="2" stroke-linecap="round"/></svg>
-          <div>
-            <h3 class="text-xl font-bold text-white">Grocery AI assistant — local semantic search</h3>
-            <p class="text-gray-400 mt-1">Offline product search and Q&A over Instacart-style data using a compact local model.</p>
-            <p class="text-xs text-gray-500 mt-1"><strong>Tech:</strong> Python, FAISS, LangChain, Sentence Transformers, Gradio</p>
-          </div>
-        </div>
-        <div class="mt-4 flex flex-wrap gap-2">
-          <a href="https://github.com/kmsmohamedansar/ai_knowledge_assistant" target="_blank" rel="noopener noreferrer" class="px-4 py-2 text-sm rounded-lg bg-cyan-600 hover:bg-cyan-500 text-white">GitHub</a>
-          <a href="https://huggingface.co/spaces/kmsmohamedansar/ai_knowledge_assistant" target="_blank" rel="noopener noreferrer" class="px-4 py-2 text-sm rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white">Live demo</a>
-          <button data-toggle="#grocery-details" class="px-4 py-2 text-sm rounded-lg bg-white/10 hover:bg-white/15 text-white">Show more</button>
-        </div>
-        <!-- DETAILS -->
-        <div id="grocery-details" class="hidden bg-gray-950/60 border border-white/10 rounded-xl mt-6 p-4 text-gray-200 text-sm max-h-[600px] overflow-y-auto">
-          <h4 class="font-semibold mb-2 text-lg text-cyan-300">Local semantic search + Q&A</h4>
-          <div class="grid sm:grid-cols-3 gap-3 mb-4">
-            <div class="bg-white/5 p-3 rounded"><div class="text-gray-400 text-xs">Index size</div><div class="text-2xl">~50k</div> docs</div>
-            <div class="bg-white/5 p-3 rounded"><div class="text-gray-400 text-xs">FAISS query</div><div class="text-2xl">&lt;100ms</div></div>
-            <div class="bg-white/5 p-3 rounded"><div class="text-gray-400 text-xs">LLM</div><div class="text-2xl">FLAN-T5</div></div>
-          </div>
-          <p class="mb-3"><strong>Goal:</strong> Keep data local while enabling natural-language search and Q&A.</p>
-          <h5 class="font-semibold text-cyan-300 mb-1">Pipeline</h5>
-          <ol class="list-decimal pl-6 mb-3">
-            <li>Join products/aisles/departments → readable <code>combined_text</code>.</li>
-            <li>Embed with <code>all-MiniLM-L6-v2</code>; index with FAISS.</li>
-            <li>Retrieve top-k → ground the prompt → answer with <code>flan-t5-base</code>.</li>
-            <li>Gradio UI with cited sources.</li>
-          </ol>
-        </div>
-      </div>
-    </article>
-
-    <!-- Sentiment Analysis -->
-    <article class="tilt relative rounded-2xl transition duration-300 hover:scale-[1.02]">
-      <div class="absolute inset-0 rounded-2xl bg-gradient-to-br from-cyan-400/60 via-fuchsia-400/40 to-purple-500/60 blur-[14px] opacity-40 -z-10"></div>
-      <div class="bg-gray-900/80 dark:bg-gray-800/70 backdrop-blur border border-white/10 rounded-2xl p-6 shadow">
-        <div class="flex items-start gap-3">
-          <svg class="w-6 h-6 text-fuchsia-400 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M3 17l6-6 4 4 7-7" stroke-width="2" stroke-linecap="round"/></svg>
-          <div>
-            <h3 class="text-xl font-bold text-white">Amazon fine food sentiment (DistilBERT)</h3>
-            <p class="text-gray-400 mt-1">Classic baseline → transformer, with a quick look at error modes.</p>
-            <p class="text-xs text-gray-500 mt-1"><strong>Tech:</strong> TF-IDF, Logistic Regression, DistilBERT, Hugging Face, Gradio</p>
-          </div>
-        </div>
-        <div class="mt-4 flex flex-wrap gap-2">
-          <a href="https://github.com/kmsmohamedansar/amazon-fine-food-sentiment-analysis" target="_blank" rel="noopener noreferrer" class="px-4 py-2 text-sm rounded-lg bg-cyan-600 hover:bg-cyan-500 text-white">GitHub</a>
-          <button data-toggle="#sentiment-details" class="px-4 py-2 text-sm rounded-lg bg-white/10 hover:bg-white/15 text-white">Show more</button>
-        </div>
-        <!-- DETAILS -->
-        <div id="sentiment-details" class="hidden bg-gray-950/60 border border-white/10 rounded-xl mt-6 p-4 text-gray-200 text-sm max-h-[600px] overflow-y-auto">
-          <h4 class="font-semibold mb-2 text-lg text-fuchsia-300">Classical → transformer</h4>
-          <div class="grid sm:grid-cols-4 gap-3 mb-4">
-            <div class="bg-white/5 p-3 rounded"><div class="text-gray-400 text-xs">Dataset</div><div class="text-2xl">~568k</div> reviews</div>
-            <div class="bg-white/5 p-3 rounded"><div class="text-gray-400 text-xs">Baseline F1</div><div class="text-2xl">0.88</div></div>
-            <div class="bg-white/5 p-3 rounded"><div class="text-gray-400 text-xs">DistilBERT F1</div><div class="text-2xl">0.91</div></div>
-            <div class="bg-white/5 p-3 rounded"><div class="text-gray-400 text-xs">Latency</div><div class="text-2xl">&lt;100ms</div></div>
-          </div>
-          <p class="mb-3"><strong>Approach:</strong> Start with TF-IDF + Logistic Regression for a fast baseline and interpretability, then upgrade to DistilBERT with early stopping.</p>
-          <h5 class="font-semibold text-fuchsia-300 mb-1">Serving</h5>
-          <ul class="list-disc pl-6 mb-3">
-            <li>Gradio UI returns label + confidence; batch CSV scoring script included.</li>
-            <li>Saved tokenizer/model weights; deterministic splits for reproducibility.</li>
-          </ul>
-        </div>
-      </div>
-    </article>
-
-    <!-- Yahoo Finance News Scraper -->
-    <article class="tilt relative rounded-2xl transition duration-300 hover:scale-[1.02]">
-      <div class="absolute inset-0 rounded-2xl bg-gradient-to-br from-cyan-400/60 via-fuchsia-400/40 to-purple-500/60 blur-[14px] opacity-40 -z-10"></div>
-      <div class="bg-gray-900/80 dark:bg-gray-800/70 backdrop-blur border border-white/10 rounded-2xl p-6 shadow">
-        <div class="flex items-start gap-3">
-          <svg class="w-6 h-6 text-cyan-400 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M4 6h16M4 12h8" stroke-width="2" stroke-linecap="round"/></svg>
-          <div>
-            <h3 class="text-xl font-bold text-white">Yahoo Finance news scraper</h3>
-            <p class="text-gray-400 mt-1">Headless Chrome scraper for JS-rendered news → clean CSV/DataFrame.</p>
-            <p class="text-xs text-gray-500 mt-1"><strong>Tech:</strong> Python, Selenium, BeautifulSoup, Pandas, ChromeDriver</p>
-          </div>
-        </div>
-        <div class="mt-4">
-          <button data-toggle="#yahoo-details" class="px-4 py-2 text-sm rounded-lg bg-white/10 hover:bg-white/15 text-white">Show more</button>
-        </div>
-        <!-- DETAILS -->
-        <div id="yahoo-details" class="hidden bg-gray-950/60 border border-white/10 rounded-xl mt-6 p-4 text-gray-200 text-sm max-h-[600px] overflow-y-auto">
-          <h4 class="font-semibold mb-2 text-lg text-cyan-300">Headless scraping for JS-heavy pages</h4>
-          <div class="grid sm:grid-cols-3 gap-3 mb-4">
-            <div class="bg-white/5 p-3 rounded"><div class="text-gray-400 text-xs">Articles/session</div><div class="text-2xl">~50</div></div>
-            <div class="bg-white/5 p-3 rounded"><div class="text-gray-400 text-xs">Storage</div><div class="text-2xl">CSV/DF</div></div>
-            <div class="bg-white/5 p-3 rounded"><div class="text-gray-400 text-xs">Headless</div><div class="text-2xl">Chrome</div></div>
-          </div>
-          <ol class="list-decimal pl-6 mb-3">
-            <li>Open homepage with Selenium; wait for network idle.</li>
-            <li>Collect links; visit each; extract headline, time, author, body.</li>
-            <li>Normalize and store in Pandas; export to CSV for downstream NLP.</li>
-          </ol>
-        </div>
-      </div>
-    </article>
-
-    <!-- Zero-shot Product Categorization -->
-    <article class="tilt relative rounded-2xl transition duration-300 hover:scale-[1.02]">
-      <div class="absolute inset-0 rounded-2xl bg-gradient-to-br from-cyan-400/60 via-fuchsia-400/40 to-purple-500/60 blur-[14px] opacity-40 -z-10"></div>
-      <div class="bg-gray-900/80 dark:bg-gray-800/70 backdrop-blur border border-white/10 rounded-2xl p-6 shadow">
-        <div class="flex items-start gap-3">
-          <svg class="w-6 h-6 text-amber-300 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 3v18M3 12h18" stroke-width="2" stroke-linecap="round"/></svg>
-          <div>
-            <h3 class="text-xl font-bold text-white">Smart product categorization — zero-shot</h3>
-            <p class="text-gray-400 mt-1">Validate product→category mappings with BART-MNLI plus lightweight rules.</p>
-            <p class="text-xs text-gray-500 mt-1"><strong>Tech:</strong> Transformers (BART-MNLI), pipelines, pandas</p>
-          </div>
-        </div>
-        <div class="mt-4">
-          <button data-toggle="#zero-shot-details" class="px-4 py-2 text-sm rounded-lg bg-white/10 hover:bg-white/15 text-white">Show more</button>
-        </div>
-        <!-- DETAILS -->
-        <div id="zero-shot-details" class="hidden bg-gray-950/60 border border-white/10 rounded-xl mt-6 p-4 text-gray-200 text-sm max-h-[600px] overflow-y-auto">
-          <h4 class="font-semibold mb-2 text-lg text-amber-200">Zero-shot categorization</h4>
-          <div class="grid sm:grid-cols-3 gap-3 mb-4">
-            <div class="bg-white/5 p-3 rounded"><div class="text-gray-400 text-xs">Model</div><div class="text-2xl">BART-MNLI</div></div>
-            <div class="bg-white/5 p-3 rounded"><div class="text-gray-400 text-xs">CPU throughput</div><div class="text-2xl">~8/s</div></div>
-            <div class="bg-white/5 p-3 rounded"><div class="text-gray-400 text-xs">Flag rate</div><div class="text-2xl">~12%</div></div>
-          </div>
-          <ol class="list-decimal pl-6 mb-3">
-            <li>Parse category path; take the leaf as the candidate label.</li>
-            <li>Quick keyword pass for obvious matches.</li>
-            <li>Zero-shot entailment on product name vs. label; threshold 0.6.</li>
-            <li>Low-score items go to review with top-k alternatives.</li>
-          </ol>
-        </div>
-      </div>
-    </article>
-
-    <!-- Spotify Trends -->
-    <article class="tilt relative rounded-2xl transition duration-300 hover:scale-[1.02]">
-      <div class="absolute inset-0 rounded-2xl bg-gradient-to-br from-cyan-400/60 via-fuchsia-400/40 to-purple-500/60 blur-[14px] opacity-40 -z-10"></div>
-      <div class="bg-gray-900/80 dark:bg-gray-800/70 backdrop-blur border border-white/10 rounded-2xl p-6 shadow">
-        <div class="flex items-start gap-3">
-          <svg class="w-6 h-6 text-rose-300 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M4 19h16M4 12h10M4 5h7" stroke-width="2" stroke-linecap="round"/></svg>
-          <div>
-            <h3 class="text-xl font-bold text-white">Spotify music trends — quick EDA</h3>
-            <p class="text-gray-400 mt-1">Large-scale exploration of audio features and popularity over time.</p>
-            <p class="text-xs text-gray-500 mt-1"><strong>Tech:</strong> Python, pandas, NumPy, Matplotlib</p>
-          </div>
-        </div>
-        <div class="mt-4">
-          <button data-toggle="#spotify-details" class="px-4 py-2 text-sm rounded-lg bg-white/10 hover:bg-white/15 text-white">Show more</button>
-        </div>
-        <!-- DETAILS -->
-        <div id="spotify-details" class="hidden bg-gray-950/60 border border-white/10 rounded-xl mt-6 p-4 text-gray-200 text-sm max-h-[600px] overflow-y-auto">
-          <h4 class="font-semibold mb-3 text-lg text-rose-200">Highlights</h4>
-          <div class="grid sm:grid-cols-3 gap-3 mb-4">
-            <div class="bg-white/5 p-3 rounded"><div class="text-gray-400 text-xs">Tracks</div><div class="text-2xl">~170k</div></div>
-            <div class="bg-white/5 p-3 rounded"><div class="text-gray-400 text-xs">Period</div><div class="text-2xl">1920s–2020s</div></div>
-            <div class="bg-white/5 p-3 rounded"><div class="text-gray-400 text-xs">Key corr.</div><div class="text-2xl">energy↔loudness</div></div>
-          </div>
-          <ul class="list-disc pl-6 mb-3">
-            <li>Longest average track lengths in the 70s–80s.</li>
-            <li>Strong positive correlation between energy and loudness.</li>
-            <li>Valence and danceability show a moderate association.</li>
-          </ul>
-        </div>
-      </div>
-    </article>
-
-    <!-- CPL Dream Team -->
-    <article class="tilt relative rounded-2xl transition duration-300 hover:scale-[1.02]">
-      <div class="absolute inset-0 rounded-2xl bg-gradient-to-br from-cyan-400/60 via-fuchsia-400/40 to-purple-500/60 blur-[14px] opacity-40 -z-10"></div>
-      <div class="bg-gray-900/80 dark:bg-gray-800/70 backdrop-blur border border-white/10 rounded-2xl p-6 shadow">
-        <div class="flex items-start gap-3">
-          <svg class="w-6 h-6 text-sky-300 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="3" stroke-width="2"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09a1.65 1.65 0 0 0-1-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09a1.65 1.65 0 0 0 1.51-1 1.65 1.65 0 0 0-.33-1.82l-.06-.06A2 2 0 1 1 7.04 3.3l.06.06c.46.46 1.12.6 1.72.33a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09c0 .66.38 1.26 1 1.51.6.27 1.26.13 1.72-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06c-.46.46-.6 1.12-.33 1.72.27.6.85 1 1.51 1H21a2 2 0 0 1 0 4h-.09c-.66 0-1.26.38-1.51 1z"/></svg>
-          <div>
-            <h3 class="text-xl font-bold text-white">Canadian Premier League — Dream XI (2019)</h3>
-            <p class="text-gray-400 mt-1">Role-aware KPI model for best-XI selection with a small Power BI dashboard.</p>
-            <p class="text-xs text-gray-500 mt-1"><strong>Tech:</strong> Python (pandas, matplotlib), Power BI</p>
-          </div>
-        </div>
-        <div class="mt-4">
-          <button data-toggle="#cpl-details" class="px-4 py-2 text-sm rounded-lg bg-white/10 hover:bg-white/15 text-white">Show more</button>
-        </div>
-        <!-- DETAILS -->
-        <div id="cpl-details" class="hidden bg-gray-950/60 border border-white/10 rounded-xl mt-6 p-4 text-gray-200 text-sm max-h-[600px] overflow-y-auto">
-          <h4 class="font-semibold mb-3 text-lg text-sky-200">Method & KPIs</h4>
-          <div class="grid sm:grid-cols-3 gap-3 mb-4">
-            <div class="bg-white/5 p-3 rounded"><div class="text-gray-400 text-xs">Teams</div><div class="text-2xl">7</div></div>
-            <div class="bg-white/5 p-3 rounded"><div class="text-gray-400 text-xs">Players</div><div class="text-2xl">~300</div></div>
-            <div class="bg-white/5 p-3 rounded"><div class="text-gray-400 text-xs">Dashboard</div><div class="text-2xl">Power BI</div></div>
-          </div>
-          <ul class="list-disc pl-6 mb-3">
-            <li><b>Team KPI:</b> goals, shots on target ratio, pass%, fouls, touches in box.</li>
-            <li><b>Roles:</b> CF (goals + pens − xG), wingers (2×assists + xA + 0.5×chances), CAM (2×goals + assists + 0.5×chances), DM (assists + 2×tackles + 0.5×interceptions), FB/CB/GK rules.</li>
-          </ul>
-        </div>
-      </div>
-    </article>
-
-  </div>
-</section>
-
-<!-- Divider -->
-<div class="my-2 opacity-60" aria-hidden="true">
-  <svg viewBox="0 0 1200 120" class="w-full h-12">
-    <use href="#race" />
-  </svg>
-</div>
-
-
- <!-- SKILLS -->
-<section id="skills" class="bg-gray-100 dark:bg-gray-800 py-16" data-aos="fade-up" data-aos-delay="100">
-  <div class="max-w-5xl mx-auto px-4">
-    <h2 class="text-3xl font-semibold mb-6 text-center text-gray-900 dark:text-white">Skills</h2>
-    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-
-      <div class="bg-white dark:bg-gray-700 p-6 rounded-lg shadow text-gray-900 dark:text-white">
-        <h3 class="font-bold mb-2">Machine Learning & AI</h3>
-        <p>scikit-learn, Transformers, MLflow, SHAP, Streamlit, Gradio</p>
+    <div class="grid md:grid-cols-3 gap-6">
+      <div class="rounded-2xl p-6 bg-white/70 dark:bg-gray-900/40 border border-gray-200/70 dark:border-white/10">
+        <h3 class="font-bold text-gray-900 dark:text-white">1) Discovery → requirements</h3>
+        <p class="mt-2 text-gray-600 dark:text-gray-300 text-sm">
+          Clarify goals, define success metrics, map data sources, and document assumptions/edge cases.
+        </p>
       </div>
 
-      <div class="bg-white dark:bg-gray-700 p-6 rounded-lg shadow text-gray-900 dark:text-white">
-        <h3 class="font-bold mb-2">Data Analytics & Visualization</h3>
-        <p>Tableau, Power BI, Excel (Power Query, Pivot Tables), pandas, KPI dashboards</p>
+      <div class="rounded-2xl p-6 bg-white/70 dark:bg-gray-900/40 border border-gray-200/70 dark:border-white/10">
+        <h3 class="font-bold text-gray-900 dark:text-white">2) Build → ship</h3>
+        <p class="mt-2 text-gray-600 dark:text-gray-300 text-sm">
+          SQL + Python pipelines, transformations, QA checks, dashboards, and stakeholder-ready outputs.
+        </p>
       </div>
 
-      <div class="bg-white dark:bg-gray-700 p-6 rounded-lg shadow text-gray-900 dark:text-white">
-        <h3 class="font-bold mb-2">Languages & Scripting</h3>
-        <p>Python, SQL, R, HTML/CSS, Bash, VBA</p>
+      <div class="rounded-2xl p-6 bg-white/70 dark:bg-gray-900/40 border border-gray-200/70 dark:border-white/10">
+        <h3 class="font-bold text-gray-900 dark:text-white">3) Operate → improve</h3>
+        <p class="mt-2 text-gray-600 dark:text-gray-300 text-sm">
+          Monitoring, alerts, documentation, handoffs, and iterative improvements based on feedback.
+        </p>
       </div>
-
-      <div class="bg-white dark:bg-gray-700 p-6 rounded-lg shadow text-gray-900 dark:text-white">
-        <h3 class="font-bold mb-2">Data Engineering</h3>
-        <p>ETL/ELT, dbt, Apache Airflow, data modeling, API integration, validation frameworks</p>
-      </div>
-
-      <div class="bg-white dark:bg-gray-700 p-6 rounded-lg shadow text-gray-900 dark:text-white">
-        <h3 class="font-bold mb-2">Databases</h3>
-        <p>Snowflake, BigQuery, DuckDB, PostgreSQL, MySQL</p>
-      </div>
-
-      <div class="bg-white dark:bg-gray-700 p-6 rounded-lg shadow text-gray-900 dark:text-white">
-        <h3 class="font-bold mb-2">Cloud & DevOps</h3>
-        <p>AWS, Docker, Terraform, serverless, Git, GitHub Actions, CI/CD pipelines</p>
-      </div>
-
     </div>
-  </div>
-</section>
+  </section>
 
   <!-- Divider -->
   <div class="my-2 opacity-60" aria-hidden="true">
@@ -662,127 +333,576 @@
     </svg>
   </div>
 
-<!-- EXPERIENCE -->
-<section id="experience" class="max-w-6xl mx-auto px-4 py-16" data-aos="fade-up">
-  <h2 class="text-3xl font-semibold mb-8 text-gray-900 dark:text-white">Experience</h2>
-  <div class="space-y-10">
+  <!-- PROJECTS -->
+  <section id="projects" class="max-w-6xl mx-auto px-4 py-20" data-aos="fade-up" data-aos-delay="50">
+    <header class="text-center mb-12">
+      <h2 class="text-3xl font-extrabold tracking-tight text-gray-900 dark:text-white">Case Studies</h2>
+      <p class="mt-2 text-gray-600 dark:text-gray-300">Projects that show delivery, structure, and real-world thinking.</p>
+    </header>
 
-    <!-- Datasembly -->
-<article class="rounded-2xl bg-white/70 dark:bg-gray-800/60 backdrop-blur p-6 shadow hover:shadow-lg transition">
-  <header class="flex items-start justify-between gap-4">
-    <div>
-      <h3 class="font-bold text-xl text-gray-900 dark:text-white">Tech Support Specialist · Datasembly</h3>
-      <p class="text-sm text-gray-600 dark:text-gray-400">Aug 2024 – Present · Remote (Canada)</p>
+    <div class="grid gap-8 md:grid-cols-2">
+
+      <!-- Card helper: gradient outline + glass -->
+      <!-- SQL Playground -->
+      <article class="tilt relative rounded-2xl transition duration-300 hover:scale-[1.02]">
+        <div class="absolute inset-0 rounded-2xl bg-gradient-to-br from-cyan-400/60 via-fuchsia-400/30 to-purple-500/60 blur-[14px] opacity-35 -z-10"></div>
+        <div class="bg-slate-900/55 dark:bg-slate-900/45 backdrop-blur border border-white/10 rounded-2xl p-6 shadow">
+          <div class="flex items-start gap-3">
+            <svg class="w-6 h-6 text-cyan-400 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M3 5h18M3 12h18M3 19h18" stroke-width="2" stroke-linecap="round"/></svg>
+            <div>
+              <h3 class="text-xl font-bold text-white">SQL Playground — Snowflake style in your browser</h3>
+              <p class="text-gray-300/90 mt-1">Practice Snowflake-flavoured SQL in the browser using SQLite WASM plus a small translation layer.</p>
+              <p class="text-xs text-gray-400 mt-1"><strong>Tech:</strong> SQL.js (SQLite WASM), Tailwind, PapaParse</p>
+
+              <div class="mt-4 grid gap-2 text-sm text-gray-200/95">
+                <p><span class="text-gray-400">Problem:</span> Build a quick, self-serve SQL practice environment without needing a database account.</p>
+                <p><span class="text-gray-400">Approach:</span> SQLite WASM + Snowflake-ish translation (SHOW/DESCRIBE/ILIKE/DATE_TRUNC).</p>
+                <p><span class="text-gray-400">Outcome:</span> A recruiter-friendly demo that shows UI + SQL logic + product thinking.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="mt-4 flex flex-wrap gap-2">
+            <a href="https://github.com/kmsmohamedansar/sql-playground" target="_blank" rel="noopener noreferrer" class="px-4 py-2 text-sm rounded-lg bg-cyan-600 hover:bg-cyan-500 text-white">GitHub</a>
+            <a href="https://kmsmohamedansar.github.io/sql-playground" target="_blank" rel="noopener noreferrer" class="px-4 py-2 text-sm rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white">Live demo</a>
+            <button data-toggle="#sql-details" class="px-4 py-2 text-sm rounded-lg bg-white/10 hover:bg-white/15 text-white">Show more</button>
+          </div>
+
+          <div id="sql-details" class="hidden bg-black/25 border border-white/10 rounded-xl mt-6 p-4 text-gray-200 text-sm max-h-[600px] overflow-y-auto">
+            <h4 class="font-semibold mb-2 text-lg text-cyan-200">Interactive SQL Playground — Snowflake syntax</h4>
+            <div class="grid sm:grid-cols-3 gap-3 mb-4">
+              <div class="bg-white/5 p-3 rounded"><div class="text-gray-400 text-xs">Tables</div><div class="text-2xl">6+</div></div>
+              <div class="bg-white/5 p-3 rounded"><div class="text-gray-400 text-xs">Syntax</div><div class="text-2xl">Snowflake-ish</div></div>
+              <div class="bg-white/5 p-3 rounded"><div class="text-gray-400 text-xs">Practice tasks</div><div class="text-2xl">5+</div></div>
+            </div>
+            <p class="mb-3"><strong>Goal:</strong> An in-browser SQL sandbox for interview prep, supporting commands like <code>DESCRIBE</code>, <code>SHOW TABLES</code>, <code>ILIKE</code>, and <code>DATE_TRUNC</code>.</p>
+            <h5 class="font-semibold text-cyan-200 mb-1">Features</h5>
+            <ul class="list-disc pl-6 mb-3">
+              <li>Snowflake→SQLite translation (<code>DESCRIBE</code>, <code>SHOW</code>, <code>QUALIFY</code>, etc.).</li>
+              <li>Preloaded schema: <code>employees</code>, <code>departments</code>, <code>orders</code>, <code>customers</code>.</li>
+              <li>CSV import to create your own tables.</li>
+              <li>Save and re-run queries locally.</li>
+              <li>Practice tasks: joins, windows, date truncation, CLV, anti-joins.</li>
+            </ul>
+            <p class="mb-2">
+              <a class="underline text-cyan-200" target="_blank" rel="noopener noreferrer" href="https://kmsmohamedansar.github.io/sql-playground">Live demo</a> ·
+              <a class="underline text-cyan-200" target="_blank" rel="noopener noreferrer" href="https://github.com/kmsmohamedansar/sql-playground">GitHub</a>
+            </p>
+          </div>
+        </div>
+      </article>
+
+      <!-- TaskMaster -->
+      <article class="tilt relative rounded-2xl transition duration-300 hover:scale-[1.02]">
+        <div class="absolute inset-0 rounded-2xl bg-gradient-to-br from-cyan-400/60 via-fuchsia-400/30 to-purple-500/60 blur-[14px] opacity-35 -z-10"></div>
+        <div class="bg-slate-900/55 dark:bg-slate-900/45 backdrop-blur border border-white/10 rounded-2xl p-6 shadow">
+          <div class="flex items-start gap-3">
+            <svg class="w-6 h-6 text-purple-300 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 6v12M6 12h12" stroke-width="2" stroke-linecap="round"/></svg>
+            <div>
+              <h3 class="text-xl font-bold text-white">TaskMaster — small ML pipeline with retries</h3>
+              <p class="text-gray-300/90 mt-1">Production-style pipeline with idempotent steps, backoff retries, and a model served via Gradio.</p>
+              <p class="text-xs text-gray-400 mt-1"><strong>Tech:</strong> Python, scikit-learn, Gradio, logging, backoff</p>
+
+              <div class="mt-4 grid gap-2 text-sm text-gray-200/95">
+                <p><span class="text-gray-400">Problem:</span> Show “production thinking” beyond a notebook (retries, idempotency, artifacts).</p>
+                <p><span class="text-gray-400">Approach:</span> Step-based pipeline (ingest → validate → train → serve) with structured logs.</p>
+                <p><span class="text-gray-400">Outcome:</span> A small but realistic example of orchestration + serving.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="mt-4 flex flex-wrap gap-2">
+            <a href="https://huggingface.co/spaces/kmsmohamedansar/TaskMaster-Job-Scheduler" target="_blank" rel="noopener noreferrer" class="px-4 py-2 text-sm rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white">Live demo</a>
+            <button data-toggle="#taskmaster-details" class="px-4 py-2 text-sm rounded-lg bg-white/10 hover:bg-white/15 text-white">Show more</button>
+          </div>
+
+          <div id="taskmaster-details" class="hidden bg-black/25 border border-white/10 rounded-xl mt-6 p-4 text-gray-200 text-sm max-h-[600px] overflow-y-auto">
+            <h4 class="font-semibold mb-3 text-lg text-purple-200">End-to-end orchestration & deployment</h4>
+            <div class="grid md:grid-cols-3 gap-3 mb-4">
+              <div class="bg-white/5 rounded-lg p-3"><div class="text-gray-400 text-xs">Pipeline uptime</div><div class="kpi text-2xl" data-to="99">0</div>%</div>
+              <div class="bg-white/5 rounded-lg p-3"><div class="text-gray-400 text-xs">Avg. stage latency</div><div class="text-2xl">~450ms</div></div>
+              <div class="bg-white/5 rounded-lg p-3"><div class="text-gray-400 text-xs">Auto-retries</div><div class="kpi text-2xl" data-to="3">0</div>x</div>
+            </div>
+            <p class="mb-3"><strong>Why:</strong> Toy examples skip the ops. I wanted something small that behaves like production.</p>
+            <p class="mb-3"><strong>How:</strong> Orchestrated steps (<em>Ingest → Validate → Featurize → Train → Serve</em>) with exponential backoff, structured logs, and a live demo.</p>
+            <h5 class="font-semibold text-purple-200 mb-1">Architecture</h5>
+            <ul class="list-disc pl-6 mb-3">
+              <li>Pure-function steps with on-disk artifacts for re-runs and caching.</li>
+              <li>Retry policy (<code>max_attempts=3</code> with jitter); terminal failures trigger an alert hook.</li>
+              <li>Correlation IDs for each run; JSON logs for any backend.</li>
+            </ul>
+          </div>
+        </div>
+      </article>
+
+      <!-- High-value customer predictor -->
+      <article class="tilt relative rounded-2xl transition duration-300 hover:scale-[1.02]">
+        <div class="absolute inset-0 rounded-2xl bg-gradient-to-br from-cyan-400/60 via-fuchsia-400/30 to-purple-500/60 blur-[14px] opacity-35 -z-10"></div>
+        <div class="bg-slate-900/55 dark:bg-slate-900/45 backdrop-blur border border-white/10 rounded-2xl p-6 shadow">
+          <div class="flex items-start gap-3">
+            <svg class="w-6 h-6 text-emerald-300 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M4 19h16M4 5h16M7 5v14M12 5v14M17 5v14" stroke-width="2" stroke-linecap="round"/></svg>
+            <div>
+              <h3 class="text-xl font-bold text-white">High-value customer predictor</h3>
+              <p class="text-gray-300/90 mt-1">Retention model with explainability and basic MLOps hygiene.</p>
+              <p class="text-xs text-gray-400 mt-1"><strong>Tech:</strong> DuckDB, Pandera, RandomForest, Streamlit, SHAP, MLflow</p>
+
+              <div class="mt-4 grid gap-2 text-sm text-gray-200/95">
+                <p><span class="text-gray-400">Problem:</span> Identify top customers for retention while avoiding wasted offers.</p>
+                <p><span class="text-gray-400">Approach:</span> RFM features + validation (Pandera) + tuned RF + SHAP explanations.</p>
+                <p><span class="text-gray-400">Outcome:</span> Demo shows modeling + checks + stakeholder-friendly UI.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="mt-4 flex flex-wrap gap-2">
+            <a href="https://github.com/kmsmohamedansar/high-value-customer-predictor" target="_blank" rel="noopener noreferrer" class="px-4 py-2 text-sm rounded-lg bg-cyan-600 hover:bg-cyan-500 text-white">GitHub</a>
+            <a href="https://huggingface.co/spaces/kmsmohamedansar/high-value-customer-predictor" target="_blank" rel="noopener noreferrer" class="px-4 py-2 text-sm rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white">Live demo</a>
+            <button data-toggle="#customer-details" class="px-4 py-2 text-sm rounded-lg bg-white/10 hover:bg-white/15 text-white">Show more</button>
+          </div>
+
+          <div id="customer-details" class="hidden bg-black/25 border border-white/10 rounded-xl mt-6 p-4 text-gray-200 text-sm max-h-[600px] overflow-y-auto">
+            <h4 class="font-semibold mb-2 text-lg text-emerald-200">Model + MLOps</h4>
+            <div class="grid sm:grid-cols-4 gap-3 mb-4">
+              <div class="bg-white/5 p-3 rounded"><div class="text-gray-400 text-xs">Accuracy</div><div class="kpi text-2xl" data-to="97">0</div>%</div>
+              <div class="bg-white/5 p-3 rounded"><div class="text-gray-400 text-xs">F1</div><div class="kpi text-2xl" data-to="95">0</div>%</div>
+              <div class="bg-white/5 p-3 rounded"><div class="text-gray-400 text-xs">ROC-AUC</div><div class="kpi text-2xl" data-to="99">0</div>%</div>
+              <div class="bg-white/5 p-3 rounded"><div class="text-gray-400 text-xs">Top-decile capture</div><div class="text-2xl">~84%</div></div>
+            </div>
+            <p class="mb-3"><strong>Problem:</strong> Find the top 10% of customers by expected value for targeted retention.</p>
+            <p class="mb-3"><strong>Data:</strong> Orders → customer aggregates (RFM, tenure, cohorts, discounting). Validated with <code>Pandera</code> to avoid leakage and bad ranges.</p>
+            <h5 class="font-semibold text-emerald-200 mb-1">Model & explainability</h5>
+            <ul class="list-disc pl-6 mb-3">
+              <li>RandomForest with class weighting; randomized search.</li>
+              <li>Threshold tuned for precision ≥ 0.9 to cut wasteful offers.</li>
+              <li>SHAP for global and per-prediction context in the UI.</li>
+            </ul>
+            <h5 class="font-semibold text-emerald-200 mb-1">MLOps</h5>
+            <ul class="list-disc pl-6 mb-3">
+              <li>MLflow tracking for params/metrics; artifacts include model and confusion matrix.</li>
+              <li>Streamlit app for what-if scoring; batch CLI for CRM exports.</li>
+            </ul>
+          </div>
+        </div>
+      </article>
+
+      <!-- Grocery AI Assistant -->
+      <article class="tilt relative rounded-2xl transition duration-300 hover:scale-[1.02]">
+        <div class="absolute inset-0 rounded-2xl bg-gradient-to-br from-cyan-400/60 via-fuchsia-400/30 to-purple-500/60 blur-[14px] opacity-35 -z-10"></div>
+        <div class="bg-slate-900/55 dark:bg-slate-900/45 backdrop-blur border border-white/10 rounded-2xl p-6 shadow">
+          <div class="flex items-start gap-3">
+            <svg class="w-6 h-6 text-cyan-300 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M4 7h16M4 12h16M4 17h10" stroke-width="2" stroke-linecap="round"/></svg>
+            <div>
+              <h3 class="text-xl font-bold text-white">Grocery AI assistant — local semantic search</h3>
+              <p class="text-gray-300/90 mt-1">Offline product search and Q&A over Instacart-style data using a compact local model.</p>
+              <p class="text-xs text-gray-400 mt-1"><strong>Tech:</strong> Python, FAISS, LangChain, Sentence Transformers, Gradio</p>
+
+              <div class="mt-4 grid gap-2 text-sm text-gray-200/95">
+                <p><span class="text-gray-400">Problem:</span> Enable fast search + Q&A without sending data to external services.</p>
+                <p><span class="text-gray-400">Approach:</span> Embeddings + FAISS index + grounded prompt + lightweight generation.</p>
+                <p><span class="text-gray-400">Outcome:</span> Local-first retrieval + explainable answers with cited sources.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="mt-4 flex flex-wrap gap-2">
+            <a href="https://github.com/kmsmohamedansar/ai_knowledge_assistant" target="_blank" rel="noopener noreferrer" class="px-4 py-2 text-sm rounded-lg bg-cyan-600 hover:bg-cyan-500 text-white">GitHub</a>
+            <a href="https://huggingface.co/spaces/kmsmohamedansar/ai_knowledge_assistant" target="_blank" rel="noopener noreferrer" class="px-4 py-2 text-sm rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white">Live demo</a>
+            <button data-toggle="#grocery-details" class="px-4 py-2 text-sm rounded-lg bg-white/10 hover:bg-white/15 text-white">Show more</button>
+          </div>
+
+          <div id="grocery-details" class="hidden bg-black/25 border border-white/10 rounded-xl mt-6 p-4 text-gray-200 text-sm max-h-[600px] overflow-y-auto">
+            <h4 class="font-semibold mb-2 text-lg text-cyan-200">Local semantic search + Q&A</h4>
+            <div class="grid sm:grid-cols-3 gap-3 mb-4">
+              <div class="bg-white/5 p-3 rounded"><div class="text-gray-400 text-xs">Index size</div><div class="text-2xl">~50k</div> docs</div>
+              <div class="bg-white/5 p-3 rounded"><div class="text-gray-400 text-xs">FAISS query</div><div class="text-2xl">&lt;100ms</div></div>
+              <div class="bg-white/5 p-3 rounded"><div class="text-gray-400 text-xs">LLM</div><div class="text-2xl">FLAN-T5</div></div>
+            </div>
+            <p class="mb-3"><strong>Goal:</strong> Keep data local while enabling natural-language search and Q&A.</p>
+            <h5 class="font-semibold text-cyan-200 mb-1">Pipeline</h5>
+            <ol class="list-decimal pl-6 mb-3">
+              <li>Join products/aisles/departments → readable <code>combined_text</code>.</li>
+              <li>Embed with <code>all-MiniLM-L6-v2</code>; index with FAISS.</li>
+              <li>Retrieve top-k → ground the prompt → answer with <code>flan-t5-base</code>.</li>
+              <li>Gradio UI with cited sources.</li>
+            </ol>
+          </div>
+        </div>
+      </article>
+
+      <!-- Sentiment Analysis -->
+      <article class="tilt relative rounded-2xl transition duration-300 hover:scale-[1.02]">
+        <div class="absolute inset-0 rounded-2xl bg-gradient-to-br from-cyan-400/60 via-fuchsia-400/30 to-purple-500/60 blur-[14px] opacity-35 -z-10"></div>
+        <div class="bg-slate-900/55 dark:bg-slate-900/45 backdrop-blur border border-white/10 rounded-2xl p-6 shadow">
+          <div class="flex items-start gap-3">
+            <svg class="w-6 h-6 text-fuchsia-300 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M3 17l6-6 4 4 7-7" stroke-width="2" stroke-linecap="round"/></svg>
+            <div>
+              <h3 class="text-xl font-bold text-white">Amazon fine food sentiment (DistilBERT)</h3>
+              <p class="text-gray-300/90 mt-1">Classic baseline → transformer, with a quick look at error modes.</p>
+              <p class="text-xs text-gray-400 mt-1"><strong>Tech:</strong> TF-IDF, Logistic Regression, DistilBERT, Hugging Face, Gradio</p>
+
+              <div class="mt-4 grid gap-2 text-sm text-gray-200/95">
+                <p><span class="text-gray-400">Problem:</span> Improve sentiment classification performance beyond classical NLP.</p>
+                <p><span class="text-gray-400">Approach:</span> Baseline TF-IDF → DistilBERT fine-tune with eval + error inspection.</p>
+                <p><span class="text-gray-400">Outcome:</span> Stronger F1 + deployable inference demo.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="mt-4 flex flex-wrap gap-2">
+            <a href="https://github.com/kmsmohamedansar/amazon-fine-food-sentiment-analysis" target="_blank" rel="noopener noreferrer" class="px-4 py-2 text-sm rounded-lg bg-cyan-600 hover:bg-cyan-500 text-white">GitHub</a>
+            <button data-toggle="#sentiment-details" class="px-4 py-2 text-sm rounded-lg bg-white/10 hover:bg-white/15 text-white">Show more</button>
+          </div>
+
+          <div id="sentiment-details" class="hidden bg-black/25 border border-white/10 rounded-xl mt-6 p-4 text-gray-200 text-sm max-h-[600px] overflow-y-auto">
+            <h4 class="font-semibold mb-2 text-lg text-fuchsia-200">Classical → transformer</h4>
+            <div class="grid sm:grid-cols-4 gap-3 mb-4">
+              <div class="bg-white/5 p-3 rounded"><div class="text-gray-400 text-xs">Dataset</div><div class="text-2xl">~568k</div> reviews</div>
+              <div class="bg-white/5 p-3 rounded"><div class="text-gray-400 text-xs">Baseline F1</div><div class="text-2xl">0.88</div></div>
+              <div class="bg-white/5 p-3 rounded"><div class="text-gray-400 text-xs">DistilBERT F1</div><div class="text-2xl">0.91</div></div>
+              <div class="bg-white/5 p-3 rounded"><div class="text-gray-400 text-xs">Latency</div><div class="text-2xl">&lt;100ms</div></div>
+            </div>
+            <p class="mb-3"><strong>Approach:</strong> Start with TF-IDF + Logistic Regression for a fast baseline and interpretability, then upgrade to DistilBERT with early stopping.</p>
+            <h5 class="font-semibold text-fuchsia-200 mb-1">Serving</h5>
+            <ul class="list-disc pl-6 mb-3">
+              <li>Gradio UI returns label + confidence; batch CSV scoring script included.</li>
+              <li>Saved tokenizer/model weights; deterministic splits for reproducibility.</li>
+            </ul>
+          </div>
+        </div>
+      </article>
+
+      <!-- Yahoo Finance News Scraper -->
+      <article class="tilt relative rounded-2xl transition duration-300 hover:scale-[1.02]">
+        <div class="absolute inset-0 rounded-2xl bg-gradient-to-br from-cyan-400/60 via-fuchsia-400/30 to-purple-500/60 blur-[14px] opacity-35 -z-10"></div>
+        <div class="bg-slate-900/55 dark:bg-slate-900/45 backdrop-blur border border-white/10 rounded-2xl p-6 shadow">
+          <div class="flex items-start gap-3">
+            <svg class="w-6 h-6 text-cyan-300 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M4 6h16M4 12h8" stroke-width="2" stroke-linecap="round"/></svg>
+            <div>
+              <h3 class="text-xl font-bold text-white">Yahoo Finance news scraper</h3>
+              <p class="text-gray-300/90 mt-1">Headless Chrome scraper for JS-rendered news → clean CSV/DataFrame.</p>
+              <p class="text-xs text-gray-400 mt-1"><strong>Tech:</strong> Python, Selenium, BeautifulSoup, Pandas, ChromeDriver</p>
+
+              <div class="mt-4 grid gap-2 text-sm text-gray-200/95">
+                <p><span class="text-gray-400">Problem:</span> Extract reliable news text from JS-heavy pages for downstream NLP.</p>
+                <p><span class="text-gray-400">Approach:</span> Selenium waits + HTML parsing + normalized schema to CSV.</p>
+                <p><span class="text-gray-400">Outcome:</span> Repeatable collection pipeline ready for analysis and modeling.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="mt-4">
+            <button data-toggle="#yahoo-details" class="px-4 py-2 text-sm rounded-lg bg-white/10 hover:bg-white/15 text-white">Show more</button>
+          </div>
+
+          <div id="yahoo-details" class="hidden bg-black/25 border border-white/10 rounded-xl mt-6 p-4 text-gray-200 text-sm max-h-[600px] overflow-y-auto">
+            <h4 class="font-semibold mb-2 text-lg text-cyan-200">Headless scraping for JS-heavy pages</h4>
+            <div class="grid sm:grid-cols-3 gap-3 mb-4">
+              <div class="bg-white/5 p-3 rounded"><div class="text-gray-400 text-xs">Articles/session</div><div class="text-2xl">~50</div></div>
+              <div class="bg-white/5 p-3 rounded"><div class="text-gray-400 text-xs">Storage</div><div class="text-2xl">CSV/DF</div></div>
+              <div class="bg-white/5 p-3 rounded"><div class="text-gray-400 text-xs">Headless</div><div class="text-2xl">Chrome</div></div>
+            </div>
+            <ol class="list-decimal pl-6 mb-3">
+              <li>Open homepage with Selenium; wait for network idle.</li>
+              <li>Collect links; visit each; extract headline, time, author, body.</li>
+              <li>Normalize and store in Pandas; export to CSV for downstream NLP.</li>
+            </ol>
+          </div>
+        </div>
+      </article>
+
+      <!-- Zero-shot Product Categorization -->
+      <article class="tilt relative rounded-2xl transition duration-300 hover:scale-[1.02]">
+        <div class="absolute inset-0 rounded-2xl bg-gradient-to-br from-cyan-400/60 via-fuchsia-400/30 to-purple-500/60 blur-[14px] opacity-35 -z-10"></div>
+        <div class="bg-slate-900/55 dark:bg-slate-900/45 backdrop-blur border border-white/10 rounded-2xl p-6 shadow">
+          <div class="flex items-start gap-3">
+            <svg class="w-6 h-6 text-amber-200 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 3v18M3 12h18" stroke-width="2" stroke-linecap="round"/></svg>
+            <div>
+              <h3 class="text-xl font-bold text-white">Smart product categorization — zero-shot</h3>
+              <p class="text-gray-300/90 mt-1">Validate product→category mappings with BART-MNLI plus lightweight rules.</p>
+              <p class="text-xs text-gray-400 mt-1"><strong>Tech:</strong> Transformers (BART-MNLI), pipelines, pandas</p>
+
+              <div class="mt-4 grid gap-2 text-sm text-gray-200/95">
+                <p><span class="text-gray-400">Problem:</span> Catch mismatched category assignments at scale with minimal labels.</p>
+                <p><span class="text-gray-400">Approach:</span> Keyword pass + entailment scoring + threshold flags to review.</p>
+                <p><span class="text-gray-400">Outcome:</span> Practical QA workflow: fast, explainable, low manual effort.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="mt-4">
+            <button data-toggle="#zero-shot-details" class="px-4 py-2 text-sm rounded-lg bg-white/10 hover:bg-white/15 text-white">Show more</button>
+          </div>
+
+          <div id="zero-shot-details" class="hidden bg-black/25 border border-white/10 rounded-xl mt-6 p-4 text-gray-200 text-sm max-h-[600px] overflow-y-auto">
+            <h4 class="font-semibold mb-2 text-lg text-amber-200">Zero-shot categorization</h4>
+            <div class="grid sm:grid-cols-3 gap-3 mb-4">
+              <div class="bg-white/5 p-3 rounded"><div class="text-gray-400 text-xs">Model</div><div class="text-2xl">BART-MNLI</div></div>
+              <div class="bg-white/5 p-3 rounded"><div class="text-gray-400 text-xs">CPU throughput</div><div class="text-2xl">~8/s</div></div>
+              <div class="bg-white/5 p-3 rounded"><div class="text-gray-400 text-xs">Flag rate</div><div class="text-2xl">~12%</div></div>
+            </div>
+            <ol class="list-decimal pl-6 mb-3">
+              <li>Parse category path; take the leaf as the candidate label.</li>
+              <li>Quick keyword pass for obvious matches.</li>
+              <li>Zero-shot entailment on product name vs. label; threshold 0.6.</li>
+              <li>Low-score items go to review with top-k alternatives.</li>
+            </ol>
+          </div>
+        </div>
+      </article>
+
+      <!-- Spotify Trends -->
+      <article class="tilt relative rounded-2xl transition duration-300 hover:scale-[1.02]">
+        <div class="absolute inset-0 rounded-2xl bg-gradient-to-br from-cyan-400/60 via-fuchsia-400/30 to-purple-500/60 blur-[14px] opacity-35 -z-10"></div>
+        <div class="bg-slate-900/55 dark:bg-slate-900/45 backdrop-blur border border-white/10 rounded-2xl p-6 shadow">
+          <div class="flex items-start gap-3">
+            <svg class="w-6 h-6 text-rose-200 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M4 19h16M4 12h10M4 5h7" stroke-width="2" stroke-linecap="round"/></svg>
+            <div>
+              <h3 class="text-xl font-bold text-white">Spotify music trends — quick EDA</h3>
+              <p class="text-gray-300/90 mt-1">Large-scale exploration of audio features and popularity over time.</p>
+              <p class="text-xs text-gray-400 mt-1"><strong>Tech:</strong> Python, pandas, NumPy, Matplotlib</p>
+
+              <div class="mt-4 grid gap-2 text-sm text-gray-200/95">
+                <p><span class="text-gray-400">Problem:</span> Understand which audio features correlate with popularity across eras.</p>
+                <p><span class="text-gray-400">Approach:</span> Clean + aggregate + correlations + trend exploration.</p>
+                <p><span class="text-gray-400">Outcome:</span> Clear insights + visual story that’s easy to present.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="mt-4">
+            <button data-toggle="#spotify-details" class="px-4 py-2 text-sm rounded-lg bg-white/10 hover:bg-white/15 text-white">Show more</button>
+          </div>
+
+          <div id="spotify-details" class="hidden bg-black/25 border border-white/10 rounded-xl mt-6 p-4 text-gray-200 text-sm max-h-[600px] overflow-y-auto">
+            <h4 class="font-semibold mb-3 text-lg text-rose-200">Highlights</h4>
+            <div class="grid sm:grid-cols-3 gap-3 mb-4">
+              <div class="bg-white/5 p-3 rounded"><div class="text-gray-400 text-xs">Tracks</div><div class="text-2xl">~170k</div></div>
+              <div class="bg-white/5 p-3 rounded"><div class="text-gray-400 text-xs">Period</div><div class="text-2xl">1920s–2020s</div></div>
+              <div class="bg-white/5 p-3 rounded"><div class="text-gray-400 text-xs">Key corr.</div><div class="text-2xl">energy↔loudness</div></div>
+            </div>
+            <ul class="list-disc pl-6 mb-3">
+              <li>Longest average track lengths in the 70s–80s.</li>
+              <li>Strong positive correlation between energy and loudness.</li>
+              <li>Valence and danceability show a moderate association.</li>
+            </ul>
+          </div>
+        </div>
+      </article>
+
+      <!-- CPL Dream XI -->
+      <article class="tilt relative rounded-2xl transition duration-300 hover:scale-[1.02]">
+        <div class="absolute inset-0 rounded-2xl bg-gradient-to-br from-cyan-400/60 via-fuchsia-400/30 to-purple-500/60 blur-[14px] opacity-35 -z-10"></div>
+        <div class="bg-slate-900/55 dark:bg-slate-900/45 backdrop-blur border border-white/10 rounded-2xl p-6 shadow">
+          <div class="flex items-start gap-3">
+            <svg class="w-6 h-6 text-sky-200 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="3" stroke-width="2"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09a1.65 1.65 0 0 0-1-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09a1.65 1.65 0 0 0 1.51-1 1.65 1.65 0 0 0-.33-1.82l-.06-.06A2 2 0 1 1 7.04 3.3l.06.06c.46.46 1.12.6 1.72.33a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09c0 .66.38 1.26 1 1.51.6.27 1.26.13 1.72-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06c-.46.46-.6 1.12-.33 1.72.27.6.85 1 1.51 1H21a2 2 0 0 1 0 4h-.09c-.66 0-1.26.38-1.51 1z"/></svg>
+            <div>
+              <h3 class="text-xl font-bold text-white">Canadian Premier League — Dream XI (2019)</h3>
+              <p class="text-gray-300/90 mt-1">Role-aware KPI model for best-XI selection with a small Power BI dashboard.</p>
+              <p class="text-xs text-gray-400 mt-1"><strong>Tech:</strong> Python (pandas, matplotlib), Power BI</p>
+
+              <div class="mt-4 grid gap-2 text-sm text-gray-200/95">
+                <p><span class="text-gray-400">Problem:</span> Rank players fairly across roles (GK/CB/DM/etc.), not just raw goals.</p>
+                <p><span class="text-gray-400">Approach:</span> Role-weighted KPIs + scoring rules + dashboard to explore.</p>
+                <p><span class="text-gray-400">Outcome:</span> Clear selection logic + interactive view for storytelling.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="mt-4">
+            <button data-toggle="#cpl-details" class="px-4 py-2 text-sm rounded-lg bg-white/10 hover:bg-white/15 text-white">Show more</button>
+          </div>
+
+          <div id="cpl-details" class="hidden bg-black/25 border border-white/10 rounded-xl mt-6 p-4 text-gray-200 text-sm max-h-[600px] overflow-y-auto">
+            <h4 class="font-semibold mb-3 text-lg text-sky-200">Method & KPIs</h4>
+            <div class="grid sm:grid-cols-3 gap-3 mb-4">
+              <div class="bg-white/5 p-3 rounded"><div class="text-gray-400 text-xs">Teams</div><div class="text-2xl">7</div></div>
+              <div class="bg-white/5 p-3 rounded"><div class="text-gray-400 text-xs">Players</div><div class="text-2xl">~300</div></div>
+              <div class="bg-white/5 p-3 rounded"><div class="text-gray-400 text-xs">Dashboard</div><div class="text-2xl">Power BI</div></div>
+            </div>
+            <ul class="list-disc pl-6 mb-3">
+              <li><b>Team KPI:</b> goals, shots on target ratio, pass%, fouls, touches in box.</li>
+              <li><b>Roles:</b> CF (goals + pens − xG), wingers (2×assists + xA + 0.5×chances), CAM (2×goals + assists + 0.5×chances), DM (assists + 2×tackles + 0.5×interceptions), FB/CB/GK rules.</li>
+            </ul>
+          </div>
+        </div>
+      </article>
+
     </div>
-    <div class="hidden md:flex flex-wrap gap-2" aria-hidden="true">
-      <span class="px-2 py-1 text-xs rounded-full bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200">SQL</span>
-      <span class="px-2 py-1 text-xs rounded-full bg-gray-100 dark:bg-gray-700">Snowflake</span>
-      <span class="px-2 py-1 text-xs rounded-full bg-gray-100 dark:bg-gray-700">BigQuery</span>
-      <span class="px-2 py-1 text-xs rounded-full bg-gray-100 dark:bg-gray-700">Airflow</span>
-      <span class="px-2 py-1 text-xs rounded-full bg-gray-100 dark:bg-gray-700">Tableau</span>
-      <span class="px-2 py-1 text-xs rounded-full bg-gray-100 dark:bg-gray-700">Retool</span>
-    </div>
-  </header>
+  </section>
 
-  <ul class="mt-4 list-disc ml-5 space-y-2 text-gray-700 dark:text-gray-300">
-    <li>Build and monitor scalable data workflows in <b>Snowflake</b> and <b>BigQuery</b>, supporting 12B+ pricing points weekly for retail and CPG clients.</li>
-    <li>Write and optimize <b>SQL</b> queries (CTEs, regex, window functions) to deliver accurate, custom datasets and one-off analyses.</li>
-    <li>Automate report generation and validation using <b>Airflow</b> and <b>Python</b>, improving reliability and reducing manual QA effort.</li>
-    <li>Collaborate with <b>Customer Success</b> and <b>Sales</b> teams to map client data workflows and design end-to-end data solutions.</li>
-    <li>Develop and enhance <b>Tableau</b> dashboards visualizing pricing and availability trends, improving insight delivery to stakeholders.</li>
-    <li>Tools: Snowflake, DataGrip, Airflow, Retool, Tableau, GitHub.</li>
-  </ul>
-
-  <div class="mt-3 text-xs text-gray-500 dark:text-gray-400">
-    Skills: Data Engineering, SQL Optimization, Automation, Analytics, Stakeholder Collaboration, Dashboarding, Documentation
+  <!-- Divider -->
+  <div class="my-2 opacity-60" aria-hidden="true">
+    <svg viewBox="0 0 1200 120" class="w-full h-12">
+      <use href="#race" />
+    </svg>
   </div>
-</article>
 
+  <!-- SKILLS -->
+  <section id="skills" class="bg-gray-100 dark:bg-gray-900 py-16" data-aos="fade-up" data-aos-delay="100">
+    <div class="max-w-5xl mx-auto px-4">
+      <h2 class="text-3xl font-semibold mb-6 text-center text-gray-900 dark:text-white">Skills</h2>
+      <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
 
-<!-- Spongelii -->
-<article class="rounded-2xl bg-white/70 dark:bg-gray-800/60 backdrop-blur p-6 shadow hover:shadow-lg transition" data-aos="fade-up" data-aos-delay="100">
-  <header class="flex items-start justify-between gap-4">
-    <div>
-      <h3 class="font-bold text-xl text-gray-900 dark:text-white">Business Analyst Intern · Spongelii</h3>
-      <p class="text-sm text-gray-600 dark:text-gray-400">Jan 2024 – Apr 2024 · Remote (Canada)</p>
+        <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow text-gray-900 dark:text-white border border-gray-200/70 dark:border-white/10">
+          <h3 class="font-bold mb-2">Machine Learning & AI</h3>
+          <p>scikit-learn, Transformers, MLflow, SHAP, Streamlit, Gradio</p>
+        </div>
+
+        <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow text-gray-900 dark:text-white border border-gray-200/70 dark:border-white/10">
+          <h3 class="font-bold mb-2">Data Analytics & Visualization</h3>
+          <p>Tableau, Power BI, Excel (Power Query, Pivot Tables), pandas, KPI dashboards</p>
+        </div>
+
+        <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow text-gray-900 dark:text-white border border-gray-200/70 dark:border-white/10">
+          <h3 class="font-bold mb-2">Languages & Scripting</h3>
+          <p>Python, SQL, R, HTML/CSS, Bash, VBA</p>
+        </div>
+
+        <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow text-gray-900 dark:text-white border border-gray-200/70 dark:border-white/10">
+          <h3 class="font-bold mb-2">Data Engineering</h3>
+          <p>ETL/ELT, dbt, Apache Airflow, data modeling, API integration, validation frameworks</p>
+        </div>
+
+        <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow text-gray-900 dark:text-white border border-gray-200/70 dark:border-white/10">
+          <h3 class="font-bold mb-2">Databases</h3>
+          <p>Snowflake, BigQuery, DuckDB, PostgreSQL, MySQL</p>
+        </div>
+
+        <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow text-gray-900 dark:text-white border border-gray-200/70 dark:border-white/10">
+          <h3 class="font-bold mb-2">Cloud & DevOps</h3>
+          <p>AWS, Docker, Terraform, Git, GitHub Actions, CI/CD pipelines</p>
+        </div>
+
+      </div>
     </div>
-    <div class="hidden md:flex flex-wrap gap-2" aria-hidden="true">
-      <span class="px-2 py-1 text-xs rounded-full bg-gray-100 dark:bg-gray-700">SQL</span>
-      <span class="px-2 py-1 text-xs rounded-full bg-gray-100 dark:bg-gray-700">Snowflake</span>
-      <span class="px-2 py-1 text-xs rounded-full bg-gray-100 dark:bg-gray-700">Tableau</span>
-    </div>
-  </header>
+  </section>
 
-  <ul class="mt-4 list-disc ml-5 space-y-2 text-gray-700 dark:text-gray-300">
-    <li>Developed and tested 2+ <b>ETL workflows</b> using SQL and Snowflake to automate client data ingestion, reducing onboarding time by <b>40%</b>.</li>
-    <li>Built <b>Tableau dashboards</b> analyzing financial KPIs and product engagement; optimized queries to improve refresh time by <b>13%</b>.</li>
-    <li>Partnered with product managers to translate requirements into technical specifications for analytics and reporting tools.</li>
-    <li>Created documentation outlining data pipeline architecture, ensuring collaboration and long-term maintainability.</li>
-  </ul>
-</article>
-
-<!-- Amazon Prime Video -->
-<article class="rounded-2xl bg-white/70 dark:bg-gray-800/60 backdrop-blur p-6 shadow hover:shadow-lg transition" data-aos="fade-up" data-aos-delay="200">
-  <header class="flex items-start justify-between gap-4">
-    <div>
-      <h3 class="font-bold text-xl text-gray-900 dark:text-white">Business Data Analyst · Amazon Prime Video</h3>
-      <p class="text-sm text-gray-600 dark:text-gray-400">Aug 2019 – Aug 2022 · Hybrid (India)</p>
-    </div>
-    <div class="hidden md:flex flex-wrap gap-2" aria-hidden="true">
-      <span class="px-2 py-1 text-xs rounded-full bg-gray-100 dark:bg-gray-700">SQL</span>
-      <span class="px-2 py-1 text-xs rounded-full bg-gray-100 dark:bg-gray-700">Power BI</span>
-      <span class="px-2 py-1 text-xs rounded-full bg-gray-100 dark:bg-gray-700">Tableau</span>
-    </div>
-  </header>
-
-  <ul class="mt-4 list-disc ml-5 space-y-2 text-gray-700 dark:text-gray-300">
-    <li>Designed and automated <b>SQL-based ETL pipelines</b> to process 1M+ transactions weekly, improving data accuracy and reporting latency by <b>45%</b>.</li>
-    <li>Built <b>Power BI dashboards</b> tracking operational KPIs and campaign performance; reduced manual reporting time by <b>35%</b>.</li>
-    <li>Collaborated with engineering and product teams to implement <b>data quality checks</b> and workflow automations across ServiceNow and Salesforce.</li>
-    <li>Led technical onboarding for <b>200+ internal accounts</b> with standardized SOPs and documentation, improving data consistency and compliance.</li>
-  </ul>
-
-  <button class="mt-4 text-sm font-medium text-indigo-600 dark:text-indigo-300 hover:underline"
-          data-toggle="#more-amz" aria-controls="more-amz" aria-expanded="false">
-    Show more
-  </button>
-  <div id="more-amz" class="hidden mt-3">
-    <ul class="list-disc ml-5 space-y-2 text-gray-700 dark:text-gray-300">
-      <li>Reduced Sev2 SLA from ~12h to ~6h through process optimization and workflow automation.</li>
-      <li>Developed SQL and Excel scripts for <b>KPI tracking</b> across finance and operations, speeding up decision cycles.</li>
-      <li>Supported <b>UAT and QA</b> for data integrations and internal dashboards, identifying 100+ defects before release.</li>
-    </ul>
+  <!-- Divider -->
+  <div class="my-2 opacity-60" aria-hidden="true">
+    <svg viewBox="0 0 1200 120" class="w-full h-12">
+      <use href="#race" />
+    </svg>
   </div>
-</article>
 
+  <!-- EXPERIENCE -->
+  <section id="experience" class="max-w-6xl mx-auto px-4 py-16" data-aos="fade-up">
+    <h2 class="text-3xl font-semibold mb-8 text-gray-900 dark:text-white">Experience</h2>
+    <div class="space-y-10">
 
+      <!-- Datasembly -->
+      <article class="rounded-2xl bg-white/70 dark:bg-gray-900/40 backdrop-blur p-6 shadow hover:shadow-lg transition border border-gray-200/70 dark:border-white/10">
+        <header class="flex items-start justify-between gap-4">
+          <div>
+            <h3 class="font-bold text-xl text-gray-900 dark:text-white">Tech Support Specialist · Datasembly</h3>
+            <p class="text-sm text-gray-600 dark:text-gray-400">Aug 2024 – Present · Remote (Canada)</p>
+          </div>
+          <div class="hidden md:flex flex-wrap gap-2" aria-hidden="true">
+            <span class="px-2 py-1 text-xs rounded-full bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-200">SQL</span>
+            <span class="px-2 py-1 text-xs rounded-full bg-gray-100 dark:bg-gray-800">Snowflake</span>
+            <span class="px-2 py-1 text-xs rounded-full bg-gray-100 dark:bg-gray-800">BigQuery</span>
+            <span class="px-2 py-1 text-xs rounded-full bg-gray-100 dark:bg-gray-800">Airflow</span>
+            <span class="px-2 py-1 text-xs rounded-full bg-gray-100 dark:bg-gray-800">Tableau</span>
+            <span class="px-2 py-1 text-xs rounded-full bg-gray-100 dark:bg-gray-800">Retool</span>
+          </div>
+        </header>
 
+        <ul class="mt-4 list-disc ml-5 space-y-2 text-gray-700 dark:text-gray-300">
+          <li>Build and monitor scalable data workflows in <b>Snowflake</b> and <b>BigQuery</b>, supporting 12B+ pricing points weekly for retail and CPG clients.</li>
+          <li>Write and optimize <b>SQL</b> queries (CTEs, regex, window functions) to deliver accurate, custom datasets and one-off analyses.</li>
+          <li>Automate report generation and validation using <b>Airflow</b> and <b>Python</b>, improving reliability and reducing manual QA effort.</li>
+          <li>Collaborate with <b>Customer Success</b> and <b>Sales</b> teams to map client data workflows and design end-to-end data solutions.</li>
+          <li>Develop and enhance <b>Tableau</b> dashboards visualizing pricing and availability trends, improving insight delivery to stakeholders.</li>
+          <li>Tools: Snowflake, DataGrip, Airflow, Retool, Tableau, GitHub.</li>
+        </ul>
 
- <!-- EDUCATION -->
-<section id="education" class="bg-gray-100 dark:bg-gray-800 py-16" data-aos="fade-up">
-  <div class="max-w-5xl mx-auto px-4">
-    <h2 class="text-3xl font-semibold mb-4 text-gray-900 dark:text-white">Education</h2>
+        <div class="mt-3 text-xs text-gray-500 dark:text-gray-400">
+          Skills: Data Engineering, SQL Optimization, Automation, Analytics, Stakeholder Collaboration, Dashboarding, Documentation
+        </div>
+      </article>
 
-    <h3 class="font-bold text-xl text-gray-900 dark:text-white">Postgraduate Diploma — Business Analytics</h3>
-    <p class="text-sm text-gray-500 dark:text-gray-400 mb-2">
-      Lambton College · Mississauga, Canada · 2022 – 2024
-    </p>
-    <ul class="list-disc ml-6 text-gray-700 dark:text-gray-300 mb-6">
-      <li>Completed hands-on coursework in <b>SQL</b>, <b>Python</b>, and <b>Power BI</b> focused on building reproducible analytics pipelines and dashboards.</li>
-      <li>Applied statistical and business methods to real datasets, emphasizing <b>data cleaning</b>, <b>ETL</b>, and <b>report automation</b> during co-op projects.</li>
-    </ul>
+      <!-- Spongelii -->
+      <article class="rounded-2xl bg-white/70 dark:bg-gray-900/40 backdrop-blur p-6 shadow hover:shadow-lg transition border border-gray-200/70 dark:border-white/10" data-aos="fade-up" data-aos-delay="100">
+        <header class="flex items-start justify-between gap-4">
+          <div>
+            <h3 class="font-bold text-xl text-gray-900 dark:text-white">Business Analyst Intern · Spongelii</h3>
+            <p class="text-sm text-gray-600 dark:text-gray-400">Jan 2024 – Apr 2024 · Remote (Canada)</p>
+          </div>
+          <div class="hidden md:flex flex-wrap gap-2" aria-hidden="true">
+            <span class="px-2 py-1 text-xs rounded-full bg-gray-100 dark:bg-gray-800">SQL</span>
+            <span class="px-2 py-1 text-xs rounded-full bg-gray-100 dark:bg-gray-800">Snowflake</span>
+            <span class="px-2 py-1 text-xs rounded-full bg-gray-100 dark:bg-gray-800">Tableau</span>
+          </div>
+        </header>
 
-    <h3 class="font-bold text-xl text-gray-900 dark:text-white">Bachelor of Business Administration (BBA)</h3>
-    <p class="text-sm text-gray-500 dark:text-gray-400 mb-2">
-      The New College · Chennai, India · 2015 – 2018
-    </p>
-    <ul class="list-disc ml-6 text-gray-700 dark:text-gray-300">
-      <li>Studied core business disciplines with exposure to <b>Excel modeling</b>, <b>data visualization</b>, and <b>SQL fundamentals</b>.</li>
-      <li>Completed case studies and a short internship applying analytics concepts to business scenarios.</li>
-    </ul>
-  </div>
-</section>
+        <ul class="mt-4 list-disc ml-5 space-y-2 text-gray-700 dark:text-gray-300">
+          <li>Developed and tested 2+ <b>ETL workflows</b> using SQL and Snowflake to automate client data ingestion, reducing onboarding time by <b>40%</b>.</li>
+          <li>Built <b>Tableau dashboards</b> analyzing financial KPIs and product engagement; optimized queries to improve refresh time by <b>13%</b>.</li>
+          <li>Partnered with product managers to translate requirements into technical specifications for analytics and reporting tools.</li>
+          <li>Created documentation outlining data pipeline architecture, ensuring collaboration and long-term maintainability.</li>
+        </ul>
+      </article>
 
+      <!-- Amazon Prime Video -->
+      <article class="rounded-2xl bg-white/70 dark:bg-gray-900/40 backdrop-blur p-6 shadow hover:shadow-lg transition border border-gray-200/70 dark:border-white/10" data-aos="fade-up" data-aos-delay="200">
+        <header class="flex items-start justify-between gap-4">
+          <div>
+            <h3 class="font-bold text-xl text-gray-900 dark:text-white">Business Data Analyst · Amazon Prime Video</h3>
+            <p class="text-sm text-gray-600 dark:text-gray-400">Aug 2019 – Aug 2022 · Hybrid (India)</p>
+          </div>
+          <div class="hidden md:flex flex-wrap gap-2" aria-hidden="true">
+            <span class="px-2 py-1 text-xs rounded-full bg-gray-100 dark:bg-gray-800">SQL</span>
+            <span class="px-2 py-1 text-xs rounded-full bg-gray-100 dark:bg-gray-800">Power BI</span>
+            <span class="px-2 py-1 text-xs rounded-full bg-gray-100 dark:bg-gray-800">Tableau</span>
+          </div>
+        </header>
+
+        <ul class="mt-4 list-disc ml-5 space-y-2 text-gray-700 dark:text-gray-300">
+          <li>Designed and automated <b>SQL-based ETL pipelines</b> to process 1M+ transactions weekly, improving data accuracy and reporting latency by <b>45%</b>.</li>
+          <li>Built <b>Power BI dashboards</b> tracking operational KPIs and campaign performance; reduced manual reporting time by <b>35%</b>.</li>
+          <li>Collaborated with engineering and product teams to implement <b>data quality checks</b> and workflow automations across ServiceNow and Salesforce.</li>
+          <li>Led technical onboarding for <b>200+ internal accounts</b> with standardized SOPs and documentation, improving data consistency and compliance.</li>
+        </ul>
+
+        <button class="mt-4 text-sm font-medium text-indigo-600 dark:text-indigo-300 hover:underline"
+                data-toggle="#more-amz" aria-controls="more-amz" aria-expanded="false">
+          Show more
+        </button>
+        <div id="more-amz" class="hidden mt-3">
+          <ul class="list-disc ml-5 space-y-2 text-gray-700 dark:text-gray-300">
+            <li>Reduced Sev2 SLA from ~12h to ~6h through process optimization and workflow automation.</li>
+            <li>Developed SQL and Excel scripts for <b>KPI tracking</b> across finance and operations, speeding up decision cycles.</li>
+            <li>Supported <b>UAT and QA</b> for data integrations and internal dashboards, identifying 100+ defects before release.</li>
+          </ul>
+        </div>
+      </article>
+
+    </div>
+  </section>
+
+  <!-- EDUCATION -->
+  <section id="education" class="bg-gray-100 dark:bg-gray-900 py-16" data-aos="fade-up">
+    <div class="max-w-5xl mx-auto px-4">
+      <h2 class="text-3xl font-semibold mb-4 text-gray-900 dark:text-white">Education</h2>
+
+      <h3 class="font-bold text-xl text-gray-900 dark:text-white">Postgraduate Diploma — Business Analytics</h3>
+      <p class="text-sm text-gray-500 dark:text-gray-400 mb-2">
+        Lambton College · Mississauga, Canada · 2022 – 2024
+      </p>
+      <ul class="list-disc ml-6 text-gray-700 dark:text-gray-300 mb-6">
+        <li>Completed hands-on coursework in <b>SQL</b>, <b>Python</b>, and <b>Power BI</b> focused on building reproducible analytics pipelines and dashboards.</li>
+        <li>Applied statistical and business methods to real datasets, emphasizing <b>data cleaning</b>, <b>ETL</b>, and <b>report automation</b> during co-op projects.</li>
+      </ul>
+
+      <h3 class="font-bold text-xl text-gray-900 dark:text-white">Bachelor of Business Administration (BBA)</h3>
+      <p class="text-sm text-gray-500 dark:text-gray-400 mb-2">
+        The New College · Chennai, India · 2015 – 2018
+      </p>
+      <ul class="list-disc ml-6 text-gray-700 dark:text-gray-300">
+        <li>Studied core business disciplines with exposure to <b>Excel modeling</b>, <b>data visualization</b>, and <b>SQL fundamentals</b>.</li>
+        <li>Completed case studies and a short internship applying analytics concepts to business scenarios.</li>
+      </ul>
+    </div>
+  </section>
 
   <!-- Divider -->
   <div class="my-2 opacity-60" aria-hidden="true">
@@ -795,244 +915,238 @@
   <section id="contact" class="max-w-5xl mx-auto px-4 py-16" data-aos="fade-up">
     <h2 class="text-3xl font-semibold mb-4 text-gray-900 dark:text-white">Contact</h2>
     <p class="text-gray-700 dark:text-gray-300">Email: <a href="mailto:mohamedansarkms@gmail.com" class="underline">mohamedansarkms@gmail.com</a></p>
-    <p class="text-gray-700 dark:text-gray-300">LinkedIn: <a href="https://www.linkedin.com/in/kmsmohamedansar/" class="underline" target="_blank" rel="noopener noreferrer">linkedin.com/kmsmohamedansar</a></p>
+    <p class="text-gray-700 dark:text-gray-300">
+      LinkedIn:
+      <a href="https://www.linkedin.com/in/kmsmohamedansar/" class="underline" target="_blank" rel="noopener noreferrer">linkedin.com/kmsmohamedansar</a>
+    </p>
   </section>
 
   <!-- Scripts -->
-<script>
-window.addEventListener('DOMContentLoaded', () => {
-  const reduceMotion = window.matchMedia?.('(prefers-reduced-motion: reduce)')?.matches;
-  const root = document.documentElement;
+  <script>
+    window.addEventListener('DOMContentLoaded', () => {
+      const reduceMotion = window.matchMedia?.('(prefers-reduced-motion: reduce)')?.matches;
+      const root = document.documentElement;
 
-  /* ---------------- THEME TOGGLE ---------------- */
-  const themeBtn = document.getElementById('theme-toggle');
-  const setTheme = (theme) => {
-    root.classList.toggle('dark', theme === 'dark');
-    try { localStorage.setItem('theme', theme); } catch (_) {}
-  };
-  themeBtn?.addEventListener('click', () => {
-    const next = root.classList.contains('dark') ? 'light' : 'dark';
-    setTheme(next);
-  });
-
-  /* ---------------- ANIMATIONS ---------------- */
-  if (!reduceMotion) {
-    window.AOS?.init({ once: true, duration: 800 });
-    window.VanillaTilt?.init(document.querySelectorAll('.tilt'), {
-      max: 15, speed: 400, glare: true, 'max-glare': 0.3
-    });
-  }
-
-  /* ---------------- HERO TYPED TEXT ---------------- */
-  const typedEl = document.getElementById('typed');
-  if (typedEl) {
-    if (window.Typed) {
-      new Typed('#typed', {
-        strings: ['Mohamed Ansar', 'a data generalist', 'a business analyst', 'into ML/AI'],
-        typeSpeed: 80, backSpeed: 40, loop: true
+      /* ---------------- THEME TOGGLE ---------------- */
+      const themeBtn = document.getElementById('theme-toggle');
+      const setTheme = (theme) => {
+        root.classList.toggle('dark', theme === 'dark');
+        try { localStorage.setItem('theme', theme); } catch (_) {}
+      };
+      themeBtn?.addEventListener('click', () => {
+        const next = root.classList.contains('dark') ? 'light' : 'dark';
+        setTheme(next);
       });
-    } else {
-      typedEl.textContent = 'Mohamed Ansar';
-    }
-  }
 
-  /* ---------------- FLOATING KEYWORDS ---------------- */
-  const keywords = [
-    'Data pipelines', 'MLOps', 'Explainable AI', 'RAG', 'Deployment',
-    'Feature engineering', 'Hugging Face', 'Streamlit', 'Airflow',
-    'MLflow', 'Semantic search', 'Vector DBs', 'DuckDB',
-    'Snowflake', 'Selenium', 'BeautifulSoup'
-  ];
-  let idx = 0;
-  const mlWords = document.getElementById('mlWords');
-  if (mlWords) {
-    mlWords.textContent = keywords[0];
-    setInterval(() => {
-      mlWords.style.opacity = 0;
-      setTimeout(() => {
-        mlWords.textContent = keywords[idx = (idx + 1) % keywords.length];
-        mlWords.style.opacity = 1;
-      }, 250);
-    }, 2200);
-  }
-
-  /* ---------------- NAVIGATION ---------------- */
-  const navToggle = document.getElementById('nav-toggle');
-  const mobileNav = document.getElementById('mobile-nav');
-  const navLinks = document.querySelectorAll('#nav-links a, #mobile-nav a');
-
-  const toggleNav = () => {
-    const open = mobileNav.classList.toggle('hidden');
-    navToggle.setAttribute('aria-expanded', String(!open));
-  };
-  navToggle?.addEventListener('click', toggleNav);
-  navToggle?.addEventListener('keydown', (e) => {
-    if (['Enter', ' '].includes(e.key)) {
-      e.preventDefault(); toggleNav();
-    }
-  });
-  document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape' && !mobileNav.classList.contains('hidden')) {
-      toggleNav(); navToggle.focus();
-    }
-  });
-  navLinks.forEach(a => a.addEventListener('click', () => mobileNav.classList.add('hidden')));
-
-  /* ---------------- ACTIVE LINK HIGHLIGHT ---------------- */
-  const sections = ['about', 'projects', 'skills', 'experience', 'education', 'contact']
-    .map(id => document.getElementById(id)).filter(Boolean);
-  const mapLink = (id) => [...navLinks].find(a => a.getAttribute('href') === `#${id}`);
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach(e => {
-      const link = mapLink(e.target.id);
-      if (link && e.isIntersecting) {
-        navLinks.forEach(l => l.classList.remove('border-b-2', 'border-cyan-400'));
-        link.classList.add('border-b-2', 'border-cyan-400');
-        link.setAttribute('aria-current', 'page');
+      /* ---------------- ANIMATIONS ---------------- */
+      if (!reduceMotion) {
+        window.AOS?.init({ once: true, duration: 800 });
+        window.VanillaTilt?.init(document.querySelectorAll('.tilt'), {
+          max: 12, speed: 400, glare: true, 'max-glare': 0.22
+        });
       }
-    });
-  }, { rootMargin: '-45% 0px -50% 0px', threshold: 0.01 });
-  sections.forEach(s => observer.observe(s));
 
-  /* ---------------- SHOW MORE PANELS + KPI COUNTUP ---------------- */
-  const countUp = (el) => {
-    const target = +el.dataset.to || 0;
-    let cur = 0, step = Math.max(1, Math.round(target / 30));
-    const id = setInterval(() => {
-      cur += step;
-      if (cur >= target) { cur = target; clearInterval(id); }
-      el.textContent = cur;
-    }, 20);
-  };
-  document.querySelectorAll('[data-toggle]').forEach(btn => {
-    const target = document.querySelector(btn.dataset.toggle);
-    if (!target) return;
-    btn.setAttribute('aria-controls', btn.dataset.toggle.slice(1));
-    btn.addEventListener('click', () => {
-      target.classList.toggle('hidden');
-      const open = !target.classList.contains('hidden');
-      btn.textContent = open ? 'Show less' : 'Show more';
-      btn.setAttribute('aria-expanded', open);
-      if (open) target.querySelectorAll('.kpi').forEach(countUp);
-    });
-  });
+      /* ---------------- HERO TYPED TEXT (optional) ---------------- */
+      // If you want typed text somewhere, add an element and enable here.
+      // Keeping it off by default for a calmer, more “enterprise” hero.
 
-  /* ---------------- BACKGROUND 1 (Animated Network) ---------------- */
-  const setupHiDPI = (canvas) => {
-    const ctx = canvas.getContext('2d', { alpha: true });
-    const dpr = Math.min(2, window.devicePixelRatio || 1);
-    const resize = () => {
-      const { innerWidth: w, innerHeight: h } = window;
-      canvas.width = w * dpr; canvas.height = h * dpr;
-      canvas.style.width = `${w}px`; canvas.style.height = `${h}px`;
-      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    };
-    resize();
-    addEventListener('resize', resize, { passive: true });
-    return { ctx };
-  };
+      /* ---------------- FLOATING KEYWORDS ---------------- */
+      const keywords = [
+        'SQL Optimization', 'Airflow', 'Snowflake', 'BigQuery', 'Data Quality',
+        'Stakeholder Delivery', 'Documentation', 'Monitoring', 'Dashboards',
+        'MLOps', 'Semantic search', 'DuckDB', 'Selenium'
+      ];
+      let idx = 0;
+      const mlWords = document.getElementById('mlWords');
+      if (mlWords) {
+        mlWords.textContent = keywords[0];
+        setInterval(() => {
+          mlWords.style.opacity = 0;
+          setTimeout(() => {
+            mlWords.textContent = keywords[idx = (idx + 1) % keywords.length];
+            mlWords.style.opacity = 1;
+          }, 250);
+        }, 2200);
+      }
 
-  (function network() {
-    const canvas = document.getElementById('anime-bg');
-    if (!canvas) return;
-    const { ctx } = setupHiDPI(canvas);
-    const NODES = 12;
-    const nodes = Array.from({ length: NODES }, () => ({
-      x: Math.random() * innerWidth,
-      y: Math.random() * innerHeight,
-      vx: (Math.random() - 0.5) * 0.7,
-      vy: (Math.random() - 0.5) * 0.7,
-      r: 9 + Math.random() * 7
-    }));
+      /* ---------------- NAVIGATION ---------------- */
+      const navToggle = document.getElementById('nav-toggle');
+      const mobileNav = document.getElementById('mobile-nav');
+      const navLinks = document.querySelectorAll('#nav-links a, #mobile-nav a');
 
-    const draw = () => {
-      ctx.clearRect(0, 0, innerWidth, innerHeight);
-      for (let i = 0; i < NODES; i++) {
-        for (let j = i + 1; j < NODES; j++) {
-          const a = nodes[i], b = nodes[j];
-          const d = Math.hypot(a.x - b.x, a.y - b.y);
-          if (d < 220) {
-            ctx.save();
-            ctx.globalAlpha = 0.16;
-            ctx.strokeStyle = "#38bdf8";
-            ctx.beginPath();
-            ctx.moveTo(a.x, a.y);
-            ctx.lineTo(b.x, b.y);
-            ctx.stroke();
-            ctx.restore();
+      const toggleNav = () => {
+        const hiddenNow = mobileNav.classList.toggle('hidden');
+        navToggle.setAttribute('aria-expanded', String(!hiddenNow));
+      };
+      navToggle?.addEventListener('click', toggleNav);
+      navToggle?.addEventListener('keydown', (e) => {
+        if (['Enter', ' '].includes(e.key)) {
+          e.preventDefault(); toggleNav();
+        }
+      });
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && !mobileNav.classList.contains('hidden')) {
+          toggleNav(); navToggle.focus();
+        }
+      });
+      navLinks.forEach(a => a.addEventListener('click', () => mobileNav.classList.add('hidden')));
+
+      /* ---------------- ACTIVE LINK HIGHLIGHT ---------------- */
+      const sections = ['about', 'solutions', 'projects', 'skills', 'experience', 'education', 'contact']
+        .map(id => document.getElementById(id)).filter(Boolean);
+      const mapLink = (id) => [...navLinks].find(a => a.getAttribute('href') === `#${id}`);
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(e => {
+          const link = mapLink(e.target.id);
+          if (link && e.isIntersecting) {
+            navLinks.forEach(l => l.classList.remove('border-b-2', 'border-cyan-400'));
+            link.classList.add('border-b-2', 'border-cyan-400');
+            link.setAttribute('aria-current', 'page');
           }
-        }
+        });
+      }, { rootMargin: '-45% 0px -50% 0px', threshold: 0.01 });
+      sections.forEach(s => observer.observe(s));
+
+      /* ---------------- SHOW MORE PANELS + KPI COUNTUP ---------------- */
+      const countUp = (el) => {
+        const target = +el.dataset.to || 0;
+        let cur = 0, step = Math.max(1, Math.round(target / 30));
+        const id = setInterval(() => {
+          cur += step;
+          if (cur >= target) { cur = target; clearInterval(id); }
+          el.textContent = cur;
+        }, 20);
+      };
+      document.querySelectorAll('[data-toggle]').forEach(btn => {
+        const target = document.querySelector(btn.dataset.toggle);
+        if (!target) return;
+        btn.setAttribute('aria-controls', btn.dataset.toggle.slice(1));
+        btn.addEventListener('click', () => {
+          target.classList.toggle('hidden');
+          const open = !target.classList.contains('hidden');
+          btn.textContent = open ? 'Show less' : 'Show more';
+          btn.setAttribute('aria-expanded', open);
+          if (open) target.querySelectorAll('.kpi').forEach(countUp);
+        });
+      });
+
+      /* ---------------- BACKGROUND 1 (Animated Network) ---------------- */
+      const setupHiDPI = (canvas) => {
+        const ctx = canvas.getContext('2d', { alpha: true });
+        const dpr = Math.min(2, window.devicePixelRatio || 1);
+        const resize = () => {
+          const { innerWidth: w, innerHeight: h } = window;
+          canvas.width = w * dpr; canvas.height = h * dpr;
+          canvas.style.width = `${w}px`; canvas.style.height = `${h}px`;
+          ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        };
+        resize();
+        addEventListener('resize', resize, { passive: true });
+        return { ctx };
+      };
+
+      (function network() {
+        const canvas = document.getElementById('anime-bg');
+        if (!canvas) return;
+        const { ctx } = setupHiDPI(canvas);
+        const NODES = 10;
+        const nodes = Array.from({ length: NODES }, () => ({
+          x: Math.random() * innerWidth,
+          y: Math.random() * innerHeight,
+          vx: (Math.random() - 0.5) * 0.55,
+          vy: (Math.random() - 0.5) * 0.55,
+          r: 7 + Math.random() * 6
+        }));
+
+        const draw = () => {
+          ctx.clearRect(0, 0, innerWidth, innerHeight);
+          for (let i = 0; i < NODES; i++) {
+            for (let j = i + 1; j < NODES; j++) {
+              const a = nodes[i], b = nodes[j];
+              const d = Math.hypot(a.x - b.x, a.y - b.y);
+              if (d < 220) {
+                ctx.save();
+                ctx.globalAlpha = 0.12;
+                ctx.strokeStyle = "#38bdf8";
+                ctx.beginPath();
+                ctx.moveTo(a.x, a.y);
+                ctx.lineTo(b.x, b.y);
+                ctx.stroke();
+                ctx.restore();
+              }
+            }
+          }
+          nodes.forEach(n => {
+            ctx.save();
+            ctx.globalAlpha = 0.55;
+            ctx.beginPath();
+            ctx.arc(n.x, n.y, n.r, 0, Math.PI * 2);
+            ctx.fillStyle = "#38bdf8";
+            ctx.shadowColor = "#a78bfa";
+            ctx.shadowBlur = 14;
+            ctx.fill();
+            ctx.restore();
+
+            n.x += n.vx;
+            n.y += n.vy;
+            if (n.x < n.r || n.x > innerWidth - n.r) n.vx *= -1;
+            if (n.y < n.r || n.y > innerHeight - n.r) n.vy *= -1;
+          });
+          requestAnimationFrame(draw);
+        };
+        if (!reduceMotion) draw();
+      })();
+
+      /* ---------------- BACKGROUND 2 (Particles) ---------------- */
+      (function waterfall() {
+        const canvas = document.getElementById('waterfall');
+        if (!canvas) return;
+        const { ctx } = setupHiDPI(canvas);
+        const parts = Array.from({ length: 90 }, () => ({
+          x: Math.random() * innerWidth,
+          y: Math.random() * innerHeight,
+          s: 2 + Math.random() * 3,
+          v: 0.35 + Math.random() * 0.55
+        }));
+        const projects = document.getElementById('projects');
+        const tick = () => {
+          if (reduceMotion) return;
+          ctx.clearRect(0, 0, innerWidth, innerHeight);
+          const rect = projects?.getBoundingClientRect();
+          const targetY = rect ? (rect.top + rect.height * 0.15) + window.scrollY : 0;
+          const p = Math.min(1, Math.max(0, (scrollY - innerHeight * 0.3) / (innerHeight * 0.6)));
+
+          parts.forEach((q, i) => {
+            const gx = (i % 16 + 0.5) * innerWidth / 16;
+            const gy = targetY % innerHeight;
+            q.y += q.v;
+            if (p > 0.4) {
+              q.x += (gx - q.x) * 0.05;
+              q.y += (gy - q.y) * 0.05;
+            }
+            if (q.y > innerHeight + 10) {
+              q.y = -10;
+              q.x = Math.random() * innerWidth;
+            }
+            ctx.fillStyle = '#38bdf8';
+            ctx.globalAlpha = 0.55;
+            ctx.fillRect(q.x, q.y, q.s, q.s);
+          });
+          requestAnimationFrame(tick);
+        };
+        tick();
+      })();
+
+      /* ---------------- RACE LINE ---------------- */
+      if (window.anime && !reduceMotion) {
+        anime({
+          targets: '#race',
+          strokeDashoffset: [anime.setDashoffset, 0],
+          duration: 1600,
+          easing: 'easeOutQuad'
+        });
       }
-      nodes.forEach(n => {
-        ctx.save();
-        ctx.globalAlpha = 0.8;
-        ctx.beginPath();
-        ctx.arc(n.x, n.y, n.r, 0, Math.PI * 2);
-        ctx.fillStyle = "#38bdf8";
-        ctx.shadowColor = "#a78bfa";
-        ctx.shadowBlur = 18;
-        ctx.fill();
-        ctx.restore();
-
-        n.x += n.vx;
-        n.y += n.vy;
-        if (n.x < n.r || n.x > innerWidth - n.r) n.vx *= -1;
-        if (n.y < n.r || n.y > innerHeight - n.r) n.vy *= -1;
-      });
-      requestAnimationFrame(draw);
-    };
-    if (!reduceMotion) draw();
-  })();
-
-  /* ---------------- BACKGROUND 2 (Particles) ---------------- */
-  (function waterfall() {
-    const canvas = document.getElementById('waterfall');
-    if (!canvas) return;
-    const { ctx } = setupHiDPI(canvas);
-    const parts = Array.from({ length: 120 }, () => ({
-      x: Math.random() * innerWidth,
-      y: Math.random() * innerHeight,
-      s: 2 + Math.random() * 3,
-      v: 0.4 + Math.random() * 0.6
-    }));
-    const projects = document.getElementById('projects');
-    const tick = () => {
-      if (reduceMotion) return;
-      ctx.clearRect(0, 0, innerWidth, innerHeight);
-      const rect = projects?.getBoundingClientRect();
-      const targetY = rect ? (rect.top + rect.height * 0.15) + window.scrollY : 0;
-      const p = Math.min(1, Math.max(0, (scrollY - innerHeight * 0.3) / (innerHeight * 0.6)));
-      parts.forEach((q, i) => {
-        const gx = (i % 16 + 0.5) * innerWidth / 16;
-        const gy = targetY % innerHeight;
-        q.y += q.v;
-        if (p > 0.4) {
-          q.x += (gx - q.x) * 0.06;
-          q.y += (gy - q.y) * 0.06;
-        }
-        if (q.y > innerHeight + 10) {
-          q.y = -10;
-          q.x = Math.random() * innerWidth;
-        }
-        ctx.fillStyle = '#38bdf8';
-        ctx.globalAlpha = 0.7;
-        ctx.fillRect(q.x, q.y, q.s, q.s);
-      });
-      requestAnimationFrame(tick);
-    };
-    tick();
-  })();
-
-  /* ---------------- RACE LINE ---------------- */
-  if (window.anime && !reduceMotion) {
-    anime({
-      targets: '#race',
-      strokeDashoffset: [anime.setDashoffset, 0],
-      duration: 1600,
-      easing: 'easeOutQuad'
     });
-  }
-});
-</script>
+  </script>
 </body>
 </html>
