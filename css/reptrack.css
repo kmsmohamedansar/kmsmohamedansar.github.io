@@ -116,7 +116,7 @@
 
 .reptrack-flagship {
   position: relative;
-  border-radius: 26px;
+  border-radius: var(--radius-xl);
   padding: clamp(1.75rem, 4.5vw, 3rem);
   background: var(--surface-1);
   border: 1px solid var(--border);
@@ -240,14 +240,14 @@
   border-radius: var(--radius-sm);
   background: var(--accent-red);
   border: 1px solid rgba(0, 0, 0, 0.08);
-  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.2) inset, 0 4px 16px rgba(225, 6, 0, 0.22);
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.2) inset, 0 2px 8px rgba(20, 24, 32, 0.06), 0 4px 14px rgba(225, 6, 0, 0.14);
   transition: transform 0.16s var(--ease-out-expo, ease), background 0.16s ease, box-shadow 0.16s ease;
 }
 
 .btn-reptrack-primary:hover {
   transform: translateY(-1px);
   background: #c50500;
-  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.18) inset, 0 6px 20px rgba(225, 6, 0, 0.28);
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.18) inset, 0 4px 12px rgba(20, 24, 32, 0.08), 0 6px 18px rgba(225, 6, 0, 0.18);
 }
 
 .btn-reptrack-secondary {
@@ -263,12 +263,14 @@
   border-radius: var(--radius-sm);
   background: transparent;
   border: 1px solid var(--border-strong);
-  transition: border-color 0.2s ease, background 0.2s ease, transform 0.2s ease;
+  box-shadow: none;
+  transition: border-color 0.2s ease, background 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 .btn-reptrack-secondary:hover {
   border-color: var(--accent-steel);
-  background: rgba(20, 24, 32, 0.03);
+  background: rgba(20, 24, 32, 0.035);
+  box-shadow: 0 2px 8px rgba(20, 24, 32, 0.05);
   transform: translateY(-1px);
 }
 
@@ -330,7 +332,7 @@
 
 .reptrack-slide figure {
   margin: 0;
-  border-radius: 22px;
+  border-radius: var(--radius-xl);
   overflow: hidden;
   padding: 0.42rem;
   border: 1px solid var(--border);
@@ -522,5 +524,9 @@
   .reptrack-thumb:hover,
   .reptrack-thumb.is-active {
     transform: none;
+  }
+
+  .btn-reptrack-secondary:hover {
+    box-shadow: none;
   }
 }
