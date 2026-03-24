@@ -46,7 +46,7 @@
 }
 
 .case-breadcrumb a:hover {
-  color: var(--accent-cyan);
+  color: var(--accent-data);
 }
 
 .case-breadcrumb__here {
@@ -56,10 +56,6 @@
 .case-breadcrumb__sep {
   margin: 0 0.5rem;
   opacity: 0.4;
-}
-
-.case-hero__rail {
-  margin-bottom: 1.35rem !important;
 }
 
 .case-hero__tagline {
@@ -122,17 +118,9 @@
   position: relative;
   border-radius: 26px;
   padding: clamp(1.75rem, 4.5vw, 3rem);
-  background: linear-gradient(
-    152deg,
-    rgba(15, 27, 46, 0.97) 0%,
-    rgba(10, 19, 34, 0.94) 42%,
-    rgba(18, 26, 40, 0.96) 100%
-  );
-  border: 1px solid rgba(79, 209, 255, 0.14);
-  box-shadow:
-    0 32px 96px rgba(0, 0, 0, 0.58),
-    0 0 0 1px rgba(255, 255, 255, 0.04) inset,
-    0 -28px 72px rgba(75, 123, 255, 0.05) inset;
+  background: var(--surface-1);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-card);
   overflow: visible;
 }
 
@@ -141,21 +129,9 @@
   position: absolute;
   inset: 0;
   border-radius: inherit;
-  background: radial-gradient(ellipse 65% 48% at 88% 8%, rgba(79, 209, 255, 0.11), transparent 58%),
-    radial-gradient(ellipse 40% 35% at 12% 92%, rgba(201, 166, 70, 0.06), transparent 50%);
+  background: linear-gradient(165deg, rgba(255, 255, 255, 0.95) 0%, transparent 40%),
+    radial-gradient(ellipse 70% 50% at 85% 0%, rgba(74, 111, 138, 0.06), transparent 55%);
   pointer-events: none;
-}
-
-.reptrack-flagship::after {
-  content: "";
-  position: absolute;
-  top: 1.25rem;
-  right: 1.25rem;
-  width: 120px;
-  height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(79, 209, 255, 0.25), transparent);
-  pointer-events: none;
-  opacity: 0.8;
 }
 
 .reptrack-shell {
@@ -174,19 +150,19 @@
   font-weight: 600;
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: var(--accent-gold);
-  background: rgba(201, 166, 70, 0.09);
-  border: 1px solid rgba(201, 166, 70, 0.32);
-  box-shadow: 0 0 24px rgba(201, 166, 70, 0.08);
+  color: var(--accent-steel);
+  background: rgba(20, 24, 32, 0.04);
+  border: 1px solid var(--border-strong);
+  box-shadow: none;
 }
 
 .reptrack-demonstrates {
   margin-top: 1.85rem;
   padding: 1.35rem 1.4rem;
   border-radius: var(--radius-md);
-  background: rgba(5, 11, 20, 0.45);
+  background: var(--surface-2);
   border: 1px solid var(--border);
-  border-left: 2px solid rgba(201, 166, 70, 0.45);
+  border-left: 2px solid var(--accent-red);
 }
 
 .reptrack-demonstrates h4 {
@@ -230,8 +206,7 @@
   width: 5px;
   height: 5px;
   border-radius: 1px;
-  background: var(--accent-gold);
-  box-shadow: 0 0 10px rgba(201, 166, 70, 0.4);
+  background: var(--accent-data);
 }
 
 .reptrack-list li {
@@ -248,8 +223,7 @@
   width: 5px;
   height: 5px;
   border-radius: 1px;
-  background: var(--accent-cyan);
-  box-shadow: 0 0 8px rgba(79, 209, 255, 0.35);
+  background: var(--accent-data);
 }
 
 .btn-reptrack-primary {
@@ -261,19 +235,19 @@
   font-size: 0.8125rem;
   font-weight: 700;
   letter-spacing: 0.02em;
-  color: #050810;
+  color: #ffffff;
   text-decoration: none;
   border-radius: var(--radius-sm);
-  background: linear-gradient(180deg, #e4c86a 0%, var(--accent-gold) 48%, #a08030 100%);
-  border: 1px solid rgba(255, 255, 255, 0.18);
-  box-shadow: 0 8px 32px rgba(201, 166, 70, 0.25);
-  transition: transform 0.2s var(--ease-out-expo, ease), filter 0.2s ease, box-shadow 0.2s ease;
+  background: var(--accent-red);
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.2) inset, 0 4px 16px rgba(225, 6, 0, 0.22);
+  transition: transform 0.16s var(--ease-out-expo, ease), background 0.16s ease, box-shadow 0.16s ease;
 }
 
 .btn-reptrack-primary:hover {
-  transform: translateY(-2px);
-  filter: brightness(1.05);
-  box-shadow: 0 14px 40px rgba(201, 166, 70, 0.32);
+  transform: translateY(-1px);
+  background: #c50500;
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.18) inset, 0 6px 20px rgba(225, 6, 0, 0.28);
 }
 
 .btn-reptrack-secondary {
@@ -287,15 +261,15 @@
   color: var(--text-primary);
   text-decoration: none;
   border-radius: var(--radius-sm);
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid var(--border);
+  background: transparent;
+  border: 1px solid var(--border-strong);
   transition: border-color 0.2s ease, background 0.2s ease, transform 0.2s ease;
 }
 
 .btn-reptrack-secondary:hover {
-  border-color: rgba(79, 209, 255, 0.3);
-  background: rgba(79, 209, 255, 0.07);
-  transform: translateY(-2px);
+  border-color: var(--accent-steel);
+  background: rgba(20, 24, 32, 0.03);
+  transform: translateY(-1px);
 }
 
 .btn-reptrack-muted {
@@ -324,7 +298,7 @@
   padding: 0.35rem 0 0.85rem;
   margin: 0 -0.25rem;
   scrollbar-width: thin;
-  scrollbar-color: rgba(79, 209, 255, 0.35) transparent;
+  scrollbar-color: rgba(20, 24, 32, 0.22) transparent;
 }
 
 .reptrack-carousel-viewport::-webkit-scrollbar {
@@ -332,45 +306,50 @@
 }
 
 .reptrack-carousel-viewport::-webkit-scrollbar-thumb {
-  background: rgba(79, 209, 255, 0.35);
+  background: rgba(20, 24, 32, 0.22);
   border-radius: 999px;
 }
 
 .reptrack-slide {
-  flex: 0 0 min(100%, 280px);
+  flex: 0 0 min(100%, 300px);
   scroll-snap-align: center;
   scroll-snap-stop: always;
 }
 
 @media (min-width: 640px) {
   .reptrack-slide {
-    flex-basis: 260px;
+    flex-basis: 278px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .reptrack-slide {
+    flex-basis: 292px;
   }
 }
 
 .reptrack-slide figure {
   margin: 0;
-  border-radius: 20px;
+  border-radius: 22px;
   overflow: hidden;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  background: #050b14;
-  box-shadow:
-    0 24px 64px rgba(0, 0, 0, 0.6),
-    0 0 0 1px rgba(79, 209, 255, 0.1),
-    inset 0 1px 0 rgba(255, 255, 255, 0.04);
-  transition: transform 0.35s var(--ease-out-expo, ease), border-color 0.35s ease, box-shadow 0.35s ease;
+  padding: 0.42rem;
+  border: 1px solid var(--border);
+  background: var(--surface-1);
+  box-shadow: var(--shadow-card);
+  transition: transform 0.26s var(--ease-out-expo, ease), border-color 0.26s ease, box-shadow 0.26s ease;
 }
 
 .reptrack-slide figure:hover {
-  transform: translateY(-5px) scale(1.01);
-  border-color: rgba(79, 209, 255, 0.24);
-  box-shadow: 0 32px 80px rgba(0, 0, 0, 0.65), 0 0 48px rgba(75, 123, 255, 0.1);
+  transform: translateY(-2px);
+  border-color: var(--border-strong);
+  box-shadow: var(--shadow-hover);
 }
 
 .reptrack-slide img {
   display: block;
   width: 100%;
   height: auto;
+  border-radius: 17px;
 }
 
 .reptrack-slide figcaption {
@@ -380,7 +359,7 @@
   line-height: 1.35;
   letter-spacing: 0.02em;
   color: var(--text-dim);
-  background: rgba(5, 11, 20, 0.96);
+  background: var(--surface-2);
 }
 
 .reptrack-carousel-btn {
@@ -391,26 +370,26 @@
   width: 2.5rem;
   height: 2.5rem;
   border-radius: 999px;
-  border: 1px solid var(--border);
-  background: rgba(10, 19, 34, 0.94);
+  border: 1px solid var(--border-strong);
+  background: rgba(255, 255, 255, 0.92);
   color: var(--text-primary);
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
   backdrop-filter: blur(12px);
-  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.45);
+  box-shadow: 0 4px 20px rgba(20, 24, 32, 0.1);
   transition: border-color 0.2s ease, background 0.2s ease, color 0.2s ease;
 }
 
 .reptrack-carousel-btn:hover {
-  border-color: rgba(79, 209, 255, 0.38);
-  background: rgba(79, 209, 255, 0.1);
-  color: var(--accent-cyan);
+  border-color: var(--accent-steel);
+  background: var(--surface-1);
+  color: var(--accent-data);
 }
 
 .reptrack-carousel-btn:focus-visible {
-  outline: 2px solid rgba(79, 209, 255, 0.45);
+  outline: 2px solid rgba(225, 6, 0, 0.35);
   outline-offset: 2px;
 }
 
@@ -441,7 +420,7 @@
   overflow: hidden;
   border: 2px solid transparent;
   padding: 0;
-  background: #050b14;
+  background: var(--surface-2);
   cursor: pointer;
   opacity: 0.45;
   transition: opacity 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
@@ -456,12 +435,12 @@
 .reptrack-thumb:hover,
 .reptrack-thumb.is-active {
   opacity: 1;
-  border-color: rgba(201, 166, 70, 0.55);
-  transform: translateY(-2px);
+  border-color: rgba(225, 6, 0, 0.45);
+  transform: translateY(-1px);
 }
 
 .reptrack-thumb:focus-visible {
-  outline: 2px solid rgba(79, 209, 255, 0.45);
+  outline: 2px solid rgba(225, 6, 0, 0.35);
   outline-offset: 2px;
 }
 
@@ -512,14 +491,14 @@
   border-radius: 16px;
   overflow: hidden;
   border: 1px solid var(--border);
-  background: #050b14;
-  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.5);
-  transition: transform 0.3s ease, border-color 0.3s ease;
+  background: var(--surface-1);
+  box-shadow: var(--shadow-card);
+  transition: transform 0.26s ease, border-color 0.26s ease;
 }
 
 .reptrack-gallery-grid figure:hover {
-  transform: translateY(-4px);
-  border-color: rgba(79, 209, 255, 0.22);
+  transform: translateY(-2px);
+  border-color: var(--border-strong);
 }
 
 .reptrack-gallery-grid img {
@@ -532,7 +511,7 @@
   padding: 0.65rem 0.85rem 0.85rem;
   font-size: 0.78rem;
   color: var(--text-dim);
-  background: rgba(5, 11, 20, 0.96);
+  background: var(--surface-2);
 }
 
 @media (prefers-reduced-motion: reduce) {

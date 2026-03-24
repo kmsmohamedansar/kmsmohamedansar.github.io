@@ -22,13 +22,13 @@
   let targetMy = 0;
 
   const COLORS = {
-    grid: "rgba(79, 209, 255, 0.028)",
-    gridAccent: "rgba(75, 123, 255, 0.045)",
-    trace: "rgba(79, 209, 255, 0.11)",
-    traceBlue: "rgba(75, 123, 255, 0.09)",
-    sample: "rgba(79, 209, 255, 0.35)",
-    sampleCore: "rgba(245, 247, 251, 0.5)",
-    connect: "rgba(75, 123, 255, 0.06)"
+    grid: "rgba(20, 24, 32, 0.045)",
+    gridAccent: "rgba(74, 111, 138, 0.07)",
+    trace: "rgba(20, 24, 32, 0.07)",
+    traceBlue: "rgba(74, 111, 138, 0.08)",
+    sample: "rgba(74, 111, 138, 0.28)",
+    sampleCore: "rgba(255, 255, 255, 0.75)",
+    connect: "rgba(74, 111, 138, 0.05)"
   };
 
   /** @type {{ pts: {x:number,y:number}[], len: number }[]} */
@@ -164,11 +164,11 @@
   }
 
   function drawGlow() {
-    const gx = w * 0.55 + targetMx * 0.06;
-    const gy = h * 0.32 + targetMy * 0.05;
-    const grd = ctx.createRadialGradient(gx, gy, 0, gx, gy, Math.max(w, h) * 0.5);
-    grd.addColorStop(0, "rgba(79, 209, 255, 0.1)");
-    grd.addColorStop(0.28, "rgba(75, 123, 255, 0.04)");
+    const gx = w * 0.52 + targetMx * 0.04;
+    const gy = h * 0.28 + targetMy * 0.035;
+    const grd = ctx.createRadialGradient(gx, gy, 0, gx, gy, Math.max(w, h) * 0.48);
+    grd.addColorStop(0, "rgba(255, 255, 255, 0.5)");
+    grd.addColorStop(0.22, "rgba(240, 241, 239, 0.2)");
     grd.addColorStop(1, "transparent");
     ctx.fillStyle = grd;
     ctx.fillRect(0, 0, w, h);
@@ -212,8 +212,8 @@
         const b = positions[j];
         const dist = Math.hypot(b.x - a.x, b.y - a.y);
         if (dist < (isMobile ? 100 : 140)) {
-          const alpha = (1 - dist / (isMobile ? 100 : 140)) * 0.07;
-          ctx.strokeStyle = `rgba(75, 123, 255, ${alpha})`;
+          const alpha = (1 - dist / (isMobile ? 100 : 140)) * 0.05;
+          ctx.strokeStyle = `rgba(74, 111, 138, ${alpha})`;
           ctx.lineWidth = 0.5;
           ctx.beginPath();
           ctx.moveTo(a.x, a.y);

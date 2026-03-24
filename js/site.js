@@ -65,7 +65,7 @@
   }
 
   /* Subtle hero depth on large screens (telemetry panel feel) */
-  const heroPanel = document.querySelector(".hero__visual--parallax");
+  const heroPanel = document.querySelector(".hero__panel--parallax");
   const heroEl = document.getElementById("hero");
   if (
     heroPanel &&
