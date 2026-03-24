@@ -4,11 +4,11 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-  <title>Mohamed Ansar — Solutions Engineer</title>
+  <title>Mohamed Ansar · Solutions Engineer</title>
 
   <meta
     name="description"
-    content="Solutions Engineer who ships practical data and software solutions — SQL, Snowflake, production systems, and native iOS products."
+    content="Solutions Engineer who ships practical data and software solutions: SQL, Snowflake, production systems, and native iOS products."
   />
   <meta
     name="keywords"
@@ -16,22 +16,22 @@
   />
   <link rel="canonical" href="https://kmsmohamedansar.github.io/" />
 
-  <meta property="og:title" content="Mohamed Ansar — Solutions Engineer" />
+  <meta property="og:title" content="Mohamed Ansar · Solutions Engineer" />
   <meta
     property="og:description"
-    content="I build and ship real-world solutions — from data systems to iOS products."
+    content="I build and ship real-world data and product systems."
   />
   <meta property="og:image" content="https://kmsmohamedansar.github.io/preview.png" />
   <meta property="og:url" content="https://kmsmohamedansar.github.io/" />
   <meta property="og:type" content="website" />
 
-  <meta name="theme-color" content="#f8f9fb" />
+  <meta name="theme-color" content="#0b1020" />
   <link rel="icon" href="/favicon.ico" type="image/x-icon" />
 
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link
-    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+    href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500;600&family=Outfit:wght@500;600;700&display=swap"
     rel="stylesheet"
   />
 
@@ -41,27 +41,7 @@
       theme: {
         extend: {
           boxShadow: {
-            card: "0 10px 30px rgba(0,0,0,0.06)"
-          },
-          animation: {
-            floaty: "floaty 8s ease-in-out infinite",
-            drift: "drift 16s linear infinite",
-            pulseglow: "pulseglow 4s ease-in-out infinite"
-          },
-          keyframes: {
-            floaty: {
-              "0%, 100%": { transform: "translateY(0px)" },
-              "50%": { transform: "translateY(-12px)" }
-            },
-            drift: {
-              "0%": { transform: "translateX(0px)" },
-              "50%": { transform: "translateX(40px)" },
-              "100%": { transform: "translateX(0px)" }
-            },
-            pulseglow: {
-              "0%, 100%": { opacity: "0.45" },
-              "50%": { opacity: "0.8" }
-            }
+            card: "0 20px 50px rgba(0,0,0,0.45)"
           }
         }
       }
@@ -72,206 +52,233 @@
   <link rel="stylesheet" href="/css/reptrack.css" />
 </head>
 
-<body class="grid-bg scanlines">
-  <nav class="fixed top-0 inset-x-0 z-50">
-    <div class="max-w-6xl mx-auto px-4 pt-4 pb-1">
-      <div class="nav-shell px-5 py-3.5 md:py-4 flex items-center justify-between shadow-card">
-        <a href="#hero" class="font-bold tracking-tight text-zinc-900 text-lg md:text-xl">
-          Mohamed Ansar
-        </a>
+<body class="site">
+  <canvas id="ambient-canvas" class="ambient-canvas" width="1920" height="1080" aria-hidden="true"></canvas>
+  <div class="ambient-vignette" aria-hidden="true"></div>
+  <div class="ambient-noise" aria-hidden="true"></div>
 
-        <div class="hidden md:flex items-center gap-7 text-sm">
-          <a href="#about" class="nav-link">About</a>
-          <a href="#direction" class="nav-link">Direction</a>
-          <a href="#reptrack-featured" class="nav-link">Featured</a>
-          <a href="#projects" class="nav-link">Selected work</a>
-          <a href="#stack" class="nav-link">Stack</a>
-          <a href="#experience" class="nav-link">Experience</a>
-          <a href="#contact" class="nav-link">Contact</a>
-        </div>
+  <div class="site-nav-wrap">
+    <nav class="site-nav" aria-label="Primary">
+      <a href="#hero" class="site-nav__brand">Mohamed Ansar</a>
 
-        <button
-          id="nav-toggle"
-          class="md:hidden text-zinc-800 p-1 -mr-1"
-          aria-label="Open menu"
-          aria-controls="mobile-nav"
-          aria-expanded="false"
-        >
-          <svg class="w-7 h-7" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M4 7h16M4 12h16M4 17h16"/>
-          </svg>
-        </button>
+      <div class="site-nav__links">
+        <a href="#about" class="nav-link">About</a>
+        <a href="#direction" class="nav-link">Direction</a>
+        <a href="#reptrack-featured" class="nav-link">Featured</a>
+        <a href="#projects" class="nav-link">Selected work</a>
+        <a href="#stack" class="nav-link">Stack</a>
+        <a href="#experience" class="nav-link">Experience</a>
+        <a href="#contact" class="nav-link">Contact</a>
       </div>
 
-      <div id="mobile-nav" class="hidden md:hidden mt-2 nav-shell p-4 text-sm shadow-card">
-        <div class="flex flex-col gap-3 text-zinc-600">
-          <a href="#about" class="nav-link py-0.5">About</a>
-          <a href="#direction" class="nav-link py-0.5">Direction</a>
-          <a href="#reptrack-featured" class="nav-link py-0.5">Featured</a>
-          <a href="#projects" class="nav-link py-0.5">Selected work</a>
-          <a href="#stack" class="nav-link py-0.5">Stack</a>
-          <a href="#experience" class="nav-link py-0.5">Experience</a>
-          <a href="#contact" class="nav-link py-0.5">Contact</a>
+      <button
+        type="button"
+        id="nav-toggle"
+        class="site-nav__toggle"
+        aria-label="Open menu"
+        aria-controls="mobile-nav"
+        aria-expanded="false"
+      >
+        <svg class="w-7 h-7" fill="none" stroke="currentColor" stroke-width="1.6" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M4 7h16M4 12h16M4 17h16"/>
+        </svg>
+      </button>
+    </nav>
+
+    <div id="mobile-nav" class="site-nav__mobile hidden" role="dialog" aria-label="Menu">
+      <a href="#about" class="nav-link">About</a>
+      <a href="#direction" class="nav-link">Direction</a>
+      <a href="#reptrack-featured" class="nav-link">Featured</a>
+      <a href="#projects" class="nav-link">Selected work</a>
+      <a href="#stack" class="nav-link">Stack</a>
+      <a href="#experience" class="nav-link">Experience</a>
+      <a href="#contact" class="nav-link">Contact</a>
+    </div>
+  </div>
+
+  <header id="hero" class="hero reveal-section">
+    <div class="hero__grid">
+      <div>
+        <p class="eyebrow">Portfolio</p>
+        <p class="hero__label-name">Mohamed Ansar</p>
+        <h1 class="display-hero mt-4">
+          I build and ship <span class="display-hero__accent">real-world data and product systems.</span>
+        </h1>
+        <p class="body-lead mt-6">
+          Associate Solutions Engineer working with SQL, Snowflake, and production data systems, extending into software and AI-driven applications with the same bar for clarity and delivery.
+        </p>
+        <p class="hero__meta">
+          <span>Datasembly</span>
+          <span class="mx-2 opacity-50">·</span>
+          <span>Previously Amazon (Prime Video)</span>
+          <span class="mx-2 opacity-50">·</span>
+          <span>Mississauga</span>
+        </p>
+        <div class="hero__actions">
+          <a href="#reptrack-featured" class="btn-primary">Featured work</a>
+          <a href="#projects" class="btn-secondary">Selected work</a>
+          <a href="https://www.linkedin.com/in/kmsmohamedansar/" target="_blank" rel="noopener noreferrer" class="btn-secondary">LinkedIn</a>
+          <a href="#contact" class="btn-secondary">Contact</a>
+        </div>
+      </div>
+
+      <div class="hero__visual">
+        <svg class="hero-nodes" viewBox="0 0 400 400" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <path d="M60 200 Q200 80 340 200 T340 280" stroke="rgba(79,209,255,0.15)" stroke-width="1" fill="none"/>
+          <path d="M80 320 L200 120 L320 300" stroke="rgba(124,140,255,0.12)" stroke-width="0.8" fill="none"/>
+          <circle cx="200" cy="120" r="3" fill="rgba(79,209,255,0.5)"/>
+          <circle cx="80" cy="320" r="2.5" fill="rgba(124,140,255,0.45)"/>
+          <circle cx="320" cy="300" r="2.5" fill="rgba(79,209,255,0.4)"/>
+          <circle cx="340" cy="200" r="2" fill="rgba(79,209,255,0.35)"/>
+        </svg>
+        <div class="hero-stack">
+          <div class="hero-stack__card hero-stack__card--back" aria-hidden="true">
+            <p class="hero-metric">PIPELINE</p>
+            <p class="hero-metric__val mono-nums">ETL</p>
+            <p class="hero-metric__sub">Snowflake · SQL</p>
+          </div>
+          <div class="hero-stack__card hero-stack__card--mid" aria-hidden="true">
+            <p class="hero-metric">LATENCY</p>
+            <p class="hero-metric__val mono-nums">&lt;100ms</p>
+            <p class="hero-metric__sub">Validated outputs</p>
+          </div>
+          <div class="hero-stack__card hero-stack__card--front">
+            <p class="hero-metric">SYSTEM STATUS</p>
+            <p class="hero-metric__val mono-nums">OK</p>
+            <p class="hero-metric__sub">Data solutions · Product builds</p>
+          </div>
         </div>
       </div>
     </div>
-  </nav>
 
-  <header id="hero" class="relative min-h-[90vh] flex items-center justify-center px-4 pt-28 pb-24">
-    <div class="max-w-3xl mx-auto text-center reveal">
-      <p class="text-sm font-medium text-zinc-500 tracking-wide">Mohamed Ansar</p>
-
-      <h1 class="hero-headline mt-5">
-        I build and ship real-world solutions — from data systems to iOS products.
-      </h1>
-
-      <p class="mt-8 text-lg md:text-xl text-zinc-600 max-w-2xl mx-auto leading-relaxed">
-        Associate Solutions Engineer working with SQL, Snowflake, and production data systems, now expanding into software and AI-driven applications.
-      </p>
-
-      <p class="mt-6 text-sm text-zinc-500">
-        <span class="text-zinc-600">Datasembly</span>
-        <span class="mx-2 text-zinc-300">·</span>
-        <span class="text-zinc-600">Previously Amazon (Prime Video)</span>
-        <span class="mx-2 text-zinc-300">·</span>
-        <span class="text-zinc-600">Mississauga</span>
-      </p>
-
-      <div class="mt-10 flex flex-col sm:flex-row items-center justify-center gap-3">
-        <a href="#reptrack-featured" class="btn-hero-primary w-full sm:w-auto">Featured work</a>
-        <a href="#projects" class="btn-hero-secondary w-full sm:w-auto">Selected work</a>
-        <a
-          href="https://www.linkedin.com/in/kmsmohamedansar/"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="btn-hero-secondary w-full sm:w-auto"
-        >LinkedIn</a>
-        <a href="#contact" class="btn-hero-secondary w-full sm:w-auto">Contact</a>
-      </div>
-
-      <div class="mt-20 grid grid-cols-1 sm:grid-cols-3 gap-5 text-left max-w-5xl mx-auto">
-        <div class="glass p-7 md:p-8 card-hover">
-          <div class="text-xs font-semibold uppercase tracking-[0.18em] text-zinc-500">Today</div>
-          <div class="mt-3 font-semibold text-zinc-900 text-lg tracking-tight">Data solutions in production</div>
-          <div class="mt-2 text-sm text-zinc-600 leading-relaxed">SQL, Snowflake, and recurring pipelines that internal teams and clients rely on.</div>
+    <div class="mt-16 lg:mt-20 grid grid-cols-1 sm:grid-cols-3 gap-5 max-w-6xl mx-auto">
+      <article class="surface-card surface-card--hover p-7 md:p-8">
+        <div class="surface-card__inner">
+          <p class="eyebrow eyebrow--dim">Today</p>
+          <h3 class="heading-card mt-3">Data in production</h3>
+          <p class="body-text text-sm mt-2">SQL, Snowflake, and recurring pipelines teams and clients rely on.</p>
         </div>
-
-        <div class="glass p-7 md:p-8 card-hover">
-          <div class="text-xs font-semibold uppercase tracking-[0.18em] text-zinc-500">Also building</div>
-          <div class="mt-3 font-semibold text-zinc-900 text-lg tracking-tight">Software &amp; AI applications</div>
-          <div class="mt-2 text-sm text-zinc-600 leading-relaxed">Shipping native apps and practical ML interfaces, not slides.</div>
+      </article>
+      <article class="surface-card surface-card--hover p-7 md:p-8">
+        <div class="surface-card__inner">
+          <p class="eyebrow eyebrow--dim">Building</p>
+          <h3 class="heading-card mt-3">Software &amp; AI surfaces</h3>
+          <p class="body-text text-sm mt-2">Native apps and practical ML interfaces, shipped, not slideware.</p>
         </div>
-
-        <div class="glass p-7 md:p-8 card-hover">
-          <div class="text-xs font-semibold uppercase tracking-[0.18em] text-zinc-500">How I work</div>
-          <div class="mt-3 font-semibold text-zinc-900 text-lg tracking-tight">Clarify, build, deliver</div>
-          <div class="mt-2 text-sm text-zinc-600 leading-relaxed">Stakeholder clarity first — then solutions that hold up after launch.</div>
+      </article>
+      <article class="surface-card surface-card--hover p-7 md:p-8">
+        <div class="surface-card__inner">
+          <p class="eyebrow eyebrow--dim">Principle</p>
+          <h3 class="heading-card mt-3">Clarify, build, deliver</h3>
+          <p class="body-text text-sm mt-2">Stakeholder clarity first, then solutions that hold up after launch.</p>
         </div>
-      </div>
+      </article>
     </div>
   </header>
 
-  <main>
-    <section id="about" class="max-w-5xl mx-auto px-4 py-28 md:py-32 reveal">
-      <div class="mono-line mb-12"></div>
-      <div class="grid lg:grid-cols-[1fr_1.35fr] gap-12 lg:gap-16 items-start">
-        <div>
-          <p class="section-eyebrow">About</p>
-          <h2 class="section-title mt-4 text-3xl md:text-4xl lg:text-[2.5rem] font-bold leading-tight">
+  <main class="site-main">
+    <section id="about" class="chapter reveal-section" aria-labelledby="about-heading">
+      <div class="chapter__rule"></div>
+      <div class="grid lg:grid-cols-[minmax(0,0.95fr)_minmax(0,1.2fr)] gap-12 lg:gap-16 items-start">
+        <header class="chapter__header">
+          <p class="eyebrow eyebrow--dim">About</p>
+          <h2 id="about-heading" class="heading-section mt-4">
             Solutions that survive real stakeholders
           </h2>
-        </div>
-
-        <div class="glass p-8 md:p-10 shadow-card">
-          <p class="text-zinc-600 leading-relaxed mb-5 text-[1.05rem]">
-            I solve data problems where the answer has to be right and usable — retail pricing, large analytical datasets, and recurring delivery to people who depend on the output.
-          </p>
-
-          <p class="text-zinc-600 leading-relaxed mb-5 text-[1.05rem]">
-            At <strong class="text-zinc-900 font-semibold">Datasembly</strong>, that means SQL and Snowflake work, validated pipelines, dashboards, and clear handoffs when requirements shift mid-flight.
-          </p>
-
-          <p class="text-zinc-600 leading-relaxed text-[1.05rem]">
-            I’m extending the same mindset into <strong class="text-zinc-900 font-semibold">software and AI-driven tools</strong> — shipping products end-to-end, not only analyses — so the portfolio you see here is both my day job and what I build next.
-          </p>
+        </header>
+        <div class="surface-card p-8 md:p-10">
+          <div class="surface-card__inner space-y-5 body-text">
+            <p>
+              I solve data problems where the answer has to be right and usable: retail pricing, large analytical datasets, and recurring delivery to people who depend on the output.
+            </p>
+            <p>
+              At <strong>Datasembly</strong>, that means SQL and Snowflake work, validated pipelines, dashboards, and clear handoffs when requirements shift mid-flight.
+            </p>
+            <p>
+              I extend the same mindset into <strong>software and AI-driven tools</strong>: shipping products end-to-end, not only analyses. This site is both my day job and what I build next.
+            </p>
+          </div>
         </div>
       </div>
     </section>
 
-    <section id="direction" class="max-w-6xl mx-auto px-4 py-24 md:py-28 reveal">
-      <div class="mono-line mb-12"></div>
-      <div class="text-center mb-14 max-w-2xl mx-auto">
-        <p class="section-eyebrow">Direction</p>
-        <h2 class="section-title mt-4 text-3xl md:text-4xl lg:text-[2.5rem] font-bold leading-tight">
+    <section id="direction" class="chapter reveal-section" aria-labelledby="direction-heading">
+      <div class="chapter__rule"></div>
+      <header class="chapter__header--center">
+        <p class="eyebrow eyebrow--dim">Direction</p>
+        <h2 id="direction-heading" class="heading-section mt-4">
           How I want to be evaluated
         </h2>
-        <p class="mt-4 text-zinc-600 leading-relaxed">
-          Three commitments — not a wish list. This is the bar I hold for client work and personal builds.
+        <p class="chapter__sub">
+          Three commitments, not a wish list. The bar I hold for client work and personal builds.
         </p>
-      </div>
-
+      </header>
       <div class="grid md:grid-cols-3 gap-6 lg:gap-8">
-        <div class="glass p-8 card-hover">
-          <div class="direction-step mb-5">01</div>
-          <h3 class="text-lg font-semibold text-zinc-900 tracking-tight">Ownership through delivery</h3>
-          <p class="mt-3 text-sm text-zinc-600 leading-relaxed">
-            I take problems from ambiguity to something teams can run — validated data, clear outputs, and communication that matches how people actually work.
-          </p>
-        </div>
-
-        <div class="glass p-8 card-hover">
-          <div class="direction-step mb-5">02</div>
-          <h3 class="text-lg font-semibold text-zinc-900 tracking-tight">Depth where it matters</h3>
-          <p class="mt-3 text-sm text-zinc-600 leading-relaxed">
-            Stronger engineering and applied AI aren’t separate hobbies — they’re how I widen the set of problems I can solve without lowering the quality bar.
-          </p>
-        </div>
-
-        <div class="glass p-8 card-hover">
-          <div class="direction-step mb-5">03</div>
-          <h3 class="text-lg font-semibold text-zinc-900 tracking-tight">Product judgment</h3>
-          <p class="mt-3 text-sm text-zinc-600 leading-relaxed">
-            Whether it’s a dashboard or an app, I care what gets left out — simple beats clever when someone has to use it every week.
-          </p>
-        </div>
+        <article class="surface-card surface-card--hover p-8">
+          <div class="surface-card__inner">
+            <div class="direction-step mb-5">01</div>
+            <h3 class="heading-card">Ownership through delivery</h3>
+            <p class="body-text text-sm mt-3">
+              From ambiguity to something teams can run: validated data, clear outputs, communication that matches how people work.
+            </p>
+          </div>
+        </article>
+        <article class="surface-card surface-card--hover p-8">
+          <div class="surface-card__inner">
+            <div class="direction-step mb-5">02</div>
+            <h3 class="heading-card">Depth where it matters</h3>
+            <p class="body-text text-sm mt-3">
+              Engineering and applied AI widen what I can solve without lowering the quality bar.
+            </p>
+          </div>
+        </article>
+        <article class="surface-card surface-card--hover p-8">
+          <div class="surface-card__inner">
+            <div class="direction-step mb-5">03</div>
+            <h3 class="heading-card">Product judgment</h3>
+            <p class="body-text text-sm mt-3">
+              Dashboard or app: what gets left out matters. Simple beats clever for weekly use.
+            </p>
+          </div>
+        </article>
       </div>
     </section>
 
-    <section id="reptrack-featured" class="max-w-6xl mx-auto px-4 py-28 md:py-32 reveal" aria-labelledby="reptrack-featured-heading">
-      <div class="mono-line mb-12"></div>
-      <div class="text-center mb-12 md:mb-14">
-        <p class="section-eyebrow">Featured product</p>
-        <h2 id="reptrack-featured-heading" class="section-title mt-4 text-3xl md:text-4xl lg:text-[2.5rem] font-bold leading-tight">
+    <section id="reptrack-featured" class="chapter reveal-section" aria-labelledby="reptrack-featured-heading">
+      <div class="chapter__rule"></div>
+      <header class="chapter__header--center">
+        <p class="eyebrow">Featured product</p>
+        <h2 id="reptrack-featured-heading" class="heading-section mt-4">
           RepTrack Workout Log
         </h2>
-        <p class="mt-4 text-zinc-600 max-w-xl mx-auto text-base leading-relaxed">
-          Native iOS — designed, built, and submitted end-to-end.
+        <p class="chapter__sub">
+          Native iOS: designed, built, and submitted end-to-end.
         </p>
-      </div>
+      </header>
 
-      <div class="reptrack-showcase reptrack-shell p-6 md:p-10 lg:p-12">
-        <div class="grid lg:grid-cols-[minmax(0,1fr)_minmax(0,1.08fr)] gap-12 lg:gap-16 items-start">
-          <div>
-            <p class="text-xs font-bold uppercase tracking-[0.2em] text-[#9a8233]">iOS · SwiftUI · SwiftData</p>
-            <p class="mt-4 text-xl md:text-2xl text-zinc-900 font-semibold leading-snug tracking-tight">
+      <div class="reptrack-flagship">
+        <div class="reptrack-shell grid lg:grid-cols-[minmax(0,1fr)_minmax(0,1.05fr)] gap-12 lg:gap-14 items-start">
+          <div class="min-w-0">
+            <p class="eyebrow">iOS · SwiftUI · SwiftData</p>
+            <p class="heading-section text-xl md:text-2xl mt-4">
               A clean, focused workout tracker built for consistency and strength progression.
             </p>
-            <p class="mt-5 text-zinc-600 leading-relaxed text-base">
+            <p class="body-text mt-5">
               RepTrack is a production-ready iOS app designed to help users log workouts, track sets and reps, and review their performance over time. I designed and built the app end-to-end using SwiftUI and SwiftData, focusing on clarity, speed, and a distraction-free experience.
             </p>
             <span class="reptrack-badge">Submitted to App Store</span>
 
             <div class="reptrack-demonstrates">
               <h4>What this demonstrates</h4>
-              <ul>
+              <ul class="list-check">
                 <li>Ability to ship a complete product end-to-end</li>
                 <li>Strong focus on user experience and simplicity</li>
                 <li>Translating real-world needs into working software</li>
               </ul>
             </div>
 
-            <h3 class="mt-10 text-xs font-bold uppercase tracking-[0.18em] text-zinc-500">Key features</h3>
-            <ul class="reptrack-list mt-4 space-y-2.5 text-sm text-zinc-600">
+            <h3 class="eyebrow eyebrow--dim mt-10">Key features</h3>
+            <ul class="reptrack-list mt-4 space-y-2.5 text-sm">
               <li>Log workouts with exercises, sets, reps, and weight</li>
               <li>Review prior performance to guide progression</li>
               <li>Distraction-free session flow tuned for the gym</li>
@@ -279,29 +286,24 @@
               <li>Optimized for quick, repeatable daily use</li>
             </ul>
 
-            <h3 class="mt-8 text-xs font-bold uppercase tracking-[0.18em] text-zinc-500">Tech stack</h3>
+            <h3 class="eyebrow eyebrow--dim mt-8">Tech stack</h3>
             <div class="mt-3 flex flex-wrap gap-2">
-              <span class="project-tag text-xs rounded-full px-3 py-1">SwiftUI</span>
-              <span class="project-tag text-xs rounded-full px-3 py-1">SwiftData</span>
-              <span class="project-tag text-xs rounded-full px-3 py-1">iOS</span>
-              <span class="project-tag text-xs rounded-full px-3 py-1">Xcode</span>
-              <span class="project-tag text-xs rounded-full px-3 py-1">App Store Connect</span>
+              <span class="project-tag">SwiftUI</span>
+              <span class="project-tag">SwiftData</span>
+              <span class="project-tag">iOS</span>
+              <span class="project-tag">Xcode</span>
+              <span class="project-tag">App Store Connect</span>
             </div>
 
             <div class="mt-10 flex flex-col sm:flex-row flex-wrap gap-3">
               <a href="/projects/reptrack.html" class="btn-reptrack-primary text-center">View project</a>
-              <a
-                href="https://github.com/kmsmohamedansar/reptrack"
-                target="_blank"
-                rel="noopener noreferrer"
-                class="btn-reptrack-secondary text-center"
-              >View on GitHub</a>
-              <span class="btn-reptrack-muted text-center" title="Link will be added when the app is live on the App Store">App Store (coming soon)</span>
+              <a href="https://github.com/kmsmohamedansar/reptrack" target="_blank" rel="noopener noreferrer" class="btn-reptrack-secondary text-center">View on GitHub</a>
+              <span class="btn-reptrack-muted text-center" title="Add link when live on the App Store">App Store (coming soon)</span>
             </div>
           </div>
 
           <div class="reptrack-carousel w-full min-w-0" data-reptrack-carousel>
-            <p class="text-xs font-bold uppercase tracking-[0.18em] text-zinc-500 mb-4">Product screens</p>
+            <p class="eyebrow eyebrow--dim mb-4">Product screens</p>
             <div class="relative px-0 sm:px-10">
               <button type="button" class="reptrack-carousel-btn reptrack-carousel-btn--prev" data-carousel-prev aria-label="Previous screenshot">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
@@ -312,31 +314,31 @@
                 <div class="reptrack-slide">
                   <figure>
                     <img src="/assets/reptrack/reptrack-01-empty-state.png" width="1290" height="2796" alt="RepTrack empty workouts screen with Add Workout call to action" loading="lazy" decoding="async" />
-                    <figcaption>Empty state — clear entry points for new sessions</figcaption>
+                    <figcaption>Empty state: clear entry points for new sessions</figcaption>
                   </figure>
                 </div>
                 <div class="reptrack-slide">
                   <figure>
                     <img src="/assets/reptrack/reptrack-02-workouts-dashboard.png" width="1290" height="2796" alt="RepTrack workouts dashboard with continue workout and weekly progress" loading="lazy" decoding="async" />
-                    <figcaption>Dashboard — active session, today’s work, and weekly goals</figcaption>
+                    <figcaption>Dashboard: active session, today’s work, weekly goals</figcaption>
                   </figure>
                 </div>
                 <div class="reptrack-slide">
                   <figure>
                     <img src="/assets/reptrack/reptrack-03-session-active.png" width="1290" height="2796" alt="RepTrack active workout session with exercise and set inputs" loading="lazy" decoding="async" />
-                    <figcaption>Session view — metrics and inline exercise editing</figcaption>
+                    <figcaption>Session view: metrics and inline exercise editing</figcaption>
                   </figure>
                 </div>
                 <div class="reptrack-slide">
                   <figure>
                     <img src="/assets/reptrack/reptrack-04-session-empty.png" width="1290" height="2796" alt="RepTrack workout session before exercises are added" loading="lazy" decoding="async" />
-                    <figcaption>Session setup — guided path to the first exercise</figcaption>
+                    <figcaption>Session setup: guided path to the first exercise</figcaption>
                   </figure>
                 </div>
                 <div class="reptrack-slide">
                   <figure>
                     <img src="/assets/reptrack/reptrack-05-new-workout.png" width="1290" height="2796" alt="RepTrack new workout screen with date picker" loading="lazy" decoding="async" />
-                    <figcaption>New workout — native date selection</figcaption>
+                    <figcaption>New workout: native date selection</figcaption>
                   </figure>
                 </div>
               </div>
@@ -368,389 +370,340 @@
       </div>
     </section>
 
-    <section id="projects" class="max-w-6xl mx-auto px-4 py-28 md:py-32 reveal">
-      <div class="mono-line mb-12"></div>
-      <div class="text-center mb-14">
-        <p class="section-eyebrow">Portfolio</p>
-        <h2 class="section-title mt-4 text-3xl md:text-4xl lg:text-[2.5rem] font-bold leading-tight text-zinc-900">
-          Selected work
-        </h2>
-        <p class="mt-4 text-zinc-600 max-w-2xl mx-auto leading-relaxed">
-          Additional builds across SQL, ML, analytics, search, and automation — each chosen to show how I approach real problems.
+    <section id="projects" class="chapter reveal-section" aria-labelledby="projects-heading">
+      <div class="chapter__rule"></div>
+      <header class="chapter__header--center">
+        <p class="eyebrow eyebrow--dim">Builds</p>
+        <h2 id="projects-heading" class="heading-section mt-4">Selected work</h2>
+        <p class="chapter__sub">
+          SQL, ML, analytics, search, and automation. Each piece shows how I approach real problems.
         </p>
-      </div>
+      </header>
 
       <div class="max-w-5xl mx-auto">
-        <details class="glass p-6 md:p-7 shadow-card">
-          <summary class="cursor-pointer flex items-center justify-between gap-4 list-none">
+        <details class="surface-card p-6 md:p-7">
+          <summary class="cursor-pointer flex items-center justify-between gap-4">
             <div>
-              <h3 class="text-xl font-bold text-zinc-900 tracking-tight">More projects</h3>
-              <p class="text-sm text-zinc-500 mt-1.5">
-                Earlier prototypes and technical depth — expand for the full list.
-              </p>
+              <h3 class="heading-card text-lg">More projects</h3>
+              <p class="body-text text-sm mt-1.5">Earlier prototypes and depth. Expand for the full list.</p>
             </div>
-
-            <div class="details-chevron details-arrow shrink-0 transition" aria-hidden="true">
-              ⌄
-            </div>
+            <div class="details-chevron details-arrow shrink-0 transition" aria-hidden="true">⌄</div>
           </summary>
 
           <div class="mt-10 grid gap-8 md:grid-cols-2">
-            <article class="glass p-7 md:p-8 card-hover">
-              <div class="flex flex-wrap gap-2 mb-4">
-                <span class="project-tag text-xs rounded-full px-3 py-1">SQL</span>
-                <span class="project-tag text-xs rounded-full px-3 py-1">Browser App</span>
-                <span class="project-tag text-xs rounded-full px-3 py-1">Learning Tool</span>
-              </div>
-              <h3 class="text-xl font-bold text-zinc-900">SQL Playground — Snowflake style in your browser</h3>
-              <p class="mt-3 text-zinc-600">
-                A browser-based SQL practice environment using SQLite WASM with a lightweight Snowflake-style translation layer.
-              </p>
-              <p class="mt-3 text-sm text-zinc-500">
-                Shows product thinking, SQL fluency, and a useful learning interface.
-              </p>
-              <div class="mt-5 flex flex-wrap gap-2">
-                <a href="https://github.com/kmsmohamedansar/sql-playground" target="_blank" rel="noopener noreferrer" class="project-link">GitHub</a>
-                <a href="https://kmsmohamedansar.github.io/sql-playground" target="_blank" rel="noopener noreferrer" class="project-link">Live demo</a>
+            <article class="surface-card surface-card--hover p-7 md:p-8">
+              <div class="surface-card__inner">
+                <div class="flex flex-wrap gap-2 mb-4">
+                  <span class="project-tag">SQL</span>
+                  <span class="project-tag">Browser App</span>
+                  <span class="project-tag">Learning Tool</span>
+                </div>
+                <h3 class="heading-card text-lg">SQL Playground: Snowflake style in your browser</h3>
+                <p class="body-text text-sm mt-3">A browser-based SQL practice environment using SQLite WASM with a lightweight Snowflake-style translation layer.</p>
+                <p class="body-text text-xs mt-3 opacity-90">Product thinking, SQL fluency, and a useful learning interface.</p>
+                <div class="mt-5 flex flex-wrap gap-2">
+                  <a href="https://github.com/kmsmohamedansar/sql-playground" target="_blank" rel="noopener noreferrer" class="project-link">GitHub</a>
+                  <a href="https://kmsmohamedansar.github.io/sql-playground" target="_blank" rel="noopener noreferrer" class="project-link">Live demo</a>
+                </div>
               </div>
             </article>
 
-            <article class="glass p-7 md:p-8 card-hover">
-              <div class="flex flex-wrap gap-2 mb-4">
-                <span class="project-tag text-xs rounded-full px-3 py-1">ML</span>
-                <span class="project-tag text-xs rounded-full px-3 py-1">Pipeline</span>
-                <span class="project-tag text-xs rounded-full px-3 py-1">Retries</span>
-              </div>
-              <h3 class="text-xl font-bold text-zinc-900">TaskMaster — small ML pipeline with retries</h3>
-              <p class="mt-3 text-zinc-600">
-                A production-style mini pipeline with idempotent steps, retry logic, structured logs, and a live interface.
-              </p>
-              <p class="mt-3 text-sm text-zinc-500">
-                Built to show more than notebook ML — closer to system behavior.
-              </p>
-              <div class="mt-5 flex flex-wrap gap-2">
-                <a href="https://huggingface.co/spaces/kmsmohamedansar/TaskMaster-Job-Scheduler" target="_blank" rel="noopener noreferrer" class="project-link">Live demo</a>
+            <article class="surface-card surface-card--hover p-7 md:p-8">
+              <div class="surface-card__inner">
+                <div class="flex flex-wrap gap-2 mb-4">
+                  <span class="project-tag">ML</span>
+                  <span class="project-tag">Pipeline</span>
+                  <span class="project-tag">Retries</span>
+                </div>
+                <h3 class="heading-card text-lg">TaskMaster: small ML pipeline with retries</h3>
+                <p class="body-text text-sm mt-3">A production-style mini pipeline with idempotent steps, retry logic, structured logs, and a live interface.</p>
+                <p class="body-text text-xs mt-3 opacity-90">More than notebook ML: closer to system behavior.</p>
+                <div class="mt-5 flex flex-wrap gap-2">
+                  <a href="https://huggingface.co/spaces/kmsmohamedansar/TaskMaster-Job-Scheduler" target="_blank" rel="noopener noreferrer" class="project-link">Live demo</a>
+                </div>
               </div>
             </article>
 
-            <article class="glass p-7 md:p-8 card-hover">
-              <div class="flex flex-wrap gap-2 mb-4">
-                <span class="project-tag text-xs rounded-full px-3 py-1">ML</span>
-                <span class="project-tag text-xs rounded-full px-3 py-1">Retention</span>
-                <span class="project-tag text-xs rounded-full px-3 py-1">Explainability</span>
-              </div>
-              <h3 class="text-xl font-bold text-zinc-900">High-value customer predictor</h3>
-              <p class="mt-3 text-zinc-600">
-                A retention-focused model with validation, explainability, and basic MLOps hygiene.
-              </p>
-              <p class="mt-3 text-sm text-zinc-500">
-                Built to connect modeling with stakeholder usability.
-              </p>
-              <div class="mt-5 flex flex-wrap gap-2">
-                <a href="https://github.com/kmsmohamedansar/high-value-customer-predictor" target="_blank" rel="noopener noreferrer" class="project-link">GitHub</a>
-                <a href="https://huggingface.co/spaces/kmsmohamedansar/high-value-customer-predictor" target="_blank" rel="noopener noreferrer" class="project-link">Live demo</a>
+            <article class="surface-card surface-card--hover p-7 md:p-8">
+              <div class="surface-card__inner">
+                <div class="flex flex-wrap gap-2 mb-4">
+                  <span class="project-tag">ML</span>
+                  <span class="project-tag">Retention</span>
+                  <span class="project-tag">Explainability</span>
+                </div>
+                <h3 class="heading-card text-lg">High-value customer predictor</h3>
+                <p class="body-text text-sm mt-3">A retention-focused model with validation, explainability, and basic MLOps hygiene.</p>
+                <p class="body-text text-xs mt-3 opacity-90">Modeling with stakeholder usability in mind.</p>
+                <div class="mt-5 flex flex-wrap gap-2">
+                  <a href="https://github.com/kmsmohamedansar/high-value-customer-predictor" target="_blank" rel="noopener noreferrer" class="project-link">GitHub</a>
+                  <a href="https://huggingface.co/spaces/kmsmohamedansar/high-value-customer-predictor" target="_blank" rel="noopener noreferrer" class="project-link">Live demo</a>
+                </div>
               </div>
             </article>
 
-            <article class="glass p-7 md:p-8 card-hover">
-              <div class="flex flex-wrap gap-2 mb-4">
-                <span class="project-tag text-xs rounded-full px-3 py-1">Search</span>
-                <span class="project-tag text-xs rounded-full px-3 py-1">LLM</span>
-                <span class="project-tag text-xs rounded-full px-3 py-1">Local First</span>
-              </div>
-              <h3 class="text-xl font-bold text-zinc-900">Grocery AI assistant — local semantic search</h3>
-              <p class="mt-3 text-zinc-600">
-                Offline product search and grounded Q&A using embeddings, FAISS, and a lightweight local model.
-              </p>
-              <p class="mt-3 text-sm text-zinc-500">
-                Shows interest in retrieval, local AI, and practical interfaces.
-              </p>
-              <div class="mt-5 flex flex-wrap gap-2">
-                <a href="https://github.com/kmsmohamedansar/ai_knowledge_assistant" target="_blank" rel="noopener noreferrer" class="project-link">GitHub</a>
-                <a href="https://huggingface.co/spaces/kmsmohamedansar/ai_knowledge_assistant" target="_blank" rel="noopener noreferrer" class="project-link">Live demo</a>
+            <article class="surface-card surface-card--hover p-7 md:p-8">
+              <div class="surface-card__inner">
+                <div class="flex flex-wrap gap-2 mb-4">
+                  <span class="project-tag">Search</span>
+                  <span class="project-tag">LLM</span>
+                  <span class="project-tag">Local First</span>
+                </div>
+                <h3 class="heading-card text-lg">Grocery AI assistant: local semantic search</h3>
+                <p class="body-text text-sm mt-3">Offline product search and grounded Q&amp;A using embeddings, FAISS, and a lightweight local model.</p>
+                <p class="body-text text-xs mt-3 opacity-90">Retrieval, local AI, practical interfaces.</p>
+                <div class="mt-5 flex flex-wrap gap-2">
+                  <a href="https://github.com/kmsmohamedansar/ai_knowledge_assistant" target="_blank" rel="noopener noreferrer" class="project-link">GitHub</a>
+                  <a href="https://huggingface.co/spaces/kmsmohamedansar/ai_knowledge_assistant" target="_blank" rel="noopener noreferrer" class="project-link">Live demo</a>
+                </div>
               </div>
             </article>
 
-            <article class="glass p-7 md:p-8 card-hover">
-              <div class="flex flex-wrap gap-2 mb-4">
-                <span class="project-tag text-xs rounded-full px-3 py-1">NLP</span>
-                <span class="project-tag text-xs rounded-full px-3 py-1">Transformers</span>
-                <span class="project-tag text-xs rounded-full px-3 py-1">Sentiment</span>
-              </div>
-              <h3 class="text-xl font-bold text-zinc-900">Amazon fine food sentiment</h3>
-              <p class="mt-3 text-zinc-600">
-                A baseline-to-transformer sentiment analysis project exploring stronger NLP performance and deployment.
-              </p>
-              <div class="mt-5 flex flex-wrap gap-2">
-                <a href="https://github.com/kmsmohamedansar/amazon-fine-food-sentiment-analysis" target="_blank" rel="noopener noreferrer" class="project-link">GitHub</a>
+            <article class="surface-card surface-card--hover p-7 md:p-8">
+              <div class="surface-card__inner">
+                <div class="flex flex-wrap gap-2 mb-4">
+                  <span class="project-tag">NLP</span>
+                  <span class="project-tag">Transformers</span>
+                  <span class="project-tag">Sentiment</span>
+                </div>
+                <h3 class="heading-card text-lg">Amazon fine food sentiment</h3>
+                <p class="body-text text-sm mt-3">Baseline-to-transformer sentiment analysis with stronger NLP performance and deployment exploration.</p>
+                <div class="mt-5 flex flex-wrap gap-2">
+                  <a href="https://github.com/kmsmohamedansar/amazon-fine-food-sentiment-analysis" target="_blank" rel="noopener noreferrer" class="project-link">GitHub</a>
+                </div>
               </div>
             </article>
 
-            <article class="glass p-7 md:p-8 card-hover">
-              <div class="flex flex-wrap gap-2 mb-4">
-                <span class="project-tag text-xs rounded-full px-3 py-1">Scraping</span>
-                <span class="project-tag text-xs rounded-full px-3 py-1">Automation</span>
-                <span class="project-tag text-xs rounded-full px-3 py-1">Python</span>
+            <article class="surface-card surface-card--hover p-7 md:p-8">
+              <div class="surface-card__inner">
+                <div class="flex flex-wrap gap-2 mb-4">
+                  <span class="project-tag">Scraping</span>
+                  <span class="project-tag">Automation</span>
+                  <span class="project-tag">Python</span>
+                </div>
+                <h3 class="heading-card text-lg">Yahoo Finance news scraper</h3>
+                <p class="body-text text-sm mt-3">Headless browser scraper for JS-heavy news pages, normalized into a structured dataset.</p>
+                <p class="body-text text-xs mt-3 opacity-90">Downstream NLP and research workflows.</p>
               </div>
-              <h3 class="text-xl font-bold text-zinc-900">Yahoo Finance news scraper</h3>
-              <p class="mt-3 text-zinc-600">
-                A headless browser scraper for JS-heavy news pages, normalized into a structured dataset for analysis.
-              </p>
-              <p class="mt-3 text-sm text-zinc-500">
-                Useful for downstream NLP or research workflows.
-              </p>
             </article>
 
-            <article class="glass p-7 md:p-8 card-hover">
-              <div class="flex flex-wrap gap-2 mb-4">
-                <span class="project-tag text-xs rounded-full px-3 py-1">Zero-shot</span>
-                <span class="project-tag text-xs rounded-full px-3 py-1">LLM/NLI</span>
-                <span class="project-tag text-xs rounded-full px-3 py-1">QA</span>
+            <article class="surface-card surface-card--hover p-7 md:p-8">
+              <div class="surface-card__inner">
+                <div class="flex flex-wrap gap-2 mb-4">
+                  <span class="project-tag">Zero-shot</span>
+                  <span class="project-tag">LLM/NLI</span>
+                  <span class="project-tag">QA</span>
+                </div>
+                <h3 class="heading-card text-lg">Smart product categorization: zero-shot</h3>
+                <p class="body-text text-sm mt-3">Category validation with BART-MNLI and lightweight rules for low-label review.</p>
               </div>
-              <h3 class="text-xl font-bold text-zinc-900">Smart product categorization — zero-shot</h3>
-              <p class="mt-3 text-zinc-600">
-                A practical category-validation workflow using BART-MNLI and lightweight rules for low-label review.
-              </p>
             </article>
 
-            <article class="glass p-7 md:p-8 card-hover">
-              <div class="flex flex-wrap gap-2 mb-4">
-                <span class="project-tag text-xs rounded-full px-3 py-1">EDA</span>
-                <span class="project-tag text-xs rounded-full px-3 py-1">Python</span>
-                <span class="project-tag text-xs rounded-full px-3 py-1">Visualization</span>
+            <article class="surface-card surface-card--hover p-7 md:p-8">
+              <div class="surface-card__inner">
+                <div class="flex flex-wrap gap-2 mb-4">
+                  <span class="project-tag">EDA</span>
+                  <span class="project-tag">Python</span>
+                  <span class="project-tag">Visualization</span>
+                </div>
+                <h3 class="heading-card text-lg">Spotify music trends: quick EDA</h3>
+                <p class="body-text text-sm mt-3">Audio features and popularity over time, focused on clean data storytelling.</p>
               </div>
-              <h3 class="text-xl font-bold text-zinc-900">Spotify music trends — quick EDA</h3>
-              <p class="mt-3 text-zinc-600">
-                Exploration of audio features and popularity patterns over time, focused on clean storytelling with data.
-              </p>
             </article>
 
-            <article class="glass p-7 md:p-8 card-hover md:col-span-2">
-              <div class="flex flex-wrap gap-2 mb-4">
-                <span class="project-tag text-xs rounded-full px-3 py-1">Sports Analytics</span>
-                <span class="project-tag text-xs rounded-full px-3 py-1">Power BI</span>
-                <span class="project-tag text-xs rounded-full px-3 py-1">Scoring Logic</span>
+            <article class="surface-card surface-card--hover p-7 md:p-8 md:col-span-2">
+              <div class="surface-card__inner">
+                <div class="flex flex-wrap gap-2 mb-4">
+                  <span class="project-tag">Sports Analytics</span>
+                  <span class="project-tag">Power BI</span>
+                  <span class="project-tag">Scoring Logic</span>
+                </div>
+                <h3 class="heading-card text-lg">Canadian Premier League: Dream XI (2019)</h3>
+                <p class="body-text text-sm mt-3">Role-aware KPI model for player selection with a Power BI dashboard for storytelling.</p>
               </div>
-              <h3 class="text-xl font-bold text-zinc-900">Canadian Premier League — Dream XI (2019)</h3>
-              <p class="mt-3 text-zinc-600">
-                A role-aware KPI model for player selection, paired with a lightweight Power BI dashboard for storytelling.
-              </p>
             </article>
           </div>
         </details>
       </div>
     </section>
 
-    <section id="stack" class="max-w-6xl mx-auto px-4 py-28 md:py-32 reveal">
-      <div class="mono-line mb-12"></div>
-      <div class="text-center mb-14">
-        <p class="section-eyebrow">Stack</p>
-        <h2 class="section-title mt-4 text-3xl md:text-4xl lg:text-[2.5rem] font-bold leading-tight text-zinc-900">
-          Tools I ship with
-        </h2>
-      </div>
-
-      <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-        <div class="glass p-8 card-hover">
-          <h3 class="text-zinc-900 font-semibold text-lg">Data Systems</h3>
-          <p class="mt-3 text-sm text-zinc-500">SQL, Snowflake, BigQuery, DuckDB</p>
-        </div>
-
-        <div class="glass p-8 card-hover">
-          <h3 class="text-zinc-900 font-semibold text-lg">Workflows</h3>
-          <p class="mt-3 text-sm text-zinc-500">Airflow, ETL/ELT, recurring data delivery</p>
-        </div>
-
-        <div class="glass p-8 card-hover">
-          <h3 class="text-zinc-900 font-semibold text-lg">Analytics</h3>
-          <p class="mt-3 text-sm text-zinc-500">Tableau, Power BI, pandas, business reporting</p>
-        </div>
-
-        <div class="glass p-8 card-hover">
-          <h3 class="text-zinc-900 font-semibold text-lg">Growth Areas</h3>
-          <p class="mt-3 text-sm text-zinc-500">Python depth, AI workflows, search, automation, system thinking</p>
-        </div>
-      </div>
-    </section>
-
-    <section id="experience" class="max-w-6xl mx-auto px-4 py-28 md:py-32 reveal">
-      <div class="mono-line mb-12"></div>
-
-      <div class="text-center mb-14">
-        <p class="section-eyebrow">Experience</p>
-        <h2 class="section-title mt-4 text-3xl md:text-4xl lg:text-[2.5rem] font-bold leading-tight text-zinc-900">
-          Professional work
-        </h2>
-      </div>
-
-  <div class="space-y-6">
-
-    <article class="glass p-8 md:p-9 card-hover">
-      <div class="flex flex-col md:flex-row md:items-start md:justify-between gap-4">
-        <div>
-          <h3 class="text-xl md:text-2xl font-bold text-zinc-900">Associate Solutions Engineer · Datasembly</h3>
-          <p class="mt-1 text-sm text-zinc-500">Jan 2026 – Present · Remote, Canada</p>
-        </div>
-        <div class="flex flex-wrap gap-2">
-          <span class="project-tag text-xs rounded-full px-3 py-1">SQL</span>
-          <span class="project-tag text-xs rounded-full px-3 py-1">Snowflake</span>
-          <span class="project-tag text-xs rounded-full px-3 py-1">Pre-sales</span>
-          <span class="project-tag text-xs rounded-full px-3 py-1">Data Solutions</span>
-        </div>
-      </div>
-
-      <ul class="mt-5 list-disc ml-5 space-y-2 text-zinc-600">
-        <li>Design data solutions for retail pricing datasets, supporting client needs, pre-sales analysis, and custom data requests.</li>
-        <li>Use SQL and Snowflake to investigate complex data issues, validate outputs, and deliver reliable stakeholder-ready solutions.</li>
-        <li>Partner with internal teams to translate business questions into clear technical approaches and usable deliverables.</li>
-      </ul>
-    </article>
-
-    <article class="glass p-8 md:p-9 card-hover">
-      <div class="flex flex-col md:flex-row md:items-start md:justify-between gap-4">
-        <div>
-          <h3 class="text-xl md:text-2xl font-bold text-zinc-900">Tech Support · Datasembly</h3>
-          <p class="mt-1 text-sm text-zinc-500">Aug 2024 – Dec 2025 · Remote, Canada</p>
-        </div>
-        <div class="flex flex-wrap gap-2">
-          <span class="project-tag text-xs rounded-full px-3 py-1">SQL</span>
-          <span class="project-tag text-xs rounded-full px-3 py-1">Snowflake</span>
-          <span class="project-tag text-xs rounded-full px-3 py-1">Reporting</span>
-          <span class="project-tag text-xs rounded-full px-3 py-1">Workflow Support</span>
-        </div>
-      </div>
-
-      <ul class="mt-5 list-disc ml-5 space-y-2 text-zinc-600">
-        <li>Supported pricing analytics initiatives by building SQL-based reporting solutions and improving internal data workflows.</li>
-        <li>Resolved complex data issues across recurring client and internal requests using Snowflake and related tooling.</li>
-        <li>Contributed to dashboarding, reporting reliability, and workflow improvements across analytics operations.</li>
-      </ul>
-    </article>
-
-    <article class="glass p-8 md:p-9 card-hover">
-      <div class="flex flex-col md:flex-row md:items-start md:justify-between gap-4">
-        <div>
-          <h3 class="text-xl md:text-2xl font-bold text-zinc-900">Business Development Intern (Business Analysis) · Spongelii</h3>
-          <p class="mt-1 text-sm text-zinc-500">Jan 2024 – Apr 2024 · Remote, Canada</p>
-        </div>
-        <div class="flex flex-wrap gap-2">
-          <span class="project-tag text-xs rounded-full px-3 py-1">Business Analysis</span>
-          <span class="project-tag text-xs rounded-full px-3 py-1">SQL</span>
-          <span class="project-tag text-xs rounded-full px-3 py-1">Snowflake</span>
-          <span class="project-tag text-xs rounded-full px-3 py-1">Tableau</span>
-        </div>
-      </div>
-
-      <ul class="mt-5 list-disc ml-5 space-y-2 text-zinc-600">
-        <li>Worked on business analysis tasks tied to data workflows, reporting needs, and stakeholder requirements.</li>
-        <li>Supported SQL and Snowflake-based data work while helping shape dashboard and reporting outputs.</li>
-        <li>Helped document requirements, analysis logic, and workflow structure for collaboration and handoff.</li>
-      </ul>
-    </article>
-
-    <article class="glass p-8 md:p-9 card-hover">
-      <div class="flex flex-col md:flex-row md:items-start md:justify-between gap-4">
-        <div>
-          <h3 class="text-xl md:text-2xl font-bold text-zinc-900">Business Analyst II - Quality Auditing · Amazon Prime Video</h3>
-          <p class="mt-1 text-sm text-zinc-500">Oct 2021 – Aug 2022 · Hybrid, India</p>
-        </div>
-        <div class="flex flex-wrap gap-2">
-          <span class="project-tag text-xs rounded-full px-3 py-1">Quality Auditing</span>
-          <span class="project-tag text-xs rounded-full px-3 py-1">Process Improvement</span>
-          <span class="project-tag text-xs rounded-full px-3 py-1">Reporting</span>
-          <span class="project-tag text-xs rounded-full px-3 py-1">Operations</span>
-        </div>
-      </div>
-
-      <ul class="mt-5 list-disc ml-5 space-y-2 text-zinc-600">
-        <li>Led quality auditing and process improvement work for Prime Video content operations, improving accuracy and team efficiency.</li>
-        <li>Used reporting and data-driven analysis to identify workflow gaps, track trends, and support operational decisions.</li>
-        <li>Contributed to SOP updates, audit consistency, and cross-team process standardization.</li>
-      </ul>
-    </article>
-
-    <article class="glass p-8 md:p-9 card-hover">
-      <div class="flex flex-col md:flex-row md:items-start md:justify-between gap-4">
-        <div>
-          <h3 class="text-xl md:text-2xl font-bold text-zinc-900">Business Analyst I - Digital Content · Amazon Prime Video</h3>
-          <p class="mt-1 text-sm text-zinc-500">Aug 2019 – Sep 2021 · Hybrid, India</p>
-        </div>
-        <div class="flex flex-wrap gap-2">
-          <span class="project-tag text-xs rounded-full px-3 py-1">Digital Content</span>
-          <span class="project-tag text-xs rounded-full px-3 py-1">Quality Control</span>
-          <span class="project-tag text-xs rounded-full px-3 py-1">Stakeholder Coordination</span>
-          <span class="project-tag text-xs rounded-full px-3 py-1">Operations</span>
-        </div>
-      </div>
-
-      <ul class="mt-5 list-disc ml-5 space-y-2 text-zinc-600">
-        <li>Managed quality control and operational coordination for Prime Video’s digital content catalog.</li>
-        <li>Worked with internal stakeholders to resolve defects, maintain metadata accuracy, and support timely content readiness.</li>
-        <li>Helped maintain process quality across recurring content operations and issue-resolution workflows.</li>
-      </ul>
-    </article>
-
+    <section id="stack" class="chapter reveal-section" aria-labelledby="stack-heading">
+      <div class="chapter__rule"></div>
+      <header class="chapter__header--center">
+        <p class="eyebrow eyebrow--dim">Stack</p>
+        <h2 id="stack-heading" class="heading-section mt-4">Tools I ship with</h2>
+      </header>
+      <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8">
+        <article class="surface-card surface-card--hover p-8">
+          <div class="surface-card__inner">
+            <p class="eyebrow eyebrow--dim text-[0.6rem]">01</p>
+            <h3 class="heading-card mt-2">Data systems</h3>
+            <p class="body-text text-sm mt-3">SQL, Snowflake, BigQuery, DuckDB</p>
+          </div>
+        </article>
+        <article class="surface-card surface-card--hover p-8">
+          <div class="surface-card__inner">
+            <p class="eyebrow eyebrow--dim text-[0.6rem]">02</p>
+            <h3 class="heading-card mt-2">Workflows</h3>
+            <p class="body-text text-sm mt-3">Airflow, ETL/ELT, recurring data delivery</p>
+          </div>
+        </article>
+        <article class="surface-card surface-card--hover p-8">
+          <div class="surface-card__inner">
+            <p class="eyebrow eyebrow--dim text-[0.6rem]">03</p>
+            <h3 class="heading-card mt-2">Analytics</h3>
+            <p class="body-text text-sm mt-3">Tableau, Power BI, pandas, business reporting</p>
+          </div>
+        </article>
+        <article class="surface-card surface-card--hover p-8">
+          <div class="surface-card__inner">
+            <p class="eyebrow eyebrow--dim text-[0.6rem]">04</p>
+            <h3 class="heading-card mt-2">Growth</h3>
+            <p class="body-text text-sm mt-3">Python depth, AI workflows, search, automation, systems thinking</p>
+          </div>
+        </article>
       </div>
     </section>
 
-    <section id="contact" class="max-w-5xl mx-auto px-4 py-28 md:py-32 reveal">
-      <div class="mono-line mb-12"></div>
-      <div class="glass p-10 md:p-12 text-center shadow-card">
-        <p class="section-eyebrow">Contact</p>
-        <h2 class="section-title mt-4 text-3xl md:text-4xl font-bold text-zinc-900">
-          Let’s connect
-        </h2>
-        <p class="mt-5 text-zinc-600 max-w-xl mx-auto leading-relaxed">
-          Open to conversations about solutions engineering, data systems, and product-minded technical work.
-        </p>
+    <section id="experience" class="chapter reveal-section" aria-labelledby="experience-heading">
+      <div class="chapter__rule"></div>
+      <header class="chapter__header--center">
+        <p class="eyebrow eyebrow--dim">Experience</p>
+        <h2 id="experience-heading" class="heading-section mt-4">Professional work</h2>
+      </header>
 
-        <div class="mt-10 flex flex-col items-center gap-4 text-zinc-600">
-          <a href="mailto:mohamedansarkms@gmail.com" class="text-zinc-900 font-medium hover:text-[#9a8233] transition underline underline-offset-4 decoration-zinc-300 hover:decoration-[#c9a646]/60">
-            mohamedansarkms@gmail.com
-          </a>
-          <a
-            href="https://www.linkedin.com/in/kmsmohamedansar/"
-            target="_blank"
-            rel="noopener noreferrer"
-            class="text-zinc-900 font-medium hover:text-[#9a8233] transition underline underline-offset-4 decoration-zinc-300 hover:decoration-[#c9a646]/60"
-          >
-            linkedin.com/kmsmohamedansar
-          </a>
+      <div class="space-y-6 max-w-4xl mx-auto">
+        <article class="surface-card surface-card--hover p-8 md:p-9">
+          <div class="surface-card__inner">
+            <div class="flex flex-col md:flex-row md:items-start md:justify-between gap-4">
+              <div>
+                <h3 class="heading-card text-xl md:text-2xl">Associate Solutions Engineer · Datasembly</h3>
+                <p class="body-text text-sm mt-1 opacity-80">Jan 2026 – Present · Remote, Canada</p>
+              </div>
+              <div class="flex flex-wrap gap-2">
+                <span class="project-tag">SQL</span>
+                <span class="project-tag">Snowflake</span>
+                <span class="project-tag">Pre-sales</span>
+                <span class="project-tag">Data Solutions</span>
+              </div>
+            </div>
+            <ul class="mt-5 space-y-2 text-sm list-disc pl-5">
+              <li>Design data solutions for retail pricing datasets, supporting client needs, pre-sales analysis, and custom data requests.</li>
+              <li>Use SQL and Snowflake to investigate complex data issues, validate outputs, and deliver reliable stakeholder-ready solutions.</li>
+              <li>Partner with internal teams to translate business questions into clear technical approaches and usable deliverables.</li>
+            </ul>
+          </div>
+        </article>
+
+        <article class="surface-card surface-card--hover p-8 md:p-9">
+          <div class="surface-card__inner">
+            <div class="flex flex-col md:flex-row md:items-start md:justify-between gap-4">
+              <div>
+                <h3 class="heading-card text-xl md:text-2xl">Tech Support · Datasembly</h3>
+                <p class="body-text text-sm mt-1 opacity-80">Aug 2024 – Dec 2025 · Remote, Canada</p>
+              </div>
+              <div class="flex flex-wrap gap-2">
+                <span class="project-tag">SQL</span>
+                <span class="project-tag">Snowflake</span>
+                <span class="project-tag">Reporting</span>
+                <span class="project-tag">Workflow Support</span>
+              </div>
+            </div>
+            <ul class="mt-5 space-y-2 text-sm list-disc pl-5">
+              <li>Supported pricing analytics initiatives by building SQL-based reporting solutions and improving internal data workflows.</li>
+              <li>Resolved complex data issues across recurring client and internal requests using Snowflake and related tooling.</li>
+              <li>Contributed to dashboarding, reporting reliability, and workflow improvements across analytics operations.</li>
+            </ul>
+          </div>
+        </article>
+
+        <article class="surface-card surface-card--hover p-8 md:p-9">
+          <div class="surface-card__inner">
+            <div class="flex flex-col md:flex-row md:items-start md:justify-between gap-4">
+              <div>
+                <h3 class="heading-card text-xl md:text-2xl">Business Development Intern (Business Analysis) · Spongelii</h3>
+                <p class="body-text text-sm mt-1 opacity-80">Jan 2024 – Apr 2024 · Remote, Canada</p>
+              </div>
+              <div class="flex flex-wrap gap-2">
+                <span class="project-tag">Business Analysis</span>
+                <span class="project-tag">SQL</span>
+                <span class="project-tag">Snowflake</span>
+                <span class="project-tag">Tableau</span>
+              </div>
+            </div>
+            <ul class="mt-5 space-y-2 text-sm list-disc pl-5">
+              <li>Business analysis tied to data workflows, reporting needs, and stakeholder requirements.</li>
+              <li>SQL and Snowflake-based work shaping dashboard and reporting outputs.</li>
+              <li>Documentation for requirements, analysis logic, and workflow structure.</li>
+            </ul>
+          </div>
+        </article>
+
+        <article class="surface-card surface-card--hover p-8 md:p-9">
+          <div class="surface-card__inner">
+            <div class="flex flex-col md:flex-row md:items-start md:justify-between gap-4">
+              <div>
+                <h3 class="heading-card text-xl md:text-2xl">Business Analyst II - Quality Auditing · Amazon Prime Video</h3>
+                <p class="body-text text-sm mt-1 opacity-80">Oct 2021 – Aug 2022 · Hybrid, India</p>
+              </div>
+              <div class="flex flex-wrap gap-2">
+                <span class="project-tag">Quality Auditing</span>
+                <span class="project-tag">Process Improvement</span>
+                <span class="project-tag">Reporting</span>
+                <span class="project-tag">Operations</span>
+              </div>
+            </div>
+            <ul class="mt-5 space-y-2 text-sm list-disc pl-5">
+              <li>Quality auditing and process improvement for Prime Video content operations.</li>
+              <li>Reporting and analysis for workflow gaps, trends, and operational decisions.</li>
+              <li>SOP updates, audit consistency, cross-team standardization.</li>
+            </ul>
+          </div>
+        </article>
+
+        <article class="surface-card surface-card--hover p-8 md:p-9">
+          <div class="surface-card__inner">
+            <div class="flex flex-col md:flex-row md:items-start md:justify-between gap-4">
+              <div>
+                <h3 class="heading-card text-xl md:text-2xl">Business Analyst I - Digital Content · Amazon Prime Video</h3>
+                <p class="body-text text-sm mt-1 opacity-80">Aug 2019 – Sep 2021 · Hybrid, India</p>
+              </div>
+              <div class="flex flex-wrap gap-2">
+                <span class="project-tag">Digital Content</span>
+                <span class="project-tag">Quality Control</span>
+                <span class="project-tag">Stakeholder Coordination</span>
+                <span class="project-tag">Operations</span>
+              </div>
+            </div>
+            <ul class="mt-5 space-y-2 text-sm list-disc pl-5">
+              <li>Quality control and operational coordination for the digital content catalog.</li>
+              <li>Stakeholder work on defects, metadata accuracy, and content readiness.</li>
+              <li>Process quality across recurring operations and issue resolution.</li>
+            </ul>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section id="contact" class="chapter reveal-section pb-24 md:pb-32" aria-labelledby="contact-heading">
+      <div class="chapter__rule"></div>
+      <div class="surface-card p-10 md:p-14 max-w-2xl mx-auto text-center">
+        <div class="surface-card__inner">
+          <p class="eyebrow eyebrow--dim">Contact</p>
+          <h2 id="contact-heading" class="heading-section mt-4">Let’s connect</h2>
+          <p class="body-text mt-5">
+            Open to conversations about solutions engineering, data systems, and product-minded technical work.
+          </p>
+          <div class="mt-10 flex flex-col items-center gap-4">
+            <a href="mailto:mohamedansarkms@gmail.com" class="link-contact">mohamedansarkms@gmail.com</a>
+            <a href="https://www.linkedin.com/in/kmsmohamedansar/" target="_blank" rel="noopener noreferrer" class="link-contact">linkedin.com/kmsmohamedansar</a>
+          </div>
         </div>
       </div>
     </section>
   </main>
 
-  <script>
-    const navToggle = document.getElementById("nav-toggle");
-    const mobileNav = document.getElementById("mobile-nav");
-    navToggle?.addEventListener("click", () => {
-      const hidden = mobileNav.classList.toggle("hidden");
-      navToggle.setAttribute("aria-expanded", String(!hidden));
-    });
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add("show");
-          }
-        });
-      },
-      { threshold: 0.12 }
-    );
-
-    document.querySelectorAll(".reveal").forEach((el) => observer.observe(el));
-
-    document.querySelectorAll("details").forEach((detail) => {
-      const arrow = detail.querySelector(".details-arrow");
-      detail.addEventListener("toggle", () => {
-        if (!arrow) return;
-        arrow.style.transform = detail.open ? "rotate(180deg)" : "rotate(0deg)";
-      });
-    });
-
-  </script>
+  <script src="/js/ambient.js" defer></script>
+  <script src="/js/site.js" defer></script>
   <script src="/js/reptrack-carousel.js" defer></script>
 </body>
 </html>
