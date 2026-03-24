@@ -1,6 +1,6 @@
 /**
  * Telemetry-inspired ambient canvas: grid, flow curves, signal samples.
- * Abstract "race engineering UI" — no literal racing imagery.
+ * Abstract "race engineering UI", no literal racing imagery.
  * Respects prefers-reduced-motion; lighter on narrow viewports.
  */
 (function () {

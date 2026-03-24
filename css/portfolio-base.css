@@ -1,5 +1,5 @@
 /* =============================================================================
-   Precision engineering / F1-telemetry UI — light instrument theme
+   Precision engineering / F1-telemetry UI, light instrument theme
    Tokens: :root. Ambient: /js/ambient.js · prefers-reduced-motion respected
    ============================================================================= */
 
@@ -13,7 +13,7 @@
   --text-primary: #141820;
   --text-secondary: #4a5058;
   --text-dim: #6d747c;
-  /* Ferrari red — use sparingly (CTA, key metrics, active) */
+  /* Ferrari red: use sparingly (CTA, key metrics, active) */
   --accent-red: #e10600;
   --accent-red-soft: rgba(225, 6, 0, 0.1);
   --accent-steel: #2d3339;
