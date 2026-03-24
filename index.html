@@ -4,28 +4,28 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-  <title>Mohamed Ansar</title>
+  <title>Mohamed Ansar — Solutions Engineer</title>
 
   <meta
     name="description"
-    content="Associate Solutions Engineer building data systems, analytics workflows, and growing into AI-driven engineering."
+    content="Solutions Engineer who ships practical data and software solutions — SQL, Snowflake, production systems, and native iOS products."
   />
   <meta
     name="keywords"
-    content="Associate Solutions Engineer, AI, Data Systems, SQL, Snowflake, iOS, SwiftUI, Python, Tableau, Power BI"
+    content="Solutions Engineer, SQL, Snowflake, data systems, iOS, SwiftUI, SwiftData, Python, analytics, AI"
   />
   <link rel="canonical" href="https://kmsmohamedansar.github.io/" />
 
-  <meta property="og:title" content="Mohamed Ansar" />
+  <meta property="og:title" content="Mohamed Ansar — Solutions Engineer" />
   <meta
     property="og:description"
-    content="Data systems, analytics workflows, and a growing focus on AI and engineering."
+    content="I build and ship real-world solutions — from data systems to iOS products."
   />
   <meta property="og:image" content="https://kmsmohamedansar.github.io/preview.png" />
   <meta property="og:url" content="https://kmsmohamedansar.github.io/" />
   <meta property="og:type" content="website" />
 
-  <meta name="theme-color" content="#09090b" />
+  <meta name="theme-color" content="#f8f9fb" />
   <link rel="icon" href="/favicon.ico" type="image/x-icon" />
 
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -41,7 +41,7 @@
       theme: {
         extend: {
           boxShadow: {
-            neon: "0 0 0 1px rgba(255,255,255,0.06), 0 0 30px rgba(56,189,248,0.15), 0 0 80px rgba(168,85,247,0.1)"
+            card: "0 10px 30px rgba(0,0,0,0.06)"
           },
           animation: {
             floaty: "floaty 8s ease-in-out infinite",
@@ -73,32 +73,26 @@
 </head>
 
 <body class="grid-bg scanlines">
-  <div class="aurora" aria-hidden="true">
-    <div class="blob blob-1"></div>
-    <div class="blob blob-2"></div>
-    <div class="blob blob-3"></div>
-  </div>
-
   <nav class="fixed top-0 inset-x-0 z-50">
-    <div class="max-w-6xl mx-auto px-4 pt-4">
-      <div class="glass rounded-2xl px-5 py-4 flex items-center justify-between shadow-neon">
-        <a href="#hero" class="font-extrabold tracking-tight text-white text-lg md:text-xl">
+    <div class="max-w-6xl mx-auto px-4 pt-4 pb-1">
+      <div class="nav-shell px-5 py-3.5 md:py-4 flex items-center justify-between shadow-card">
+        <a href="#hero" class="font-bold tracking-tight text-zinc-900 text-lg md:text-xl">
           Mohamed Ansar
         </a>
 
-        <div class="hidden md:flex items-center gap-6 text-sm text-zinc-300">
-          <a href="#about" class="hover:text-white transition">About</a>
-          <a href="#direction" class="hover:text-white transition">Direction</a>
-          <a href="#reptrack-featured" class="hover:text-white transition">Featured</a>
-          <a href="#projects" class="hover:text-white transition">Projects</a>
-          <a href="#stack" class="hover:text-white transition">Stack</a>
-          <a href="#experience" class="hover:text-white transition">Experience</a>
-          <a href="#contact" class="hover:text-white transition">Contact</a>
+        <div class="hidden md:flex items-center gap-7 text-sm">
+          <a href="#about" class="nav-link">About</a>
+          <a href="#direction" class="nav-link">Direction</a>
+          <a href="#reptrack-featured" class="nav-link">Featured</a>
+          <a href="#projects" class="nav-link">Selected work</a>
+          <a href="#stack" class="nav-link">Stack</a>
+          <a href="#experience" class="nav-link">Experience</a>
+          <a href="#contact" class="nav-link">Contact</a>
         </div>
 
         <button
           id="nav-toggle"
-          class="md:hidden text-white"
+          class="md:hidden text-zinc-800 p-1 -mr-1"
           aria-label="Open menu"
           aria-controls="mobile-nav"
           aria-expanded="false"
@@ -109,187 +103,175 @@
         </button>
       </div>
 
-      <div id="mobile-nav" class="hidden md:hidden mt-2 glass rounded-2xl p-4 text-sm text-zinc-300">
-        <div class="flex flex-col gap-3">
-          <a href="#about">About</a>
-          <a href="#direction">Direction</a>
-          <a href="#reptrack-featured">Featured</a>
-          <a href="#projects">Projects</a>
-          <a href="#stack">Stack</a>
-          <a href="#experience">Experience</a>
-          <a href="#contact">Contact</a>
+      <div id="mobile-nav" class="hidden md:hidden mt-2 nav-shell p-4 text-sm shadow-card">
+        <div class="flex flex-col gap-3 text-zinc-600">
+          <a href="#about" class="nav-link py-0.5">About</a>
+          <a href="#direction" class="nav-link py-0.5">Direction</a>
+          <a href="#reptrack-featured" class="nav-link py-0.5">Featured</a>
+          <a href="#projects" class="nav-link py-0.5">Selected work</a>
+          <a href="#stack" class="nav-link py-0.5">Stack</a>
+          <a href="#experience" class="nav-link py-0.5">Experience</a>
+          <a href="#contact" class="nav-link py-0.5">Contact</a>
         </div>
       </div>
     </div>
   </nav>
 
-  <header id="hero" class="relative min-h-screen flex items-center justify-center px-4">
-    <div class="hero-ring hidden md:block"></div>
+  <header id="hero" class="relative min-h-[90vh] flex items-center justify-center px-4 pt-28 pb-24">
+    <div class="max-w-3xl mx-auto text-center reveal">
+      <p class="text-sm font-medium text-zinc-500 tracking-wide">Mohamed Ansar</p>
 
-    <div class="max-w-5xl mx-auto text-center reveal">
-      <div class="inline-flex flex-wrap items-center justify-center gap-2 rounded-full px-4 py-2 chip text-sm">
-        <span>Associate Solutions Engineer</span>
-        <span class="text-zinc-500">•</span>
-        <span>Data Systems</span>
-        <span class="text-zinc-500">•</span>
-        <span>Growing into AI + Engineering</span>
-      </div>
+      <h1 class="hero-headline mt-5">
+        I build and ship real-world solutions — from data systems to iOS products.
+      </h1>
 
-     
-
-      <p class="mt-6 text-lg md:text-xl text-zinc-300 max-w-3xl mx-auto leading-relaxed">
-        I work on pricing data, analytics workflows, and stakeholder-facing solutions today,
-        while steadily expanding into AI tooling, engineering workflows, and deeper technical builds.
+      <p class="mt-8 text-lg md:text-xl text-zinc-600 max-w-2xl mx-auto leading-relaxed">
+        Associate Solutions Engineer working with SQL, Snowflake, and production data systems, now expanding into software and AI-driven applications.
       </p>
 
-      <p class="mt-4 text-sm md:text-base text-zinc-400">
-        Currently at <b class="text-zinc-200">Datasembly</b> • Previously at <b class="text-zinc-200">Amazon (Prime Video)</b> • Based in <b class="text-zinc-200">Mississauga</b>
+      <p class="mt-6 text-sm text-zinc-500">
+        <span class="text-zinc-600">Datasembly</span>
+        <span class="mx-2 text-zinc-300">·</span>
+        <span class="text-zinc-600">Previously Amazon (Prime Video)</span>
+        <span class="mx-2 text-zinc-300">·</span>
+        <span class="text-zinc-600">Mississauga</span>
       </p>
 
-      <div class="mt-8 flex flex-col sm:flex-row items-center justify-center gap-3">
-        <a
-          href="#reptrack-featured"
-          class="px-6 py-3 rounded-xl bg-white text-zinc-900 font-semibold hover:scale-[1.02] transition"
-        >
-          Explore projects
-        </a>
+      <div class="mt-10 flex flex-col sm:flex-row items-center justify-center gap-3">
+        <a href="#reptrack-featured" class="btn-hero-primary w-full sm:w-auto">Featured work</a>
+        <a href="#projects" class="btn-hero-secondary w-full sm:w-auto">Selected work</a>
         <a
           href="https://www.linkedin.com/in/kmsmohamedansar/"
           target="_blank"
           rel="noopener noreferrer"
-          class="px-6 py-3 rounded-xl border border-white/10 bg-white/5 text-white hover:bg-white/10 transition"
-        >
-          LinkedIn
-        </a>
-        <a
-          href="#contact"
-          class="px-6 py-3 rounded-xl border border-sky-400/25 bg-sky-400/10 text-sky-200 hover:bg-sky-400/15 transition"
-        >
-          Contact
-        </a>
+          class="btn-hero-secondary w-full sm:w-auto"
+        >LinkedIn</a>
+        <a href="#contact" class="btn-hero-secondary w-full sm:w-auto">Contact</a>
       </div>
 
-      <div class="mt-14 grid grid-cols-1 sm:grid-cols-3 gap-4 text-left">
-        <div class="glass rounded-2xl p-5 card-hover">
-          <div class="text-xs uppercase tracking-[0.2em] text-zinc-500">Current Focus</div>
-          <div class="mt-2 font-semibold text-white">Retail pricing workflows</div>
-          <div class="mt-1 text-sm text-zinc-400">SQL, Snowflake, analytics delivery</div>
+      <div class="mt-20 grid grid-cols-1 sm:grid-cols-3 gap-5 text-left max-w-5xl mx-auto">
+        <div class="glass p-7 md:p-8 card-hover">
+          <div class="text-xs font-semibold uppercase tracking-[0.18em] text-zinc-500">Today</div>
+          <div class="mt-3 font-semibold text-zinc-900 text-lg tracking-tight">Data solutions in production</div>
+          <div class="mt-2 text-sm text-zinc-600 leading-relaxed">SQL, Snowflake, and recurring pipelines that internal teams and clients rely on.</div>
         </div>
 
-        <div class="glass rounded-2xl p-5 card-hover animate-floaty">
-          <div class="text-xs uppercase tracking-[0.2em] text-zinc-500">Next Layer</div>
-          <div class="mt-2 font-semibold text-white">AI + coding depth</div>
-          <div class="mt-1 text-sm text-zinc-400">Automation, applied ML, stronger engineering systems</div>
+        <div class="glass p-7 md:p-8 card-hover">
+          <div class="text-xs font-semibold uppercase tracking-[0.18em] text-zinc-500">Also building</div>
+          <div class="mt-3 font-semibold text-zinc-900 text-lg tracking-tight">Software &amp; AI applications</div>
+          <div class="mt-2 text-sm text-zinc-600 leading-relaxed">Shipping native apps and practical ML interfaces, not slides.</div>
         </div>
 
-        <div class="glass rounded-2xl p-5 card-hover">
-          <div class="text-xs uppercase tracking-[0.2em] text-zinc-500">Style of Work</div>
-          <div class="mt-2 font-semibold text-white">Messy problem → usable system</div>
-          <div class="mt-1 text-sm text-zinc-400">Requirements, delivery, iteration</div>
+        <div class="glass p-7 md:p-8 card-hover">
+          <div class="text-xs font-semibold uppercase tracking-[0.18em] text-zinc-500">How I work</div>
+          <div class="mt-3 font-semibold text-zinc-900 text-lg tracking-tight">Clarify, build, deliver</div>
+          <div class="mt-2 text-sm text-zinc-600 leading-relaxed">Stakeholder clarity first — then solutions that hold up after launch.</div>
         </div>
       </div>
     </div>
   </header>
 
   <main>
-    <section id="about" class="max-w-5xl mx-auto px-4 py-24 reveal">
-      <div class="mono-line mb-10"></div>
-      <div class="grid lg:grid-cols-[1fr_1.4fr] gap-10 items-start">
+    <section id="about" class="max-w-5xl mx-auto px-4 py-28 md:py-32 reveal">
+      <div class="mono-line mb-12"></div>
+      <div class="grid lg:grid-cols-[1fr_1.35fr] gap-12 lg:gap-16 items-start">
         <div>
-          <p class="text-sm uppercase tracking-[0.22em] text-zinc-500">About</p>
-          <h2 class="section-title mt-3 text-3xl md:text-4xl font-bold text-white">
-            Where I am now
+          <p class="section-eyebrow">About</p>
+          <h2 class="section-title mt-4 text-3xl md:text-4xl lg:text-[2.5rem] font-bold leading-tight">
+            Solutions that survive real stakeholders
           </h2>
         </div>
 
-        <div class="glass rounded-3xl p-7 md:p-8 shadow-neon">
-          <p class="text-zinc-300 leading-relaxed mb-4">
-            I work at the intersection of analytics, data workflows, and stakeholder delivery.
-            My current role is centered around building reliable outputs from large retail and pricing datasets.
+        <div class="glass p-8 md:p-10 shadow-card">
+          <p class="text-zinc-600 leading-relaxed mb-5 text-[1.05rem]">
+            I solve data problems where the answer has to be right and usable — retail pricing, large analytical datasets, and recurring delivery to people who depend on the output.
           </p>
 
-          <p class="text-zinc-300 leading-relaxed mb-4">
-            At <strong class="text-white">Datasembly</strong>, I work with SQL-driven workflows, dashboards,
-            and recurring data processes that support internal teams and external client needs.
+          <p class="text-zinc-600 leading-relaxed mb-5 text-[1.05rem]">
+            At <strong class="text-zinc-900 font-semibold">Datasembly</strong>, that means SQL and Snowflake work, validated pipelines, dashboards, and clear handoffs when requirements shift mid-flight.
           </p>
 
-          <p class="text-zinc-300 leading-relaxed">
-            At the same time, I’m intentionally moving deeper into <strong class="text-white">AI, coding, and engineering-style problem solving</strong>.
-            This site is meant to reflect that direction — not just what I’ve done, but what I’m actively growing into.
+          <p class="text-zinc-600 leading-relaxed text-[1.05rem]">
+            I’m extending the same mindset into <strong class="text-zinc-900 font-semibold">software and AI-driven tools</strong> — shipping products end-to-end, not only analyses — so the portfolio you see here is both my day job and what I build next.
           </p>
         </div>
       </div>
     </section>
 
-    <section id="direction" class="max-w-6xl mx-auto px-4 py-10 reveal">
-      <div class="mono-line mb-10"></div>
-      <div class="text-center mb-12">
-        <p class="text-sm uppercase tracking-[0.22em] text-zinc-500">Direction</p>
-        <h2 class="section-title mt-3 text-3xl md:text-4xl font-bold text-white">
-          What I want this portfolio to say
+    <section id="direction" class="max-w-6xl mx-auto px-4 py-24 md:py-28 reveal">
+      <div class="mono-line mb-12"></div>
+      <div class="text-center mb-14 max-w-2xl mx-auto">
+        <p class="section-eyebrow">Direction</p>
+        <h2 class="section-title mt-4 text-3xl md:text-4xl lg:text-[2.5rem] font-bold leading-tight">
+          How I want to be evaluated
         </h2>
-      </div>
-
-      <div class="grid md:grid-cols-3 gap-6">
-        <div class="glass rounded-3xl p-6 card-hover">
-          <div class="w-10 h-10 rounded-xl bg-sky-400/12 border border-sky-400/20 flex items-center justify-center text-sky-300 mb-4">
-            01
-          </div>
-          <h3 class="text-lg font-semibold text-white">I already ship useful work</h3>
-          <p class="mt-2 text-sm text-zinc-400">
-            Real workflows, real stakeholders, real business constraints.
-          </p>
-        </div>
-
-        <div class="glass rounded-3xl p-6 card-hover">
-          <div class="w-10 h-10 rounded-xl bg-purple-400/12 border border-purple-400/20 flex items-center justify-center text-purple-300 mb-4">
-            02
-          </div>
-          <h3 class="text-lg font-semibold text-white">I’m moving deeper technically</h3>
-          <p class="mt-2 text-sm text-zinc-400">
-            More coding, more systems thinking, more AI and automation.
-          </p>
-        </div>
-
-        <div class="glass rounded-3xl p-6 card-hover">
-          <div class="w-10 h-10 rounded-xl bg-emerald-400/12 border border-emerald-400/20 flex items-center justify-center text-emerald-300 mb-4">
-            03
-          </div>
-          <h3 class="text-lg font-semibold text-white">I build with curiosity</h3>
-          <p class="mt-2 text-sm text-zinc-400">
-            Experiments matter because they show how I think, not just what tool I know.
-          </p>
-        </div>
-      </div>
-    </section>
-
-    <section id="reptrack-featured" class="max-w-6xl mx-auto px-4 py-24 reveal" aria-labelledby="reptrack-featured-heading">
-      <div class="mono-line mb-10"></div>
-      <div class="text-center mb-10">
-        <p class="text-sm uppercase tracking-[0.22em] text-zinc-500">Featured project</p>
-        <h2 id="reptrack-featured-heading" class="section-title mt-3 text-3xl md:text-4xl font-bold text-white">
-          RepTrack Workout Log
-        </h2>
-        <p class="mt-4 text-zinc-400 max-w-2xl mx-auto text-sm md:text-base">
-          Native iOS product work — shipped end-to-end with SwiftUI and SwiftData.
+        <p class="mt-4 text-zinc-600 leading-relaxed">
+          Three commitments — not a wish list. This is the bar I hold for client work and personal builds.
         </p>
       </div>
 
-      <div class="glass reptrack-shell rounded-[1.75rem] md:rounded-[2rem] p-6 md:p-10 lg:p-12 shadow-neon">
-        <div class="grid lg:grid-cols-[minmax(0,1fr)_minmax(0,1.12fr)] gap-10 lg:gap-14 items-start">
+      <div class="grid md:grid-cols-3 gap-6 lg:gap-8">
+        <div class="glass p-8 card-hover">
+          <div class="direction-step mb-5">01</div>
+          <h3 class="text-lg font-semibold text-zinc-900 tracking-tight">Ownership through delivery</h3>
+          <p class="mt-3 text-sm text-zinc-600 leading-relaxed">
+            I take problems from ambiguity to something teams can run — validated data, clear outputs, and communication that matches how people actually work.
+          </p>
+        </div>
+
+        <div class="glass p-8 card-hover">
+          <div class="direction-step mb-5">02</div>
+          <h3 class="text-lg font-semibold text-zinc-900 tracking-tight">Depth where it matters</h3>
+          <p class="mt-3 text-sm text-zinc-600 leading-relaxed">
+            Stronger engineering and applied AI aren’t separate hobbies — they’re how I widen the set of problems I can solve without lowering the quality bar.
+          </p>
+        </div>
+
+        <div class="glass p-8 card-hover">
+          <div class="direction-step mb-5">03</div>
+          <h3 class="text-lg font-semibold text-zinc-900 tracking-tight">Product judgment</h3>
+          <p class="mt-3 text-sm text-zinc-600 leading-relaxed">
+            Whether it’s a dashboard or an app, I care what gets left out — simple beats clever when someone has to use it every week.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section id="reptrack-featured" class="max-w-6xl mx-auto px-4 py-28 md:py-32 reveal" aria-labelledby="reptrack-featured-heading">
+      <div class="mono-line mb-12"></div>
+      <div class="text-center mb-12 md:mb-14">
+        <p class="section-eyebrow">Featured product</p>
+        <h2 id="reptrack-featured-heading" class="section-title mt-4 text-3xl md:text-4xl lg:text-[2.5rem] font-bold leading-tight">
+          RepTrack Workout Log
+        </h2>
+        <p class="mt-4 text-zinc-600 max-w-xl mx-auto text-base leading-relaxed">
+          Native iOS — designed, built, and submitted end-to-end.
+        </p>
+      </div>
+
+      <div class="reptrack-showcase reptrack-shell p-6 md:p-10 lg:p-12">
+        <div class="grid lg:grid-cols-[minmax(0,1fr)_minmax(0,1.08fr)] gap-12 lg:gap-16 items-start">
           <div>
-            <p class="text-xs uppercase tracking-[0.2em] text-amber-200/70 font-semibold">iOS · SwiftUI · SwiftData</p>
-            <p class="mt-3 text-lg md:text-xl text-zinc-100 font-medium leading-snug">
-              A clean, focused workout tracker built for consistency and strength progress.
+            <p class="text-xs font-bold uppercase tracking-[0.2em] text-[#9a8233]">iOS · SwiftUI · SwiftData</p>
+            <p class="mt-4 text-xl md:text-2xl text-zinc-900 font-semibold leading-snug tracking-tight">
+              A clean, focused workout tracker built for consistency and strength progression.
             </p>
-            <p class="mt-4 text-zinc-300 leading-relaxed text-sm md:text-base">
-              RepTrack is a production-ready iOS app for logging workouts, sets, and reps, and reviewing performance over time.
-              I designed and built it end to end — prioritizing a calm interface, fast logging, and practical progress signals for everyday training.
+            <p class="mt-5 text-zinc-600 leading-relaxed text-base">
+              RepTrack is a production-ready iOS app designed to help users log workouts, track sets and reps, and review their performance over time. I designed and built the app end-to-end using SwiftUI and SwiftData, focusing on clarity, speed, and a distraction-free experience.
             </p>
             <span class="reptrack-badge">Submitted to App Store</span>
 
-            <h3 class="mt-10 text-xs font-semibold uppercase tracking-[0.18em] text-zinc-500">Key features</h3>
-            <ul class="reptrack-list mt-3 space-y-2.5 text-sm text-zinc-300">
+            <div class="reptrack-demonstrates">
+              <h4>What this demonstrates</h4>
+              <ul>
+                <li>Ability to ship a complete product end-to-end</li>
+                <li>Strong focus on user experience and simplicity</li>
+                <li>Translating real-world needs into working software</li>
+              </ul>
+            </div>
+
+            <h3 class="mt-10 text-xs font-bold uppercase tracking-[0.18em] text-zinc-500">Key features</h3>
+            <ul class="reptrack-list mt-4 space-y-2.5 text-sm text-zinc-600">
               <li>Log workouts with exercises, sets, reps, and weight</li>
               <li>Review prior performance to guide progression</li>
               <li>Distraction-free session flow tuned for the gym</li>
@@ -297,7 +279,7 @@
               <li>Optimized for quick, repeatable daily use</li>
             </ul>
 
-            <h3 class="mt-8 text-xs font-semibold uppercase tracking-[0.18em] text-zinc-500">Tech stack</h3>
+            <h3 class="mt-8 text-xs font-bold uppercase tracking-[0.18em] text-zinc-500">Tech stack</h3>
             <div class="mt-3 flex flex-wrap gap-2">
               <span class="project-tag text-xs rounded-full px-3 py-1">SwiftUI</span>
               <span class="project-tag text-xs rounded-full px-3 py-1">SwiftData</span>
@@ -319,7 +301,7 @@
           </div>
 
           <div class="reptrack-carousel w-full min-w-0" data-reptrack-carousel>
-            <p class="text-xs font-semibold uppercase tracking-[0.18em] text-zinc-500 mb-3">Product</p>
+            <p class="text-xs font-bold uppercase tracking-[0.18em] text-zinc-500 mb-4">Product screens</p>
             <div class="relative px-0 sm:px-10">
               <button type="button" class="reptrack-carousel-btn reptrack-carousel-btn--prev" data-carousel-prev aria-label="Previous screenshot">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
@@ -386,171 +368,171 @@
       </div>
     </section>
 
-    <section id="projects" class="max-w-6xl mx-auto px-4 py-24 reveal">
-      <div class="mono-line mb-10"></div>
-      <div class="text-center mb-12">
-        <p class="text-sm uppercase tracking-[0.22em] text-zinc-500">Projects</p>
-        <h2 class="section-title mt-3 text-3xl md:text-4xl font-bold text-white">
-          Experiments & Side Projects
+    <section id="projects" class="max-w-6xl mx-auto px-4 py-28 md:py-32 reveal">
+      <div class="mono-line mb-12"></div>
+      <div class="text-center mb-14">
+        <p class="section-eyebrow">Portfolio</p>
+        <h2 class="section-title mt-4 text-3xl md:text-4xl lg:text-[2.5rem] font-bold leading-tight text-zinc-900">
+          Selected work
         </h2>
-        <p class="mt-4 text-zinc-400 max-w-2xl mx-auto">
-          Experiments across SQL, ML, analytics, search, automation, and data systems — alongside the featured iOS build above.
+        <p class="mt-4 text-zinc-600 max-w-2xl mx-auto leading-relaxed">
+          Additional builds across SQL, ML, analytics, search, and automation — each chosen to show how I approach real problems.
         </p>
       </div>
 
       <div class="max-w-5xl mx-auto">
-        <details class="glass rounded-3xl p-5 shadow-neon">
-          <summary class="cursor-pointer flex items-center justify-between gap-4">
+        <details class="glass p-6 md:p-7 shadow-card">
+          <summary class="cursor-pointer flex items-center justify-between gap-4 list-none">
             <div>
-              <h3 class="text-xl font-bold text-white">Old Projects</h3>
-              <p class="text-sm text-zinc-400 mt-1">
-                Earlier builds, prototypes, and technical experiments.
+              <h3 class="text-xl font-bold text-zinc-900 tracking-tight">More projects</h3>
+              <p class="text-sm text-zinc-500 mt-1.5">
+                Earlier prototypes and technical depth — expand for the full list.
               </p>
             </div>
 
-            <div class="w-10 h-10 rounded-full border border-white/10 bg-white/5 flex items-center justify-center text-zinc-300 details-arrow transition">
+            <div class="details-chevron details-arrow shrink-0 transition" aria-hidden="true">
               ⌄
             </div>
           </summary>
 
-          <div class="mt-8 grid gap-6 md:grid-cols-2">
-            <article class="glass rounded-3xl p-6 card-hover">
+          <div class="mt-10 grid gap-8 md:grid-cols-2">
+            <article class="glass p-7 md:p-8 card-hover">
               <div class="flex flex-wrap gap-2 mb-4">
                 <span class="project-tag text-xs rounded-full px-3 py-1">SQL</span>
                 <span class="project-tag text-xs rounded-full px-3 py-1">Browser App</span>
                 <span class="project-tag text-xs rounded-full px-3 py-1">Learning Tool</span>
               </div>
-              <h3 class="text-xl font-bold text-white">SQL Playground — Snowflake style in your browser</h3>
-              <p class="mt-3 text-zinc-300">
+              <h3 class="text-xl font-bold text-zinc-900">SQL Playground — Snowflake style in your browser</h3>
+              <p class="mt-3 text-zinc-600">
                 A browser-based SQL practice environment using SQLite WASM with a lightweight Snowflake-style translation layer.
               </p>
-              <p class="mt-3 text-sm text-zinc-400">
+              <p class="mt-3 text-sm text-zinc-500">
                 Shows product thinking, SQL fluency, and a useful learning interface.
               </p>
               <div class="mt-5 flex flex-wrap gap-2">
-                <a href="https://github.com/kmsmohamedansar/sql-playground" target="_blank" rel="noopener noreferrer" class="px-4 py-2 rounded-lg bg-sky-400/15 text-sky-200 border border-sky-400/20 text-sm">GitHub</a>
-                <a href="https://kmsmohamedansar.github.io/sql-playground" target="_blank" rel="noopener noreferrer" class="px-4 py-2 rounded-lg bg-emerald-400/15 text-emerald-200 border border-emerald-400/20 text-sm">Live demo</a>
+                <a href="https://github.com/kmsmohamedansar/sql-playground" target="_blank" rel="noopener noreferrer" class="project-link">GitHub</a>
+                <a href="https://kmsmohamedansar.github.io/sql-playground" target="_blank" rel="noopener noreferrer" class="project-link">Live demo</a>
               </div>
             </article>
 
-            <article class="glass rounded-3xl p-6 card-hover">
+            <article class="glass p-7 md:p-8 card-hover">
               <div class="flex flex-wrap gap-2 mb-4">
                 <span class="project-tag text-xs rounded-full px-3 py-1">ML</span>
                 <span class="project-tag text-xs rounded-full px-3 py-1">Pipeline</span>
                 <span class="project-tag text-xs rounded-full px-3 py-1">Retries</span>
               </div>
-              <h3 class="text-xl font-bold text-white">TaskMaster — small ML pipeline with retries</h3>
-              <p class="mt-3 text-zinc-300">
+              <h3 class="text-xl font-bold text-zinc-900">TaskMaster — small ML pipeline with retries</h3>
+              <p class="mt-3 text-zinc-600">
                 A production-style mini pipeline with idempotent steps, retry logic, structured logs, and a live interface.
               </p>
-              <p class="mt-3 text-sm text-zinc-400">
+              <p class="mt-3 text-sm text-zinc-500">
                 Built to show more than notebook ML — closer to system behavior.
               </p>
               <div class="mt-5 flex flex-wrap gap-2">
-                <a href="https://huggingface.co/spaces/kmsmohamedansar/TaskMaster-Job-Scheduler" target="_blank" rel="noopener noreferrer" class="px-4 py-2 rounded-lg bg-emerald-400/15 text-emerald-200 border border-emerald-400/20 text-sm">Live demo</a>
+                <a href="https://huggingface.co/spaces/kmsmohamedansar/TaskMaster-Job-Scheduler" target="_blank" rel="noopener noreferrer" class="project-link">Live demo</a>
               </div>
             </article>
 
-            <article class="glass rounded-3xl p-6 card-hover">
+            <article class="glass p-7 md:p-8 card-hover">
               <div class="flex flex-wrap gap-2 mb-4">
                 <span class="project-tag text-xs rounded-full px-3 py-1">ML</span>
                 <span class="project-tag text-xs rounded-full px-3 py-1">Retention</span>
                 <span class="project-tag text-xs rounded-full px-3 py-1">Explainability</span>
               </div>
-              <h3 class="text-xl font-bold text-white">High-value customer predictor</h3>
-              <p class="mt-3 text-zinc-300">
+              <h3 class="text-xl font-bold text-zinc-900">High-value customer predictor</h3>
+              <p class="mt-3 text-zinc-600">
                 A retention-focused model with validation, explainability, and basic MLOps hygiene.
               </p>
-              <p class="mt-3 text-sm text-zinc-400">
+              <p class="mt-3 text-sm text-zinc-500">
                 Built to connect modeling with stakeholder usability.
               </p>
               <div class="mt-5 flex flex-wrap gap-2">
-                <a href="https://github.com/kmsmohamedansar/high-value-customer-predictor" target="_blank" rel="noopener noreferrer" class="px-4 py-2 rounded-lg bg-sky-400/15 text-sky-200 border border-sky-400/20 text-sm">GitHub</a>
-                <a href="https://huggingface.co/spaces/kmsmohamedansar/high-value-customer-predictor" target="_blank" rel="noopener noreferrer" class="px-4 py-2 rounded-lg bg-emerald-400/15 text-emerald-200 border border-emerald-400/20 text-sm">Live demo</a>
+                <a href="https://github.com/kmsmohamedansar/high-value-customer-predictor" target="_blank" rel="noopener noreferrer" class="project-link">GitHub</a>
+                <a href="https://huggingface.co/spaces/kmsmohamedansar/high-value-customer-predictor" target="_blank" rel="noopener noreferrer" class="project-link">Live demo</a>
               </div>
             </article>
 
-            <article class="glass rounded-3xl p-6 card-hover">
+            <article class="glass p-7 md:p-8 card-hover">
               <div class="flex flex-wrap gap-2 mb-4">
                 <span class="project-tag text-xs rounded-full px-3 py-1">Search</span>
                 <span class="project-tag text-xs rounded-full px-3 py-1">LLM</span>
                 <span class="project-tag text-xs rounded-full px-3 py-1">Local First</span>
               </div>
-              <h3 class="text-xl font-bold text-white">Grocery AI assistant — local semantic search</h3>
-              <p class="mt-3 text-zinc-300">
+              <h3 class="text-xl font-bold text-zinc-900">Grocery AI assistant — local semantic search</h3>
+              <p class="mt-3 text-zinc-600">
                 Offline product search and grounded Q&A using embeddings, FAISS, and a lightweight local model.
               </p>
-              <p class="mt-3 text-sm text-zinc-400">
+              <p class="mt-3 text-sm text-zinc-500">
                 Shows interest in retrieval, local AI, and practical interfaces.
               </p>
               <div class="mt-5 flex flex-wrap gap-2">
-                <a href="https://github.com/kmsmohamedansar/ai_knowledge_assistant" target="_blank" rel="noopener noreferrer" class="px-4 py-2 rounded-lg bg-sky-400/15 text-sky-200 border border-sky-400/20 text-sm">GitHub</a>
-                <a href="https://huggingface.co/spaces/kmsmohamedansar/ai_knowledge_assistant" target="_blank" rel="noopener noreferrer" class="px-4 py-2 rounded-lg bg-emerald-400/15 text-emerald-200 border border-emerald-400/20 text-sm">Live demo</a>
+                <a href="https://github.com/kmsmohamedansar/ai_knowledge_assistant" target="_blank" rel="noopener noreferrer" class="project-link">GitHub</a>
+                <a href="https://huggingface.co/spaces/kmsmohamedansar/ai_knowledge_assistant" target="_blank" rel="noopener noreferrer" class="project-link">Live demo</a>
               </div>
             </article>
 
-            <article class="glass rounded-3xl p-6 card-hover">
+            <article class="glass p-7 md:p-8 card-hover">
               <div class="flex flex-wrap gap-2 mb-4">
                 <span class="project-tag text-xs rounded-full px-3 py-1">NLP</span>
                 <span class="project-tag text-xs rounded-full px-3 py-1">Transformers</span>
                 <span class="project-tag text-xs rounded-full px-3 py-1">Sentiment</span>
               </div>
-              <h3 class="text-xl font-bold text-white">Amazon fine food sentiment</h3>
-              <p class="mt-3 text-zinc-300">
+              <h3 class="text-xl font-bold text-zinc-900">Amazon fine food sentiment</h3>
+              <p class="mt-3 text-zinc-600">
                 A baseline-to-transformer sentiment analysis project exploring stronger NLP performance and deployment.
               </p>
               <div class="mt-5 flex flex-wrap gap-2">
-                <a href="https://github.com/kmsmohamedansar/amazon-fine-food-sentiment-analysis" target="_blank" rel="noopener noreferrer" class="px-4 py-2 rounded-lg bg-sky-400/15 text-sky-200 border border-sky-400/20 text-sm">GitHub</a>
+                <a href="https://github.com/kmsmohamedansar/amazon-fine-food-sentiment-analysis" target="_blank" rel="noopener noreferrer" class="project-link">GitHub</a>
               </div>
             </article>
 
-            <article class="glass rounded-3xl p-6 card-hover">
+            <article class="glass p-7 md:p-8 card-hover">
               <div class="flex flex-wrap gap-2 mb-4">
                 <span class="project-tag text-xs rounded-full px-3 py-1">Scraping</span>
                 <span class="project-tag text-xs rounded-full px-3 py-1">Automation</span>
                 <span class="project-tag text-xs rounded-full px-3 py-1">Python</span>
               </div>
-              <h3 class="text-xl font-bold text-white">Yahoo Finance news scraper</h3>
-              <p class="mt-3 text-zinc-300">
+              <h3 class="text-xl font-bold text-zinc-900">Yahoo Finance news scraper</h3>
+              <p class="mt-3 text-zinc-600">
                 A headless browser scraper for JS-heavy news pages, normalized into a structured dataset for analysis.
               </p>
-              <p class="mt-3 text-sm text-zinc-400">
+              <p class="mt-3 text-sm text-zinc-500">
                 Useful for downstream NLP or research workflows.
               </p>
             </article>
 
-            <article class="glass rounded-3xl p-6 card-hover">
+            <article class="glass p-7 md:p-8 card-hover">
               <div class="flex flex-wrap gap-2 mb-4">
                 <span class="project-tag text-xs rounded-full px-3 py-1">Zero-shot</span>
                 <span class="project-tag text-xs rounded-full px-3 py-1">LLM/NLI</span>
                 <span class="project-tag text-xs rounded-full px-3 py-1">QA</span>
               </div>
-              <h3 class="text-xl font-bold text-white">Smart product categorization — zero-shot</h3>
-              <p class="mt-3 text-zinc-300">
+              <h3 class="text-xl font-bold text-zinc-900">Smart product categorization — zero-shot</h3>
+              <p class="mt-3 text-zinc-600">
                 A practical category-validation workflow using BART-MNLI and lightweight rules for low-label review.
               </p>
             </article>
 
-            <article class="glass rounded-3xl p-6 card-hover">
+            <article class="glass p-7 md:p-8 card-hover">
               <div class="flex flex-wrap gap-2 mb-4">
                 <span class="project-tag text-xs rounded-full px-3 py-1">EDA</span>
                 <span class="project-tag text-xs rounded-full px-3 py-1">Python</span>
                 <span class="project-tag text-xs rounded-full px-3 py-1">Visualization</span>
               </div>
-              <h3 class="text-xl font-bold text-white">Spotify music trends — quick EDA</h3>
-              <p class="mt-3 text-zinc-300">
+              <h3 class="text-xl font-bold text-zinc-900">Spotify music trends — quick EDA</h3>
+              <p class="mt-3 text-zinc-600">
                 Exploration of audio features and popularity patterns over time, focused on clean storytelling with data.
               </p>
             </article>
 
-            <article class="glass rounded-3xl p-6 card-hover md:col-span-2">
+            <article class="glass p-7 md:p-8 card-hover md:col-span-2">
               <div class="flex flex-wrap gap-2 mb-4">
                 <span class="project-tag text-xs rounded-full px-3 py-1">Sports Analytics</span>
                 <span class="project-tag text-xs rounded-full px-3 py-1">Power BI</span>
                 <span class="project-tag text-xs rounded-full px-3 py-1">Scoring Logic</span>
               </div>
-              <h3 class="text-xl font-bold text-white">Canadian Premier League — Dream XI (2019)</h3>
-              <p class="mt-3 text-zinc-300">
+              <h3 class="text-xl font-bold text-zinc-900">Canadian Premier League — Dream XI (2019)</h3>
+              <p class="mt-3 text-zinc-600">
                 A role-aware KPI model for player selection, paired with a lightweight Power BI dashboard for storytelling.
               </p>
             </article>
@@ -559,55 +541,55 @@
       </div>
     </section>
 
-    <section id="stack" class="max-w-6xl mx-auto px-4 py-12 reveal">
-      <div class="mono-line mb-10"></div>
-      <div class="text-center mb-12">
-        <p class="text-sm uppercase tracking-[0.22em] text-zinc-500">Stack</p>
-        <h2 class="section-title mt-3 text-3xl md:text-4xl font-bold text-white">
-          Technical stack
+    <section id="stack" class="max-w-6xl mx-auto px-4 py-28 md:py-32 reveal">
+      <div class="mono-line mb-12"></div>
+      <div class="text-center mb-14">
+        <p class="section-eyebrow">Stack</p>
+        <h2 class="section-title mt-4 text-3xl md:text-4xl lg:text-[2.5rem] font-bold leading-tight text-zinc-900">
+          Tools I ship with
         </h2>
       </div>
 
-      <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <div class="glass rounded-3xl p-6 card-hover">
-          <h3 class="text-white font-semibold">Data Systems</h3>
-          <p class="mt-3 text-sm text-zinc-400">SQL, Snowflake, BigQuery, DuckDB</p>
+      <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+        <div class="glass p-8 card-hover">
+          <h3 class="text-zinc-900 font-semibold text-lg">Data Systems</h3>
+          <p class="mt-3 text-sm text-zinc-500">SQL, Snowflake, BigQuery, DuckDB</p>
         </div>
 
-        <div class="glass rounded-3xl p-6 card-hover">
-          <h3 class="text-white font-semibold">Workflows</h3>
-          <p class="mt-3 text-sm text-zinc-400">Airflow, ETL/ELT, recurring data delivery</p>
+        <div class="glass p-8 card-hover">
+          <h3 class="text-zinc-900 font-semibold text-lg">Workflows</h3>
+          <p class="mt-3 text-sm text-zinc-500">Airflow, ETL/ELT, recurring data delivery</p>
         </div>
 
-        <div class="glass rounded-3xl p-6 card-hover">
-          <h3 class="text-white font-semibold">Analytics</h3>
-          <p class="mt-3 text-sm text-zinc-400">Tableau, Power BI, pandas, business reporting</p>
+        <div class="glass p-8 card-hover">
+          <h3 class="text-zinc-900 font-semibold text-lg">Analytics</h3>
+          <p class="mt-3 text-sm text-zinc-500">Tableau, Power BI, pandas, business reporting</p>
         </div>
 
-        <div class="glass rounded-3xl p-6 card-hover">
-          <h3 class="text-white font-semibold">Growth Areas</h3>
-          <p class="mt-3 text-sm text-zinc-400">Python depth, AI workflows, search, automation, system thinking</p>
+        <div class="glass p-8 card-hover">
+          <h3 class="text-zinc-900 font-semibold text-lg">Growth Areas</h3>
+          <p class="mt-3 text-sm text-zinc-500">Python depth, AI workflows, search, automation, system thinking</p>
         </div>
       </div>
     </section>
 
-   <section id="experience" class="max-w-6xl mx-auto px-4 py-24 reveal">
-  <div class="mono-line mb-10"></div>
+    <section id="experience" class="max-w-6xl mx-auto px-4 py-28 md:py-32 reveal">
+      <div class="mono-line mb-12"></div>
 
-  <div class="text-center mb-12">
-    <p class="text-sm uppercase tracking-[0.22em] text-zinc-500">Experience</p>
-    <h2 class="section-title mt-3 text-3xl md:text-4xl font-bold text-white">
-      Professional work
-    </h2>
-  </div>
+      <div class="text-center mb-14">
+        <p class="section-eyebrow">Experience</p>
+        <h2 class="section-title mt-4 text-3xl md:text-4xl lg:text-[2.5rem] font-bold leading-tight text-zinc-900">
+          Professional work
+        </h2>
+      </div>
 
   <div class="space-y-6">
 
-    <article class="glass rounded-3xl p-7 card-hover">
+    <article class="glass p-8 md:p-9 card-hover">
       <div class="flex flex-col md:flex-row md:items-start md:justify-between gap-4">
         <div>
-          <h3 class="text-xl md:text-2xl font-bold text-white">Associate Solutions Engineer · Datasembly</h3>
-          <p class="mt-1 text-sm text-zinc-400">Jan 2026 – Present · Remote, Canada</p>
+          <h3 class="text-xl md:text-2xl font-bold text-zinc-900">Associate Solutions Engineer · Datasembly</h3>
+          <p class="mt-1 text-sm text-zinc-500">Jan 2026 – Present · Remote, Canada</p>
         </div>
         <div class="flex flex-wrap gap-2">
           <span class="project-tag text-xs rounded-full px-3 py-1">SQL</span>
@@ -617,18 +599,18 @@
         </div>
       </div>
 
-      <ul class="mt-5 list-disc ml-5 space-y-2 text-zinc-300">
+      <ul class="mt-5 list-disc ml-5 space-y-2 text-zinc-600">
         <li>Design data solutions for retail pricing datasets, supporting client needs, pre-sales analysis, and custom data requests.</li>
         <li>Use SQL and Snowflake to investigate complex data issues, validate outputs, and deliver reliable stakeholder-ready solutions.</li>
         <li>Partner with internal teams to translate business questions into clear technical approaches and usable deliverables.</li>
       </ul>
     </article>
 
-    <article class="glass rounded-3xl p-7 card-hover">
+    <article class="glass p-8 md:p-9 card-hover">
       <div class="flex flex-col md:flex-row md:items-start md:justify-between gap-4">
         <div>
-          <h3 class="text-xl md:text-2xl font-bold text-white">Tech Support · Datasembly</h3>
-          <p class="mt-1 text-sm text-zinc-400">Aug 2024 – Dec 2025 · Remote, Canada</p>
+          <h3 class="text-xl md:text-2xl font-bold text-zinc-900">Tech Support · Datasembly</h3>
+          <p class="mt-1 text-sm text-zinc-500">Aug 2024 – Dec 2025 · Remote, Canada</p>
         </div>
         <div class="flex flex-wrap gap-2">
           <span class="project-tag text-xs rounded-full px-3 py-1">SQL</span>
@@ -638,18 +620,18 @@
         </div>
       </div>
 
-      <ul class="mt-5 list-disc ml-5 space-y-2 text-zinc-300">
+      <ul class="mt-5 list-disc ml-5 space-y-2 text-zinc-600">
         <li>Supported pricing analytics initiatives by building SQL-based reporting solutions and improving internal data workflows.</li>
         <li>Resolved complex data issues across recurring client and internal requests using Snowflake and related tooling.</li>
         <li>Contributed to dashboarding, reporting reliability, and workflow improvements across analytics operations.</li>
       </ul>
     </article>
 
-    <article class="glass rounded-3xl p-7 card-hover">
+    <article class="glass p-8 md:p-9 card-hover">
       <div class="flex flex-col md:flex-row md:items-start md:justify-between gap-4">
         <div>
-          <h3 class="text-xl md:text-2xl font-bold text-white">Business Development Intern (Business Analysis) · Spongelii</h3>
-          <p class="mt-1 text-sm text-zinc-400">Jan 2024 – Apr 2024 · Remote, Canada</p>
+          <h3 class="text-xl md:text-2xl font-bold text-zinc-900">Business Development Intern (Business Analysis) · Spongelii</h3>
+          <p class="mt-1 text-sm text-zinc-500">Jan 2024 – Apr 2024 · Remote, Canada</p>
         </div>
         <div class="flex flex-wrap gap-2">
           <span class="project-tag text-xs rounded-full px-3 py-1">Business Analysis</span>
@@ -659,18 +641,18 @@
         </div>
       </div>
 
-      <ul class="mt-5 list-disc ml-5 space-y-2 text-zinc-300">
+      <ul class="mt-5 list-disc ml-5 space-y-2 text-zinc-600">
         <li>Worked on business analysis tasks tied to data workflows, reporting needs, and stakeholder requirements.</li>
         <li>Supported SQL and Snowflake-based data work while helping shape dashboard and reporting outputs.</li>
         <li>Helped document requirements, analysis logic, and workflow structure for collaboration and handoff.</li>
       </ul>
     </article>
 
-    <article class="glass rounded-3xl p-7 card-hover">
+    <article class="glass p-8 md:p-9 card-hover">
       <div class="flex flex-col md:flex-row md:items-start md:justify-between gap-4">
         <div>
-          <h3 class="text-xl md:text-2xl font-bold text-white">Business Analyst II - Quality Auditing · Amazon Prime Video</h3>
-          <p class="mt-1 text-sm text-zinc-400">Oct 2021 – Aug 2022 · Hybrid, India</p>
+          <h3 class="text-xl md:text-2xl font-bold text-zinc-900">Business Analyst II - Quality Auditing · Amazon Prime Video</h3>
+          <p class="mt-1 text-sm text-zinc-500">Oct 2021 – Aug 2022 · Hybrid, India</p>
         </div>
         <div class="flex flex-wrap gap-2">
           <span class="project-tag text-xs rounded-full px-3 py-1">Quality Auditing</span>
@@ -680,18 +662,18 @@
         </div>
       </div>
 
-      <ul class="mt-5 list-disc ml-5 space-y-2 text-zinc-300">
+      <ul class="mt-5 list-disc ml-5 space-y-2 text-zinc-600">
         <li>Led quality auditing and process improvement work for Prime Video content operations, improving accuracy and team efficiency.</li>
         <li>Used reporting and data-driven analysis to identify workflow gaps, track trends, and support operational decisions.</li>
         <li>Contributed to SOP updates, audit consistency, and cross-team process standardization.</li>
       </ul>
     </article>
 
-    <article class="glass rounded-3xl p-7 card-hover">
+    <article class="glass p-8 md:p-9 card-hover">
       <div class="flex flex-col md:flex-row md:items-start md:justify-between gap-4">
         <div>
-          <h3 class="text-xl md:text-2xl font-bold text-white">Business Analyst I - Digital Content · Amazon Prime Video</h3>
-          <p class="mt-1 text-sm text-zinc-400">Aug 2019 – Sep 2021 · Hybrid, India</p>
+          <h3 class="text-xl md:text-2xl font-bold text-zinc-900">Business Analyst I - Digital Content · Amazon Prime Video</h3>
+          <p class="mt-1 text-sm text-zinc-500">Aug 2019 – Sep 2021 · Hybrid, India</p>
         </div>
         <div class="flex flex-wrap gap-2">
           <span class="project-tag text-xs rounded-full px-3 py-1">Digital Content</span>
@@ -701,36 +683,36 @@
         </div>
       </div>
 
-      <ul class="mt-5 list-disc ml-5 space-y-2 text-zinc-300">
+      <ul class="mt-5 list-disc ml-5 space-y-2 text-zinc-600">
         <li>Managed quality control and operational coordination for Prime Video’s digital content catalog.</li>
         <li>Worked with internal stakeholders to resolve defects, maintain metadata accuracy, and support timely content readiness.</li>
         <li>Helped maintain process quality across recurring content operations and issue-resolution workflows.</li>
       </ul>
     </article>
 
-  </div>
-</section>
-    
-    <section id="contact" class="max-w-5xl mx-auto px-4 py-24 reveal">
-      <div class="mono-line mb-10"></div>
-      <div class="glass rounded-3xl p-8 md:p-10 text-center shadow-neon">
-        <p class="text-sm uppercase tracking-[0.22em] text-zinc-500">Contact</p>
-        <h2 class="section-title mt-3 text-3xl md:text-4xl font-bold text-white">
- 
+      </div>
+    </section>
+
+    <section id="contact" class="max-w-5xl mx-auto px-4 py-28 md:py-32 reveal">
+      <div class="mono-line mb-12"></div>
+      <div class="glass p-10 md:p-12 text-center shadow-card">
+        <p class="section-eyebrow">Contact</p>
+        <h2 class="section-title mt-4 text-3xl md:text-4xl font-bold text-zinc-900">
+          Let’s connect
         </h2>
-        <p class="mt-4 text-zinc-400 max-w-2xl mx-auto">
-          I’m currently focused on growing as a more technical builder across data, AI, and engineering-style systems.
+        <p class="mt-5 text-zinc-600 max-w-xl mx-auto leading-relaxed">
+          Open to conversations about solutions engineering, data systems, and product-minded technical work.
         </p>
 
-        <div class="mt-8 flex flex-col items-center gap-3 text-zinc-300">
-          <a href="mailto:mohamedansarkms@gmail.com" class="hover:text-white transition underline underline-offset-4">
+        <div class="mt-10 flex flex-col items-center gap-4 text-zinc-600">
+          <a href="mailto:mohamedansarkms@gmail.com" class="text-zinc-900 font-medium hover:text-[#9a8233] transition underline underline-offset-4 decoration-zinc-300 hover:decoration-[#c9a646]/60">
             mohamedansarkms@gmail.com
           </a>
           <a
             href="https://www.linkedin.com/in/kmsmohamedansar/"
             target="_blank"
             rel="noopener noreferrer"
-            class="hover:text-white transition underline underline-offset-4"
+            class="text-zinc-900 font-medium hover:text-[#9a8233] transition underline underline-offset-4 decoration-zinc-300 hover:decoration-[#c9a646]/60"
           >
             linkedin.com/kmsmohamedansar
           </a>

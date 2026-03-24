@@ -21,7 +21,7 @@
   <meta property="og:url" content="https://kmsmohamedansar.github.io/projects/reptrack.html" />
   <meta property="og:type" content="website" />
 
-  <meta name="theme-color" content="#09090b" />
+  <meta name="theme-color" content="#f8f9fb" />
   <link rel="icon" href="/favicon.ico" type="image/x-icon" />
 
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -37,7 +37,7 @@
       theme: {
         extend: {
           boxShadow: {
-            neon: "0 0 0 1px rgba(255,255,255,0.06), 0 0 30px rgba(56,189,248,0.15), 0 0 80px rgba(168,85,247,0.1)"
+            card: "0 10px 30px rgba(0,0,0,0.06)"
           },
           animation: {
             floaty: "floaty 8s ease-in-out infinite",
@@ -69,30 +69,24 @@
 </head>
 
 <body class="grid-bg scanlines">
-  <div class="aurora" aria-hidden="true">
-    <div class="blob blob-1"></div>
-    <div class="blob blob-2"></div>
-    <div class="blob blob-3"></div>
-  </div>
-
   <nav class="fixed top-0 inset-x-0 z-50">
-    <div class="max-w-6xl mx-auto px-4 pt-4">
-      <div class="glass rounded-2xl px-5 py-4 flex items-center justify-between shadow-neon">
-        <a href="/" class="font-extrabold tracking-tight text-white text-lg md:text-xl">
+    <div class="max-w-6xl mx-auto px-4 pt-4 pb-1">
+      <div class="nav-shell px-5 py-3.5 md:py-4 flex items-center justify-between shadow-card">
+        <a href="/" class="font-bold tracking-tight text-zinc-900 text-lg md:text-xl">
           Mohamed Ansar
         </a>
 
-        <div class="hidden md:flex items-center gap-6 text-sm text-zinc-300">
-          <a href="/#about" class="hover:text-white transition">About</a>
-          <a href="/#direction" class="hover:text-white transition">Direction</a>
-          <a href="/#reptrack-featured" class="hover:text-white transition">Featured</a>
-          <a href="/#projects" class="hover:text-white transition">Projects</a>
-          <a href="/#contact" class="hover:text-white transition">Contact</a>
+        <div class="hidden md:flex items-center gap-7 text-sm">
+          <a href="/#about" class="nav-link">About</a>
+          <a href="/#direction" class="nav-link">Direction</a>
+          <a href="/#reptrack-featured" class="nav-link">Featured</a>
+          <a href="/#projects" class="nav-link">Selected work</a>
+          <a href="/#contact" class="nav-link">Contact</a>
         </div>
 
         <button
           id="nav-toggle"
-          class="md:hidden text-white"
+          class="md:hidden text-zinc-800 p-1 -mr-1"
           aria-label="Open menu"
           aria-controls="mobile-nav"
           aria-expanded="false"
@@ -103,37 +97,48 @@
         </button>
       </div>
 
-      <div id="mobile-nav" class="hidden md:hidden mt-2 glass rounded-2xl p-4 text-sm text-zinc-300">
-        <div class="flex flex-col gap-3">
-          <a href="/#about">About</a>
-          <a href="/#direction">Direction</a>
-          <a href="/#reptrack-featured">Featured</a>
-          <a href="/#projects">Projects</a>
-          <a href="/#contact">Contact</a>
+      <div id="mobile-nav" class="hidden md:hidden mt-2 nav-shell p-4 text-sm shadow-card">
+        <div class="flex flex-col gap-3 text-zinc-600">
+          <a href="/#about" class="nav-link py-0.5">About</a>
+          <a href="/#direction" class="nav-link py-0.5">Direction</a>
+          <a href="/#reptrack-featured" class="nav-link py-0.5">Featured</a>
+          <a href="/#projects" class="nav-link py-0.5">Selected work</a>
+          <a href="/#contact" class="nav-link py-0.5">Contact</a>
         </div>
       </div>
     </div>
   </nav>
 
-  <main class="pt-28 pb-24 px-4 max-w-6xl mx-auto">
+  <main class="pt-28 pb-28 md:pb-32 px-4 max-w-6xl mx-auto">
     <header class="reptrack-detail-hero reveal">
       <nav class="text-sm text-zinc-500 mb-8" aria-label="Breadcrumb">
-        <a href="/" class="hover:text-zinc-300 transition">Home</a>
-        <span class="mx-2 text-zinc-600">/</span>
-        <span class="text-zinc-400">RepTrack</span>
+        <a href="/" class="hover:text-zinc-800 transition">Home</a>
+        <span class="mx-2 text-zinc-300">/</span>
+        <span class="text-zinc-600">RepTrack</span>
       </nav>
 
-      <div class="glass reptrack-shell rounded-[1.75rem] md:rounded-[2rem] p-8 md:p-12 shadow-neon">
-        <div class="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-8">
+      <div class="reptrack-showcase reptrack-shell p-8 md:p-12">
+        <div class="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-10">
           <div class="max-w-2xl">
-            <p class="text-sm uppercase tracking-[0.22em] text-zinc-500">Case study</p>
-            <h1 class="section-title mt-3 text-3xl md:text-5xl font-bold text-white">
+            <p class="section-eyebrow">Case study</p>
+            <h1 class="section-title mt-4 text-3xl md:text-5xl font-bold text-zinc-900 leading-tight">
               RepTrack Workout Log
             </h1>
-            <p class="mt-4 text-lg md:text-xl text-zinc-200 font-medium leading-snug">
-              A clean and focused iOS workout tracker built for consistency and strength progress.
+            <p class="mt-5 text-lg md:text-xl text-zinc-900 font-semibold leading-snug">
+              A clean, focused workout tracker built for consistency and strength progression.
+            </p>
+            <p class="mt-4 text-zinc-600 leading-relaxed">
+              RepTrack is a production-ready iOS app designed to help users log workouts, track sets and reps, and review their performance over time. I designed and built the app end-to-end using SwiftUI and SwiftData, focusing on clarity, speed, and a distraction-free experience.
             </p>
             <span class="reptrack-badge">Submitted to App Store</span>
+            <div class="reptrack-demonstrates">
+              <h4>What this demonstrates</h4>
+              <ul>
+                <li>Ability to ship a complete product end-to-end</li>
+                <li>Strong focus on user experience and simplicity</li>
+                <li>Translating real-world needs into working software</li>
+              </ul>
+            </div>
           </div>
           <div class="flex flex-col sm:flex-row lg:flex-col gap-3 shrink-0">
             <a
@@ -149,13 +154,13 @@
       </div>
     </header>
 
-    <section class="mt-16 reveal reptrack-carousel" data-reptrack-carousel aria-labelledby="gallery-heading">
-      <div class="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-6">
+    <section class="mt-20 reveal reptrack-carousel" data-reptrack-carousel aria-labelledby="gallery-heading">
+      <div class="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-8">
         <div>
-          <h2 id="gallery-heading" class="section-title text-2xl md:text-3xl font-bold text-white">
+          <h2 id="gallery-heading" class="section-title text-2xl md:text-3xl font-bold text-zinc-900">
             Interface
           </h2>
-          <p class="mt-2 text-sm text-zinc-400 max-w-xl">
+          <p class="mt-3 text-sm text-zinc-600 max-w-xl leading-relaxed">
             A tight, native-feeling flow from dashboard to session — built for quick logging and clear feedback.
           </p>
         </div>
@@ -224,9 +229,9 @@
       </div>
     </section>
 
-    <section class="mt-20 reveal">
-      <h2 class="section-title text-2xl md:text-3xl font-bold text-white">Still gallery</h2>
-      <p class="mt-2 text-sm text-zinc-400 max-w-2xl">
+    <section class="mt-24 reveal">
+      <h2 class="section-title text-2xl md:text-3xl font-bold text-zinc-900">Still gallery</h2>
+      <p class="mt-3 text-sm text-zinc-600 max-w-2xl leading-relaxed">
         Full-resolution frames for a closer read of layout, spacing, and hierarchy.
       </p>
       <div class="reptrack-gallery-grid mt-10">
@@ -253,10 +258,10 @@
       </div>
     </section>
 
-    <div class="mt-20 grid lg:grid-cols-2 gap-10 reveal">
-      <article class="glass rounded-3xl p-8 shadow-neon reptrack-prose">
-        <h2 class="section-title text-2xl font-bold text-white mt-0">Overview</h2>
-        <p class="mt-4 text-zinc-300">
+    <div class="mt-24 grid lg:grid-cols-2 gap-10 reveal">
+      <article class="glass p-8 md:p-10 shadow-card reptrack-prose">
+        <h2 class="section-title text-2xl font-bold text-zinc-900 mt-0">Overview</h2>
+        <p class="mt-4 text-zinc-600">
           RepTrack Workout Log is a focused iOS fitness app that simplifies workout tracking and makes strength progression easier to review over time.
           It was designed and developed end to end with an emphasis on clarity, usability, and a smooth native iOS experience.
         </p>
@@ -273,8 +278,8 @@
         </p>
       </article>
 
-      <article class="glass rounded-3xl p-8 shadow-neon reptrack-prose">
-        <h2 class="section-title text-2xl font-bold text-white mt-0">What I built</h2>
+      <article class="glass p-8 md:p-10 shadow-card reptrack-prose">
+        <h2 class="section-title text-2xl font-bold text-zinc-900 mt-0">What I built</h2>
         <ul>
           <li>Designed the workout logging flow for speed and low cognitive load</li>
           <li>Implemented the interface in SwiftUI with consistent hierarchy and spacing</li>
@@ -293,11 +298,11 @@
       </article>
     </div>
 
-    <section class="mt-16 glass rounded-3xl p-8 md:p-10 shadow-neon reveal">
+    <section class="mt-16 glass p-8 md:p-10 shadow-card reveal">
       <div class="grid md:grid-cols-2 gap-10">
         <div>
-          <h2 class="section-title text-xl font-bold text-white">Key features</h2>
-          <ul class="reptrack-list mt-4 space-y-2.5 text-sm text-zinc-300">
+          <h2 class="section-title text-xl font-bold text-zinc-900">Key features</h2>
+          <ul class="reptrack-list mt-4 space-y-2.5 text-sm text-zinc-600">
             <li>Workouts with exercises, sets, reps, and weight</li>
             <li>Historical context for progression decisions</li>
             <li>Focused session flow with minimal distraction</li>
@@ -306,7 +311,7 @@
           </ul>
         </div>
         <div>
-          <h2 class="section-title text-xl font-bold text-white">Tech stack</h2>
+          <h2 class="section-title text-xl font-bold text-zinc-900">Tech stack</h2>
           <div class="mt-4 flex flex-wrap gap-2">
             <span class="project-tag text-xs rounded-full px-3 py-1">SwiftUI</span>
             <span class="project-tag text-xs rounded-full px-3 py-1">SwiftData</span>
@@ -314,8 +319,8 @@
             <span class="project-tag text-xs rounded-full px-3 py-1">Xcode</span>
             <span class="project-tag text-xs rounded-full px-3 py-1">App Store Connect</span>
           </div>
-          <h3 class="mt-8 text-sm font-semibold text-white">Why it matters</h3>
-          <p class="mt-2 text-sm text-zinc-400 leading-relaxed">
+          <h3 class="mt-8 text-sm font-semibold text-zinc-900">Why it matters</h3>
+          <p class="mt-2 text-sm text-zinc-600 leading-relaxed">
             Shipping a consumer-facing iOS app is as much about product judgment as it is about code: what to leave out, how screens behave under time pressure, and how persistence and navigation stay predictable.
             RepTrack is my proof point for owning that full loop — not only building features, but delivering something polished enough to submit to Apple.
           </p>
@@ -323,9 +328,9 @@
       </div>
     </section>
 
-    <section class="mt-16 glass rounded-3xl p-8 md:p-10 shadow-neon reveal reptrack-prose">
-      <h2 class="section-title text-xl font-bold text-white mt-0">What’s next</h2>
-      <p class="text-zinc-400 text-sm md:text-base">
+    <section class="mt-16 glass p-8 md:p-10 shadow-card reveal reptrack-prose">
+      <h2 class="section-title text-xl font-bold text-zinc-900 mt-0">What’s next</h2>
+      <p class="text-zinc-600 text-sm md:text-base leading-relaxed">
         Post-launch iteration will follow real usage: refinements to progression insights, optional quality-of-life shortcuts, and anything that makes logging faster without diluting the calm, focused experience.
       </p>
     </section>
