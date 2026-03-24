@@ -1,0 +1,68 @@
+/* NorthStar Forge company page: uses portfolio-base tokens and components */
+
+.nsf-page .site-nav__brand {
+  max-width: 14rem;
+  line-height: 1.15;
+}
+
+@media (min-width: 900px) {
+  .nsf-page .site-nav__links {
+    gap: 1.15rem;
+  }
+}
+
+.nsf-product-grid {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: 1fr;
+}
+
+@media (min-width: 640px) {
+  .nsf-product-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 1024px) {
+  .nsf-product-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.nsf-product-grid figure {
+  margin: 0;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  border: 1px solid var(--border);
+  background: var(--surface-1);
+  box-shadow: var(--shadow-card);
+}
+
+.nsf-product-grid img {
+  display: block;
+  width: 100%;
+  height: auto;
+  vertical-align: middle;
+}
+
+.nsf-product-grid figcaption {
+  padding: 0.65rem 0.85rem;
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  background: var(--surface-2);
+}
+
+.nsf-footer {
+  padding: 2rem 1rem 3rem;
+  max-width: var(--content-max);
+  margin: 0 auto;
+  text-align: center;
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
