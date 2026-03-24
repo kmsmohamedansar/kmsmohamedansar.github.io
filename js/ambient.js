@@ -1,6 +1,7 @@
 /**
- * Premium ambient canvas: grid + soft nodes + slow drift.
- * Respects prefers-reduced-motion; lighter on mobile.
+ * Telemetry-inspired ambient canvas: grid, flow curves, signal samples.
+ * Abstract "race engineering UI" — no literal racing imagery.
+ * Respects prefers-reduced-motion; lighter on narrow viewports.
  */
 (function () {
   const canvas = document.getElementById("ambient-canvas");
@@ -8,12 +9,12 @@
 
   const ctx = canvas.getContext("2d", { alpha: true });
   const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  const isMobile = window.matchMedia("(max-width: 768px)").matches;
+  const mqMobile = window.matchMedia("(max-width: 768px)");
+  let isMobile = mqMobile.matches;
 
   let w = 0;
   let h = 0;
-  let dpr = Math.min(window.devicePixelRatio || 1, 2);
-  let nodes = [];
+  let dpr = 1;
   let tick = 0;
   let mx = 0;
   let my = 0;
@@ -21,12 +22,106 @@
   let targetMy = 0;
 
   const COLORS = {
-    grid: "rgba(79, 209, 255, 0.035)",
-    gridStrong: "rgba(79, 209, 255, 0.06)",
-    node: "rgba(79, 209, 255, 0.25)",
-    line: "rgba(124, 140, 255, 0.08)",
-    glow: "rgba(61, 169, 252, 0.12)"
+    grid: "rgba(79, 209, 255, 0.028)",
+    gridAccent: "rgba(75, 123, 255, 0.045)",
+    trace: "rgba(79, 209, 255, 0.11)",
+    traceBlue: "rgba(75, 123, 255, 0.09)",
+    sample: "rgba(79, 209, 255, 0.35)",
+    sampleCore: "rgba(245, 247, 251, 0.5)",
+    connect: "rgba(75, 123, 255, 0.06)"
   };
+
+  /** @type {{ pts: {x:number,y:number}[], len: number }[]} */
+  let paths = [];
+  /** @type {{ pathIndex: number, t: number, speed: number }[]} */
+  let samples = [];
+
+  function buildPaths() {
+    paths = [];
+    const pad = Math.min(w, h) * 0.08;
+    const W = w - pad * 2;
+    const H = h - pad * 2;
+    const baseX = pad;
+    const baseY = pad;
+
+    const curves = [
+      [
+        { x: baseX + W * 0.02, y: baseY + H * 0.72 },
+        { x: baseX + W * 0.22, y: baseY + H * 0.35 },
+        { x: baseX + W * 0.48, y: baseY + H * 0.55 },
+        { x: baseX + W * 0.78, y: baseY + H * 0.22 },
+        { x: baseX + W * 0.96, y: baseY + H * 0.48 }
+      ],
+      [
+        { x: baseX + W * 0.08, y: baseY + H * 0.18 },
+        { x: baseX + W * 0.35, y: baseY + H * 0.42 },
+        { x: baseX + W * 0.62, y: baseY + H * 0.28 },
+        { x: baseX + W * 0.88, y: baseY + H * 0.65 }
+      ],
+      [
+        { x: baseX + W * 0.95, y: baseY + H * 0.12 },
+        { x: baseX + W * 0.7, y: baseY + H * 0.38 },
+        { x: baseX + W * 0.45, y: baseY + H * 0.82 },
+        { x: baseX + W * 0.15, y: baseY + H * 0.58 }
+      ]
+    ];
+
+    if (isMobile) curves.splice(1, 1);
+
+    curves.forEach((ctrl) => {
+      const pts = [];
+      const segs = ctrl.length - 1;
+      const stepsPerSeg = isMobile ? 14 : 22;
+      for (let s = 0; s < segs; s++) {
+        const p0 = ctrl[s];
+        const p1 = ctrl[s + 1];
+        const midx = (p0.x + p1.x) / 2 + (s % 2 === 0 ? 1 : -1) * W * 0.022;
+        const midy = (p0.y + p1.y) / 2;
+        for (let i = 0; i <= stepsPerSeg; i++) {
+          const t = i / stepsPerSeg;
+          const ox = (1 - t) * (1 - t) * p0.x + 2 * (1 - t) * t * midx + t * t * p1.x;
+          const oy = (1 - t) * (1 - t) * p0.y + 2 * (1 - t) * t * midy + t * t * p1.y;
+          pts.push({ x: ox, y: oy });
+        }
+      }
+      let len = 0;
+      for (let i = 1; i < pts.length; i++) {
+        len += Math.hypot(pts[i].x - pts[i - 1].x, pts[i].y - pts[i - 1].y);
+      }
+      paths.push({ pts, len });
+    });
+  }
+
+  function pointOnPath(path, t) {
+    const { pts, len } = path;
+    if (!pts.length) return { x: 0, y: 0 };
+    const target = ((t % 1) + 1) % 1) * len;
+    let acc = 0;
+    for (let i = 1; i < pts.length; i++) {
+      const a = pts[i - 1];
+      const b = pts[i];
+      const seg = Math.hypot(b.x - a.x, b.y - a.y);
+      if (acc + seg >= target) {
+        const u = seg > 0 ? (target - acc) / seg : 0;
+        return { x: a.x + (b.x - a.x) * u, y: a.y + (b.y - a.y) * u };
+      }
+      acc += seg;
+    }
+    return pts[pts.length - 1];
+  }
+
+  function initSamples() {
+    samples = [];
+    if (reduceMotion || !paths.length) return;
+    const count = isMobile ? 5 : 11;
+    for (let i = 0; i < count; i++) {
+      samples.push({
+        pathIndex: i % paths.length,
+        t: Math.random(),
+        speed: 0.00015 + Math.random() * 0.00022
+      });
+    }
+  }
 
   function resize() {
     w = window.innerWidth;
@@ -37,30 +132,17 @@
     canvas.style.width = w + "px";
     canvas.style.height = h + "px";
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    initNodes();
-  }
-
-  function initNodes() {
-    const count = reduceMotion ? 0 : isMobile ? 10 : 22;
-    nodes = [];
-    for (let i = 0; i < count; i++) {
-      nodes.push({
-        x: Math.random() * w,
-        y: Math.random() * h,
-        vx: (Math.random() - 0.5) * 0.15,
-        vy: (Math.random() - 0.5) * 0.15,
-        r: 1.2 + Math.random() * 1.8,
-        phase: Math.random() * Math.PI * 2
-      });
-    }
+    buildPaths();
+    initSamples();
   }
 
   function drawGrid() {
-    const step = isMobile ? 56 : 48;
+    const step = isMobile ? 64 : 52;
     ctx.strokeStyle = COLORS.grid;
     ctx.lineWidth = 1;
     ctx.beginPath();
-    for (let x = 0; x <= w; x += step) {
+    const off = (tick * 0.12) % step;
+    for (let x = -step + off; x <= w + step; x += step) {
       ctx.moveTo(x + 0.5, 0);
       ctx.lineTo(x + 0.5, h);
     }
@@ -70,12 +152,10 @@
     }
     ctx.stroke();
 
-    // Accent cross at origin feel (slow shift)
     if (!reduceMotion) {
-      const ox = (tick * 0.15) % step;
-      ctx.strokeStyle = COLORS.gridStrong;
+      ctx.strokeStyle = COLORS.gridAccent;
       ctx.beginPath();
-      for (let x = -step + ox; x <= w + step; x += step * 3) {
+      for (let x = off + step * 2; x <= w; x += step * 4) {
         ctx.moveTo(x, 0);
         ctx.lineTo(x, h);
       }
@@ -84,33 +164,56 @@
   }
 
   function drawGlow() {
-    const gx = mx * 0.08 + w * 0.72;
-    const gy = my * 0.06 + h * 0.28;
-    const grd = ctx.createRadialGradient(gx, gy, 0, gx, gy, Math.max(w, h) * 0.45);
-    grd.addColorStop(0, "rgba(61, 169, 252, 0.14)");
-    grd.addColorStop(0.35, "rgba(124, 140, 255, 0.05)");
+    const gx = w * 0.55 + targetMx * 0.06;
+    const gy = h * 0.32 + targetMy * 0.05;
+    const grd = ctx.createRadialGradient(gx, gy, 0, gx, gy, Math.max(w, h) * 0.5);
+    grd.addColorStop(0, "rgba(79, 209, 255, 0.1)");
+    grd.addColorStop(0.28, "rgba(75, 123, 255, 0.04)");
     grd.addColorStop(1, "transparent");
     ctx.fillStyle = grd;
     ctx.fillRect(0, 0, w, h);
   }
 
-  function drawNodes() {
-    nodes.forEach((n) => {
-      n.x += n.vx;
-      n.y += n.vy;
-      if (n.x < 0 || n.x > w) n.vx *= -1;
-      if (n.y < 0 || n.y > h) n.vy *= -1;
+  function drawPaths(staticOnly) {
+    paths.forEach((path, idx) => {
+      const { pts } = path;
+      if (pts.length < 2) return;
+      ctx.beginPath();
+      ctx.moveTo(pts[0].x, pts[0].y);
+      for (let i = 1; i < pts.length; i++) ctx.lineTo(pts[i].x, pts[i].y);
+      ctx.strokeStyle = idx % 2 === 0 ? COLORS.trace : COLORS.traceBlue;
+      ctx.lineWidth = idx === 0 ? 1.1 : 0.9;
+      if (!staticOnly && !reduceMotion) {
+        ctx.setLineDash([4 + idx * 2, 12 + idx * 3]);
+        ctx.lineDashOffset = -(tick * (0.35 + idx * 0.15));
+      } else {
+        ctx.setLineDash([]);
+      }
+      ctx.globalAlpha = 0.55;
+      ctx.stroke();
+      ctx.setLineDash([]);
+      ctx.globalAlpha = 1;
+    });
+  }
+
+  function drawSamples() {
+    if (reduceMotion || !samples.length) return;
+    const positions = [];
+    samples.forEach((s) => {
+      const path = paths[s.pathIndex];
+      if (!path) return;
+      s.t = (s.t + s.speed) % 1;
+      positions.push(pointOnPath(path, s.t));
     });
 
-    const maxDist = isMobile ? 120 : 160;
-    for (let i = 0; i < nodes.length; i++) {
-      for (let j = i + 1; j < nodes.length; j++) {
-        const a = nodes[i];
-        const b = nodes[j];
+    for (let i = 0; i < positions.length; i++) {
+      for (let j = i + 1; j < positions.length; j++) {
+        const a = positions[i];
+        const b = positions[j];
         const dist = Math.hypot(b.x - a.x, b.y - a.y);
-        if (dist < maxDist) {
-          const alpha = (1 - dist / maxDist) * 0.12;
-          ctx.strokeStyle = `rgba(124, 140, 255, ${alpha})`;
+        if (dist < (isMobile ? 100 : 140)) {
+          const alpha = (1 - dist / (isMobile ? 100 : 140)) * 0.07;
+          ctx.strokeStyle = `rgba(75, 123, 255, ${alpha})`;
           ctx.lineWidth = 0.5;
           ctx.beginPath();
           ctx.moveTo(a.x, a.y);
@@ -120,27 +223,28 @@
       }
     }
 
-    nodes.forEach((n) => {
-      const pulse = 0.65 + 0.35 * Math.sin(tick * 0.02 + n.phase);
+    positions.forEach((p) => {
       ctx.beginPath();
-      ctx.arc(n.x, n.y, n.r * pulse, 0, Math.PI * 2);
-      ctx.fillStyle = COLORS.node;
+      ctx.arc(p.x, p.y, 2.2, 0, Math.PI * 2);
+      ctx.fillStyle = COLORS.sample;
+      ctx.fill();
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, 0.9, 0, Math.PI * 2);
+      ctx.fillStyle = COLORS.sampleCore;
       ctx.fill();
     });
   }
 
   function frame() {
     tick++;
-    mx += (targetMx - mx) * 0.04;
-    my += (targetMy - my) * 0.04;
+    mx += (targetMx - mx) * 0.035;
+    my += (targetMy - my) * 0.035;
 
     ctx.clearRect(0, 0, w, h);
     drawGlow();
     drawGrid();
-
-    if (!reduceMotion && nodes.length) {
-      drawNodes();
-    }
+    drawPaths(false);
+    drawSamples();
 
     if (!reduceMotion) {
       requestAnimationFrame(frame);
@@ -151,9 +255,19 @@
     ctx.clearRect(0, 0, w, h);
     drawGlow();
     drawGrid();
+    drawPaths(true);
   }
 
-  window.addEventListener("resize", () => {
+  function onResize() {
+    isMobile = mqMobile.matches;
+    resize();
+    if (reduceMotion) staticFrame();
+  }
+
+  window.addEventListener("resize", onResize);
+
+  mqMobile.addEventListener?.("change", (e) => {
+    isMobile = e.matches;
     resize();
     if (reduceMotion) staticFrame();
   });

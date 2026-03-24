@@ -1,15 +1,138 @@
-/* RepTrack flagship: dark data-tech showcase (uses :root from portfolio-base.css) */
+/* RepTrack flagship — telemetry / product showcase (tokens: portfolio-base.css) */
+
+/* ---------- Case study page (projects/reptrack.html) ---------- */
+.reptrack-case-hero {
+  position: relative;
+  max-width: var(--content-max);
+  margin: 0 auto;
+  padding: max(5.25rem, calc(env(safe-area-inset-top, 0px) + 4.65rem)) 1rem clamp(2rem, 5vw, 3.25rem);
+}
+
+@media (min-width: 900px) {
+  .reptrack-case-hero::before {
+    content: "00";
+    position: absolute;
+    top: max(5.25rem, calc(env(safe-area-inset-top, 0px) + 4.65rem));
+    left: max(0.25rem, calc(50% - var(--content-max) / 2));
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    font-weight: 600;
+    letter-spacing: 0.28em;
+    color: var(--text-dim);
+    opacity: 0.4;
+    pointer-events: none;
+    z-index: 0;
+  }
+}
+
+.reptrack-case-hero__inner {
+  position: relative;
+  z-index: 1;
+}
+
+.case-breadcrumb {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  margin-bottom: 1.15rem;
+}
+
+.case-breadcrumb a {
+  color: var(--text-dim);
+  text-decoration: none;
+  transition: color var(--transition-fast, 0.18s ease);
+}
+
+.case-breadcrumb a:hover {
+  color: var(--accent-cyan);
+}
+
+.case-breadcrumb__here {
+  color: var(--text-secondary);
+}
+
+.case-breadcrumb__sep {
+  margin: 0 0.5rem;
+  opacity: 0.4;
+}
+
+.case-hero__rail {
+  margin-bottom: 1.35rem !important;
+}
+
+.case-hero__tagline {
+  font-weight: 600;
+  letter-spacing: -0.025em;
+  opacity: 0.92;
+}
+
+.case-hero__lead {
+  max-width: 34rem;
+}
+
+.case-section__sub {
+  max-width: 40rem;
+}
+
+.case-section__sub--narrow {
+  max-width: 36rem;
+}
+
+.case-section__sub--tight {
+  max-width: 32rem;
+}
+
+.case-em {
+  color: var(--text-primary);
+  font-weight: 600;
+}
+
+.reptrack-flagship--hero {
+  margin-top: 0.35rem;
+}
+
+.site-main--case-study {
+  padding-left: 0;
+  padding-right: 0;
+}
+
+.reptrack-showcase-deck .surface-card__inner {
+  position: relative;
+  z-index: 1;
+}
+
+@media (max-width: 1023px) {
+  .case-hero__metrics {
+    max-width: none;
+    margin-top: 0.5rem;
+  }
+}
+
+@media (max-width: 639px) {
+  .reptrack-case-hero {
+    padding-top: max(5rem, calc(env(safe-area-inset-top, 0px) + 4.5rem));
+  }
+}
+
+/* ---------- Flagship shell ---------- */
 
 .reptrack-flagship {
   position: relative;
-  border-radius: 24px;
-  padding: clamp(1.5rem, 4vw, 2.75rem);
-  background: linear-gradient(155deg, rgba(20, 32, 52, 0.95) 0%, rgba(8, 14, 28, 0.92) 50%, rgba(12, 18, 34, 0.95) 100%);
-  border: 1px solid rgba(79, 209, 255, 0.12);
+  border-radius: 26px;
+  padding: clamp(1.75rem, 4.5vw, 3rem);
+  background: linear-gradient(
+    152deg,
+    rgba(15, 27, 46, 0.97) 0%,
+    rgba(10, 19, 34, 0.94) 42%,
+    rgba(18, 26, 40, 0.96) 100%
+  );
+  border: 1px solid rgba(79, 209, 255, 0.14);
   box-shadow:
-    0 24px 80px rgba(0, 0, 0, 0.55),
+    0 32px 96px rgba(0, 0, 0, 0.58),
     0 0 0 1px rgba(255, 255, 255, 0.04) inset,
-    0 -20px 60px rgba(61, 169, 252, 0.06) inset;
+    0 -28px 72px rgba(75, 123, 255, 0.05) inset;
   overflow: visible;
 }
 
@@ -18,8 +141,21 @@
   position: absolute;
   inset: 0;
   border-radius: inherit;
-  background: radial-gradient(ellipse 70% 45% at 85% 15%, rgba(79, 209, 255, 0.09), transparent 55%);
+  background: radial-gradient(ellipse 65% 48% at 88% 8%, rgba(79, 209, 255, 0.11), transparent 58%),
+    radial-gradient(ellipse 40% 35% at 12% 92%, rgba(201, 166, 70, 0.06), transparent 50%);
   pointer-events: none;
+}
+
+.reptrack-flagship::after {
+  content: "";
+  position: absolute;
+  top: 1.25rem;
+  right: 1.25rem;
+  width: 120px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(79, 209, 255, 0.25), transparent);
+  pointer-events: none;
+  opacity: 0.8;
 }
 
 .reptrack-shell {
@@ -30,35 +166,41 @@
 .reptrack-badge {
   display: inline-flex;
   align-items: center;
-  margin-top: 1rem;
-  padding: 0.35rem 0.85rem;
+  margin-top: 1.15rem;
+  padding: 0.38rem 0.9rem;
   border-radius: 999px;
   font-family: var(--font-mono);
-  font-size: 0.625rem;
+  font-size: 0.6rem;
   font-weight: 600;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
   color: var(--accent-gold);
-  background: rgba(201, 166, 70, 0.1);
-  border: 1px solid rgba(201, 166, 70, 0.28);
+  background: rgba(201, 166, 70, 0.09);
+  border: 1px solid rgba(201, 166, 70, 0.32);
+  box-shadow: 0 0 24px rgba(201, 166, 70, 0.08);
 }
 
 .reptrack-demonstrates {
-  margin-top: 1.75rem;
-  padding: 1.25rem 1.35rem;
+  margin-top: 1.85rem;
+  padding: 1.35rem 1.4rem;
   border-radius: var(--radius-md);
-  background: rgba(0, 0, 0, 0.25);
+  background: rgba(5, 11, 20, 0.45);
   border: 1px solid var(--border);
+  border-left: 2px solid rgba(201, 166, 70, 0.45);
 }
 
 .reptrack-demonstrates h4 {
-  margin: 0 0 0.75rem;
+  margin: 0 0 0.85rem;
   font-family: var(--font-mono);
-  font-size: 0.625rem;
+  font-size: 0.6rem;
   font-weight: 600;
-  letter-spacing: 0.14em;
+  letter-spacing: 0.16em;
   text-transform: uppercase;
   color: var(--text-dim);
+}
+
+.reptrack-demonstrates h4.sr-only {
+  margin: 0;
 }
 
 .reptrack-demonstrates ul {
@@ -70,9 +212,9 @@
 .reptrack-demonstrates li {
   position: relative;
   padding-left: 1.1rem;
-  margin-bottom: 0.45rem;
+  margin-bottom: 0.5rem;
   font-size: 0.875rem;
-  line-height: 1.5;
+  line-height: 1.55;
   color: var(--text-secondary);
 }
 
@@ -89,7 +231,7 @@
   height: 5px;
   border-radius: 1px;
   background: var(--accent-gold);
-  box-shadow: 0 0 8px rgba(201, 166, 70, 0.35);
+  box-shadow: 0 0 10px rgba(201, 166, 70, 0.4);
 }
 
 .reptrack-list li {
@@ -107,40 +249,41 @@
   height: 5px;
   border-radius: 1px;
   background: var(--accent-cyan);
-  box-shadow: 0 0 6px rgba(79, 209, 255, 0.4);
+  box-shadow: 0 0 8px rgba(79, 209, 255, 0.35);
 }
 
 .btn-reptrack-primary {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 0.75rem 1.35rem;
+  padding: 0.78rem 1.4rem;
   font-family: var(--font-display);
-  font-size: 0.875rem;
-  font-weight: 600;
-  color: #041018;
+  font-size: 0.8125rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  color: #050810;
   text-decoration: none;
   border-radius: var(--radius-sm);
-  background: linear-gradient(180deg, #e8c547 0%, var(--accent-gold) 100%);
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  box-shadow: 0 8px 28px rgba(201, 166, 70, 0.22);
-  transition: transform 0.2s ease, filter 0.2s ease, box-shadow 0.2s ease;
+  background: linear-gradient(180deg, #e4c86a 0%, var(--accent-gold) 48%, #a08030 100%);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  box-shadow: 0 8px 32px rgba(201, 166, 70, 0.25);
+  transition: transform 0.2s var(--ease-out-expo, ease), filter 0.2s ease, box-shadow 0.2s ease;
 }
 
 .btn-reptrack-primary:hover {
   transform: translateY(-2px);
-  filter: brightness(1.04);
-  box-shadow: 0 12px 36px rgba(201, 166, 70, 0.3);
+  filter: brightness(1.05);
+  box-shadow: 0 14px 40px rgba(201, 166, 70, 0.32);
 }
 
 .btn-reptrack-secondary {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 0.75rem 1.35rem;
+  padding: 0.78rem 1.4rem;
   font-family: var(--font-display);
-  font-size: 0.875rem;
-  font-weight: 600;
+  font-size: 0.8125rem;
+  font-weight: 700;
   color: var(--text-primary);
   text-decoration: none;
   border-radius: var(--radius-sm);
@@ -150,8 +293,8 @@
 }
 
 .btn-reptrack-secondary:hover {
-  border-color: rgba(79, 209, 255, 0.28);
-  background: rgba(79, 209, 255, 0.06);
+  border-color: rgba(79, 209, 255, 0.3);
+  background: rgba(79, 209, 255, 0.07);
   transform: translateY(-2px);
 }
 
@@ -159,8 +302,8 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 0.75rem 1.35rem;
-  font-size: 0.875rem;
+  padding: 0.78rem 1.4rem;
+  font-size: 0.8125rem;
   font-weight: 600;
   color: var(--text-dim);
   border-radius: var(--radius-sm);
@@ -207,18 +350,21 @@
 
 .reptrack-slide figure {
   margin: 0;
-  border-radius: 18px;
+  border-radius: 20px;
   overflow: hidden;
   border: 1px solid rgba(255, 255, 255, 0.1);
-  background: #0a0f18;
-  box-shadow: 0 20px 56px rgba(0, 0, 0, 0.55), 0 0 0 1px rgba(79, 209, 255, 0.08);
-  transition: transform 0.35s ease, border-color 0.35s ease, box-shadow 0.35s ease;
+  background: #050b14;
+  box-shadow:
+    0 24px 64px rgba(0, 0, 0, 0.6),
+    0 0 0 1px rgba(79, 209, 255, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.04);
+  transition: transform 0.35s var(--ease-out-expo, ease), border-color 0.35s ease, box-shadow 0.35s ease;
 }
 
 .reptrack-slide figure:hover {
-  transform: translateY(-4px) scale(1.01);
-  border-color: rgba(79, 209, 255, 0.22);
-  box-shadow: 0 28px 72px rgba(0, 0, 0, 0.6), 0 0 40px rgba(61, 169, 252, 0.08);
+  transform: translateY(-5px) scale(1.01);
+  border-color: rgba(79, 209, 255, 0.24);
+  box-shadow: 0 32px 80px rgba(0, 0, 0, 0.65), 0 0 48px rgba(75, 123, 255, 0.1);
 }
 
 .reptrack-slide img {
@@ -229,10 +375,12 @@
 
 .reptrack-slide figcaption {
   padding: 0.65rem 0.85rem 0.85rem;
-  font-size: 0.72rem;
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
   line-height: 1.35;
+  letter-spacing: 0.02em;
   color: var(--text-dim);
-  background: rgba(8, 12, 22, 0.95);
+  background: rgba(5, 11, 20, 0.96);
 }
 
 .reptrack-carousel-btn {
@@ -244,19 +392,19 @@
   height: 2.5rem;
   border-radius: 999px;
   border: 1px solid var(--border);
-  background: rgba(11, 16, 32, 0.92);
+  background: rgba(10, 19, 34, 0.94);
   color: var(--text-primary);
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  backdrop-filter: blur(10px);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(12px);
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.45);
   transition: border-color 0.2s ease, background 0.2s ease, color 0.2s ease;
 }
 
 .reptrack-carousel-btn:hover {
-  border-color: rgba(79, 209, 255, 0.35);
+  border-color: rgba(79, 209, 255, 0.38);
   background: rgba(79, 209, 255, 0.1);
   color: var(--accent-cyan);
 }
@@ -293,7 +441,7 @@
   overflow: hidden;
   border: 2px solid transparent;
   padding: 0;
-  background: #0a0f18;
+  background: #050b14;
   cursor: pointer;
   opacity: 0.45;
   transition: opacity 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
@@ -308,7 +456,7 @@
 .reptrack-thumb:hover,
 .reptrack-thumb.is-active {
   opacity: 1;
-  border-color: rgba(79, 209, 255, 0.5);
+  border-color: rgba(201, 166, 70, 0.55);
   transform: translateY(-2px);
 }
 
@@ -364,14 +512,14 @@
   border-radius: 16px;
   overflow: hidden;
   border: 1px solid var(--border);
-  background: #0a0f18;
-  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.45);
+  background: #050b14;
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.5);
   transition: transform 0.3s ease, border-color 0.3s ease;
 }
 
 .reptrack-gallery-grid figure:hover {
   transform: translateY(-4px);
-  border-color: rgba(79, 209, 255, 0.2);
+  border-color: rgba(79, 209, 255, 0.22);
 }
 
 .reptrack-gallery-grid img {
@@ -384,5 +532,16 @@
   padding: 0.65rem 0.85rem 0.85rem;
   font-size: 0.78rem;
   color: var(--text-dim);
-  background: rgba(8, 12, 22, 0.95);
+  background: rgba(5, 11, 20, 0.96);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reptrack-slide figure:hover,
+  .reptrack-gallery-grid figure:hover,
+  .btn-reptrack-primary:hover,
+  .btn-reptrack-secondary:hover,
+  .reptrack-thumb:hover,
+  .reptrack-thumb.is-active {
+    transform: none;
+  }
 }

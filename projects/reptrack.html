@@ -4,30 +4,30 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-  <title>RepTrack Workout Log · Mohamed Ansar</title>
+  <title>RepTrack · Case study · Mohamed Ansar</title>
 
   <meta
     name="description"
-    content="RepTrack: native iOS workout log with SwiftUI and SwiftData. End-to-end design, development, and App Store submission."
+    content="RepTrack: native iOS workout log—SwiftUI, SwiftData, end-to-end product execution and App Store submission."
   />
   <link rel="canonical" href="https://kmsmohamedansar.github.io/projects/reptrack.html" />
 
-  <meta property="og:title" content="RepTrack Workout Log · Mohamed Ansar" />
+  <meta property="og:title" content="RepTrack · Flagship iOS case study" />
   <meta
     property="og:description"
-    content="Production iOS workout tracking: SwiftUI, SwiftData, calm UX for daily training."
+    content="Production workout tracking: native architecture, calm UX, shipped to App Store review."
   />
   <meta property="og:image" content="https://kmsmohamedansar.github.io/preview.png" />
   <meta property="og:url" content="https://kmsmohamedansar.github.io/projects/reptrack.html" />
   <meta property="og:type" content="website" />
 
-  <meta name="theme-color" content="#0b1020" />
+  <meta name="theme-color" content="#050b14" />
   <link rel="icon" href="/favicon.ico" type="image/x-icon" />
 
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link
-    href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500;600&family=Outfit:wght@500;600;700&display=swap"
+    href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&family=IBM+Plex+Mono:wght@400;500;600&family=Syne:wght@600;700;800&display=swap"
     rel="stylesheet"
   />
 
@@ -48,9 +48,10 @@
 
       <div class="site-nav__links">
         <a href="/#about" class="nav-link">About</a>
-        <a href="/#direction" class="nav-link">Direction</a>
         <a href="/#reptrack-featured" class="nav-link">Featured</a>
         <a href="/#projects" class="nav-link">Selected work</a>
+        <a href="/#stack" class="nav-link">Stack</a>
+        <a href="/#experience" class="nav-link">Experience</a>
         <a href="/#contact" class="nav-link">Contact</a>
       </div>
 
@@ -61,231 +62,279 @@
       </button>
     </nav>
 
-    <div id="mobile-nav" class="site-nav__mobile hidden">
+    <div id="mobile-nav" class="site-nav__mobile hidden" role="dialog" aria-label="Menu">
       <a href="/#about" class="nav-link">About</a>
-      <a href="/#direction" class="nav-link">Direction</a>
       <a href="/#reptrack-featured" class="nav-link">Featured</a>
       <a href="/#projects" class="nav-link">Selected work</a>
+      <a href="/#stack" class="nav-link">Stack</a>
+      <a href="/#experience" class="nav-link">Experience</a>
       <a href="/#contact" class="nav-link">Contact</a>
     </div>
   </div>
 
-  <main class="site-main pt-24 pb-28 md:pb-32 px-4 max-w-6xl mx-auto">
-    <header class="reptrack-detail-hero reveal-section">
-      <nav class="text-sm mb-8 font-mono tracking-wide" style="font-family: var(--font-mono)" aria-label="Breadcrumb">
-        <a href="/" class="text-[var(--text-dim)] hover:text-[var(--accent-cyan)] transition">Home</a>
-        <span class="mx-2 opacity-40">/</span>
-        <span class="text-[var(--text-secondary)]">RepTrack</span>
+  <header class="reptrack-case-hero reveal-section">
+    <div class="reptrack-case-hero__inner">
+      <nav class="case-breadcrumb" aria-label="Breadcrumb">
+        <a href="/">Home</a>
+        <span class="case-breadcrumb__sep" aria-hidden="true">/</span>
+        <span class="case-breadcrumb__here">RepTrack</span>
       </nav>
 
-      <div class="reptrack-flagship">
-        <div class="reptrack-shell flex flex-col lg:flex-row lg:items-start lg:justify-between gap-10">
-          <div class="max-w-2xl">
-            <p class="eyebrow eyebrow--dim">Case study</p>
-            <h1 class="heading-section text-3xl md:text-5xl mt-4">RepTrack Workout Log</h1>
-            <p class="heading-section text-lg md:text-xl mt-4 opacity-95">
-              A clean, focused workout tracker built for consistency and strength progression.
+      <div class="hero__status-rail case-hero__rail" aria-hidden="true">
+        <span class="hero__status-dot">●</span>
+        <span>Case file</span>
+        <span class="opacity-40">/</span>
+        <span>SwiftUI · SwiftData · iOS</span>
+      </div>
+
+      <div class="reptrack-flagship reptrack-flagship--hero">
+        <div class="reptrack-shell grid lg:grid-cols-[minmax(0,1.15fr)_minmax(0,auto)] gap-8 lg:gap-12 items-start">
+          <div class="min-w-0">
+            <p class="eyebrow eyebrow--dim">Flagship case study</p>
+            <h1 class="display-hero mt-3 md:mt-4">RepTrack</h1>
+            <p class="heading-section case-hero__tagline text-lg md:text-xl mt-3">
+              Native workout log built for speed in-session and clarity over time.
             </p>
-            <p class="body-text mt-4">
-              RepTrack is a production-ready iOS app designed to help users log workouts, track sets and reps, and review their performance over time. I designed and built the app end-to-end using SwiftUI and SwiftData, focusing on clarity, speed, and a distraction-free experience.
+            <p class="body-lead case-hero__lead mt-4">
+              End-to-end iOS product: UX, SwiftUI screens, SwiftData model, and App Store Connect submission—one execution standard from idea to review.
             </p>
-            <span class="reptrack-badge">Submitted to App Store</span>
-            <div class="reptrack-demonstrates">
-              <h4>What this demonstrates</h4>
-              <ul class="list-check">
-                <li>Ability to ship a complete product end-to-end</li>
-                <li>Strong focus on user experience and simplicity</li>
-                <li>Translating real-world needs into working software</li>
-              </ul>
+            <div class="flex flex-wrap items-center gap-3 mt-5">
+              <span class="reptrack-badge">Submitted to App Store</span>
+              <span class="status-chip status-chip--stable">Local-first</span>
+            </div>
+            <div class="mt-8 flex flex-col sm:flex-row flex-wrap gap-3">
+              <a href="https://github.com/kmsmohamedansar/reptrack" target="_blank" rel="noopener noreferrer" class="btn-reptrack-secondary text-center">GitHub</a>
+              <span class="btn-reptrack-muted text-center" title="Add App Store link when live">App Store (soon)</span>
+              <a href="/#reptrack-featured" class="btn-reptrack-primary text-center">Portfolio</a>
             </div>
           </div>
-          <div class="flex flex-col sm:flex-row lg:flex-col gap-3 shrink-0">
-            <a href="https://github.com/kmsmohamedansar/reptrack" target="_blank" rel="noopener noreferrer" class="btn-reptrack-secondary text-center whitespace-nowrap">View on GitHub</a>
-            <span class="btn-reptrack-muted text-center whitespace-nowrap" title="Add your App Store URL when approved">App Store (coming soon)</span>
-            <a href="/#reptrack-featured" class="btn-reptrack-primary text-center whitespace-nowrap">Back to portfolio</a>
+          <div class="case-hero__metrics reveal-stagger w-full max-w-md lg:justify-self-end">
+            <div class="surface-card surface-card--signal surface-card--hover p-5 md:p-6 reveal-stagger__item">
+              <p class="hero-metric mb-1">Scope</p>
+              <p class="heading-card text-base mt-0">Full product loop</p>
+              <p class="body-text text-xs mt-2">Design → build → assets → submission</p>
+            </div>
+            <div class="surface-card surface-card--signal surface-card--hover p-5 md:p-6 reveal-stagger__item mt-4">
+              <p class="hero-metric mb-1">Surface</p>
+              <p class="heading-card text-base mt-0">SwiftUI + SwiftData</p>
+              <p class="body-text text-xs mt-2">Native patterns, on-device persistence</p>
+            </div>
+            <div class="surface-card surface-card--signal surface-card--hover p-5 md:p-6 reveal-stagger__item mt-4">
+              <p class="hero-metric mb-1">Constraint</p>
+              <p class="heading-card text-base mt-0">Gym context</p>
+              <p class="body-text text-xs mt-2">Low friction, high repeat use</p>
+            </div>
           </div>
         </div>
       </div>
-    </header>
-
-    <section class="mt-20 md:mt-24 reveal-section reptrack-carousel" data-reptrack-carousel aria-labelledby="gallery-heading">
-      <div class="chapter__rule mb-8"></div>
-      <div class="mb-8">
-        <h2 id="gallery-heading" class="heading-section text-2xl md:text-3xl">Interface</h2>
-        <p class="body-text text-sm mt-3 max-w-xl">
-          Native flow from dashboard to session: quick logging, clear feedback, minimal noise.
-        </p>
-      </div>
-
-      <div class="relative px-0 sm:px-10">
-        <button type="button" class="reptrack-carousel-btn reptrack-carousel-btn--prev" data-carousel-prev aria-label="Previous screenshot">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M15 18l-6-6 6-6"/>
-          </svg>
-        </button>
-        <div class="reptrack-carousel-viewport rounded-xl" data-carousel-viewport tabindex="0" role="region" aria-label="RepTrack screenshots">
-          <div class="reptrack-slide">
-            <figure>
-              <img src="/assets/reptrack/reptrack-01-empty-state.png" width="1290" height="2796" alt="RepTrack empty workouts screen" loading="eager" decoding="async" />
-              <figcaption>Onboarding-style empty state with primary actions</figcaption>
-            </figure>
-          </div>
-          <div class="reptrack-slide">
-            <figure>
-              <img src="/assets/reptrack/reptrack-02-workouts-dashboard.png" width="1290" height="2796" alt="Workouts dashboard" loading="lazy" decoding="async" />
-              <figcaption>Dashboard: active session, streak context, weekly goal</figcaption>
-            </figure>
-          </div>
-          <div class="reptrack-slide">
-            <figure>
-              <img src="/assets/reptrack/reptrack-03-session-active.png" width="1290" height="2796" alt="Active workout" loading="lazy" decoding="async" />
-              <figcaption>Session detail: performance summary and exercise inputs</figcaption>
-            </figure>
-          </div>
-          <div class="reptrack-slide">
-            <figure>
-              <img src="/assets/reptrack/reptrack-04-session-empty.png" width="1290" height="2796" alt="Session before exercises" loading="lazy" decoding="async" />
-              <figcaption>Session scaffold: add exercise with minimal friction</figcaption>
-            </figure>
-          </div>
-          <div class="reptrack-slide">
-            <figure>
-              <img src="/assets/reptrack/reptrack-05-new-workout.png" width="1290" height="2796" alt="New workout date picker" loading="lazy" decoding="async" />
-              <figcaption>New workout: familiar iOS date selection</figcaption>
-            </figure>
-          </div>
-        </div>
-        <button type="button" class="reptrack-carousel-btn reptrack-carousel-btn--next" data-carousel-next aria-label="Next screenshot">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M9 18l6-6-6-6"/>
-          </svg>
-        </button>
-      </div>
-      <div class="flex flex-wrap gap-2 justify-center mt-5" data-carousel-thumbs aria-label="Thumbnails">
-        <button type="button" class="reptrack-thumb is-active" data-thumb="0" aria-label="Screenshot 1" aria-current="true">
-          <img src="/assets/reptrack/reptrack-01-empty-state.png" alt="" width="78" height="132" loading="lazy" decoding="async" />
-        </button>
-        <button type="button" class="reptrack-thumb" data-thumb="1" aria-label="Screenshot 2">
-          <img src="/assets/reptrack/reptrack-02-workouts-dashboard.png" alt="" width="78" height="132" loading="lazy" decoding="async" />
-        </button>
-        <button type="button" class="reptrack-thumb" data-thumb="2" aria-label="Screenshot 3">
-          <img src="/assets/reptrack/reptrack-03-session-active.png" alt="" width="78" height="132" loading="lazy" decoding="async" />
-        </button>
-        <button type="button" class="reptrack-thumb" data-thumb="3" aria-label="Screenshot 4">
-          <img src="/assets/reptrack/reptrack-04-session-empty.png" alt="" width="78" height="132" loading="lazy" decoding="async" />
-        </button>
-        <button type="button" class="reptrack-thumb" data-thumb="4" aria-label="Screenshot 5">
-          <img src="/assets/reptrack/reptrack-05-new-workout.png" alt="" width="78" height="132" loading="lazy" decoding="async" />
-        </button>
-      </div>
-    </section>
-
-    <section class="mt-24 reveal-section">
-      <div class="chapter__rule mb-8"></div>
-      <h2 class="heading-section text-2xl md:text-3xl">Still gallery</h2>
-      <p class="body-text text-sm mt-3 max-w-2xl">Full frames for layout, spacing, and hierarchy.</p>
-      <div class="reptrack-gallery-grid mt-10">
-        <figure>
-          <img src="/assets/reptrack/reptrack-01-empty-state.png" width="1290" height="2796" alt="Empty workouts" loading="lazy" decoding="async" />
-          <figcaption>Empty workouts</figcaption>
-        </figure>
-        <figure>
-          <img src="/assets/reptrack/reptrack-02-workouts-dashboard.png" width="1290" height="2796" alt="Workouts home" loading="lazy" decoding="async" />
-          <figcaption>Workouts home</figcaption>
-        </figure>
-        <figure>
-          <img src="/assets/reptrack/reptrack-03-session-active.png" width="1290" height="2796" alt="Active session" loading="lazy" decoding="async" />
-          <figcaption>Active session</figcaption>
-        </figure>
-        <figure>
-          <img src="/assets/reptrack/reptrack-04-session-empty.png" width="1290" height="2796" alt="Session setup" loading="lazy" decoding="async" />
-          <figcaption>Session setup</figcaption>
-        </figure>
-        <figure>
-          <img src="/assets/reptrack/reptrack-05-new-workout.png" width="1290" height="2796" alt="New workout" loading="lazy" decoding="async" />
-          <figcaption>New workout</figcaption>
-        </figure>
-      </div>
-    </section>
-
-    <div class="mt-24 grid lg:grid-cols-2 gap-10 reveal-section">
-      <article class="surface-card p-8 md:p-10 reptrack-prose">
-        <div class="surface-card__inner">
-          <h2 class="heading-section text-2xl mt-0">Overview</h2>
-          <p class="body-text mt-4">
-            RepTrack Workout Log is a focused iOS fitness app that simplifies workout tracking and makes strength progression easier to review over time.
-            It was designed and developed end to end with an emphasis on clarity, usability, and a smooth native iOS experience.
-          </p>
-          <h3>Problem</h3>
-          <p class="body-text">
-            Training logs often feel noisy or overbuilt. Lifters need fast capture in the gym and a simple read on what they did last time, not another dashboard fighting for attention.
-          </p>
-          <h3>Solution</h3>
-          <p class="body-text">
-            RepTrack uses a straightforward session model: pick a date, add exercises, log sets and reps, notes when they matter.
-            The UI stays calm so the product stays out of the way while you train.
-          </p>
-        </div>
-      </article>
-
-      <article class="surface-card p-8 md:p-10 reptrack-prose">
-        <div class="surface-card__inner">
-          <h2 class="heading-section text-2xl mt-0">What I built</h2>
-          <ul>
-            <li>Workout logging flow tuned for speed and low cognitive load</li>
-            <li>SwiftUI interface with consistent hierarchy and spacing</li>
-            <li>Local workout and exercise modeling with SwiftData</li>
-            <li>Codebase structured around maintainable iOS patterns</li>
-            <li>Assets, metadata, and App Store Connect submission for review</li>
-          </ul>
-          <h3>Highlights</h3>
-          <ul>
-            <li>End-to-end ownership from concept through App Store submission</li>
-            <li>Native architecture with SwiftUI and SwiftData</li>
-            <li>UX tuned for repeat daily use, not one-off demos</li>
-            <li>Practical focus on consistency, tracking clarity, and real constraints</li>
-          </ul>
-        </div>
-      </article>
     </div>
+  </header>
 
-    <section class="mt-16 surface-card p-8 md:p-10 reveal-section">
-      <div class="surface-card__inner grid md:grid-cols-2 gap-10">
-        <div>
-          <h2 class="heading-section text-xl">Key features</h2>
-          <ul class="reptrack-list mt-4 space-y-2.5 text-sm">
-            <li>Workouts with exercises, sets, reps, and weight</li>
-            <li>Historical context for progression decisions</li>
-            <li>Focused session flow with minimal distraction</li>
-            <li>Local-first data model: no account friction for core use</li>
-            <li>Fast paths for common actions during a session</li>
-          </ul>
+  <main class="site-main site-main--brand site-main--case-study pb-24 md:pb-32">
+    <section id="reptrack-overview" class="chapter chapter--sector chapter--breath reveal-section" aria-labelledby="reptrack-overview-h">
+      <div class="chapter__rule" aria-hidden="true"></div>
+      <header class="chapter__header">
+        <p class="eyebrow eyebrow--dim">Overview</p>
+        <h2 id="reptrack-overview-h" class="heading-section mt-4">What it is</h2>
+        <p class="chapter__sub case-section__sub mt-4 text-left max-w-none mx-0">
+          A disciplined training log—not a social feed or analytics dashboard pretending to be a product.
+        </p>
+      </header>
+      <div class="surface-card surface-card--prose surface-card--hover p-8 md:p-10 max-w-3xl">
+        <div class="surface-card__inner space-y-4 body-text text-sm md:text-base">
+          <p>
+            <strong class="case-em">Problem:</strong> logging in the gym needs to be fast; reviewing last session needs to be obvious. Most apps add noise.
+          </p>
+          <p>
+            <strong class="case-em">Response:</strong> RepTrack keeps a tight session model—workouts, exercises, sets—with UI that stays calm so the work stays in the gym.
+          </p>
         </div>
-        <div>
-          <h2 class="heading-section text-xl">Tech stack</h2>
-          <div class="mt-4 flex flex-wrap gap-2">
+      </div>
+    </section>
+
+    <section id="reptrack-built" class="chapter chapter--sector reveal-section" aria-labelledby="reptrack-built-h">
+      <div class="chapter__rule" aria-hidden="true"></div>
+      <header class="chapter__header">
+        <p class="eyebrow eyebrow--dim">What I built</p>
+        <h2 id="reptrack-built-h" class="heading-section mt-4">Delivery scope</h2>
+        <p class="chapter__sub case-section__sub case-section__sub--narrow mt-4 text-left max-w-none mx-0">
+          Four execution pillars—each maps to shippable surface area, not slideware.
+        </p>
+      </header>
+      <div class="grid sm:grid-cols-2 gap-4 md:gap-5 reveal-stagger max-w-4xl">
+        <article class="surface-card surface-card--hover surface-card--signal p-6 md:p-7 reveal-stagger__item">
+          <div class="surface-card__inner">
+            <p class="eyebrow eyebrow--dim text-[0.6rem]">01</p>
+            <h3 class="heading-card mt-2">Session flow</h3>
+            <p class="body-text text-sm mt-2">Workout lifecycle from create → exercise → sets, optimized for thumbs and time pressure.</p>
+          </div>
+        </article>
+        <article class="surface-card surface-card--hover surface-card--signal p-6 md:p-7 reveal-stagger__item">
+          <div class="surface-card__inner">
+            <p class="eyebrow eyebrow--dim text-[0.6rem]">02</p>
+            <h3 class="heading-card mt-2">Data layer</h3>
+            <p class="body-text text-sm mt-2">SwiftData models and relationships that stay understandable as features grow.</p>
+          </div>
+        </article>
+        <article class="surface-card surface-card--hover surface-card--signal p-6 md:p-7 reveal-stagger__item">
+          <div class="surface-card__inner">
+            <p class="eyebrow eyebrow--dim text-[0.6rem]">03</p>
+            <h3 class="heading-card mt-2">UI system</h3>
+            <p class="body-text text-sm mt-2">Consistent hierarchy, spacing, and native controls—no custom chrome for its own sake.</p>
+          </div>
+        </article>
+        <article class="surface-card surface-card--hover surface-card--signal p-6 md:p-7 reveal-stagger__item">
+          <div class="surface-card__inner">
+            <p class="eyebrow eyebrow--dim text-[0.6rem]">04</p>
+            <h3 class="heading-card mt-2">Store readiness</h3>
+            <p class="body-text text-sm mt-2">Metadata, assets, and submission path through App Store Connect under real constraints.</p>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section id="reptrack-stack" class="chapter chapter--sector reveal-section" aria-labelledby="reptrack-stack-h">
+      <div class="chapter__rule" aria-hidden="true"></div>
+      <header class="chapter__header">
+        <p class="eyebrow eyebrow--dim">Tech stack</p>
+        <h2 id="reptrack-stack-h" class="heading-section mt-4">Tools &amp; platform</h2>
+      </header>
+      <div class="surface-card surface-card--hover p-8 md:p-9 max-w-2xl">
+        <div class="surface-card__inner">
+          <div class="flex flex-wrap gap-2">
             <span class="project-tag">SwiftUI</span>
             <span class="project-tag">SwiftData</span>
             <span class="project-tag">iOS</span>
             <span class="project-tag">Xcode</span>
             <span class="project-tag">App Store Connect</span>
           </div>
-          <h3 class="heading-card text-sm mt-8 opacity-90">Why it matters</h3>
-          <p class="body-text text-sm mt-2">
-            Shipping consumer iOS is product judgment as much as code: what to omit, how screens behave under pressure, predictable persistence and navigation.
-            RepTrack is the proof I can own that loop and submit work to Apple’s bar.
+          <p class="body-text text-sm mt-6">
+            Consumer iOS is as much <strong>omission</strong> as implementation—what not to build, how screens fail gracefully, and how data survives daily use.
           </p>
         </div>
       </div>
     </section>
 
-    <section class="mt-16 surface-card p-8 md:p-10 reveal-section reptrack-prose">
-      <div class="surface-card__inner">
-        <h2 class="heading-section text-xl mt-0">What’s next</h2>
-        <p class="body-text text-sm md:text-base">
-          Post-launch iteration follows real usage: progression insights, quality-of-life shortcuts, anything that speeds logging without diluting the calm, focused experience.
-        </p>
+    <section id="reptrack-demonstrates" class="chapter chapter--sector reveal-section" aria-labelledby="reptrack-demonstrates-h">
+      <div class="chapter__rule" aria-hidden="true"></div>
+      <header class="chapter__header">
+        <p class="eyebrow eyebrow--gold">Proof</p>
+        <h2 id="reptrack-demonstrates-h" class="heading-section mt-4">What this demonstrates</h2>
+      </header>
+      <div class="reptrack-demonstrates max-w-2xl">
+        <h4 class="sr-only">Capabilities evidenced by this project</h4>
+        <ul>
+          <li>End-to-end product development through App Store submission</li>
+          <li>Native iOS architecture with maintainable, local-first data</li>
+          <li>UX and workflows tuned for a distracting real-world context</li>
+          <li>Idea-to-ship execution without trading down quality bar</li>
+        </ul>
       </div>
+    </section>
+
+    <section id="reptrack-showcase" class="chapter chapter--sector reveal-section" aria-labelledby="reptrack-showcase-h">
+      <div class="chapter__rule" aria-hidden="true"></div>
+      <header class="chapter__header">
+        <p class="eyebrow eyebrow--dim">Product showcase</p>
+        <h2 id="reptrack-showcase-h" class="heading-section mt-4">Screens</h2>
+        <p class="chapter__sub case-section__sub case-section__sub--tight mt-4 text-left max-w-none mx-0">
+          Dashboard → session → inputs. Swipe or use thumbnails to scan the flow.
+        </p>
+      </header>
+
+      <div class="surface-card surface-card--hover p-5 sm:p-8 md:p-10 reptrack-showcase-deck">
+        <div class="surface-card__inner reptrack-carousel" data-reptrack-carousel>
+          <p class="eyebrow eyebrow--dim mb-4">Capture strip</p>
+          <div class="relative px-0 sm:px-10">
+            <button type="button" class="reptrack-carousel-btn reptrack-carousel-btn--prev" data-carousel-prev aria-label="Previous screenshot">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M15 18l-6-6 6-6"/>
+              </svg>
+            </button>
+            <div class="reptrack-carousel-viewport" data-carousel-viewport tabindex="0" role="region" aria-label="RepTrack screenshot carousel">
+              <div class="reptrack-slide">
+                <figure>
+                  <img src="/assets/reptrack/reptrack-01-empty-state.png" width="1290" height="2796" alt="RepTrack empty workouts screen" loading="eager" decoding="async" />
+                  <figcaption>Entry: clear primary actions</figcaption>
+                </figure>
+              </div>
+              <div class="reptrack-slide">
+                <figure>
+                  <img src="/assets/reptrack/reptrack-02-workouts-dashboard.png" width="1290" height="2796" alt="Workouts dashboard" loading="lazy" decoding="async" />
+                  <figcaption>Dashboard: context and weekly focus</figcaption>
+                </figure>
+              </div>
+              <div class="reptrack-slide">
+                <figure>
+                  <img src="/assets/reptrack/reptrack-03-session-active.png" width="1290" height="2796" alt="Active workout session" loading="lazy" decoding="async" />
+                  <figcaption>Session: logging surface</figcaption>
+                </figure>
+              </div>
+              <div class="reptrack-slide">
+                <figure>
+                  <img src="/assets/reptrack/reptrack-04-session-empty.png" width="1290" height="2796" alt="Session before exercises" loading="lazy" decoding="async" />
+                  <figcaption>Scaffold: low-friction add</figcaption>
+                </figure>
+              </div>
+              <div class="reptrack-slide">
+                <figure>
+                  <img src="/assets/reptrack/reptrack-05-new-workout.png" width="1290" height="2796" alt="New workout date picker" loading="lazy" decoding="async" />
+                  <figcaption>New workout: native date control</figcaption>
+                </figure>
+              </div>
+            </div>
+            <button type="button" class="reptrack-carousel-btn reptrack-carousel-btn--next" data-carousel-next aria-label="Next screenshot">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M9 18l6-6-6-6"/>
+              </svg>
+            </button>
+          </div>
+          <div class="flex flex-wrap gap-2 justify-center sm:justify-start mt-5" data-carousel-thumbs aria-label="Screenshot thumbnails">
+            <button type="button" class="reptrack-thumb is-active" data-thumb="0" aria-label="Screenshot 1" aria-current="true">
+              <img src="/assets/reptrack/reptrack-01-empty-state.png" alt="" width="78" height="132" loading="lazy" decoding="async" />
+            </button>
+            <button type="button" class="reptrack-thumb" data-thumb="1" aria-label="Screenshot 2">
+              <img src="/assets/reptrack/reptrack-02-workouts-dashboard.png" alt="" width="78" height="132" loading="lazy" decoding="async" />
+            </button>
+            <button type="button" class="reptrack-thumb" data-thumb="2" aria-label="Screenshot 3">
+              <img src="/assets/reptrack/reptrack-03-session-active.png" alt="" width="78" height="132" loading="lazy" decoding="async" />
+            </button>
+            <button type="button" class="reptrack-thumb" data-thumb="3" aria-label="Screenshot 4">
+              <img src="/assets/reptrack/reptrack-04-session-empty.png" alt="" width="78" height="132" loading="lazy" decoding="async" />
+            </button>
+            <button type="button" class="reptrack-thumb" data-thumb="4" aria-label="Screenshot 5">
+              <img src="/assets/reptrack/reptrack-05-new-workout.png" alt="" width="78" height="132" loading="lazy" decoding="async" />
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="reptrack-outcome" class="chapter chapter--sector chapter--breath reveal-section" aria-labelledby="reptrack-outcome-h">
+      <div class="chapter__rule" aria-hidden="true"></div>
+      <header class="chapter__header">
+        <p class="eyebrow eyebrow--dim">Outcome</p>
+        <h2 id="reptrack-outcome-h" class="heading-section mt-4">Status</h2>
+      </header>
+      <div class="grid gap-5 md:grid-cols-2 max-w-4xl items-stretch">
+        <div class="surface-card surface-card--role surface-card--role--current surface-card--hover p-7 md:p-8">
+          <div class="surface-card__inner">
+            <p class="hero-metric">Release</p>
+            <p class="heading-card text-lg mt-2">App Store review</p>
+            <p class="body-text text-sm mt-3">Build submitted with metadata and assets; public listing when approved.</p>
+          </div>
+        </div>
+        <div class="surface-card surface-card--hover surface-card--signal p-7 md:p-8">
+          <div class="surface-card__inner">
+            <p class="hero-metric">Next</p>
+            <p class="heading-card text-lg mt-2">Usage-driven iteration</p>
+            <p class="body-text text-sm mt-3">Shortcuts and progression insight—only where they reduce friction, not stack features.</p>
+          </div>
+        </div>
+      </div>
+      <p class="mt-10 text-center">
+        <a href="/#reptrack-featured" class="btn-secondary">← Back to portfolio</a>
+      </p>
     </section>
   </main>
 

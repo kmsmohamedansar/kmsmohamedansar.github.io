@@ -37,7 +37,7 @@
     });
   });
 
-  const sectionIds = ["hero", "about", "direction", "reptrack-featured", "projects", "stack", "experience", "contact"];
+  const sectionIds = ["hero", "about", "reptrack-featured", "projects", "stack", "experience", "contact"];
   const navLinks = document.querySelectorAll(".site-nav a[href^='#']");
   const onHomePage =
     !location.pathname.includes("/projects/") &&
@@ -62,5 +62,26 @@
       const el = document.getElementById(id);
       if (el) io.observe(el);
     });
+  }
+
+  /* Subtle hero depth on large screens (telemetry panel feel) */
+  const heroPanel = document.querySelector(".hero__visual--parallax");
+  const heroEl = document.getElementById("hero");
+  if (
+    heroPanel &&
+    heroEl &&
+    !window.matchMedia("(prefers-reduced-motion: reduce)").matches &&
+    window.matchMedia("(min-width: 1024px)").matches
+  ) {
+    window.addEventListener(
+      "scroll",
+      () => {
+        const r = heroEl.getBoundingClientRect();
+        const total = r.height + 120;
+        const p = Math.max(0, Math.min(1, 1 - r.bottom / total));
+        heroPanel.style.transform = `translate3d(0, ${p * 20}px, 0)`;
+      },
+      { passive: true }
+    );
   }
 })();
