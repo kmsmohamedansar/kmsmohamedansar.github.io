@@ -8,38 +8,60 @@ struct DocumentSidebarView: View {
     var onRenameRequest: (FlowDocument) -> Void
 
     var body: some View {
-        List(selection: $selection) {
-            Section {
-                ForEach(documents, id: \.persistentModelID) { document in
-                    Label(document.title, systemImage: "square.grid.3x3.fill")
-                        .contextMenu {
-                            Button("Rename…") {
-                                onRenameRequest(document)
+        Group {
+            if documents.isEmpty {
+                sidebarEmptyLibrary
+            } else {
+                List(selection: $selection) {
+                    Section {
+                        ForEach(documents, id: \.persistentModelID) { document in
+                            Label {
+                                Text(document.title)
+                                    .font(.body)
+                                    .lineLimit(2)
+                            } icon: {
+                                Image(systemName: "rectangle.on.rectangle.angled")
+                                    .symbolRenderingMode(.hierarchical)
+                                    .foregroundStyle(.secondary)
                             }
-                            Divider()
-                            Button("Delete", role: .destructive) {
-                                if let index = documents.firstIndex(where: { $0.id == document.id }) {
-                                    onDelete(IndexSet(integer: index))
+                            .contextMenu {
+                                Button("Rename…") {
+                                    onRenameRequest(document)
+                                }
+                                Divider()
+                                Button("Delete", role: .destructive) {
+                                    if let index = documents.firstIndex(where: { $0.id == document.id }) {
+                                        onDelete(IndexSet(integer: index))
+                                    }
                                 }
                             }
+                            .tag(Optional(document))
+                            .listRowInsets(EdgeInsets(top: 7, leading: 12, bottom: 7, trailing: 10))
                         }
-                        .tag(Optional(document))
+                        .onDelete(perform: onDelete)
+                    } header: {
+                        Text("Boards")
+                            .font(.caption.weight(.semibold))
+                            .foregroundStyle(.tertiary)
+                            .textCase(nil)
+                            .padding(.bottom, 2)
+                    }
                 }
-                .onDelete(perform: onDelete)
-            } header: {
-                Text("Boards")
+                .listStyle(.sidebar)
             }
         }
-        .listStyle(.sidebar)
         .safeAreaInset(edge: .bottom) {
-            VStack(alignment: .leading, spacing: 8) {
+            VStack(alignment: .leading, spacing: 0) {
                 Divider()
+                    .opacity(0.5)
                 Button(action: onNewBoard) {
                     Label("New Board", systemImage: "plus.circle.fill")
+                        .font(.body.weight(.medium))
+                        .frame(maxWidth: .infinity, alignment: .leading)
                 }
                 .buttonStyle(.borderless)
-                .padding(.horizontal, 12)
-                .padding(.bottom, 8)
+                .padding(.horizontal, 14)
+                .padding(.vertical, 10)
             }
             .background(.bar)
         }
@@ -51,5 +73,20 @@ struct DocumentSidebarView: View {
                 .help("New board")
             }
         }
+    }
+
+    private var sidebarEmptyLibrary: some View {
+        ContentUnavailableView {
+            Label("Your boards", systemImage: "rectangle.3.group")
+        } description: {
+            Text("Create a board to sketch, write, and arrange ideas on an infinite canvas.")
+                .multilineTextAlignment(.center)
+                .foregroundStyle(.secondary)
+        } actions: {
+            Button("New Board", action: onNewBoard)
+                .buttonStyle(.borderedProminent)
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .padding(.horizontal, 8)
     }
 }

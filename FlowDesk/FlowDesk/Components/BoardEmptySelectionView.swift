@@ -5,13 +5,25 @@ struct BoardEmptySelectionView: View {
 
     var body: some View {
         ContentUnavailableView {
-            Label("No Board Selected", systemImage: "square.dashed")
+            VStack(spacing: 14) {
+                Image(systemName: "square.dashed")
+                    .font(.system(size: 40, weight: .ultraLight))
+                    .symbolRenderingMode(.hierarchical)
+                    .foregroundStyle(.secondary)
+                Text("Choose a board")
+                    .font(.title3.weight(.semibold))
+            }
         } description: {
-            Text("Create a board to start sketching ideas, notes, and diagrams.")
+            Text("Select a document in the sidebar, or create a new board to arrange text, notes, shapes, and charts on the canvas.")
+                .multilineTextAlignment(.center)
+                .foregroundStyle(.secondary)
+                .frame(maxWidth: 420)
         } actions: {
             Button("New Board", action: onNewBoard)
                 .keyboardShortcut("n", modifiers: [.command])
+                .buttonStyle(.borderedProminent)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .padding(32)
     }
 }

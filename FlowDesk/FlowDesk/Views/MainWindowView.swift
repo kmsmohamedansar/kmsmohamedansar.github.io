@@ -10,6 +10,7 @@ struct MainWindowView: View {
     @State private var selection: FlowDocument?
     @State private var documentListViewModel = DocumentListViewModel()
     @State private var canvasBoardViewModel = CanvasBoardViewModel()
+    @State private var canvasSelection = CanvasSelectionModel()
 
     @State private var renameSession: RenameSession?
     @State private var renameDraft: String = ""
@@ -29,11 +30,21 @@ struct MainWindowView: View {
         }
         .navigationTitle("")
         .toolbarBackground(.visible, for: .windowToolbar)
+        .task {
+            LibrarySeedService.seedIfNeeded(in: modelContext)
+        }
         .onAppear {
             documentListViewModel.attach(modelContext: modelContext)
             syncCanvasAttachment()
         }
+        .onReceive(NotificationCenter.default.publisher(for: .flowDeskBoardUndo)) { _ in
+            canvasBoardViewModel.undoBoard()
+        }
+        .onReceive(NotificationCenter.default.publisher(for: .flowDeskBoardRedo)) { _ in
+            canvasBoardViewModel.redoBoard()
+        }
         .onChange(of: selection?.persistentModelID) { _, _ in
+            canvasSelection.clear()
             syncCanvasAttachment()
         }
         .sheet(item: $renameSession) { session in
@@ -52,10 +63,18 @@ struct MainWindowView: View {
     private var detailContent: some View {
         if let doc = selection {
             HSplitView {
-                CanvasWorkspaceView(document: doc, viewModel: canvasBoardViewModel)
-                    .frame(minWidth: 480)
+                CanvasScreenView(
+                    document: doc,
+                    boardViewModel: canvasBoardViewModel,
+                    selection: canvasSelection
+                )
+                .frame(minWidth: 480)
 
-                InspectorPanelView(document: doc, canvasViewModel: canvasBoardViewModel)
+                InspectorPanelView(
+                    document: doc,
+                    canvasViewModel: canvasBoardViewModel,
+                    selection: canvasSelection
+                )
                     .frame(minWidth: 240, idealWidth: 280, maxWidth: 360)
             }
         } else {

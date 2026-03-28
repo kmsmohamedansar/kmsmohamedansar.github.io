@@ -61,6 +61,16 @@ struct CanvasElementRecord: Codable, Identifiable, Equatable, Sendable {
     var width: Double
     var height: Double
     var zIndex: Int
+    /// Populated when `kind == .textBlock`; omitted in JSON for other kinds and legacy boards.
+    var textBlock: TextBlockPayload?
+    /// Populated when `kind == .stickyNote`; omitted otherwise.
+    var stickyNote: StickyNotePayload?
+    /// Populated when `kind == .shape`; omitted otherwise.
+    var shapePayload: ShapePayload?
+    /// Populated when `kind == .stroke`; omitted otherwise.
+    var strokePayload: StrokePayload?
+    /// Populated when `kind == .chart`; omitted otherwise.
+    var chartPayload: ChartPayload?
 
     init(
         id: UUID = UUID(),
@@ -69,7 +79,12 @@ struct CanvasElementRecord: Codable, Identifiable, Equatable, Sendable {
         y: Double,
         width: Double,
         height: Double,
-        zIndex: Int = 0
+        zIndex: Int = 0,
+        textBlock: TextBlockPayload? = nil,
+        stickyNote: StickyNotePayload? = nil,
+        shapePayload: ShapePayload? = nil,
+        strokePayload: StrokePayload? = nil,
+        chartPayload: ChartPayload? = nil
     ) {
         self.id = id
         self.kind = kind
@@ -78,6 +93,40 @@ struct CanvasElementRecord: Codable, Identifiable, Equatable, Sendable {
         self.width = width
         self.height = height
         self.zIndex = zIndex
+        self.textBlock = textBlock
+        self.stickyNote = stickyNote
+        self.shapePayload = shapePayload
+        self.strokePayload = strokePayload
+        self.chartPayload = chartPayload
+    }
+}
+
+extension CanvasElementRecord {
+    /// Legacy or partial data: ensure text blocks always have a renderable payload.
+    func resolvedTextPayload() -> TextBlockPayload {
+        guard kind == .textBlock else { return .default }
+        return textBlock ?? .default
+    }
+
+    /// Legacy or partial data: sticky notes without payload still render sensibly.
+    func resolvedStickyNotePayload() -> StickyNotePayload {
+        guard kind == .stickyNote else { return .default }
+        return stickyNote ?? .default
+    }
+
+    func resolvedShapePayload() -> ShapePayload {
+        guard kind == .shape else { return .default }
+        return shapePayload ?? .default
+    }
+
+    func resolvedStrokePayload() -> StrokePayload {
+        guard kind == .stroke else { return .default }
+        return strokePayload ?? .default
+    }
+
+    func resolvedChartPayload() -> ChartPayload {
+        guard kind == .chart else { return .default }
+        return chartPayload ?? .default
     }
 }
 

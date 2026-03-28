@@ -4,6 +4,8 @@ import SwiftUI
 struct CanvasGridOverlay: View {
     var spacing: CGFloat
     var lineWidth: CGFloat
+    /// Subtle line weight; use `FlowDeskTheme.gridLineOpacity(for:)` from the parent.
+    var lineOpacity: Double
 
     var body: some View {
         Canvas { context, size in
@@ -20,7 +22,11 @@ struct CanvasGridOverlay: View {
                 path.addLine(to: CGPoint(x: size.width, y: y))
                 y += spacing
             }
-            context.stroke(path, with: .color(.black.opacity(0.07)), lineWidth: lineWidth)
+            context.stroke(
+                path,
+                with: .color(Color.primary.opacity(lineOpacity)),
+                lineWidth: lineWidth
+            )
         }
     }
 }
