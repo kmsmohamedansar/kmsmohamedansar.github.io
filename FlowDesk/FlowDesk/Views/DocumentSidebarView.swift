@@ -60,7 +60,7 @@ struct DocumentSidebarView: View {
                         }
                         .onDelete(perform: onDelete)
                     } header: {
-                        Text("Boards")
+                        Text("Canvases")
                             .font(FlowDeskTypography.sidebarSectionHeader)
                             .foregroundStyle(.tertiary)
                             .textCase(nil)
@@ -77,7 +77,7 @@ struct DocumentSidebarView: View {
                 Divider()
                     .opacity(0.45)
                 Button(action: onNewBoard) {
-                    Label("New Board", systemImage: "plus.circle.fill")
+                    Label("New canvas", systemImage: "plus.circle.fill")
                         .font(.body.weight(.medium))
                         .frame(maxWidth: .infinity, alignment: .leading)
                 }
@@ -92,7 +92,7 @@ struct DocumentSidebarView: View {
                 Button(action: onNewBoard) {
                     Image(systemName: "plus")
                 }
-                .help("New board")
+                .help("New smart canvas")
                 .buttonStyle(FlowDeskToolbarButtonStyle())
             }
         }
@@ -117,14 +117,14 @@ struct DocumentSidebarView: View {
 
     private var sidebarEmptyLibrary: some View {
         ContentUnavailableView {
-            Label("Your boards", systemImage: "rectangle.3.group")
+            Label("Your canvases", systemImage: "rectangle.3.group")
         } description: {
-            Text("Create a board to sketch, write, and arrange ideas on an infinite canvas.")
+            Text("Create a smart canvas to capture notes, sketches, and layout in one place.")
                 .multilineTextAlignment(.center)
                 .font(FlowDeskTypography.sectionCaption)
                 .foregroundStyle(.secondary)
         } actions: {
-            Button("New Board", action: onNewBoard)
+            Button("New canvas", action: onNewBoard)
                 .buttonStyle(.borderedProminent)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)

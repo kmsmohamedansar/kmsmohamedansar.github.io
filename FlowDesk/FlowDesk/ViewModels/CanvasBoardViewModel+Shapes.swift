@@ -34,6 +34,42 @@ extension CanvasBoardViewModel {
         return id
     }
 
+    /// Click-to-place while `canvasTool == .placeShape`; does not change the active tool.
+    @discardableResult
+    func insertShapeAtCanvasPoint(
+        kind: FlowDeskShapeKind,
+        point: CGPoint,
+        selection: CanvasSelectionModel
+    ) -> UUID {
+        stopAllInlineEditing()
+        let id = UUID()
+        var payload = ShapePayload.default
+        payload.kind = kind
+        let (w, h) = Self.defaultSize(for: kind)
+        let origin = CanvasInsertionPlacement.topLeftFromCenter(
+            centerX: Double(point.x),
+            centerY: Double(point.y),
+            elementWidth: w,
+            elementHeight: h,
+            canvasLogicalSize: 4000
+        )
+        let record = CanvasElementRecord(
+            id: id,
+            kind: .shape,
+            x: origin.x,
+            y: origin.y,
+            width: w,
+            height: h,
+            zIndex: nextZIndex(),
+            shapePayload: payload
+        )
+        applyBoardMutation { state in
+            state.elements.append(record)
+        }
+        selection.selectOnly(id)
+        return id
+    }
+
     private static func defaultSize(for kind: FlowDeskShapeKind) -> (width: Double, height: Double) {
         switch kind {
         case .rectangle, .roundedRectangle:

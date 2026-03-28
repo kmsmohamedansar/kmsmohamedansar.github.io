@@ -73,6 +73,23 @@ enum CanvasInsertionPlacement {
         y = min(max(0, y), maxY)
         return (x, y)
     }
+
+    /// Top-left for an element whose **center** is at `(centerX, centerY)` in canvas space (e.g. click-to-place).
+    static func topLeftFromCenter(
+        centerX: Double,
+        centerY: Double,
+        elementWidth: Double,
+        elementHeight: Double,
+        canvasLogicalSize: Double
+    ) -> (x: Double, y: Double) {
+        var x = centerX - elementWidth * 0.5
+        var y = centerY - elementHeight * 0.5
+        let maxX = max(0, canvasLogicalSize - elementWidth)
+        let maxY = max(0, canvasLogicalSize - elementHeight)
+        x = min(max(0, x), maxX)
+        y = min(max(0, y), maxY)
+        return (x, y)
+    }
 }
 
 extension CanvasBoardViewModel {

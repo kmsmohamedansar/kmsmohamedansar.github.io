@@ -12,7 +12,7 @@ final class DocumentListViewModel {
     }
 
     func createUntitledBoard() -> FlowDocument? {
-        createBoard(from: .blankBoard)
+        createBoard(from: .smartCanvas)
     }
 
     /// Creates a board from a home-screen template with encoded initial canvas + template metadata.

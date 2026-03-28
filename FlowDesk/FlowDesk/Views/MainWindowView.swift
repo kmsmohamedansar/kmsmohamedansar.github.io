@@ -98,7 +98,7 @@ struct MainWindowView: View {
     }
 
     private func createBoard() {
-        guard let doc = documentListViewModel.createBoard(from: .blankBoard) else { return }
+        guard let doc = documentListViewModel.createBoard(from: .smartCanvas) else { return }
         selection = doc
     }
 

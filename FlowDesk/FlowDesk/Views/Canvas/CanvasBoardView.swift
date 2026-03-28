@@ -24,7 +24,7 @@ struct CanvasBoardView: View {
 
             ZStack(alignment: .topLeading) {
                 ZStack(alignment: .topLeading) {
-                    canvasBackgroundLayer(viewport: viewport)
+                    canvasBackgroundLayer(viewport: viewport, selection: selection)
 
                     ForEach(sortedElements) { element in
                         canvasElementView(for: element)
@@ -70,10 +70,28 @@ struct CanvasBoardView: View {
                     x: CGFloat(viewport.offsetX) + panDragTranslation.width,
                     y: CGFloat(viewport.offsetY) + panDragTranslation.height
                 )
+
+                selectionToolbarOverlay(
+                    geo: geo,
+                    viewport: viewport,
+                    scale: scale
+                )
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
             .clipped()
             .contentShape(Rectangle())
+            .onHover { hovering in
+                guard hovering else {
+                    NSCursor.arrow.set()
+                    return
+                }
+                switch boardViewModel.canvasTool {
+                case .select:
+                    NSCursor.arrow.set()
+                case .draw, .placeText, .placeSticky, .placeShape:
+                    NSCursor.crosshair.set()
+                }
+            }
             .simultaneousGesture(zoomGesture(currentScale: viewport.scale))
             .task(id: insertionSnapshotTaskID(geo: geo, viewport: viewport, pan: panDragTranslation)) {
                 boardViewModel.syncInsertionViewportSnapshot(
@@ -95,12 +113,13 @@ struct CanvasBoardView: View {
     }
 
     @ViewBuilder
-    private func canvasBackgroundLayer(viewport: ViewportState) -> some View {
+    private func canvasBackgroundLayer(viewport: ViewportState, selection: CanvasSelectionModel) -> some View {
         let bg = canvasBackground(showGrid: viewport.showGrid)
             .frame(width: canvasSize, height: canvasSize)
             .contentShape(Rectangle())
 
-        if boardViewModel.canvasTool == .select {
+        switch boardViewModel.canvasTool {
+        case .select:
             bg
                 .gesture(panGesture(viewport: viewport))
                 .onTapGesture {
@@ -108,9 +127,36 @@ struct CanvasBoardView: View {
                     boardViewModel.resetGroupMoveState()
                     selection.clear()
                 }
-        } else {
+        case .draw:
             bg
+        case .placeText, .placeSticky, .placeShape:
+            bg
+                .gesture(placementTapGesture(selection: selection))
         }
+    }
+
+    /// Short drag threshold so pan-sized motion does not fire a placement.
+    private func placementTapGesture(selection: CanvasSelectionModel) -> some Gesture {
+        DragGesture(minimumDistance: 0, coordinateSpace: .local)
+            .onEnded { value in
+                let drag = hypot(value.translation.width, value.translation.height)
+                guard drag < 10 else { return }
+                let p = value.startLocation
+                switch boardViewModel.canvasTool {
+                case .placeText:
+                    boardViewModel.insertTextBlockAtCanvasPoint(p, selection: selection)
+                case .placeSticky:
+                    boardViewModel.insertStickyNoteAtCanvasPoint(p, selection: selection)
+                case .placeShape:
+                    boardViewModel.insertShapeAtCanvasPoint(
+                        kind: boardViewModel.placeShapeKind,
+                        point: p,
+                        selection: selection
+                    )
+                default:
+                    break
+                }
+            }
     }
 
     private func freehandDrawGesture(selection: CanvasSelectionModel) -> some Gesture {
@@ -222,5 +268,87 @@ struct CanvasBoardView: View {
                 )
             }
         }
+    }
+
+    // MARK: - Selection toolbar (view-space overlay)
+
+    private let selectionToolbarEstimatedWidth: CGFloat = 280
+    private let selectionToolbarEstimatedHeight: CGFloat = 48
+
+    @ViewBuilder
+    private func selectionToolbarOverlay(
+        geo: GeometryProxy,
+        viewport: ViewportState,
+        scale: CGFloat
+    ) -> some View {
+        Group {
+            if let id = selection.primarySelectedID,
+               let el = boardViewModel.boardState.elements.first(where: { $0.id == id }),
+               selectionToolbarSupportsKind(el.kind) {
+                CanvasSelectionToolbarView(
+                    elementID: id,
+                    elementKind: el.kind,
+                    boardViewModel: boardViewModel
+                )
+                .zIndex(600_000)
+                .position(
+                    selectionToolbarCenter(
+                        element: el,
+                        viewSize: geo.size,
+                        viewport: viewport,
+                        scale: scale,
+                        pan: panDragTranslation,
+                        toolbarWidth: selectionToolbarEstimatedWidth,
+                        toolbarHeight: selectionToolbarEstimatedHeight
+                    )
+                )
+                .transition(
+                    .opacity.combined(with: .scale(scale: 0.94, anchor: UnitPoint(x: 0.5, y: 1)))
+                )
+            }
+        }
+        .animation(.easeOut(duration: 0.2), value: selectionToolbarMotionIdentity())
+    }
+
+    /// Maps the element’s canvas frame through the same scale + offset as the board, then places the toolbar centered above it (view coordinates).
+    private func selectionToolbarCenter(
+        element: CanvasElementRecord,
+        viewSize: CGSize,
+        viewport: ViewportState,
+        scale: CGFloat,
+        pan: CGSize,
+        toolbarWidth: CGFloat,
+        toolbarHeight: CGFloat
+    ) -> CGPoint {
+        let ox = CGFloat(viewport.offsetX) + pan.width
+        let oy = CGFloat(viewport.offsetY) + pan.height
+        let elLeft = CGFloat(element.x) * scale + ox
+        let elTop = CGFloat(element.y) * scale + oy
+        let elW = CGFloat(element.width) * scale
+        let gap: CGFloat = 12
+        var midX = elLeft + elW * 0.5
+        var centerY = elTop - gap - toolbarHeight * 0.5
+        let margin: CGFloat = 10
+        let halfW = toolbarWidth * 0.5
+        let halfH = toolbarHeight * 0.5
+        midX = min(max(midX, halfW + margin), viewSize.width - halfW - margin)
+        centerY = min(max(centerY, halfH + margin), viewSize.height - halfH - margin)
+        return CGPoint(x: midX, y: centerY)
+    }
+
+    private func selectionToolbarSupportsKind(_ kind: CanvasElementKind) -> Bool {
+        switch kind {
+        case .textBlock, .stickyNote, .shape: true
+        case .stroke, .chart: false
+        @unknown default: false
+        }
+    }
+
+    private func selectionToolbarMotionIdentity() -> String {
+        guard let id = selection.primarySelectedID,
+              let el = boardViewModel.boardState.elements.first(where: { $0.id == id }),
+              selectionToolbarSupportsKind(el.kind)
+        else { return "none" }
+        return "\(id.uuidString)-\(el.x)-\(el.y)-\(el.width)-\(el.height)"
     }
 }

@@ -20,7 +20,7 @@ struct InspectorPanelView: View {
                         .foregroundStyle(.secondary)
                 }
             } header: {
-                FlowDeskInspectorSectionHeader("Board")
+                FlowDeskInspectorSectionHeader("Canvas")
             }
 
             Section {

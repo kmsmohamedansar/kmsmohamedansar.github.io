@@ -38,6 +38,47 @@ extension CanvasBoardViewModel {
         return id
     }
 
+    /// Click-to-place while `canvasTool == .placeSticky`; does not change the active tool.
+    @discardableResult
+    func insertStickyNoteAtCanvasPoint(
+        _ point: CGPoint,
+        selection: CanvasSelectionModel,
+        beginEditing: Bool = true
+    ) -> UUID {
+        stopAllInlineEditing()
+        let w = Self.stickyDefaultWidth
+        let h = Self.stickyDefaultHeight
+        let origin = CanvasInsertionPlacement.topLeftFromCenter(
+            centerX: Double(point.x),
+            centerY: Double(point.y),
+            elementWidth: w,
+            elementHeight: h,
+            canvasLogicalSize: 4000
+        )
+        let id = UUID()
+        var payload = StickyNotePayload.default
+        payload.text = ""
+        let record = CanvasElementRecord(
+            id: id,
+            kind: .stickyNote,
+            x: origin.x,
+            y: origin.y,
+            width: w,
+            height: h,
+            zIndex: nextZIndex(),
+            stickyNote: payload
+        )
+        applyBoardMutation { state in
+            state.elements.append(record)
+        }
+        selection.selectOnly(id)
+        if beginEditing {
+            editingTextElementID = nil
+            editingStickyNoteElementID = id
+        }
+        return id
+    }
+
     func stopEditingStickyNote() {
         editingStickyNoteElementID = nil
     }

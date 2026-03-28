@@ -19,6 +19,9 @@ final class CanvasBoardViewModel {
     /// Tool mode: pan/select vs freehand ink. Reset when opening a document.
     var canvasTool: CanvasToolMode = .select
 
+    /// Shape kind used when `canvasTool == .placeShape` and the user clicks the canvas.
+    var placeShapeKind: FlowDeskShapeKind = .rectangle
+
     /// Active drawing style for new strokes (toolbar / inspector).
     var drawingStrokeColor: CanvasRGBAColor = CanvasRGBAColor(red: 0.12, green: 0.12, blue: 0.14, opacity: 1)
     var drawingLineWidth: Double = 3
@@ -72,6 +75,7 @@ final class CanvasBoardViewModel {
         clipboardPasteGeneration = 0
         activeAlignmentGuides = []
         resetGroupMoveState()
+        placeShapeKind = .rectangle
         boardState = CanvasBoardCoding.decode(from: document.canvasPayload)
         // Initial tool is session UI state; derive from template when present so whiteboards open ready to draw.
         canvasTool = boardState.boardTemplate?.preferredInitialCanvasTool ?? .select
@@ -89,6 +93,7 @@ final class CanvasBoardViewModel {
         clipboardPasteGeneration = 0
         activeAlignmentGuides = []
         resetGroupMoveState()
+        placeShapeKind = .rectangle
         boardState = .empty()
         resetCanvasUndoHistory()
     }

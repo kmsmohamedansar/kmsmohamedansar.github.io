@@ -1,6 +1,8 @@
 import Foundation
 
 // MARK: - Initial persisted state (centralized; JSON-only, backward compatible)
+//
+// User-facing creation uses `.smartCanvas` and `.blankBoard` only. Other cases stay for decode + older boards.
 
 extension FlowDeskBoardTemplate {
     /// Full board snapshot for a new document from this template.

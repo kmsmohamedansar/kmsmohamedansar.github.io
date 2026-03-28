@@ -1,16 +1,32 @@
 import SwiftUI
 
-/// macOS canvas screen: toolbar + board. Keeps navigation subtitles here.
+/// macOS canvas screen: canvas-first tools + lightweight window toolbar (Edit / View / Export).
 struct CanvasScreenView: View {
     let document: FlowDocument
     @Bindable var boardViewModel: CanvasBoardViewModel
     @Bindable var selection: CanvasSelectionModel
 
+    @Environment(FlowDeskOnboardingStore.self) private var onboarding
+
     var body: some View {
-        CanvasBoardView(
-            boardViewModel: boardViewModel,
-            selection: selection
-        )
+        ZStack(alignment: .leading) {
+            CanvasBoardView(
+                boardViewModel: boardViewModel,
+                selection: selection
+            )
+
+            CanvasFloatingToolPalette(boardViewModel: boardViewModel)
+                .padding(.leading, 18)
+                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
+
+            if !onboarding.canvasTipsDismissed {
+                FlowDeskCanvasOnboardingCallout()
+                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topTrailing)
+                    .padding(.top, 10)
+                    .padding(.trailing, 14)
+            }
+        }
+        .animation(.easeOut(duration: 0.2), value: onboarding.canvasTipsDismissed)
         .navigationTitle(document.title)
         #if os(macOS)
         .navigationSubtitle("Last edited \(document.updatedAt.formatted(date: .abbreviated, time: .shortened))")
@@ -84,7 +100,30 @@ struct CanvasScreenView: View {
                     .disabled(!selection.hasSelection)
                 }
 
-                Menu("Export") {
+                Menu {
+                    Toggle("Show grid", isOn: gridBinding)
+                    Divider()
+                    Button("Text block at viewport center") {
+                        boardViewModel.insertTextBlock(selection: selection, beginEditing: true)
+                    }
+                    .keyboardShortcut("t", modifiers: [.command])
+                    Button("Sticky note at viewport center") {
+                        boardViewModel.insertStickyNote(selection: selection, beginEditing: true)
+                    }
+                    .keyboardShortcut("n", modifiers: [.command, .shift])
+                    Divider()
+                    Button("Bar chart") {
+                        boardViewModel.insertChart(kind: .bar, selection: selection)
+                    }
+                    Button("Line chart") {
+                        boardViewModel.insertChart(kind: .line, selection: selection)
+                    }
+                } label: {
+                    Label("View", systemImage: "rectangle.split.2x1")
+                }
+                .help("Grid, quick inserts, and charts")
+
+                Menu {
                     Button("Export PNG…") {
                         CanvasExportService.presentExportPanel(
                             boardState: boardViewModel.boardState,
@@ -99,73 +138,23 @@ struct CanvasScreenView: View {
                             format: .pdf
                         )
                     }
-                }
-                .buttonStyle(FlowDeskToolbarButtonStyle())
-            }
-            ToolbarItemGroup(placement: .primaryAction) {
-                Picker("Tool", selection: $boardViewModel.canvasTool) {
-                    Label("Select", systemImage: "cursorarrow").tag(CanvasToolMode.select)
-                    Label("Draw", systemImage: "pencil.tip").tag(CanvasToolMode.draw)
-                }
-                .pickerStyle(.segmented)
-                .controlSize(.regular)
-                .frame(minWidth: 168)
-                .help("Select and pan, or draw freehand strokes")
-            }
-            ToolbarItemGroup(placement: .primaryAction) {
-                Button {
-                    boardViewModel.insertTextBlock(selection: selection, beginEditing: true)
                 } label: {
-                    Label("Text block", systemImage: "textformat")
+                    Image(systemName: "square.and.arrow.up")
                 }
+                .help("Export")
                 .buttonStyle(FlowDeskToolbarButtonStyle())
-                .help("Insert a text block")
-                .keyboardShortcut("t", modifiers: [.command])
-
-                Button {
-                    boardViewModel.insertStickyNote(selection: selection, beginEditing: true)
-                } label: {
-                    Label("Sticky note", systemImage: "note.text")
-                }
-                .buttonStyle(FlowDeskToolbarButtonStyle())
-                .help("Insert a sticky note")
-                .keyboardShortcut("n", modifiers: [.command, .shift])
-
-                Menu {
-                    Button("Rectangle") {
-                        boardViewModel.insertShape(kind: .rectangle, selection: selection)
-                    }
-                    Button("Rounded rectangle") {
-                        boardViewModel.insertShape(kind: .roundedRectangle, selection: selection)
-                    }
-                    Button("Ellipse") {
-                        boardViewModel.insertShape(kind: .ellipse, selection: selection)
-                    }
-                    Button("Line") {
-                        boardViewModel.insertShape(kind: .line, selection: selection)
-                    }
-                    Button("Arrow") {
-                        boardViewModel.insertShape(kind: .arrow, selection: selection)
-                    }
-                } label: {
-                    Label("Shape", systemImage: "square.on.circle")
-                }
-                .buttonStyle(FlowDeskToolbarButtonStyle())
-                .help("Insert a shape")
-
-                Menu {
-                    Button("Bar chart") {
-                        boardViewModel.insertChart(kind: .bar, selection: selection)
-                    }
-                    Button("Line chart") {
-                        boardViewModel.insertChart(kind: .line, selection: selection)
-                    }
-                } label: {
-                    Label("Chart", systemImage: "chart.bar")
-                }
-                .buttonStyle(FlowDeskToolbarButtonStyle())
-                .help("Insert a chart block")
             }
         }
+    }
+
+    private var gridBinding: Binding<Bool> {
+        Binding(
+            get: { boardViewModel.boardState.viewport.showGrid },
+            set: { newValue in
+                var viewport = boardViewModel.boardState.viewport
+                viewport.showGrid = newValue
+                boardViewModel.setViewport(viewport)
+            }
+        )
     }
 }

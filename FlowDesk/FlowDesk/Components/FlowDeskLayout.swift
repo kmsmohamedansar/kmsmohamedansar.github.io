@@ -20,6 +20,8 @@ enum FlowDeskLayout {
     static let homeSubsectionSpacing: CGFloat = 12
     static let homeHeadlineToBodySpacing: CGFloat = 10
     static let homeCreationGridSpacing: CGFloat = 16
+    /// Caps width of the secondary “Blank board” tile so the hero canvas card dominates.
+    static let homeBlankCreationMaxWidth: CGFloat = 380
     static let homeRecentRowSpacing: CGFloat = 8
 
     // MARK: - Cards (same family as canvas framed elements)
@@ -34,6 +36,8 @@ enum FlowDeskLayout {
     static let cardShadowYHover: CGFloat = 5
 
     static let homeCreationCardMinHeight: CGFloat = 144
+    /// Primary “Smart canvas” tile on Home (secondary blank uses `homeCreationCardMinHeight`).
+    static let homeCreationCardHeroMinHeight: CGFloat = 196
     static let homeCreationCardInnerSpacing: CGFloat = 12
     static let homeCreationCardTitleSubtitleSpacing: CGFloat = 4
 

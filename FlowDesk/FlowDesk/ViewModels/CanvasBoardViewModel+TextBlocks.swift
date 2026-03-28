@@ -42,6 +42,47 @@ extension CanvasBoardViewModel {
         return id
     }
 
+    /// Click-to-place while `canvasTool == .placeText`; does not change the active tool.
+    @discardableResult
+    func insertTextBlockAtCanvasPoint(
+        _ point: CGPoint,
+        selection: CanvasSelectionModel,
+        beginEditing: Bool = true
+    ) -> UUID {
+        stopAllInlineEditing()
+        let w = Self.textBlockDefaultWidth
+        let h = Self.textBlockDefaultHeight
+        let origin = CanvasInsertionPlacement.topLeftFromCenter(
+            centerX: Double(point.x),
+            centerY: Double(point.y),
+            elementWidth: w,
+            elementHeight: h,
+            canvasLogicalSize: 4000
+        )
+        let id = UUID()
+        var payload = TextBlockPayload.default
+        payload.text = ""
+        let record = CanvasElementRecord(
+            id: id,
+            kind: .textBlock,
+            x: origin.x,
+            y: origin.y,
+            width: w,
+            height: h,
+            zIndex: nextZIndex(),
+            textBlock: payload
+        )
+        applyBoardMutation { state in
+            state.elements.append(record)
+        }
+        selection.selectOnly(id)
+        if beginEditing {
+            editingStickyNoteElementID = nil
+            editingTextElementID = id
+        }
+        return id
+    }
+
     func stopEditingText() {
         editingTextElementID = nil
     }

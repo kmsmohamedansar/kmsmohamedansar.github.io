@@ -14,7 +14,9 @@ enum FlowDeskTypography {
     // MARK: - Cards
 
     static let cardIconPointSize: CGFloat = 26
+    static let heroCardIconPointSize: CGFloat = 34
     static let cardTitle = Font.headline
+    static let heroCardTitle = Font.title2.weight(.semibold)
     static let cardSubtitle = Font.subheadline
     static let continueTitle = Font.title3.weight(.semibold)
     static let continueMeta = Font.subheadline
