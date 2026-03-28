@@ -6,7 +6,7 @@ struct CanvasBoardView: View {
     @Bindable var boardViewModel: CanvasBoardViewModel
     @Bindable var selection: CanvasSelectionModel
 
-    @Environment(\.colorScheme) private var colorScheme
+    @Environment(\.flowDeskTokens) private var tokens
 
     @State private var panDragTranslation: CGSize = .zero
     @State private var draftCanvasPoints: [CGPoint] = []
@@ -32,6 +32,13 @@ struct CanvasBoardView: View {
                             .offset(x: CGFloat(element.x), y: CGFloat(element.y))
                             .zIndex(Double(element.zIndex))
                     }
+
+                    CanvasMultiSelectionBoundsOverlay(
+                        elements: boardViewModel.boardState.elements,
+                        selectedIDs: selection.selectedElementIDs
+                    )
+                    .allowsHitTesting(false)
+                    .zIndex(450_000)
 
                     CanvasAlignmentGuidesOverlay(
                         guides: boardViewModel.activeAlignmentGuides,
@@ -98,6 +105,7 @@ struct CanvasBoardView: View {
                 .gesture(panGesture(viewport: viewport))
                 .onTapGesture {
                     boardViewModel.stopAllInlineEditing()
+                    boardViewModel.resetGroupMoveState()
                     selection.clear()
                 }
         } else {
@@ -172,7 +180,8 @@ struct CanvasBoardView: View {
             )
             .onTapGesture {
                 boardViewModel.stopAllInlineEditing()
-                selection.selectOnly(element.id)
+                let extend = NSEvent.modifierFlags.contains(.shift)
+                selection.handleCanvasTap(elementID: element.id, extendSelection: extend)
             }
         }
     }
@@ -204,12 +213,12 @@ struct CanvasBoardView: View {
     @ViewBuilder
     private func canvasBackground(showGrid: Bool) -> some View {
         ZStack {
-            FlowDeskTheme.canvasWorkspaceBackground(for: colorScheme)
+            tokens.workspaceBackground
             if showGrid {
                 CanvasGridOverlay(
                     spacing: 24,
-                    lineWidth: 0.35,
-                    lineOpacity: FlowDeskTheme.gridLineOpacity(for: colorScheme)
+                    lineWidth: FlowDeskLayout.gridLineWidth,
+                    lineOpacity: tokens.gridLineOpacity
                 )
             }
         }

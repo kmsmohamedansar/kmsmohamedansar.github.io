@@ -3,6 +3,8 @@ import SwiftUI
 
 struct MainWindowView: View {
     @Environment(\.modelContext) private var modelContext
+    @Environment(\.colorScheme) private var colorScheme
+    @Environment(FlowDeskAppearanceStore.self) private var appearanceStore
 
     @Query(sort: \FlowDocument.updatedAt, order: .reverse)
     private var documents: [FlowDocument]
@@ -14,6 +16,10 @@ struct MainWindowView: View {
 
     @State private var renameSession: RenameSession?
     @State private var renameDraft: String = ""
+
+    private var appearanceTokens: FlowDeskAppearanceTokens {
+        FlowDeskAppearanceTokens.resolve(colorScheme: colorScheme, preset: appearanceStore.stylePreset)
+    }
 
     var body: some View {
         NavigationSplitView {
@@ -30,6 +36,8 @@ struct MainWindowView: View {
         }
         .navigationTitle("")
         .toolbarBackground(.visible, for: .windowToolbar)
+        .flowDeskToolbarChrome(appearanceTokens)
+        .environment(\.flowDeskTokens, appearanceTokens)
         .task {
             LibrarySeedService.seedIfNeeded(in: modelContext)
         }
@@ -78,12 +86,19 @@ struct MainWindowView: View {
                     .frame(minWidth: 240, idealWidth: 280, maxWidth: 360)
             }
         } else {
-            BoardEmptySelectionView(onNewBoard: createBoard)
+            HomeView(
+                documents: documents,
+                onOpenDocument: { selection = $0 },
+                onCreateFromTemplate: { template in
+                    guard let doc = documentListViewModel.createBoard(from: template) else { return }
+                    selection = doc
+                }
+            )
         }
     }
 
     private func createBoard() {
-        guard let doc = documentListViewModel.createUntitledBoard() else { return }
+        guard let doc = documentListViewModel.createBoard(from: .blankBoard) else { return }
         selection = doc
     }
 

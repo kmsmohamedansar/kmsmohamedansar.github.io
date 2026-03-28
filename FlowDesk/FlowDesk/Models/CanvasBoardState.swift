@@ -8,15 +8,19 @@ struct CanvasBoardState: Codable, Equatable, Sendable {
     var formatVersion: Int
     var viewport: ViewportState
     var elements: [CanvasElementRecord]
+    /// Set when created from the home screen; omitted in legacy JSON.
+    var boardTemplate: FlowDeskBoardTemplate?
 
     init(
         formatVersion: Int = Self.currentFormatVersion,
         viewport: ViewportState = .init(),
-        elements: [CanvasElementRecord] = []
+        elements: [CanvasElementRecord] = [],
+        boardTemplate: FlowDeskBoardTemplate? = nil
     ) {
         self.formatVersion = formatVersion
         self.viewport = viewport
         self.elements = elements
+        self.boardTemplate = boardTemplate
     }
 
     static func empty() -> CanvasBoardState {

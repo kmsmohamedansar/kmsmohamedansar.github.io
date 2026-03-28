@@ -27,9 +27,9 @@ enum CanvasSnapEngine {
         }
     }
 
-    private static func framesForSnapping(excluding id: UUID, elements: [CanvasElementRecord]) -> [CGRect] {
+    private static func framesForSnapping(excludingIds: Set<UUID>, elements: [CanvasElementRecord]) -> [CGRect] {
         elements.compactMap { el in
-            guard el.id != id, participatesInSnapping(el.kind) else { return nil }
+            guard !excludingIds.contains(el.id), participatesInSnapping(el.kind) else { return nil }
             return CGRect(x: CGFloat(el.x), y: CGFloat(el.y), width: CGFloat(el.width), height: CGFloat(el.height))
         }
     }
@@ -55,14 +55,15 @@ enum CanvasSnapEngine {
     }
 
     /// Snap translation of a framed rect (move). Returns snapped rect and up to one vertical + one horizontal guide.
+    /// Pass all element IDs that move together so they are excluded from snap targets (e.g. multi-select).
     static func snapMove(
         proposed: CGRect,
-        movingElementId: UUID,
+        excludingElementIds: Set<UUID>,
         elements: [CanvasElementRecord],
         canvasSize: CGFloat = defaultCanvasLogicalSize,
         threshold: CGFloat = defaultThreshold
     ) -> (rect: CGRect, guides: [CanvasAlignmentGuide]) {
-        let others = framesForSnapping(excluding: movingElementId, elements: elements)
+        let others = framesForSnapping(excludingIds: excludingElementIds, elements: elements)
         let xT = xTargets(others: others, canvasSize: canvasSize)
         let yT = yTargets(others: others, canvasSize: canvasSize)
 
@@ -94,7 +95,7 @@ enum CanvasSnapEngine {
         canvasSize: CGFloat = defaultCanvasLogicalSize,
         threshold: CGFloat = defaultThreshold
     ) -> (rect: CGRect, guides: [CanvasAlignmentGuide]) {
-        let others = framesForSnapping(excluding: resizingElementId, elements: elements)
+        let others = framesForSnapping(excludingIds: Set([resizingElementId]), elements: elements)
         var r = proposed
         var guides: [CanvasAlignmentGuide] = []
 

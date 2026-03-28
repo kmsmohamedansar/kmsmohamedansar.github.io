@@ -1,7 +1,10 @@
+import AppKit
 import SwiftUI
 
 /// Bounding-box chrome, selection, and move for a persisted freehand stroke (no resize in v1).
 struct StrokeCanvasItemView: View {
+    @Environment(\.flowDeskTokens) private var tokens
+
     let element: CanvasElementRecord
     @Bindable var boardViewModel: CanvasBoardViewModel
     @Bindable var selection: CanvasSelectionModel
@@ -30,7 +33,7 @@ struct StrokeCanvasItemView: View {
 
             if isSelected {
                 RoundedRectangle(cornerRadius: chromeCorner, style: .continuous)
-                    .strokeBorder(FlowDeskTheme.selectionStrokeColor, lineWidth: FlowDeskTheme.selectionStrokeWidth)
+                    .strokeBorder(tokens.selectionStrokeColor, lineWidth: tokens.selectionStrokeWidth)
                     .allowsHitTesting(false)
             }
         }
@@ -39,7 +42,8 @@ struct StrokeCanvasItemView: View {
         .onTapGesture {
             guard boardViewModel.canvasTool == .select else { return }
             boardViewModel.stopAllInlineEditing()
-            selection.selectOnly(element.id)
+            let extend = NSEvent.modifierFlags.contains(.shift)
+            selection.handleCanvasTap(elementID: element.id, extendSelection: extend)
         }
         .simultaneousGesture(moveGesture)
         .contextMenu {

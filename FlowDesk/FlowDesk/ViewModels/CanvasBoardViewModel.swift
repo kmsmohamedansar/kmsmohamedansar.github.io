@@ -32,6 +32,21 @@ final class CanvasBoardViewModel {
     /// Live alignment guides during move/resize (not persisted).
     var activeAlignmentGuides: [CanvasAlignmentGuide] = []
 
+    /// Multi-select framed drag: leader view drives snap; followers mirror `groupMovePreviewTranslation`.
+    var groupMoveLeaderID: UUID?
+    var groupMovePreviewTranslation: CGSize = .zero
+    /// Subset of `selectedElementIDs` that are framed (text, sticky, shape, chart).
+    var groupMoveParticipantIDs: Set<UUID> = []
+
+    /// Cascading offset steps for repeated paste from the internal clipboard (canvas points). Reset on copy and document attach/detach.
+    var clipboardPasteGeneration: Int = 0
+
+    /// Bumped when the FlowDesk pasteboard write succeeds so SwiftUI refreshes Paste affordances.
+    var clipboardRevision: Int = 0
+
+    /// Shared offset for duplicate, multi-duplicate, and clipboard paste (canvas space, points).
+    static let boardCascadeOffset: Double = 28
+
     // MARK: - Undo / redo (snapshot-based; see CanvasBoardViewModel+Undo.swift)
 
     /// States to restore on Undo. Not persisted across app relaunch or document switches.
@@ -54,8 +69,12 @@ final class CanvasBoardViewModel {
         canvasTool = .select
         insertionViewportSnapshot = nil
         insertionStaggerCounter = 0
+        clipboardPasteGeneration = 0
         activeAlignmentGuides = []
+        resetGroupMoveState()
         boardState = CanvasBoardCoding.decode(from: document.canvasPayload)
+        // Initial tool is session UI state; derive from template when present so whiteboards open ready to draw.
+        canvasTool = boardState.boardTemplate?.preferredInitialCanvasTool ?? .select
         resetCanvasUndoHistory()
     }
 
@@ -67,7 +86,9 @@ final class CanvasBoardViewModel {
         canvasTool = .select
         insertionViewportSnapshot = nil
         insertionStaggerCounter = 0
+        clipboardPasteGeneration = 0
         activeAlignmentGuides = []
+        resetGroupMoveState()
         boardState = .empty()
         resetCanvasUndoHistory()
     }

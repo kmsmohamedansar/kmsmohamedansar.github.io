@@ -77,6 +77,6 @@ extension CanvasBoardViewModel {
 enum CanvasStickyNoteLayout {
     static let minWidth: Double = 100
     static let minHeight: Double = 80
-    static let cornerRadius: CGFloat = 15
-    static let contentPadding = EdgeInsets(top: 13, leading: 15, bottom: 13, trailing: 15)
+    static let cornerRadius: CGFloat = FlowDeskLayout.cardCornerRadius
+    static let contentPadding = FlowDeskLayout.canvasCardContentPadding
 }

@@ -3,6 +3,8 @@ import SwiftUI
 
 /// Renders and edits a sticky note: paper color, soft shadow, inline text editing, move/resize.
 struct StickyNoteCanvasItemView: View {
+    @Environment(\.flowDeskTokens) private var tokens
+
     let element: CanvasElementRecord
     @Bindable var boardViewModel: CanvasBoardViewModel
     @Bindable var selection: CanvasSelectionModel
@@ -25,6 +27,16 @@ struct StickyNoteCanvasItemView: View {
         selection.isSelected(element.id)
     }
 
+    private var composedMoveOffset: CGSize {
+        if boardViewModel.groupMoveLeaderID == element.id {
+            return moveDragTranslation
+        }
+        if boardViewModel.groupMoveParticipantIDs.contains(element.id) {
+            return boardViewModel.groupMovePreviewTranslation
+        }
+        return moveDragTranslation
+    }
+
     private var cardShape: RoundedRectangle {
         RoundedRectangle(cornerRadius: CanvasStickyNoteLayout.cornerRadius, style: .continuous)
     }
@@ -34,10 +46,12 @@ struct StickyNoteCanvasItemView: View {
             cardShape
                 .fill(payload.backgroundColor.swiftUIColor)
                 .shadow(
-                    color: Color.black.opacity(FlowDeskTheme.cardShadowOpacity(selected: isSelected)),
-                    radius: FlowDeskTheme.cardShadowRadius(selected: isSelected),
+                    color: Color.black.opacity(
+                        isSelected ? tokens.canvasItemShadowSelected : tokens.canvasItemShadowNormal
+                    ),
+                    radius: isSelected ? tokens.canvasItemShadowRadiusSelected : tokens.canvasItemShadowRadiusNormal,
                     x: 0,
-                    y: FlowDeskTheme.cardShadowY(selected: isSelected)
+                    y: isSelected ? tokens.canvasItemShadowYSelected : tokens.canvasItemShadowYNormal
                 )
                 .overlay {
                     cardShape
@@ -67,18 +81,18 @@ struct StickyNoteCanvasItemView: View {
 
             if isSelected {
                 cardShape
-                    .strokeBorder(FlowDeskTheme.selectionStrokeColor, lineWidth: FlowDeskTheme.selectionStrokeWidth)
+                    .strokeBorder(tokens.selectionStrokeColor, lineWidth: tokens.selectionStrokeWidth)
                     .allowsHitTesting(false)
             }
         }
         .overlay(alignment: .bottomTrailing) {
-            if isSelected, !isEditing {
+            if isSelected, !isEditing, !selection.isMultiSelection {
                 CanvasTextBlockResizeHandle()
                     .padding(7)
                     .gesture(resizeGesture)
             }
         }
-        .offset(moveDragTranslation)
+        .offset(composedMoveOffset)
         .contentShape(cardShape)
         .highPriorityGesture(
             TapGesture(count: 2).onEnded {
@@ -87,7 +101,9 @@ struct StickyNoteCanvasItemView: View {
             }
         )
         .onTapGesture {
-            selection.selectOnly(element.id)
+            boardViewModel.stopAllInlineEditing()
+            let extend = NSEvent.modifierFlags.contains(.shift)
+            selection.handleCanvasTap(elementID: element.id, extendSelection: extend)
         }
         .simultaneousGesture(moveGesture)
         .contextMenu {
@@ -152,19 +168,22 @@ struct StickyNoteCanvasItemView: View {
                 guard !isEditing else { return }
                 if moveDragStartCanvasOrigin == nil {
                     moveDragStartCanvasOrigin = CGPoint(x: element.x, y: element.y)
+                    boardViewModel.configureGroupMoveIfNeeded(leaderId: element.id, selection: selection)
                 }
                 let start = moveDragStartCanvasOrigin ?? CGPoint(x: element.x, y: element.y)
                 let rawX = start.x + value.translation.width
                 let rawY = start.y + value.translation.height
+                let exclude = boardViewModel.snapExclusionsForFramedMove(leaderId: element.id, selection: selection)
                 let (snapped, guides) = boardViewModel.snapMoveFrame(
                     rawOrigin: CGPoint(x: rawX, y: rawY),
                     size: CGSize(width: element.width, height: element.height),
-                    elementId: element.id
+                    excludingElementIds: exclude
                 )
                 moveDragTranslation = CGSize(
                     width: snapped.x - element.x,
                     height: snapped.y - element.y
                 )
+                boardViewModel.syncGroupMovePreview(leaderId: element.id, translation: moveDragTranslation)
                 boardViewModel.updateAlignmentGuides(guides)
             }
             .onEnded { value in
@@ -173,18 +192,28 @@ struct StickyNoteCanvasItemView: View {
                 let start = moveDragStartCanvasOrigin ?? CGPoint(x: element.x, y: element.y)
                 let rawX = start.x + value.translation.width
                 let rawY = start.y + value.translation.height
+                let exclude = boardViewModel.snapExclusionsForFramedMove(leaderId: element.id, selection: selection)
                 let (snapped, _) = boardViewModel.snapMoveFrame(
                     rawOrigin: CGPoint(x: rawX, y: rawY),
                     size: CGSize(width: element.width, height: element.height),
-                    elementId: element.id
+                    excludingElementIds: exclude
                 )
-                boardViewModel.setStickyNoteFrame(
-                    id: element.id,
-                    x: Double(snapped.x),
-                    y: Double(snapped.y),
-                    width: element.width,
-                    height: element.height
-                )
+                let participants = boardViewModel.groupMoveParticipantIDs
+                if boardViewModel.groupMoveLeaderID == element.id,
+                   participants.count > 1 {
+                    let dx = Double(snapped.x - start.x)
+                    let dy = Double(snapped.y - start.y)
+                    boardViewModel.applyFramedGroupPositionDelta(ids: participants, dx: dx, dy: dy)
+                } else {
+                    boardViewModel.setStickyNoteFrame(
+                        id: element.id,
+                        x: Double(snapped.x),
+                        y: Double(snapped.y),
+                        width: element.width,
+                        height: element.height
+                    )
+                }
+                boardViewModel.resetGroupMoveState()
                 moveDragTranslation = .zero
                 moveDragStartCanvasOrigin = nil
             }

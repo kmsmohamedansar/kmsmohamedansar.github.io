@@ -14,12 +14,12 @@ extension CanvasBoardViewModel {
     func snapMoveFrame(
         rawOrigin: CGPoint,
         size: CGSize,
-        elementId: UUID
+        excludingElementIds: Set<UUID>
     ) -> (origin: CGPoint, guides: [CanvasAlignmentGuide]) {
         let proposed = CGRect(origin: rawOrigin, size: size)
         let (snapped, guides) = CanvasSnapEngine.snapMove(
             proposed: proposed,
-            movingElementId: elementId,
+            excludingElementIds: excludingElementIds,
             elements: boardState.elements,
             canvasSize: CanvasSnapEngine.defaultCanvasLogicalSize,
             threshold: CanvasSnapEngine.defaultThreshold

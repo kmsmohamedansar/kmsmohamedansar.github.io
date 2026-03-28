@@ -4,10 +4,11 @@ import SwiftUI
 @main
 struct FlowDeskApp: App {
     private let modelContainer = ModelContainerFactory.makeDefault()
+    @State private var appearanceStore = FlowDeskAppearanceStore()
 
     var body: some Scene {
         WindowGroup {
-            MainWindowView()
+            FlowDeskRootView(appearanceStore: appearanceStore)
         }
         .modelContainer(modelContainer)
         .windowStyle(.automatic)
@@ -25,5 +26,11 @@ struct FlowDeskApp: App {
                 .keyboardShortcut("z", modifiers: [.command, .shift])
             }
         }
+
+        #if os(macOS)
+        Settings {
+            FlowDeskAppearanceSettingsView(store: appearanceStore)
+        }
+        #endif
     }
 }

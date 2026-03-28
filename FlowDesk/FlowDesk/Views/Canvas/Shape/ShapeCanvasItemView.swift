@@ -1,7 +1,10 @@
+import AppKit
 import SwiftUI
 
 /// Selectable shape on the board: vector body, accent chrome, move + resize.
 struct ShapeCanvasItemView: View {
+    @Environment(\.flowDeskTokens) private var tokens
+
     let element: CanvasElementRecord
     @Bindable var boardViewModel: CanvasBoardViewModel
     @Bindable var selection: CanvasSelectionModel
@@ -18,6 +21,16 @@ struct ShapeCanvasItemView: View {
         selection.isSelected(element.id)
     }
 
+    private var composedMoveOffset: CGSize {
+        if boardViewModel.groupMoveLeaderID == element.id {
+            return moveDragTranslation
+        }
+        if boardViewModel.groupMoveParticipantIDs.contains(element.id) {
+            return boardViewModel.groupMovePreviewTranslation
+        }
+        return moveDragTranslation
+    }
+
     private var chromeCorner: CGFloat { FlowDeskTheme.shapeSelectionChromeCorner }
 
     var body: some View {
@@ -26,22 +39,23 @@ struct ShapeCanvasItemView: View {
 
             if isSelected {
                 RoundedRectangle(cornerRadius: chromeCorner, style: .continuous)
-                    .strokeBorder(FlowDeskTheme.selectionStrokeColor, lineWidth: FlowDeskTheme.selectionStrokeWidth)
+                    .strokeBorder(tokens.selectionStrokeColor, lineWidth: tokens.selectionStrokeWidth)
                     .allowsHitTesting(false)
             }
         }
         .overlay(alignment: .bottomTrailing) {
-            if isSelected {
+            if isSelected, !selection.isMultiSelection {
                 CanvasTextBlockResizeHandle()
                     .padding(7)
                     .gesture(resizeGesture)
             }
         }
-        .offset(moveDragTranslation)
+        .offset(composedMoveOffset)
         .contentShape(Rectangle())
         .onTapGesture {
             boardViewModel.stopAllInlineEditing()
-            selection.selectOnly(element.id)
+            let extend = NSEvent.modifierFlags.contains(.shift)
+            selection.handleCanvasTap(elementID: element.id, extendSelection: extend)
         }
         .simultaneousGesture(moveGesture)
         .contextMenu {
@@ -58,19 +72,22 @@ struct ShapeCanvasItemView: View {
             .onChanged { value in
                 if moveDragStartCanvasOrigin == nil {
                     moveDragStartCanvasOrigin = CGPoint(x: element.x, y: element.y)
+                    boardViewModel.configureGroupMoveIfNeeded(leaderId: element.id, selection: selection)
                 }
                 let start = moveDragStartCanvasOrigin ?? CGPoint(x: element.x, y: element.y)
                 let rawX = start.x + value.translation.width
                 let rawY = start.y + value.translation.height
+                let exclude = boardViewModel.snapExclusionsForFramedMove(leaderId: element.id, selection: selection)
                 let (snapped, guides) = boardViewModel.snapMoveFrame(
                     rawOrigin: CGPoint(x: rawX, y: rawY),
                     size: CGSize(width: element.width, height: element.height),
-                    elementId: element.id
+                    excludingElementIds: exclude
                 )
                 moveDragTranslation = CGSize(
                     width: snapped.x - element.x,
                     height: snapped.y - element.y
                 )
+                boardViewModel.syncGroupMovePreview(leaderId: element.id, translation: moveDragTranslation)
                 boardViewModel.updateAlignmentGuides(guides)
             }
             .onEnded { value in
@@ -78,18 +95,28 @@ struct ShapeCanvasItemView: View {
                 let start = moveDragStartCanvasOrigin ?? CGPoint(x: element.x, y: element.y)
                 let rawX = start.x + value.translation.width
                 let rawY = start.y + value.translation.height
+                let exclude = boardViewModel.snapExclusionsForFramedMove(leaderId: element.id, selection: selection)
                 let (snapped, _) = boardViewModel.snapMoveFrame(
                     rawOrigin: CGPoint(x: rawX, y: rawY),
                     size: CGSize(width: element.width, height: element.height),
-                    elementId: element.id
+                    excludingElementIds: exclude
                 )
-                boardViewModel.setShapeFrame(
-                    id: element.id,
-                    x: Double(snapped.x),
-                    y: Double(snapped.y),
-                    width: element.width,
-                    height: element.height
-                )
+                let participants = boardViewModel.groupMoveParticipantIDs
+                if boardViewModel.groupMoveLeaderID == element.id,
+                   participants.count > 1 {
+                    let dx = Double(snapped.x - start.x)
+                    let dy = Double(snapped.y - start.y)
+                    boardViewModel.applyFramedGroupPositionDelta(ids: participants, dx: dx, dy: dy)
+                } else {
+                    boardViewModel.setShapeFrame(
+                        id: element.id,
+                        x: Double(snapped.x),
+                        y: Double(snapped.y),
+                        width: element.width,
+                        height: element.height
+                    )
+                }
+                boardViewModel.resetGroupMoveState()
                 moveDragTranslation = .zero
                 moveDragStartCanvasOrigin = nil
             }

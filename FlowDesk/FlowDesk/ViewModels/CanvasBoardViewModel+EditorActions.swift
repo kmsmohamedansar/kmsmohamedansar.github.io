@@ -23,8 +23,6 @@ extension CanvasBoardViewModel {
 // MARK: - Duplicate
 
 extension CanvasBoardViewModel {
-    private static let duplicateOffset: Double = 28
-
     /// Copies one element (any kind); new id, offset frame, top z-index, selects the copy.
     func duplicateElement(id: UUID, selection: CanvasSelectionModel) {
         guard let el = boardState.elements.first(where: { $0.id == id }) else { return }
@@ -34,8 +32,8 @@ extension CanvasBoardViewModel {
         let copy = CanvasElementRecord(
             id: newId,
             kind: el.kind,
-            x: el.x + Self.duplicateOffset,
-            y: el.y + Self.duplicateOffset,
+            x: el.x + Self.boardCascadeOffset,
+            y: el.y + Self.boardCascadeOffset,
             width: el.width,
             height: el.height,
             zIndex: z,
@@ -66,15 +64,15 @@ extension CanvasBoardViewModel {
             return
         }
         stopAllInlineEditing()
-        var lastNewId: UUID?
         let stagger: Double = 12
+        var newIDs: [UUID] = []
         applyBoardMutation { state in
             var maxZ = state.elements.map(\.zIndex).max() ?? 0
             for (i, el) in ordered.enumerated() {
                 maxZ += 1
                 let newId = UUID()
-                let dx = Self.duplicateOffset + Double(i) * stagger
-                let dy = Self.duplicateOffset + Double(i) * stagger
+                let dx = Self.boardCascadeOffset + Double(i) * stagger
+                let dy = Self.boardCascadeOffset + Double(i) * stagger
                 let copy = CanvasElementRecord(
                     id: newId,
                     kind: el.kind,
@@ -90,11 +88,11 @@ extension CanvasBoardViewModel {
                     chartPayload: el.chartPayload
                 )
                 state.elements.append(copy)
-                lastNewId = newId
+                newIDs.append(newId)
             }
         }
-        if let lastNewId {
-            selection.selectOnly(lastNewId)
+        if !newIDs.isEmpty {
+            selection.replaceSelection(Set(newIDs))
         }
     }
 }
@@ -146,7 +144,7 @@ extension CanvasBoardViewModel {
         updateElement(id: id) { $0.zIndex = minZ - 1 }
     }
 
-    // MARK: Selection-based (v1: primary only; multi-select → actions disabled until primary exists)
+    // MARK: Selection-based stacking (v1: primary only; multi-select uses Arrange after selecting one item)
 
     func canBringSelectionForward(selection: CanvasSelectionModel) -> Bool {
         guard let id = selection.primarySelectedID else { return false }

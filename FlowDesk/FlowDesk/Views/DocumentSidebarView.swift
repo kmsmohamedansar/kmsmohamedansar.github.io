@@ -1,11 +1,15 @@
 import SwiftUI
 
 struct DocumentSidebarView: View {
+    @Environment(\.flowDeskTokens) private var tokens
+
     let documents: [FlowDocument]
     @Binding var selection: FlowDocument?
     var onNewBoard: () -> Void
     var onDelete: (IndexSet) -> Void
     var onRenameRequest: (FlowDocument) -> Void
+
+    @State private var hoveredDocumentID: UUID?
 
     var body: some View {
         Group {
@@ -17,7 +21,7 @@ struct DocumentSidebarView: View {
                         ForEach(documents, id: \.persistentModelID) { document in
                             Label {
                                 Text(document.title)
-                                    .font(.body)
+                                    .font(FlowDeskTypography.sidebarRowTitle)
                                     .lineLimit(2)
                             } icon: {
                                 Image(systemName: "rectangle.on.rectangle.angled")
@@ -36,34 +40,52 @@ struct DocumentSidebarView: View {
                                 }
                             }
                             .tag(Optional(document))
-                            .listRowInsets(EdgeInsets(top: 7, leading: 12, bottom: 7, trailing: 10))
+                            .listRowInsets(
+                                EdgeInsets(
+                                    top: FlowDeskLayout.sidebarRowVerticalInset,
+                                    leading: FlowDeskLayout.sidebarRowLeadingInset,
+                                    bottom: FlowDeskLayout.sidebarRowVerticalInset,
+                                    trailing: FlowDeskLayout.sidebarRowTrailingInset
+                                )
+                            )
+                            .listRowBackground(
+                                sidebarRowBackground(
+                                    isSelected: selection?.id == document.id,
+                                    isHovered: hoveredDocumentID == document.id
+                                )
+                            )
+                            .onHover { inside in
+                                hoveredDocumentID = inside ? document.id : nil
+                            }
                         }
                         .onDelete(perform: onDelete)
                     } header: {
                         Text("Boards")
-                            .font(.caption.weight(.semibold))
+                            .font(FlowDeskTypography.sidebarSectionHeader)
                             .foregroundStyle(.tertiary)
                             .textCase(nil)
-                            .padding(.bottom, 2)
+                            .padding(.bottom, FlowDeskLayout.spaceXS)
                     }
                 }
                 .listStyle(.sidebar)
+                .scrollContentBackground(.hidden)
             }
         }
+        .background(tokens.sidebarListTint)
         .safeAreaInset(edge: .bottom) {
             VStack(alignment: .leading, spacing: 0) {
                 Divider()
-                    .opacity(0.5)
+                    .opacity(0.45)
                 Button(action: onNewBoard) {
                     Label("New Board", systemImage: "plus.circle.fill")
                         .font(.body.weight(.medium))
                         .frame(maxWidth: .infinity, alignment: .leading)
                 }
-                .buttonStyle(.borderless)
-                .padding(.horizontal, 14)
-                .padding(.vertical, 10)
+                .buttonStyle(FlowDeskPlainCardButtonStyle())
+                .padding(.horizontal, FlowDeskLayout.sidebarFooterHorizontalPadding)
+                .padding(.vertical, FlowDeskLayout.sidebarFooterVerticalPadding)
             }
-            .background(.bar)
+            .flowDeskSidebarFooterBackground(tokens)
         }
         .toolbar {
             ToolbarItem(placement: .primaryAction) {
@@ -71,8 +93,26 @@ struct DocumentSidebarView: View {
                     Image(systemName: "plus")
                 }
                 .help("New board")
+                .buttonStyle(FlowDeskToolbarButtonStyle())
             }
         }
+    }
+
+    private func sidebarRowBackground(isSelected: Bool, isHovered: Bool) -> some View {
+        RoundedRectangle(cornerRadius: FlowDeskLayout.sidebarRowSelectionCornerRadius, style: .continuous)
+            .fill(rowFill(isSelected: isSelected, isHovered: isHovered))
+            .padding(.vertical, 2)
+            .padding(.horizontal, 4)
+    }
+
+    private func rowFill(isSelected: Bool, isHovered: Bool) -> Color {
+        if isSelected {
+            return Color.primary.opacity(0.11)
+        }
+        if isHovered {
+            return Color.primary.opacity(0.055)
+        }
+        return Color.clear
     }
 
     private var sidebarEmptyLibrary: some View {
@@ -81,12 +121,13 @@ struct DocumentSidebarView: View {
         } description: {
             Text("Create a board to sketch, write, and arrange ideas on an infinite canvas.")
                 .multilineTextAlignment(.center)
+                .font(FlowDeskTypography.sectionCaption)
                 .foregroundStyle(.secondary)
         } actions: {
             Button("New Board", action: onNewBoard)
                 .buttonStyle(.borderedProminent)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .padding(.horizontal, 8)
+        .padding(.horizontal, FlowDeskLayout.sidebarEmptyHorizontalPadding)
     }
 }

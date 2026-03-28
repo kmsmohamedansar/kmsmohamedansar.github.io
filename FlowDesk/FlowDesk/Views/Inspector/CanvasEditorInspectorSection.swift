@@ -1,6 +1,6 @@
 import SwiftUI
 
-/// Edit / arrange actions for the primary selected element (v1: single selection for z-order and duplicate).
+/// Edit / arrange: duplicate/delete use full selection; stacking (Arrange) stays primary-only in v1.
 struct CanvasEditorInspectorSection: View {
     @Bindable var canvasViewModel: CanvasBoardViewModel
     @Bindable var selection: CanvasSelectionModel
@@ -9,11 +9,11 @@ struct CanvasEditorInspectorSection: View {
         Section {
             HStack(spacing: 10) {
                 Button("Duplicate") {
-                    canvasViewModel.duplicatePrimarySelection(selection: selection)
+                    canvasViewModel.duplicateAllSelectedElements(selection: selection)
                 }
                 .buttonStyle(.bordered)
                 .controlSize(.regular)
-                .disabled(selection.primarySelectedID == nil)
+                .disabled(!selection.hasSelection)
 
                 Spacer(minLength: 0)
 
@@ -46,6 +46,12 @@ struct CanvasEditorInspectorSection: View {
                 Label("Arrange stacking", systemImage: "square.3.layers.3d")
             }
             .disabled(selection.primarySelectedID == nil)
+
+            if selection.isMultiSelection {
+                Text("Arrange applies to one item at a time. Select a single element for stacking controls.")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+            }
         } header: {
             FlowDeskInspectorSectionHeader("Edit")
         }

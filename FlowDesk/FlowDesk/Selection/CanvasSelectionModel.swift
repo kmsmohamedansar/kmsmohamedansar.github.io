@@ -2,7 +2,6 @@ import Foundation
 import Observation
 
 /// Canvas-scoped selection (element UUIDs). Cleared when the active `FlowDocument` changes.
-/// Future: shift-click multi-select, marquee, and focus order map to `selectedElementIDs`.
 @Observable
 final class CanvasSelectionModel {
     private(set) var selectedElementIDs: Set<UUID> = []
@@ -11,6 +10,9 @@ final class CanvasSelectionModel {
         if selectedElementIDs.count == 1 { return selectedElementIDs.first }
         return nil
     }
+
+    /// More than one element selected (inspector uses lightweight multi state).
+    var isMultiSelection: Bool { selectedElementIDs.count > 1 }
 
     var hasSelection: Bool { !selectedElementIDs.isEmpty }
 
@@ -23,6 +25,28 @@ final class CanvasSelectionModel {
             selectedElementIDs = [id]
         } else {
             clear()
+        }
+    }
+
+    /// Replaces the selection (e.g. after paste or multi-duplicate).
+    func replaceSelection(_ ids: Set<UUID>) {
+        selectedElementIDs = ids
+    }
+
+    /// Normal click: single select. Shift-click: add/remove without clearing others.
+    func handleCanvasTap(elementID: UUID, extendSelection: Bool) {
+        if extendSelection {
+            toggleSelection(elementID)
+        } else {
+            selectOnly(elementID)
+        }
+    }
+
+    func toggleSelection(_ id: UUID) {
+        if selectedElementIDs.contains(id) {
+            selectedElementIDs.remove(id)
+        } else {
+            selectedElementIDs.insert(id)
         }
     }
 

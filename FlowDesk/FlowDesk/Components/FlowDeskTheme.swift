@@ -1,42 +1,37 @@
 import AppKit
 import SwiftUI
 
-/// Shared visual constants for a calm, native macOS productivity feel.
+/// Geometry and export-time constants. **Dynamic colors** come from `FlowDeskAppearanceTokens`
+/// (resolved per `ColorScheme` + user style preset) and are injected via `@Environment(\.flowDeskTokens)`.
 enum FlowDeskTheme {
-    // MARK: - Canvas workspace
+    // MARK: - Canvas workspace (export / previews only)
 
+    /// Matches warm-paper light tokens for predictable PNG/PDF output.
     static func canvasWorkspaceBackground(for colorScheme: ColorScheme) -> Color {
-        switch colorScheme {
-        case .dark:
-            Color(nsColor: NSColor(red: 0.12, green: 0.12, blue: 0.13, alpha: 1))
-        default:
-            // Slightly warm off-white; easier on the eyes than pure window gray.
-            Color(nsColor: NSColor(red: 0.965, green: 0.958, blue: 0.948, alpha: 1))
-        }
+        FlowDeskAppearanceTokens.resolve(colorScheme: colorScheme, preset: .warmPaper).workspaceBackground
     }
 
-    /// Export and thumbnails: match light workspace for predictable output.
     static var canvasWorkspaceBackgroundExport: Color {
-        Color(nsColor: NSColor(red: 0.965, green: 0.958, blue: 0.948, alpha: 1))
+        FlowDeskAppearanceTokens.resolve(colorScheme: .light, preset: .warmPaper).workspaceBackground
     }
 
     static func gridLineOpacity(for colorScheme: ColorScheme) -> Double {
-        colorScheme == .dark ? 0.07 : 0.045
+        FlowDeskAppearanceTokens.resolve(colorScheme: colorScheme, preset: .warmPaper).gridLineOpacity
     }
 
-    // MARK: - Framed canvas items
+    // MARK: - Framed canvas items (geometry; aligned with `FlowDeskLayout.cardCornerRadius`)
 
-    static let textBlockCornerRadius: CGFloat = 14
-    static let textBlockContentPadding = EdgeInsets(top: 11, leading: 14, bottom: 11, trailing: 14)
+    static var textBlockCornerRadius: CGFloat { FlowDeskLayout.cardCornerRadius }
+    static var textBlockContentPadding: EdgeInsets { FlowDeskLayout.canvasCardContentPadding }
 
-    static let chartCardCornerRadius: CGFloat = 14
-    static let chartCardContentPadding: CGFloat = 16
-    static let chartTitleSpacing: CGFloat = 12
+    static var chartCardCornerRadius: CGFloat { FlowDeskLayout.cardCornerRadius }
+    static var chartCardContentPadding: CGFloat { FlowDeskLayout.canvasCardContentPadding.leading }
+    static var chartTitleSpacing: CGFloat { FlowDeskLayout.chartTitleElementSpacing }
 
-    static let shapeSelectionChromeCorner: CGFloat = 12
-    static let strokeSelectionChromeCorner: CGFloat = 8
+    static var shapeSelectionChromeCorner: CGFloat { FlowDeskLayout.shapeSelectionCornerRadius }
+    static var strokeSelectionChromeCorner: CGFloat { FlowDeskLayout.strokeSelectionCornerRadius }
 
-    // MARK: - Selection & handles
+    // MARK: - Selection & handles (geometry; stroke color lives on tokens in canvas views)
 
     static let selectionStrokeWidth: CGFloat = 1.5
     static let selectionAccentOpacity: Double = 0.88
@@ -45,24 +40,27 @@ enum FlowDeskTheme {
         Color.accentColor.opacity(selectionAccentOpacity)
     }
 
-    // MARK: - Shadows (subtle depth)
+    // MARK: - Shadows (export + legacy callers)
 
     static func cardShadowOpacity(selected: Bool) -> Double {
-        selected ? 0.11 : 0.055
+        let t = FlowDeskAppearanceTokens.resolve(colorScheme: .light, preset: .warmPaper)
+        return selected ? t.canvasItemShadowSelected : t.canvasItemShadowNormal
     }
 
     static func cardShadowRadius(selected: Bool) -> CGFloat {
-        selected ? 12 : 6
+        let t = FlowDeskAppearanceTokens.resolve(colorScheme: .light, preset: .warmPaper)
+        return selected ? t.canvasItemShadowRadiusSelected : t.canvasItemShadowRadiusNormal
     }
 
     static func cardShadowY(selected: Bool) -> CGFloat {
-        selected ? 4 : 2
+        let t = FlowDeskAppearanceTokens.resolve(colorScheme: .light, preset: .warmPaper)
+        return selected ? t.canvasItemShadowYSelected : t.canvasItemShadowYNormal
     }
 }
 
 // MARK: - Inspector
 
-/// Consistent section headers for the inspector form.
+/// Section headers: same density as sidebar section titles for quick scanning.
 struct FlowDeskInspectorSectionHeader: View {
     let title: String
 
@@ -72,7 +70,8 @@ struct FlowDeskInspectorSectionHeader: View {
 
     var body: some View {
         Text(title)
-            .font(.subheadline.weight(.semibold))
-            .foregroundStyle(.secondary)
+            .font(FlowDeskTypography.sidebarSectionHeader)
+            .foregroundStyle(.tertiary)
+            .padding(.bottom, FlowDeskLayout.inspectorSectionHeaderBottomSpacing)
     }
 }

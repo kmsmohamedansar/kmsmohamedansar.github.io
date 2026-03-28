@@ -3,6 +3,8 @@ import SwiftUI
 
 /// Renders and edits a single text block on the board (display, selection chrome, move, resize).
 struct TextBlockCanvasItemView: View {
+    @Environment(\.flowDeskTokens) private var tokens
+
     let element: CanvasElementRecord
     @Bindable var boardViewModel: CanvasBoardViewModel
     @Bindable var selection: CanvasSelectionModel
@@ -21,21 +23,34 @@ struct TextBlockCanvasItemView: View {
         selection.isSelected(element.id)
     }
 
+    /// Multi-select drag: leader uses local snap translation; followers mirror shared preview.
+    private var composedMoveOffset: CGSize {
+        if boardViewModel.groupMoveLeaderID == element.id {
+            return moveDragTranslation
+        }
+        if boardViewModel.groupMoveParticipantIDs.contains(element.id) {
+            return boardViewModel.groupMovePreviewTranslation
+        }
+        return moveDragTranslation
+    }
+
     var body: some View {
         let displayPayload = element.resolvedTextPayload()
 
         ZStack(alignment: .topLeading) {
             RoundedRectangle(cornerRadius: FlowDeskTheme.textBlockCornerRadius, style: .continuous)
-                .fill(Color(nsColor: .textBackgroundColor))
+                .fill(tokens.canvasTextBlockFill)
                 .shadow(
-                    color: Color.black.opacity(FlowDeskTheme.cardShadowOpacity(selected: isSelected)),
-                    radius: FlowDeskTheme.cardShadowRadius(selected: isSelected),
+                    color: Color.black.opacity(
+                        isSelected ? tokens.canvasItemShadowSelected : tokens.canvasItemShadowNormal
+                    ),
+                    radius: isSelected ? tokens.canvasItemShadowRadiusSelected : tokens.canvasItemShadowRadiusNormal,
                     x: 0,
-                    y: FlowDeskTheme.cardShadowY(selected: isSelected)
+                    y: isSelected ? tokens.canvasItemShadowYSelected : tokens.canvasItemShadowYNormal
                 )
                 .overlay {
                     RoundedRectangle(cornerRadius: FlowDeskTheme.textBlockCornerRadius, style: .continuous)
-                        .strokeBorder(Color.primary.opacity(0.06), lineWidth: 0.5)
+                        .strokeBorder(Color.primary.opacity(tokens.canvasTextBlockBorderOpacity), lineWidth: 0.5)
                 }
 
             Group {
@@ -60,18 +75,18 @@ struct TextBlockCanvasItemView: View {
 
             if isSelected {
                 RoundedRectangle(cornerRadius: FlowDeskTheme.textBlockCornerRadius, style: .continuous)
-                    .strokeBorder(FlowDeskTheme.selectionStrokeColor, lineWidth: FlowDeskTheme.selectionStrokeWidth)
+                    .strokeBorder(tokens.selectionStrokeColor, lineWidth: tokens.selectionStrokeWidth)
                     .allowsHitTesting(false)
             }
         }
         .overlay(alignment: .bottomTrailing) {
-            if isSelected, !isEditing {
+            if isSelected, !isEditing, !selection.isMultiSelection {
                 CanvasTextBlockResizeHandle()
                     .padding(7)
                     .gesture(resizeGesture)
             }
         }
-        .offset(moveDragTranslation)
+        .offset(composedMoveOffset)
         .contentShape(RoundedRectangle(cornerRadius: FlowDeskTheme.textBlockCornerRadius, style: .continuous))
         .highPriorityGesture(
             TapGesture(count: 2).onEnded {
@@ -80,7 +95,9 @@ struct TextBlockCanvasItemView: View {
             }
         )
         .onTapGesture {
-            selection.selectOnly(element.id)
+            boardViewModel.stopAllInlineEditing()
+            let extend = NSEvent.modifierFlags.contains(.shift)
+            selection.handleCanvasTap(elementID: element.id, extendSelection: extend)
         }
         .simultaneousGesture(moveGesture)
         .contextMenu {
@@ -148,19 +165,22 @@ struct TextBlockCanvasItemView: View {
                 guard !isEditing else { return }
                 if moveDragStartCanvasOrigin == nil {
                     moveDragStartCanvasOrigin = CGPoint(x: element.x, y: element.y)
+                    boardViewModel.configureGroupMoveIfNeeded(leaderId: element.id, selection: selection)
                 }
                 let start = moveDragStartCanvasOrigin ?? CGPoint(x: element.x, y: element.y)
                 let rawX = start.x + value.translation.width
                 let rawY = start.y + value.translation.height
+                let exclude = boardViewModel.snapExclusionsForFramedMove(leaderId: element.id, selection: selection)
                 let (snapped, guides) = boardViewModel.snapMoveFrame(
                     rawOrigin: CGPoint(x: rawX, y: rawY),
                     size: CGSize(width: element.width, height: element.height),
-                    elementId: element.id
+                    excludingElementIds: exclude
                 )
                 moveDragTranslation = CGSize(
                     width: snapped.x - element.x,
                     height: snapped.y - element.y
                 )
+                boardViewModel.syncGroupMovePreview(leaderId: element.id, translation: moveDragTranslation)
                 boardViewModel.updateAlignmentGuides(guides)
             }
             .onEnded { value in
@@ -169,18 +189,28 @@ struct TextBlockCanvasItemView: View {
                 let start = moveDragStartCanvasOrigin ?? CGPoint(x: element.x, y: element.y)
                 let rawX = start.x + value.translation.width
                 let rawY = start.y + value.translation.height
+                let exclude = boardViewModel.snapExclusionsForFramedMove(leaderId: element.id, selection: selection)
                 let (snapped, _) = boardViewModel.snapMoveFrame(
                     rawOrigin: CGPoint(x: rawX, y: rawY),
                     size: CGSize(width: element.width, height: element.height),
-                    elementId: element.id
+                    excludingElementIds: exclude
                 )
-                boardViewModel.setTextBlockFrame(
-                    id: element.id,
-                    x: Double(snapped.x),
-                    y: Double(snapped.y),
-                    width: element.width,
-                    height: element.height
-                )
+                let participants = boardViewModel.groupMoveParticipantIDs
+                if boardViewModel.groupMoveLeaderID == element.id,
+                   participants.count > 1 {
+                    let dx = Double(snapped.x - start.x)
+                    let dy = Double(snapped.y - start.y)
+                    boardViewModel.applyFramedGroupPositionDelta(ids: participants, dx: dx, dy: dy)
+                } else {
+                    boardViewModel.setTextBlockFrame(
+                        id: element.id,
+                        x: Double(snapped.x),
+                        y: Double(snapped.y),
+                        width: element.width,
+                        height: element.height
+                    )
+                }
+                boardViewModel.resetGroupMoveState()
                 moveDragTranslation = .zero
                 moveDragStartCanvasOrigin = nil
             }

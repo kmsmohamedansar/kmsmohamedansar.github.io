@@ -1,6 +1,8 @@
 import SwiftUI
 
 struct InspectorPanelView: View {
+    @Environment(\.flowDeskTokens) private var tokens
+
     let document: FlowDocument
     @Bindable var canvasViewModel: CanvasBoardViewModel
     @Bindable var selection: CanvasSelectionModel
@@ -53,8 +55,18 @@ struct InspectorPanelView: View {
                             .foregroundStyle(.secondary)
                             .monospacedDigit()
                     }
+                } else if selection.isMultiSelection {
+                    VStack(alignment: .leading, spacing: 6) {
+                        Text("\(selection.selectedElementIDs.count) items selected")
+                            .font(.subheadline)
+                            .foregroundStyle(.secondary)
+                        Text("Shift-click to add or remove. Drag any selected framed item to move the group together.")
+                            .font(.caption)
+                            .foregroundStyle(.tertiary)
+                    }
+                    .frame(maxWidth: .infinity, alignment: .leading)
                 } else {
-                    Text(selection.hasSelection ? "\(selection.selectedElementIDs.count) selected" : "None")
+                    Text("None")
                         .font(.subheadline)
                         .foregroundStyle(.tertiary)
                         .frame(maxWidth: .infinity, alignment: .leading)
@@ -102,6 +114,9 @@ struct InspectorPanelView: View {
             }
         }
         .formStyle(.grouped)
+        .scrollContentBackground(.hidden)
+        .background(tokens.inspectorChromeBackground)
+        .padding(.horizontal, FlowDeskLayout.inspectorHorizontalPadding)
         .frame(maxHeight: .infinity, alignment: .top)
     }
 

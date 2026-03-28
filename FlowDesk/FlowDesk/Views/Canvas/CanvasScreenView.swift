@@ -15,6 +15,7 @@ struct CanvasScreenView: View {
         #if os(macOS)
         .navigationSubtitle("Last edited \(document.updatedAt.formatted(date: .abbreviated, time: .shortened))")
         #endif
+        .canvasScreenKeyCommands(boardViewModel: boardViewModel, selection: selection)
         .onDeleteCommand {
             boardViewModel.deleteSelectedElements(selection: selection)
         }
@@ -36,10 +37,24 @@ struct CanvasScreenView: View {
                     Divider()
 
                     Button("Duplicate") {
-                        boardViewModel.duplicatePrimarySelection(selection: selection)
+                        boardViewModel.duplicateAllSelectedElements(selection: selection)
                     }
-                    .disabled(selection.primarySelectedID == nil)
+                    .disabled(!selection.hasSelection)
                     .keyboardShortcut("d", modifiers: [.command])
+
+                    Divider()
+
+                    Button("Copy") {
+                        boardViewModel.copySelectedElementsToPasteboard(selection: selection)
+                    }
+                    .disabled(!selection.hasSelection)
+                    .keyboardShortcut("c", modifiers: [.command])
+
+                    Button("Paste") {
+                        boardViewModel.pasteClipboardElements(selection: selection)
+                    }
+                    .disabled(!boardViewModel.canPasteFromClipboard)
+                    .keyboardShortcut("v", modifiers: [.command])
 
                     Divider()
 
@@ -85,6 +100,7 @@ struct CanvasScreenView: View {
                         )
                     }
                 }
+                .buttonStyle(FlowDeskToolbarButtonStyle())
             }
             ToolbarItemGroup(placement: .primaryAction) {
                 Picker("Tool", selection: $boardViewModel.canvasTool) {
@@ -102,6 +118,7 @@ struct CanvasScreenView: View {
                 } label: {
                     Label("Text block", systemImage: "textformat")
                 }
+                .buttonStyle(FlowDeskToolbarButtonStyle())
                 .help("Insert a text block")
                 .keyboardShortcut("t", modifiers: [.command])
 
@@ -110,6 +127,7 @@ struct CanvasScreenView: View {
                 } label: {
                     Label("Sticky note", systemImage: "note.text")
                 }
+                .buttonStyle(FlowDeskToolbarButtonStyle())
                 .help("Insert a sticky note")
                 .keyboardShortcut("n", modifiers: [.command, .shift])
 
@@ -132,6 +150,7 @@ struct CanvasScreenView: View {
                 } label: {
                     Label("Shape", systemImage: "square.on.circle")
                 }
+                .buttonStyle(FlowDeskToolbarButtonStyle())
                 .help("Insert a shape")
 
                 Menu {
@@ -144,6 +163,7 @@ struct CanvasScreenView: View {
                 } label: {
                     Label("Chart", systemImage: "chart.bar")
                 }
+                .buttonStyle(FlowDeskToolbarButtonStyle())
                 .help("Insert a chart block")
             }
         }

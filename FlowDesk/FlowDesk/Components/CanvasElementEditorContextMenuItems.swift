@@ -6,9 +6,17 @@ struct CanvasElementEditorContextMenuItems: View {
     @Bindable var boardViewModel: CanvasBoardViewModel
     @Bindable var selection: CanvasSelectionModel
 
+    private var duplicateAllIfInMultiSelect: Bool {
+        selection.selectedElementIDs.count > 1 && selection.isSelected(elementID)
+    }
+
     var body: some View {
         Button("Duplicate") {
-            boardViewModel.duplicateElement(id: elementID, selection: selection)
+            if duplicateAllIfInMultiSelect {
+                boardViewModel.duplicateAllSelectedElements(selection: selection)
+            } else {
+                boardViewModel.duplicateElement(id: elementID, selection: selection)
+            }
         }
 
         Menu("Arrange") {
@@ -31,7 +39,11 @@ struct CanvasElementEditorContextMenuItems: View {
         Divider()
 
         Button("Delete", role: .destructive) {
-            boardViewModel.deleteElements(ids: Set([elementID]), selection: selection)
+            if selection.isSelected(elementID) {
+                boardViewModel.deleteSelectedElements(selection: selection)
+            } else {
+                boardViewModel.deleteElements(ids: Set([elementID]), selection: selection)
+            }
         }
     }
 }
