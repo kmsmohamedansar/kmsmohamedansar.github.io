@@ -17,8 +17,8 @@ struct ContinueBoardHeroView: View {
                 VStack(alignment: .leading, spacing: FlowDeskLayout.spaceS) {
                     HStack(spacing: FlowDeskLayout.spaceS) {
                         Image(systemName: "arrow.turn.down.left")
-                            .font(.body.weight(.semibold))
-                            .foregroundStyle(.secondary)
+                            .font(.callout.weight(.semibold))
+                            .foregroundStyle(.tertiary)
                         if let template {
                             FlowDeskTemplateChip(label: template.homeChipLabel)
                         }
@@ -37,9 +37,9 @@ struct ContinueBoardHeroView: View {
 
                 Spacer(minLength: FlowDeskLayout.spaceM)
 
-                Image(systemName: "chevron.right")
-                    .font(.body.weight(.semibold))
-                    .foregroundStyle(.tertiary)
+                Image(systemName: "chevron.forward")
+                    .font(.subheadline.weight(.semibold))
+                    .foregroundStyle(.quaternary)
             }
             .padding(FlowDeskLayout.homeCardPadding)
             .frame(maxWidth: .infinity, minHeight: FlowDeskLayout.homeContinueMinHeight, alignment: .leading)

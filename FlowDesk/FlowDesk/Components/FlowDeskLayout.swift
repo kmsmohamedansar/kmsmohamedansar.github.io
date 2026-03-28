@@ -70,12 +70,22 @@ enum FlowDeskLayout {
 
     // MARK: - Inspector
 
-    static let inspectorHorizontalPadding: CGFloat = 10
+    static let inspectorHorizontalPadding: CGFloat = 8
     static let inspectorSectionHeaderBottomSpacing: CGFloat = 4
 
     // MARK: - Canvas
 
     static let gridLineWidth: CGFloat = 0.4
+    /// Every Nth grid interval reads slightly stronger (spatial hierarchy).
+    static let gridMajorLineStride: Int = 5
+
+    // MARK: - Floating panels (palette, selection bar, tips)
+
+    static let floatingPanelCornerRadius: CGFloat = 16
+    static let floatingPanelContentPadding: CGFloat = 8
+
+    /// Keep the selection toolbar clear of the left floating palette (view space).
+    static let canvasSelectionToolbarLeadingGutter: CGFloat = 88
 
     // MARK: - Shared chrome
 

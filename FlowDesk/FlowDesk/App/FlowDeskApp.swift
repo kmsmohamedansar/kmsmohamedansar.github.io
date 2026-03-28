@@ -7,6 +7,7 @@ struct FlowDeskApp: App {
     @State private var appearanceStore = FlowDeskAppearanceStore()
 
     var body: some Scene {
+        // Native window chrome: minimize / zoom / full screen (no custom window styles).
         WindowGroup {
             FlowDeskRootView(appearanceStore: appearanceStore)
         }

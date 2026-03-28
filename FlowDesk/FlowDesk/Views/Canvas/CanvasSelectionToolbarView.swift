@@ -7,6 +7,9 @@ struct CanvasSelectionToolbarView: View {
     let elementKind: CanvasElementKind
     @Bindable var boardViewModel: CanvasBoardViewModel
 
+    @Environment(\.flowDeskTokens) private var tokens
+    @Environment(\.colorScheme) private var colorScheme
+
     var body: some View {
         Group {
             switch elementKind {
@@ -20,16 +23,35 @@ struct CanvasSelectionToolbarView: View {
                 EmptyView()
             }
         }
-        .padding(.horizontal, 10)
+        .padding(.horizontal, FlowDeskLayout.floatingPanelContentPadding)
         .padding(.vertical, 6)
         .background {
-            RoundedRectangle(cornerRadius: 12, style: .continuous)
-                .fill(.ultraThinMaterial)
-                .shadow(color: Color.black.opacity(0.12), radius: 10, x: 0, y: 4)
+            ZStack {
+                RoundedRectangle(cornerRadius: FlowDeskLayout.floatingPanelCornerRadius, style: .continuous)
+                    .fill(.ultraThinMaterial)
+                RoundedRectangle(cornerRadius: FlowDeskLayout.floatingPanelCornerRadius, style: .continuous)
+                    .fill(tokens.homeCardFill.opacity(colorScheme == .dark ? 0.07 : 0.11))
+            }
+            .shadow(
+                color: Color.black.opacity(FlowDeskTheme.floatingPanelShadowOpacity * 0.92),
+                radius: FlowDeskTheme.floatingPanelShadowRadius * 0.68,
+                x: 0,
+                y: FlowDeskTheme.floatingPanelShadowY * 0.62
+            )
         }
         .overlay {
-            RoundedRectangle(cornerRadius: 12, style: .continuous)
-                .strokeBorder(Color.primary.opacity(0.1), lineWidth: 1)
+            RoundedRectangle(cornerRadius: FlowDeskLayout.floatingPanelCornerRadius, style: .continuous)
+                .strokeBorder(
+                    LinearGradient(
+                        colors: [
+                            Color.primary.opacity(0.085),
+                            Color.primary.opacity(0.03)
+                        ],
+                        startPoint: .topLeading,
+                        endPoint: .bottomTrailing
+                    ),
+                    lineWidth: 0.75
+                )
         }
         .fixedSize()
     }

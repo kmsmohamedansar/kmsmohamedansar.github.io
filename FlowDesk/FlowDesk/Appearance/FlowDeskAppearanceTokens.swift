@@ -22,6 +22,8 @@ enum FlowDeskMaterialLayer: Equatable {
 struct FlowDeskAppearanceTokens: Equatable {
     let workspaceBackground: Color
     let gridLineOpacity: Double
+    /// Base color for canvas grid lines (scaled by `gridLineOpacity`). Warm presets use ink with a slight paper tone.
+    let canvasGridInk: Color
 
     let homeCardFill: Color
     let homeCardMaterial: FlowDeskMaterialLayer
@@ -75,8 +77,9 @@ struct FlowDeskAppearanceTokens: Equatable {
     // MARK: - Warm Paper
 
     private static let warmPaperLight = FlowDeskAppearanceTokens(
-        workspaceBackground: Color(nsColor: NSColor(red: 0.965, green: 0.958, blue: 0.948, alpha: 1)),
-        gridLineOpacity: 0.045,
+        workspaceBackground: Color(nsColor: NSColor(red: 0.972, green: 0.962, blue: 0.949, alpha: 1)),
+        gridLineOpacity: 0.034,
+        canvasGridInk: Color(nsColor: NSColor(red: 0.36, green: 0.30, blue: 0.25, alpha: 1)),
         homeCardFill: Color(nsColor: NSColor(red: 0.99, green: 0.985, blue: 0.975, alpha: 1)),
         homeCardMaterial: .none,
         homeCardBorderNormal: 0.08,
@@ -97,17 +100,18 @@ struct FlowDeskAppearanceTokens: Equatable {
         chartCardBorderOpacity: 0.08,
         selectionStrokeColor: Color.accentColor.opacity(0.88),
         selectionStrokeWidth: 1.5,
-        sidebarListTint: Color(nsColor: NSColor(red: 0.98, green: 0.975, blue: 0.965, alpha: 0.35)),
+        sidebarListTint: Color(nsColor: NSColor(red: 0.98, green: 0.975, blue: 0.965, alpha: 0.2)),
         sidebarFooterUseSystemBar: true,
         sidebarFooterMaterial: .none,
         toolbarMaterial: .thin,
         toolbarFlatBackground: nil,
-        inspectorChromeBackground: Color(nsColor: NSColor(red: 0.97, green: 0.965, blue: 0.955, alpha: 0.6))
+        inspectorChromeBackground: Color(nsColor: NSColor(red: 0.97, green: 0.965, blue: 0.955, alpha: 0.38))
     )
 
     private static let warmPaperDark = FlowDeskAppearanceTokens(
         workspaceBackground: Color(nsColor: NSColor(red: 0.14, green: 0.12, blue: 0.11, alpha: 1)),
-        gridLineOpacity: 0.09,
+        gridLineOpacity: 0.072,
+        canvasGridInk: Color(nsColor: NSColor(red: 0.58, green: 0.53, blue: 0.49, alpha: 1)),
         homeCardFill: Color(nsColor: NSColor(red: 0.2, green: 0.17, blue: 0.16, alpha: 1)),
         homeCardMaterial: .none,
         homeCardBorderNormal: 0.12,
@@ -128,12 +132,12 @@ struct FlowDeskAppearanceTokens: Equatable {
         chartCardBorderOpacity: 0.18,
         selectionStrokeColor: Color.accentColor.opacity(0.9),
         selectionStrokeWidth: 1.5,
-        sidebarListTint: Color(nsColor: NSColor(red: 0.16, green: 0.14, blue: 0.13, alpha: 0.5)),
+        sidebarListTint: Color(nsColor: NSColor(red: 0.16, green: 0.14, blue: 0.13, alpha: 0.32)),
         sidebarFooterUseSystemBar: true,
         sidebarFooterMaterial: .none,
         toolbarMaterial: .thin,
         toolbarFlatBackground: nil,
-        inspectorChromeBackground: Color(nsColor: NSColor(red: 0.17, green: 0.15, blue: 0.14, alpha: 0.55))
+        inspectorChromeBackground: Color(nsColor: NSColor(red: 0.17, green: 0.15, blue: 0.14, alpha: 0.4))
     )
 
     // MARK: - Graphite
@@ -141,6 +145,7 @@ struct FlowDeskAppearanceTokens: Equatable {
     private static let graphiteLight = FlowDeskAppearanceTokens(
         workspaceBackground: Color(nsColor: NSColor(red: 0.93, green: 0.94, blue: 0.96, alpha: 1)),
         gridLineOpacity: 0.055,
+        canvasGridInk: Color.primary,
         homeCardFill: Color(nsColor: NSColor(red: 0.98, green: 0.98, blue: 0.99, alpha: 1)),
         homeCardMaterial: .none,
         homeCardBorderNormal: 0.1,
@@ -161,17 +166,18 @@ struct FlowDeskAppearanceTokens: Equatable {
         chartCardBorderOpacity: 0.1,
         selectionStrokeColor: Color(nsColor: NSColor(red: 0.2, green: 0.45, blue: 0.85, alpha: 1)),
         selectionStrokeWidth: 1.5,
-        sidebarListTint: Color(nsColor: NSColor(red: 0.94, green: 0.95, blue: 0.97, alpha: 0.5)),
+        sidebarListTint: Color(nsColor: NSColor(red: 0.94, green: 0.95, blue: 0.97, alpha: 0.3)),
         sidebarFooterUseSystemBar: true,
         sidebarFooterMaterial: .none,
         toolbarMaterial: .ultraThin,
         toolbarFlatBackground: nil,
-        inspectorChromeBackground: Color(nsColor: NSColor(red: 0.95, green: 0.96, blue: 0.98, alpha: 0.65))
+        inspectorChromeBackground: Color(nsColor: NSColor(red: 0.95, green: 0.96, blue: 0.98, alpha: 0.42))
     )
 
     private static let graphiteDark = FlowDeskAppearanceTokens(
         workspaceBackground: Color(nsColor: NSColor(red: 0.11, green: 0.12, blue: 0.14, alpha: 1)),
         gridLineOpacity: 0.08,
+        canvasGridInk: Color.primary,
         homeCardFill: Color(nsColor: NSColor(red: 0.17, green: 0.18, blue: 0.2, alpha: 1)),
         homeCardMaterial: .none,
         homeCardBorderNormal: 0.14,
@@ -192,12 +198,12 @@ struct FlowDeskAppearanceTokens: Equatable {
         chartCardBorderOpacity: 0.22,
         selectionStrokeColor: Color(nsColor: NSColor(red: 0.45, green: 0.65, blue: 1, alpha: 0.95)),
         selectionStrokeWidth: 1.5,
-        sidebarListTint: Color(nsColor: NSColor(red: 0.13, green: 0.14, blue: 0.16, alpha: 0.55)),
+        sidebarListTint: Color(nsColor: NSColor(red: 0.13, green: 0.14, blue: 0.16, alpha: 0.36)),
         sidebarFooterUseSystemBar: true,
         sidebarFooterMaterial: .none,
         toolbarMaterial: .ultraThin,
         toolbarFlatBackground: nil,
-        inspectorChromeBackground: Color(nsColor: NSColor(red: 0.15, green: 0.16, blue: 0.18, alpha: 0.6))
+        inspectorChromeBackground: Color(nsColor: NSColor(red: 0.15, green: 0.16, blue: 0.18, alpha: 0.42))
     )
 
     // MARK: - Glass
@@ -205,6 +211,7 @@ struct FlowDeskAppearanceTokens: Equatable {
     private static let glassLight = FlowDeskAppearanceTokens(
         workspaceBackground: Color(nsColor: NSColor(red: 0.94, green: 0.95, blue: 0.98, alpha: 1)),
         gridLineOpacity: 0.04,
+        canvasGridInk: Color.primary,
         homeCardFill: Color.white.opacity(0.2),
         homeCardMaterial: .regular,
         homeCardBorderNormal: 0.12,
@@ -225,17 +232,18 @@ struct FlowDeskAppearanceTokens: Equatable {
         chartCardBorderOpacity: 0.14,
         selectionStrokeColor: Color.accentColor.opacity(0.92),
         selectionStrokeWidth: 1.5,
-        sidebarListTint: Color.white.opacity(0.15),
+        sidebarListTint: Color.white.opacity(0.09),
         sidebarFooterUseSystemBar: false,
         sidebarFooterMaterial: .thin,
         toolbarMaterial: .regular,
         toolbarFlatBackground: nil,
-        inspectorChromeBackground: Color.white.opacity(0.22)
+        inspectorChromeBackground: Color.white.opacity(0.14)
     )
 
     private static let glassDark = FlowDeskAppearanceTokens(
         workspaceBackground: Color(nsColor: NSColor(red: 0.09, green: 0.1, blue: 0.12, alpha: 1)),
         gridLineOpacity: 0.075,
+        canvasGridInk: Color.primary,
         homeCardFill: Color.white.opacity(0.06),
         homeCardMaterial: .regular,
         homeCardBorderNormal: 0.18,
@@ -256,12 +264,12 @@ struct FlowDeskAppearanceTokens: Equatable {
         chartCardBorderOpacity: 0.24,
         selectionStrokeColor: Color.accentColor.opacity(0.95),
         selectionStrokeWidth: 1.5,
-        sidebarListTint: Color.white.opacity(0.05),
+        sidebarListTint: Color.white.opacity(0.035),
         sidebarFooterUseSystemBar: false,
         sidebarFooterMaterial: .thin,
         toolbarMaterial: .regular,
         toolbarFlatBackground: nil,
-        inspectorChromeBackground: Color.white.opacity(0.08)
+        inspectorChromeBackground: Color.white.opacity(0.06)
     )
 
     // MARK: - Solid
@@ -269,6 +277,7 @@ struct FlowDeskAppearanceTokens: Equatable {
     private static let solidLight = FlowDeskAppearanceTokens(
         workspaceBackground: Color(nsColor: NSColor(red: 0.96, green: 0.96, blue: 0.96, alpha: 1)),
         gridLineOpacity: 0.065,
+        canvasGridInk: Color.primary,
         homeCardFill: Color(nsColor: NSColor(red: 1, green: 1, blue: 1, alpha: 1)),
         homeCardMaterial: .none,
         homeCardBorderNormal: 0.14,
@@ -289,17 +298,18 @@ struct FlowDeskAppearanceTokens: Equatable {
         chartCardBorderOpacity: 0.14,
         selectionStrokeColor: Color.primary.opacity(0.85),
         selectionStrokeWidth: 2,
-        sidebarListTint: Color(nsColor: NSColor(red: 0.94, green: 0.94, blue: 0.94, alpha: 0.9)),
+        sidebarListTint: Color(nsColor: NSColor(red: 0.94, green: 0.94, blue: 0.94, alpha: 0.55)),
         sidebarFooterUseSystemBar: true,
         sidebarFooterMaterial: .none,
         toolbarMaterial: .none,
         toolbarFlatBackground: Color(nsColor: NSColor.windowBackgroundColor),
-        inspectorChromeBackground: Color(nsColor: NSColor(red: 0.95, green: 0.95, blue: 0.95, alpha: 1))
+        inspectorChromeBackground: Color(nsColor: NSColor(red: 0.96, green: 0.96, blue: 0.96, alpha: 0.92))
     )
 
     private static let solidDark = FlowDeskAppearanceTokens(
         workspaceBackground: Color(nsColor: NSColor(red: 0.13, green: 0.13, blue: 0.13, alpha: 1)),
         gridLineOpacity: 0.1,
+        canvasGridInk: Color.primary,
         homeCardFill: Color(nsColor: NSColor(red: 0.18, green: 0.18, blue: 0.18, alpha: 1)),
         homeCardMaterial: .none,
         homeCardBorderNormal: 0.22,
@@ -320,11 +330,11 @@ struct FlowDeskAppearanceTokens: Equatable {
         chartCardBorderOpacity: 0.28,
         selectionStrokeColor: Color.white.opacity(0.75),
         selectionStrokeWidth: 2,
-        sidebarListTint: Color(nsColor: NSColor(red: 0.16, green: 0.16, blue: 0.16, alpha: 0.95)),
+        sidebarListTint: Color(nsColor: NSColor(red: 0.16, green: 0.16, blue: 0.16, alpha: 0.62)),
         sidebarFooterUseSystemBar: true,
         sidebarFooterMaterial: .none,
         toolbarMaterial: .none,
         toolbarFlatBackground: Color(nsColor: NSColor(red: 0.15, green: 0.15, blue: 0.15, alpha: 1)),
-        inspectorChromeBackground: Color(nsColor: NSColor(red: 0.17, green: 0.17, blue: 0.17, alpha: 1))
+        inspectorChromeBackground: Color(nsColor: NSColor(red: 0.17, green: 0.17, blue: 0.17, alpha: 0.88))
     )
 }

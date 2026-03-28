@@ -3,6 +3,7 @@ import SwiftUI
 /// Workspace dashboard when no board is selected: continue, create, and recent work.
 struct HomeView: View {
     @Environment(\.flowDeskTokens) private var tokens
+    @Environment(\.colorScheme) private var colorScheme
     @Environment(FlowDeskOnboardingStore.self) private var onboarding
 
     /// Same ordering as `MainWindowView`’s `@Query` (newest first).
@@ -21,45 +22,49 @@ struct HomeView: View {
     }
 
     var body: some View {
-        ZStack(alignment: .bottomTrailing) {
-            ScrollView {
-                VStack(alignment: .leading, spacing: FlowDeskLayout.homeMajorSectionSpacing) {
-                    pageChrome
+        ScrollView {
+            VStack(alignment: .leading, spacing: FlowDeskLayout.homeMajorSectionSpacing) {
+                pageChrome
 
-                    if let latest = continueDocument {
-                        continueSection(latest: latest)
-                    }
-
-                    creationSection
-
-                    recentSection
+                if let latest = continueDocument {
+                    continueSection(latest: latest)
                 }
-                .padding(.horizontal, FlowDeskLayout.homePageHorizontalPadding)
-                .padding(.vertical, FlowDeskLayout.homePageVerticalPadding)
-                .frame(maxWidth: FlowDeskLayout.homePageMaxContentWidth)
-                .frame(maxWidth: .infinity)
-            }
-            .frame(maxWidth: .infinity, maxHeight: .infinity)
 
+                creationSection
+
+                recentSection
+            }
+            .padding(.horizontal, FlowDeskLayout.homePageHorizontalPadding)
+            .padding(.vertical, FlowDeskLayout.homePageVerticalPadding)
+            .frame(maxWidth: FlowDeskLayout.homePageMaxContentWidth)
+            .frame(maxWidth: .infinity)
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .overlay(alignment: .bottomTrailing) {
             if !onboarding.homeTipsDismissed {
                 FlowDeskHomeOnboardingCallout()
                     .padding(FlowDeskLayout.spaceL)
             }
         }
-        .animation(.easeOut(duration: 0.22), value: onboarding.homeTipsDismissed)
+        .animation(.spring(response: 0.38, dampingFraction: 0.88), value: onboarding.homeTipsDismissed)
         .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .background(tokens.workspaceBackground)
+        .background {
+            ZStack {
+                tokens.workspaceBackground
+                FlowDeskTheme.homeAtmosphereWash(colorScheme: colorScheme)
+                    .allowsHitTesting(false)
+            }
+        }
+        .navigationTitle("FlowDesk")
     }
 
     private var pageChrome: some View {
-        VStack(alignment: .leading, spacing: FlowDeskLayout.spaceXS) {
-            Text("FlowDesk")
-                .font(FlowDeskTypography.pageEyebrow)
-                .foregroundStyle(.tertiary)
-                .tracking(0.6)
-            Text("Smart canvas")
+        VStack(alignment: .leading, spacing: FlowDeskLayout.homeHeadlineToBodySpacing) {
+            FlowDeskWordmark()
+            Text("Space for ideas that need room")
                 .font(FlowDeskTypography.pageSubtitle)
                 .foregroundStyle(.secondary)
+                .fixedSize(horizontal: false, vertical: true)
         }
         .accessibilityElement(children: .combine)
     }
@@ -67,9 +72,14 @@ struct HomeView: View {
     @ViewBuilder
     private func continueSection(latest: FlowDocument) -> some View {
         VStack(alignment: .leading, spacing: FlowDeskLayout.homeSubsectionSpacing) {
-            Text("Continue where you left off")
-                .font(FlowDeskTypography.sectionTitle)
-                .foregroundStyle(.primary)
+            VStack(alignment: .leading, spacing: FlowDeskLayout.spaceXS) {
+                Text("Continue")
+                    .font(FlowDeskTypography.sectionTitle)
+                    .foregroundStyle(.primary)
+                Text("Your most recently opened board")
+                    .font(FlowDeskTypography.homeSectionKicker)
+                    .foregroundStyle(.tertiary)
+            }
 
             ContinueBoardHeroView(document: latest) {
                 onOpenDocument(latest)
@@ -80,13 +90,14 @@ struct HomeView: View {
     private var creationSection: some View {
         VStack(alignment: .leading, spacing: FlowDeskLayout.spaceL) {
             VStack(alignment: .leading, spacing: FlowDeskLayout.homeHeadlineToBodySpacing) {
-                Text("Start thinking")
+                Text("New board")
                     .font(FlowDeskTypography.homeHeroTitle)
                     .foregroundStyle(.primary)
 
-                Text("One canvas for notes, sketches, and layout. Start with a guided setup, or open empty.")
+                Text("Each board is one infinite canvas—write, sketch, and arrange freely. Pick a starter below; your work saves automatically.")
                     .font(FlowDeskTypography.homeIntroBody)
                     .foregroundStyle(.secondary)
+                    .lineSpacing(3)
                     .frame(maxWidth: 560, alignment: .leading)
             }
 
@@ -94,7 +105,7 @@ struct HomeView: View {
                 CreationCardView(
                     systemImage: "rectangle.split.2x1.fill",
                     title: "Smart canvas",
-                    subtitle: "Starter text, sticky, and scratch area on a grid—ready to think out loud.",
+                    subtitle: "Starter text and sticky on the grid—edit, remove, or build around them.",
                     prominence: .hero
                 ) {
                     onCreateFromTemplate(.smartCanvas)
@@ -103,7 +114,7 @@ struct HomeView: View {
                 CreationCardView(
                     systemImage: "rectangle.dashed",
                     title: "Blank board",
-                    subtitle: "Empty canvas, no starter blocks."
+                    subtitle: "Nothing pre-placed—an empty canvas for your own layout."
                 ) {
                     onCreateFromTemplate(.blankBoard)
                 }
@@ -118,13 +129,15 @@ struct HomeView: View {
             EmptyView()
         } else {
             VStack(alignment: .leading, spacing: FlowDeskLayout.homeSubsectionSpacing) {
-                Text("Recent canvases")
-                    .font(FlowDeskTypography.sectionTitle)
-                    .foregroundStyle(.primary)
+                VStack(alignment: .leading, spacing: FlowDeskLayout.spaceXS) {
+                    Text("Recent")
+                        .font(FlowDeskTypography.sectionTitle)
+                        .foregroundStyle(.primary)
 
-                Text("Jump back into something you were working on.")
-                    .font(FlowDeskTypography.sectionCaption)
-                    .foregroundStyle(.secondary)
+                    Text("Boards you opened recently")
+                        .font(FlowDeskTypography.homeSectionKicker)
+                        .foregroundStyle(.tertiary)
+                }
 
                 VStack(spacing: FlowDeskLayout.homeRecentRowSpacing) {
                     ForEach(otherRecentDocuments, id: \.persistentModelID) { doc in

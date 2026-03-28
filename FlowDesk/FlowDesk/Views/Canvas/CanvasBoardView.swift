@@ -7,6 +7,7 @@ struct CanvasBoardView: View {
     @Bindable var selection: CanvasSelectionModel
 
     @Environment(\.flowDeskTokens) private var tokens
+    @Environment(\.colorScheme) private var colorScheme
 
     @State private var panDragTranslation: CGSize = .zero
     @State private var draftCanvasPoints: [CGPoint] = []
@@ -31,6 +32,13 @@ struct CanvasBoardView: View {
                             .frame(width: CGFloat(element.width), height: CGFloat(element.height))
                             .offset(x: CGFloat(element.x), y: CGFloat(element.y))
                             .zIndex(Double(element.zIndex))
+                    }
+
+                    if sortedElements.isEmpty {
+                        FlowDeskCanvasWorkspaceHint()
+                            .position(x: canvasSize * 0.5, y: canvasSize * 0.5)
+                            .allowsHitTesting(false)
+                            .zIndex(2)
                     }
 
                     CanvasMultiSelectionBoundsOverlay(
@@ -73,6 +81,7 @@ struct CanvasBoardView: View {
 
                 selectionToolbarOverlay(
                     geo: geo,
+                    safeArea: geo.safeAreaInsets,
                     viewport: viewport,
                     scale: scale
                 )
@@ -260,11 +269,16 @@ struct CanvasBoardView: View {
     private func canvasBackground(showGrid: Bool) -> some View {
         ZStack {
             tokens.workspaceBackground
+            FlowDeskTheme.canvasBoardRadialAtmosphere(colorScheme: colorScheme)
+                .allowsHitTesting(false)
+            FlowDeskTheme.canvasBoardDepthGradient(colorScheme: colorScheme)
+                .allowsHitTesting(false)
             if showGrid {
                 CanvasGridOverlay(
                     spacing: 24,
                     lineWidth: FlowDeskLayout.gridLineWidth,
-                    lineOpacity: tokens.gridLineOpacity
+                    lineOpacity: tokens.gridLineOpacity,
+                    gridInk: tokens.canvasGridInk
                 )
             }
         }
@@ -272,12 +286,13 @@ struct CanvasBoardView: View {
 
     // MARK: - Selection toolbar (view-space overlay)
 
-    private let selectionToolbarEstimatedWidth: CGFloat = 280
-    private let selectionToolbarEstimatedHeight: CGFloat = 48
+    private let selectionToolbarEstimatedWidth: CGFloat = 292
+    private let selectionToolbarEstimatedHeight: CGFloat = 52
 
     @ViewBuilder
     private func selectionToolbarOverlay(
         geo: GeometryProxy,
+        safeArea: EdgeInsets,
         viewport: ViewportState,
         scale: CGFloat
     ) -> some View {
@@ -295,6 +310,7 @@ struct CanvasBoardView: View {
                     selectionToolbarCenter(
                         element: el,
                         viewSize: geo.size,
+                        safeArea: safeArea,
                         viewport: viewport,
                         scale: scale,
                         pan: panDragTranslation,
@@ -303,17 +319,19 @@ struct CanvasBoardView: View {
                     )
                 )
                 .transition(
-                    .opacity.combined(with: .scale(scale: 0.94, anchor: UnitPoint(x: 0.5, y: 1)))
+                    .opacity.combined(with: .move(edge: .bottom))
+                        .combined(with: .scale(scale: 0.96, anchor: UnitPoint(x: 0.5, y: 1)))
                 )
             }
         }
-        .animation(.easeOut(duration: 0.2), value: selectionToolbarMotionIdentity())
+        .animation(.spring(response: 0.25, dampingFraction: 0.8), value: selectionToolbarMotionIdentity())
     }
 
     /// Maps the element’s canvas frame through the same scale + offset as the board, then places the toolbar centered above it (view coordinates).
     private func selectionToolbarCenter(
         element: CanvasElementRecord,
         viewSize: CGSize,
+        safeArea: EdgeInsets,
         viewport: ViewportState,
         scale: CGFloat,
         pan: CGSize,
@@ -331,8 +349,16 @@ struct CanvasBoardView: View {
         let margin: CGFloat = 10
         let halfW = toolbarWidth * 0.5
         let halfH = toolbarHeight * 0.5
-        midX = min(max(midX, halfW + margin), viewSize.width - halfW - margin)
-        centerY = min(max(centerY, halfH + margin), viewSize.height - halfH - margin)
+        let insetLeft = safeArea.leading + margin
+        let insetRight = safeArea.trailing + margin
+        let insetTop = safeArea.top + margin
+        let insetBottom = safeArea.bottom + margin
+        let minMidX = max(halfW + insetLeft, FlowDeskLayout.canvasSelectionToolbarLeadingGutter + halfW)
+        let maxMidX = viewSize.width - halfW - insetRight
+        midX = min(max(midX, minMidX), max(maxMidX, minMidX))
+        let minCenterY = halfH + insetTop
+        let maxCenterY = viewSize.height - halfH - insetBottom
+        centerY = min(max(centerY, minCenterY), max(maxCenterY, minCenterY))
         return CGPoint(x: midX, y: centerY)
     }
 

@@ -14,7 +14,7 @@ extension CanvasBoardState {
                     height: 140,
                     zIndex: 10,
                     textBlock: TextBlockPayload(
-                        text: "FlowDesk blends documents and whiteboards. Double-click any text block to edit.",
+                        text: "Welcome to FlowDesk. Double-click text to edit. Drag empty space to pan; pinch on a trackpad to zoom. Add items with the tools on the left; use Export in the toolbar for PNG or PDF.",
                         fontSize: 17,
                         isBold: true,
                         color: .defaultText,

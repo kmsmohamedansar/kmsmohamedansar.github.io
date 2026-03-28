@@ -24,9 +24,12 @@ enum CanvasExportBounds {
 
         var union = CGRect.null
         for element in elements {
-            union = union.union(
-                CGRect(x: element.x, y: element.y, width: element.width, height: element.height)
-            )
+            var r = CGRect(x: element.x, y: element.y, width: element.width, height: element.height)
+            if element.kind == .stroke, let payload = element.strokePayload {
+                let pad = max(3, payload.lineWidth * 0.5 + 2)
+                r = r.insetBy(dx: -pad, dy: -pad)
+            }
+            union = union.union(r)
         }
 
         let padded = union.insetBy(dx: -contentPadding, dy: -contentPadding)

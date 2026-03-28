@@ -2,8 +2,11 @@ import SwiftUI
 
 // MARK: - Shared chrome
 
-/// Compact dismissible tips; matches floating palette material + radius family.
+/// First-run tips: same depth language as the floating palette (material + one shadow + one hairline).
 struct FlowDeskOnboardingTipCard: View {
+    @Environment(\.flowDeskTokens) private var tokens
+    @Environment(\.colorScheme) private var colorScheme
+
     let title: String
     let tips: [String]
     let onDismiss: () -> Void
@@ -11,55 +14,84 @@ struct FlowDeskOnboardingTipCard: View {
     var body: some View {
         VStack(alignment: .leading, spacing: FlowDeskLayout.spaceM) {
             HStack(alignment: .firstTextBaseline, spacing: FlowDeskLayout.spaceS) {
-                Text(title)
-                    .font(.subheadline.weight(.semibold))
-                    .foregroundStyle(.primary)
+                VStack(alignment: .leading, spacing: 2) {
+                    Text(title)
+                        .font(.subheadline.weight(.semibold))
+                        .foregroundStyle(.primary)
+                    Text("Quick tour")
+                        .font(.caption2.weight(.medium))
+                        .foregroundStyle(.tertiary)
+                        .textCase(.uppercase)
+                        .tracking(0.4)
+                }
                 Spacer(minLength: 8)
                 Button {
                     onDismiss()
                 } label: {
                     Image(systemName: "xmark.circle.fill")
                         .symbolRenderingMode(.hierarchical)
-                        .font(.body)
-                        .foregroundStyle(.secondary)
+                        .font(.title3)
+                        .foregroundStyle(.tertiary)
                 }
                 .buttonStyle(.plain)
                 .help("Dismiss tips")
             }
 
-            VStack(alignment: .leading, spacing: FlowDeskLayout.spaceS) {
-                ForEach(Array(tips.enumerated()), id: \.offset) { _, line in
-                    HStack(alignment: .top, spacing: 8) {
-                        Circle()
-                            .fill(Color.accentColor.opacity(0.5))
-                            .frame(width: 5, height: 5)
-                            .padding(.top, 5)
+            VStack(alignment: .leading, spacing: FlowDeskLayout.spaceM) {
+                ForEach(Array(tips.enumerated()), id: \.offset) { index, line in
+                    HStack(alignment: .top, spacing: 10) {
+                        Text("\(index + 1)")
+                            .font(.caption2.weight(.bold))
+                            .monospacedDigit()
+                            .foregroundStyle(.quaternary)
+                            .frame(width: 16, alignment: .trailing)
+                            .padding(.top, 2)
                         Text(line)
-                            .font(.caption)
+                            .font(.caption.weight(.medium))
                             .foregroundStyle(.secondary)
                             .multilineTextAlignment(.leading)
                             .fixedSize(horizontal: false, vertical: true)
+                            .lineSpacing(2)
                     }
                 }
             }
 
-            Button("Got it") {
+            Button("Done") {
                 onDismiss()
             }
             .keyboardShortcut(.defaultAction)
             .buttonStyle(.borderedProminent)
-            .controlSize(.small)
+            .controlSize(.regular)
         }
-        .padding(FlowDeskLayout.spaceM)
-        .frame(maxWidth: 300, alignment: .leading)
+        .padding(FlowDeskLayout.floatingPanelContentPadding + 2)
+        .frame(maxWidth: 312, alignment: .leading)
         .background {
-            RoundedRectangle(cornerRadius: 14, style: .continuous)
-                .fill(.ultraThinMaterial)
-                .shadow(color: Color.black.opacity(0.1), radius: 12, x: 0, y: 4)
+            ZStack {
+                RoundedRectangle(cornerRadius: FlowDeskLayout.floatingPanelCornerRadius, style: .continuous)
+                    .fill(.ultraThinMaterial)
+                RoundedRectangle(cornerRadius: FlowDeskLayout.floatingPanelCornerRadius, style: .continuous)
+                    .fill(tokens.homeCardFill.opacity(colorScheme == .dark ? 0.08 : 0.12))
+            }
+            .shadow(
+                color: Color.black.opacity(FlowDeskTheme.floatingPanelShadowOpacity * 0.92),
+                radius: FlowDeskTheme.floatingPanelShadowRadius * 0.9,
+                x: 0,
+                y: FlowDeskTheme.floatingPanelShadowY
+            )
         }
         .overlay {
-            RoundedRectangle(cornerRadius: 14, style: .continuous)
-                .strokeBorder(Color.primary.opacity(0.08), lineWidth: 1)
+            RoundedRectangle(cornerRadius: FlowDeskLayout.floatingPanelCornerRadius, style: .continuous)
+                .strokeBorder(
+                    LinearGradient(
+                        colors: [
+                            Color.primary.opacity(0.09),
+                            Color.primary.opacity(0.035)
+                        ],
+                        startPoint: .topLeading,
+                        endPoint: .bottomTrailing
+                    ),
+                    lineWidth: 0.75
+                )
         }
         .accessibilityElement(children: .contain)
         .accessibilityLabel("First-time tips")
@@ -73,15 +105,18 @@ struct FlowDeskHomeOnboardingCallout: View {
 
     var body: some View {
         FlowDeskOnboardingTipCard(
-            title: "Getting started",
+            title: "Welcome",
             tips: [
-                "Pick Smart canvas or Blank board below to start a new board.",
-                "Your boards stay in the sidebar—open or continue anytime.",
-                "One infinite canvas for notes, sketches, and layout."
+                "FlowDesk added two starter boards in the sidebar—open Welcome to explore, or Scratch for an empty canvas.",
+                "Need another board? Use New board in the sidebar footer or the + button above the list.",
+                "Every board is one infinite surface: drag empty space to pan, pinch on a trackpad to zoom."
             ],
             onDismiss: { onboarding.dismissHomeTips() }
         )
-        .transition(.move(edge: .bottom).combined(with: .opacity))
+        .transition(.asymmetric(
+            insertion: .opacity.combined(with: .move(edge: .bottom).combined(with: .scale(scale: 0.98, anchor: .bottomTrailing))),
+            removal: .opacity.combined(with: .scale(scale: 0.98, anchor: .bottomTrailing))
+        ))
     }
 }
 
@@ -92,14 +127,18 @@ struct FlowDeskCanvasOnboardingCallout: View {
 
     var body: some View {
         FlowDeskOnboardingTipCard(
-            title: "Canvas basics",
+            title: "The canvas",
             tips: [
-                "Choose a tool on the left to place elements or draw freehand.",
-                "Select an item to edit it from the floating toolbar; finer controls are in the inspector.",
-                "Drag empty space to pan (with Select active)."
+                "Tools on the left switch Select, Draw, and place modes (text, sticky, shapes). You can also insert from the View menu.",
+                "With Select active, drag empty space to pan and pinch on a trackpad to zoom.",
+                "Copy and paste (⌘C / ⌘V) apply to items on this board only—not general clipboard text from other apps.",
+                "Export the board as PNG or PDF from the Export button in the toolbar (share icon)."
             ],
             onDismiss: { onboarding.dismissCanvasTips() }
         )
-        .transition(.opacity.combined(with: .scale(scale: 0.97, anchor: .topTrailing)))
+        .transition(.asymmetric(
+            insertion: .opacity.combined(with: .move(edge: .top).combined(with: .scale(scale: 0.97, anchor: .topTrailing))),
+            removal: .opacity.combined(with: .scale(scale: 0.97, anchor: .topTrailing))
+        ))
     }
 }

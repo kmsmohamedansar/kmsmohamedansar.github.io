@@ -30,11 +30,10 @@ struct MainWindowView: View {
                 onDelete: deleteBoards,
                 onRenameRequest: beginRename
             )
-            .navigationSplitViewColumnWidth(min: 220, ideal: 260, max: 340)
+            .navigationSplitViewColumnWidth(min: 200, ideal: 240, max: 300)
         } detail: {
             detailContent
         }
-        .navigationTitle("")
         .toolbarBackground(.visible, for: .windowToolbar)
         .flowDeskToolbarChrome(appearanceTokens)
         .environment(\.flowDeskTokens, appearanceTokens)
@@ -54,6 +53,20 @@ struct MainWindowView: View {
         .onChange(of: selection?.persistentModelID) { _, _ in
             canvasSelection.clear()
             syncCanvasAttachment()
+        }
+        // SwiftData refresh can replace model instances; keep the sidebar binding and canvas on the same live object.
+        .onChange(of: documents) { _, newDocuments in
+            guard let current = selection else { return }
+            guard let fresh = newDocuments.first(where: { $0.persistentModelID == current.persistentModelID }) else {
+                selection = nil
+                canvasSelection.clear()
+                syncCanvasAttachment()
+                return
+            }
+            if fresh !== current {
+                selection = fresh
+                syncCanvasAttachment()
+            }
         }
         .sheet(item: $renameSession) { session in
             RenameDocumentSheet(
@@ -76,14 +89,21 @@ struct MainWindowView: View {
                     boardViewModel: canvasBoardViewModel,
                     selection: canvasSelection
                 )
-                .frame(minWidth: 480)
+                .frame(minWidth: 320, maxWidth: .infinity, maxHeight: .infinity)
+                .layoutPriority(1)
 
                 InspectorPanelView(
                     document: doc,
                     canvasViewModel: canvasBoardViewModel,
                     selection: canvasSelection
                 )
-                    .frame(minWidth: 240, idealWidth: 280, maxWidth: 360)
+                .frame(minWidth: 176, idealWidth: 236, maxWidth: 304)
+            }
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+            // Fresh SwiftUI identity per document so canvas/inspector never show stale content.
+            .id(doc.persistentModelID)
+            .onAppear {
+                syncCanvasAttachment()
             }
         } else {
             HomeView(

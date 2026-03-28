@@ -3,6 +3,31 @@ import PDFKit
 import SwiftUI
 import UniformTypeIdentifiers
 
+// MARK: - Export appearance (matches live app chrome)
+
+private enum CanvasExportAppearance {
+    static func resolvedTokens() -> FlowDeskAppearanceTokens {
+        let modeRaw = UserDefaults.standard.string(forKey: "FlowDesk.appearance.mode")
+            ?? FlowDeskAppearanceMode.system.rawValue
+        let mode = FlowDeskAppearanceMode(rawValue: modeRaw) ?? .system
+        let colorScheme: ColorScheme
+        switch mode {
+        case .light:
+            colorScheme = .light
+        case .dark:
+            colorScheme = .dark
+        case .system:
+            colorScheme = NSApp.effectiveAppearance.bestMatch(from: [.darkAqua, .aqua]) == .darkAqua
+                ? .dark
+                : .light
+        }
+        let presetRaw = UserDefaults.standard.string(forKey: "FlowDesk.appearance.stylePreset")
+            ?? FlowDeskStylePreset.warmPaper.rawValue
+        let preset = FlowDeskStylePreset(rawValue: presetRaw) ?? .warmPaper
+        return FlowDeskAppearanceTokens.resolve(colorScheme: colorScheme, preset: preset)
+    }
+}
+
 /// Renders a snapshot of `CanvasBoardState` off-screen and writes PNG/PDF via the system save panel.
 /// Does not mutate documents or live canvas UI state.
 @MainActor
@@ -76,7 +101,8 @@ enum CanvasExportService {
     /// Renders the content bounds (see `CanvasExportBounds`) at `defaultRenderScale`.
     static func renderExportImage(boardState: CanvasBoardState) -> NSImage? {
         let rect = CanvasExportBounds.exportRect(elements: boardState.elements)
-        let content = CanvasBoardExportContentView(boardState: boardState, exportRect: rect)
+        let tokens = CanvasExportAppearance.resolvedTokens()
+        let content = CanvasBoardExportContentView(boardState: boardState, exportRect: rect, tokens: tokens)
         let renderer = ImageRenderer(content: content)
         renderer.scale = defaultRenderScale
         renderer.proposedSize = ProposedViewSize(

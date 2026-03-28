@@ -26,7 +26,8 @@ struct DocumentSidebarView: View {
                             } icon: {
                                 Image(systemName: "rectangle.on.rectangle.angled")
                                     .symbolRenderingMode(.hierarchical)
-                                    .foregroundStyle(.secondary)
+                                    .font(.body.weight(.medium))
+                                    .foregroundStyle(.tertiary)
                             }
                             .contextMenu {
                                 Button("Rename…") {
@@ -50,7 +51,7 @@ struct DocumentSidebarView: View {
                             )
                             .listRowBackground(
                                 sidebarRowBackground(
-                                    isSelected: selection?.id == document.id,
+                                    isSelected: selection?.persistentModelID == document.persistentModelID,
                                     isHovered: hoveredDocumentID == document.id
                                 )
                             )
@@ -60,10 +61,11 @@ struct DocumentSidebarView: View {
                         }
                         .onDelete(perform: onDelete)
                     } header: {
-                        Text("Canvases")
+                        Text("Boards")
                             .font(FlowDeskTypography.sidebarSectionHeader)
-                            .foregroundStyle(.tertiary)
-                            .textCase(nil)
+                            .foregroundStyle(.quaternary)
+                            .textCase(.uppercase)
+                            .tracking(0.35)
                             .padding(.bottom, FlowDeskLayout.spaceXS)
                     }
                 }
@@ -75,10 +77,10 @@ struct DocumentSidebarView: View {
         .safeAreaInset(edge: .bottom) {
             VStack(alignment: .leading, spacing: 0) {
                 Divider()
-                    .opacity(0.45)
+                    .opacity(0.22)
                 Button(action: onNewBoard) {
-                    Label("New canvas", systemImage: "plus.circle.fill")
-                        .font(.body.weight(.medium))
+                    Label("New board", systemImage: "plus.circle.fill")
+                        .font(.subheadline.weight(.medium))
                         .frame(maxWidth: .infinity, alignment: .leading)
                 }
                 .buttonStyle(FlowDeskPlainCardButtonStyle())
@@ -92,7 +94,7 @@ struct DocumentSidebarView: View {
                 Button(action: onNewBoard) {
                     Image(systemName: "plus")
                 }
-                .help("New smart canvas")
+                .help("New board")
                 .buttonStyle(FlowDeskToolbarButtonStyle())
             }
         }
@@ -107,25 +109,33 @@ struct DocumentSidebarView: View {
 
     private func rowFill(isSelected: Bool, isHovered: Bool) -> Color {
         if isSelected {
-            return Color.primary.opacity(0.11)
+            return Color.primary.opacity(0.085)
         }
         if isHovered {
-            return Color.primary.opacity(0.055)
+            return Color.primary.opacity(0.045)
         }
         return Color.clear
     }
 
     private var sidebarEmptyLibrary: some View {
-        ContentUnavailableView {
-            Label("Your canvases", systemImage: "rectangle.3.group")
-        } description: {
-            Text("Create a smart canvas to capture notes, sketches, and layout in one place.")
-                .multilineTextAlignment(.center)
-                .font(FlowDeskTypography.sectionCaption)
-                .foregroundStyle(.secondary)
-        } actions: {
-            Button("New canvas", action: onNewBoard)
+        VStack(spacing: FlowDeskLayout.spaceL) {
+            Spacer(minLength: 0)
+            FlowDeskSheetsStackMark(size: 84)
+            VStack(spacing: FlowDeskLayout.spaceS) {
+                Text("No boards yet")
+                    .font(FlowDeskTypography.sidebarEmptyTitle)
+                    .foregroundStyle(.primary)
+                Text("Create a board to begin. FlowDesk saves your work as you go—nothing to configure.")
+                    .font(FlowDeskTypography.sidebarEmptyBody)
+                    .foregroundStyle(.secondary)
+                    .multilineTextAlignment(.center)
+                    .lineSpacing(3)
+                    .padding(.horizontal, FlowDeskLayout.spaceM)
+            }
+            Button("Create board", action: onNewBoard)
                 .buttonStyle(.borderedProminent)
+                .controlSize(.large)
+            Spacer(minLength: 0)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .padding(.horizontal, FlowDeskLayout.sidebarEmptyHorizontalPadding)

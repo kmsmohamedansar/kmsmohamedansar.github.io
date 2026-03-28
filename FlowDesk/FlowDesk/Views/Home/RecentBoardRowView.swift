@@ -74,7 +74,7 @@ struct RecentBoardRowView: View {
                             : FlowDeskLayout.cardBorderLineWidth
                     )
             }
-            .animation(.easeOut(duration: 0.16), value: isHovered)
+            .animation(.spring(response: 0.32, dampingFraction: 0.88), value: isHovered)
         }
         .buttonStyle(FlowDeskPlainCardButtonStyle())
         .onHover { isHovered = $0 }

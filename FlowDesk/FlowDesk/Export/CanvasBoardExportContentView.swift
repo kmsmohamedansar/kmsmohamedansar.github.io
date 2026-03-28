@@ -6,6 +6,8 @@ import SwiftUI
 struct CanvasBoardExportContentView: View {
     let boardState: CanvasBoardState
     let exportRect: CGRect
+    /// Matches the user’s light/dark + style preset for background and grid (see `CanvasExportService`).
+    let tokens: FlowDeskAppearanceTokens
 
     private var sortedElements: [CanvasElementRecord] {
         boardState.elements.sorted {
@@ -35,12 +37,13 @@ struct CanvasBoardExportContentView: View {
     @ViewBuilder
     private func exportBackground(showGrid: Bool) -> some View {
         ZStack {
-            FlowDeskTheme.canvasWorkspaceBackgroundExport
+            tokens.workspaceBackground
             if showGrid {
                 CanvasGridOverlay(
                     spacing: 24,
                     lineWidth: 0.35,
-                    lineOpacity: FlowDeskTheme.gridLineOpacity(for: .light)
+                    lineOpacity: tokens.gridLineOpacity,
+                    gridInk: tokens.canvasGridInk
                 )
             }
         }

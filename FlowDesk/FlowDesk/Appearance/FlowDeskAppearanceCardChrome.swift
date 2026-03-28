@@ -74,7 +74,7 @@ struct FlowDeskCardChromeModifier: ViewModifier {
                     )
             }
             .scaleEffect(isHovered ? scaleOnHover : 1)
-            .animation(.easeOut(duration: 0.16), value: isHovered)
+            .animation(.spring(response: 0.34, dampingFraction: 0.86), value: isHovered)
     }
 }
 

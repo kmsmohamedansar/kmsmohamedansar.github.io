@@ -3,7 +3,7 @@ import SwiftUI
 struct InspectorPanelView: View {
     @Environment(\.flowDeskTokens) private var tokens
 
-    let document: FlowDocument
+    @Bindable var document: FlowDocument
     @Bindable var canvasViewModel: CanvasBoardViewModel
     @Bindable var selection: CanvasSelectionModel
 
@@ -20,7 +20,7 @@ struct InspectorPanelView: View {
                         .foregroundStyle(.secondary)
                 }
             } header: {
-                FlowDeskInspectorSectionHeader("Canvas")
+                FlowDeskInspectorSectionHeader("Board")
             }
 
             Section {
@@ -35,7 +35,7 @@ struct InspectorPanelView: View {
                         .monospacedDigit()
                 }
             } header: {
-                FlowDeskInspectorSectionHeader("Canvas")
+                FlowDeskInspectorSectionHeader("Viewport")
             }
 
             Section {
@@ -66,9 +66,10 @@ struct InspectorPanelView: View {
                     }
                     .frame(maxWidth: .infinity, alignment: .leading)
                 } else {
-                    Text("None")
-                        .font(.subheadline)
+                    Text("Nothing selected—click an item on the canvas, or choose a tool to add one.")
+                        .font(.caption)
                         .foregroundStyle(.tertiary)
+                        .fixedSize(horizontal: false, vertical: true)
                         .frame(maxWidth: .infinity, alignment: .leading)
                 }
             } header: {
@@ -115,7 +116,13 @@ struct InspectorPanelView: View {
         }
         .formStyle(.grouped)
         .scrollContentBackground(.hidden)
-        .background(tokens.inspectorChromeBackground)
+        .background {
+            ZStack {
+                tokens.inspectorChromeBackground
+                Rectangle()
+                    .fill(.ultraThinMaterial)
+            }
+        }
         .padding(.horizontal, FlowDeskLayout.inspectorHorizontalPadding)
         .frame(maxHeight: .infinity, alignment: .top)
     }

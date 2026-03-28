@@ -2,7 +2,7 @@ import SwiftUI
 
 /// macOS canvas screen: canvas-first tools + lightweight window toolbar (Edit / View / Export).
 struct CanvasScreenView: View {
-    let document: FlowDocument
+    @Bindable var document: FlowDocument
     @Bindable var boardViewModel: CanvasBoardViewModel
     @Bindable var selection: CanvasSelectionModel
 
@@ -14,19 +14,22 @@ struct CanvasScreenView: View {
                 boardViewModel: boardViewModel,
                 selection: selection
             )
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
 
             CanvasFloatingToolPalette(boardViewModel: boardViewModel)
-                .padding(.leading, 18)
+                .padding(.leading, 12)
                 .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
-
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        // Overlay keeps hit testing to the card only (no invisible full-screen blocker).
+        .overlay(alignment: .topTrailing) {
             if !onboarding.canvasTipsDismissed {
                 FlowDeskCanvasOnboardingCallout()
-                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topTrailing)
                     .padding(.top, 10)
                     .padding(.trailing, 14)
             }
         }
-        .animation(.easeOut(duration: 0.2), value: onboarding.canvasTipsDismissed)
+        .animation(.spring(response: 0.36, dampingFraction: 0.86), value: onboarding.canvasTipsDismissed)
         .navigationTitle(document.title)
         #if os(macOS)
         .navigationSubtitle("Last edited \(document.updatedAt.formatted(date: .abbreviated, time: .shortened))")
@@ -37,18 +40,20 @@ struct CanvasScreenView: View {
         }
         .toolbar {
             ToolbarItemGroup(placement: .automatic) {
-                Menu("Edit") {
+                Menu {
                     Button("Undo") {
                         boardViewModel.undoBoard()
                     }
                     .disabled(!boardViewModel.canUndoBoard)
                     .keyboardShortcut("z", modifiers: [.command])
+                    .help("Undo the last change on this board")
 
                     Button("Redo") {
                         boardViewModel.redoBoard()
                     }
                     .disabled(!boardViewModel.canRedoBoard)
                     .keyboardShortcut("z", modifiers: [.command, .shift])
+                    .help("Redo a previously undone change")
 
                     Divider()
 
@@ -57,6 +62,7 @@ struct CanvasScreenView: View {
                     }
                     .disabled(!selection.hasSelection)
                     .keyboardShortcut("d", modifiers: [.command])
+                    .help("Duplicate the selected items on this board")
 
                     Divider()
 
@@ -65,12 +71,14 @@ struct CanvasScreenView: View {
                     }
                     .disabled(!selection.hasSelection)
                     .keyboardShortcut("c", modifiers: [.command])
+                    .help("Copy selected canvas items to paste elsewhere on this board")
 
                     Button("Paste") {
                         boardViewModel.pasteClipboardElements(selection: selection)
                     }
                     .disabled(!boardViewModel.canPasteFromClipboard)
                     .keyboardShortcut("v", modifiers: [.command])
+                    .help("Paste items copied from this board in FlowDesk (not plain text from other apps)")
 
                     Divider()
 
@@ -98,50 +106,69 @@ struct CanvasScreenView: View {
                         boardViewModel.deleteSelectedElements(selection: selection)
                     }
                     .disabled(!selection.hasSelection)
+                    .help("Remove selected items from the board")
+                } label: {
+                    HStack(spacing: 5) {
+                        Text("Edit")
+                            .font(.subheadline.weight(.medium))
+                    }
                 }
 
                 Menu {
                     Toggle("Show grid", isOn: gridBinding)
                     Divider()
-                    Button("Text block at viewport center") {
+                    Button("Insert text block") {
                         boardViewModel.insertTextBlock(selection: selection, beginEditing: true)
                     }
                     .keyboardShortcut("t", modifiers: [.command])
-                    Button("Sticky note at viewport center") {
+                    .help("Adds a text block centered in what you see now")
+                    Button("Insert sticky note") {
                         boardViewModel.insertStickyNote(selection: selection, beginEditing: true)
                     }
                     .keyboardShortcut("n", modifiers: [.command, .shift])
+                    .help("Adds a sticky note centered in the current view")
                     Divider()
                     Button("Bar chart") {
                         boardViewModel.insertChart(kind: .bar, selection: selection)
                     }
+                    .help("Insert a sample bar chart at the center of the view")
                     Button("Line chart") {
                         boardViewModel.insertChart(kind: .line, selection: selection)
                     }
+                    .help("Insert a sample line chart at the center of the view")
                 } label: {
-                    Label("View", systemImage: "rectangle.split.2x1")
+                    HStack(spacing: 5) {
+                        Image(systemName: "rectangle.split.2x1")
+                            .font(.system(size: 14, weight: .medium))
+                        Text("View")
+                            .font(.subheadline.weight(.medium))
+                    }
                 }
-                .help("Grid, quick inserts, and charts")
+                .help("Grid, insert items in view, and charts")
 
                 Menu {
-                    Button("Export PNG…") {
+                    Button("PNG…") {
                         CanvasExportService.presentExportPanel(
                             boardState: boardViewModel.boardState,
                             documentTitle: document.title,
                             format: .png
                         )
                     }
-                    Button("Export PDF…") {
+                    .help("Save the board as a PNG image")
+                    Button("PDF…") {
                         CanvasExportService.presentExportPanel(
                             boardState: boardViewModel.boardState,
                             documentTitle: document.title,
                             format: .pdf
                         )
                     }
+                    .help("Save the board as a one-page PDF")
                 } label: {
-                    Image(systemName: "square.and.arrow.up")
+                    Label("Export", systemImage: "square.and.arrow.up")
+                        .font(.system(size: 14, weight: .medium))
+                        .labelStyle(.titleAndIcon)
                 }
-                .help("Export")
+                .help("Save this board as PNG or PDF")
                 .buttonStyle(FlowDeskToolbarButtonStyle())
             }
         }
