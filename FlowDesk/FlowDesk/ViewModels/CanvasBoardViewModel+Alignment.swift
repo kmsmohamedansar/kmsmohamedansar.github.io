@@ -86,7 +86,6 @@ extension CanvasBoardViewModel {
         let framed = framedAlignableRecords(selection: selection)
         guard framed.count >= 3 else { return }
         stopAllInlineEditing()
-        let ids = Set(framed.map(\.id))
         let canvasMax = Double(CanvasSnapEngine.defaultCanvasLogicalSize)
         switch axis {
         case .horizontal:

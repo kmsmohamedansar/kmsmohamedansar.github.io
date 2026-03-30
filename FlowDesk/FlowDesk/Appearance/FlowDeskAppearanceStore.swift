@@ -2,8 +2,9 @@ import Observation
 import SwiftUI
 
 /// App-wide appearance preferences (UserDefaults-backed).
+/// `EnvironmentKey.defaultValue` requires `Sendable`; store is main-actor–consumed in practice.
 @Observable
-final class FlowDeskAppearanceStore {
+final class FlowDeskAppearanceStore: @unchecked Sendable {
     private enum Key: String {
         case mode = "FlowDesk.appearance.mode"
         case preset = "FlowDesk.appearance.stylePreset"

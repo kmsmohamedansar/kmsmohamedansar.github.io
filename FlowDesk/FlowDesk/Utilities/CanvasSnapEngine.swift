@@ -207,7 +207,7 @@ enum CanvasSnapEngine {
         let idealMinX = leftWall + (slot - rect.width) / 2
         var out = rect
         out.origin.x = max(0, min(idealMinX, canvasSize - rect.width))
-        var guides: [CanvasAlignmentGuide] = [
+        let guides: [CanvasAlignmentGuide] = [
             CanvasAlignmentGuide(isVertical: true, position: leftWall),
             CanvasAlignmentGuide(isVertical: true, position: rightWall),
             CanvasAlignmentGuide(isVertical: true, position: (leftWall + rightWall) / 2),

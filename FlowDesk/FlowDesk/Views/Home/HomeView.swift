@@ -81,9 +81,9 @@ struct HomeView: View {
                     .foregroundStyle(.tertiary)
             }
 
-            ContinueBoardHeroView(document: latest) {
+            ContinueBoardHeroView(document: latest, onOpen: {
                 onOpenDocument(latest)
-            }
+            })
         }
     }
 
@@ -106,18 +106,20 @@ struct HomeView: View {
                     systemImage: "rectangle.split.2x1.fill",
                     title: "Smart canvas",
                     subtitle: "Starter text and sticky on the grid—edit, remove, or build around them.",
+                    action: {
+                        onCreateFromTemplate(.smartCanvas)
+                    },
                     prominence: .hero
-                ) {
-                    onCreateFromTemplate(.smartCanvas)
-                }
+                )
 
                 CreationCardView(
                     systemImage: "rectangle.dashed",
                     title: "Blank board",
-                    subtitle: "Nothing pre-placed—an empty canvas for your own layout."
-                ) {
-                    onCreateFromTemplate(.blankBoard)
-                }
+                    subtitle: "Nothing pre-placed—an empty canvas for your own layout.",
+                    action: {
+                        onCreateFromTemplate(.blankBoard)
+                    }
+                )
                 .frame(maxWidth: FlowDeskLayout.homeBlankCreationMaxWidth, alignment: .leading)
             }
         }
@@ -141,9 +143,9 @@ struct HomeView: View {
 
                 VStack(spacing: FlowDeskLayout.homeRecentRowSpacing) {
                     ForEach(otherRecentDocuments, id: \.persistentModelID) { doc in
-                        RecentBoardRowView(document: doc) {
+                        RecentBoardRowView(document: doc, onOpen: {
                             onOpenDocument(doc)
-                        }
+                        })
                     }
                 }
             }

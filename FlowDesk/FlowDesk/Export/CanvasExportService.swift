@@ -5,6 +5,7 @@ import UniformTypeIdentifiers
 
 // MARK: - Export appearance (matches live app chrome)
 
+@MainActor
 private enum CanvasExportAppearance {
     static func resolvedTokens() -> FlowDeskAppearanceTokens {
         let modeRaw = UserDefaults.standard.string(forKey: "FlowDesk.appearance.mode")
