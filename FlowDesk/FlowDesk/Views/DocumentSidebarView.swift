@@ -125,7 +125,7 @@ struct DocumentSidebarView: View {
                 Text("No boards yet")
                     .font(FlowDeskTypography.sidebarEmptyTitle)
                     .foregroundStyle(.primary)
-                Text("Create a board to begin. FlowDesk saves your work as you go—nothing to configure.")
+                Text("Create a board to begin. Cerebra saves your work as you go—nothing to configure.")
                     .font(FlowDeskTypography.sidebarEmptyBody)
                     .foregroundStyle(.secondary)
                     .multilineTextAlignment(.center)

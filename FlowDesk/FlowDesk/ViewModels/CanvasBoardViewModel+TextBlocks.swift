@@ -1,3 +1,4 @@
+import CoreGraphics
 import Foundation
 
 extension CanvasBoardViewModel {
@@ -15,6 +16,7 @@ extension CanvasBoardViewModel {
         beginEditing: Bool = true
     ) -> UUID {
         canvasTool = .select
+        dismissCanvasContextPanel()
         let id = UUID()
         var payload = TextBlockPayload.default
         payload.text = ""
@@ -37,6 +39,7 @@ extension CanvasBoardViewModel {
         selection.selectOnly(id)
         if beginEditing {
             editingStickyNoteElementID = nil
+            editingConnectorLabelElementID = nil
             editingTextElementID = id
         }
         return id
@@ -78,6 +81,52 @@ extension CanvasBoardViewModel {
         selection.selectOnly(id)
         if beginEditing {
             editingStickyNoteElementID = nil
+            editingConnectorLabelElementID = nil
+            editingTextElementID = id
+        }
+        return id
+    }
+
+    /// Drag-to-define area while `canvasTool == .placeText`.
+    @discardableResult
+    func insertTextBlockInCanvasRect(
+        _ rect: CGRect,
+        selection: CanvasSelectionModel,
+        beginEditing: Bool = true
+    ) -> UUID {
+        stopAllInlineEditing()
+        let std = rect.standardized
+        let minW = CanvasTextBlockLayout.minWidth
+        let minH = CanvasTextBlockLayout.minHeight
+        let canvasMax: Double = 4000
+        var x = Double(std.minX)
+        var y = Double(std.minY)
+        var w = Double(std.width)
+        var h = Double(std.height)
+        x = max(0, min(x, canvasMax - minW))
+        y = max(0, min(y, canvasMax - minH))
+        w = max(minW, min(w, canvasMax - x))
+        h = max(minH, min(h, canvasMax - y))
+        let id = UUID()
+        var payload = TextBlockPayload.default
+        payload.text = ""
+        let record = CanvasElementRecord(
+            id: id,
+            kind: .textBlock,
+            x: x,
+            y: y,
+            width: w,
+            height: h,
+            zIndex: nextZIndex(),
+            textBlock: payload
+        )
+        applyBoardMutation { state in
+            state.elements.append(record)
+        }
+        selection.selectOnly(id)
+        if beginEditing {
+            editingStickyNoteElementID = nil
+            editingConnectorLabelElementID = nil
             editingTextElementID = id
         }
         return id
@@ -90,6 +139,7 @@ extension CanvasBoardViewModel {
     func beginEditingTextBlock(id: UUID) {
         guard boardState.elements.contains(where: { $0.id == id && $0.kind == .textBlock }) else { return }
         editingStickyNoteElementID = nil
+        editingConnectorLabelElementID = nil
         editingTextElementID = id
     }
 

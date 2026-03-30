@@ -36,6 +36,8 @@ struct CanvasElementChrome: View {
         case .stroke: return .purple
         case .shape: return .gray
         case .chart: return .green
+        case .connector: return .cyan
+        @unknown default: return .gray
         }
     }
 }
@@ -48,6 +50,8 @@ private extension CanvasElementKind {
         case .stroke: return "Drawing"
         case .shape: return "Shape"
         case .chart: return "Chart"
+        case .connector: return "Connector"
+        @unknown default: return "Element"
         }
     }
 
@@ -58,6 +62,8 @@ private extension CanvasElementKind {
         case .stroke: return "scribble.variable"
         case .shape: return "square.on.circle"
         case .chart: return "chart.bar"
+        case .connector: return "arrow.triangle.branch"
+        @unknown default: return "square.dashed"
         }
     }
 }

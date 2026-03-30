@@ -8,7 +8,7 @@ enum ModelContainerFactory {
         do {
             return try ModelContainer(for: schema, configurations: [configuration])
         } catch {
-            fatalError("FlowDesk: ModelContainer failed — \(error.localizedDescription)")
+            fatalError("Cerebra: ModelContainer failed — \(error.localizedDescription)")
         }
     }
 }

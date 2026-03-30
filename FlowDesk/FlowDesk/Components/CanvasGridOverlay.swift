@@ -3,6 +3,7 @@ import SwiftUI
 /// Lightweight grid drawn in the canvas coordinate space (scales with the board).
 struct CanvasGridOverlay: View {
     var spacing: CGFloat
+    /// Softer than hairline for a premium “space” read.
     var lineWidth: CGFloat
     /// Subtle line weight; use tokens from the parent.
     var lineOpacity: Double

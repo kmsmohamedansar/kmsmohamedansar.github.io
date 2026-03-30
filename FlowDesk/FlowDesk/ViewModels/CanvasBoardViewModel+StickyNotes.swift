@@ -1,3 +1,4 @@
+import CoreGraphics
 import Foundation
 import SwiftUI
 
@@ -11,6 +12,7 @@ extension CanvasBoardViewModel {
         beginEditing: Bool = true
     ) -> UUID {
         canvasTool = .select
+        dismissCanvasContextPanel()
         let id = UUID()
         var payload = StickyNotePayload.default
         payload.text = ""
@@ -33,6 +35,7 @@ extension CanvasBoardViewModel {
         selection.selectOnly(id)
         if beginEditing {
             editingTextElementID = nil
+            editingConnectorLabelElementID = nil
             editingStickyNoteElementID = id
         }
         return id
@@ -74,6 +77,52 @@ extension CanvasBoardViewModel {
         selection.selectOnly(id)
         if beginEditing {
             editingTextElementID = nil
+            editingConnectorLabelElementID = nil
+            editingStickyNoteElementID = id
+        }
+        return id
+    }
+
+    /// Drag-to-define area while `canvasTool == .placeSticky`.
+    @discardableResult
+    func insertStickyNoteInCanvasRect(
+        _ rect: CGRect,
+        selection: CanvasSelectionModel,
+        beginEditing: Bool = true
+    ) -> UUID {
+        stopAllInlineEditing()
+        let std = rect.standardized
+        let minW = Double(CanvasStickyNoteLayout.minWidth)
+        let minH = Double(CanvasStickyNoteLayout.minHeight)
+        let canvasMax: Double = 4000
+        var x = Double(std.minX)
+        var y = Double(std.minY)
+        var w = Double(std.width)
+        var h = Double(std.height)
+        x = max(0, min(x, canvasMax - minW))
+        y = max(0, min(y, canvasMax - minH))
+        w = max(minW, min(w, canvasMax - x))
+        h = max(minH, min(h, canvasMax - y))
+        let id = UUID()
+        var payload = StickyNotePayload.default
+        payload.text = ""
+        let record = CanvasElementRecord(
+            id: id,
+            kind: .stickyNote,
+            x: x,
+            y: y,
+            width: w,
+            height: h,
+            zIndex: nextZIndex(),
+            stickyNote: payload
+        )
+        applyBoardMutation { state in
+            state.elements.append(record)
+        }
+        selection.selectOnly(id)
+        if beginEditing {
+            editingTextElementID = nil
+            editingConnectorLabelElementID = nil
             editingStickyNoteElementID = id
         }
         return id
@@ -83,15 +132,17 @@ extension CanvasBoardViewModel {
         editingStickyNoteElementID = nil
     }
 
-    /// Clears any inline editor (text block or sticky).
+    /// Clears any inline editor (text block, sticky, or connector label).
     func stopAllInlineEditing() {
         editingTextElementID = nil
         editingStickyNoteElementID = nil
+        editingConnectorLabelElementID = nil
     }
 
     func beginEditingStickyNote(id: UUID) {
         guard boardState.elements.contains(where: { $0.id == id && $0.kind == .stickyNote }) else { return }
         editingTextElementID = nil
+        editingConnectorLabelElementID = nil
         editingStickyNoteElementID = id
     }
 

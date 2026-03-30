@@ -94,7 +94,7 @@ struct FlowDeskOnboardingTipCard: View {
                 )
         }
         .accessibilityElement(children: .contain)
-        .accessibilityLabel("First-time tips")
+        .accessibilityLabel("Cerebra tips")
     }
 }
 
@@ -107,7 +107,7 @@ struct FlowDeskHomeOnboardingCallout: View {
         FlowDeskOnboardingTipCard(
             title: "Welcome",
             tips: [
-                "FlowDesk added two starter boards in the sidebar—open Welcome to explore, or Scratch for an empty canvas.",
+                "Two starter boards are in the sidebar—open Welcome to Cerebra to explore, or Scratch for an empty canvas.",
                 "Need another board? Use New board in the sidebar footer or the + button above the list.",
                 "Every board is one infinite surface: drag empty space to pan, pinch on a trackpad to zoom."
             ],
@@ -129,9 +129,10 @@ struct FlowDeskCanvasOnboardingCallout: View {
         FlowDeskOnboardingTipCard(
             title: "The canvas",
             tips: [
-                "Tools on the left switch Select, Draw, and place modes (text, sticky, shapes). You can also insert from the View menu.",
+                "The left rail has Select, Draw, Text, Sticky, Shape, and Templates. Single keys when not typing: V select, P draw, T text, N sticky, R/S rectangle or square shape. Shapes and draw can open a slim side panel—insert from the View menu too.",
+                "Framing: ⌘⌥1 fit board, ⌘⌥2 center content, ⌘⌥3 zoom to selection. ⌘+ / ⌘− step zoom. G toggles the grid.",
                 "With Select active, drag empty space to pan and pinch on a trackpad to zoom.",
-                "Copy and paste (⌘C / ⌘V) apply to items on this board only—not general clipboard text from other apps.",
+                "Copy and paste (⌘C / ⌘V) apply to canvas items you copied in Cerebra—not plain text from other apps.",
                 "Export the board as PNG or PDF from the Export button in the toolbar (share icon)."
             ],
             onDismiss: { onboarding.dismissCanvasTips() }

@@ -2,7 +2,7 @@ import Foundation
 
 /// How a board was first created. Persisted in `CanvasBoardState.boardTemplate` (JSON).
 ///
-/// **Product:** FlowDesk is one **smart canvas** app. Only ``smartCanvas`` and ``blankBoard`` appear in the
+/// **Product:** Cerebra is a **smart canvas** app for solo thinking. Only ``smartCanvas`` and ``blankBoard`` appear in the
 /// creation UI. Cases ``document``, ``whiteboard``, and ``flowDiagram`` remain for decoding existing data.
 enum FlowDeskBoardTemplate: String, Codable, Sendable, CaseIterable, Identifiable {
     case document

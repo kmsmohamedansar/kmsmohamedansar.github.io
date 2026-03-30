@@ -7,6 +7,7 @@ extension CanvasBoardViewModel {
     @discardableResult
     func insertChart(kind: FlowDeskChartKind, selection: CanvasSelectionModel) -> UUID {
         canvasTool = .select
+        dismissCanvasContextPanel()
         stopAllInlineEditing()
 
         let id = UUID()

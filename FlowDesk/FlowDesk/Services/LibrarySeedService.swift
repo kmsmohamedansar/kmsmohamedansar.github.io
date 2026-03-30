@@ -10,7 +10,7 @@ enum LibrarySeedService {
         guard any.isEmpty else { return }
 
         let welcome = FlowDocument(
-            title: "Welcome to FlowDesk",
+            title: "Welcome to Cerebra",
             canvasPayload: CanvasBoardCoding.encode(.sampleWelcomeBoard())
         )
         context.insert(welcome)

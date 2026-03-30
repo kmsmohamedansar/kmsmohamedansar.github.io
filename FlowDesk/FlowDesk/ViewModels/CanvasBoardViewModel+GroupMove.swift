@@ -7,6 +7,7 @@ extension CanvasBoardViewModel {
     func resetGroupMoveState() {
         groupMoveLeaderID = nil
         groupMovePreviewTranslation = .zero
+        groupMoveLiveCanvasTranslation = .zero
         groupMoveParticipantIDs = []
     }
 
@@ -22,6 +23,7 @@ extension CanvasBoardViewModel {
 
     /// Call on first `moveGesture` change for the dragged framed element.
     func configureGroupMoveIfNeeded(leaderId: UUID, selection: CanvasSelectionModel) {
+        cancelConnectorEndpointAdjust()
         let framed = framedSelectedElementIDs(selection: selection)
         guard framed.count > 1, framed.contains(leaderId) else {
             resetGroupMoveState()
@@ -35,6 +37,7 @@ extension CanvasBoardViewModel {
     func syncGroupMovePreview(leaderId: UUID, translation: CGSize) {
         guard groupMoveLeaderID == leaderId else { return }
         groupMovePreviewTranslation = translation
+        groupMoveLiveCanvasTranslation = translation
     }
 
     /// IDs to exclude from snap targets while dragging `leaderId` (co-moving selection + leader).

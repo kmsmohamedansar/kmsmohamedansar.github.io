@@ -1,3 +1,4 @@
+import CoreGraphics
 import Foundation
 
 extension CanvasBoardViewModel {
@@ -7,6 +8,7 @@ extension CanvasBoardViewModel {
         selection: CanvasSelectionModel
     ) -> UUID {
         canvasTool = .select
+        dismissCanvasContextPanel()
         stopAllInlineEditing()
 
         let id = UUID()
@@ -58,6 +60,55 @@ extension CanvasBoardViewModel {
             kind: .shape,
             x: origin.x,
             y: origin.y,
+            width: w,
+            height: h,
+            zIndex: nextZIndex(),
+            shapePayload: payload
+        )
+        applyBoardMutation { state in
+            state.elements.append(record)
+        }
+        selection.selectOnly(id)
+        return id
+    }
+
+    /// Drag-to-define frame while `canvasTool == .placeShape`.
+    @discardableResult
+    func insertShapeInCanvasRect(
+        kind: FlowDeskShapeKind,
+        rect: CGRect,
+        selection: CanvasSelectionModel
+    ) -> UUID {
+        stopAllInlineEditing()
+        let std = rect.standardized
+        let (defW, defH) = Self.defaultSize(for: kind)
+        let minW = CanvasShapeLayout.minWidth
+        let minH = CanvasShapeLayout.minHeight
+        let canvasMax: Double = 4000
+        var x = Double(std.minX)
+        var y = Double(std.minY)
+        var w = Double(std.width)
+        var h = Double(std.height)
+        switch kind {
+        case .line, .arrow:
+            w = max(defW * 0.35, w, minW)
+            h = max(defH, h, minH)
+        default:
+            w = max(minW, w)
+            h = max(minH, h)
+        }
+        x = max(0, min(x, canvasMax - w))
+        y = max(0, min(y, canvasMax - h))
+        w = min(w, canvasMax - x)
+        h = min(h, canvasMax - y)
+        let id = UUID()
+        var payload = ShapePayload.default
+        payload.kind = kind
+        let record = CanvasElementRecord(
+            id: id,
+            kind: .shape,
+            x: x,
+            y: y,
             width: w,
             height: h,
             zIndex: nextZIndex(),

@@ -78,7 +78,7 @@ struct FlowDeskAppearanceTokens: Equatable {
 
     private static let warmPaperLight = FlowDeskAppearanceTokens(
         workspaceBackground: Color(nsColor: NSColor(red: 0.972, green: 0.962, blue: 0.949, alpha: 1)),
-        gridLineOpacity: 0.034,
+        gridLineOpacity: 0.028,
         canvasGridInk: Color(nsColor: NSColor(red: 0.36, green: 0.30, blue: 0.25, alpha: 1)),
         homeCardFill: Color(nsColor: NSColor(red: 0.99, green: 0.985, blue: 0.975, alpha: 1)),
         homeCardMaterial: .none,
@@ -110,7 +110,7 @@ struct FlowDeskAppearanceTokens: Equatable {
 
     private static let warmPaperDark = FlowDeskAppearanceTokens(
         workspaceBackground: Color(nsColor: NSColor(red: 0.14, green: 0.12, blue: 0.11, alpha: 1)),
-        gridLineOpacity: 0.072,
+        gridLineOpacity: 0.062,
         canvasGridInk: Color(nsColor: NSColor(red: 0.58, green: 0.53, blue: 0.49, alpha: 1)),
         homeCardFill: Color(nsColor: NSColor(red: 0.2, green: 0.17, blue: 0.16, alpha: 1)),
         homeCardMaterial: .none,

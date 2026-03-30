@@ -6,25 +6,29 @@ struct CanvasSelectionToolbarView: View {
     let elementID: UUID
     let elementKind: CanvasElementKind
     @Bindable var boardViewModel: CanvasBoardViewModel
+    @Bindable var selection: CanvasSelectionModel
 
     @Environment(\.flowDeskTokens) private var tokens
     @Environment(\.colorScheme) private var colorScheme
 
     var body: some View {
-        Group {
-            switch elementKind {
-            case .textBlock:
-                textBlockContent
-            case .stickyNote:
-                stickyContent
-            case .shape:
-                shapeContent
-            default:
-                EmptyView()
+        VStack(alignment: .leading, spacing: 5) {
+            quickActionsRow
+            Group {
+                switch elementKind {
+                case .textBlock:
+                    textBlockContent
+                case .stickyNote:
+                    stickyContent
+                case .shape:
+                    shapeContent
+                default:
+                    EmptyView()
+                }
             }
         }
-        .padding(.horizontal, FlowDeskLayout.floatingPanelContentPadding)
-        .padding(.vertical, 6)
+        .padding(.horizontal, 7)
+        .padding(.vertical, 4)
         .background {
             ZStack {
                 RoundedRectangle(cornerRadius: FlowDeskLayout.floatingPanelCornerRadius, style: .continuous)
@@ -56,6 +60,32 @@ struct CanvasSelectionToolbarView: View {
         .fixedSize()
     }
 
+    private var quickActionsRow: some View {
+        HStack(spacing: 6) {
+            Button {
+                boardViewModel.duplicateElement(id: elementID, selection: selection)
+            } label: {
+                Image(systemName: "plus.square.on.square")
+                    .font(.caption.weight(.semibold))
+            }
+            .buttonStyle(.plain)
+            .help("Duplicate (⌘D)")
+
+            Button(role: .destructive) {
+                boardViewModel.deleteElements(ids: [elementID], selection: selection)
+            } label: {
+                Image(systemName: "trash")
+                    .font(.caption.weight(.semibold))
+            }
+            .buttonStyle(.plain)
+            .help("Delete")
+
+            Rectangle()
+                .fill(Color.primary.opacity(0.12))
+                .frame(width: 1, height: 16)
+        }
+    }
+
     // MARK: - Text block
 
     @ViewBuilder
@@ -63,21 +93,30 @@ struct CanvasSelectionToolbarView: View {
         if let payload = currentTextPayload() {
             let fontSize = boardViewModel.boardState.elements.first(where: { $0.id == elementID })?
                 .resolvedTextPayload().fontSize ?? payload.fontSize
-            HStack(spacing: 10) {
+            HStack(spacing: 6) {
+                ColorPicker(
+                    "",
+                    selection: textColorBinding(fallback: payload.color),
+                    supportsOpacity: true
+                )
+                .labelsHidden()
+                .frame(width: 24, height: 22)
+                .help("Text color")
+
                 Stepper(value: textFontSizeBinding(fallback: payload.fontSize), in: 10 ... 72, step: 1) {
-                    Text("\(Int(fontSize)) pt")
-                        .font(.caption.weight(.medium))
+                    Text("\(Int(fontSize))")
+                        .font(.caption2.weight(.semibold))
                         .monospacedDigit()
-                        .frame(minWidth: 36, alignment: .trailing)
+                        .frame(minWidth: 28, alignment: .trailing)
                 }
-                .controlSize(.small)
+                .controlSize(.mini)
 
                 Toggle(isOn: textBoldBinding(fallback: payload.isBold)) {
                     Image(systemName: "bold")
-                        .font(.body.weight(.semibold))
+                        .font(.caption.weight(.semibold))
                 }
                 .toggleStyle(.button)
-                .controlSize(.small)
+                .controlSize(.mini)
             }
             .labelsHidden()
         }
@@ -114,12 +153,25 @@ struct CanvasSelectionToolbarView: View {
         )
     }
 
+    private func textColorBinding(fallback: CanvasRGBAColor) -> Binding<Color> {
+        Binding(
+            get: {
+                boardViewModel.boardState.elements.first { $0.id == elementID }?.resolvedTextPayload().color
+                    .swiftUIColor ?? fallback.swiftUIColor
+            },
+            set: { newColor in
+                let rgba = Self.rgba(from: newColor)
+                boardViewModel.updateTextPayload(id: elementID) { $0.color = rgba }
+            }
+        )
+    }
+
     // MARK: - Sticky
 
     @ViewBuilder
     private var stickyContent: some View {
         if let payload = currentStickyPayload() {
-            HStack(spacing: 6) {
+            HStack(spacing: 4) {
                 ForEach(StickyNoteColorPreset.allCases, id: \.self) { preset in
                     let selected = StickyNoteColorPreset.nearest(to: payload.backgroundColor) == preset
                     Button {
@@ -129,10 +181,10 @@ struct CanvasSelectionToolbarView: View {
                     } label: {
                         Circle()
                             .fill(preset.rgba.swiftUIColor)
-                            .frame(width: 22, height: 22)
+                            .frame(width: 18, height: 18)
                             .overlay {
                                 Circle()
-                                    .strokeBorder(Color.accentColor, lineWidth: selected ? 2 : 0)
+                                    .strokeBorder(Color.accentColor, lineWidth: selected ? 1.5 : 0)
                             }
                     }
                     .buttonStyle(.plain)
@@ -154,7 +206,7 @@ struct CanvasSelectionToolbarView: View {
     @ViewBuilder
     private var shapeContent: some View {
         if let payload = currentShapePayload() {
-            HStack(spacing: 10) {
+            HStack(spacing: 6) {
                 if payload.supportsFill {
                     ColorPicker(
                         "",
@@ -162,16 +214,16 @@ struct CanvasSelectionToolbarView: View {
                         supportsOpacity: true
                     )
                     .labelsHidden()
-                    .frame(width: 28, height: 24)
+                    .frame(width: 24, height: 22)
                     .help("Fill")
                 }
 
                 Toggle(isOn: shapeStrokeVisibleBinding(fallback: payload.lineWidth)) {
                     Image(systemName: "circle.dashed")
-                        .font(.body.weight(.medium))
+                        .font(.caption.weight(.medium))
                 }
                 .toggleStyle(.button)
-                .controlSize(.small)
+                .controlSize(.mini)
                 .help("Outline on/off")
 
                 ColorPicker(
@@ -180,7 +232,7 @@ struct CanvasSelectionToolbarView: View {
                     supportsOpacity: true
                 )
                 .labelsHidden()
-                .frame(width: 28, height: 24)
+                .frame(width: 24, height: 22)
                 .help("Stroke")
             }
         }

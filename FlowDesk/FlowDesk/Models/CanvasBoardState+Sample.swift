@@ -14,7 +14,7 @@ extension CanvasBoardState {
                     height: 140,
                     zIndex: 10,
                     textBlock: TextBlockPayload(
-                        text: "Welcome to FlowDesk. Double-click text to edit. Drag empty space to pan; pinch on a trackpad to zoom. Add items with the tools on the left; use Export in the toolbar for PNG or PDF.",
+                        text: "Welcome to Cerebra. Double-click text to edit. Drag empty space to pan; pinch on a trackpad to zoom. Add items with the tools on the left; use Export in the toolbar for PNG or PDF.",
                         fontSize: 17,
                         isBold: true,
                         color: .defaultText,
@@ -29,7 +29,7 @@ extension CanvasBoardState {
                     height: 200,
                     zIndex: 20,
                     stickyNote: StickyNotePayload(
-                        text: "Ideas live here — drag, resize, or pick a paper color in the inspector.",
+                        text: "Capture side thoughts here—drag, resize, or change paper color in the inspector.",
                         backgroundColor: StickyNoteColorPreset.blush.rgba,
                         fontSize: 14,
                         isBold: false,

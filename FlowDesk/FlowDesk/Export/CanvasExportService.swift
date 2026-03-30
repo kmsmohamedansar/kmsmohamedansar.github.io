@@ -72,7 +72,7 @@ enum CanvasExportService {
         let panel = NSSavePanel()
         panel.canCreateDirectories = true
         panel.isExtensionHidden = false
-        panel.title = format == .png ? "Export Board as PNG" : "Export Board as PDF"
+        panel.title = format == .png ? "Export as PNG" : "Export as PDF"
         panel.nameFieldStringValue = defaultName
         panel.allowedContentTypes = [format.utType]
         panel.allowsOtherFileTypes = false

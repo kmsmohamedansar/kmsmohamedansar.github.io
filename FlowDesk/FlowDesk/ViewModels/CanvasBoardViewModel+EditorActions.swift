@@ -23,26 +23,21 @@ extension CanvasBoardViewModel {
 // MARK: - Duplicate
 
 extension CanvasBoardViewModel {
-    /// Copies one element (any kind); new id, offset frame, top z-index, selects the copy.
+    /// Copies one element (any kind except connector alone); new id, offset frame, top z-index, selects the copy.
     func duplicateElement(id: UUID, selection: CanvasSelectionModel) {
         guard let el = boardState.elements.first(where: { $0.id == id }) else { return }
+        guard el.kind != .connector else { return }
         stopAllInlineEditing()
         let newId = UUID()
         let z = nextZIndex()
-        let copy = CanvasElementRecord(
-            id: newId,
-            kind: el.kind,
-            x: el.x + Self.boardCascadeOffset,
-            y: el.y + Self.boardCascadeOffset,
-            width: el.width,
-            height: el.height,
+        let o = Self.boardCascadeOffset
+        guard let copy = el.boardDuplicatedCopy(
+            newId: newId,
+            deltaX: o,
+            deltaY: o,
             zIndex: z,
-            textBlock: el.textBlock,
-            stickyNote: el.stickyNote,
-            shapePayload: el.shapePayload,
-            strokePayload: el.strokePayload,
-            chartPayload: el.chartPayload
-        )
+            endpointIDRemap: nil
+        ) else { return }
         applyBoardMutation { state in
             state.elements.append(copy)
         }
@@ -65,28 +60,25 @@ extension CanvasBoardViewModel {
         }
         stopAllInlineEditing()
         let stagger: Double = 12
+        var idRemap: [UUID: UUID] = [:]
+        for el in ordered {
+            idRemap[el.id] = UUID()
+        }
         var newIDs: [UUID] = []
         applyBoardMutation { state in
             var maxZ = state.elements.map(\.zIndex).max() ?? 0
             for (i, el) in ordered.enumerated() {
+                guard let newId = idRemap[el.id] else { continue }
                 maxZ += 1
-                let newId = UUID()
                 let dx = Self.boardCascadeOffset + Double(i) * stagger
                 let dy = Self.boardCascadeOffset + Double(i) * stagger
-                let copy = CanvasElementRecord(
-                    id: newId,
-                    kind: el.kind,
-                    x: el.x + dx,
-                    y: el.y + dy,
-                    width: el.width,
-                    height: el.height,
+                guard let copy = el.boardDuplicatedCopy(
+                    newId: newId,
+                    deltaX: dx,
+                    deltaY: dy,
                     zIndex: maxZ,
-                    textBlock: el.textBlock,
-                    stickyNote: el.stickyNote,
-                    shapePayload: el.shapePayload,
-                    strokePayload: el.strokePayload,
-                    chartPayload: el.chartPayload
-                )
+                    endpointIDRemap: idRemap
+                ) else { continue }
                 state.elements.append(copy)
                 newIDs.append(newId)
             }

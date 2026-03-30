@@ -43,6 +43,18 @@ enum FlowDeskTheme {
         )
     }
 
+    /// Gentle brightening at the canvas center so the board reads as a lit “space” (Figma/Miro-like depth).
+    static func canvasBoardCenterGlow(colorScheme: ColorScheme) -> RadialGradient {
+        RadialGradient(
+            colors: colorScheme == .dark
+                ? [Color.white.opacity(0.04), Color.clear]
+                : [Color.white.opacity(0.22), Color.clear],
+            center: .center,
+            startRadius: 80,
+            endRadius: 1400
+        )
+    }
+
     /// Home dashboard: gentle warmth from the top so the first screen feels composed.
     static func homeAtmosphereWash(colorScheme: ColorScheme) -> LinearGradient {
         LinearGradient(
@@ -53,6 +65,11 @@ enum FlowDeskTheme {
             endPoint: UnitPoint(x: 0.5, y: 0.44)
         )
     }
+
+    // MARK: - Canvas readability (dense boards)
+
+    /// Elements outside the selection + one connector hop use this opacity (see `CanvasBoardView`).
+    static let canvasBoardReadabilityDeemphasisOpacity: CGFloat = 0.86
 
     // MARK: - Canvas workspace (export / previews only)
 
@@ -134,16 +151,16 @@ struct FlowDeskInspectorSectionHeader: View {
 struct FlowDeskWordmark: View {
     var body: some View {
         HStack(alignment: .firstTextBaseline, spacing: 2) {
-            Text("Flow")
+            Text("Cere")
                 .font(.system(size: 21, weight: .semibold, design: .rounded))
                 .tracking(-0.35)
-            Text("Desk")
+            Text("bra")
                 .font(.system(size: 21, weight: .medium, design: .rounded))
                 .tracking(-0.22)
                 .foregroundStyle(.secondary)
         }
         .foregroundStyle(.primary)
-        .accessibilityLabel("FlowDesk")
+        .accessibilityLabel("Cerebra")
     }
 }
 
@@ -202,17 +219,18 @@ struct FlowDeskCanvasWorkspaceHint: View {
     @Environment(\.colorScheme) private var colorScheme
 
     var body: some View {
-        VStack(spacing: 18) {
-            FlowDeskSheetsStackMark(size: 92)
-            VStack(spacing: 6) {
-                Text("Open workspace")
-                    .font(.system(size: 13, weight: .semibold, design: .rounded))
-                    .foregroundStyle(Color.primary.opacity(colorScheme == .dark ? 0.52 : 0.4))
-                Text("Use the tools on the left to draw, add text, stickies, or shapes.")
-                    .font(.system(size: 12, weight: .regular, design: .rounded))
+        VStack(spacing: 20) {
+            FlowDeskSheetsStackMark(size: 88)
+            VStack(spacing: 8) {
+                Text("What do you want to explore?")
+                    .font(.system(size: 15, weight: .semibold, design: .rounded))
+                    .foregroundStyle(Color.primary.opacity(colorScheme == .dark ? 0.55 : 0.42))
                     .multilineTextAlignment(.center)
-                    .foregroundStyle(Color.primary.opacity(colorScheme == .dark ? 0.38 : 0.3))
-                    .frame(maxWidth: 248)
+                Text("A calm canvas for solo thinking—use the tools on the left to write, sketch, or place shapes.")
+                    .font(.system(size: 12.5, weight: .regular, design: .rounded))
+                    .multilineTextAlignment(.center)
+                    .foregroundStyle(Color.primary.opacity(colorScheme == .dark ? 0.38 : 0.32))
+                    .frame(maxWidth: 280)
                     .fixedSize(horizontal: false, vertical: true)
             }
         }

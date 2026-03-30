@@ -21,7 +21,7 @@ struct FlowDeskAppearanceSettingsView: View {
                 }
                 .pickerStyle(.inline)
             } header: {
-                Text("FlowDesk")
+                Text("Cerebra")
             } footer: {
                 Text("Appearance follows the system, or locks to light or dark. Visual style adjusts surfaces, borders, and canvas tone.")
                     .font(.caption)

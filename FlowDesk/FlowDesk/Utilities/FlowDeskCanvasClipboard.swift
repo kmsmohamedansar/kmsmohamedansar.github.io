@@ -1,7 +1,7 @@
 import AppKit
 import Foundation
 
-/// JSON on `NSPasteboard` for FlowDesk canvas elements (cross-session within the app; v1 is not a public interchange format).
+/// JSON on `NSPasteboard` for Cerebra canvas elements (cross-session within the app; v1 is not a public interchange format).
 enum FlowDeskCanvasClipboard {
     static let pasteboardType = NSPasteboard.PasteboardType("com.flowdesk.board-elements-v1")
 

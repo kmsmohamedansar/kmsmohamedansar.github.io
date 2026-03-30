@@ -54,6 +54,7 @@ enum CanvasElementKind: String, Codable, Sendable {
     case stroke
     case shape
     case chart
+    case connector
 }
 
 struct CanvasElementRecord: Codable, Identifiable, Equatable, Sendable {
@@ -75,6 +76,8 @@ struct CanvasElementRecord: Codable, Identifiable, Equatable, Sendable {
     var strokePayload: StrokePayload?
     /// Populated when `kind == .chart`; omitted otherwise.
     var chartPayload: ChartPayload?
+    /// Populated when `kind == .connector`; omitted otherwise.
+    var connectorPayload: ConnectorPayload?
 
     init(
         id: UUID = UUID(),
@@ -88,7 +91,8 @@ struct CanvasElementRecord: Codable, Identifiable, Equatable, Sendable {
         stickyNote: StickyNotePayload? = nil,
         shapePayload: ShapePayload? = nil,
         strokePayload: StrokePayload? = nil,
-        chartPayload: ChartPayload? = nil
+        chartPayload: ChartPayload? = nil,
+        connectorPayload: ConnectorPayload? = nil
     ) {
         self.id = id
         self.kind = kind
@@ -102,6 +106,7 @@ struct CanvasElementRecord: Codable, Identifiable, Equatable, Sendable {
         self.shapePayload = shapePayload
         self.strokePayload = strokePayload
         self.chartPayload = chartPayload
+        self.connectorPayload = connectorPayload
     }
 }
 
@@ -131,6 +136,62 @@ extension CanvasElementRecord {
     func resolvedChartPayload() -> ChartPayload {
         guard kind == .chart else { return .default }
         return chartPayload ?? .default
+    }
+
+    func resolvedConnectorPayload() -> ConnectorPayload? {
+        guard kind == .connector else { return nil }
+        return connectorPayload
+    }
+
+    // MARK: - Duplicate / paste (connectors)
+
+    /// Creates a copy for board duplicate or clipboard paste.
+    ///
+    /// **Connectors:** Returned only when `endpointIDRemap` maps **both** payload endpoints to new ids
+    /// (same batch duplicate / paste). Otherwise `nil` — links are not shallow-copied onto the same nodes.
+    /// **Other kinds:** Always returns a copy; `endpointIDRemap` is ignored.
+    func boardDuplicatedCopy(
+        newId: UUID,
+        deltaX: Double,
+        deltaY: Double,
+        zIndex: Int,
+        endpointIDRemap: [UUID: UUID]?
+    ) -> CanvasElementRecord? {
+        if kind == .connector {
+            guard let payload = connectorPayload,
+                  let remap = endpointIDRemap,
+                  let newStart = remap[payload.startElementID],
+                  let newEnd = remap[payload.endElementID]
+            else { return nil }
+            var p = payload
+            p.startElementID = newStart
+            p.endElementID = newEnd
+            return CanvasElementRecord(
+                id: newId,
+                kind: .connector,
+                x: x + deltaX,
+                y: y + deltaY,
+                width: width,
+                height: height,
+                zIndex: zIndex,
+                connectorPayload: p
+            )
+        }
+        return CanvasElementRecord(
+            id: newId,
+            kind: kind,
+            x: x + deltaX,
+            y: y + deltaY,
+            width: width,
+            height: height,
+            zIndex: zIndex,
+            textBlock: textBlock,
+            stickyNote: stickyNote,
+            shapePayload: shapePayload,
+            strokePayload: strokePayload,
+            chartPayload: chartPayload,
+            connectorPayload: nil
+        )
     }
 }
 

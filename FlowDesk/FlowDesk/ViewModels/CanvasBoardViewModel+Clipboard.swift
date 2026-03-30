@@ -27,26 +27,23 @@ extension CanvasBoardViewModel {
         let step = CanvasBoardViewModel.boardCascadeOffset * Double(clipboardPasteGeneration + 1)
         clipboardPasteGeneration += 1
 
+        var idRemap: [UUID: UUID] = [:]
+        for el in elements {
+            idRemap[el.id] = UUID()
+        }
         var newIDs: [UUID] = []
         applyBoardMutation { state in
             var z = state.elements.map(\.zIndex).max() ?? 0
             for el in elements {
+                guard let newId = idRemap[el.id] else { continue }
                 z += 1
-                let newId = UUID()
-                let copy = CanvasElementRecord(
-                    id: newId,
-                    kind: el.kind,
-                    x: el.x + step,
-                    y: el.y + step,
-                    width: el.width,
-                    height: el.height,
+                guard let copy = el.boardDuplicatedCopy(
+                    newId: newId,
+                    deltaX: step,
+                    deltaY: step,
                     zIndex: z,
-                    textBlock: el.textBlock,
-                    stickyNote: el.stickyNote,
-                    shapePayload: el.shapePayload,
-                    strokePayload: el.strokePayload,
-                    chartPayload: el.chartPayload
-                )
+                    endpointIDRemap: idRemap
+                ) else { continue }
                 state.elements.append(copy)
                 newIDs.append(newId)
             }

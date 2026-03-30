@@ -10,6 +10,10 @@ struct CanvasElementEditorContextMenuItems: View {
         selection.selectedElementIDs.count > 1 && selection.isSelected(elementID)
     }
 
+    private var contextElementKind: CanvasElementKind? {
+        boardViewModel.boardState.elements.first(where: { $0.id == elementID })?.kind
+    }
+
     var body: some View {
         Button("Duplicate") {
             if duplicateAllIfInMultiSelect {
@@ -33,6 +37,13 @@ struct CanvasElementEditorContextMenuItems: View {
             .disabled(!boardViewModel.canSendElementBackward(id: elementID))
             Button("Send to Back") {
                 boardViewModel.sendElementToBack(id: elementID)
+            }
+        }
+
+        if contextElementKind == .connector {
+            Button("Edit Label…") {
+                selection.selectOnly(elementID)
+                boardViewModel.beginEditingConnectorLabel(id: elementID)
             }
         }
 

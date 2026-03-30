@@ -134,6 +134,7 @@ struct InspectorPanelView: View {
         case .shape: return "Shape"
         case .stroke: return "Drawing"
         case .chart: return "Chart"
+        case .connector: return "Connector"
         @unknown default: return "Element"
         }
     }

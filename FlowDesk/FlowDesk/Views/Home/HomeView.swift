@@ -55,13 +55,13 @@ struct HomeView: View {
                     .allowsHitTesting(false)
             }
         }
-        .navigationTitle("FlowDesk")
+        .navigationTitle("Cerebra")
     }
 
     private var pageChrome: some View {
         VStack(alignment: .leading, spacing: FlowDeskLayout.homeHeadlineToBodySpacing) {
             FlowDeskWordmark()
-            Text("Space for ideas that need room")
+            Text("A calm canvas for solo thinking")
                 .font(FlowDeskTypography.pageSubtitle)
                 .foregroundStyle(.secondary)
                 .fixedSize(horizontal: false, vertical: true)
@@ -94,7 +94,7 @@ struct HomeView: View {
                     .font(FlowDeskTypography.homeHeroTitle)
                     .foregroundStyle(.primary)
 
-                Text("Each board is one infinite canvas—write, sketch, and arrange freely. Pick a starter below; your work saves automatically.")
+                Text("Each board is one infinite surface for thinking alone. Pick a starter below; your work saves automatically.")
                     .font(FlowDeskTypography.homeIntroBody)
                     .foregroundStyle(.secondary)
                     .lineSpacing(3)

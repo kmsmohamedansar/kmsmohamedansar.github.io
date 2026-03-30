@@ -75,7 +75,7 @@ enum FlowDeskLayout {
 
     // MARK: - Canvas
 
-    static let gridLineWidth: CGFloat = 0.4
+    static let gridLineWidth: CGFloat = 0.32
     /// Every Nth grid interval reads slightly stronger (spatial hierarchy).
     static let gridMajorLineStride: Int = 5
 
@@ -84,8 +84,18 @@ enum FlowDeskLayout {
     static let floatingPanelCornerRadius: CGFloat = 16
     static let floatingPanelContentPadding: CGFloat = 8
 
-    /// Keep the selection toolbar clear of the left floating palette (view space).
-    static let canvasSelectionToolbarLeadingGutter: CGFloat = 88
+    /// Primary tool rail (Miro-style); icons sit in this width including padding.
+    static let canvasToolRailWidth: CGFloat = 48
+
+    /// `CanvasBoardView` inner board layer (logical canvas coords) for `DragGesture(coordinateSpace:)`.
+    static let canvasInnerCoordinateSpaceName = "flowdesk.canvas.inner"
+    /// Progressive context panel beside the rail.
+    static let canvasContextPanelWidth: CGFloat = 268
+    static let canvasChromeLeadingPadding: CGFloat = 10
+    static let canvasChromeInterColumnSpacing: CGFloat = 8
+
+    /// Tool rail icon hit target (width × height).
+    static let canvasRailIconSize: CGFloat = 36
 
     // MARK: - Shared chrome
 

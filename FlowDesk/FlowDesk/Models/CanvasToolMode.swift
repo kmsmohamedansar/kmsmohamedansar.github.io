@@ -4,11 +4,11 @@ import Foundation
 enum CanvasToolMode: String, Codable, Sendable, Hashable {
     case select
     case draw
-    /// Click empty canvas to place a text block (stays active for repeated placement).
+    /// Click to place a text block, or drag to define its frame (stays active for repeated placement).
     case placeText
-    /// Click empty canvas to place a sticky note.
+    /// Click to place a sticky, or drag to define its area.
     case placeSticky
-    /// Click empty canvas to place `CanvasBoardViewModel.placeShapeKind`.
+    /// Drag on the canvas to size a shape (or click for default size) using `CanvasBoardViewModel.placeShapeKind`.
     case placeShape
 
     var isPlacementMode: Bool {
@@ -17,4 +17,11 @@ enum CanvasToolMode: String, Codable, Sendable, Hashable {
         case .select, .draw: return false
         }
     }
+}
+
+/// Lightweight context UI beside the primary tool rail (progressive disclosure).
+enum CanvasContextPanel: String, Equatable {
+    case templates
+    case shapes
+    case drawStroke
 }

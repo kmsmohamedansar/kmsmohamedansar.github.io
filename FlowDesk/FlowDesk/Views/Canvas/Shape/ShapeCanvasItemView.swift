@@ -22,6 +22,9 @@ struct ShapeCanvasItemView: View {
     }
 
     private var composedMoveOffset: CGSize {
+        if boardViewModel.optionDuplicateSourceElementID == element.id {
+            return .zero
+        }
         if boardViewModel.groupMoveLeaderID == element.id {
             return moveDragTranslation
         }
@@ -37,17 +40,28 @@ struct ShapeCanvasItemView: View {
         ZStack {
             ShapeCanvasShapeView(payload: payload)
 
-            if isSelected {
-                RoundedRectangle(cornerRadius: chromeCorner, style: .continuous)
-                    .strokeBorder(tokens.selectionStrokeColor, lineWidth: tokens.selectionStrokeWidth)
-                    .allowsHitTesting(false)
-            }
+            RoundedRectangle(cornerRadius: chromeCorner, style: .continuous)
+                .strokeBorder(tokens.selectionStrokeColor, lineWidth: tokens.selectionStrokeWidth)
+                .opacity(isSelected ? 1 : 0)
+                .allowsHitTesting(false)
         }
+        .animation(.easeOut(duration: 0.18), value: isSelected)
         .overlay(alignment: .bottomTrailing) {
             if isSelected, !selection.isMultiSelection {
                 CanvasTextBlockResizeHandle()
                     .padding(7)
                     .gesture(resizeGesture)
+            }
+        }
+        .overlay {
+            if boardViewModel.canvasTool == .select, isSelected, !selection.isMultiSelection {
+                ShapeConnectorHandlesOverlay(
+                    element: element,
+                    boardViewModel: boardViewModel,
+                    selection: selection
+                )
+                .allowsHitTesting(true)
+                .help("Drag a blue dot to connect to another object (⇧ straight line)")
             }
         }
         .offset(composedMoveOffset)
@@ -68,38 +82,68 @@ struct ShapeCanvasItemView: View {
     }
 
     private var moveGesture: some Gesture {
-        DragGesture(minimumDistance: 3)
+        DragGesture(minimumDistance: 1)
             .onChanged { value in
                 if moveDragStartCanvasOrigin == nil {
-                    moveDragStartCanvasOrigin = CGPoint(x: element.x, y: element.y)
-                    boardViewModel.configureGroupMoveIfNeeded(leaderId: element.id, selection: selection)
+                    if boardViewModel.beginOptionDuplicateIfNeeded(fromElementId: element.id, selection: selection) {
+                        let subject = boardViewModel.moveGestureSubjectElementId(viewElementId: element.id)
+                        if let rec = boardViewModel.boardState.elements.first(where: { $0.id == subject }) {
+                            moveDragStartCanvasOrigin = CGPoint(x: CGFloat(rec.x), y: CGFloat(rec.y))
+                        }
+                    } else {
+                        moveDragStartCanvasOrigin = CGPoint(x: element.x, y: element.y)
+                        boardViewModel.configureGroupMoveIfNeeded(leaderId: element.id, selection: selection)
+                    }
                 }
-                let start = moveDragStartCanvasOrigin ?? CGPoint(x: element.x, y: element.y)
+                let subjectId = boardViewModel.moveGestureSubjectElementId(viewElementId: element.id)
+                guard let subjectRec = boardViewModel.boardState.elements.first(where: { $0.id == subjectId }) else { return }
+                let start = moveDragStartCanvasOrigin ?? CGPoint(x: subjectRec.x, y: subjectRec.y)
                 let rawX = start.x + value.translation.width
                 let rawY = start.y + value.translation.height
-                let exclude = boardViewModel.snapExclusionsForFramedMove(leaderId: element.id, selection: selection)
+                let exclude = boardViewModel.snapExclusionsForFramedMove(leaderId: subjectId, selection: selection)
                 let (snapped, guides) = boardViewModel.snapMoveFrame(
                     rawOrigin: CGPoint(x: rawX, y: rawY),
-                    size: CGSize(width: element.width, height: element.height),
-                    excludingElementIds: exclude
+                    size: CGSize(width: subjectRec.width, height: subjectRec.height),
+                    excludingElementIds: exclude,
+                    movingElementId: subjectId
                 )
-                moveDragTranslation = CGSize(
-                    width: snapped.x - element.x,
-                    height: snapped.y - element.y
-                )
+                if boardViewModel.optionDuplicateSourceElementID == element.id {
+                    boardViewModel.setShapeFrame(
+                        id: subjectId,
+                        x: Double(snapped.x),
+                        y: Double(snapped.y),
+                        width: subjectRec.width,
+                        height: subjectRec.height
+                    )
+                    moveDragTranslation = .zero
+                } else {
+                    moveDragTranslation = CGSize(
+                        width: snapped.x - CGFloat(subjectRec.x),
+                        height: snapped.y - CGFloat(subjectRec.y)
+                    )
+                }
                 boardViewModel.syncGroupMovePreview(leaderId: element.id, translation: moveDragTranslation)
                 boardViewModel.updateAlignmentGuides(guides)
             }
             .onEnded { value in
                 boardViewModel.clearAlignmentGuides()
-                let start = moveDragStartCanvasOrigin ?? CGPoint(x: element.x, y: element.y)
+                let subjectId = boardViewModel.moveGestureSubjectElementId(viewElementId: element.id)
+                guard let subjectRec = boardViewModel.boardState.elements.first(where: { $0.id == subjectId }) else {
+                    boardViewModel.resetGroupMoveState()
+                    boardViewModel.clearOptionDuplicateDragState()
+                    moveDragTranslation = .zero
+                    moveDragStartCanvasOrigin = nil
+                    return
+                }
+                let start = moveDragStartCanvasOrigin ?? CGPoint(x: subjectRec.x, y: subjectRec.y)
                 let rawX = start.x + value.translation.width
                 let rawY = start.y + value.translation.height
-                let exclude = boardViewModel.snapExclusionsForFramedMove(leaderId: element.id, selection: selection)
+                let exclude = boardViewModel.snapExclusionsForFramedMove(leaderId: subjectId, selection: selection)
                 let (snapped, _) = boardViewModel.snapMoveFrame(
                     rawOrigin: CGPoint(x: rawX, y: rawY),
-                    size: CGSize(width: element.width, height: element.height),
-                    excludingElementIds: exclude
+                    size: CGSize(width: subjectRec.width, height: subjectRec.height),
+                    excludingElementIds: exclude,
+                    movingElementId: subjectId
                 )
                 let participants = boardViewModel.groupMoveParticipantIDs
                 if boardViewModel.groupMoveLeaderID == element.id,
@@ -109,14 +153,15 @@ struct ShapeCanvasItemView: View {
                     boardViewModel.applyFramedGroupPositionDelta(ids: participants, dx: dx, dy: dy)
                 } else {
                     boardViewModel.setShapeFrame(
-                        id: element.id,
+                        id: subjectId,
                         x: Double(snapped.x),
                         y: Double(snapped.y),
-                        width: element.width,
-                        height: element.height
+                        width: subjectRec.width,
+                        height: subjectRec.height
                     )
                 }
                 boardViewModel.resetGroupMoveState()
+                boardViewModel.clearOptionDuplicateDragState()
                 moveDragTranslation = .zero
                 moveDragStartCanvasOrigin = nil
             }

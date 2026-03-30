@@ -1,129 +1,368 @@
 import SwiftUI
 
-/// Left-edge floating tools (canvas-first); keeps Edit/Export in the window toolbar.
-struct CanvasFloatingToolPalette: View {
+/// Miro-style left rail + progressive context panels (Figma/Miro “canvas is king” pattern).
+struct CerebraCanvasChromeColumn: View {
     @Environment(\.flowDeskTokens) private var tokens
-    @Bindable var boardViewModel: CanvasBoardViewModel
-
     @Environment(\.colorScheme) private var colorScheme
 
-    private let iconFont = Font.system(size: 14.5, weight: .medium)
+    @Bindable var boardViewModel: CanvasBoardViewModel
+    @Bindable var selection: CanvasSelectionModel
+
+    private let iconFont = Font.system(size: 15, weight: .medium)
+
+    private var chromeMotionIdentity: String {
+        let p = boardViewModel.canvasContextPanel?.rawValue ?? "nil"
+        return "\(p)-\(boardViewModel.canvasTool.rawValue)"
+    }
 
     var body: some View {
-        VStack(spacing: 6) {
-            paletteButton(mode: .select)
-            paletteButton(mode: .draw)
-            Divider()
-                .opacity(0.18)
-                .padding(.vertical, 1)
-            paletteButton(mode: .placeSticky)
-            paletteButton(mode: .placeText)
-            shapeMenuPaletteButton
-        }
-        .padding(FlowDeskLayout.floatingPanelContentPadding)
-        .background {
-            ZStack {
-                RoundedRectangle(cornerRadius: FlowDeskLayout.floatingPanelCornerRadius, style: .continuous)
-                    .fill(.ultraThinMaterial)
-                RoundedRectangle(cornerRadius: FlowDeskLayout.floatingPanelCornerRadius, style: .continuous)
-                    .fill(tokens.homeCardFill.opacity(colorScheme == .dark ? 0.08 : 0.12))
+        HStack(alignment: .top, spacing: FlowDeskLayout.canvasChromeInterColumnSpacing) {
+            toolRail
+                .frame(width: FlowDeskLayout.canvasToolRailWidth)
+
+            if let panel = boardViewModel.canvasContextPanel {
+                contextPanel(kind: panel)
+                    .frame(width: FlowDeskLayout.canvasContextPanelWidth, alignment: .leading)
+                    .transition(
+                        .asymmetric(
+                            insertion: .move(edge: .leading).combined(with: .opacity),
+                            removal: .opacity.combined(with: .scale(scale: 0.98, anchor: .leading))
+                        )
+                    )
             }
-            .shadow(
-                color: Color.black.opacity(FlowDeskTheme.floatingPanelShadowOpacity),
-                radius: FlowDeskTheme.floatingPanelShadowRadius,
-                x: 0,
-                y: FlowDeskTheme.floatingPanelShadowY
-            )
         }
-        .overlay {
-            RoundedRectangle(cornerRadius: FlowDeskLayout.floatingPanelCornerRadius, style: .continuous)
-                .strokeBorder(
-                    LinearGradient(
-                        colors: [
-                            Color.primary.opacity(0.09),
-                            Color.primary.opacity(0.035)
-                        ],
-                        startPoint: .topLeading,
-                        endPoint: .bottomTrailing
-                    ),
-                    lineWidth: 0.75
-                )
-        }
+        .padding(.leading, FlowDeskLayout.canvasChromeLeadingPadding)
+        .frame(maxHeight: .infinity, alignment: .center)
+        .animation(.spring(response: 0.36, dampingFraction: 0.84), value: chromeMotionIdentity)
         .accessibilityElement(children: .contain)
         .accessibilityLabel("Canvas tools")
     }
 
-    private func paletteButton(mode: CanvasToolMode) -> some View {
-        PaletteToolButton(
-            selected: boardViewModel.canvasTool == mode,
-            help: help(for: mode),
-            action: { boardViewModel.canvasTool = mode },
-            iconFont: iconFont,
-            tokens: tokens
-        ) {
-            Image(systemName: symbol(for: mode))
+    // MARK: - Rail
+
+    private var toolRail: some View {
+        VStack(spacing: 5) {
+            railTool(.select, symbol: "cursorarrow", help: "Select and pan — V")
+            railTool(.draw, symbol: "pencil.tip", help: "Draw freehand — P (panel: click tool again)")
+
+            railDivider
+
+            railTool(.placeText, symbol: "textformat", help: "Place text — T")
+            railTool(.placeSticky, symbol: "note.text", help: "Place sticky — N")
+            shapeRailButton
+
+            templatesRailButton
+
+            Spacer(minLength: 12)
+
+            railDivider
+
+            VStack(spacing: 3) {
+                chromeIconButton(
+                    symbol: "arrow.uturn.backward",
+                    help: "Undo",
+                    disabled: !boardViewModel.canUndoBoard,
+                    action: { NotificationCenter.default.post(name: .flowDeskBoardUndo, object: nil) }
+                )
+                chromeIconButton(
+                    symbol: "arrow.uturn.forward",
+                    help: "Redo",
+                    disabled: !boardViewModel.canRedoBoard,
+                    action: { NotificationCenter.default.post(name: .flowDeskBoardRedo, object: nil) }
+                )
+            }
+        }
+        .padding(.vertical, 8)
+        .padding(.horizontal, 6)
+        .background { chromeCardBackground() }
+        .overlay {
+            RoundedRectangle(cornerRadius: FlowDeskLayout.floatingPanelCornerRadius, style: .continuous)
+                .strokeBorder(chromeStrokeGradient, lineWidth: 0.75)
         }
     }
 
-    private var shapeMenuPaletteButton: some View {
-        ShapePaletteMenuButton(
-            selected: boardViewModel.canvasTool == .placeShape,
-            iconFont: iconFont,
+    private var railDivider: some View {
+        Divider()
+            .opacity(0.16)
+            .padding(.vertical, 2)
+    }
+
+    private func railTool(_ mode: CanvasToolMode, symbol: String, help: String) -> some View {
+        ChromeRailIconButton(
+            symbol: symbol,
+            font: iconFont,
+            selected: boardViewModel.canvasTool == mode,
             tokens: tokens,
-            boardViewModel: boardViewModel
+            help: help
+        ) {
+            activateTool(mode)
+        }
+    }
+
+    private func activateTool(_ mode: CanvasToolMode) {
+        boardViewModel.applyCanvasToolSelection(mode, fromKeyboard: false)
+    }
+
+    private var shapeRailButton: some View {
+        let selected = boardViewModel.canvasTool == .placeShape
+        return ChromeRailIconButton(
+            symbol: "square.on.circle",
+            font: iconFont,
+            selected: selected,
+            tokens: tokens,
+            help: "Shapes — R rectangle, S square; drag on canvas or click for default size"
+        ) {
+            activateTool(.placeShape)
+        }
+    }
+
+    private var templatesRailButton: some View {
+        let on = boardViewModel.canvasContextPanel == .templates
+        return ChromeRailIconButton(
+            symbol: "square.grid.2x2",
+            font: iconFont,
+            selected: on,
+            tokens: tokens,
+            help: "Templates — insert starter layouts on this board"
+        ) {
+            boardViewModel.stopAllInlineEditing()
+            boardViewModel.canvasTool = .select
+            boardViewModel.canvasContextPanel = on ? nil : .templates
+        }
+    }
+
+    private func chromeIconButton(symbol: String, help: String, disabled: Bool, action: @escaping () -> Void) -> some View {
+        Button(action: action) {
+            Image(systemName: symbol)
+                .font(.system(size: 13, weight: .medium))
+                .frame(width: FlowDeskLayout.canvasRailIconSize, height: 30)
+                .foregroundStyle(disabled ? Color.primary.opacity(0.25) : Color.primary.opacity(0.72))
+        }
+        .buttonStyle(.plain)
+        .disabled(disabled)
+        .help(help)
+    }
+
+    // MARK: - Context panels
+
+    @ViewBuilder
+    private func contextPanel(kind: CanvasContextPanel) -> some View {
+        VStack(alignment: .leading, spacing: 0) {
+            switch kind {
+            case .templates:
+                templatesPanel
+            case .shapes:
+                shapesPanel
+            case .drawStroke:
+                drawStrokePanel
+            }
+        }
+        .padding(12)
+        .background { chromeCardBackground() }
+        .overlay {
+            RoundedRectangle(cornerRadius: FlowDeskLayout.floatingPanelCornerRadius, style: .continuous)
+                .strokeBorder(chromeStrokeGradient, lineWidth: 0.75)
+        }
+    }
+
+    private var templatesPanel: some View {
+        VStack(alignment: .leading, spacing: 10) {
+            panelHeader("Templates", subtitle: "Add to this board")
+            ScrollView {
+                VStack(alignment: .leading, spacing: 8) {
+                    ForEach(FlowDeskBoardTemplate.canvasInsertableTemplates, id: \.self) { template in
+                        templateRow(template)
+                    }
+                }
+            }
+            .frame(maxHeight: 320)
+        }
+    }
+
+    private func templateRow(_ template: FlowDeskBoardTemplate) -> some View {
+        Button {
+            if template == .whiteboard {
+                boardViewModel.applyWhiteboardSessionPreset(selection: selection)
+            } else {
+                boardViewModel.insertTemplateLayout(template, selection: selection)
+            }
+        } label: {
+            VStack(alignment: .leading, spacing: 3) {
+                Text(template.canvasPanelTitle)
+                    .font(.subheadline.weight(.semibold))
+                    .foregroundStyle(.primary)
+                Text(template.canvasPanelSubtitle)
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+                    .fixedSize(horizontal: false, vertical: true)
+            }
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .padding(10)
+            .background {
+                RoundedRectangle(cornerRadius: 10, style: .continuous)
+                    .fill(Color.primary.opacity(colorScheme == .dark ? 0.08 : 0.04))
+            }
+        }
+        .buttonStyle(.plain)
+    }
+
+    private var shapesPanel: some View {
+        VStack(alignment: .leading, spacing: 10) {
+            panelHeader("Shapes", subtitle: "Click the canvas to place")
+            LazyVGrid(
+                columns: [GridItem(.adaptive(minimum: 52), spacing: 8)],
+                spacing: 8
+            ) {
+                ForEach(FlowDeskShapeKind.allCases, id: \.self) { kind in
+                    let picked = boardViewModel.placeShapeKind == kind
+                    Button {
+                        boardViewModel.placeShapeKind = kind
+                    } label: {
+                        Text(shortShapeLabel(kind))
+                            .font(.caption.weight(picked ? .semibold : .regular))
+                            .foregroundStyle(picked ? tokens.selectionStrokeColor : .primary)
+                            .frame(maxWidth: .infinity)
+                            .padding(.vertical, 8)
+                            .background {
+                                RoundedRectangle(cornerRadius: 8, style: .continuous)
+                                    .fill(picked ? Color.accentColor.opacity(0.15) : Color.primary.opacity(0.04))
+                            }
+                    }
+                    .buttonStyle(.plain)
+                }
+            }
+        }
+    }
+
+    private func shortShapeLabel(_ kind: FlowDeskShapeKind) -> String {
+        switch kind {
+        case .rectangle: return "Rect"
+        case .roundedRectangle: return "Round"
+        case .ellipse: return "Ellipse"
+        case .line: return "Line"
+        case .arrow: return "Arrow"
+        }
+    }
+
+    private var drawStrokePanel: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            panelHeader("Stroke", subtitle: "Drawing")
+            HStack(spacing: 10) {
+                Text("Weight")
+                    .font(.caption.weight(.medium))
+                    .foregroundStyle(.secondary)
+                HStack(spacing: 6) {
+                    ForEach([2.0, 3.5, 5.5], id: \.self) { w in
+                        let on = abs(boardViewModel.drawingLineWidth - w) < 0.25
+                        Button {
+                            boardViewModel.drawingLineWidth = w
+                        } label: {
+                            Circle()
+                                .fill(on ? tokens.selectionStrokeColor : Color.primary.opacity(0.35))
+                                .frame(width: max(6, CGFloat(w)), height: max(6, CGFloat(w)))
+                        }
+                        .buttonStyle(.plain)
+                    }
+                }
+            }
+            VStack(alignment: .leading, spacing: 6) {
+                Text("Color")
+                    .font(.caption.weight(.medium))
+                    .foregroundStyle(.secondary)
+                HStack(spacing: 8) {
+                    ForEach(Array(CerebraStrokePreset.colors.enumerated()), id: \.offset) { _, rgba in
+                        let on = boardViewModel.drawingStrokeColor == rgba
+                        Button {
+                            boardViewModel.drawingStrokeColor = rgba
+                        } label: {
+                            Circle()
+                                .fill(rgba.swiftUIColor)
+                                .frame(width: 22, height: 22)
+                                .overlay {
+                                    Circle()
+                                        .strokeBorder(Color.primary.opacity(on ? 0.45 : 0), lineWidth: 2)
+                                }
+                        }
+                        .buttonStyle(.plain)
+                    }
+                }
+            }
+        }
+    }
+
+    private func panelHeader(_ title: String, subtitle: String) -> some View {
+        VStack(alignment: .leading, spacing: 2) {
+            Text(title)
+                .font(.subheadline.weight(.semibold))
+            Text(subtitle)
+                .font(.caption2)
+                .foregroundStyle(.tertiary)
+        }
+    }
+
+    private var chromeStrokeGradient: LinearGradient {
+        LinearGradient(
+            colors: [
+                Color.primary.opacity(0.085),
+                Color.primary.opacity(0.03)
+            ],
+            startPoint: .topLeading,
+            endPoint: .bottomTrailing
         )
     }
 
-    private func symbol(for mode: CanvasToolMode) -> String {
-        switch mode {
-        case .select: return "cursorarrow"
-        case .draw: return "pencil.tip"
-        case .placeSticky: return "note.text"
-        case .placeText: return "textformat"
-        case .placeShape: return "square.on.circle"
+    @ViewBuilder
+    private func chromeCardBackground() -> some View {
+        ZStack {
+            RoundedRectangle(cornerRadius: FlowDeskLayout.floatingPanelCornerRadius, style: .continuous)
+                .fill(.ultraThinMaterial)
+            RoundedRectangle(cornerRadius: FlowDeskLayout.floatingPanelCornerRadius, style: .continuous)
+                .fill(tokens.homeCardFill.opacity(colorScheme == .dark ? 0.08 : 0.11))
         }
-    }
-
-    private func help(for mode: CanvasToolMode) -> String {
-        switch mode {
-        case .select:
-            return "Select and move items. Drag empty space to pan; pinch on a trackpad to zoom."
-        case .draw:
-            return "Draw freehand—click and drag on the canvas."
-        case .placeSticky:
-            return "Click where you want a sticky note."
-        case .placeText:
-            return "Click where you want a text block."
-        case .placeShape:
-            return "Choose a shape from the menu, then click the canvas."
-        }
+        .shadow(
+            color: Color.black.opacity(FlowDeskTheme.floatingPanelShadowOpacity),
+            radius: FlowDeskTheme.floatingPanelShadowRadius,
+            x: 0,
+            y: FlowDeskTheme.floatingPanelShadowY
+        )
     }
 }
 
-// MARK: - Palette controls (hover / press motion)
+// MARK: - Stroke presets
 
-private struct PaletteToolButton<Icon: View>: View {
+private enum CerebraStrokePreset {
+    static let colors: [CanvasRGBAColor] = [
+        CanvasRGBAColor(red: 0.12, green: 0.12, blue: 0.14, opacity: 1),
+        CanvasRGBAColor(red: 0.2, green: 0.45, blue: 0.85, opacity: 1),
+        CanvasRGBAColor(red: 0.85, green: 0.25, blue: 0.28, opacity: 1),
+        CanvasRGBAColor(red: 0.2, green: 0.65, blue: 0.42, opacity: 1)
+    ]
+}
+
+// MARK: - Rail button
+
+private struct ChromeRailIconButton: View {
+    let symbol: String
+    let font: Font
     let selected: Bool
+    let tokens: FlowDeskAppearanceTokens
     let help: String
     let action: () -> Void
-    let iconFont: Font
-    let tokens: FlowDeskAppearanceTokens
-    @ViewBuilder let icon: () -> Icon
 
     @State private var hovered = false
 
     var body: some View {
         Button(action: action) {
-            icon()
-                .font(iconFont)
-                .frame(width: 40, height: 34)
+            Image(systemName: symbol)
+                .font(font)
+                .frame(width: FlowDeskLayout.canvasRailIconSize, height: FlowDeskLayout.canvasRailIconSize)
                 .foregroundStyle(selected ? tokens.selectionStrokeColor : Color.primary.opacity(0.88))
                 .background {
-                    RoundedRectangle(cornerRadius: 9, style: .continuous)
+                    RoundedRectangle(cornerRadius: 10, style: .continuous)
                         .fill(chipFill)
                 }
                 .overlay {
-                    RoundedRectangle(cornerRadius: 9, style: .continuous)
+                    RoundedRectangle(cornerRadius: 10, style: .continuous)
                         .strokeBorder(strokeColor, lineWidth: selected ? 1 : (hovered ? 0.75 : 0))
                 }
         }
@@ -139,56 +378,7 @@ private struct PaletteToolButton<Icon: View>: View {
     }
 
     private var strokeColor: Color {
-        if selected { return tokens.selectionStrokeColor.opacity(0.5) }
-        return Color.primary.opacity(0.1)
-    }
-}
-
-private struct ShapePaletteMenuButton: View {
-    let selected: Bool
-    let iconFont: Font
-    let tokens: FlowDeskAppearanceTokens
-    @Bindable var boardViewModel: CanvasBoardViewModel
-
-    @State private var hovered = false
-
-    var body: some View {
-        Menu {
-            ForEach(FlowDeskShapeKind.allCases, id: \.self) { kind in
-                Button(kind.inspectorTitle) {
-                    boardViewModel.placeShapeKind = kind
-                    boardViewModel.canvasTool = .placeShape
-                }
-            }
-        } label: {
-            Image(systemName: "square.on.circle")
-                .font(iconFont)
-                .frame(width: 40, height: 34)
-                .foregroundStyle(selected ? tokens.selectionStrokeColor : Color.primary.opacity(0.88))
-                .background {
-                    RoundedRectangle(cornerRadius: 9, style: .continuous)
-                        .fill(chipFill)
-                }
-                .overlay {
-                    RoundedRectangle(cornerRadius: 9, style: .continuous)
-                        .strokeBorder(strokeColor, lineWidth: selected ? 1 : (hovered ? 0.75 : 0))
-                }
-        }
-        .menuStyle(.button)
-        .menuIndicator(.hidden)
-        .buttonStyle(FlowDeskCanvasToolButtonStyle(isHovered: hovered))
-        .onHover { hovered = $0 }
-        .help("Place a shape — click the canvas. Choose kind from the menu.")
-    }
-
-    private var chipFill: Color {
-        if selected { return Color.accentColor.opacity(0.2) }
-        if hovered { return Color.primary.opacity(0.06) }
-        return Color.clear
-    }
-
-    private var strokeColor: Color {
-        if selected { return tokens.selectionStrokeColor.opacity(0.5) }
-        return Color.primary.opacity(0.1)
+        if selected { return tokens.selectionStrokeColor.opacity(0.45) }
+        return Color.primary.opacity(0.08)
     }
 }

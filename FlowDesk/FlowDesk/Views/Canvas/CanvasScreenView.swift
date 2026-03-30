@@ -16,9 +16,11 @@ struct CanvasScreenView: View {
             )
             .frame(maxWidth: .infinity, maxHeight: .infinity)
 
-            CanvasFloatingToolPalette(boardViewModel: boardViewModel)
-                .padding(.leading, 12)
-                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
+            CerebraCanvasChromeColumn(
+                boardViewModel: boardViewModel,
+                selection: selection
+            )
+            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         // Overlay keeps hit testing to the card only (no invisible full-screen blocker).
@@ -28,6 +30,11 @@ struct CanvasScreenView: View {
                     .padding(.top, 10)
                     .padding(.trailing, 14)
             }
+        }
+        .overlay(alignment: .bottomTrailing) {
+            CanvasZoomHUDView(boardViewModel: boardViewModel, selection: selection)
+                .padding(.trailing, 16)
+                .padding(.bottom, 14)
         }
         .animation(.spring(response: 0.36, dampingFraction: 0.86), value: onboarding.canvasTipsDismissed)
         .navigationTitle(document.title)
@@ -78,7 +85,7 @@ struct CanvasScreenView: View {
                     }
                     .disabled(!boardViewModel.canPasteFromClipboard)
                     .keyboardShortcut("v", modifiers: [.command])
-                    .help("Paste items copied from this board in FlowDesk (not plain text from other apps)")
+                    .help("Paste items copied from this board in Cerebra (not plain text from other apps)")
 
                     Divider()
 
@@ -117,6 +124,23 @@ struct CanvasScreenView: View {
                 Menu {
                     Toggle("Show grid", isOn: gridBinding)
                     Divider()
+                    Button("Fit board to content") {
+                        boardViewModel.fitViewportToBoardContent()
+                    }
+                    .keyboardShortcut("1", modifiers: [.command, .option])
+                    .help("Zoom and pan so everything on the board is visible (⌘⌥1)")
+                    Button("Center on content") {
+                        boardViewModel.centerViewportOnBoardContent(canvasMargin: 48)
+                    }
+                    .keyboardShortcut("2", modifiers: [.command, .option])
+                    .help("Pan so exported content is centered at the current zoom (⌘⌥2)")
+                    Button("Zoom to selection") {
+                        boardViewModel.fitViewportToSelection(selection: selection)
+                    }
+                    .disabled(!selection.hasSelection)
+                    .keyboardShortcut("3", modifiers: [.command, .option])
+                    .help("Zoom and pan to fit the selected items (⌘⌥3)")
+                    Divider()
                     Button("Insert text block") {
                         boardViewModel.insertTextBlock(selection: selection, beginEditing: true)
                     }
@@ -144,7 +168,7 @@ struct CanvasScreenView: View {
                             .font(.subheadline.weight(.medium))
                     }
                 }
-                .help("Grid, insert items in view, and charts")
+                .help("Grid, canvas framing, insert items in view, and charts")
 
                 Menu {
                     Button("PNG…") {

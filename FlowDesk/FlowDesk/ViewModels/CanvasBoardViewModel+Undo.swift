@@ -34,13 +34,19 @@ extension CanvasBoardViewModel {
     /// Applies a change to `boardState` and persists. Records one undo step unless `recordUndo` is false or state is unchanged.
     func applyBoardMutation(recordUndo: Bool = true, _ body: (inout CanvasBoardState) -> Void) {
         if canvasUndoApplying {
-            mutateBoardState(body)
+            mutateBoardState { state in
+                body(&state)
+                CanvasConnectorGeometry.reconcileConnectorFrames(in: &state.elements)
+            }
             persist()
             return
         }
 
         let snapshotBeforeMutation = boardState
-        mutateBoardState(body)
+        mutateBoardState { state in
+            body(&state)
+            CanvasConnectorGeometry.reconcileConnectorFrames(in: &state.elements)
+        }
         persist()
 
         guard recordUndo, boardState != snapshotBeforeMutation else {
