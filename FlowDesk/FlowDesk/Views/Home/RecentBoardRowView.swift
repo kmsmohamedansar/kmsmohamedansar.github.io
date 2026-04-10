@@ -78,7 +78,7 @@ struct RecentBoardRowView: View {
             }
             .padding(.horizontal, FlowDeskLayout.homeRecentRowHorizontalPadding)
             .padding(.vertical, FlowDeskLayout.homeRecentRowVerticalPadding)
-            .flowDeskCardChrome(isHovered: $isHovered, scaleOnHover: 1.014)
+            .flowDeskCardChrome(isHovered: $isHovered, scaleOnHover: 1.024)
         }
         .buttonStyle(FlowDeskHomeCardButtonStyle())
         .onHover { isHovered = $0 }

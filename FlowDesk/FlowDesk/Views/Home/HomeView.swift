@@ -51,6 +51,8 @@ struct HomeView: View {
         .background {
             ZStack {
                 tokens.workspaceBackground
+                FlowDeskTheme.homeAccentSignatureGlow(tokens: tokens, colorScheme: colorScheme)
+                    .allowsHitTesting(false)
                 FlowDeskTheme.homeAtmosphereWash(colorScheme: colorScheme)
                     .allowsHitTesting(false)
             }
@@ -63,7 +65,8 @@ struct HomeView: View {
             FlowDeskWordmark()
             Text("A calm canvas for solo thinking")
                 .font(FlowDeskTypography.pageSubtitle)
-                .foregroundStyle(.secondary)
+                .tracking(0.35)
+                .foregroundStyle(.secondary.opacity(0.88))
                 .fixedSize(horizontal: false, vertical: true)
         }
         .accessibilityElement(children: .combine)

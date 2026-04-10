@@ -43,7 +43,7 @@ struct CreationCardView: View {
     }
 
     private var hoverScale: CGFloat {
-        prominence == .hero ? 1.024 : 1.02
+        prominence == .hero ? 1.034 : 1.026
     }
 
     var body: some View {

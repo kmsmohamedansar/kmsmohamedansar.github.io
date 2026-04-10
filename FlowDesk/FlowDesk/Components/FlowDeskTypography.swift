@@ -10,10 +10,10 @@ enum FlowDeskTypography {
     /// Primary home headline — heavier than body copy for clear editorial hierarchy (Notion-like calm, not shouty).
     static let homeHeroTitle = Font.largeTitle.weight(.heavy)
     static let homeIntroBody = Font.body
-    static let sectionTitle = Font.title3.weight(.bold)
+    static let sectionTitle = Font.title2.weight(.semibold)
     static let sectionCaption = Font.subheadline
     /// Short supporting line under major home headings.
-    static let homeSectionKicker = Font.subheadline.weight(.medium)
+    static let homeSectionKicker = Font.subheadline.weight(.regular)
 
     // MARK: - Cards
 

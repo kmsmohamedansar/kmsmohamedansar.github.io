@@ -35,8 +35,8 @@ enum FlowDeskLayout {
     static let cardBorderLineWidth: CGFloat = 1
     static let cardBorderLineWidthHover: CGFloat = 1.25
 
-    static let cardShadowYNormal: CGFloat = 5
-    static let cardShadowYHover: CGFloat = 6
+    static let cardShadowYNormal: CGFloat = 6
+    static let cardShadowYHover: CGFloat = 8
 
     static let homeCreationCardMinHeight: CGFloat = 144
     /// Primary “Smart canvas” tile on Home (secondary blank uses `homeCreationCardMinHeight`).

@@ -7,9 +7,9 @@ enum FlowDeskTheme {
     // MARK: - Depth (Level 2 floating panels — single shadow system)
 
     /// Tight, modern lift—subtle elevation without heavy blur.
-    static let floatingPanelShadowOpacity: Double = 0.072
-    static let floatingPanelShadowRadius: CGFloat = 14
-    static let floatingPanelShadowY: CGFloat = 3
+    static let floatingPanelShadowOpacity: Double = 0.088
+    static let floatingPanelShadowRadius: CGFloat = 16
+    static let floatingPanelShadowY: CGFloat = 4
 
     /// Subtle vertical wash so the canvas (Level 1) reads as a surface, not a flat fill.
     static func canvasBoardDepthGradient(colorScheme: ColorScheme) -> LinearGradient {
@@ -36,7 +36,7 @@ enum FlowDeskTheme {
         RadialGradient(
             colors: colorScheme == .dark
                 ? [Color.white.opacity(0.052), Color.clear]
-                : [Color(red: 1, green: 0.992, blue: 0.978).opacity(0.34), Color.clear],
+                : [Color(red: 1, green: 0.992, blue: 0.978).opacity(0.42), Color.clear],
             center: UnitPoint(x: 0.12, y: 0.08),
             startRadius: 0,
             endRadius: 780
@@ -59,10 +59,23 @@ enum FlowDeskTheme {
     static func homeAtmosphereWash(colorScheme: ColorScheme) -> LinearGradient {
         LinearGradient(
             colors: colorScheme == .dark
-                ? [Color.white.opacity(0.042), Color.clear]
-                : [Color(red: 0.995, green: 0.988, blue: 0.978).opacity(0.82), Color.clear],
+                ? [Color.white.opacity(0.055), Color.clear]
+                : [Color(red: 0.995, green: 0.988, blue: 0.978).opacity(0.94), Color.clear],
             startPoint: .top,
             endPoint: UnitPoint(x: 0.5, y: 0.44)
+        )
+    }
+
+    /// Subtle accent bloom from the upper-left — ties Home to the product stroke without changing layout.
+    static func homeAccentSignatureGlow(tokens: FlowDeskAppearanceTokens, colorScheme: ColorScheme) -> RadialGradient {
+        RadialGradient(
+            colors: [
+                tokens.selectionStrokeColor.opacity(colorScheme == .dark ? 0.14 : 0.072),
+                Color.clear
+            ],
+            center: UnitPoint(x: 0.05, y: 0.02),
+            startRadius: 0,
+            endRadius: 540
         )
     }
 

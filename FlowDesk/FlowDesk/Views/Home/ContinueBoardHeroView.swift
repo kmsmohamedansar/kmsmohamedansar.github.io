@@ -5,6 +5,8 @@ struct ContinueBoardHeroView: View {
     let document: FlowDocument
     let onOpen: () -> Void
 
+    @Environment(\.flowDeskTokens) private var tokens
+
     @State private var isHovered = false
 
     private var template: FlowDeskBoardTemplate? {
@@ -40,13 +42,18 @@ struct ContinueBoardHeroView: View {
 
                 Image(systemName: "chevron.forward")
                     .font(.subheadline.weight(.semibold))
-                    .foregroundStyle(.quaternary)
+                    .foregroundStyle(
+                        isHovered
+                            ? tokens.selectionStrokeColor.opacity(0.88)
+                            : Color.secondary.opacity(0.42)
+                    )
+                    .animation(.easeOut(duration: 0.16), value: isHovered)
             }
             .padding(FlowDeskLayout.homeCardPadding)
             .frame(maxWidth: .infinity, minHeight: FlowDeskLayout.homeContinueMinHeight, alignment: .leading)
-            .flowDeskCardChrome(isHovered: $isHovered, scaleOnHover: 1.02)
+            .flowDeskCardChrome(isHovered: $isHovered, scaleOnHover: 1.03)
         }
-        .buttonStyle(FlowDeskPlainCardButtonStyle())
+        .buttonStyle(FlowDeskHomeCardButtonStyle())
         .onHover { isHovered = $0 }
         .contentShape(RoundedRectangle(cornerRadius: FlowDeskLayout.cardCornerRadius, style: .continuous))
         .accessibilityLabel(accessibilityLabel)

@@ -28,8 +28,18 @@ struct DocumentSidebarView: View {
         .background {
             ZStack(alignment: .trailing) {
                 tokens.sidebarListTint
+                LinearGradient(
+                    colors: [
+                        Color.black.opacity(colorScheme == .dark ? 0.26 : 0.062),
+                        Color.clear
+                    ],
+                    startPoint: .trailing,
+                    endPoint: UnitPoint(x: 0.68, y: 0.5)
+                )
+                .frame(width: 26)
+                .allowsHitTesting(false)
                 Rectangle()
-                    .fill(Color.primary.opacity(colorScheme == .dark ? 0.14 : 0.032))
+                    .fill(Color.primary.opacity(colorScheme == .dark ? 0.16 : 0.04))
                     .frame(width: 1)
                     .allowsHitTesting(false)
             }
@@ -139,7 +149,7 @@ struct DocumentSidebarView: View {
             .overlay {
                 RoundedRectangle(cornerRadius: corner, style: .continuous)
                     .strokeBorder(
-                        isSelected ? tokens.selectionStrokeColor.opacity(colorScheme == .dark ? 0.42 : 0.38) : Color.clear,
+                        isSelected ? tokens.selectionStrokeColor.opacity(colorScheme == .dark ? 0.5 : 0.44) : Color.clear,
                         lineWidth: isSelected ? 1 : 0
                     )
             }
@@ -151,10 +161,10 @@ struct DocumentSidebarView: View {
 
     private func rowFill(isSelected: Bool, isHovered: Bool) -> Color {
         if isSelected {
-            return tokens.selectionStrokeColor.opacity(colorScheme == .dark ? 0.24 : 0.13)
+            return tokens.selectionStrokeColor.opacity(colorScheme == .dark ? 0.3 : 0.16)
         }
         if isHovered {
-            return tokens.selectionStrokeColor.opacity(colorScheme == .dark ? 0.12 : 0.065)
+            return tokens.selectionStrokeColor.opacity(colorScheme == .dark ? 0.15 : 0.09)
         }
         return Color.clear
     }

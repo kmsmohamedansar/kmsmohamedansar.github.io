@@ -61,7 +61,7 @@ struct FlowDeskCardChromeModifier: ViewModifier {
         content
             .background {
                 tokens.homeCardFillBackground(cornerRadius: cornerRadius)
-                    // Tight “contact” shadow + soft ambient (Linear-style lift without harsh edges).
+                    // Tight “contact” shadow + primary lift + wide ambient bloom (stacked depth, not one flat drop).
                     .shadow(color: Color.black.opacity(isHovered ? 0.11 : 0.065), radius: 1.5, x: 0, y: 1)
                     .shadow(
                         color: Color.black.opacity(
@@ -70,6 +70,12 @@ struct FlowDeskCardChromeModifier: ViewModifier {
                         radius: isHovered ? tokens.homeCardShadowRadiusHover : tokens.homeCardShadowRadiusNormal,
                         x: 0,
                         y: isHovered ? FlowDeskLayout.cardShadowYHover : FlowDeskLayout.cardShadowYNormal
+                    )
+                    .shadow(
+                        color: Color.black.opacity(isHovered ? 0.048 : 0.03),
+                        radius: isHovered ? 28 : 20,
+                        x: 0,
+                        y: isHovered ? 14 : 9
                     )
             }
             .overlay {
@@ -90,8 +96,22 @@ struct FlowDeskCardChromeModifier: ViewModifier {
                 shape
                     .strokeBorder(
                         isHovered
-                            ? tokens.selectionStrokeColor.opacity(0.48)
-                            : Color.primary.opacity(tokens.homeCardBorderNormal),
+                            ? LinearGradient(
+                                colors: [
+                                    tokens.selectionStrokeColor.opacity(0.62),
+                                    tokens.selectionStrokeColor.opacity(0.36)
+                                ],
+                                startPoint: .topLeading,
+                                endPoint: .bottomTrailing
+                            )
+                            : LinearGradient(
+                                colors: [
+                                    tokens.selectionStrokeColor.opacity(colorScheme == .dark ? 0.22 : 0.18),
+                                    Color.primary.opacity(tokens.homeCardBorderNormal)
+                                ],
+                                startPoint: .topLeading,
+                                endPoint: UnitPoint(x: 0.72, y: 0.88)
+                            ),
                         lineWidth: isHovered
                             ? FlowDeskLayout.cardBorderLineWidthHover
                             : FlowDeskLayout.cardBorderLineWidth
