@@ -49,7 +49,7 @@ struct ShapeConnectorHandlesOverlay: View {
                     .frame(width: dotSize + 12, height: dotSize + 12)
             }
             Circle()
-                .fill(Color.accentColor.opacity(isHover ? 0.98 : 0.88))
+                .fill(tokens.selectionStrokeColor.opacity(isHover ? 1 : 0.9))
                 .frame(width: visualDiameter, height: visualDiameter)
                 .overlay {
                     Circle().strokeBorder(Color.white.opacity(isHover ? 0.5 : 0.34), lineWidth: 0.85)

@@ -184,7 +184,7 @@ struct CanvasSelectionToolbarView: View {
                             .frame(width: 18, height: 18)
                             .overlay {
                                 Circle()
-                                    .strokeBorder(Color.accentColor, lineWidth: selected ? 1.5 : 0)
+                                    .strokeBorder(tokens.selectionStrokeColor, lineWidth: selected ? 1.25 : 0)
                             }
                     }
                     .buttonStyle(.plain)

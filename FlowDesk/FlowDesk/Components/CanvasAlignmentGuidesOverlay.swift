@@ -2,10 +2,14 @@ import SwiftUI
 
 /// Renders transient alignment guides in board space (full canvas frame).
 struct CanvasAlignmentGuidesOverlay: View {
+    @Environment(\.flowDeskTokens) private var tokens
+
     let guides: [CanvasAlignmentGuide]
     let canvasSize: CGFloat
 
-    private let lineColor = Color.accentColor.opacity(0.42)
+    private var lineColor: Color {
+        tokens.selectionStrokeColor.opacity(0.34)
+    }
 
     var body: some View {
         ZStack {

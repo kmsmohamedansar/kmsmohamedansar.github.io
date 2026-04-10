@@ -1,6 +1,8 @@
 import SwiftUI
 
 struct StickyNoteInspectorSection: View {
+    @Environment(\.flowDeskTokens) private var tokens
+
     let elementID: UUID
     @Bindable var canvasViewModel: CanvasBoardViewModel
 
@@ -28,7 +30,7 @@ struct StickyNoteInspectorSection: View {
                                     .frame(width: 32, height: 32)
                                     .overlay {
                                         Circle()
-                                            .strokeBorder(Color.accentColor, lineWidth: selected ? 2 : 0)
+                                            .strokeBorder(tokens.selectionStrokeColor, lineWidth: selected ? 1.5 : 0)
                                     }
                                     .shadow(color: .black.opacity(0.08), radius: 2, y: 1)
                             }

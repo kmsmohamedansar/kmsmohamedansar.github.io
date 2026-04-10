@@ -7,7 +7,8 @@ enum FlowDeskTypography {
     /// Small editorial label above the hero line (premium restraint).
     static let pageEyebrow = Font.system(size: 10.5, weight: .semibold, design: .default)
     static let pageSubtitle = Font.title2.weight(.regular)
-    static let homeHeroTitle = Font.largeTitle.weight(.bold)
+    /// Primary home headline — heavier than body copy for clear editorial hierarchy (Notion-like calm, not shouty).
+    static let homeHeroTitle = Font.largeTitle.weight(.heavy)
     static let homeIntroBody = Font.body
     static let sectionTitle = Font.title3.weight(.semibold)
     static let sectionCaption = Font.subheadline
@@ -20,7 +21,8 @@ enum FlowDeskTypography {
     static let heroCardIconPointSize: CGFloat = 34
     static let cardTitle = Font.headline
     static let heroCardTitle = Font.title2.weight(.semibold)
-    static let cardSubtitle = Font.subheadline
+    /// Supporting copy under card titles—regular weight so titles read as the anchor.
+    static let cardSubtitle = Font.subheadline.weight(.regular)
     static let continueTitle = Font.title3.weight(.semibold)
     static let continueMeta = Font.subheadline
     static let recentTitle = Font.body.weight(.medium)

@@ -32,12 +32,13 @@ struct CanvasBoardExportContentView: View {
             }
         }
         .frame(width: exportRect.width, height: exportRect.height)
+        .environment(\.flowDeskTokens, tokens)
     }
 
     @ViewBuilder
     private func exportBackground(showGrid: Bool) -> some View {
         ZStack {
-            tokens.workspaceBackground
+            tokens.canvasWorkspaceBackground
             if showGrid {
                 CanvasGridOverlay(
                     spacing: 24,

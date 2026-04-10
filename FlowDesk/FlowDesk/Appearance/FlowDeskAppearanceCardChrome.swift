@@ -65,9 +65,9 @@ struct FlowDeskCardChromeModifier: ViewModifier {
             .overlay {
                 RoundedRectangle(cornerRadius: cornerRadius, style: .continuous)
                     .strokeBorder(
-                        Color.primary.opacity(
-                            isHovered ? tokens.homeCardBorderHover : tokens.homeCardBorderNormal
-                        ),
+                        isHovered
+                            ? tokens.selectionStrokeColor.opacity(0.48)
+                            : Color.primary.opacity(tokens.homeCardBorderNormal),
                         lineWidth: isHovered
                             ? FlowDeskLayout.cardBorderLineWidthHover
                             : FlowDeskLayout.cardBorderLineWidth

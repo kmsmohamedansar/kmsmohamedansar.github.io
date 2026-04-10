@@ -3,7 +3,13 @@ import SwiftUI
 
 /// Swift Charts rendering inside the chart block card (bar / line v1).
 struct ChartBlockChartView: View {
+    @Environment(\.flowDeskTokens) private var tokens
+
     let payload: ChartPayload
+
+    private var chartAccent: Color {
+        tokens.selectionStrokeColor.opacity(0.72)
+    }
 
     var body: some View {
         Group {
@@ -50,20 +56,20 @@ struct ChartBlockChartView: View {
                         x: .value("Label", point.label),
                         y: .value("Value", point.value)
                     )
-                    .foregroundStyle(Color.accentColor.gradient)
+                    .foregroundStyle(chartAccent)
                     .cornerRadius(3)
                 case .line:
                     LineMark(
                         x: .value("Label", point.label),
                         y: .value("Value", point.value)
                     )
-                    .foregroundStyle(Color.accentColor)
+                    .foregroundStyle(chartAccent)
                     .interpolationMethod(.catmullRom)
                     PointMark(
                         x: .value("Label", point.label),
                         y: .value("Value", point.value)
                     )
-                    .foregroundStyle(Color.accentColor)
+                    .foregroundStyle(chartAccent)
                 }
             }
         }

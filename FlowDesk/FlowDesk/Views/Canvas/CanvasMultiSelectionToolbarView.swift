@@ -119,7 +119,7 @@ private struct MultiSelectionToolbarIconButtonStyle: ButtonStyle {
         configuration.label
             .background {
                 RoundedRectangle(cornerRadius: 6, style: .continuous)
-                    .fill(Color.accentColor.opacity(configuration.isPressed ? 0.14 : 0))
+                    .fill(tokens.selectionStrokeColor.opacity(configuration.isPressed ? 0.12 : 0))
             }
             .overlay {
                 RoundedRectangle(cornerRadius: 6, style: .continuous)

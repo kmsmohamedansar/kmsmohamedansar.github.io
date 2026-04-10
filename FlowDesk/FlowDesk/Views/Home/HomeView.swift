@@ -96,7 +96,7 @@ struct HomeView: View {
 
                 Text("Each board is one infinite surface for thinking alone. Pick a starter below; your work saves automatically.")
                     .font(FlowDeskTypography.homeIntroBody)
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(.tertiary)
                     .lineSpacing(3)
                     .frame(maxWidth: 560, alignment: .leading)
             }

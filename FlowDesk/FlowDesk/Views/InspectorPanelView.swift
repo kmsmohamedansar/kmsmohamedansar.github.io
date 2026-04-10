@@ -29,6 +29,7 @@ struct InspectorPanelView: View {
                         .monospacedDigit()
                 }
                 Toggle("Show grid", isOn: gridBinding)
+                    .tint(tokens.selectionStrokeColor)
                 LabeledContent("Elements") {
                     Text("\(canvasViewModel.boardState.elements.count)")
                         .foregroundStyle(.secondary)
@@ -117,11 +118,13 @@ struct InspectorPanelView: View {
         .formStyle(.grouped)
         .scrollContentBackground(.hidden)
         .background {
-            ZStack {
-                tokens.inspectorChromeBackground
-                Rectangle()
-                    .fill(.ultraThinMaterial)
-            }
+            tokens.inspectorChromeBackground
+        }
+        .overlay(alignment: .leading) {
+            Rectangle()
+                .fill(Color.primary.opacity(0.055))
+                .frame(width: 1)
+                .allowsHitTesting(false)
         }
         .padding(.horizontal, FlowDeskLayout.inspectorHorizontalPadding)
         .frame(maxHeight: .infinity, alignment: .top)

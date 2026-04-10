@@ -31,8 +31,8 @@ struct ShapePayload: Codable, Equatable, Sendable {
 
     static let `default` = ShapePayload(
         kind: .rectangle,
-        strokeColor: CanvasRGBAColor(red: 0.34, green: 0.40, blue: 0.50, opacity: 1),
-        fillColor: CanvasRGBAColor(red: 0.34, green: 0.40, blue: 0.50, opacity: 0.09),
+        strokeColor: CanvasRGBAColor(red: 0.38, green: 0.36, blue: 0.34, opacity: 1),
+        fillColor: CanvasRGBAColor(red: 0.48, green: 0.42, blue: 0.36, opacity: 0.16),
         lineWidth: 2,
         cornerRadius: 12
     )

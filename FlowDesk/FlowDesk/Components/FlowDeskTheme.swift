@@ -6,10 +6,10 @@ import SwiftUI
 enum FlowDeskTheme {
     // MARK: - Depth (Level 2 floating panels — single shadow system)
 
-    /// Softer lift so floating chrome reads light and precise, not heavy.
-    static let floatingPanelShadowOpacity: Double = 0.11
-    static let floatingPanelShadowRadius: CGFloat = 22
-    static let floatingPanelShadowY: CGFloat = 5
+    /// Tight, modern lift—subtle elevation without heavy blur.
+    static let floatingPanelShadowOpacity: Double = 0.072
+    static let floatingPanelShadowRadius: CGFloat = 14
+    static let floatingPanelShadowY: CGFloat = 3
 
     /// Subtle vertical wash so the canvas (Level 1) reads as a surface, not a flat fill.
     static func canvasBoardDepthGradient(colorScheme: ColorScheme) -> LinearGradient {
@@ -23,8 +23,8 @@ enum FlowDeskTheme {
         return LinearGradient(
             gradient: Gradient(stops: [
                 .init(color: .clear, location: 0),
-                .init(color: Color.black.opacity(0.03), location: 0.52),
-                .init(color: Color(red: 0.44, green: 0.37, blue: 0.31).opacity(0.022), location: 1)
+                .init(color: Color.black.opacity(0.022), location: 0.52),
+                .init(color: Color(red: 0.44, green: 0.37, blue: 0.31).opacity(0.018), location: 1)
             ]),
             startPoint: .top,
             endPoint: .bottom
@@ -36,7 +36,7 @@ enum FlowDeskTheme {
         RadialGradient(
             colors: colorScheme == .dark
                 ? [Color.white.opacity(0.052), Color.clear]
-                : [Color(red: 1, green: 0.992, blue: 0.978).opacity(0.34), Color.clear],
+                : [Color(red: 1, green: 0.992, blue: 0.978).opacity(0.26), Color.clear],
             center: UnitPoint(x: 0.12, y: 0.08),
             startRadius: 0,
             endRadius: 780
@@ -48,7 +48,7 @@ enum FlowDeskTheme {
         RadialGradient(
             colors: colorScheme == .dark
                 ? [Color.white.opacity(0.04), Color.clear]
-                : [Color.white.opacity(0.22), Color.clear],
+                : [Color.white.opacity(0.14), Color.clear],
             center: .center,
             startRadius: 80,
             endRadius: 1400
@@ -60,7 +60,7 @@ enum FlowDeskTheme {
         LinearGradient(
             colors: colorScheme == .dark
                 ? [Color.white.opacity(0.042), Color.clear]
-                : [Color(red: 0.995, green: 0.988, blue: 0.978).opacity(0.88), Color.clear],
+                : [Color(red: 0.995, green: 0.988, blue: 0.978).opacity(0.82), Color.clear],
             startPoint: .top,
             endPoint: UnitPoint(x: 0.5, y: 0.44)
         )
@@ -73,13 +73,13 @@ enum FlowDeskTheme {
 
     // MARK: - Canvas workspace (export / previews only)
 
-    /// Matches warm-paper light tokens for predictable PNG/PDF output.
+    /// Matches warm-paper light tokens for predictable PNG/PDF output (board mat, not home chrome).
     static func canvasWorkspaceBackground(for colorScheme: ColorScheme) -> Color {
-        FlowDeskAppearanceTokens.resolve(colorScheme: colorScheme, preset: .warmPaper).workspaceBackground
+        FlowDeskAppearanceTokens.resolve(colorScheme: colorScheme, preset: .warmPaper).canvasWorkspaceBackground
     }
 
     static var canvasWorkspaceBackgroundExport: Color {
-        FlowDeskAppearanceTokens.resolve(colorScheme: .light, preset: .warmPaper).workspaceBackground
+        FlowDeskAppearanceTokens.resolve(colorScheme: .light, preset: .warmPaper).canvasWorkspaceBackground
     }
 
     static func gridLineOpacity(for colorScheme: ColorScheme) -> Double {
@@ -100,11 +100,14 @@ enum FlowDeskTheme {
 
     // MARK: - Selection & handles (geometry; stroke color lives on tokens in canvas views)
 
-    static let selectionStrokeWidth: CGFloat = 1.5
-    static let selectionAccentOpacity: Double = 0.88
+    static let selectionStrokeWidth: CGFloat = 1.25
+    static let selectionAccentOpacity: Double = 0.92
+
+    /// Single product accent (RGB aligned with `FlowDeskAppearanceTokens` accent bases).
+    static let brandAccent = Color(nsColor: NSColor(red: 0.20, green: 0.45, blue: 0.84, alpha: 1))
 
     static var selectionStrokeColor: Color {
-        Color.accentColor.opacity(selectionAccentOpacity)
+        brandAccent.opacity(selectionAccentOpacity)
     }
 
     // MARK: - Shadows (export + legacy callers)
@@ -138,7 +141,7 @@ struct FlowDeskInspectorSectionHeader: View {
     var body: some View {
         Text(title)
             .font(FlowDeskTypography.sidebarSectionHeader)
-            .foregroundStyle(.quaternary)
+            .foregroundStyle(.tertiary)
             .textCase(.uppercase)
             .tracking(0.35)
             .padding(.bottom, FlowDeskLayout.inspectorSectionHeaderBottomSpacing)

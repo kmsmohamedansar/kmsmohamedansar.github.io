@@ -287,7 +287,7 @@ struct ConnectorCanvasItemView: View {
                     .frame(width: diameter + 12, height: diameter + 12)
             }
             Circle()
-                .fill(Color.accentColor.opacity(isHover ? 0.98 : 0.88))
+                .fill(tokens.selectionStrokeColor.opacity(isHover ? 1 : 0.9))
                 .frame(width: diameter, height: diameter)
                 .overlay {
                     Circle().strokeBorder(Color.white.opacity(isHover ? 0.48 : 0.34), lineWidth: 0.85)

@@ -49,8 +49,9 @@ struct CreationCardView: View {
                         .multilineTextAlignment(.leading)
                     Text(subtitle)
                         .font(FlowDeskTypography.cardSubtitle)
-                        .foregroundStyle(.secondary)
+                        .foregroundStyle(.tertiary)
                         .multilineTextAlignment(.leading)
+                        .lineSpacing(3)
                         .fixedSize(horizontal: false, vertical: true)
                 }
             }

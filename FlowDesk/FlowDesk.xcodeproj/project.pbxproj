@@ -8,37 +8,9 @@
 
 /* Begin PBXBuildFile section */
 		A10000000000000000000001 /* FlowDeskApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000001 /* FlowDeskApp.swift */; };
-		A10000000000000000000042 /* FlowDeskBoardUndoCommands.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000042 /* FlowDeskBoardUndoCommands.swift */; };
 		A10000000000000000000002 /* FlowDocument.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000002 /* FlowDocument.swift */; };
 		A10000000000000000000003 /* CanvasBoardState.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000003 /* CanvasBoardState.swift */; };
 		A10000000000000000000004 /* JSONCoding+FlowDesk.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000004 /* JSONCoding+FlowDesk.swift */; };
-		A10000000000000000000037 /* CanvasInsertionPlacement.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000037 /* CanvasInsertionPlacement.swift */; };
-		A10000000000000000000061 /* FlowDeskCanvasClipboard.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000061 /* FlowDeskCanvasClipboard.swift */; };
-		A10000000000000000000062 /* CanvasBoardViewModel+Clipboard.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000062 /* CanvasBoardViewModel+Clipboard.swift */; };
-		A10000000000000000000064 /* CanvasBoardViewModel+GroupMove.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000064 /* CanvasBoardViewModel+GroupMove.swift */; };
-		A10000000000000000000065 /* CanvasMultiSelectionBoundsOverlay.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000065 /* CanvasMultiSelectionBoundsOverlay.swift */; };
-		A10000000000000000000038 /* CanvasSnapEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000038 /* CanvasSnapEngine.swift */; };
-		A10000000000000000000039 /* CanvasAlignmentGuidesOverlay.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000039 /* CanvasAlignmentGuidesOverlay.swift */; };
-		A1000000000000000000003A /* CanvasBoardViewModel+Snapping.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000000000000000000003A /* CanvasBoardViewModel+Snapping.swift */; };
-		A10000000000000000000071 /* CanvasBoardViewModel+ToolSelection.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000071 /* CanvasBoardViewModel+ToolSelection.swift */; };
-		A10000000000000000000081 /* ConnectorPayload.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000081 /* ConnectorPayload.swift */; };
-		A10000000000000000000082 /* CanvasConnectorGeometry.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000082 /* CanvasConnectorGeometry.swift */; };
-		A10000000000000000000083 /* CanvasBoardViewModel+Connectors.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000083 /* CanvasBoardViewModel+Connectors.swift */; };
-		A10000000000000000000084 /* CanvasBoardViewModel+OptionDuplicate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000084 /* CanvasBoardViewModel+OptionDuplicate.swift */; };
-		A10000000000000000000085 /* CanvasBoardViewModel+Alignment.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000085 /* CanvasBoardViewModel+Alignment.swift */; };
-		A10000000000000000000086 /* ConnectorCanvasItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000086 /* ConnectorCanvasItemView.swift */; };
-		A10000000000000000000087 /* ShapeConnectorHandlesOverlay.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000087 /* ShapeConnectorHandlesOverlay.swift */; };
-		A10000000000000000000088 /* CanvasMultiSelectionToolbarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000088 /* CanvasMultiSelectionToolbarView.swift */; };
-		A10000000000000000000089 /* CanvasZoomHUDView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000089 /* CanvasZoomHUDView.swift */; };
-		A10000000000000000000090 /* FlowDeskConnectorVisuals.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000090 /* FlowDeskConnectorVisuals.swift */; };
-		A10000000000000000000091 /* CanvasBoardViewModel+ViewportNavigation.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000091 /* CanvasBoardViewModel+ViewportNavigation.swift */; };
-		A1000000000000000000003B /* CanvasBoardViewModel+EditorActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000000000000000000003B /* CanvasBoardViewModel+EditorActions.swift */; };
-		A1000000000000000000003C /* CanvasElementEditorContextMenuItems.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000000000000000000003C /* CanvasElementEditorContextMenuItems.swift */; };
-		A1000000000000000000003D /* CanvasEditorInspectorSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000000000000000000003D /* CanvasEditorInspectorSection.swift */; };
-		A1000000000000000000003E /* CanvasExportBounds.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000000000000000000003E /* CanvasExportBounds.swift */; };
-		A1000000000000000000003F /* CanvasBoardExportContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000000000000000000003F /* CanvasBoardExportContentView.swift */; };
-		A10000000000000000000040 /* CanvasExportService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000040 /* CanvasExportService.swift */; };
-		A10000000000000000000041 /* CanvasBoardViewModel+Undo.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000041 /* CanvasBoardViewModel+Undo.swift */; };
 		A10000000000000000000005 /* DocumentListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000005 /* DocumentListViewModel.swift */; };
 		A10000000000000000000006 /* CanvasBoardViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000006 /* CanvasBoardViewModel.swift */; };
 		A10000000000000000000007 /* MainWindowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000007 /* MainWindowView.swift */; };
@@ -46,26 +18,6 @@
 		A1000000000000000000000A /* InspectorPanelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000000000000000000000A /* InspectorPanelView.swift */; };
 		A1000000000000000000000B /* RenameDocumentSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000000000000000000000B /* RenameDocumentSheet.swift */; };
 		A1000000000000000000000C /* CanvasGridOverlay.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000000000000000000000C /* CanvasGridOverlay.swift */; };
-		A10000000000000000000043 /* FlowDeskTheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000043 /* FlowDeskTheme.swift */; };
-		A10000000000000000000058 /* FlowDeskLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000058 /* FlowDeskLayout.swift */; };
-		A10000000000000000000059 /* FlowDeskTypography.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000059 /* FlowDeskTypography.swift */; };
-		A10000000000000000000060 /* FlowDeskInteractionStyles.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000060 /* FlowDeskInteractionStyles.swift */; };
-		A10000000000000000000044 /* FlowDeskBoardTemplate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000044 /* FlowDeskBoardTemplate.swift */; };
-		A10000000000000000000047 /* FlowDeskBoardTemplate+InitialCanvas.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000047 /* FlowDeskBoardTemplate+InitialCanvas.swift */; };
-		A10000000000000000000045 /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000045 /* HomeView.swift */; };
-		A10000000000000000000046 /* CreationCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000046 /* CreationCardView.swift */; };
-		A10000000000000000000048 /* FlowDeskBoardTemplate+HomeDisplay.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000048 /* FlowDeskBoardTemplate+HomeDisplay.swift */; };
-		A10000000000000000000049 /* FlowDocument+ResolvedTemplate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000049 /* FlowDocument+ResolvedTemplate.swift */; };
-		A10000000000000000000050 /* ContinueBoardHeroView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000050 /* ContinueBoardHeroView.swift */; };
-		A10000000000000000000051 /* RecentBoardRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000051 /* RecentBoardRowView.swift */; };
-		A10000000000000000000052 /* FlowDeskAppearanceKinds.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000052 /* FlowDeskAppearanceKinds.swift */; };
-		A10000000000000000000053 /* FlowDeskAppearanceStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000053 /* FlowDeskAppearanceStore.swift */; };
-		A10000000000000000000054 /* FlowDeskAppearanceTokens.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000054 /* FlowDeskAppearanceTokens.swift */; };
-		A10000000000000000000055 /* FlowDeskAppearanceCardChrome.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000055 /* FlowDeskAppearanceCardChrome.swift */; };
-		A10000000000000000000056 /* FlowDeskAppearanceSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000056 /* FlowDeskAppearanceSettingsView.swift */; };
-		A10000000000000000000057 /* FlowDeskRootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000057 /* FlowDeskRootView.swift */; };
-		A10000000000000000000068 /* FlowDeskOnboardingStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000068 /* FlowDeskOnboardingStore.swift */; };
-		A10000000000000000000069 /* FlowDeskOnboardingCallouts.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000069 /* FlowDeskOnboardingCallouts.swift */; };
 		A1000000000000000000000D /* BoardEmptySelectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000000000000000000000D /* BoardEmptySelectionView.swift */; };
 		A1000000000000000000000E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A2000000000000000000000E /* Assets.xcassets */; };
 		A10000000000000000000010 /* ModelContainerFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000010 /* ModelContainerFactory.swift */; };
@@ -73,9 +25,6 @@
 		A10000000000000000000012 /* LibrarySeedService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000012 /* LibrarySeedService.swift */; };
 		A10000000000000000000013 /* CanvasBoardState+Sample.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000013 /* CanvasBoardState+Sample.swift */; };
 		A10000000000000000000014 /* CanvasScreenView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000014 /* CanvasScreenView.swift */; };
-		A10000000000000000000063 /* CanvasScreenKeyCommands.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000063 /* CanvasScreenKeyCommands.swift */; };
-		A10000000000000000000066 /* CanvasFloatingToolPalette.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000066 /* CanvasFloatingToolPalette.swift */; };
-		A10000000000000000000067 /* CanvasSelectionToolbarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000067 /* CanvasSelectionToolbarView.swift */; };
 		A10000000000000000000015 /* CanvasBoardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000015 /* CanvasBoardView.swift */; };
 		A10000000000000000000016 /* CanvasElementChrome.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000016 /* CanvasElementChrome.swift */; };
 		A10000000000000000000017 /* TextBlockPayload.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000017 /* TextBlockPayload.swift */; };
@@ -105,57 +54,70 @@
 		A1000000000000000000002F /* StrokeInspectorSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000000000000000000002F /* StrokeInspectorSection.swift */; };
 		A10000000000000000000030 /* ChartPayload.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000030 /* ChartPayload.swift */; };
 		A10000000000000000000031 /* CanvasBoardViewModel+Charts.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000031 /* CanvasBoardViewModel+Charts.swift */; };
-		A10000000000000000000070 /* CanvasBoardViewModel+Templates.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000070 /* CanvasBoardViewModel+Templates.swift */; };
 		A10000000000000000000032 /* ChartBlockChartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000032 /* ChartBlockChartView.swift */; };
 		A10000000000000000000033 /* ChartCanvasItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000033 /* ChartCanvasItemView.swift */; };
 		A10000000000000000000034 /* ChartInspectorSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000034 /* ChartInspectorSection.swift */; };
 		A10000000000000000000036 /* Charts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A20000000000000000000036 /* Charts.framework */; };
+		A10000000000000000000037 /* CanvasInsertionPlacement.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000037 /* CanvasInsertionPlacement.swift */; };
+		A10000000000000000000038 /* CanvasSnapEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000038 /* CanvasSnapEngine.swift */; };
+		A10000000000000000000039 /* CanvasAlignmentGuidesOverlay.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000039 /* CanvasAlignmentGuidesOverlay.swift */; };
+		A1000000000000000000003A /* CanvasBoardViewModel+Snapping.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000000000000000000003A /* CanvasBoardViewModel+Snapping.swift */; };
+		A1000000000000000000003B /* CanvasBoardViewModel+EditorActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000000000000000000003B /* CanvasBoardViewModel+EditorActions.swift */; };
+		A1000000000000000000003C /* CanvasElementEditorContextMenuItems.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000000000000000000003C /* CanvasElementEditorContextMenuItems.swift */; };
+		A1000000000000000000003D /* CanvasEditorInspectorSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000000000000000000003D /* CanvasEditorInspectorSection.swift */; };
+		A1000000000000000000003E /* CanvasExportBounds.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000000000000000000003E /* CanvasExportBounds.swift */; };
+		A1000000000000000000003F /* CanvasBoardExportContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000000000000000000003F /* CanvasBoardExportContentView.swift */; };
+		A10000000000000000000040 /* CanvasExportService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000040 /* CanvasExportService.swift */; };
+		A10000000000000000000041 /* CanvasBoardViewModel+Undo.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000041 /* CanvasBoardViewModel+Undo.swift */; };
+		A10000000000000000000042 /* FlowDeskBoardUndoCommands.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000042 /* FlowDeskBoardUndoCommands.swift */; };
+		A10000000000000000000043 /* FlowDeskTheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000043 /* FlowDeskTheme.swift */; };
+		A10000000000000000000044 /* FlowDeskBoardTemplate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000044 /* FlowDeskBoardTemplate.swift */; };
+		A10000000000000000000045 /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000045 /* HomeView.swift */; };
+		A10000000000000000000046 /* CreationCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000046 /* CreationCardView.swift */; };
+		A10000000000000000000047 /* FlowDeskBoardTemplate+InitialCanvas.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000047 /* FlowDeskBoardTemplate+InitialCanvas.swift */; };
+		A10000000000000000000048 /* FlowDeskBoardTemplate+HomeDisplay.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000048 /* FlowDeskBoardTemplate+HomeDisplay.swift */; };
+		A10000000000000000000049 /* FlowDocument+ResolvedTemplate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000049 /* FlowDocument+ResolvedTemplate.swift */; };
+		A10000000000000000000050 /* ContinueBoardHeroView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000050 /* ContinueBoardHeroView.swift */; };
+		A10000000000000000000051 /* RecentBoardRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000051 /* RecentBoardRowView.swift */; };
+		A10000000000000000000052 /* FlowDeskAppearanceKinds.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000052 /* FlowDeskAppearanceKinds.swift */; };
+		A10000000000000000000053 /* FlowDeskAppearanceStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000053 /* FlowDeskAppearanceStore.swift */; };
+		A10000000000000000000054 /* FlowDeskAppearanceTokens.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000054 /* FlowDeskAppearanceTokens.swift */; };
+		A10000000000000000000055 /* FlowDeskAppearanceCardChrome.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000055 /* FlowDeskAppearanceCardChrome.swift */; };
+		A10000000000000000000056 /* FlowDeskAppearanceSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000056 /* FlowDeskAppearanceSettingsView.swift */; };
+		A10000000000000000000057 /* FlowDeskRootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000057 /* FlowDeskRootView.swift */; };
+		A10000000000000000000058 /* FlowDeskLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000058 /* FlowDeskLayout.swift */; };
+		A10000000000000000000059 /* FlowDeskTypography.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000059 /* FlowDeskTypography.swift */; };
+		A10000000000000000000060 /* FlowDeskInteractionStyles.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000060 /* FlowDeskInteractionStyles.swift */; };
+		A10000000000000000000061 /* FlowDeskCanvasClipboard.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000061 /* FlowDeskCanvasClipboard.swift */; };
+		A10000000000000000000062 /* CanvasBoardViewModel+Clipboard.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000062 /* CanvasBoardViewModel+Clipboard.swift */; };
+		A10000000000000000000063 /* CanvasScreenKeyCommands.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000063 /* CanvasScreenKeyCommands.swift */; };
+		A10000000000000000000064 /* CanvasBoardViewModel+GroupMove.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000064 /* CanvasBoardViewModel+GroupMove.swift */; };
+		A10000000000000000000065 /* CanvasMultiSelectionBoundsOverlay.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000065 /* CanvasMultiSelectionBoundsOverlay.swift */; };
+		A10000000000000000000066 /* CanvasFloatingToolPalette.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000066 /* CanvasFloatingToolPalette.swift */; };
+		A10000000000000000000067 /* CanvasSelectionToolbarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000067 /* CanvasSelectionToolbarView.swift */; };
+		A10000000000000000000068 /* FlowDeskOnboardingStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000068 /* FlowDeskOnboardingStore.swift */; };
+		A10000000000000000000069 /* FlowDeskOnboardingCallouts.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000069 /* FlowDeskOnboardingCallouts.swift */; };
+		A10000000000000000000070 /* CanvasBoardViewModel+Templates.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000070 /* CanvasBoardViewModel+Templates.swift */; };
+		A10000000000000000000071 /* CanvasBoardViewModel+ToolSelection.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000071 /* CanvasBoardViewModel+ToolSelection.swift */; };
+		A10000000000000000000081 /* ConnectorPayload.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000081 /* ConnectorPayload.swift */; };
+		A10000000000000000000082 /* CanvasConnectorGeometry.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000082 /* CanvasConnectorGeometry.swift */; };
+		A10000000000000000000083 /* CanvasBoardViewModel+Connectors.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000083 /* CanvasBoardViewModel+Connectors.swift */; };
+		A10000000000000000000084 /* CanvasBoardViewModel+OptionDuplicate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000084 /* CanvasBoardViewModel+OptionDuplicate.swift */; };
+		A10000000000000000000085 /* CanvasBoardViewModel+Alignment.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000085 /* CanvasBoardViewModel+Alignment.swift */; };
+		A10000000000000000000086 /* ConnectorCanvasItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000086 /* ConnectorCanvasItemView.swift */; };
+		A10000000000000000000087 /* ShapeConnectorHandlesOverlay.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000087 /* ShapeConnectorHandlesOverlay.swift */; };
+		A10000000000000000000088 /* CanvasMultiSelectionToolbarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000088 /* CanvasMultiSelectionToolbarView.swift */; };
+		A10000000000000000000089 /* CanvasZoomHUDView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000089 /* CanvasZoomHUDView.swift */; };
+		A10000000000000000000090 /* FlowDeskConnectorVisuals.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000090 /* FlowDeskConnectorVisuals.swift */; };
+		A10000000000000000000091 /* CanvasBoardViewModel+ViewportNavigation.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000091 /* CanvasBoardViewModel+ViewportNavigation.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		A20000000000000000000000 /* FlowDesk.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FlowDesk.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		A20000000000000000000000 /* Cerebra.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Cerebra.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A20000000000000000000001 /* FlowDeskApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlowDeskApp.swift; sourceTree = "<group>"; };
-		A20000000000000000000042 /* FlowDeskBoardUndoCommands.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlowDeskBoardUndoCommands.swift; sourceTree = "<group>"; };
-		A20000000000000000000010 /* ModelContainerFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelContainerFactory.swift; sourceTree = "<group>"; };
-		A20000000000000000000011 /* CanvasSelectionModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CanvasSelectionModel.swift; sourceTree = "<group>"; };
-		A20000000000000000000012 /* LibrarySeedService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibrarySeedService.swift; sourceTree = "<group>"; };
-		A20000000000000000000013 /* CanvasBoardState+Sample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CanvasBoardState+Sample.swift"; sourceTree = "<group>"; };
-		A20000000000000000000014 /* CanvasScreenView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CanvasScreenView.swift; sourceTree = "<group>"; };
-		A20000000000000000000063 /* CanvasScreenKeyCommands.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CanvasScreenKeyCommands.swift; sourceTree = "<group>"; };
-		A20000000000000000000066 /* CanvasFloatingToolPalette.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CanvasFloatingToolPalette.swift; sourceTree = "<group>"; };
-		A20000000000000000000067 /* CanvasSelectionToolbarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CanvasSelectionToolbarView.swift; sourceTree = "<group>"; };
-		A20000000000000000000015 /* CanvasBoardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CanvasBoardView.swift; sourceTree = "<group>"; };
-		A20000000000000000000016 /* CanvasElementChrome.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CanvasElementChrome.swift; sourceTree = "<group>"; };
 		A20000000000000000000002 /* FlowDocument.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlowDocument.swift; sourceTree = "<group>"; };
 		A20000000000000000000003 /* CanvasBoardState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CanvasBoardState.swift; sourceTree = "<group>"; };
 		A20000000000000000000004 /* JSONCoding+FlowDesk.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "JSONCoding+FlowDesk.swift"; sourceTree = "<group>"; };
-		A20000000000000000000037 /* CanvasInsertionPlacement.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CanvasInsertionPlacement.swift; sourceTree = "<group>"; };
-		A20000000000000000000061 /* FlowDeskCanvasClipboard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlowDeskCanvasClipboard.swift; sourceTree = "<group>"; };
-		A20000000000000000000062 /* CanvasBoardViewModel+Clipboard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CanvasBoardViewModel+Clipboard.swift"; sourceTree = "<group>"; };
-		A20000000000000000000064 /* CanvasBoardViewModel+GroupMove.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CanvasBoardViewModel+GroupMove.swift"; sourceTree = "<group>"; };
-		A20000000000000000000065 /* CanvasMultiSelectionBoundsOverlay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CanvasMultiSelectionBoundsOverlay.swift; sourceTree = "<group>"; };
-		A20000000000000000000038 /* CanvasSnapEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CanvasSnapEngine.swift; sourceTree = "<group>"; };
-		A20000000000000000000039 /* CanvasAlignmentGuidesOverlay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CanvasAlignmentGuidesOverlay.swift; sourceTree = "<group>"; };
-		A2000000000000000000003A /* CanvasBoardViewModel+Snapping.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CanvasBoardViewModel+Snapping.swift"; sourceTree = "<group>"; };
-		A20000000000000000000071 /* CanvasBoardViewModel+ToolSelection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CanvasBoardViewModel+ToolSelection.swift"; sourceTree = "<group>"; };
-		A20000000000000000000081 /* ConnectorPayload.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectorPayload.swift; sourceTree = "<group>"; };
-		A20000000000000000000082 /* CanvasConnectorGeometry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CanvasConnectorGeometry.swift; sourceTree = "<group>"; };
-		A20000000000000000000083 /* CanvasBoardViewModel+Connectors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CanvasBoardViewModel+Connectors.swift"; sourceTree = "<group>"; };
-		A20000000000000000000084 /* CanvasBoardViewModel+OptionDuplicate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CanvasBoardViewModel+OptionDuplicate.swift"; sourceTree = "<group>"; };
-		A20000000000000000000085 /* CanvasBoardViewModel+Alignment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CanvasBoardViewModel+Alignment.swift"; sourceTree = "<group>"; };
-		A20000000000000000000086 /* ConnectorCanvasItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectorCanvasItemView.swift; sourceTree = "<group>"; };
-		A20000000000000000000087 /* ShapeConnectorHandlesOverlay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShapeConnectorHandlesOverlay.swift; sourceTree = "<group>"; };
-		A20000000000000000000088 /* CanvasMultiSelectionToolbarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CanvasMultiSelectionToolbarView.swift; sourceTree = "<group>"; };
-		A20000000000000000000089 /* CanvasZoomHUDView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CanvasZoomHUDView.swift; sourceTree = "<group>"; };
-		A20000000000000000000090 /* FlowDeskConnectorVisuals.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlowDeskConnectorVisuals.swift; sourceTree = "<group>"; };
-		A20000000000000000000091 /* CanvasBoardViewModel+ViewportNavigation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CanvasBoardViewModel+ViewportNavigation.swift"; sourceTree = "<group>"; };
-		A2000000000000000000003B /* CanvasBoardViewModel+EditorActions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CanvasBoardViewModel+EditorActions.swift"; sourceTree = "<group>"; };
-		A2000000000000000000003C /* CanvasElementEditorContextMenuItems.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CanvasElementEditorContextMenuItems.swift; sourceTree = "<group>"; };
-		A2000000000000000000003D /* CanvasEditorInspectorSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CanvasEditorInspectorSection.swift; sourceTree = "<group>"; };
-		A2000000000000000000003E /* CanvasExportBounds.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CanvasExportBounds.swift; sourceTree = "<group>"; };
-		A2000000000000000000003F /* CanvasBoardExportContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CanvasBoardExportContentView.swift; sourceTree = "<group>"; };
-		A20000000000000000000040 /* CanvasExportService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CanvasExportService.swift; sourceTree = "<group>"; };
-		A20000000000000000000041 /* CanvasBoardViewModel+Undo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CanvasBoardViewModel+Undo.swift"; sourceTree = "<group>"; };
 		A20000000000000000000005 /* DocumentListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocumentListViewModel.swift; sourceTree = "<group>"; };
 		A20000000000000000000006 /* CanvasBoardViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CanvasBoardViewModel.swift; sourceTree = "<group>"; };
 		A20000000000000000000007 /* MainWindowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainWindowView.swift; sourceTree = "<group>"; };
@@ -163,29 +125,16 @@
 		A2000000000000000000000A /* InspectorPanelView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InspectorPanelView.swift; sourceTree = "<group>"; };
 		A2000000000000000000000B /* RenameDocumentSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RenameDocumentSheet.swift; sourceTree = "<group>"; };
 		A2000000000000000000000C /* CanvasGridOverlay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CanvasGridOverlay.swift; sourceTree = "<group>"; };
-		A20000000000000000000043 /* FlowDeskTheme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlowDeskTheme.swift; sourceTree = "<group>"; };
-		A20000000000000000000058 /* FlowDeskLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlowDeskLayout.swift; sourceTree = "<group>"; };
-		A20000000000000000000059 /* FlowDeskTypography.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlowDeskTypography.swift; sourceTree = "<group>"; };
-		A20000000000000000000060 /* FlowDeskInteractionStyles.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlowDeskInteractionStyles.swift; sourceTree = "<group>"; };
-		A20000000000000000000044 /* FlowDeskBoardTemplate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlowDeskBoardTemplate.swift; sourceTree = "<group>"; };
-		A20000000000000000000047 /* FlowDeskBoardTemplate+InitialCanvas.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "FlowDeskBoardTemplate+InitialCanvas.swift"; sourceTree = "<group>"; };
-		A20000000000000000000045 /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
-		A20000000000000000000046 /* CreationCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreationCardView.swift; sourceTree = "<group>"; };
-		A20000000000000000000048 /* FlowDeskBoardTemplate+HomeDisplay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "FlowDeskBoardTemplate+HomeDisplay.swift"; sourceTree = "<group>"; };
-		A20000000000000000000049 /* FlowDocument+ResolvedTemplate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "FlowDocument+ResolvedTemplate.swift"; sourceTree = "<group>"; };
-		A20000000000000000000050 /* ContinueBoardHeroView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContinueBoardHeroView.swift; sourceTree = "<group>"; };
-		A20000000000000000000051 /* RecentBoardRowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecentBoardRowView.swift; sourceTree = "<group>"; };
-		A20000000000000000000052 /* FlowDeskAppearanceKinds.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlowDeskAppearanceKinds.swift; sourceTree = "<group>"; };
-		A20000000000000000000053 /* FlowDeskAppearanceStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlowDeskAppearanceStore.swift; sourceTree = "<group>"; };
-		A20000000000000000000054 /* FlowDeskAppearanceTokens.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlowDeskAppearanceTokens.swift; sourceTree = "<group>"; };
-		A20000000000000000000055 /* FlowDeskAppearanceCardChrome.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlowDeskAppearanceCardChrome.swift; sourceTree = "<group>"; };
-		A20000000000000000000056 /* FlowDeskAppearanceSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlowDeskAppearanceSettingsView.swift; sourceTree = "<group>"; };
-		A20000000000000000000057 /* FlowDeskRootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlowDeskRootView.swift; sourceTree = "<group>"; };
-		A20000000000000000000068 /* FlowDeskOnboardingStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlowDeskOnboardingStore.swift; sourceTree = "<group>"; };
-		A20000000000000000000069 /* FlowDeskOnboardingCallouts.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlowDeskOnboardingCallouts.swift; sourceTree = "<group>"; };
 		A2000000000000000000000D /* BoardEmptySelectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoardEmptySelectionView.swift; sourceTree = "<group>"; };
 		A2000000000000000000000E /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		A2000000000000000000000F /* FlowDesk.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = FlowDesk.entitlements; sourceTree = "<group>"; };
+		A20000000000000000000010 /* ModelContainerFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelContainerFactory.swift; sourceTree = "<group>"; };
+		A20000000000000000000011 /* CanvasSelectionModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CanvasSelectionModel.swift; sourceTree = "<group>"; };
+		A20000000000000000000012 /* LibrarySeedService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibrarySeedService.swift; sourceTree = "<group>"; };
+		A20000000000000000000013 /* CanvasBoardState+Sample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CanvasBoardState+Sample.swift"; sourceTree = "<group>"; };
+		A20000000000000000000014 /* CanvasScreenView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CanvasScreenView.swift; sourceTree = "<group>"; };
+		A20000000000000000000015 /* CanvasBoardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CanvasBoardView.swift; sourceTree = "<group>"; };
+		A20000000000000000000016 /* CanvasElementChrome.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CanvasElementChrome.swift; sourceTree = "<group>"; };
 		A20000000000000000000017 /* TextBlockPayload.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextBlockPayload.swift; sourceTree = "<group>"; };
 		A20000000000000000000018 /* CanvasBoardViewModel+TextBlocks.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CanvasBoardViewModel+TextBlocks.swift"; sourceTree = "<group>"; };
 		A20000000000000000000019 /* TextBlockCanvasItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextBlockCanvasItemView.swift; sourceTree = "<group>"; };
@@ -213,11 +162,62 @@
 		A2000000000000000000002F /* StrokeInspectorSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StrokeInspectorSection.swift; sourceTree = "<group>"; };
 		A20000000000000000000030 /* ChartPayload.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChartPayload.swift; sourceTree = "<group>"; };
 		A20000000000000000000031 /* CanvasBoardViewModel+Charts.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CanvasBoardViewModel+Charts.swift"; sourceTree = "<group>"; };
-		A20000000000000000000070 /* CanvasBoardViewModel+Templates.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CanvasBoardViewModel+Templates.swift"; sourceTree = "<group>"; };
 		A20000000000000000000032 /* ChartBlockChartView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChartBlockChartView.swift; sourceTree = "<group>"; };
 		A20000000000000000000033 /* ChartCanvasItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChartCanvasItemView.swift; sourceTree = "<group>"; };
 		A20000000000000000000034 /* ChartInspectorSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChartInspectorSection.swift; sourceTree = "<group>"; };
 		A20000000000000000000036 /* Charts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Charts.framework; path = System/Library/Frameworks/Charts.framework; sourceTree = SDKROOT; };
+		A20000000000000000000037 /* CanvasInsertionPlacement.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CanvasInsertionPlacement.swift; sourceTree = "<group>"; };
+		A20000000000000000000038 /* CanvasSnapEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CanvasSnapEngine.swift; sourceTree = "<group>"; };
+		A20000000000000000000039 /* CanvasAlignmentGuidesOverlay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CanvasAlignmentGuidesOverlay.swift; sourceTree = "<group>"; };
+		A2000000000000000000003A /* CanvasBoardViewModel+Snapping.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CanvasBoardViewModel+Snapping.swift"; sourceTree = "<group>"; };
+		A2000000000000000000003B /* CanvasBoardViewModel+EditorActions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CanvasBoardViewModel+EditorActions.swift"; sourceTree = "<group>"; };
+		A2000000000000000000003C /* CanvasElementEditorContextMenuItems.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CanvasElementEditorContextMenuItems.swift; sourceTree = "<group>"; };
+		A2000000000000000000003D /* CanvasEditorInspectorSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CanvasEditorInspectorSection.swift; sourceTree = "<group>"; };
+		A2000000000000000000003E /* CanvasExportBounds.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CanvasExportBounds.swift; sourceTree = "<group>"; };
+		A2000000000000000000003F /* CanvasBoardExportContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CanvasBoardExportContentView.swift; sourceTree = "<group>"; };
+		A20000000000000000000040 /* CanvasExportService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CanvasExportService.swift; sourceTree = "<group>"; };
+		A20000000000000000000041 /* CanvasBoardViewModel+Undo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CanvasBoardViewModel+Undo.swift"; sourceTree = "<group>"; };
+		A20000000000000000000042 /* FlowDeskBoardUndoCommands.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlowDeskBoardUndoCommands.swift; sourceTree = "<group>"; };
+		A20000000000000000000043 /* FlowDeskTheme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlowDeskTheme.swift; sourceTree = "<group>"; };
+		A20000000000000000000044 /* FlowDeskBoardTemplate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlowDeskBoardTemplate.swift; sourceTree = "<group>"; };
+		A20000000000000000000045 /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
+		A20000000000000000000046 /* CreationCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreationCardView.swift; sourceTree = "<group>"; };
+		A20000000000000000000047 /* FlowDeskBoardTemplate+InitialCanvas.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "FlowDeskBoardTemplate+InitialCanvas.swift"; sourceTree = "<group>"; };
+		A20000000000000000000048 /* FlowDeskBoardTemplate+HomeDisplay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "FlowDeskBoardTemplate+HomeDisplay.swift"; sourceTree = "<group>"; };
+		A20000000000000000000049 /* FlowDocument+ResolvedTemplate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "FlowDocument+ResolvedTemplate.swift"; sourceTree = "<group>"; };
+		A20000000000000000000050 /* ContinueBoardHeroView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContinueBoardHeroView.swift; sourceTree = "<group>"; };
+		A20000000000000000000051 /* RecentBoardRowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecentBoardRowView.swift; sourceTree = "<group>"; };
+		A20000000000000000000052 /* FlowDeskAppearanceKinds.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlowDeskAppearanceKinds.swift; sourceTree = "<group>"; };
+		A20000000000000000000053 /* FlowDeskAppearanceStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlowDeskAppearanceStore.swift; sourceTree = "<group>"; };
+		A20000000000000000000054 /* FlowDeskAppearanceTokens.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlowDeskAppearanceTokens.swift; sourceTree = "<group>"; };
+		A20000000000000000000055 /* FlowDeskAppearanceCardChrome.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlowDeskAppearanceCardChrome.swift; sourceTree = "<group>"; };
+		A20000000000000000000056 /* FlowDeskAppearanceSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlowDeskAppearanceSettingsView.swift; sourceTree = "<group>"; };
+		A20000000000000000000057 /* FlowDeskRootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlowDeskRootView.swift; sourceTree = "<group>"; };
+		A20000000000000000000058 /* FlowDeskLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlowDeskLayout.swift; sourceTree = "<group>"; };
+		A20000000000000000000059 /* FlowDeskTypography.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlowDeskTypography.swift; sourceTree = "<group>"; };
+		A20000000000000000000060 /* FlowDeskInteractionStyles.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlowDeskInteractionStyles.swift; sourceTree = "<group>"; };
+		A20000000000000000000061 /* FlowDeskCanvasClipboard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlowDeskCanvasClipboard.swift; sourceTree = "<group>"; };
+		A20000000000000000000062 /* CanvasBoardViewModel+Clipboard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CanvasBoardViewModel+Clipboard.swift"; sourceTree = "<group>"; };
+		A20000000000000000000063 /* CanvasScreenKeyCommands.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CanvasScreenKeyCommands.swift; sourceTree = "<group>"; };
+		A20000000000000000000064 /* CanvasBoardViewModel+GroupMove.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CanvasBoardViewModel+GroupMove.swift"; sourceTree = "<group>"; };
+		A20000000000000000000065 /* CanvasMultiSelectionBoundsOverlay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CanvasMultiSelectionBoundsOverlay.swift; sourceTree = "<group>"; };
+		A20000000000000000000066 /* CanvasFloatingToolPalette.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CanvasFloatingToolPalette.swift; sourceTree = "<group>"; };
+		A20000000000000000000067 /* CanvasSelectionToolbarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CanvasSelectionToolbarView.swift; sourceTree = "<group>"; };
+		A20000000000000000000068 /* FlowDeskOnboardingStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlowDeskOnboardingStore.swift; sourceTree = "<group>"; };
+		A20000000000000000000069 /* FlowDeskOnboardingCallouts.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlowDeskOnboardingCallouts.swift; sourceTree = "<group>"; };
+		A20000000000000000000070 /* CanvasBoardViewModel+Templates.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CanvasBoardViewModel+Templates.swift"; sourceTree = "<group>"; };
+		A20000000000000000000071 /* CanvasBoardViewModel+ToolSelection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CanvasBoardViewModel+ToolSelection.swift"; sourceTree = "<group>"; };
+		A20000000000000000000081 /* ConnectorPayload.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectorPayload.swift; sourceTree = "<group>"; };
+		A20000000000000000000082 /* CanvasConnectorGeometry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CanvasConnectorGeometry.swift; sourceTree = "<group>"; };
+		A20000000000000000000083 /* CanvasBoardViewModel+Connectors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CanvasBoardViewModel+Connectors.swift"; sourceTree = "<group>"; };
+		A20000000000000000000084 /* CanvasBoardViewModel+OptionDuplicate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CanvasBoardViewModel+OptionDuplicate.swift"; sourceTree = "<group>"; };
+		A20000000000000000000085 /* CanvasBoardViewModel+Alignment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CanvasBoardViewModel+Alignment.swift"; sourceTree = "<group>"; };
+		A20000000000000000000086 /* ConnectorCanvasItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectorCanvasItemView.swift; sourceTree = "<group>"; };
+		A20000000000000000000087 /* ShapeConnectorHandlesOverlay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShapeConnectorHandlesOverlay.swift; sourceTree = "<group>"; };
+		A20000000000000000000088 /* CanvasMultiSelectionToolbarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CanvasMultiSelectionToolbarView.swift; sourceTree = "<group>"; };
+		A20000000000000000000089 /* CanvasZoomHUDView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CanvasZoomHUDView.swift; sourceTree = "<group>"; };
+		A20000000000000000000090 /* FlowDeskConnectorVisuals.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlowDeskConnectorVisuals.swift; sourceTree = "<group>"; };
+		A20000000000000000000091 /* CanvasBoardViewModel+ViewportNavigation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CanvasBoardViewModel+ViewportNavigation.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -232,11 +232,20 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		1E6630012F78769600D31682 /* Recovered References */ = {
+			isa = PBXGroup;
+			children = (
+				A20000000000000000000036 /* Charts.framework */,
+			);
+			name = "Recovered References";
+			sourceTree = "<group>";
+		};
 		A40000000000000000000001 = {
 			isa = PBXGroup;
 			children = (
 				A40000000000000000000002 /* FlowDesk */,
 				A40000000000000000000003 /* Products */,
+				1E6630012F78769600D31682 /* Recovered References */,
 			);
 			sourceTree = "<group>";
 		};
@@ -259,61 +268,10 @@
 			path = FlowDesk;
 			sourceTree = "<group>";
 		};
-		A40000000000000000000009 /* App */ = {
-			isa = PBXGroup;
-			children = (
-				A20000000000000000000001 /* FlowDeskApp.swift */,
-				A20000000000000000000057 /* FlowDeskRootView.swift */,
-				A20000000000000000000068 /* FlowDeskOnboardingStore.swift */,
-				A20000000000000000000069 /* FlowDeskOnboardingCallouts.swift */,
-				A20000000000000000000042 /* FlowDeskBoardUndoCommands.swift */,
-				A20000000000000000000010 /* ModelContainerFactory.swift */,
-			);
-			path = App;
-			sourceTree = "<group>";
-		};
-		A40000000000000000000018 /* Appearance */ = {
-			isa = PBXGroup;
-			children = (
-				A20000000000000000000052 /* FlowDeskAppearanceKinds.swift */,
-				A20000000000000000000053 /* FlowDeskAppearanceStore.swift */,
-				A20000000000000000000054 /* FlowDeskAppearanceTokens.swift */,
-				A20000000000000000000055 /* FlowDeskAppearanceCardChrome.swift */,
-				A20000000000000000000056 /* FlowDeskAppearanceSettingsView.swift */,
-			);
-			path = Appearance;
-			sourceTree = "<group>";
-		};
-		A4000000000000000000000D /* Selection */ = {
-			isa = PBXGroup;
-			children = (
-				A20000000000000000000011 /* CanvasSelectionModel.swift */,
-			);
-			path = Selection;
-			sourceTree = "<group>";
-		};
-		A4000000000000000000000E /* Services */ = {
-			isa = PBXGroup;
-			children = (
-				A20000000000000000000012 /* LibrarySeedService.swift */,
-			);
-			path = Services;
-			sourceTree = "<group>";
-		};
-		A40000000000000000000011 /* Export */ = {
-			isa = PBXGroup;
-			children = (
-				A2000000000000000000003E /* CanvasExportBounds.swift */,
-				A2000000000000000000003F /* CanvasBoardExportContentView.swift */,
-				A20000000000000000000040 /* CanvasExportService.swift */,
-			);
-			path = Export;
-			sourceTree = "<group>";
-		};
 		A40000000000000000000003 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				A20000000000000000000000 /* FlowDesk.app */,
+				A20000000000000000000000 /* Cerebra.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -378,15 +336,63 @@
 			path = Views;
 			sourceTree = "<group>";
 		};
-		A40000000000000000000017 /* Home */ = {
+		A40000000000000000000007 /* Components */ = {
 			isa = PBXGroup;
 			children = (
-				A20000000000000000000045 /* HomeView.swift */,
-				A20000000000000000000046 /* CreationCardView.swift */,
-				A20000000000000000000050 /* ContinueBoardHeroView.swift */,
-				A20000000000000000000051 /* RecentBoardRowView.swift */,
+				A2000000000000000000000C /* CanvasGridOverlay.swift */,
+				A20000000000000000000058 /* FlowDeskLayout.swift */,
+				A20000000000000000000059 /* FlowDeskTypography.swift */,
+				A20000000000000000000060 /* FlowDeskInteractionStyles.swift */,
+				A20000000000000000000043 /* FlowDeskTheme.swift */,
+				A2000000000000000000000D /* BoardEmptySelectionView.swift */,
+				A20000000000000000000016 /* CanvasElementChrome.swift */,
+				A2000000000000000000001B /* CanvasTextBlockResizeHandle.swift */,
+				A20000000000000000000039 /* CanvasAlignmentGuidesOverlay.swift */,
+				A20000000000000000000065 /* CanvasMultiSelectionBoundsOverlay.swift */,
+				A2000000000000000000003C /* CanvasElementEditorContextMenuItems.swift */,
 			);
-			path = Home;
+			path = Components;
+			sourceTree = "<group>";
+		};
+		A40000000000000000000008 /* Utilities */ = {
+			isa = PBXGroup;
+			children = (
+				A20000000000000000000004 /* JSONCoding+FlowDesk.swift */,
+				A20000000000000000000061 /* FlowDeskCanvasClipboard.swift */,
+				A20000000000000000000037 /* CanvasInsertionPlacement.swift */,
+				A20000000000000000000038 /* CanvasSnapEngine.swift */,
+				A20000000000000000000082 /* CanvasConnectorGeometry.swift */,
+			);
+			path = Utilities;
+			sourceTree = "<group>";
+		};
+		A40000000000000000000009 /* App */ = {
+			isa = PBXGroup;
+			children = (
+				A20000000000000000000001 /* FlowDeskApp.swift */,
+				A20000000000000000000057 /* FlowDeskRootView.swift */,
+				A20000000000000000000068 /* FlowDeskOnboardingStore.swift */,
+				A20000000000000000000069 /* FlowDeskOnboardingCallouts.swift */,
+				A20000000000000000000042 /* FlowDeskBoardUndoCommands.swift */,
+				A20000000000000000000010 /* ModelContainerFactory.swift */,
+			);
+			path = App;
+			sourceTree = "<group>";
+		};
+		A4000000000000000000000D /* Selection */ = {
+			isa = PBXGroup;
+			children = (
+				A20000000000000000000011 /* CanvasSelectionModel.swift */,
+			);
+			path = Selection;
+			sourceTree = "<group>";
+		};
+		A4000000000000000000000E /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				A20000000000000000000012 /* LibrarySeedService.swift */,
+			);
+			path = Services;
 			sourceTree = "<group>";
 		};
 		A4000000000000000000000F /* Canvas */ = {
@@ -409,14 +415,37 @@
 			path = Canvas;
 			sourceTree = "<group>";
 		};
-		A40000000000000000000019 /* Connector */ = {
+		A40000000000000000000010 /* Inspector */ = {
 			isa = PBXGroup;
 			children = (
-				A20000000000000000000086 /* ConnectorCanvasItemView.swift */,
-				A20000000000000000000087 /* ShapeConnectorHandlesOverlay.swift */,
-				A20000000000000000000090 /* FlowDeskConnectorVisuals.swift */,
+				A2000000000000000000001C /* TextBlockInspectorSection.swift */,
+				A20000000000000000000021 /* StickyNoteInspectorSection.swift */,
+				A20000000000000000000026 /* ShapeInspectorSection.swift */,
+				A2000000000000000000002E /* DrawingToolInspectorSection.swift */,
+				A2000000000000000000002F /* StrokeInspectorSection.swift */,
+				A20000000000000000000034 /* ChartInspectorSection.swift */,
+				A2000000000000000000003D /* CanvasEditorInspectorSection.swift */,
 			);
-			path = Connector;
+			path = Inspector;
+			sourceTree = "<group>";
+		};
+		A40000000000000000000011 /* Export */ = {
+			isa = PBXGroup;
+			children = (
+				A2000000000000000000003E /* CanvasExportBounds.swift */,
+				A2000000000000000000003F /* CanvasBoardExportContentView.swift */,
+				A20000000000000000000040 /* CanvasExportService.swift */,
+			);
+			path = Export;
+			sourceTree = "<group>";
+		};
+		A40000000000000000000012 /* Text */ = {
+			isa = PBXGroup;
+			children = (
+				A20000000000000000000019 /* TextBlockCanvasItemView.swift */,
+				A2000000000000000000001A /* TextBlockDisplayView.swift */,
+			);
+			path = Text;
 			sourceTree = "<group>";
 		};
 		A40000000000000000000013 /* Sticky */ = {
@@ -457,57 +486,37 @@
 			path = Chart;
 			sourceTree = "<group>";
 		};
-		A40000000000000000000010 /* Inspector */ = {
+		A40000000000000000000017 /* Home */ = {
 			isa = PBXGroup;
 			children = (
-				A2000000000000000000001C /* TextBlockInspectorSection.swift */,
-				A20000000000000000000021 /* StickyNoteInspectorSection.swift */,
-				A20000000000000000000026 /* ShapeInspectorSection.swift */,
-				A2000000000000000000002E /* DrawingToolInspectorSection.swift */,
-				A2000000000000000000002F /* StrokeInspectorSection.swift */,
-				A20000000000000000000034 /* ChartInspectorSection.swift */,
-				A2000000000000000000003D /* CanvasEditorInspectorSection.swift */,
+				A20000000000000000000045 /* HomeView.swift */,
+				A20000000000000000000046 /* CreationCardView.swift */,
+				A20000000000000000000050 /* ContinueBoardHeroView.swift */,
+				A20000000000000000000051 /* RecentBoardRowView.swift */,
 			);
-			path = Inspector;
+			path = Home;
 			sourceTree = "<group>";
 		};
-		A40000000000000000000012 /* Text */ = {
+		A40000000000000000000018 /* Appearance */ = {
 			isa = PBXGroup;
 			children = (
-				A20000000000000000000019 /* TextBlockCanvasItemView.swift */,
-				A2000000000000000000001A /* TextBlockDisplayView.swift */,
+				A20000000000000000000052 /* FlowDeskAppearanceKinds.swift */,
+				A20000000000000000000053 /* FlowDeskAppearanceStore.swift */,
+				A20000000000000000000054 /* FlowDeskAppearanceTokens.swift */,
+				A20000000000000000000055 /* FlowDeskAppearanceCardChrome.swift */,
+				A20000000000000000000056 /* FlowDeskAppearanceSettingsView.swift */,
 			);
-			path = Text;
+			path = Appearance;
 			sourceTree = "<group>";
 		};
-		A40000000000000000000007 /* Components */ = {
+		A40000000000000000000019 /* Connector */ = {
 			isa = PBXGroup;
 			children = (
-				A2000000000000000000000C /* CanvasGridOverlay.swift */,
-				A20000000000000000000058 /* FlowDeskLayout.swift */,
-				A20000000000000000000059 /* FlowDeskTypography.swift */,
-				A20000000000000000000060 /* FlowDeskInteractionStyles.swift */,
-				A20000000000000000000043 /* FlowDeskTheme.swift */,
-				A2000000000000000000000D /* BoardEmptySelectionView.swift */,
-				A20000000000000000000016 /* CanvasElementChrome.swift */,
-				A2000000000000000000001B /* CanvasTextBlockResizeHandle.swift */,
-				A20000000000000000000039 /* CanvasAlignmentGuidesOverlay.swift */,
-				A20000000000000000000065 /* CanvasMultiSelectionBoundsOverlay.swift */,
-				A2000000000000000000003C /* CanvasElementEditorContextMenuItems.swift */,
+				A20000000000000000000086 /* ConnectorCanvasItemView.swift */,
+				A20000000000000000000087 /* ShapeConnectorHandlesOverlay.swift */,
+				A20000000000000000000090 /* FlowDeskConnectorVisuals.swift */,
 			);
-			path = Components;
-			sourceTree = "<group>";
-		};
-		A40000000000000000000008 /* Utilities */ = {
-			isa = PBXGroup;
-			children = (
-				A20000000000000000000004 /* JSONCoding+FlowDesk.swift */,
-				A20000000000000000000061 /* FlowDeskCanvasClipboard.swift */,
-				A20000000000000000000037 /* CanvasInsertionPlacement.swift */,
-				A20000000000000000000038 /* CanvasSnapEngine.swift */,
-				A20000000000000000000082 /* CanvasConnectorGeometry.swift */,
-			);
-			path = Utilities;
+			path = Connector;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -527,7 +536,7 @@
 			);
 			name = FlowDesk;
 			productName = FlowDesk;
-			productReference = A20000000000000000000000 /* FlowDesk.app */;
+			productReference = A20000000000000000000000 /* Cerebra.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -538,7 +547,7 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
 				LastSwiftUpdateCheck = 1500;
-				LastUpgradeCheck = 1500;
+				LastUpgradeCheck = 2620;
 				TargetAttributes = {
 					A50000000000000000000001 = {
 						CreatedOnToolsVersion = 15.0;
@@ -745,6 +754,7 @@
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = macosx;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
@@ -802,6 +812,7 @@
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = macosx;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_COMPILATION_MODE = wholemodule;
 			};
 			name = Release;
@@ -816,7 +827,9 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "";
+				ENABLE_APP_SANDBOX = YES;
 				ENABLE_PREVIEWS = YES;
+				ENABLE_USER_SELECTED_FILES = readwrite;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_CFBundleDisplayName = Cerebra;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
@@ -827,7 +840,7 @@
 				);
 				MARKETING_VERSION = 0.1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = app.flowdesk.FlowDesk;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = Cerebra;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_STRICT_CONCURRENCY = complete;
 				SWIFT_VERSION = 5.0;
@@ -844,7 +857,9 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "";
+				ENABLE_APP_SANDBOX = YES;
 				ENABLE_PREVIEWS = YES;
+				ENABLE_USER_SELECTED_FILES = readwrite;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_CFBundleDisplayName = Cerebra;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
@@ -855,7 +870,7 @@
 				);
 				MARKETING_VERSION = 0.1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = app.flowdesk.FlowDesk;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = Cerebra;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_STRICT_CONCURRENCY = complete;
 				SWIFT_VERSION = 5.0;

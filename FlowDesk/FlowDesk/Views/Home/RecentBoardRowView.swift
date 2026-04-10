@@ -2,8 +2,6 @@ import SwiftUI
 
 /// Single recent board entry on the home dashboard (not a plain List row).
 struct RecentBoardRowView: View {
-    @Environment(\.flowDeskTokens) private var tokens
-
     let document: FlowDocument
     let onOpen: () -> Void
 
@@ -51,30 +49,7 @@ struct RecentBoardRowView: View {
             }
             .padding(.horizontal, FlowDeskLayout.homeRecentRowHorizontalPadding)
             .padding(.vertical, FlowDeskLayout.homeRecentRowVerticalPadding)
-            .background {
-                tokens.homeCardFillBackground(cornerRadius: FlowDeskLayout.cardCornerRadius)
-                    .opacity(isHovered ? 0.92 : 0.78)
-                    .shadow(
-                        color: Color.black.opacity(
-                            isHovered ? tokens.homeCardShadowOpacityHover : tokens.homeCardShadowOpacityNormal
-                        ),
-                        radius: isHovered ? tokens.homeCardShadowRadiusHover : tokens.homeCardShadowRadiusNormal,
-                        x: 0,
-                        y: isHovered ? FlowDeskLayout.cardShadowYHover : FlowDeskLayout.cardShadowYNormal
-                    )
-            }
-            .overlay {
-                RoundedRectangle(cornerRadius: FlowDeskLayout.cardCornerRadius, style: .continuous)
-                    .strokeBorder(
-                        Color.primary.opacity(
-                            isHovered ? tokens.homeCardBorderHover : tokens.homeCardBorderNormal
-                        ),
-                        lineWidth: isHovered
-                            ? FlowDeskLayout.cardBorderLineWidthHover
-                            : FlowDeskLayout.cardBorderLineWidth
-                    )
-            }
-            .animation(.spring(response: 0.32, dampingFraction: 0.88), value: isHovered)
+            .flowDeskCardChrome(isHovered: $isHovered, scaleOnHover: 1.0)
         }
         .buttonStyle(FlowDeskPlainCardButtonStyle())
         .onHover { isHovered = $0 }

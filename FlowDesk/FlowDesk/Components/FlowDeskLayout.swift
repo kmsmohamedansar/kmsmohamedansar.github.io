@@ -17,7 +17,8 @@ enum FlowDeskLayout {
     static let homePageHorizontalPadding: CGFloat = 32
     static let homePageVerticalPadding: CGFloat = 32
     static let homeMajorSectionSpacing: CGFloat = 32
-    static let homeSubsectionSpacing: CGFloat = 12
+    /// Space between a section label block and its first card (keeps vertical rhythm with grid gaps).
+    static let homeSubsectionSpacing: CGFloat = 16
     static let homeHeadlineToBodySpacing: CGFloat = 10
     static let homeCreationGridSpacing: CGFloat = 16
     /// Caps width of the secondary “Blank board” tile so the hero canvas card dominates.
@@ -32,20 +33,20 @@ enum FlowDeskLayout {
     static let cardBorderLineWidth: CGFloat = 1
     static let cardBorderLineWidthHover: CGFloat = 1.25
 
-    static let cardShadowYNormal: CGFloat = 2
+    static let cardShadowYNormal: CGFloat = 4
     static let cardShadowYHover: CGFloat = 5
 
     static let homeCreationCardMinHeight: CGFloat = 144
     /// Primary “Smart canvas” tile on Home (secondary blank uses `homeCreationCardMinHeight`).
     static let homeCreationCardHeroMinHeight: CGFloat = 196
-    static let homeCreationCardInnerSpacing: CGFloat = 12
-    static let homeCreationCardTitleSubtitleSpacing: CGFloat = 4
+    static let homeCreationCardInnerSpacing: CGFloat = 14
+    static let homeCreationCardTitleSubtitleSpacing: CGFloat = 6
 
     static let homeContinueMinHeight: CGFloat = 108
-    static let homeCardPadding: CGFloat = 16
+    static let homeCardPadding: CGFloat = 18
 
-    static let homeRecentRowHorizontalPadding: CGFloat = 16
-    static let homeRecentRowVerticalPadding: CGFloat = 12
+    static let homeRecentRowHorizontalPadding: CGFloat = 18
+    static let homeRecentRowVerticalPadding: CGFloat = 14
 
     /// Interior padding for text blocks and chart bodies (aligned with home cards).
     static let canvasCardContentPadding = EdgeInsets(top: 12, leading: 16, bottom: 12, trailing: 16)
@@ -54,7 +55,7 @@ enum FlowDeskLayout {
 
     // MARK: - Selection chrome (geometry only; colors from tokens)
 
-    static let shapeSelectionCornerRadius: CGFloat = 12
+    static let shapeSelectionCornerRadius: CGFloat = 14
     static let strokeSelectionCornerRadius: CGFloat = 8
 
     // MARK: - Sidebar
@@ -70,8 +71,8 @@ enum FlowDeskLayout {
 
     // MARK: - Inspector
 
-    static let inspectorHorizontalPadding: CGFloat = 8
-    static let inspectorSectionHeaderBottomSpacing: CGFloat = 4
+    static let inspectorHorizontalPadding: CGFloat = 12
+    static let inspectorSectionHeaderBottomSpacing: CGFloat = 8
 
     // MARK: - Canvas
 

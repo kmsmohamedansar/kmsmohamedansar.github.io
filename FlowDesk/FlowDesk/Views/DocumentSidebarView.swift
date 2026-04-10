@@ -2,6 +2,7 @@ import SwiftUI
 
 struct DocumentSidebarView: View {
     @Environment(\.flowDeskTokens) private var tokens
+    @Environment(\.colorScheme) private var colorScheme
 
     let documents: [FlowDocument]
     @Binding var selection: FlowDocument?
@@ -63,7 +64,7 @@ struct DocumentSidebarView: View {
                     } header: {
                         Text("Boards")
                             .font(FlowDeskTypography.sidebarSectionHeader)
-                            .foregroundStyle(.quaternary)
+                            .foregroundStyle(.tertiary)
                             .textCase(.uppercase)
                             .tracking(0.35)
                             .padding(.bottom, FlowDeskLayout.spaceXS)
@@ -73,7 +74,15 @@ struct DocumentSidebarView: View {
                 .scrollContentBackground(.hidden)
             }
         }
-        .background(tokens.sidebarListTint)
+        .background {
+            ZStack(alignment: .trailing) {
+                tokens.sidebarListTint
+                Rectangle()
+                    .fill(Color.primary.opacity(colorScheme == .dark ? 0.16 : 0.045))
+                    .frame(width: 1)
+                    .allowsHitTesting(false)
+            }
+        }
         .safeAreaInset(edge: .bottom) {
             VStack(alignment: .leading, spacing: 0) {
                 Divider()
@@ -101,18 +110,26 @@ struct DocumentSidebarView: View {
     }
 
     private func sidebarRowBackground(isSelected: Bool, isHovered: Bool) -> some View {
-        RoundedRectangle(cornerRadius: FlowDeskLayout.sidebarRowSelectionCornerRadius, style: .continuous)
+        let corner = FlowDeskLayout.sidebarRowSelectionCornerRadius
+        return RoundedRectangle(cornerRadius: corner, style: .continuous)
             .fill(rowFill(isSelected: isSelected, isHovered: isHovered))
+            .overlay {
+                RoundedRectangle(cornerRadius: corner, style: .continuous)
+                    .strokeBorder(
+                        isSelected ? tokens.selectionStrokeColor.opacity(0.36) : Color.clear,
+                        lineWidth: 1
+                    )
+            }
             .padding(.vertical, 2)
             .padding(.horizontal, 4)
     }
 
     private func rowFill(isSelected: Bool, isHovered: Bool) -> Color {
         if isSelected {
-            return Color.primary.opacity(0.085)
+            return tokens.selectionStrokeColor.opacity(0.17)
         }
         if isHovered {
-            return Color.primary.opacity(0.045)
+            return tokens.selectionStrokeColor.opacity(0.092)
         }
         return Color.clear
     }

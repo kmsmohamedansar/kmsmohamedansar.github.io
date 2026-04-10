@@ -63,7 +63,7 @@ struct CanvasBoardView: View {
 
                     if let r = placementPreviewRect {
                         RoundedRectangle(cornerRadius: 3, style: .continuous)
-                            .strokeBorder(Color.accentColor.opacity(0.92), style: StrokeStyle(lineWidth: 1.25, dash: [7, 5]))
+                            .strokeBorder(tokens.selectionStrokeColor.opacity(0.88), style: StrokeStyle(lineWidth: 1.25, dash: [7, 5]))
                             .frame(width: r.width, height: r.height)
                             .position(x: r.midX, y: r.midY)
                             .allowsHitTesting(false)
@@ -442,7 +442,7 @@ struct CanvasBoardView: View {
     @ViewBuilder
     private func canvasBackground(showGrid: Bool) -> some View {
         ZStack {
-            tokens.workspaceBackground
+            tokens.canvasWorkspaceBackground
             FlowDeskTheme.canvasBoardRadialAtmosphere(colorScheme: colorScheme)
                 .allowsHitTesting(false)
             FlowDeskTheme.canvasBoardCenterGlow(colorScheme: colorScheme)
@@ -630,17 +630,10 @@ struct CanvasBoardView: View {
         let h = CGFloat(element.height) + pad * 2
         let cr = min(20, min(w, h) * 0.28)
         return RoundedRectangle(cornerRadius: cr, style: .continuous)
-            .strokeBorder(
-                LinearGradient(
-                    colors: [Color.accentColor.opacity(0.95), Color.accentColor.opacity(0.58)],
-                    startPoint: .topLeading,
-                    endPoint: .bottomTrailing
-                ),
-                lineWidth: 2
-            )
+            .strokeBorder(tokens.selectionStrokeColor.opacity(0.78), lineWidth: 1.75)
             .background {
                 RoundedRectangle(cornerRadius: cr, style: .continuous)
-                    .fill(Color.accentColor.opacity(0.12))
+                    .fill(tokens.selectionStrokeColor.opacity(0.09))
             }
             .frame(width: w, height: h)
             .position(
@@ -706,14 +699,14 @@ struct CanvasBoardView: View {
                 .position(draft.startCanvasPoint)
             if snapping {
                 Circle()
-                    .fill(Color.accentColor.opacity(0.22))
+                    .fill(tokens.selectionStrokeColor.opacity(0.18))
                     .frame(
                         width: FlowDeskConnectorVisuals.draftSnapRingOuterRadius * 2,
                         height: FlowDeskConnectorVisuals.draftSnapRingOuterRadius * 2
                     )
                     .overlay {
                         Circle().strokeBorder(
-                            Color.accentColor.opacity(0.92),
+                            tokens.selectionStrokeColor.opacity(0.82),
                             lineWidth: FlowDeskConnectorVisuals.draftSnapRingLineWidth
                         )
                     }

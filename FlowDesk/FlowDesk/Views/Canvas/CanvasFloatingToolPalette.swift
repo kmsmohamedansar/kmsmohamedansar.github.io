@@ -225,7 +225,7 @@ struct CerebraCanvasChromeColumn: View {
                             .padding(.vertical, 8)
                             .background {
                                 RoundedRectangle(cornerRadius: 8, style: .continuous)
-                                    .fill(picked ? Color.accentColor.opacity(0.15) : Color.primary.opacity(0.04))
+                                    .fill(picked ? tokens.selectionStrokeColor.opacity(0.12) : Color.primary.opacity(0.04))
                             }
                     }
                     .buttonStyle(.plain)
@@ -372,8 +372,8 @@ private struct ChromeRailIconButton: View {
     }
 
     private var chipFill: Color {
-        if selected { return Color.accentColor.opacity(0.2) }
-        if hovered { return Color.primary.opacity(0.06) }
+        if selected { return tokens.selectionStrokeColor.opacity(0.16) }
+        if hovered { return tokens.selectionStrokeColor.opacity(0.1) }
         return Color.clear
     }
 

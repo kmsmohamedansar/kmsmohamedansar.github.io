@@ -2,6 +2,8 @@ import SwiftUI
 
 /// Placeholder chrome for a canvas element until per-kind editors exist.
 struct CanvasElementChrome: View {
+    @Environment(\.flowDeskTokens) private var tokens
+
     let element: CanvasElementRecord
     var isSelected: Bool
 
@@ -12,8 +14,8 @@ struct CanvasElementChrome: View {
                 .overlay {
                     RoundedRectangle(cornerRadius: 10, style: .continuous)
                         .strokeBorder(
-                            isSelected ? Color.accentColor : Color.primary.opacity(0.2),
-                            lineWidth: isSelected ? 2 : 1
+                            isSelected ? tokens.selectionStrokeColor : Color.primary.opacity(0.2),
+                            lineWidth: isSelected ? 1.25 : 1
                         )
                 }
 

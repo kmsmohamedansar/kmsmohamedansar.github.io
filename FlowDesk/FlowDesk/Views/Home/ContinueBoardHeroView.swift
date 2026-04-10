@@ -32,7 +32,8 @@ struct ContinueBoardHeroView: View {
 
                     Text("Last edited \(document.updatedAt.formatted(.relative(presentation: .named)))")
                         .font(FlowDeskTypography.continueMeta)
-                        .foregroundStyle(.secondary)
+                        .foregroundStyle(.tertiary)
+                        .lineSpacing(2)
                 }
 
                 Spacer(minLength: FlowDeskLayout.spaceM)
