@@ -3,23 +3,31 @@ import SwiftUI
 /// Placeholder chrome for a canvas element until per-kind editors exist.
 struct CanvasElementChrome: View {
     @Environment(\.flowDeskTokens) private var tokens
+    @Environment(\.colorScheme) private var colorScheme
 
     let element: CanvasElementRecord
     var isSelected: Bool
 
     var body: some View {
+        let corner = FlowDeskLayout.chromeCompactCornerRadius
         ZStack(alignment: .topLeading) {
-            RoundedRectangle(cornerRadius: 10, style: .continuous)
-                .fill(fillColor.opacity(0.35))
+            RoundedRectangle(cornerRadius: corner, style: .continuous)
+                .fill(tokens.homeCardFill.opacity(colorScheme == .dark ? 0.14 : 0.22))
                 .overlay {
-                    RoundedRectangle(cornerRadius: 10, style: .continuous)
+                    RoundedRectangle(cornerRadius: corner, style: .continuous)
                         .strokeBorder(
-                            isSelected ? tokens.selectionStrokeColor : Color.primary.opacity(0.2),
-                            lineWidth: isSelected ? 1.25 : 1
+                            isSelected ? tokens.selectionStrokeColor : Color.primary.opacity(0.14),
+                            lineWidth: isSelected ? FlowDeskLayout.chromeHairlineBorderWidth + 0.5 : FlowDeskLayout.chromeHairlineBorderWidth
                         )
                 }
+                .shadow(
+                    color: Color.black.opacity(colorScheme == .dark ? 0.22 : 0.07),
+                    radius: 5,
+                    x: 0,
+                    y: 2
+                )
 
-            VStack(alignment: .leading, spacing: 4) {
+            VStack(alignment: .leading, spacing: FlowDeskLayout.spaceXS) {
                 Label(element.kind.displayName, systemImage: element.kind.systemImage)
                     .font(.caption.weight(.semibold))
                     .foregroundStyle(.primary)
@@ -27,19 +35,7 @@ struct CanvasElementChrome: View {
                     .font(.caption2)
                     .foregroundStyle(.secondary)
             }
-            .padding(10)
-        }
-    }
-
-    private var fillColor: Color {
-        switch element.kind {
-        case .textBlock: return .blue
-        case .stickyNote: return .yellow
-        case .stroke: return .purple
-        case .shape: return .gray
-        case .chart: return .green
-        case .connector: return .cyan
-        @unknown default: return .gray
+            .padding(FlowDeskLayout.canvasContextTemplateRowPadding)
         }
     }
 }

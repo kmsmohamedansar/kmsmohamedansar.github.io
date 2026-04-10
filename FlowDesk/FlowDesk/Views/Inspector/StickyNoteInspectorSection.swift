@@ -32,7 +32,11 @@ struct StickyNoteInspectorSection: View {
                                         Circle()
                                             .strokeBorder(tokens.selectionStrokeColor, lineWidth: selected ? 1.5 : 0)
                                     }
-                                    .shadow(color: .black.opacity(0.08), radius: 2, y: 1)
+                                    .shadow(
+                                        color: .black.opacity(FlowDeskTheme.canvasAuxiliaryLabelShadowOpacity * 0.65),
+                                        radius: FlowDeskTheme.canvasAuxiliaryLabelShadowRadius,
+                                        y: FlowDeskTheme.canvasAuxiliaryLabelShadowY
+                                    )
                             }
                             .buttonStyle(.plain)
                             .help(preset.displayName)

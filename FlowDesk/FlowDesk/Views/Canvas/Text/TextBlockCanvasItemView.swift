@@ -85,7 +85,7 @@ struct TextBlockCanvasItemView: View {
         .overlay(alignment: .bottomTrailing) {
             if isSelected, !isEditing, !selection.isMultiSelection {
                 CanvasTextBlockResizeHandle()
-                    .padding(7)
+                    .padding(FlowDeskLayout.canvasSelectionChromeInset)
                     .gesture(resizeGesture)
             }
         }

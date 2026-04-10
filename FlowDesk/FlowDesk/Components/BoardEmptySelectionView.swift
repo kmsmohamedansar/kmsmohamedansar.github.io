@@ -5,7 +5,7 @@ struct BoardEmptySelectionView: View {
 
     var body: some View {
         ContentUnavailableView {
-            VStack(spacing: 14) {
+            VStack(spacing: FlowDeskLayout.spaceM + FlowDeskLayout.spaceXS / 2) {
                 Image(systemName: "square.dashed")
                     .font(.system(size: 40, weight: .ultraLight))
                     .symbolRenderingMode(.hierarchical)
@@ -24,6 +24,6 @@ struct BoardEmptySelectionView: View {
                 .buttonStyle(.borderedProminent)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .padding(32)
+        .padding(FlowDeskLayout.spaceXXL)
     }
 }

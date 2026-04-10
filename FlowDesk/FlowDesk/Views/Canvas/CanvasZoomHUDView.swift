@@ -5,9 +5,6 @@ struct CanvasZoomHUDView: View {
     @Bindable var boardViewModel: CanvasBoardViewModel
     @Bindable var selection: CanvasSelectionModel
 
-    @Environment(\.flowDeskTokens) private var tokens
-    @Environment(\.colorScheme) private var colorScheme
-
     private var scalePercent: Int {
         Int((boardViewModel.boardState.viewport.scale * 100).rounded())
     }
@@ -63,20 +60,14 @@ struct CanvasZoomHUDView: View {
             .buttonStyle(.plain)
             .help("Zoom in (⌘+)")
         }
-        .padding(.horizontal, 10)
-        .padding(.vertical, 6)
-        .background {
-            ZStack {
-                RoundedRectangle(cornerRadius: 10, style: .continuous)
-                    .fill(.ultraThinMaterial)
-                RoundedRectangle(cornerRadius: 10, style: .continuous)
-                    .fill(tokens.homeCardFill.opacity(colorScheme == .dark ? 0.08 : 0.12))
-            }
-        }
-        .overlay {
-            RoundedRectangle(cornerRadius: 10, style: .continuous)
-                .strokeBorder(Color.primary.opacity(0.08), lineWidth: 0.75)
-        }
+        .padding(.horizontal, FlowDeskLayout.floatingPanelToolbarPaddingH)
+        .padding(.vertical, FlowDeskLayout.floatingPanelToolbarPaddingV)
+        .flowDeskFloatingPanelChrome(
+            cornerRadius: FlowDeskLayout.chromeCompactCornerRadius,
+            shadowStyle: .compactHUD,
+            lightTintOpacity: 0.12,
+            darkTintOpacity: 0.08
+        )
     }
 
 }

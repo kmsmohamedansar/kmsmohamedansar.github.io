@@ -6,11 +6,11 @@ enum FlowDeskTypography {
 
     /// Small editorial label above the hero line (premium restraint).
     static let pageEyebrow = Font.system(size: 10.5, weight: .semibold, design: .default)
-    static let pageSubtitle = Font.title2.weight(.regular)
+    static let pageSubtitle = Font.title2.weight(.light)
     /// Primary home headline — heavier than body copy for clear editorial hierarchy (Notion-like calm, not shouty).
     static let homeHeroTitle = Font.largeTitle.weight(.heavy)
     static let homeIntroBody = Font.body
-    static let sectionTitle = Font.title3.weight(.semibold)
+    static let sectionTitle = Font.title3.weight(.bold)
     static let sectionCaption = Font.subheadline
     /// Short supporting line under major home headings.
     static let homeSectionKicker = Font.subheadline.weight(.medium)

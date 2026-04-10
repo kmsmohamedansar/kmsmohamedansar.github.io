@@ -54,7 +54,15 @@ struct ShapeConnectorHandlesOverlay: View {
                 .overlay {
                     Circle().strokeBorder(Color.white.opacity(isHover ? 0.5 : 0.34), lineWidth: 0.85)
                 }
-                .shadow(color: Color.black.opacity(isHover ? 0.22 : 0.12), radius: isHover ? 3 : 1.5, y: 1)
+                .shadow(
+                    color: Color.black.opacity(
+                        isHover
+                            ? FlowDeskTheme.canvasAuxiliaryLabelShadowOpacityHover
+                            : FlowDeskTheme.canvasAuxiliaryLabelShadowOpacity
+                    ),
+                    radius: isHover ? FlowDeskTheme.canvasAuxiliaryLabelShadowRadiusHover : FlowDeskTheme.canvasAuxiliaryLabelShadowRadius * 0.75,
+                    y: FlowDeskTheme.canvasAuxiliaryLabelShadowY
+                )
         }
         .frame(width: 24, height: 24)
         .contentShape(Circle())

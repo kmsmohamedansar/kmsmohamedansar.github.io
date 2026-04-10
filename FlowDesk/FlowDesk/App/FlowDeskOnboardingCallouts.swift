@@ -4,9 +4,6 @@ import SwiftUI
 
 /// First-run tips: same depth language as the floating palette (material + one shadow + one hairline).
 struct FlowDeskOnboardingTipCard: View {
-    @Environment(\.flowDeskTokens) private var tokens
-    @Environment(\.colorScheme) private var colorScheme
-
     let title: String
     let tips: [String]
     let onDismiss: () -> Void
@@ -63,36 +60,13 @@ struct FlowDeskOnboardingTipCard: View {
             .buttonStyle(.borderedProminent)
             .controlSize(.regular)
         }
-        .padding(FlowDeskLayout.floatingPanelContentPadding + 2)
+        .padding(FlowDeskLayout.floatingPanelContentPadding + FlowDeskLayout.spaceXS)
         .frame(maxWidth: 312, alignment: .leading)
-        .background {
-            ZStack {
-                RoundedRectangle(cornerRadius: FlowDeskLayout.floatingPanelCornerRadius, style: .continuous)
-                    .fill(.ultraThinMaterial)
-                RoundedRectangle(cornerRadius: FlowDeskLayout.floatingPanelCornerRadius, style: .continuous)
-                    .fill(tokens.homeCardFill.opacity(colorScheme == .dark ? 0.08 : 0.12))
-            }
-            .shadow(
-                color: Color.black.opacity(FlowDeskTheme.floatingPanelShadowOpacity * 0.92),
-                radius: FlowDeskTheme.floatingPanelShadowRadius * 0.9,
-                x: 0,
-                y: FlowDeskTheme.floatingPanelShadowY
-            )
-        }
-        .overlay {
-            RoundedRectangle(cornerRadius: FlowDeskLayout.floatingPanelCornerRadius, style: .continuous)
-                .strokeBorder(
-                    LinearGradient(
-                        colors: [
-                            Color.primary.opacity(0.09),
-                            Color.primary.opacity(0.035)
-                        ],
-                        startPoint: .topLeading,
-                        endPoint: .bottomTrailing
-                    ),
-                    lineWidth: 0.75
-                )
-        }
+        .flowDeskFloatingPanelChrome(
+            shadowStyle: .toolPalette,
+            lightTintOpacity: 0.12,
+            darkTintOpacity: 0.08
+        )
         .accessibilityElement(children: .contain)
         .accessibilityLabel("Cerebra tips")
     }

@@ -8,6 +8,7 @@ struct CanvasBoardExportContentView: View {
     let exportRect: CGRect
     /// Matches the user’s light/dark + style preset for background and grid (see `CanvasExportService`).
     let tokens: FlowDeskAppearanceTokens
+    let colorScheme: ColorScheme
 
     private var sortedElements: [CanvasElementRecord] {
         boardState.elements.sorted {
@@ -37,17 +38,12 @@ struct CanvasBoardExportContentView: View {
 
     @ViewBuilder
     private func exportBackground(showGrid: Bool) -> some View {
-        ZStack {
-            tokens.canvasWorkspaceBackground
-            if showGrid {
-                CanvasGridOverlay(
-                    spacing: 24,
-                    lineWidth: 0.35,
-                    lineOpacity: tokens.gridLineOpacity,
-                    gridInk: tokens.canvasGridInk
-                )
-            }
-        }
+        FlowDeskTheme.canvasWorkspaceMatBackground(
+            tokens: tokens,
+            colorScheme: colorScheme,
+            showGrid: showGrid,
+            includeFilmGrain: false
+        )
     }
 
     @ViewBuilder

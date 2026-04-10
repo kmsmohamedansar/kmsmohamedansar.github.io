@@ -7,7 +7,7 @@ import UniformTypeIdentifiers
 
 @MainActor
 private enum CanvasExportAppearance {
-    static func resolvedTokens() -> FlowDeskAppearanceTokens {
+    static func resolvedAppearance() -> (colorScheme: ColorScheme, tokens: FlowDeskAppearanceTokens) {
         let modeRaw = UserDefaults.standard.string(forKey: "FlowDesk.appearance.mode")
             ?? FlowDeskAppearanceMode.system.rawValue
         let mode = FlowDeskAppearanceMode(rawValue: modeRaw) ?? .system
@@ -25,7 +25,8 @@ private enum CanvasExportAppearance {
         let presetRaw = UserDefaults.standard.string(forKey: "FlowDesk.appearance.stylePreset")
             ?? FlowDeskStylePreset.warmPaper.rawValue
         let preset = FlowDeskStylePreset(rawValue: presetRaw) ?? .warmPaper
-        return FlowDeskAppearanceTokens.resolve(colorScheme: colorScheme, preset: preset)
+        let tokens = FlowDeskAppearanceTokens.resolve(colorScheme: colorScheme, preset: preset)
+        return (colorScheme, tokens)
     }
 }
 
@@ -102,8 +103,13 @@ enum CanvasExportService {
     /// Renders the content bounds (see `CanvasExportBounds`) at `defaultRenderScale`.
     static func renderExportImage(boardState: CanvasBoardState) -> NSImage? {
         let rect = CanvasExportBounds.exportRect(elements: boardState.elements)
-        let tokens = CanvasExportAppearance.resolvedTokens()
-        let content = CanvasBoardExportContentView(boardState: boardState, exportRect: rect, tokens: tokens)
+        let appearance = CanvasExportAppearance.resolvedAppearance()
+        let content = CanvasBoardExportContentView(
+            boardState: boardState,
+            exportRect: rect,
+            tokens: appearance.tokens,
+            colorScheme: appearance.colorScheme
+        )
         let renderer = ImageRenderer(content: content)
         renderer.scale = defaultRenderScale
         renderer.proposedSize = ProposedViewSize(

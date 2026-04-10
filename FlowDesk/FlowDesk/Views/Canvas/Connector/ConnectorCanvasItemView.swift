@@ -200,7 +200,11 @@ struct ConnectorCanvasItemView: View {
                         .overlay {
                             Capsule().strokeBorder(tokens.selectionStrokeColor.opacity(0.42), lineWidth: 1)
                         }
-                        .shadow(color: Color.black.opacity(0.14), radius: 2, y: 1)
+                        .shadow(
+                            color: Color.black.opacity(FlowDeskTheme.canvasAuxiliaryLabelShadowOpacity),
+                            radius: FlowDeskTheme.canvasAuxiliaryLabelShadowRadius,
+                            y: FlowDeskTheme.canvasAuxiliaryLabelShadowY
+                        )
                         .position(mid)
                         .focused($labelFieldFocused)
                         .onSubmit {
@@ -237,7 +241,11 @@ struct ConnectorCanvasItemView: View {
                         .overlay {
                             Capsule().strokeBorder(Color.primary.opacity(0.07), lineWidth: 0.5)
                         }
-                        .shadow(color: Color.black.opacity(0.1), radius: 2, y: 1)
+                        .shadow(
+                            color: Color.black.opacity(FlowDeskTheme.canvasAuxiliaryLabelShadowOpacity * 0.85),
+                            radius: FlowDeskTheme.canvasAuxiliaryLabelShadowRadius,
+                            y: FlowDeskTheme.canvasAuxiliaryLabelShadowY
+                        )
                         .position(mid)
                         .allowsHitTesting(false)
                 }
@@ -292,7 +300,15 @@ struct ConnectorCanvasItemView: View {
                 .overlay {
                     Circle().strokeBorder(Color.white.opacity(isHover ? 0.48 : 0.34), lineWidth: 0.85)
                 }
-                .shadow(color: Color.black.opacity(isHover ? 0.22 : 0.12), radius: isHover ? 3 : 1.5, y: 1)
+                .shadow(
+                    color: Color.black.opacity(
+                        isHover
+                            ? FlowDeskTheme.canvasAuxiliaryLabelShadowOpacityHover
+                            : FlowDeskTheme.canvasAuxiliaryLabelShadowOpacity
+                    ),
+                    radius: isHover ? FlowDeskTheme.canvasAuxiliaryLabelShadowRadiusHover : FlowDeskTheme.canvasAuxiliaryLabelShadowRadius * 0.75,
+                    y: FlowDeskTheme.canvasAuxiliaryLabelShadowY
+                )
         }
         .frame(width: 24, height: 24)
         .contentShape(Circle())

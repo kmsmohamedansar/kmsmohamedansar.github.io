@@ -76,7 +76,7 @@ struct ChartCanvasItemView: View {
         .overlay(alignment: .bottomTrailing) {
             if isSelected, !selection.isMultiSelection {
                 CanvasTextBlockResizeHandle()
-                    .padding(7)
+                    .padding(FlowDeskLayout.canvasSelectionChromeInset)
                     .gesture(resizeGesture)
             }
         }

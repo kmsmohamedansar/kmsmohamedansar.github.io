@@ -23,7 +23,7 @@ struct ChartBlockChartView: View {
     }
 
     private var emptyState: some View {
-        VStack(spacing: 12) {
+        VStack(spacing: FlowDeskLayout.spaceM) {
             ZStack {
                 Circle()
                     .fill(Color.primary.opacity(0.05))
@@ -32,7 +32,7 @@ struct ChartBlockChartView: View {
                     .font(.system(size: 20, weight: .medium))
                     .foregroundStyle(.tertiary)
             }
-            VStack(spacing: 4) {
+            VStack(spacing: FlowDeskLayout.spaceXS) {
                 Text("No data in this chart")
                     .font(.subheadline.weight(.semibold))
                     .foregroundStyle(.secondary)
@@ -42,8 +42,8 @@ struct ChartBlockChartView: View {
             }
         }
         .multilineTextAlignment(.center)
-        .padding(.vertical, 14)
-        .padding(.horizontal, 12)
+        .padding(.vertical, FlowDeskLayout.homeCreationCardInnerSpacing)
+        .padding(.horizontal, FlowDeskLayout.spaceM)
         .frame(maxWidth: .infinity)
     }
 
@@ -57,7 +57,7 @@ struct ChartBlockChartView: View {
                         y: .value("Value", point.value)
                     )
                     .foregroundStyle(chartAccent)
-                    .cornerRadius(3)
+                    .cornerRadius(FlowDeskLayout.chartBarMarkCornerRadius)
                 case .line:
                     LineMark(
                         x: .value("Label", point.label),

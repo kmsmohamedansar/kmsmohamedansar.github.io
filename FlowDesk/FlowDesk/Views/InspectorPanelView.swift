@@ -2,6 +2,7 @@ import SwiftUI
 
 struct InspectorPanelView: View {
     @Environment(\.flowDeskTokens) private var tokens
+    @Environment(\.colorScheme) private var colorScheme
 
     @Bindable var document: FlowDocument
     @Bindable var canvasViewModel: CanvasBoardViewModel
@@ -118,11 +119,16 @@ struct InspectorPanelView: View {
         .formStyle(.grouped)
         .scrollContentBackground(.hidden)
         .background {
-            tokens.inspectorChromeBackground
+            ZStack {
+                tokens.inspectorChromeBackground
+                FlowDeskTheme.homeAtmosphereWash(colorScheme: colorScheme)
+                    .opacity(colorScheme == .dark ? 0.35 : 0.22)
+                    .allowsHitTesting(false)
+            }
         }
         .overlay(alignment: .leading) {
             Rectangle()
-                .fill(Color.primary.opacity(0.055))
+                .fill(Color.primary.opacity(colorScheme == .dark ? 0.088 : 0.032))
                 .frame(width: 1)
                 .allowsHitTesting(false)
         }

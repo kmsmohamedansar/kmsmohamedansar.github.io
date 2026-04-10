@@ -24,6 +24,8 @@ enum FlowDeskLayout {
     /// Caps width of the secondary “Blank board” tile so the hero canvas card dominates.
     static let homeBlankCreationMaxWidth: CGFloat = 380
     static let homeRecentRowSpacing: CGFloat = 8
+    /// Vertical gap between “Smart canvas” and “Blank board” (tighter than major section rhythm).
+    static let homeCreationCardsVerticalSpacing: CGFloat = 22
 
     // MARK: - Cards (same family as canvas framed elements)
 
@@ -33,8 +35,8 @@ enum FlowDeskLayout {
     static let cardBorderLineWidth: CGFloat = 1
     static let cardBorderLineWidthHover: CGFloat = 1.25
 
-    static let cardShadowYNormal: CGFloat = 4
-    static let cardShadowYHover: CGFloat = 5
+    static let cardShadowYNormal: CGFloat = 5
+    static let cardShadowYHover: CGFloat = 6
 
     static let homeCreationCardMinHeight: CGFloat = 144
     /// Primary “Smart canvas” tile on Home (secondary blank uses `homeCreationCardMinHeight`).
@@ -67,7 +69,10 @@ enum FlowDeskLayout {
     static let sidebarFooterVerticalPadding: CGFloat = 10
     static let sidebarEmptyHorizontalPadding: CGFloat = 12
 
-    static let sidebarRowSelectionCornerRadius: CGFloat = 8
+    /// Sidebar row pill; matches home-adjacent rounded language (continuous curve).
+    static let sidebarRowSelectionCornerRadius: CGFloat = 9
+    /// Leading inset for the “BOARDS”-style section label (aligns with row content).
+    static let sidebarSectionHeaderLeadingPadding: CGFloat = 18
 
     // MARK: - Inspector
 
@@ -84,6 +89,53 @@ enum FlowDeskLayout {
 
     static let floatingPanelCornerRadius: CGFloat = 16
     static let floatingPanelContentPadding: CGFloat = 8
+    /// Contextual toolbars anchored to the selection (compact footprint).
+    static let floatingPanelToolbarPaddingH: CGFloat = 8
+    static let floatingPanelToolbarPaddingV: CGFloat = 6
+    static let floatingPanelToolbarInnerSpacing: CGFloat = 6
+    /// Multi-select alignment bar outer insets.
+    static let floatingPanelMultiSelectPaddingH: CGFloat = 8
+    static let floatingPanelMultiSelectPaddingV: CGFloat = 8
+    static let floatingPanelMultiSelectOuterStackSpacing: CGFloat = 7
+
+    /// HUD chips, rail icon wells, template rows, placeholder element chrome (step below card radius).
+    static let chromeCompactCornerRadius: CGFloat = 10
+    /// Inset rows inside context panels (shape picker, etc.); aligns with stroke selection handle chrome.
+    static let chromeInsetCornerRadius: CGFloat = 8
+    /// Dashed placement preview on the board.
+    static let chromePlacementPreviewCornerRadius: CGFloat = 3
+    /// Bar marks inside Swift Charts.
+    static let chartBarMarkCornerRadius: CGFloat = 4
+
+    /// Home creation / recent row icon wells (hero / standard / list).
+    static let homeIconWellCornerHero: CGFloat = 15
+    static let homeIconWellCornerStandard: CGFloat = 12
+    static let homeIconWellCornerRecent: CGFloat = 12
+
+    /// Canvas overlay margins (onboarding callout, zoom HUD).
+    static let canvasOverlayTrailingInset: CGFloat = 16
+    static let canvasOverlayBottomInset: CGFloat = 14
+    static let canvasOnboardingCalloutTopInset: CGFloat = 10
+    static let canvasOnboardingCalloutTrailingInset: CGFloat = 14
+
+    /// Interior padding for the templates/shapes/draw context column.
+    static let canvasContextPanelPadding: CGFloat = 12
+    static let canvasContextTemplateRowPadding: CGFloat = 10
+    static let canvasToolRailPaddingV: CGFloat = 8
+    static let canvasToolRailPaddingH: CGFloat = 6
+    static let canvasToolRailStackSpacing: CGFloat = 6
+    static let canvasToolRailUndoStackSpacing: CGFloat = 4
+
+    /// Shared hairline on floating chrome (toolbars, palette, HUD).
+    static let chromeHairlineBorderWidth: CGFloat = 0.75
+
+    /// Inset around resize / selection affordances on framed canvas items.
+    static let canvasSelectionChromeInset: CGFloat = 8
+
+    /// macOS sheet content (rename, etc.).
+    static let sheetStandardPadding: CGFloat = 20
+
+    // MARK: - Canvas tool rail & context column
 
     /// Primary tool rail (Miro-style); icons sit in this width including padding.
     static let canvasToolRailWidth: CGFloat = 48

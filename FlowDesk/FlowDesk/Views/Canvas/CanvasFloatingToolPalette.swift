@@ -41,7 +41,7 @@ struct CerebraCanvasChromeColumn: View {
     // MARK: - Rail
 
     private var toolRail: some View {
-        VStack(spacing: 5) {
+        VStack(spacing: FlowDeskLayout.canvasToolRailStackSpacing) {
             railTool(.select, symbol: "cursorarrow", help: "Select and pan — V")
             railTool(.draw, symbol: "pencil.tip", help: "Draw freehand — P (panel: click tool again)")
 
@@ -53,11 +53,11 @@ struct CerebraCanvasChromeColumn: View {
 
             templatesRailButton
 
-            Spacer(minLength: 12)
+            Spacer(minLength: FlowDeskLayout.spaceM)
 
             railDivider
 
-            VStack(spacing: 3) {
+            VStack(spacing: FlowDeskLayout.canvasToolRailUndoStackSpacing) {
                 chromeIconButton(
                     symbol: "arrow.uturn.backward",
                     help: "Undo",
@@ -72,13 +72,9 @@ struct CerebraCanvasChromeColumn: View {
                 )
             }
         }
-        .padding(.vertical, 8)
-        .padding(.horizontal, 6)
-        .background { chromeCardBackground() }
-        .overlay {
-            RoundedRectangle(cornerRadius: FlowDeskLayout.floatingPanelCornerRadius, style: .continuous)
-                .strokeBorder(chromeStrokeGradient, lineWidth: 0.75)
-        }
+        .padding(.vertical, FlowDeskLayout.canvasToolRailPaddingV)
+        .padding(.horizontal, FlowDeskLayout.canvasToolRailPaddingH)
+        .flowDeskFloatingPanelChrome(shadowStyle: .toolPalette)
     }
 
     private var railDivider: some View {
@@ -157,16 +153,12 @@ struct CerebraCanvasChromeColumn: View {
                 drawStrokePanel
             }
         }
-        .padding(12)
-        .background { chromeCardBackground() }
-        .overlay {
-            RoundedRectangle(cornerRadius: FlowDeskLayout.floatingPanelCornerRadius, style: .continuous)
-                .strokeBorder(chromeStrokeGradient, lineWidth: 0.75)
-        }
+        .padding(FlowDeskLayout.canvasContextPanelPadding)
+        .flowDeskFloatingPanelChrome(shadowStyle: .toolPalette)
     }
 
     private var templatesPanel: some View {
-        VStack(alignment: .leading, spacing: 10) {
+        VStack(alignment: .leading, spacing: FlowDeskLayout.homeHeadlineToBodySpacing) {
             panelHeader("Templates", subtitle: "Add to this board")
             ScrollView {
                 VStack(alignment: .leading, spacing: 8) {
@@ -197,9 +189,9 @@ struct CerebraCanvasChromeColumn: View {
                     .fixedSize(horizontal: false, vertical: true)
             }
             .frame(maxWidth: .infinity, alignment: .leading)
-            .padding(10)
+            .padding(FlowDeskLayout.canvasContextTemplateRowPadding)
             .background {
-                RoundedRectangle(cornerRadius: 10, style: .continuous)
+                RoundedRectangle(cornerRadius: FlowDeskLayout.chromeCompactCornerRadius, style: .continuous)
                     .fill(Color.primary.opacity(colorScheme == .dark ? 0.08 : 0.04))
             }
         }
@@ -207,7 +199,7 @@ struct CerebraCanvasChromeColumn: View {
     }
 
     private var shapesPanel: some View {
-        VStack(alignment: .leading, spacing: 10) {
+        VStack(alignment: .leading, spacing: FlowDeskLayout.homeHeadlineToBodySpacing) {
             panelHeader("Shapes", subtitle: "Click the canvas to place")
             LazyVGrid(
                 columns: [GridItem(.adaptive(minimum: 52), spacing: 8)],
@@ -222,9 +214,9 @@ struct CerebraCanvasChromeColumn: View {
                             .font(.caption.weight(picked ? .semibold : .regular))
                             .foregroundStyle(picked ? tokens.selectionStrokeColor : .primary)
                             .frame(maxWidth: .infinity)
-                            .padding(.vertical, 8)
+                            .padding(.vertical, FlowDeskLayout.spaceS)
                             .background {
-                                RoundedRectangle(cornerRadius: 8, style: .continuous)
+                                RoundedRectangle(cornerRadius: FlowDeskLayout.chromeInsetCornerRadius, style: .continuous)
                                     .fill(picked ? tokens.selectionStrokeColor.opacity(0.12) : Color.primary.opacity(0.04))
                             }
                     }
@@ -245,13 +237,13 @@ struct CerebraCanvasChromeColumn: View {
     }
 
     private var drawStrokePanel: some View {
-        VStack(alignment: .leading, spacing: 12) {
+        VStack(alignment: .leading, spacing: FlowDeskLayout.spaceM) {
             panelHeader("Stroke", subtitle: "Drawing")
-            HStack(spacing: 10) {
+            HStack(spacing: FlowDeskLayout.spaceM) {
                 Text("Weight")
                     .font(.caption.weight(.medium))
                     .foregroundStyle(.secondary)
-                HStack(spacing: 6) {
+                HStack(spacing: FlowDeskLayout.floatingPanelToolbarInnerSpacing) {
                     ForEach([2.0, 3.5, 5.5], id: \.self) { w in
                         let on = abs(boardViewModel.drawingLineWidth - w) < 0.25
                         Button {
@@ -265,11 +257,11 @@ struct CerebraCanvasChromeColumn: View {
                     }
                 }
             }
-            VStack(alignment: .leading, spacing: 6) {
+            VStack(alignment: .leading, spacing: FlowDeskLayout.floatingPanelToolbarInnerSpacing) {
                 Text("Color")
                     .font(.caption.weight(.medium))
                     .foregroundStyle(.secondary)
-                HStack(spacing: 8) {
+                HStack(spacing: FlowDeskLayout.spaceS) {
                     ForEach(Array(CerebraStrokePreset.colors.enumerated()), id: \.offset) { _, rgba in
                         let on = boardViewModel.drawingStrokeColor == rgba
                         Button {
@@ -300,32 +292,6 @@ struct CerebraCanvasChromeColumn: View {
         }
     }
 
-    private var chromeStrokeGradient: LinearGradient {
-        LinearGradient(
-            colors: [
-                Color.primary.opacity(0.085),
-                Color.primary.opacity(0.03)
-            ],
-            startPoint: .topLeading,
-            endPoint: .bottomTrailing
-        )
-    }
-
-    @ViewBuilder
-    private func chromeCardBackground() -> some View {
-        ZStack {
-            RoundedRectangle(cornerRadius: FlowDeskLayout.floatingPanelCornerRadius, style: .continuous)
-                .fill(.ultraThinMaterial)
-            RoundedRectangle(cornerRadius: FlowDeskLayout.floatingPanelCornerRadius, style: .continuous)
-                .fill(tokens.homeCardFill.opacity(colorScheme == .dark ? 0.08 : 0.11))
-        }
-        .shadow(
-            color: Color.black.opacity(FlowDeskTheme.floatingPanelShadowOpacity),
-            radius: FlowDeskTheme.floatingPanelShadowRadius,
-            x: 0,
-            y: FlowDeskTheme.floatingPanelShadowY
-        )
-    }
 }
 
 // MARK: - Stroke presets
@@ -358,11 +324,11 @@ private struct ChromeRailIconButton: View {
                 .frame(width: FlowDeskLayout.canvasRailIconSize, height: FlowDeskLayout.canvasRailIconSize)
                 .foregroundStyle(selected ? tokens.selectionStrokeColor : Color.primary.opacity(0.88))
                 .background {
-                    RoundedRectangle(cornerRadius: 10, style: .continuous)
+                    RoundedRectangle(cornerRadius: FlowDeskLayout.chromeCompactCornerRadius, style: .continuous)
                         .fill(chipFill)
                 }
                 .overlay {
-                    RoundedRectangle(cornerRadius: 10, style: .continuous)
+                    RoundedRectangle(cornerRadius: FlowDeskLayout.chromeCompactCornerRadius, style: .continuous)
                         .strokeBorder(strokeColor, lineWidth: selected ? 1 : (hovered ? 0.75 : 0))
                 }
         }

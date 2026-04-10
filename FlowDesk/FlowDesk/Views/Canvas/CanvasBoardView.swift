@@ -62,7 +62,7 @@ struct CanvasBoardView: View {
                     .zIndex(500_000)
 
                     if let r = placementPreviewRect {
-                        RoundedRectangle(cornerRadius: 3, style: .continuous)
+                        RoundedRectangle(cornerRadius: FlowDeskLayout.chromePlacementPreviewCornerRadius, style: .continuous)
                             .strokeBorder(tokens.selectionStrokeColor.opacity(0.88), style: StrokeStyle(lineWidth: 1.25, dash: [7, 5]))
                             .frame(width: r.width, height: r.height)
                             .position(x: r.midX, y: r.midY)
@@ -441,23 +441,12 @@ struct CanvasBoardView: View {
 
     @ViewBuilder
     private func canvasBackground(showGrid: Bool) -> some View {
-        ZStack {
-            tokens.canvasWorkspaceBackground
-            FlowDeskTheme.canvasBoardRadialAtmosphere(colorScheme: colorScheme)
-                .allowsHitTesting(false)
-            FlowDeskTheme.canvasBoardCenterGlow(colorScheme: colorScheme)
-                .allowsHitTesting(false)
-            FlowDeskTheme.canvasBoardDepthGradient(colorScheme: colorScheme)
-                .allowsHitTesting(false)
-            if showGrid {
-                CanvasGridOverlay(
-                    spacing: 24,
-                    lineWidth: FlowDeskLayout.gridLineWidth,
-                    lineOpacity: tokens.gridLineOpacity,
-                    gridInk: tokens.canvasGridInk
-                )
-            }
-        }
+        FlowDeskTheme.canvasWorkspaceMatBackground(
+            tokens: tokens,
+            colorScheme: colorScheme,
+            showGrid: showGrid,
+            includeFilmGrain: true
+        )
     }
 
     // MARK: - Selection toolbar (view-space overlay)

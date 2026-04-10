@@ -25,7 +25,7 @@ struct RenameDocumentSheet: View {
                     .disabled(title.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
             }
         }
-        .padding(20)
+        .padding(FlowDeskLayout.sheetStandardPadding)
         .frame(minWidth: 360)
         .onAppear { focused = true }
     }

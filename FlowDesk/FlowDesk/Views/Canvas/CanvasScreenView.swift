@@ -27,14 +27,14 @@ struct CanvasScreenView: View {
         .overlay(alignment: .topTrailing) {
             if !onboarding.canvasTipsDismissed {
                 FlowDeskCanvasOnboardingCallout()
-                    .padding(.top, 10)
-                    .padding(.trailing, 14)
+                    .padding(.top, FlowDeskLayout.canvasOnboardingCalloutTopInset)
+                    .padding(.trailing, FlowDeskLayout.canvasOnboardingCalloutTrailingInset)
             }
         }
         .overlay(alignment: .bottomTrailing) {
             CanvasZoomHUDView(boardViewModel: boardViewModel, selection: selection)
-                .padding(.trailing, 16)
-                .padding(.bottom, 14)
+                .padding(.trailing, FlowDeskLayout.canvasOverlayTrailingInset)
+                .padding(.bottom, FlowDeskLayout.canvasOverlayBottomInset)
         }
         .animation(.spring(response: 0.36, dampingFraction: 0.86), value: onboarding.canvasTipsDismissed)
         .navigationTitle(document.title)

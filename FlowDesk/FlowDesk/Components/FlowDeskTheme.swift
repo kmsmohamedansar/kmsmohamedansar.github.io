@@ -23,8 +23,8 @@ enum FlowDeskTheme {
         return LinearGradient(
             gradient: Gradient(stops: [
                 .init(color: .clear, location: 0),
-                .init(color: Color.black.opacity(0.022), location: 0.52),
-                .init(color: Color(red: 0.44, green: 0.37, blue: 0.31).opacity(0.018), location: 1)
+                .init(color: Color.black.opacity(0.028), location: 0.48),
+                .init(color: Color(red: 0.44, green: 0.37, blue: 0.31).opacity(0.024), location: 1)
             ]),
             startPoint: .top,
             endPoint: .bottom
@@ -36,7 +36,7 @@ enum FlowDeskTheme {
         RadialGradient(
             colors: colorScheme == .dark
                 ? [Color.white.opacity(0.052), Color.clear]
-                : [Color(red: 1, green: 0.992, blue: 0.978).opacity(0.26), Color.clear],
+                : [Color(red: 1, green: 0.992, blue: 0.978).opacity(0.34), Color.clear],
             center: UnitPoint(x: 0.12, y: 0.08),
             startRadius: 0,
             endRadius: 780
@@ -48,7 +48,7 @@ enum FlowDeskTheme {
         RadialGradient(
             colors: colorScheme == .dark
                 ? [Color.white.opacity(0.04), Color.clear]
-                : [Color.white.opacity(0.14), Color.clear],
+                : [Color.white.opacity(0.19), Color.clear],
             center: .center,
             startRadius: 80,
             endRadius: 1400
@@ -126,12 +126,172 @@ enum FlowDeskTheme {
         let t = FlowDeskAppearanceTokens.resolve(colorScheme: .light, preset: .warmPaper)
         return selected ? t.canvasItemShadowYSelected : t.canvasItemShadowYNormal
     }
+
+    // MARK: - Floating panel chrome (palette, toolbars, HUD)
+
+    /// Hairline rim shared by palette rail, context panels, selection toolbars, zoom HUD, tips.
+    static var chromeHairlineBorderGradient: LinearGradient {
+        LinearGradient(
+            colors: [
+                Color.primary.opacity(0.085),
+                Color.primary.opacity(0.03)
+            ],
+            startPoint: .topLeading,
+            endPoint: .bottomTrailing
+        )
+    }
+
+    @ViewBuilder
+    static func floatingPanelStackedFill(
+        tokens: FlowDeskAppearanceTokens,
+        colorScheme: ColorScheme,
+        cornerRadius: CGFloat,
+        lightOpacity: Double,
+        darkOpacity: Double
+    ) -> some View {
+        ZStack {
+            RoundedRectangle(cornerRadius: cornerRadius, style: .continuous)
+                .fill(.ultraThinMaterial)
+            RoundedRectangle(cornerRadius: cornerRadius, style: .continuous)
+                .fill(tokens.homeCardFill.opacity(colorScheme == .dark ? darkOpacity : lightOpacity))
+        }
+    }
+
+    /// Connector labels and similar inline canvas annotations (one shadow language).
+    static let canvasAuxiliaryLabelShadowOpacity: Double = 0.12
+    static let canvasAuxiliaryLabelShadowOpacityHover: Double = 0.22
+    static let canvasAuxiliaryLabelShadowRadius: CGFloat = 2
+    static let canvasAuxiliaryLabelShadowRadiusHover: CGFloat = 3
+    static let canvasAuxiliaryLabelShadowY: CGFloat = 1
+
+    // MARK: - Canvas mat (infinite board surface)
+
+    /// Neutral 72×72 tile; `overlay` at low opacity reads as paper tooth, not speckle noise.
+    private static let canvasMatGrainTileNSImage: NSImage = {
+        let w = 72
+        let h = 72
+        guard let rep = NSBitmapImageRep(
+            bitmapDataPlanes: nil,
+            pixelsWide: w,
+            pixelsHigh: h,
+            bitsPerSample: 8,
+            samplesPerPixel: 4,
+            hasAlpha: false,
+            isPlanar: false,
+            colorSpaceName: .deviceRGB,
+            bytesPerRow: w * 4,
+            bitsPerPixel: 32
+        ), let data = rep.bitmapData else {
+            return NSImage(size: NSSize(width: 16, height: 16))
+        }
+        for y in 0..<h {
+            for x in 0..<w {
+                var u = UInt64(x) &* 92_837_111 ^ UInt64(y) &* 689_287_499
+                u = u &* 2_246_822_519
+                u ^= u >> 13
+                u = u &* 3_266_489_917
+                let t = Double(u & 0xFFFF) / 65_535.0
+                let g = UInt8(min(255, max(0, Int((0.48 + (t - 0.5) * 0.11) * 255.0))))
+                let o = y * w * 4 + x * 4
+                data[o] = g
+                data[o + 1] = g
+                data[o + 2] = g
+                data[o + 3] = 255
+            }
+        }
+        let img = NSImage(size: NSSize(width: w, height: h))
+        img.addRepresentation(rep)
+        return img
+    }()
+
+    /// Token-driven board mat: base → grid (embedded) → vertical depth → soft atmosphere → vignette → optional grain.
+    @ViewBuilder
+    static func canvasWorkspaceMatBackground(
+        tokens: FlowDeskAppearanceTokens,
+        colorScheme: ColorScheme,
+        showGrid: Bool,
+        includeFilmGrain: Bool
+    ) -> some View {
+        let gridOpacity = tokens.gridLineOpacity * tokens.canvasGridEmphasis
+        let topWash = colorScheme == .dark
+            ? tokens.canvasTopWashOpacity * 0.52
+            : tokens.canvasTopWashOpacity
+
+        ZStack {
+            tokens.canvasWorkspaceBackground
+
+            if showGrid {
+                CanvasGridOverlay(
+                    spacing: 24,
+                    lineWidth: FlowDeskLayout.gridLineWidth,
+                    lineOpacity: gridOpacity,
+                    gridInk: tokens.canvasGridInk
+                )
+            }
+
+            LinearGradient(
+                colors: [
+                    Color.black.opacity(0),
+                    Color.black.opacity(tokens.canvasBottomDepthOpacity)
+                ],
+                startPoint: .top,
+                endPoint: .bottom
+            )
+            .blendMode(.multiply)
+            .allowsHitTesting(false)
+
+            LinearGradient(
+                colors: [
+                    Color.white.opacity(topWash),
+                    Color.white.opacity(0)
+                ],
+                startPoint: .top,
+                endPoint: UnitPoint(x: 0.5, y: 0.38)
+            )
+            .blendMode(.softLight)
+            .allowsHitTesting(false)
+
+            canvasBoardRadialAtmosphere(colorScheme: colorScheme)
+                .opacity(colorScheme == .dark ? 0.52 : 0.42)
+                .allowsHitTesting(false)
+
+            canvasBoardCenterGlow(colorScheme: colorScheme)
+                .opacity(colorScheme == .dark ? 0.42 : 0.32)
+                .allowsHitTesting(false)
+
+            canvasBoardDepthGradient(colorScheme: colorScheme)
+                .opacity(0.82)
+                .allowsHitTesting(false)
+
+            RadialGradient(
+                colors: [
+                    Color.clear,
+                    tokens.canvasGridInk.opacity(tokens.canvasVignetteOpacity)
+                ],
+                center: .center,
+                startRadius: 280,
+                endRadius: 2_600
+            )
+            .blendMode(.multiply)
+            .allowsHitTesting(false)
+
+            if includeFilmGrain, tokens.canvasGrainOpacity > 0.0001 {
+                Image(nsImage: canvasMatGrainTileNSImage)
+                    .resizable(resizingMode: .tile)
+                    .blendMode(.overlay)
+                    .opacity(tokens.canvasGrainOpacity)
+                    .allowsHitTesting(false)
+            }
+        }
+    }
 }
 
 // MARK: - Inspector
 
 /// Section headers: same density as sidebar section titles for quick scanning.
 struct FlowDeskInspectorSectionHeader: View {
+    @Environment(\.colorScheme) private var colorScheme
+
     let title: String
 
     init(_ title: String) {
@@ -140,10 +300,10 @@ struct FlowDeskInspectorSectionHeader: View {
 
     var body: some View {
         Text(title)
-            .font(FlowDeskTypography.sidebarSectionHeader)
-            .foregroundStyle(.tertiary)
+            .font(.system(size: 11, weight: .semibold, design: .default))
+            .foregroundStyle(Color.primary.opacity(colorScheme == .dark ? 0.58 : 0.45))
             .textCase(.uppercase)
-            .tracking(0.35)
+            .tracking(0.62)
             .padding(.bottom, FlowDeskLayout.inspectorSectionHeaderBottomSpacing)
     }
 }

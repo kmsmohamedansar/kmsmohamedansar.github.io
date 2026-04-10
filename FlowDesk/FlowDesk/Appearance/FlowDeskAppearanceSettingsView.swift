@@ -30,6 +30,6 @@ struct FlowDeskAppearanceSettingsView: View {
         }
         .formStyle(.grouped)
         .frame(minWidth: 400, minHeight: 220)
-        .padding(8)
+        .padding(FlowDeskLayout.spaceS)
     }
 }

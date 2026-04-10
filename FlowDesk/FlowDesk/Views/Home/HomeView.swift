@@ -88,7 +88,7 @@ struct HomeView: View {
     }
 
     private var creationSection: some View {
-        VStack(alignment: .leading, spacing: FlowDeskLayout.spaceL) {
+        VStack(alignment: .leading, spacing: FlowDeskLayout.spaceXL) {
             VStack(alignment: .leading, spacing: FlowDeskLayout.homeHeadlineToBodySpacing) {
                 Text("New board")
                     .font(FlowDeskTypography.homeHeroTitle)
@@ -101,9 +101,9 @@ struct HomeView: View {
                     .frame(maxWidth: 560, alignment: .leading)
             }
 
-            VStack(alignment: .leading, spacing: FlowDeskLayout.homeCreationGridSpacing) {
+            VStack(alignment: .leading, spacing: FlowDeskLayout.homeCreationCardsVerticalSpacing) {
                 CreationCardView(
-                    systemImage: "rectangle.split.2x1.fill",
+                    systemImage: "square.grid.3x3.fill",
                     title: "Smart canvas",
                     subtitle: "Starter text and sticky on the grid—edit, remove, or build around them.",
                     action: {
@@ -113,7 +113,7 @@ struct HomeView: View {
                 )
 
                 CreationCardView(
-                    systemImage: "rectangle.dashed",
+                    systemImage: "rectangle.portrait",
                     title: "Blank board",
                     subtitle: "Nothing pre-placed—an empty canvas for your own layout.",
                     action: {
@@ -141,7 +141,7 @@ struct HomeView: View {
                         .foregroundStyle(.tertiary)
                 }
 
-                VStack(spacing: FlowDeskLayout.homeRecentRowSpacing) {
+                VStack(spacing: FlowDeskLayout.spaceM) {
                     ForEach(otherRecentDocuments, id: \.persistentModelID) { doc in
                         RecentBoardRowView(document: doc, onOpen: {
                             onOpenDocument(doc)

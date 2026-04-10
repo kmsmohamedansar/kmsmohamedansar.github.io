@@ -5,18 +5,15 @@ struct CanvasMultiSelectionToolbarView: View {
     @Bindable var boardViewModel: CanvasBoardViewModel
     @Bindable var selection: CanvasSelectionModel
 
-    @Environment(\.flowDeskTokens) private var tokens
-    @Environment(\.colorScheme) private var colorScheme
-
     var body: some View {
-        VStack(alignment: .leading, spacing: 7) {
+        VStack(alignment: .leading, spacing: FlowDeskLayout.floatingPanelMultiSelectOuterStackSpacing) {
             Text("ALIGN & DISTRIBUTE")
                 .font(.system(size: 9, weight: .semibold))
                 .tracking(0.6)
                 .foregroundStyle(Color.primary.opacity(0.42))
-                .padding(.leading, 2)
+                .padding(.leading, FlowDeskLayout.spaceXS / 2)
 
-            VStack(spacing: 6) {
+            VStack(spacing: FlowDeskLayout.floatingPanelToolbarInnerSpacing) {
                 HStack(spacing: 4) {
                     chromeIcon("align.horizontal.left") {
                         boardViewModel.alignSelectedElements(selection: selection, kind: .left)
@@ -67,36 +64,13 @@ struct CanvasMultiSelectionToolbarView: View {
                 }
             }
         }
-        .padding(.horizontal, 10)
-        .padding(.vertical, 7)
-        .background {
-            ZStack {
-                RoundedRectangle(cornerRadius: FlowDeskLayout.floatingPanelCornerRadius, style: .continuous)
-                    .fill(.ultraThinMaterial)
-                RoundedRectangle(cornerRadius: FlowDeskLayout.floatingPanelCornerRadius, style: .continuous)
-                    .fill(tokens.homeCardFill.opacity(colorScheme == .dark ? 0.07 : 0.11))
-            }
-            .shadow(
-                color: Color.black.opacity(FlowDeskTheme.floatingPanelShadowOpacity * 0.92),
-                radius: FlowDeskTheme.floatingPanelShadowRadius * 0.68,
-                x: 0,
-                y: FlowDeskTheme.floatingPanelShadowY * 0.62
-            )
-        }
-        .overlay {
-            RoundedRectangle(cornerRadius: FlowDeskLayout.floatingPanelCornerRadius, style: .continuous)
-                .strokeBorder(
-                    LinearGradient(
-                        colors: [
-                            Color.primary.opacity(0.085),
-                            Color.primary.opacity(0.03),
-                        ],
-                        startPoint: .topLeading,
-                        endPoint: .bottomTrailing
-                    ),
-                    lineWidth: 0.75
-                )
-        }
+        .padding(.horizontal, FlowDeskLayout.floatingPanelMultiSelectPaddingH)
+        .padding(.vertical, FlowDeskLayout.floatingPanelMultiSelectPaddingV)
+        .flowDeskFloatingPanelChrome(
+            shadowStyle: .contextualToolbar,
+            lightTintOpacity: 0.11,
+            darkTintOpacity: 0.07
+        )
         .fixedSize()
     }
 
@@ -118,11 +92,11 @@ private struct MultiSelectionToolbarIconButtonStyle: ButtonStyle {
     func makeBody(configuration: Configuration) -> some View {
         configuration.label
             .background {
-                RoundedRectangle(cornerRadius: 6, style: .continuous)
+                RoundedRectangle(cornerRadius: FlowDeskLayout.chromeInsetCornerRadius, style: .continuous)
                     .fill(tokens.selectionStrokeColor.opacity(configuration.isPressed ? 0.12 : 0))
             }
             .overlay {
-                RoundedRectangle(cornerRadius: 6, style: .continuous)
+                RoundedRectangle(cornerRadius: FlowDeskLayout.chromeInsetCornerRadius, style: .continuous)
                     .strokeBorder(tokens.selectionStrokeColor.opacity(configuration.isPressed ? 0.22 : 0), lineWidth: 1)
             }
     }

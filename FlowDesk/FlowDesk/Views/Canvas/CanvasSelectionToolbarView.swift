@@ -12,7 +12,7 @@ struct CanvasSelectionToolbarView: View {
     @Environment(\.colorScheme) private var colorScheme
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 5) {
+        VStack(alignment: .leading, spacing: FlowDeskLayout.floatingPanelToolbarInnerSpacing) {
             quickActionsRow
             Group {
                 switch elementKind {
@@ -27,41 +27,18 @@ struct CanvasSelectionToolbarView: View {
                 }
             }
         }
-        .padding(.horizontal, 7)
-        .padding(.vertical, 4)
-        .background {
-            ZStack {
-                RoundedRectangle(cornerRadius: FlowDeskLayout.floatingPanelCornerRadius, style: .continuous)
-                    .fill(.ultraThinMaterial)
-                RoundedRectangle(cornerRadius: FlowDeskLayout.floatingPanelCornerRadius, style: .continuous)
-                    .fill(tokens.homeCardFill.opacity(colorScheme == .dark ? 0.07 : 0.11))
-            }
-            .shadow(
-                color: Color.black.opacity(FlowDeskTheme.floatingPanelShadowOpacity * 0.92),
-                radius: FlowDeskTheme.floatingPanelShadowRadius * 0.68,
-                x: 0,
-                y: FlowDeskTheme.floatingPanelShadowY * 0.62
-            )
-        }
-        .overlay {
-            RoundedRectangle(cornerRadius: FlowDeskLayout.floatingPanelCornerRadius, style: .continuous)
-                .strokeBorder(
-                    LinearGradient(
-                        colors: [
-                            Color.primary.opacity(0.085),
-                            Color.primary.opacity(0.03)
-                        ],
-                        startPoint: .topLeading,
-                        endPoint: .bottomTrailing
-                    ),
-                    lineWidth: 0.75
-                )
-        }
+        .padding(.horizontal, FlowDeskLayout.floatingPanelToolbarPaddingH)
+        .padding(.vertical, FlowDeskLayout.floatingPanelToolbarPaddingV)
+        .flowDeskFloatingPanelChrome(
+            shadowStyle: .contextualToolbar,
+            lightTintOpacity: 0.11,
+            darkTintOpacity: 0.07
+        )
         .fixedSize()
     }
 
     private var quickActionsRow: some View {
-        HStack(spacing: 6) {
+        HStack(spacing: FlowDeskLayout.spaceS) {
             Button {
                 boardViewModel.duplicateElement(id: elementID, selection: selection)
             } label: {

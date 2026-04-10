@@ -21,6 +21,16 @@ struct FlowDeskPlainCardButtonStyle: ButtonStyle {
     }
 }
 
+/// Home creation / recent cards: press tuck + dim, springs with hover scale from `flowDeskCardChrome`.
+struct FlowDeskHomeCardButtonStyle: ButtonStyle {
+    func makeBody(configuration: Configuration) -> some View {
+        configuration.label
+            .scaleEffect(configuration.isPressed ? 0.988 : 1)
+            .opacity(configuration.isPressed ? 0.9 : 1)
+            .animation(.spring(response: 0.24, dampingFraction: 0.78), value: configuration.isPressed)
+    }
+}
+
 /// Toolbar and compact controls: light press dim.
 struct FlowDeskToolbarButtonStyle: ButtonStyle {
     func makeBody(configuration: Configuration) -> some View {

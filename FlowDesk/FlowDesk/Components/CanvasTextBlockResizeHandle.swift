@@ -7,11 +7,16 @@ struct CanvasTextBlockResizeHandle: View {
             .font(.system(size: 9, weight: .semibold))
             .foregroundStyle(.secondary)
             .padding(6)
-            .background(.thinMaterial, in: RoundedRectangle(cornerRadius: 6, style: .continuous))
+            .background(.thinMaterial, in: RoundedRectangle(cornerRadius: FlowDeskLayout.chromeInsetCornerRadius, style: .continuous))
             .overlay {
-                RoundedRectangle(cornerRadius: 6, style: .continuous)
+                RoundedRectangle(cornerRadius: FlowDeskLayout.chromeInsetCornerRadius, style: .continuous)
                     .strokeBorder(Color.primary.opacity(0.1), lineWidth: 0.75)
             }
-            .shadow(color: Color.black.opacity(0.06), radius: 2, x: 0, y: 1)
+            .shadow(
+                color: Color.black.opacity(FlowDeskTheme.canvasAuxiliaryLabelShadowOpacity * 0.5),
+                radius: FlowDeskTheme.canvasAuxiliaryLabelShadowRadius,
+                x: 0,
+                y: FlowDeskTheme.canvasAuxiliaryLabelShadowY
+            )
     }
 }
