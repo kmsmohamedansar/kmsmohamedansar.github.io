@@ -50,6 +50,26 @@ enum FlowDeskLayout {
     static let homeRecentRowHorizontalPadding: CGFloat = 18
     static let homeRecentRowVerticalPadding: CGFloat = 14
 
+    /// Uniform insets for `cardContainer` on creation / continue cards.
+    static var homeCardContentInsets: EdgeInsets {
+        EdgeInsets(
+            top: homeCardPadding,
+            leading: homeCardPadding,
+            bottom: homeCardPadding,
+            trailing: homeCardPadding
+        )
+    }
+
+    /// Insets for `cardContainer` on recent-board rows.
+    static var homeRecentRowContentInsets: EdgeInsets {
+        EdgeInsets(
+            top: homeRecentRowVerticalPadding,
+            leading: homeRecentRowHorizontalPadding,
+            bottom: homeRecentRowVerticalPadding,
+            trailing: homeRecentRowHorizontalPadding
+        )
+    }
+
     /// Interior padding for text blocks and chart bodies (aligned with home cards).
     static let canvasCardContentPadding = EdgeInsets(top: 12, leading: 16, bottom: 12, trailing: 16)
 

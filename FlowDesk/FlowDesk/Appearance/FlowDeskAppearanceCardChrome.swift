@@ -30,108 +30,97 @@ extension FlowDeskAppearanceTokens {
     @ViewBuilder
     func homeCardFillBackground(cornerRadius: CGFloat) -> some View {
         let shape = RoundedRectangle(cornerRadius: cornerRadius, style: .continuous)
-        let surface = LinearGradient(
-            colors: [homeCardFillTop, homeCardFill],
-            startPoint: UnitPoint(x: 0.12, y: 0),
-            endPoint: UnitPoint(x: 0.88, y: 1)
-        )
         if let material = homeCardMaterial.material {
             ZStack {
-                shape.fill(surface)
+                shape.fill(homeCardFill)
                 shape.fill(.clear).background(material, in: shape)
             }
         } else {
-            shape.fill(surface)
+            shape.fill(homeCardFill)
         }
     }
 }
 
-// MARK: - Unified home / dashboard card chrome
+// MARK: - Unified home / dashboard card container (ZStack: background → clipped content → overlays)
 
-struct FlowDeskCardChromeModifier: ViewModifier {
+/// Rounded card shell: background + shadows on a dedicated layer, padded content clipped to the same radius, hairline + border overlays on top.
+private struct FlowDeskCardContainerModifier: ViewModifier {
     @Environment(\.flowDeskTokens) private var tokens
-    @Environment(\.colorScheme) private var colorScheme
 
-    let cornerRadius: CGFloat
+    var cornerRadius: CGFloat
     @Binding var isHovered: Bool
-    var scaleOnHover: CGFloat = 1.0
+    var scaleOnHover: CGFloat
+    var contentInsets: EdgeInsets
+    var contentAlignment: Alignment
+    /// When true, content uses `maxHeight: .infinity` so vertical alignment (e.g. `.center`) can apply in tight rows.
+    var contentFillsHeight: Bool
 
     func body(content: Content) -> some View {
         let shape = RoundedRectangle(cornerRadius: cornerRadius, style: .continuous)
-        content
-            .background {
-                tokens.homeCardFillBackground(cornerRadius: cornerRadius)
-                    // Tight “contact” shadow + primary lift + wide ambient bloom (stacked depth, not one flat drop).
-                    .shadow(color: Color.black.opacity(isHovered ? 0.11 : 0.065), radius: 1.5, x: 0, y: 1)
-                    .shadow(
-                        color: Color.black.opacity(
-                            isHovered ? tokens.homeCardShadowOpacityHover : tokens.homeCardShadowOpacityNormal
-                        ),
-                        radius: isHovered ? tokens.homeCardShadowRadiusHover : tokens.homeCardShadowRadiusNormal,
-                        x: 0,
-                        y: isHovered ? FlowDeskLayout.cardShadowYHover : FlowDeskLayout.cardShadowYNormal
-                    )
-                    .shadow(
-                        color: Color.black.opacity(isHovered ? 0.048 : 0.03),
-                        radius: isHovered ? 28 : 20,
-                        x: 0,
-                        y: isHovered ? 14 : 9
-                    )
+
+        ZStack(alignment: .topLeading) {
+            tokens.homeCardFillBackground(cornerRadius: cornerRadius)
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                .allowsHitTesting(false)
+                .clipShape(shape)
+                .shadow(
+                    color: Color.black.opacity(
+                        isHovered ? tokens.homeCardShadowOpacityHover : tokens.homeCardShadowOpacityNormal
+                    ),
+                    radius: isHovered ? tokens.homeCardShadowRadiusHover : tokens.homeCardShadowRadiusNormal,
+                    x: 0,
+                    y: isHovered ? FlowDeskLayout.cardShadowYHover : FlowDeskLayout.cardShadowYNormal
+                )
+
+            Group {
+                if contentFillsHeight {
+                    content
+                        .padding(contentInsets)
+                        .frame(minWidth: 0, maxWidth: .infinity, maxHeight: .infinity, alignment: contentAlignment)
+                } else {
+                    content
+                        .padding(contentInsets)
+                        .frame(minWidth: 0, maxWidth: .infinity, alignment: contentAlignment)
+                }
             }
-            .overlay {
-                shape
-                    .fill(
-                        LinearGradient(
-                            colors: [
-                                Color.white.opacity(colorScheme == .dark ? (isHovered ? 0.11 : 0.07) : (isHovered ? 0.22 : 0.14)),
-                                Color.clear
-                            ],
-                            startPoint: .top,
-                            endPoint: UnitPoint(x: 0.5, y: 0.42)
-                        )
-                    )
-                    .allowsHitTesting(false)
-            }
-            .overlay {
-                shape
-                    .strokeBorder(
-                        isHovered
-                            ? LinearGradient(
-                                colors: [
-                                    tokens.selectionStrokeColor.opacity(0.62),
-                                    tokens.selectionStrokeColor.opacity(0.36)
-                                ],
-                                startPoint: .topLeading,
-                                endPoint: .bottomTrailing
-                            )
-                            : LinearGradient(
-                                colors: [
-                                    tokens.selectionStrokeColor.opacity(colorScheme == .dark ? 0.22 : 0.18),
-                                    Color.primary.opacity(tokens.homeCardBorderNormal)
-                                ],
-                                startPoint: .topLeading,
-                                endPoint: UnitPoint(x: 0.72, y: 0.88)
-                            ),
-                        lineWidth: isHovered
-                            ? FlowDeskLayout.cardBorderLineWidthHover
-                            : FlowDeskLayout.cardBorderLineWidth
-                    )
-            }
-            .scaleEffect(isHovered ? scaleOnHover : 1)
-            .animation(.spring(response: 0.30, dampingFraction: 0.82), value: isHovered)
+            .clipped()
+            .clipShape(shape)
+            .contentShape(shape)
+        }
+        .overlay {
+            shape
+                .strokeBorder(
+                    isHovered
+                        ? tokens.selectionStrokeColor.opacity(0.5)
+                        : Color.primary.opacity(tokens.homeCardBorderNormal),
+                    lineWidth: isHovered
+                        ? FlowDeskLayout.cardBorderLineWidthHover
+                        : FlowDeskLayout.cardBorderLineWidth
+                )
+                .allowsHitTesting(false)
+        }
+        .scaleEffect(isHovered ? scaleOnHover : 1)
+        .animation(.spring(response: 0.30, dampingFraction: 0.82), value: isHovered)
     }
 }
 
 extension View {
-    func flowDeskCardChrome(
+    /// Home / dashboard cards: background (solid fill + one shadow) → clipped content → stroke only. Corner radius defaults to `FlowDeskLayout.cardCornerRadius`.
+    func cardContainer(
         cornerRadius: CGFloat = FlowDeskLayout.cardCornerRadius,
         isHovered: Binding<Bool>,
-        scaleOnHover: CGFloat = 1.0
+        scaleOnHover: CGFloat = 1.0,
+        contentInsets: EdgeInsets = FlowDeskLayout.homeCardContentInsets,
+        contentAlignment: Alignment = .topLeading,
+        contentFillsHeight: Bool = false
     ) -> some View {
-        modifier(FlowDeskCardChromeModifier(
+        modifier(FlowDeskCardContainerModifier(
             cornerRadius: cornerRadius,
             isHovered: isHovered,
-            scaleOnHover: scaleOnHover
+            scaleOnHover: scaleOnHover,
+            contentInsets: contentInsets,
+            contentAlignment: contentAlignment,
+            contentFillsHeight: contentFillsHeight
         ))
     }
 }
@@ -144,12 +133,16 @@ struct FlowDeskTemplateChip: View {
         Text(label)
             .font(.caption.weight(.semibold))
             .foregroundStyle(.secondary)
+            .lineLimit(1)
+            .truncationMode(.tail)
             .padding(.horizontal, FlowDeskLayout.spaceS)
             .padding(.vertical, FlowDeskLayout.spaceXS)
             .background(
                 Capsule(style: .continuous)
                     .fill(Color.primary.opacity(FlowDeskLayout.chipBackgroundOpacity))
             )
+            .frame(maxWidth: 200, alignment: .leading)
+            .clipped()
     }
 }
 

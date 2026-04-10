@@ -75,7 +75,6 @@ struct CreationCardView: View {
                                     lineWidth: 1
                                 )
                         }
-                        .frame(width: iconWellSide, height: iconWellSide)
 
                     Image(systemName: systemImage)
                         .font(.system(size: iconPointSize, weight: .semibold))
@@ -84,6 +83,9 @@ struct CreationCardView: View {
                         .scaleEffect(isHovered ? 1.07 : 1)
                         .animation(.spring(response: 0.32, dampingFraction: 0.78), value: isHovered)
                 }
+                .frame(width: iconWellSide, height: iconWellSide)
+                .clipped()
+                .contentShape(Rectangle())
                 .frame(maxWidth: .infinity, alignment: .leading)
 
                 VStack(alignment: .leading, spacing: FlowDeskLayout.homeCreationCardTitleSubtitleSpacing) {
@@ -91,17 +93,22 @@ struct CreationCardView: View {
                         .font(titleFont)
                         .foregroundStyle(.primary)
                         .multilineTextAlignment(.leading)
+                        .lineLimit(prominence == .hero ? 3 : 2)
+                        .truncationMode(.tail)
+                        .fixedSize(horizontal: false, vertical: true)
                     Text(subtitle)
                         .font(FlowDeskTypography.cardSubtitle)
                         .foregroundStyle(.tertiary)
                         .multilineTextAlignment(.leading)
                         .lineSpacing(3)
+                        .lineLimit(prominence == .hero ? 6 : 4)
+                        .truncationMode(.tail)
                         .fixedSize(horizontal: false, vertical: true)
                 }
+                .frame(minWidth: 0, maxWidth: .infinity, alignment: .leading)
             }
             .frame(maxWidth: .infinity, minHeight: minHeight, alignment: .topLeading)
-            .padding(FlowDeskLayout.homeCardPadding)
-            .flowDeskCardChrome(isHovered: $isHovered, scaleOnHover: hoverScale)
+            .cardContainer(isHovered: $isHovered, scaleOnHover: hoverScale)
         }
         .buttonStyle(FlowDeskHomeCardButtonStyle())
         .onHover { isHovered = $0 }

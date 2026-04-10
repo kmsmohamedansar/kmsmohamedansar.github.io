@@ -7,75 +7,18 @@ enum FlowDeskTheme {
     // MARK: - Depth (Level 2 floating panels — single shadow system)
 
     /// Tight, modern lift—subtle elevation without heavy blur.
-    static let floatingPanelShadowOpacity: Double = 0.088
-    static let floatingPanelShadowRadius: CGFloat = 16
-    static let floatingPanelShadowY: CGFloat = 4
+    static let floatingPanelShadowOpacity: Double = 0.055
+    static let floatingPanelShadowRadius: CGFloat = 10
+    static let floatingPanelShadowY: CGFloat = 3
 
-    /// Subtle vertical wash so the canvas (Level 1) reads as a surface, not a flat fill.
-    static func canvasBoardDepthGradient(colorScheme: ColorScheme) -> LinearGradient {
-        if colorScheme == .dark {
-            return LinearGradient(
-                colors: [.clear, Color.black.opacity(0.2)],
-                startPoint: .top,
-                endPoint: .bottom
-            )
-        }
-        return LinearGradient(
-            gradient: Gradient(stops: [
-                .init(color: .clear, location: 0),
-                .init(color: Color.black.opacity(0.028), location: 0.48),
-                .init(color: Color(red: 0.44, green: 0.37, blue: 0.31).opacity(0.024), location: 1)
-            ]),
-            startPoint: .top,
-            endPoint: .bottom
-        )
-    }
-
-    /// Soft light pool from the upper-left—adds spatial richness without clutter.
-    static func canvasBoardRadialAtmosphere(colorScheme: ColorScheme) -> RadialGradient {
-        RadialGradient(
-            colors: colorScheme == .dark
-                ? [Color.white.opacity(0.052), Color.clear]
-                : [Color(red: 1, green: 0.992, blue: 0.978).opacity(0.42), Color.clear],
-            center: UnitPoint(x: 0.12, y: 0.08),
-            startRadius: 0,
-            endRadius: 780
-        )
-    }
-
-    /// Gentle brightening at the canvas center so the board reads as a lit “space” (Figma/Miro-like depth).
-    static func canvasBoardCenterGlow(colorScheme: ColorScheme) -> RadialGradient {
-        RadialGradient(
-            colors: colorScheme == .dark
-                ? [Color.white.opacity(0.04), Color.clear]
-                : [Color.white.opacity(0.19), Color.clear],
-            center: .center,
-            startRadius: 80,
-            endRadius: 1400
-        )
-    }
-
-    /// Home dashboard: gentle warmth from the top so the first screen feels composed.
+    /// Home dashboard: very light top wash only (atmospheric layers reduced elsewhere).
     static func homeAtmosphereWash(colorScheme: ColorScheme) -> LinearGradient {
         LinearGradient(
             colors: colorScheme == .dark
-                ? [Color.white.opacity(0.055), Color.clear]
-                : [Color(red: 0.995, green: 0.988, blue: 0.978).opacity(0.94), Color.clear],
+                ? [Color.white.opacity(0.028), Color.clear]
+                : [Color(red: 0.995, green: 0.988, blue: 0.978).opacity(0.47), Color.clear],
             startPoint: .top,
             endPoint: UnitPoint(x: 0.5, y: 0.44)
-        )
-    }
-
-    /// Subtle accent bloom from the upper-left — ties Home to the product stroke without changing layout.
-    static func homeAccentSignatureGlow(tokens: FlowDeskAppearanceTokens, colorScheme: ColorScheme) -> RadialGradient {
-        RadialGradient(
-            colors: [
-                tokens.selectionStrokeColor.opacity(colorScheme == .dark ? 0.14 : 0.072),
-                Color.clear
-            ],
-            center: UnitPoint(x: 0.05, y: 0.02),
-            startRadius: 0,
-            endRadius: 540
         )
     }
 
@@ -217,7 +160,7 @@ enum FlowDeskTheme {
         return img
     }()
 
-    /// Token-driven board mat: base → grid (embedded) → vertical depth → soft atmosphere → vignette → optional grain.
+    /// Token-driven board mat: base → grid → one vertical depth multiply → light top wash → edge vignette → optional grain (no stacked radial/center/depth overlays).
     @ViewBuilder
     static func canvasWorkspaceMatBackground(
         tokens: FlowDeskAppearanceTokens,
@@ -226,9 +169,7 @@ enum FlowDeskTheme {
         includeFilmGrain: Bool
     ) -> some View {
         let gridOpacity = tokens.gridLineOpacity * tokens.canvasGridEmphasis
-        let topWash = colorScheme == .dark
-            ? tokens.canvasTopWashOpacity * 0.52
-            : tokens.canvasTopWashOpacity
+        let topWash = (colorScheme == .dark ? tokens.canvasTopWashOpacity * 0.52 : tokens.canvasTopWashOpacity) * 0.5
 
         ZStack {
             tokens.canvasWorkspaceBackground
@@ -263,18 +204,6 @@ enum FlowDeskTheme {
             )
             .blendMode(.softLight)
             .allowsHitTesting(false)
-
-            canvasBoardRadialAtmosphere(colorScheme: colorScheme)
-                .opacity(colorScheme == .dark ? 0.52 : 0.42)
-                .allowsHitTesting(false)
-
-            canvasBoardCenterGlow(colorScheme: colorScheme)
-                .opacity(colorScheme == .dark ? 0.42 : 0.32)
-                .allowsHitTesting(false)
-
-            canvasBoardDepthGradient(colorScheme: colorScheme)
-                .opacity(0.82)
-                .allowsHitTesting(false)
 
             RadialGradient(
                 colors: [

@@ -21,7 +21,7 @@ struct FlowDeskPlainCardButtonStyle: ButtonStyle {
     }
 }
 
-/// Home creation / recent cards: press tuck + dim, springs with hover scale from `flowDeskCardChrome`.
+/// Home creation / recent cards: press tuck + dim, stacks with hover scale from `cardContainer`.
 struct FlowDeskHomeCardButtonStyle: ButtonStyle {
     func makeBody(configuration: Configuration) -> some View {
         configuration.label
