@@ -31,6 +31,11 @@ final class CanvasBoardViewModel {
     var drawingStrokeColor: CanvasRGBAColor = CanvasRGBAColor(red: 0.12, green: 0.12, blue: 0.14, opacity: 1)
     var drawingLineWidth: Double = 3
     var drawingStrokeOpacity: Double = 1
+    /// Central stroke interpretation pipeline:
+    /// freehand persistence, rectangle conversion, and handwriting-to-text conversion.
+    let strokeRecognizer: StrokeRecognizer = CanvasStrokeRecognizer(
+        handwritingRecognizer: VisionHandwritingRecognizer()
+    )
 
     /// Updated by `CanvasBoardView` from the visible geometry + current pan/zoom (not persisted).
     var insertionViewportSnapshot: CanvasInsertionViewportSnapshot?
@@ -158,3 +163,6 @@ final class CanvasBoardViewModel {
         canRedoBoard = !canvasRedoStack.isEmpty
     }
 }
+
+/// Canonical canvas view model surface for new canvas systems.
+typealias CanvasViewModel = CanvasBoardViewModel
