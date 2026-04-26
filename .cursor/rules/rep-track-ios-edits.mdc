@@ -1,0 +1,22 @@
+---
+description: RepTrack iOS app — edit the Xcode project in IOs projects, not the github.io repo
+globs: RepTrack/**/*.swift
+alwaysApply: true
+---
+
+# RepTrack iOS app: where to edit
+
+**All edits for the RepTrack iOS (Swift/SwiftUI) app must go to the Xcode project the user actually builds and runs.**
+
+- **Edit here (canonical):**  
+  `/Users/mohamedansar/Documents/IOs projects/RepTrack/`  
+  (iCloud Drive → Documents → IOs projects → RepTrack — the one opened in Xcode.)
+
+- **Do not edit:**  
+  The `RepTrack/` folder inside this workspace (`kmsmohamedansar.github.io/RepTrack`) for app code. That copy is not the one the user runs in the simulator.
+
+When changing views, view models, models, or utilities for the iOS app, use full paths under:
+
+`/Users/mohamedansar/Documents/IOs projects/RepTrack/RepTrack/`
+
+Example: `.../IOs projects/RepTrack/RepTrack/Views/WorkoutDetailView.swift`, not `RepTrack/RepTrackApp/Views/...` in the repo.
