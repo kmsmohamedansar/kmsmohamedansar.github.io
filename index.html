@@ -993,7 +993,7 @@ section{position:relative}
 .lineage::before{
   content:"";position:absolute;left:21px;top:8px;bottom:8px;width:2px;
   background:linear-gradient(180deg,var(--amber),var(--violet) 45%,var(--cyan));
-  opacity:.45;border-radius:2px;
+  opacity:.14;border-radius:2px;
 }
 .role{
   position:relative;
@@ -1113,12 +1113,223 @@ footer{
   #datafield{display:none}
 }
 </style>
+
+<style>
+/* ======== V2 SUBSYSTEMS: boot · cursor · palette · console REPL ======== */
+
+[hidden]{display:none !important}
+
+/* ---- BOOT SEQUENCE ---- */
+#boot{
+  position:fixed;inset:0;z-index:100;
+  display:flex;align-items:center;justify-content:center;
+  background:
+    radial-gradient(700px 460px at 50% 30%,rgba(31,179,214,.1),transparent 60%),
+    var(--ink-0);
+  transition:opacity .65s var(--ease-out),visibility .65s;
+}
+#boot.done{opacity:0;visibility:hidden;pointer-events:none}
+.boot-inner{width:min(460px,86vw)}
+.boot-logo{
+  font-family:var(--f-display);font-weight:800;font-size:1.1rem;letter-spacing:.06em;
+  width:52px;height:52px;border-radius:14px;display:grid;place-items:center;
+  background:linear-gradient(135deg,rgba(111,230,255,.18),rgba(142,125,255,.18));
+  border:1px solid var(--line-strong);
+  color:var(--cyan);
+  margin-bottom:22px;
+  animation:bootpulse 1.6s ease-in-out infinite;
+}
+@keyframes bootpulse{0%,100%{box-shadow:0 0 0 0 rgba(111,230,255,.25)}50%{box-shadow:0 0 0 12px rgba(111,230,255,0)}}
+.boot-log{
+  font-family:var(--f-mono);font-size:.74rem;line-height:2;
+  min-height:148px;color:var(--text-2);
+}
+.boot-line{opacity:0;transform:translateX(-8px);animation:bootline .35s var(--ease-out) forwards;display:flex;justify-content:space-between;gap:16px}
+.boot-line .ok{color:var(--green)}
+.boot-line .warm{color:var(--amber)}
+@keyframes bootline{to{opacity:1;transform:none}}
+.boot-bar{margin-top:18px;height:3px;border-radius:3px;background:rgba(140,168,214,.14);overflow:hidden}
+.boot-bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--cyan),var(--violet),var(--amber));transition:width .3s var(--ease-out);box-shadow:0 0 10px rgba(111,230,255,.5)}
+.boot-foot{margin-top:14px;font-family:var(--f-mono);font-size:.6rem;letter-spacing:.16em;text-transform:uppercase;color:var(--text-3)}
+
+/* ---- CUSTOM CURSOR ---- */
+.cursor-dot,.cursor-ring{
+  position:fixed;top:0;left:0;z-index:130;pointer-events:none;
+  transform:translate(-50%,-50%);
+  opacity:0;
+}
+body.cursor-on .cursor-dot,body.cursor-on .cursor-ring{opacity:1}
+.cursor-dot{
+  width:6px;height:6px;border-radius:50%;
+  background:var(--cyan);
+  box-shadow:0 0 10px rgba(111,230,255,.8);
+  transition:background .25s,opacity .25s;
+}
+.cursor-ring{
+  width:36px;height:36px;border-radius:50%;
+  border:1.5px solid rgba(111,230,255,.5);
+  transition:width .3s var(--ease-out),height .3s var(--ease-out),border-color .3s,opacity .25s,background .3s;
+}
+.cursor-dot.hot{background:var(--amber);box-shadow:0 0 10px rgba(255,180,84,.8)}
+.cursor-ring.hot{width:58px;height:58px;border-color:rgba(255,180,84,.7);background:rgba(255,180,84,.05)}
+.cursor-ring.txt{width:4px;height:26px;border-radius:3px;border-color:rgba(111,230,255,.8)}
+body.cursor-on,body.cursor-on a,body.cursor-on button,body.cursor-on .card{cursor:none}
+body.cursor-on input,body.cursor-on textarea{cursor:text}
+
+/* ---- COMMAND PALETTE (⌘K) ---- */
+.palette{
+  position:fixed;inset:0;z-index:110;
+  background:rgba(5,8,14,.6);
+  backdrop-filter:blur(10px) saturate(1.2);
+  display:flex;align-items:flex-start;justify-content:center;
+  padding:14vh 18px 0;
+  opacity:0;pointer-events:none;transition:opacity .25s;
+}
+.palette.open{opacity:1;pointer-events:auto}
+.palette-box{
+  width:min(560px,100%);
+  border-radius:18px;border:1px solid var(--line-strong);
+  background:linear-gradient(170deg,rgba(18,28,52,.92),rgba(9,13,24,.96));
+  box-shadow:0 40px 100px rgba(0,0,0,.6),0 0 0 1px rgba(111,230,255,.06);
+  overflow:hidden;
+  transform:translateY(14px) scale(.985);
+  transition:transform .3s var(--ease-out);
+}
+.palette.open .palette-box{transform:none}
+.palette-head{
+  display:flex;align-items:center;gap:12px;
+  padding:16px 18px;border-bottom:1px solid var(--line);
+  font-family:var(--f-mono);
+}
+.palette-head .pp{color:var(--violet)}
+.palette-head input{
+  flex:1;background:transparent;border:0;outline:0;
+  color:var(--text);font-family:var(--f-mono);font-size:.92rem;
+  caret-color:var(--cyan);
+}
+.palette-head input::placeholder{color:var(--text-3)}
+.palette-head kbd{
+  font-family:var(--f-mono);font-size:.58rem;letter-spacing:.1em;color:var(--text-3);
+  border:1px solid var(--line);border-radius:6px;padding:3px 7px;
+}
+.palette-list{max-height:320px;overflow-y:auto;padding:8px}
+.palette-item{
+  display:flex;align-items:center;gap:13px;
+  padding:11px 13px;border-radius:10px;
+  font-size:.9rem;color:var(--text-2);
+  cursor:pointer;
+  transition:background .15s,color .15s;
+}
+.palette-item .pi-ico{
+  width:30px;height:30px;border-radius:8px;flex:none;
+  display:grid;place-items:center;
+  background:rgba(111,230,255,.08);border:1px solid var(--line);
+  color:var(--cyan);font-family:var(--f-mono);font-size:.62rem;
+}
+.palette-item.warm .pi-ico{color:var(--amber);background:rgba(255,180,84,.08)}
+.palette-item .pi-k{margin-left:auto;font-family:var(--f-mono);font-size:.58rem;letter-spacing:.12em;color:var(--text-3);text-transform:uppercase}
+.palette-item.sel,.palette-item:hover{background:rgba(111,230,255,.08);color:var(--text)}
+.palette-foot{
+  padding:11px 18px;border-top:1px solid var(--line);
+  font-family:var(--f-mono);font-size:.6rem;letter-spacing:.14em;color:var(--text-3);text-transform:uppercase;
+  display:flex;gap:18px;
+}
+.nav-kbd{
+  font-family:var(--f-mono);font-size:.66rem;letter-spacing:.08em;
+  color:var(--text-2);
+  border:1px solid var(--line);border-radius:8px;
+  padding:8px 11px;margin-left:8px;
+  transition:color .25s,border-color .25s,transform .25s;
+}
+.nav-kbd:hover{color:var(--cyan);border-color:rgba(111,230,255,.4);transform:translateY(-2px)}
+
+/* ---- INTERACTIVE CONSOLE / REPL ---- */
+.console-body{max-height:392px;overflow-y:auto;overscroll-behavior:contain;scrollbar-width:thin;scrollbar-color:rgba(111,230,255,.3) transparent}
+.console-body::-webkit-scrollbar{width:7px}
+.console-body::-webkit-scrollbar-thumb{background:rgba(111,230,255,.25);border-radius:6px}
+.q-block{margin-bottom:6px}
+.q-out{margin:8px 0 16px;animation:rise .45s var(--ease-out)}
+.q-out .q-meta{margin-top:8px}
+.q-err{color:var(--rose)}
+.q-hint{color:var(--text-3)}
+.q-hint .fn{color:var(--cyan)}
+.q-input-row{display:flex;gap:10px;align-items:center;margin-top:8px;animation:rise .5s var(--ease-out)}
+.q-input{
+  flex:1;min-width:0;background:transparent;border:0;outline:0;
+  color:var(--text);font-family:var(--f-mono);font-size:inherit;line-height:inherit;
+  caret-color:var(--cyan);
+}
+.q-input::placeholder{color:rgba(108,125,156,.55)}
+.console-chips{
+  display:flex;flex-wrap:wrap;gap:8px;
+  padding:11px 16px;border-top:1px solid var(--line);
+  background:rgba(7,10,18,.35);
+  animation:rise .5s var(--ease-out);
+}
+.chip{
+  font-family:var(--f-mono);font-size:.6rem;letter-spacing:.12em;text-transform:uppercase;
+  padding:6px 11px;border-radius:100px;
+  border:1px solid var(--line);color:var(--text-2);
+  transition:color .2s,border-color .2s,transform .2s;
+}
+.chip:hover{color:var(--cyan);border-color:rgba(111,230,255,.45);transform:translateY(-2px)}
+.chip.warm:hover{color:var(--amber);border-color:rgba(255,180,84,.45)}
+
+/* ---- MARQUEE row 2 (reverse) ---- */
+.marquee-track.rev{animation-direction:reverse;animation-duration:46s;margin-top:14px}
+.marquee-track.rev span{color:rgba(169,184,212,.5);font-style:italic;text-transform:none;letter-spacing:.1em}
+
+/* ---- LINEAGE scroll-draw ---- */
+.lineage-fill{
+  position:absolute;left:21px;top:8px;width:2px;height:0;z-index:1;
+  background:linear-gradient(180deg,var(--amber),var(--violet) 45%,var(--cyan));
+  border-radius:2px;
+  box-shadow:0 0 14px rgba(111,230,255,.45);
+}
+
+/* ---- TILT helpers ---- */
+.proj,.schema-card,#console{transform-style:preserve-3d}
+.tilting{transition:transform .1s linear !important}
+
+@media (prefers-reduced-motion:reduce){
+  #boot{display:none}
+  .cursor-dot,.cursor-ring{display:none}
+}
+@media (max-width:920px){.nav-kbd{display:none}}
+</style>
 </head>
 <body>
 
 <canvas id="datafield" aria-hidden="true"></canvas>
 <div class="noise" aria-hidden="true"></div>
 <div class="progress" aria-hidden="true"><i id="progress-bar"></i></div>
+
+<!-- ============ BOOT SEQUENCE ============ -->
+<div id="boot" aria-hidden="true">
+  <div class="boot-inner">
+    <div class="boot-logo">MA</div>
+    <div class="boot-log" id="boot-log"></div>
+    <div class="boot-bar"><i id="boot-bar"></i></div>
+    <div class="boot-foot">warehouse: DELIVERY_WH · region: ca-central · run #2026</div>
+  </div>
+</div>
+
+<!-- ============ CUSTOM CURSOR ============ -->
+<i class="cursor-ring" id="cursor-ring" aria-hidden="true"></i>
+<i class="cursor-dot" id="cursor-dot" aria-hidden="true"></i>
+
+<!-- ============ COMMAND PALETTE ============ -->
+<div class="palette" id="palette" role="dialog" aria-modal="true" aria-label="Command palette">
+  <div class="palette-box">
+    <div class="palette-head">
+      <span class="pp mono">❯</span>
+      <input id="palette-input" type="text" placeholder="Jump anywhere… sections, demos, links" autocomplete="off" spellcheck="false" />
+      <kbd>esc</kbd>
+    </div>
+    <ul class="palette-list" id="palette-list"></ul>
+    <div class="palette-foot"><span>↑↓ navigate</span><span>↵ open</span><span>esc close</span></div>
+  </div>
+</div>
 
 <!-- ============ PIPELINE RAIL ============ -->
 <aside class="rail" aria-label="Pipeline progress">
@@ -1151,6 +1362,7 @@ footer{
       <a class="nav-link" href="#build" data-nav="build">Build</a>
       <a class="nav-link" href="#schema" data-nav="schema">Stack</a>
       <a class="nav-link" href="#lineage" data-nav="lineage">Lineage</a>
+      <button class="nav-kbd" id="open-palette" aria-label="Open command palette">⌘K</button>
       <a class="nav-cta" href="#commit">Run query →</a>
     </div>
     <button class="nav-burger" id="nav-burger" aria-label="Open menu" aria-expanded="false" aria-controls="mobile-menu">
@@ -1206,24 +1418,41 @@ footer{
           <span class="title">mohamed_ansar.sql — worksheet</span>
           <span class="env">SNOWFLAKE ❄ PROD</span>
         </div>
-        <div class="console-body">
-          <div class="q-line"><span class="q-prompt">❯</span> <span id="typed"></span><span class="caret" id="caret"></span></div>
-          <div class="q-results" id="q-results">
-            <table class="q-table">
-              <thead><tr><th>capability</th><th>proof</th><th>state</th></tr></thead>
-              <tbody>
-                <tr><td>sql · snowflake</td><td>production pricing analytics</td><td class="ok">VALIDATED</td></tr>
-                <tr><td>pipelines</td><td>recurring stakeholder delivery</td><td class="ok">RUNNING</td></tr>
-                <tr><td>swiftui · swiftdata</td><td>RepTrack — workout log</td><td class="shipped">SHIPPED ⭢ APP STORE</td></tr>
-                <tr><td>applied ai</td><td>retrieval · NLP · automation</td><td class="ok">LIVE DEMOS</td></tr>
-              </tbody>
-            </table>
-            <p class="q-meta"><span class="ok">✓</span> 4 rows returned · <span id="q-ms">0</span> ms · warehouse <span class="fn">DELIVERY_WH</span> · 0 rows dropped</p>
+        <div class="console-body" id="console-body">
+          <div id="console-log">
+            <div class="q-block">
+              <div class="q-line"><span class="q-prompt">❯</span> <span id="typed"></span><span class="caret" id="caret"></span></div>
+              <div class="q-results" id="q-results">
+                <table class="q-table">
+                  <thead><tr><th>capability</th><th>proof</th><th>state</th></tr></thead>
+                  <tbody>
+                    <tr><td>sql · snowflake</td><td>production pricing analytics</td><td class="ok">VALIDATED</td></tr>
+                    <tr><td>pipelines</td><td>recurring stakeholder delivery</td><td class="ok">RUNNING</td></tr>
+                    <tr><td>swiftui · swiftdata</td><td>RepTrack — workout log</td><td class="shipped">SHIPPED ⭢ APP STORE</td></tr>
+                    <tr><td>applied ai</td><td>retrieval · NLP · automation</td><td class="ok">LIVE DEMOS</td></tr>
+                  </tbody>
+                </table>
+                <p class="q-meta"><span class="ok">✓</span> 4 rows returned · <span id="q-ms">0</span> ms · warehouse <span class="fn">DELIVERY_WH</span> · 0 rows dropped</p>
+                <p class="q-meta q-hint" style="margin-top:10px">this console is live — type a query, or try <span class="fn">help</span></p>
+              </div>
+            </div>
           </div>
+          <div class="q-input-row" id="q-input-row" hidden>
+            <span class="q-prompt">❯</span>
+            <input id="q-input" class="q-input" type="text" autocomplete="off" autocapitalize="off" spellcheck="false" aria-label="Type a SQL query" placeholder="SELECT * FROM projects;" />
+          </div>
+        </div>
+        <div class="console-chips" id="console-chips" hidden>
+          <button class="chip" data-q="SELECT * FROM projects;">projects</button>
+          <button class="chip" data-q="SELECT * FROM experience;">experience</button>
+          <button class="chip" data-q="SELECT * FROM skills;">skills</button>
+          <button class="chip warm" data-q="SELECT * FROM contact;">contact</button>
+          <button class="chip" data-q="show tables;">tables</button>
+          <button class="chip" data-q="help">help</button>
         </div>
         <div class="console-foot">
           <span><span class="blink-dot">●</span> session: open</span>
-          <span>role: solutions_engineer</span>
+          <span id="console-rows">role: solutions_engineer</span>
           <span>autocommit: on</span>
         </div>
       </div>
@@ -1247,6 +1476,18 @@ footer{
     <span>SwiftData <i></i></span><span>Airflow <i></i></span><span>BigQuery <i></i></span><span>Tableau <i></i></span>
     <span>Power BI <i></i></span><span>pandas <i></i></span><span>FAISS <i></i></span><span>Transformers <i></i></span>
     <span>DuckDB <i></i></span><span>Xcode <i></i></span><span>App Store Connect <i></i></span><span>ETL / ELT <i></i></span>
+    <span>SQL <i></i></span><span>Snowflake <i></i></span><span>Python <i></i></span><span>SwiftUI <i></i></span>
+    <span>SwiftData <i></i></span><span>Airflow <i></i></span><span>BigQuery <i></i></span><span>Tableau <i></i></span>
+    <span>Power BI <i></i></span><span>pandas <i></i></span><span>FAISS <i></i></span><span>Transformers <i></i></span>
+    <span>DuckDB <i></i></span><span>Xcode <i></i></span><span>App Store Connect <i></i></span><span>ETL / ELT <i></i></span>
+  </div>
+  <div class="marquee-track rev">
+    <span>queries that hold <i></i></span><span>0 rows dropped <i></i></span><span>validated, not vibes <i></i></span>
+    <span>pipelines that run <i></i></span><span>stakeholder-ready <i></i></span><span>apps that ship <i></i></span>
+    <span>lineage you can explain <i></i></span><span>end-to-end ownership <i></i></span>
+    <span>queries that hold <i></i></span><span>0 rows dropped <i></i></span><span>validated, not vibes <i></i></span>
+    <span>pipelines that run <i></i></span><span>stakeholder-ready <i></i></span><span>apps that ship <i></i></span>
+    <span>lineage you can explain <i></i></span><span>end-to-end ownership <i></i></span>
   </div>
 </div>
 
@@ -1550,7 +1791,8 @@ footer{
       <p class="lede">Solutions engineering and analytics operations — progressively more technical ownership, from content operations at Amazon through pre-sales solution design at Datasembly.</p>
     </div>
 
-    <div class="lineage">
+    <div class="lineage" id="lineage-rail">
+      <i class="lineage-fill" id="lineage-fill" aria-hidden="true"></i>
       <article class="role current rv">
         <span class="role-node"></span>
         <div class="card role-card">
@@ -1675,135 +1917,298 @@ const $$ = (s,c)=> Array.from((c||document).querySelectorAll(s));
   const cv = $("#datafield");
   if(!cv || REDUCED) return;
   const ctx = cv.getContext("2d");
-  let W,H,DPR, pts=[], mouse={x:-9999,y:-9999};
-  const COUNT_BASE = 70;
+  let W,H,DPR,parts=[],t=0,mx=-1e4,my=-1e4;
 
   function size(){
-    DPR = Math.min(window.devicePixelRatio||1, 2);
-    W = cv.width  = innerWidth * DPR;
-    H = cv.height = innerHeight * DPR;
-    cv.style.width = innerWidth+"px";
-    cv.style.height = innerHeight+"px";
+    DPR = Math.min(devicePixelRatio||1, 2);
+    W = cv.width = innerWidth*DPR; H = cv.height = innerHeight*DPR;
+    cv.style.width = innerWidth+"px"; cv.style.height = innerHeight+"px";
+    ctx.clearRect(0,0,W,H);
+  }
+  function spawn(p){
+    p.x = Math.random()*W; p.y = Math.random()*H;
+    p.life = 140 + Math.random()*260;
+    const r = Math.random();
+    p.hue = r<.7 ? 192 : (r<.92 ? 252 : 32);   // cyan / violet / rare amber
+    p.sp  = (.45 + Math.random()*.85)*DPR;
   }
   function seed(){
-    const n = Math.round(COUNT_BASE * Math.min(1.4, innerWidth/1200));
-    pts = Array.from({length:n}, ()=>({
-      x:Math.random()*W, y:Math.random()*H,
-      vx:(Math.random()-.5)*.12*DPR,
-      vy:(-.18 - Math.random()*.3)*DPR,         // drift upward = data rising
-      r:(Math.random()*1.4+.7)*DPR,
-      warm: Math.random() < .18                  // a few amber packets
-    }));
+    const n = Math.round(85*Math.min(1.5, innerWidth/1100));
+    parts = Array.from({length:n}, ()=>{ const p={}; spawn(p); return p; });
   }
   size(); seed();
   addEventListener("resize", ()=>{ size(); seed(); }, {passive:true});
-  addEventListener("pointermove", e=>{ mouse.x=e.clientX*DPR; mouse.y=e.clientY*DPR; }, {passive:true});
-  addEventListener("pointerleave", ()=>{ mouse.x=mouse.y=-9999; });
+  addEventListener("pointermove", e=>{ mx=e.clientX*DPR; my=e.clientY*DPR; }, {passive:true});
+  addEventListener("pointerleave", ()=>{ mx=my=-1e4; });
 
-  const LINK = 130;
+  // layered pseudo-noise → flow angle
+  function field(x,y){
+    const s = .0016/DPR;
+    return Math.sin(x*s + t*.0045)*1.5
+         + Math.cos(y*s*1.3 - t*.003)
+         + Math.sin((x+y)*s*.55 + t*.002);
+  }
+
   function tick(){
-    ctx.clearRect(0,0,W,H);
-    const link = LINK*DPR;
+    t++;
+    // fade existing trails toward transparent
+    ctx.globalCompositeOperation = "destination-out";
+    ctx.fillStyle = "rgba(0,0,0,.06)";
+    ctx.fillRect(0,0,W,H);
+    ctx.globalCompositeOperation = "lighter";
+    ctx.lineCap = "round";
 
-    for(const p of pts){
-      p.x += p.vx; p.y += p.vy;
-      // gentle mouse repulsion
-      const dx = p.x-mouse.x, dy = p.y-mouse.y, d2 = dx*dx+dy*dy, R = 150*DPR;
-      if(d2 < R*R){ const d=Math.sqrt(d2)||1, f=(R-d)/R*.5; p.x+=dx/d*f; p.y+=dy/d*f; }
-      if(p.y < -10) { p.y = H+10; p.x = Math.random()*W; }
-      if(p.x < -10) p.x = W+10; else if(p.x > W+10) p.x = -10;
-    }
-    // links
-    ctx.lineWidth = .6*DPR;
-    for(let i=0;i<pts.length;i++){
-      const a=pts[i];
-      for(let j=i+1;j<pts.length;j++){
-        const b=pts[j], dx=a.x-b.x, dy=a.y-b.y, d2=dx*dx+dy*dy;
-        if(d2<link*link){
-          const t = 1 - Math.sqrt(d2)/link;
-          ctx.strokeStyle = `rgba(120,180,230,${(t*.16).toFixed(3)})`;
-          ctx.beginPath(); ctx.moveTo(a.x,a.y); ctx.lineTo(b.x,b.y); ctx.stroke();
-        }
-      }
-    }
-    // points
-    for(const p of pts){
-      ctx.beginPath();
-      ctx.fillStyle = p.warm ? "rgba(255,180,84,.75)" : "rgba(140,210,255,.7)";
-      ctx.arc(p.x,p.y,p.r,0,Math.PI*2); ctx.fill();
+    for(const p of parts){
+      const a = field(p.x,p.y);
+      let vx = Math.cos(a)*p.sp;
+      let vy = Math.sin(a)*p.sp - .22*DPR;     // bias upward — data rising
+      const dx=p.x-mx, dy=p.y-my, d2=dx*dx+dy*dy, R=170*DPR;
+      if(d2 < R*R){ const d=Math.sqrt(d2)||1, f=(R-d)/R; vx+=dx/d*f*1.7*DPR; vy+=dy/d*f*1.7*DPR; }
+      const nx=p.x+vx, ny=p.y+vy;
+      ctx.lineWidth = (p.hue===32 ? 1.3 : 1)*DPR;
+      ctx.strokeStyle = "hsla("+p.hue+",92%,"+(p.hue===32?64:70)+"%,.32)";
+      ctx.beginPath(); ctx.moveTo(p.x,p.y); ctx.lineTo(nx,ny); ctx.stroke();
+      p.x=nx; p.y=ny;
+      if(--p.life<0 || p.x<-30 || p.x>W+30 || p.y<-30 || p.y>H+30) spawn(p);
     }
     requestAnimationFrame(tick);
   }
-  // pause offscreen / hidden tab handled by rAF naturally
   requestAnimationFrame(tick);
 })();
 
 /* ============================================================
    2 · HERO CONSOLE — typed query, then "execute" the page
    ============================================================ */
-(function consoleType(){
-  const hero   = $("#hero");
-  const target = $("#typed");
-  const caret  = $("#caret");
-  const results= $("#q-results");
-  const ms     = $("#q-ms");
+(function consoleEngine(){
+  const hero    = $("#hero");
+  const target  = $("#typed");
+  const caret   = $("#caret");
+  const results = $("#q-results");
+  const ms      = $("#q-ms");
+  const body    = $("#console-body");
+  const log     = $("#console-log");
+  const inputRow= $("#q-input-row");
+  const input   = $("#q-input");
+  const chips   = $("#console-chips");
+  const rowsOut = $("#console-rows");
   if(!hero || !target) return;
 
-  // tokenized query: [text, cssClass]
+  /* ---- wait for boot ---- */
+  const bootReady = new Promise(res=>{
+    if(REDUCED) return res();
+    addEventListener("boot:done", res, {once:true});
+    setTimeout(res, 4200); // safety net
+  });
+
+  /* ---- the data behind the console ---- */
+  const DB = {
+    projects:{cols:["name","stack","status"],rows:[
+      ["RepTrack (iOS)","SwiftUI · SwiftData",'<span class="shipped">SHIPPED ⭢ APP STORE</span>',1],
+      ["SQL Playground","SQLite WASM · browser",'<span class="ok">LIVE</span>',1],
+      ["TaskMaster pipeline","Python · retries · logs",'<span class="ok">LIVE</span>',1],
+      ["HV customer predictor","ML · explainability",'<span class="ok">LIVE</span>',1],
+      ["Grocery AI assistant","FAISS · embeddings",'<span class="ok">LIVE</span>',1],
+      ["Fine-food sentiment","Transformers · NLP","DONE",0],
+      ["Finance news scraper","Python · headless","DONE",0],
+      ["Zero-shot categorizer","BART-MNLI · rules","DONE",0],
+      ["CPL Dream XI","Power BI · KPI model","DONE",0]
+    ]},
+    experience:{cols:["role","org","period"],rows:[
+      ["Associate Solutions Engineer","Datasembly",'<span class="shipped">2026 — now</span>'],
+      ["Tech Support","Datasembly","2024 — 2025"],
+      ["BD Intern · Business Analysis","Spongelii","2024"],
+      ["Business Analyst II · QA","Amazon Prime Video","2021 — 2022"],
+      ["Business Analyst I · Content","Amazon Prime Video","2019 — 2021"]
+    ]},
+    skills:{cols:["channel","tools"],rows:[
+      ["data systems","SQL · Snowflake · BigQuery · DuckDB"],
+      ["workflows","Airflow · ETL/ELT · validation"],
+      ["analytics","Tableau · Power BI · pandas"],
+      ["product & ai","SwiftUI · SwiftData · Python · retrieval"]
+    ]},
+    contact:{cols:["channel","value"],rows:[
+      ["email",'<a href="mailto:mohamedansarkms@gmail.com" class="fn">mohamedansarkms@gmail.com</a>'],
+      ["linkedin",'<a href="https://www.linkedin.com/in/kmsmohamedansar/" target="_blank" rel="noopener noreferrer" class="fn">/in/kmsmohamedansar</a>'],
+      ["app store",'<a href="https://apps.apple.com/us/app/reptrack-workout-log/id6761032027" target="_blank" rel="noopener noreferrer" class="fn">RepTrack — Workout Log</a>']
+    ]}
+  };
+
+  const esc = s => s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+  const hl  = s => esc(s).replace(
+    /\b(SELECT|FROM|WHERE|ORDER\s+BY|SHOW|DESCRIBE|DESC|ASC|LIMIT|INSERT|INTO|VALUES|DROP|TABLE|TABLES|AND|OR|LIKE|TRUE|FALSE|HELP|CLEAR|WHOAMI|COMMIT)\b/gi,
+    m=>'<span class="kw">'+m+'</span>'
+  );
+
+  function table(t){
+    let h = '<table class="q-table"><thead><tr>';
+    t.cols.forEach(c=> h += '<th>'+c+'</th>');
+    h += '</tr></thead><tbody>';
+    t.rows.forEach(r=>{
+      h += '<tr>';
+      for(let i=0;i<t.cols.length;i++) h += '<td>'+r[i]+'</td>';
+      h += '</tr>';
+    });
+    return h + '</tbody></table>';
+  }
+  function meta(n){
+    const dur = (40+Math.random()*220)|0;
+    return '<p class="q-meta"><span class="ok">✓</span> '+n+' row'+(n===1?'':'s')+' returned · '+dur+' ms · warehouse <span class="fn">DELIVERY_WH</span></p>';
+  }
+
+  /* ---- the tiny query engine ---- */
+  function run(raw){
+    const q = raw.trim().replace(/;+$/,"");
+    if(!q) return null;
+    const L = q.toLowerCase().replace(/\s+/g," ");
+
+    if(L==="help") return {html:
+      '<p class="q-hint">available statements:</p>'+
+      '<p class="q-hint">· <span class="fn">SELECT * FROM projects</span> &nbsp;(try <span class="fn">WHERE live = true</span>)</p>'+
+      '<p class="q-hint">· <span class="fn">SELECT * FROM experience</span> · <span class="fn">skills</span> · <span class="fn">contact</span></p>'+
+      '<p class="q-hint">· <span class="fn">show tables</span> · <span class="fn">whoami</span> · <span class="fn">clear</span></p>'+
+      '<p class="q-hint">…and a few things that aren\u2019t documented.</p>'};
+
+    if(L==="clear"){ log.innerHTML=""; return {silent:true}; }
+
+    if(/^show\s+tables$/.test(L)) return {html:
+      '<table class="q-table"><thead><tr><th>table_name</th><th>rows</th></tr></thead><tbody>'+
+      Object.keys(DB).map(k=>'<tr><td>'+k+'</td><td>'+DB[k].rows.length+'</td></tr>').join("")+
+      '</tbody></table>'+meta(Object.keys(DB).length)};
+
+    if(L==="whoami") return {html:
+      '<p class="q-hint"><span class="fn">mohamed_ansar</span> · associate solutions engineer @ Datasembly · '+
+      'data systems × native iOS · Mississauga, CA · <span class="shipped">open to signal</span></p>'};
+
+    if(/^drop\s+table/.test(L)) return {html:
+      '<p class="q-err">✗ Permission denied: this résumé is append-only.</p>'};
+
+    if(/^sudo/.test(L)) return {html:
+      '<p class="q-err">✗ mohamed_ansar is not in the sudoers file. This incident will be reported (to LinkedIn).</p>'};
+
+    if(/from\s+(coffee|beer|chai)/.test(L)) return {html:
+      '<p class="q-hint">☕ 1 row returned: <span class="shipped">brewing…</span> ship first, sip after.</p>'};
+
+    if(/^(select\s+)?42$|meaning of life/.test(L)) return {html:
+      '<p class="q-hint">42 — but validate it against a second source.</p>'};
+
+    if(/^(insert|commit|hire)/.test(L)) return {html:
+      '<p class="q-hint"><span class="ok">✓</span> COMMIT acknowledged — let\u2019s talk: '+
+      '<a class="fn" href="mailto:mohamedansarkms@gmail.com">mohamedansarkms@gmail.com</a></p>'};
+
+    const sel = L.match(/^select\b.*?\bfrom\s+([a-z_]+)(.*)$/);
+    if(sel){
+      const t = DB[sel[1]];
+      if(!t) return {html:'<p class="q-err">✗ SQL compilation error: table <b>'+esc(sel[1])+'</b> does not exist. Try <span class="fn">show tables</span>.</p>'};
+      let rows = t.rows;
+      if(sel[1]==="projects" && /where/.test(sel[2])){
+        if(/live\s*=\s*true|status\s*=\s*'?live'?|shipped/.test(sel[2])) rows = rows.filter(r=>r[3]===1);
+        else return {html:'<p class="q-err">✗ Unsupported predicate. This warehouse only bills for <span class="fn">WHERE live = true</span>.</p>'};
+      }
+      const copy = {cols:t.cols, rows};
+      return {html: table(copy)+meta(rows.length), n:rows.length};
+    }
+
+    if(/^describe\s+([a-z_]+)/.test(L)){
+      const name = L.match(/^describe\s+([a-z_]+)/)[1];
+      const t = DB[name];
+      if(t) return {html:'<p class="q-hint">'+name+' ( '+t.cols.map(c=>'<span class="fn">'+c+'</span>').join(", ")+' )</p>'};
+    }
+
+    return {html:'<p class="q-err">✗ SQL compilation error near "'+esc(q.slice(0,28))+'" — type <span class="fn">help</span> for what this console understands.</p>'};
+  }
+
+  function submit(raw){
+    const r = run(raw);
+    if(!r) return;
+    if(!r.silent){
+      const block = document.createElement("div");
+      block.className = "q-block";
+      block.innerHTML =
+        '<div class="q-line"><span class="q-prompt">❯</span> '+hl(raw.trim())+'</div>'+
+        '<div class="q-out">'+r.html+'</div>';
+      log.appendChild(block);
+      while(log.children.length > 12) log.removeChild(log.firstChild);
+      if(typeof r.n === "number" && rowsOut) rowsOut.textContent = "last result: "+r.n+" rows";
+    }
+    requestAnimationFrame(()=>{ body.scrollTop = body.scrollHeight; });
+  }
+
+  /* ---- input wiring: history, chips ---- */
+  const history = []; let hi = -1;
+  input.addEventListener("keydown", e=>{
+    if(e.key==="Enter"){
+      const v = input.value;
+      if(v.trim()){ history.unshift(v); hi=-1; submit(v); }
+      input.value="";
+    } else if(e.key==="ArrowUp"){
+      e.preventDefault();
+      if(hi < history.length-1){ hi++; input.value = history[hi]; }
+    } else if(e.key==="ArrowDown"){
+      e.preventDefault();
+      if(hi>0){ hi--; input.value=history[hi]; } else { hi=-1; input.value=""; }
+    }
+  });
+  chips.addEventListener("click", e=>{
+    const c = e.target.closest(".chip"); if(!c) return;
+    submit(c.dataset.q);
+    input.focus({preventScroll:true});
+  });
+
+  function unlock(){
+    inputRow.hidden = false;
+    chips.hidden = false;
+  }
+
+  /* ---- intro: typed query, then execute ---- */
   const tokens = [
     ["SELECT","kw"],[" role, stack, proof\n",""],
-    ["FROM","kw"],[" ",""],["mohamed_ansar",""],["\n",""],
+    ["FROM","kw"],[" mohamed_ansar\n",""],
     ["WHERE","kw"],[" shipped = ",""],["TRUE","num"],["\n",""],
     ["ORDER BY","kw"],[" impact ",""],["DESC","kw"],[";",""]
   ];
-
   function finishInstant(){
-    target.innerHTML = tokens.map(([t,c])=> c?`<span class="${c}">${t}</span>`:t).join("").replace(/\n/g,"<br>  ");
+    target.innerHTML = tokens.map(([t,c])=> c?('<span class="'+c+'">'+t+'</span>'):t).join("").replace(/\n/g,"<br>&nbsp;&nbsp;");
+    if(caret) caret.style.display="none";
     results.classList.add("show");
     ms.textContent = "212";
     hero.classList.add("executed");
+    unlock();
   }
   if(REDUCED){ finishInstant(); return; }
 
   let ti=0, ci=0;
-  function esc(s){return s.replace(/&/g,"&amp;").replace(/</g,"&lt;");}
   function typeStep(){
     if(ti >= tokens.length){ execute(); return; }
     const [text, cls] = tokens[ti];
     const ch = text[ci];
-    // rebuild output from token progress
     let html = "";
     for(let k=0;k<ti;k++){
-      const [t,c]=tokens[k];
-      html += c?`<span class="${c}">${esc(t)}</span>`:esc(t);
+      const tk=tokens[k];
+      html += tk[1]?('<span class="'+tk[1]+'">'+esc(tk[0])+'</span>'):esc(tk[0]);
     }
     const part = text.slice(0,ci+1);
-    html += cls?`<span class="${cls}">${esc(part)}</span>`:esc(part);
+    html += cls?('<span class="'+cls+'">'+esc(part)+'</span>'):esc(part);
     target.innerHTML = html.replace(/\n/g,"<br>&nbsp;&nbsp;");
     ci++;
     if(ci>=text.length){ ti++; ci=0; }
-    const jitter = 26 + Math.random()*48;
-    setTimeout(typeStep, ch==="\n" ? 200 : jitter);
+    setTimeout(typeStep, ch==="\n" ? 190 : 24+Math.random()*46);
   }
-
   function execute(){
     caret.style.display="none";
-    // fake execution timer count-up
-    let t0=performance.now();
     setTimeout(()=>{
       results.classList.add("show");
-      const dur = 700;
-      const start = performance.now();
+      const start = performance.now(), dur=700;
       (function count(){
         const p = Math.min(1,(performance.now()-start)/dur);
         ms.textContent = Math.round(212*(p*p*(3-2*p)));
         if(p<1) requestAnimationFrame(count);
       })();
       hero.classList.add("executed");
+      setTimeout(unlock, 900);
     }, 420);
   }
 
-  setTimeout(typeStep, 600);
+  bootReady.then(()=> setTimeout(typeStep, 350));
 })();
 
 /* ============================================================
@@ -1997,6 +2402,212 @@ const $$ = (s,c)=> Array.from((c||document).querySelectorAll(s));
 /* ============================================================
    10 · MISC — year, smooth anchor offset
    ============================================================ */
+/* ============================================================
+   11 · BOOT SEQUENCE — warehouse cold start
+   ============================================================ */
+(function boot(){
+  const el = $("#boot");
+  if(!el) return;
+  if(REDUCED){ el.remove(); return; }
+  const logEl = $("#boot-log"), bar = $("#boot-bar");
+  const lines = [
+    ["init","mohamed_ansar.portfolio v2.0","ok"],
+    ["conn","warehouse DELIVERY_WH … connected","ok"],
+    ["load","schemas: projects · experience · skills","ok"],
+    ["mount","RepTrack.app → App Store binary","warm"],
+    ["exec","compiling hero query","ok"]
+  ];
+  let i = 0;
+  function step(){
+    if(i < lines.length){
+      const [tag,msg,cls] = lines[i];
+      const d = document.createElement("div");
+      d.className = "boot-line";
+      d.innerHTML = '<span>['+tag+'] '+msg+'</span><span class="'+cls+'">'+(cls==="warm"?"SHIPPED":"OK")+'</span>';
+      logEl.appendChild(d);
+      bar.style.width = Math.round(((i+1)/lines.length)*100)+"%";
+      i++;
+      setTimeout(step, 200 + Math.random()*120);
+    } else {
+      setTimeout(()=>{
+        el.classList.add("done");
+        dispatchEvent(new Event("boot:done"));
+        setTimeout(()=>el.remove(), 900);
+      }, 320);
+    }
+  }
+  setTimeout(step, 200);
+})();
+
+/* ============================================================
+   12 · CUSTOM CURSOR — dot + lerped ring
+   ============================================================ */
+(function cursor(){
+  if(REDUCED || !matchMedia("(hover:hover) and (pointer:fine)").matches) return;
+  const dot = $("#cursor-dot"), ring = $("#cursor-ring");
+  if(!dot || !ring) return;
+  document.body.classList.add("cursor-on");
+  let x=innerWidth/2, y=innerHeight/2, rx=x, ry=y, seen=false;
+
+  addEventListener("pointermove", e=>{
+    x=e.clientX; y=e.clientY; seen=true;
+    dot.style.transform = "translate("+x+"px,"+y+"px) translate(-50%,-50%)";
+  }, {passive:true});
+  document.addEventListener("mouseleave", ()=>{ dot.style.opacity=0; ring.style.opacity=0; });
+  document.addEventListener("mouseenter", ()=>{ if(seen){ dot.style.opacity=1; ring.style.opacity=1; } });
+
+  (function lerp(){
+    rx += (x-rx)*.16; ry += (y-ry)*.16;
+    ring.style.transform = "translate("+rx+"px,"+ry+"px) translate(-50%,-50%)";
+    requestAnimationFrame(lerp);
+  })();
+
+  const HOT = "a,button,.card,.chip,.rail-node,.phone-dot,summary";
+  document.addEventListener("pointerover", e=>{
+    const hot = e.target.closest(HOT);
+    const txt = e.target.closest("input,textarea");
+    dot.classList.toggle("hot", !!hot);
+    ring.classList.toggle("hot", !!hot && !txt);
+    ring.classList.toggle("txt", !!txt);
+  }, {passive:true});
+})();
+
+/* ============================================================
+   13 · COMMAND PALETTE — ⌘K / Ctrl+K
+   ============================================================ */
+(function palette(){
+  const pal = $("#palette"), inp = $("#palette-input"), list = $("#palette-list");
+  if(!pal) return;
+  const ITEMS = [
+    {ico:"00", label:"Source — about & principles", k:"section", go:"#source"},
+    {ico:"01", label:"RepTrack — flagship iOS app", k:"section", go:"#ship", warm:true},
+    {ico:"02", label:"Build — selected projects", k:"section", go:"#build"},
+    {ico:"03", label:"Schema — capability matrix", k:"section", go:"#schema"},
+    {ico:"04", label:"Lineage — roles & impact", k:"section", go:"#lineage"},
+    {ico:"05", label:"Commit — contact", k:"section", go:"#commit"},
+    {ico:"↗", label:"RepTrack on the App Store", k:"open", url:"https://apps.apple.com/us/app/reptrack-workout-log/id6761032027", warm:true},
+    {ico:"↗", label:"LinkedIn — kmsmohamedansar", k:"open", url:"https://www.linkedin.com/in/kmsmohamedansar/"},
+    {ico:"↗", label:"SQL Playground — live demo", k:"open", url:"https://kmsmohamedansar.github.io/sql-playground"},
+    {ico:"↗", label:"TaskMaster pipeline — live demo", k:"open", url:"https://huggingface.co/spaces/kmsmohamedansar/TaskMaster-Job-Scheduler"},
+    {ico:"↗", label:"Grocery AI assistant — live demo", k:"open", url:"https://huggingface.co/spaces/kmsmohamedansar/ai_knowledge_assistant"},
+    {ico:"@", label:"Email — mohamedansarkms@gmail.com", k:"mail", url:"mailto:mohamedansarkms@gmail.com", warm:true}
+  ];
+  let filtered = ITEMS, sel = 0;
+
+  function render(){
+    list.innerHTML = filtered.map((it,i)=>
+      '<li class="palette-item'+(it.warm?" warm":"")+(i===sel?" sel":"")+'" data-i="'+i+'">'+
+        '<span class="pi-ico">'+it.ico+'</span><span>'+it.label+'</span>'+
+        '<span class="pi-k">'+it.k+'</span></li>'
+    ).join("") || '<li class="palette-item"><span class="pi-ico">∅</span><span>0 rows — try fewer letters</span></li>';
+  }
+  function open(){
+    pal.classList.add("open");
+    inp.value = ""; filtered = ITEMS; sel = 0; render();
+    setTimeout(()=>inp.focus(), 60);
+    document.body.style.overflow = "hidden";
+  }
+  function close(){
+    pal.classList.remove("open");
+    document.body.style.overflow = "";
+  }
+  function go(it){
+    if(!it) return;
+    close();
+    if(it.go){
+      const t = document.querySelector(it.go);
+      if(t) t.scrollIntoView({behavior:REDUCED?"auto":"smooth"});
+    } else if(it.url){
+      it.k==="mail" ? (location.href = it.url) : window.open(it.url, "_blank", "noopener");
+    }
+  }
+
+  inp.addEventListener("input", ()=>{
+    const q = inp.value.trim().toLowerCase();
+    filtered = !q ? ITEMS : ITEMS.filter(it=>it.label.toLowerCase().includes(q));
+    sel = 0; render();
+  });
+  inp.addEventListener("keydown", e=>{
+    if(e.key==="ArrowDown"){ e.preventDefault(); sel=Math.min(sel+1,filtered.length-1); render(); }
+    else if(e.key==="ArrowUp"){ e.preventDefault(); sel=Math.max(sel-1,0); render(); }
+    else if(e.key==="Enter"){ go(filtered[sel]); }
+  });
+  list.addEventListener("click", e=>{
+    const li = e.target.closest(".palette-item");
+    if(li && li.dataset.i!==undefined) go(filtered[+li.dataset.i]);
+  });
+  pal.addEventListener("click", e=>{ if(e.target===pal) close(); });
+
+  addEventListener("keydown", e=>{
+    if((e.metaKey||e.ctrlKey) && e.key.toLowerCase()==="k"){ e.preventDefault(); pal.classList.contains("open")?close():open(); }
+    else if(e.key==="Escape" && pal.classList.contains("open")) close();
+  });
+  const btn = $("#open-palette");
+  if(btn) btn.addEventListener("click", open);
+})();
+
+/* ============================================================
+   14 · MAGNETIC BUTTONS
+   ============================================================ */
+(function magnet(){
+  if(REDUCED || !matchMedia("(hover:hover) and (pointer:fine)").matches) return;
+  $$(".btn,.nav-cta,.nav-kbd").forEach(b=>{
+    b.addEventListener("pointermove", e=>{
+      const r = b.getBoundingClientRect();
+      const dx = (e.clientX - (r.left+r.width/2)) / (r.width/2);
+      const dy = (e.clientY - (r.top+r.height/2)) / (r.height/2);
+      b.style.transform = "translate("+(dx*6)+"px,"+(dy*5 - 2)+"px)";
+    }, {passive:true});
+    b.addEventListener("pointerleave", ()=>{
+      b.style.transition = "transform .55s cubic-bezier(.34,1.45,.5,1)";
+      b.style.transform = "";
+      setTimeout(()=>b.style.transition="", 560);
+    });
+  });
+})();
+
+/* ============================================================
+   15 · UNIVERSAL CARD TILT
+   ============================================================ */
+(function tiltAll(){
+  if(REDUCED || !matchMedia("(hover:hover) and (pointer:fine)").matches) return;
+  $$(".proj,.schema-card").forEach(card=>{
+    let raf = null;
+    card.addEventListener("pointermove", e=>{
+      if(raf) return;
+      raf = requestAnimationFrame(()=>{
+        const r = card.getBoundingClientRect();
+        const px = (e.clientX-r.left)/r.width - .5;
+        const py = (e.clientY-r.top)/r.height - .5;
+        card.classList.add("tilting");
+        card.style.transform = "perspective(900px) rotateY("+(px*5)+"deg) rotateX("+(-py*4)+"deg) translateY(-3px)";
+        raf = null;
+      });
+    }, {passive:true});
+    card.addEventListener("pointerleave", ()=>{
+      card.classList.remove("tilting");
+      card.style.transform = "";
+    });
+  });
+})();
+
+/* ============================================================
+   16 · LINEAGE — scroll-drawn timeline
+   ============================================================ */
+(function lineageDraw(){
+  const rail = $("#lineage-rail"), fill = $("#lineage-fill");
+  if(!rail || !fill) return;
+  function upd(){
+    const r = rail.getBoundingClientRect();
+    const viewAnchor = innerHeight*.62;
+    const p = Math.max(0, Math.min(1, (viewAnchor - r.top) / r.height));
+    fill.style.height = (p*100)+"%";
+  }
+  addEventListener("scroll", upd, {passive:true});
+  addEventListener("resize", upd, {passive:true});
+  upd();
+})();
+
 $("#year").textContent = new Date().getFullYear();
 
 })();
