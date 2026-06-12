@@ -1297,6 +1297,105 @@ body.cursor-on input,body.cursor-on textarea{cursor:text}
 }
 @media (max-width:920px){.nav-kbd{display:none}}
 </style>
+
+<style>
+/* ======== V3: VOXEL WORLD ======== */
+.voxel-frame{
+  border-radius:var(--r-lg);
+  border:1px solid var(--line-strong);
+  overflow:hidden;
+  background:
+    radial-gradient(700px 420px at 50% 0%,rgba(31,179,214,.12),transparent 60%),
+    radial-gradient(500px 360px at 80% 100%,rgba(255,138,61,.08),transparent 60%),
+    linear-gradient(180deg,#0a1224,#070b14);
+  box-shadow:0 40px 100px rgba(0,0,0,.5),0 0 0 1px rgba(111,230,255,.05);
+}
+.voxel-stage{
+  position:relative;
+  height:clamp(420px,62vh,580px);
+}
+#voxel-canvas{
+  position:absolute;inset:0;width:100%;height:100%;
+  display:block;touch-action:none;
+  cursor:grab;
+}
+#voxel-canvas.dragging{cursor:grabbing}
+#voxel-canvas.build{cursor:crosshair}
+.voxel-loading,.voxel-fallback{
+  position:absolute;inset:0;display:flex;flex-direction:column;gap:14px;
+  align-items:center;justify-content:center;
+  font-family:var(--f-mono);font-size:.72rem;letter-spacing:.18em;text-transform:uppercase;
+  color:var(--text-3);text-align:center;padding:20px;
+}
+.voxel-loading .spin{
+  width:34px;height:34px;border-radius:50%;
+  border:2px solid rgba(111,230,255,.18);border-top-color:var(--cyan);
+  animation:vspin .9s linear infinite;
+}
+@keyframes vspin{to{transform:rotate(360deg)}}
+
+.voxel-tip{
+  position:absolute;left:18px;top:18px;z-index:5;
+  max-width:min(300px,72%);
+  border:1px solid var(--line-strong);border-radius:14px;
+  background:rgba(8,12,22,.88);backdrop-filter:blur(10px);
+  padding:15px 16px;
+  animation:rise .35s var(--ease-out);
+}
+.voxel-tip b{font-family:var(--f-display);font-weight:650;font-size:.98rem;letter-spacing:-.01em;display:block}
+.voxel-tip p{color:var(--text-2);font-size:.8rem;margin:7px 0 11px;line-height:1.5}
+.voxel-tip .vt-row{display:flex;gap:8px;flex-wrap:wrap}
+.voxel-tip .chip{font-size:.58rem}
+
+.voxel-hint{
+  position:absolute;left:50%;bottom:14px;transform:translateX(-50%);z-index:4;
+  font-family:var(--f-mono);font-size:.6rem;letter-spacing:.18em;text-transform:uppercase;
+  color:var(--text-3);white-space:nowrap;
+  background:rgba(7,10,18,.7);border:1px solid var(--line);border-radius:100px;
+  padding:7px 14px;backdrop-filter:blur(8px);
+  pointer-events:none;
+  transition:opacity .4s;
+}
+@media (max-width:560px){.voxel-hint{font-size:.52rem;max-width:92%;white-space:normal;text-align:center}}
+
+.voxel-hud{
+  display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between;
+  padding:13px 16px;border-top:1px solid var(--line);
+  background:rgba(7,10,18,.55);
+  font-family:var(--f-mono);
+}
+.vh-group{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.vh-label{font-size:.58rem;letter-spacing:.2em;text-transform:uppercase;color:var(--text-3);margin-right:2px}
+.vmode{
+  font-size:.62rem;letter-spacing:.14em;text-transform:uppercase;
+  padding:8px 14px;border-radius:9px;border:1px solid var(--line);color:var(--text-2);
+  transition:all .25s;
+}
+.vmode:hover{color:var(--text);border-color:var(--line-strong)}
+.vmode.on{color:var(--ink-0);background:linear-gradient(120deg,var(--cyan),#9be9ff);border-color:transparent;font-weight:700;box-shadow:0 0 18px rgba(31,179,214,.35)}
+.vmode.on.warm{background:linear-gradient(120deg,var(--amber),#ffd398);box-shadow:0 0 18px rgba(255,138,61,.35)}
+.vswatch{
+  width:26px;height:26px;border-radius:8px;border:1px solid rgba(255,255,255,.16);
+  transition:transform .2s var(--ease-spring),box-shadow .2s;
+}
+.vswatch:hover{transform:translateY(-2px) scale(1.06)}
+.vswatch.on{box-shadow:0 0 0 2px var(--ink-0),0 0 0 3.5px currentColor,0 0 14px currentColor;transform:scale(1.08)}
+.vswatch[data-c="cyan"]{background:#5fd9f4;color:#5fd9f4}
+.vswatch[data-c="violet"]{background:#8e7dff;color:#8e7dff}
+.vswatch[data-c="amber"]{background:#ffb454;color:#ffb454}
+.vswatch[data-c="green"]{background:#5cf2a6;color:#5cf2a6}
+.vswatch[data-c="rose"]{background:#ff6b8b;color:#ff6b8b}
+.vh-count{font-size:.62rem;letter-spacing:.14em;color:var(--text-2)}
+.vh-count b{color:var(--cyan);font-weight:600}
+.vbtn{
+  font-size:.6rem;letter-spacing:.14em;text-transform:uppercase;
+  padding:8px 12px;border-radius:9px;border:1px solid var(--line);color:var(--text-3);
+  transition:all .25s;
+}
+.vbtn:hover{color:var(--text);border-color:var(--line-strong)}
+.vh-sub[hidden]{display:none !important}
+@media (prefers-reduced-motion:reduce){.voxel-loading .spin{animation:none}}
+</style>
 </head>
 <body>
 
@@ -1339,12 +1438,13 @@ body.cursor-on input,body.cursor-on textarea{cursor:text}
     <i class="rail-packet"></i><i class="rail-packet"></i><i class="rail-packet"></i>
   </div>
   <div class="rail-nodes" id="rail-nodes">
-    <a class="rail-node" href="#source" data-target="source" style="top:6%"><i></i><span class="tip">00 · source</span></a>
-    <a class="rail-node warm" href="#ship" data-target="ship" style="top:26%"><i></i><span class="tip">01 · ship</span></a>
-    <a class="rail-node" href="#build" data-target="build" style="top:48%"><i></i><span class="tip">02 · build</span></a>
-    <a class="rail-node" href="#schema" data-target="schema" style="top:67%"><i></i><span class="tip">03 · schema</span></a>
-    <a class="rail-node" href="#lineage" data-target="lineage" style="top:84%"><i></i><span class="tip">04 · lineage</span></a>
-    <a class="rail-node warm" href="#commit" data-target="commit" style="top:100%"><i></i><span class="tip">05 · commit</span></a>
+    <a class="rail-node" href="#source" data-target="source" style="top:4%"><i></i><span class="tip">00 · source</span></a>
+    <a class="rail-node warm" href="#ship" data-target="ship" style="top:20%"><i></i><span class="tip">01 · ship</span></a>
+    <a class="rail-node" href="#build" data-target="build" style="top:38%"><i></i><span class="tip">02 · build</span></a>
+    <a class="rail-node" href="#world" data-target="world" style="top:55%"><i></i><span class="tip">03 · world</span></a>
+    <a class="rail-node" href="#schema" data-target="schema" style="top:71%"><i></i><span class="tip">04 · schema</span></a>
+    <a class="rail-node" href="#lineage" data-target="lineage" style="top:86%"><i></i><span class="tip">05 · lineage</span></a>
+    <a class="rail-node warm" href="#commit" data-target="commit" style="top:100%"><i></i><span class="tip">06 · commit</span></a>
   </div>
   <span class="rail-pct" id="rail-pct">0%</span>
 </aside>
@@ -1360,6 +1460,7 @@ body.cursor-on input,body.cursor-on textarea{cursor:text}
       <a class="nav-link" href="#source" data-nav="source">Source</a>
       <a class="nav-link" href="#ship" data-nav="ship">RepTrack</a>
       <a class="nav-link" href="#build" data-nav="build">Build</a>
+      <a class="nav-link" href="#world" data-nav="world">World</a>
       <a class="nav-link" href="#schema" data-nav="schema">Stack</a>
       <a class="nav-link" href="#lineage" data-nav="lineage">Lineage</a>
       <button class="nav-kbd" id="open-palette" aria-label="Open command palette">⌘K</button>
@@ -1378,9 +1479,10 @@ body.cursor-on input,body.cursor-on textarea{cursor:text}
   <a href="#source"><span class="idx">00</span> Source</a>
   <a href="#ship"><span class="idx">01</span> RepTrack</a>
   <a href="#build"><span class="idx">02</span> Build</a>
-  <a href="#schema"><span class="idx">03</span> Stack</a>
-  <a href="#lineage"><span class="idx">04</span> Lineage</a>
-  <a href="#commit"><span class="idx">05</span> Contact</a>
+  <a href="#world"><span class="idx">03</span> World</a>
+  <a href="#schema"><span class="idx">04</span> Stack</a>
+  <a href="#lineage"><span class="idx">05</span> Lineage</a>
+  <a href="#commit"><span class="idx">06</span> Contact</a>
 </div>
 
 <main id="top">
@@ -1717,13 +1819,64 @@ body.cursor-on input,body.cursor-on textarea{cursor:text}
     </div>
   </div>
 </section>
+<div class="divider-q" aria-hidden="true"><span class="kw mono">CALL</span> <span class="mono">render_world(<span class="str">'voxel'</span>)</span></div>
+
+<!-- ============ 03 WORLD / VOXEL WAREHOUSE ============ -->
+<section class="stage" id="world" aria-labelledby="world-h">
+  <div class="shell">
+    <div class="stage-head rv">
+      <span class="stage-step"><span class="dot"></span><b>stage 03</b> · world — the warehouse, rendered</span>
+      <h2 class="h-section" id="world-h">Walk the data warehouse.<br /><span class="grad-data">Then build on it.</span></h2>
+      <p class="lede">A live 3D voxel world of this portfolio — every structure on the island is a real part of the work. Drag to orbit, click a structure to inspect it, or flip to build mode and leave your own blocks behind.</p>
+    </div>
+
+    <div class="voxel-frame rv-scale">
+      <div class="voxel-stage" id="voxel-host">
+        <canvas id="voxel-canvas" aria-label="Interactive 3D voxel world. Drag to orbit, click structures to inspect."></canvas>
+        <div class="voxel-loading" id="voxel-loading"><span class="spin"></span>compiling world…</div>
+        <div class="voxel-fallback" id="voxel-fallback" hidden>3D unavailable on this device —<br />the rest of the pipeline still runs.</div>
+        <div class="voxel-tip" id="voxel-tip" hidden>
+          <b id="vt-name"></b>
+          <p id="vt-desc"></p>
+          <div class="vt-row">
+            <button class="chip" id="vt-go">open section →</button>
+            <button class="chip" id="vt-close">close</button>
+          </div>
+        </div>
+        <div class="voxel-hint" id="voxel-hint">drag · orbit &nbsp;·&nbsp; scroll · zoom &nbsp;·&nbsp; click · inspect</div>
+      </div>
+      <div class="voxel-hud">
+        <div class="vh-group">
+          <span class="vh-label">mode</span>
+          <button class="vmode on" id="vm-explore">explore</button>
+          <button class="vmode warm" id="vm-build">build</button>
+          <span class="vh-group vh-sub" id="vh-build-tools" hidden>
+            <button class="vswatch on" data-c="cyan" aria-label="Cyan blocks"></button>
+            <button class="vswatch" data-c="violet" aria-label="Violet blocks"></button>
+            <button class="vswatch" data-c="amber" aria-label="Amber blocks"></button>
+            <button class="vswatch" data-c="green" aria-label="Green blocks"></button>
+            <button class="vswatch" data-c="rose" aria-label="Rose blocks"></button>
+            <button class="vmode" id="vm-erase">erase</button>
+          </span>
+        </div>
+        <div class="vh-group">
+          <span class="vh-count">blocks placed: <b id="vh-count">0</b></span>
+          <button class="vbtn" id="vh-zoom-in" aria-label="Zoom in">+</button>
+          <button class="vbtn" id="vh-zoom-out" aria-label="Zoom out">−</button>
+          <button class="vbtn" id="vh-reset">reset blocks</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
 <div class="divider-q" aria-hidden="true"><span class="kw mono">DESCRIBE</span> <span class="mono">SCHEMA capability_matrix</span></div>
 
 <!-- ============ 03 SCHEMA / STACK ============ -->
 <section class="stage" id="schema" aria-labelledby="schema-h">
   <div class="shell">
     <div class="stage-head rv">
-      <span class="stage-step"><span class="dot"></span><b>stage 03</b> · schema — capability matrix</span>
+      <span class="stage-step"><span class="dot"></span><b>stage 04</b> · schema — capability matrix</span>
       <h2 class="h-section" id="schema-h">Four channels, one standard</h2>
       <p class="lede">Warehouse SQL, orchestration, BI, and the product layers on top — described the way I'd describe a table: columns, types, and how full each one runs.</p>
     </div>
@@ -1786,7 +1939,7 @@ body.cursor-on input,body.cursor-on textarea{cursor:text}
 <section class="stage" id="lineage" aria-labelledby="lineage-h">
   <div class="shell">
     <div class="stage-head rv">
-      <span class="stage-step"><span class="dot"></span><b>stage 04</b> · lineage — roles & impact</span>
+      <span class="stage-step"><span class="dot"></span><b>stage 05</b> · lineage — roles & impact</span>
       <h2 class="h-section" id="lineage-h">Every row has a source</h2>
       <p class="lede">Solutions engineering and analytics operations — progressively more technical ownership, from content operations at Amazon through pre-sales solution design at Datasembly.</p>
     </div>
@@ -2095,6 +2248,9 @@ const $$ = (s,c)=> Array.from((c||document).querySelectorAll(s));
       '<p class="q-hint"><span class="ok">✓</span> COMMIT acknowledged — let\u2019s talk: '+
       '<a class="fn" href="mailto:mohamedansarkms@gmail.com">mohamedansarkms@gmail.com</a></p>'};
 
+    if(/minecraft|voxel|world|creeper/.test(L)) return {html:
+      '<p class="q-hint">⛏ voxel mode detected — the warehouse is rendered downstairs at <a class="fn" href="#world">stage 03 · world</a>. Build mode included.</p>'};
+
     const sel = L.match(/^select\b.*?\bfrom\s+([a-z_]+)(.*)$/);
     if(sel){
       const t = DB[sel[1]];
@@ -2260,7 +2416,7 @@ const $$ = (s,c)=> Array.from((c||document).querySelectorAll(s));
   const bar  = $("#progress-bar");
   const nodes= $$(".rail-node");
   const navLinks = $$("[data-nav]");
-  const sections = ["source","ship","build","schema","lineage","commit"]
+  const sections = ["source","ship","build","world","schema","lineage","commit"]
     .map(id=>document.getElementById(id)).filter(Boolean);
 
   function onScroll(){
@@ -2482,9 +2638,10 @@ const $$ = (s,c)=> Array.from((c||document).querySelectorAll(s));
     {ico:"00", label:"Source — about & principles", k:"section", go:"#source"},
     {ico:"01", label:"RepTrack — flagship iOS app", k:"section", go:"#ship", warm:true},
     {ico:"02", label:"Build — selected projects", k:"section", go:"#build"},
-    {ico:"03", label:"Schema — capability matrix", k:"section", go:"#schema"},
-    {ico:"04", label:"Lineage — roles & impact", k:"section", go:"#lineage"},
-    {ico:"05", label:"Commit — contact", k:"section", go:"#commit"},
+    {ico:"03", label:"World — 3D voxel warehouse", k:"section", go:"#world"},
+    {ico:"04", label:"Schema — capability matrix", k:"section", go:"#schema"},
+    {ico:"05", label:"Lineage — roles & impact", k:"section", go:"#lineage"},
+    {ico:"06", label:"Commit — contact", k:"section", go:"#commit"},
     {ico:"↗", label:"RepTrack on the App Store", k:"open", url:"https://apps.apple.com/us/app/reptrack-workout-log/id6761032027", warm:true},
     {ico:"↗", label:"LinkedIn — kmsmohamedansar", k:"open", url:"https://www.linkedin.com/in/kmsmohamedansar/"},
     {ico:"↗", label:"SQL Playground — live demo", k:"open", url:"https://kmsmohamedansar.github.io/sql-playground"},
@@ -2606,6 +2763,415 @@ const $$ = (s,c)=> Array.from((c||document).querySelectorAll(s));
   addEventListener("scroll", upd, {passive:true});
   addEventListener("resize", upd, {passive:true});
   upd();
+})();
+
+/* ============================================================
+   17 · VOXEL WORLD — the warehouse, rendered (Three.js, lazy)
+   ============================================================ */
+(function voxelWorld(){
+  const host = $("#voxel-host"), cv = $("#voxel-canvas");
+  if(!host || !cv) return;
+  const loading = $("#voxel-loading"), fallback = $("#voxel-fallback");
+  const tip = $("#voxel-tip"), tipName = $("#vt-name"), tipDesc = $("#vt-desc");
+  const tipGo = $("#vt-go"), tipClose = $("#vt-close"), hint = $("#voxel-hint");
+  const btnExplore = $("#vm-explore"), btnBuild = $("#vm-build"), btnErase = $("#vm-erase");
+  const buildTools = $("#vh-build-tools"), countEl = $("#vh-count"), resetBtn = $("#vh-reset");
+
+  let loadedScript = false, ready = false, running = false;
+
+  /* lazy-load three.js only when the section approaches */
+  const io = new IntersectionObserver(es=>{
+    es.forEach(en=>{
+      if(en.isIntersecting){
+        if(!loadedScript){ loadedScript = true; loadThree(); }
+        running = true;
+      } else running = false;
+    });
+  }, {rootMargin:"300px 0px"});
+  io.observe(host);
+
+  function loadThree(){
+    const s = document.createElement("script");
+    s.src = "https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js";
+    s.onload = ()=>{ try{ init(); }catch(err){ console.error(err); fail(); } };
+    s.onerror = fail;
+    document.head.appendChild(s);
+  }
+  function fail(){ loading.hidden = true; fallback.hidden = false; }
+
+  /* ---------- state ---------- */
+  let scene, camera, renderer, raycaster, pointer;
+  let theta = Math.PI*0.32, phi = Math.PI*0.34, dist = 27;
+  const target = {x:0, y:2.2, z:0};
+  let mode = "explore", erase = false, blockColor = "cyan";
+  const COLORS = {cyan:0x5fd9f4, violet:0x8e7dff, amber:0xffb454, green:0x5cf2a6, rose:0xff6b8b};
+  const playerBlocks = [], packets = [];
+  let crystal = null, beaconMat = null, clock = 0;
+  const occupied = new Set();
+  const clickable = [];     // structure meshes + terrain (for raycast)
+  const matCache = {};
+  let boxGeo;
+
+  const key = (x,y,z)=> x+","+y+","+z;
+
+  function blockMat(hex, glow){
+    const k = hex+"_"+(glow||0);
+    if(!matCache[k]) matCache[k] = new THREE.MeshLambertMaterial({
+      color: hex, emissive: hex, emissiveIntensity: glow||0
+    });
+    return matCache[k];
+  }
+
+  function init(){
+    boxGeo = new THREE.BoxGeometry(.96,.96,.96);
+    scene = new THREE.Scene();
+    scene.fog = new THREE.FogExp2(0x070b14, .017);
+
+    camera = new THREE.PerspectiveCamera(46, 1, .1, 220);
+    renderer = new THREE.WebGLRenderer({canvas:cv, antialias:true, alpha:true});
+    renderer.setClearColor(0x000000, 0);
+    renderer.setPixelRatio(Math.min(devicePixelRatio||1, 2));
+
+    raycaster = new THREE.Raycaster();
+    pointer = new THREE.Vector2();
+
+    /* lights */
+    scene.add(new THREE.AmbientLight(0x33415e, 1.05));
+    const sun = new THREE.DirectionalLight(0xbfd8ff, .85);
+    sun.position.set(10, 18, 6); scene.add(sun);
+    const cyanL = new THREE.PointLight(0x36c4ec, .9, 30); cyanL.position.set(-5, 9, -4); scene.add(cyanL);
+    const warmL = new THREE.PointLight(0xff9a3d, .8, 26);  warmL.position.set(5, 8, -3);  scene.add(warmL);
+
+    buildIsland();
+    buildStructures();
+    buildStars();
+
+    const grid = new THREE.GridHelper(46, 46, 0x1f4d66, 0x122036);
+    grid.position.y = -4.5;
+    grid.material.transparent = true; grid.material.opacity = .22;
+    scene.add(grid);
+
+    sizeToHost();
+    new ResizeObserver(sizeToHost).observe(host);
+
+    wireControls();
+    wireHud();
+
+    ready = true;
+    loading.hidden = true;
+    requestAnimationFrame(loop);
+  }
+
+  function sizeToHost(){
+    const w = host.clientWidth, h = host.clientHeight;
+    renderer.setSize(w, h, false);
+    camera.aspect = w/h;
+    camera.updateProjectionMatrix();
+  }
+
+  /* ---------- terrain: floating voxel island (instanced) ---------- */
+  let terrain = null;
+  const terrainCells = [];
+  function buildIsland(){
+    const cells = [];
+    const R = 8.2;
+    for(let x=-9;x<=9;x++) for(let z=-9;z<=9;z++){
+      const wob = Math.sin(x*1.7)*Math.cos(z*1.3)*.7;
+      const d = Math.sqrt(x*x+z*z) + wob*.4;
+      if(d < R)      cells.push([x,0,z, .9]);
+      if(d < R-1.6)  cells.push([x,-1,z, .55]);
+      if(d < R-3.6)  cells.push([x,-2,z, .35]);
+      if(d < R-6 && Math.random()<.5) cells.push([x,-3,z, .25]);
+    }
+    terrain = new THREE.InstancedMesh(
+      boxGeo, new THREE.MeshLambertMaterial({color:0xffffff}), cells.length
+    );
+    const m = new THREE.Matrix4(), c = new THREE.Color();
+    const top = new THREE.Color(0x1b2c4e), deep = new THREE.Color(0x0d1730), tint = new THREE.Color(0x2a6e8e);
+    cells.forEach((cell,i)=>{
+      const [x,y,z,b] = cell;
+      m.setPosition(x,y,z);
+      terrain.setMatrixAt(i,m);
+      c.copy(y===0?top:deep).multiplyScalar(b);
+      if(y===0 && Math.random()<.16) c.lerp(tint,.5);   // mineral flecks
+      terrain.setColorAt(i,c);
+      terrainCells[i] = {x,y,z};
+      occupied.add(key(x,y,z));
+    });
+    scene.add(terrain);
+    clickable.push(terrain);
+  }
+
+  /* ---------- structures ---------- */
+  function addBlock(x,y,z,hex,glow,data){
+    const mesh = new THREE.Mesh(boxGeo, blockMat(hex, glow));
+    mesh.position.set(x,y,z);
+    if(data) mesh.userData = data;
+    scene.add(mesh);
+    occupied.add(key(x,y,z));
+    clickable.push(mesh);
+    return mesh;
+  }
+
+  function buildStructures(){
+    const S = {
+      spire:{name:"Snowflake Spire", desc:"Data systems — SQL, Snowflake, and warehouse-scale analytics that hold up to validation.", go:"#schema"},
+      conduit:{name:"Pipeline Conduit", desc:"Recurring delivery with retries, structured logs, and zero rows dropped. Watch the packets run.", go:"#build"},
+      phone:{name:"RepTrack Monolith", desc:"Native iOS — SwiftUI + SwiftData, taken end-to-end through App Store submission.", go:"#ship"},
+      crates:{name:"Archive Crates", desc:"The Amazon Prime Video years — content operations, quality auditing, process at scale.", go:"#lineage"},
+      beacon:{name:"Commit Beacon", desc:"Open to signal. Light it up: mohamedansarkms@gmail.com", go:"#commit"}
+    };
+
+    /* Snowflake Spire (cyan) */
+    for(let y=1;y<=6;y++) addBlock(-5,y,-4, 0x2a8fb4, .22+y*.05, S.spire);
+    addBlock(-6,1,-4,0x1d5e7c,.12,S.spire); addBlock(-4,1,-4,0x1d5e7c,.12,S.spire);
+    addBlock(-5,1,-5,0x1d5e7c,.12,S.spire); addBlock(-5,1,-3,0x1d5e7c,.12,S.spire);
+    crystal = new THREE.Mesh(
+      new THREE.OctahedronGeometry(.85),
+      new THREE.MeshLambertMaterial({color:0x6fe6ff, emissive:0x36c4ec, emissiveIntensity:.9})
+    );
+    crystal.position.set(-5, 8.1, -4);
+    crystal.userData = S.spire;
+    scene.add(crystal); clickable.push(crystal);
+
+    /* RepTrack Monolith (amber phone) */
+    for(let y=1;y<=5;y++){ addBlock(5,y,-3,0x8a5a22,.1,S.phone); addBlock(6,y,-3,0x8a5a22,.1,S.phone); }
+    const screen = new THREE.Mesh(
+      new THREE.PlaneGeometry(1.7,3.6),
+      new THREE.MeshBasicMaterial({color:0xffb454, transparent:true, opacity:.85})
+    );
+    screen.position.set(5.5, 3.2, -2.45);
+    screen.userData = S.phone;
+    scene.add(screen); clickable.push(screen);
+
+    /* Pipeline Conduit — bezier arch of violet voxels + packets */
+    const p0 = new THREE.Vector3(-5, 7,  -4);
+    const p1 = new THREE.Vector3(0, 10.5, -3.5);
+    const p2 = new THREE.Vector3(5.5, 6.2, -3);
+    const curve = new THREE.QuadraticBezierCurve3(p0,p1,p2);
+    const pts = curve.getPoints(15);
+    pts.forEach((p,i)=>{
+      if(i%2) return;
+      const m = new THREE.Mesh(boxGeo, blockMat(0x8e7dff,.35));
+      m.scale.setScalar(.42);
+      m.position.copy(p);
+      m.userData = S.conduit;
+      scene.add(m); clickable.push(m);
+    });
+    for(let i=0;i<3;i++){
+      const pk = new THREE.Mesh(boxGeo, blockMat(0x9beaff,1.1));
+      pk.scale.setScalar(.3);
+      pk.userData = S.conduit;
+      scene.add(pk); clickable.push(pk);
+      packets.push({mesh:pk, t:i/3, curve});
+    }
+
+    /* Archive Crates (bronze) */
+    [[4,1,4],[5,1,4],[4,1,5],[4,2,4]].forEach(([x,y,z])=> addBlock(x,y,z,0x7a5a33,.06,S.crates));
+
+    /* Commit Beacon (amber pillar of light) */
+    addBlock(-4,1,5,0xffb454,.5,S.beacon);
+    beaconMat = new THREE.MeshBasicMaterial({color:0xffc77a, transparent:true, opacity:.28, blending:THREE.AdditiveBlending, depthWrite:false});
+    const beam = new THREE.Mesh(new THREE.CylinderGeometry(.32,.46,14,12,1,true), beaconMat);
+    beam.position.set(-4, 8, 5);
+    beam.userData = S.beacon;
+    scene.add(beam); clickable.push(beam);
+
+    /* decorative micro-crystals */
+    [[-1,1,6,0x5cf2a6],[7,1,1,0x6fe6ff],[-7,1,1,0x8e7dff],[1,1,-7,0x6fe6ff]].forEach(([x,y,z,c])=>{
+      const g = new THREE.Mesh(new THREE.OctahedronGeometry(.34), blockMat(c,.7));
+      g.position.set(x, y-.15, z);
+      g.rotation.y = Math.random()*3;
+      scene.add(g);
+    });
+  }
+
+  function buildStars(){
+    const n = 240, pos = new Float32Array(n*3);
+    for(let i=0;i<n;i++){
+      const r = 60+Math.random()*70, a = Math.random()*Math.PI*2, b = (Math.random()-.35)*Math.PI;
+      pos[i*3]   = r*Math.cos(a)*Math.cos(b);
+      pos[i*3+1] = r*Math.sin(b)+10;
+      pos[i*3+2] = r*Math.sin(a)*Math.cos(b);
+    }
+    const g = new THREE.BufferGeometry();
+    g.setAttribute("position", new THREE.BufferAttribute(pos,3));
+    scene.add(new THREE.Points(g, new THREE.PointsMaterial({color:0x7fb8d8, size:.5, transparent:true, opacity:.7})));
+  }
+
+  /* ---------- camera orbit ---------- */
+  let dragging=false, lastX=0, lastY=0, downX=0, downY=0, downT=0, idle=0;
+  function applyCam(){
+    phi  = Math.max(.14, Math.min(1.32, phi));
+    dist = Math.max(13, Math.min(48, dist));
+    camera.position.set(
+      target.x + dist*Math.sin(phi)*Math.cos(theta),
+      target.y + dist*Math.cos(phi),
+      target.z + dist*Math.sin(phi)*Math.sin(theta)
+    );
+    camera.lookAt(target.x, target.y, target.z);
+  }
+
+  function wireControls(){
+    cv.addEventListener("pointerdown", e=>{
+      dragging = true; idle = 0;
+      lastX = downX = e.clientX; lastY = downY = e.clientY; downT = performance.now();
+      cv.classList.add("dragging");
+      cv.setPointerCapture(e.pointerId);
+    });
+    cv.addEventListener("pointermove", e=>{
+      if(!dragging) return;
+      theta += (e.clientX-lastX)*.0052;
+      phi   -= (e.clientY-lastY)*.0042;
+      lastX = e.clientX; lastY = e.clientY;
+      idle = 0;
+    });
+    cv.addEventListener("pointerup", e=>{
+      dragging = false;
+      cv.classList.remove("dragging");
+      const moved = Math.hypot(e.clientX-downX, e.clientY-downY);
+      if(moved < 7 && performance.now()-downT < 450) onClick(e);
+    });
+    cv.addEventListener("pointercancel", ()=>{ dragging=false; cv.classList.remove("dragging"); });
+    cv.addEventListener("wheel", e=>{
+      e.preventDefault();
+      dist *= 1 + Math.sign(e.deltaY)*.07;
+      idle = 0;
+    }, {passive:false});
+    cv.addEventListener("contextmenu", e=>e.preventDefault());
+  }
+
+  /* ---------- picking / building ---------- */
+  function castFrom(e){
+    const r = cv.getBoundingClientRect();
+    pointer.x = ((e.clientX-r.left)/r.width)*2-1;
+    pointer.y = -((e.clientY-r.top)/r.height)*2+1;
+    raycaster.setFromCamera(pointer, camera);
+    const targets = clickable.concat(playerBlocks);
+    return raycaster.intersectObjects(targets, false)[0] || null;
+  }
+
+  function onClick(e){
+    const hit = castFrom(e);
+    if(mode === "explore"){
+      if(hit && hit.object.userData && hit.object.userData.name) showTip(hit.object.userData);
+      else hideTip();
+      return;
+    }
+    /* build mode */
+    if(!hit) return;
+    if(erase || e.button===2 || e.shiftKey){
+      const i = playerBlocks.indexOf(hit.object);
+      if(i>-1){
+        occupied.delete(key(hit.object.position.x, hit.object.position.y, hit.object.position.z));
+        scene.remove(hit.object);
+        playerBlocks.splice(i,1);
+        countEl.textContent = playerBlocks.length;
+      }
+      return;
+    }
+    if(playerBlocks.length >= 300){ flashHint("block budget reached — reset to keep building"); return; }
+    let base;
+    if(hit.object === terrain && hit.instanceId !== undefined) base = terrainCells[hit.instanceId];
+    else if(hit.object.geometry === boxGeo) base = hit.object.position;
+    else return;
+    const n = hit.face.normal;
+    const x = Math.round(base.x + n.x), y = Math.round(base.y + n.y), z = Math.round(base.z + n.z);
+    if(Math.abs(x)>11 || Math.abs(z)>11 || y<-3 || y>14) return;
+    if(occupied.has(key(x,y,z))) return;
+    const mesh = new THREE.Mesh(boxGeo, blockMat(COLORS[blockColor], .3));
+    mesh.position.set(x,y,z);
+    mesh.scale.setScalar(.01);
+    mesh.userData.pop = 1;                       // spawn animation
+    scene.add(mesh);
+    playerBlocks.push(mesh);
+    occupied.add(key(x,y,z));
+    countEl.textContent = playerBlocks.length;
+  }
+
+  function showTip(d){
+    tipName.textContent = d.name;
+    tipDesc.textContent = d.desc;
+    tipGo.onclick = ()=>{ const t = document.querySelector(d.go); if(t) t.scrollIntoView({behavior:REDUCED?"auto":"smooth"}); };
+    tip.hidden = false;
+  }
+  function hideTip(){ tip.hidden = true; }
+  tipClose.addEventListener("click", hideTip);
+
+  let hintTimer = null;
+  function flashHint(msg){
+    hint.textContent = msg;
+    hint.style.opacity = 1;
+    clearTimeout(hintTimer);
+    hintTimer = setTimeout(()=>setHintForMode(), 2600);
+  }
+  function setHintForMode(){
+    hint.textContent = mode==="build"
+      ? (erase ? "click a placed block · erase" : "click a face · place block — shift-click · erase")
+      : "drag · orbit · scroll · zoom · click · inspect";
+  }
+
+  /* ---------- HUD ---------- */
+  function wireHud(){
+    function setMode(m){
+      mode = m;
+      btnExplore.classList.toggle("on", m==="explore");
+      btnBuild.classList.toggle("on", m==="build");
+      buildTools.hidden = m!=="build";
+      cv.classList.toggle("build", m==="build");
+      if(m!=="build"){ erase=false; btnErase.classList.remove("on"); }
+      hideTip(); setHintForMode();
+    }
+    btnExplore.addEventListener("click", ()=>setMode("explore"));
+    btnBuild.addEventListener("click", ()=>setMode("build"));
+    btnErase.addEventListener("click", ()=>{ erase=!erase; btnErase.classList.toggle("on",erase); setHintForMode(); });
+    $$(".vswatch").forEach(s=>s.addEventListener("click", ()=>{
+      $$(".vswatch").forEach(x=>x.classList.remove("on"));
+      s.classList.add("on");
+      blockColor = s.dataset.c;
+      if(erase){ erase=false; btnErase.classList.remove("on"); setHintForMode(); }
+    }));
+    resetBtn.addEventListener("click", ()=>{
+      playerBlocks.forEach(b=>{
+        occupied.delete(key(b.position.x,b.position.y,b.position.z));
+        scene.remove(b);
+      });
+      playerBlocks.length = 0;
+      countEl.textContent = 0;
+    });
+    $("#vh-zoom-in").addEventListener("click", ()=>{ dist*=.86; idle=0; });
+    $("#vh-zoom-out").addEventListener("click", ()=>{ dist*=1.16; idle=0; });
+  }
+
+  /* ---------- loop ---------- */
+  function loop(){
+    requestAnimationFrame(loop);
+    if(!ready || !running || document.hidden) return;
+    clock += .016; idle += .016;
+
+    if(!dragging && !REDUCED && idle > 2.2) theta += .0014;   // gentle idle orbit
+    applyCam();
+
+    if(crystal){
+      crystal.rotation.y += .012;
+      crystal.position.y = 8.1 + Math.sin(clock*1.4)*.22;
+    }
+    if(beaconMat) beaconMat.opacity = .2 + Math.abs(Math.sin(clock*1.2))*.18;
+    for(const p of packets){
+      p.t = (p.t + .0035) % 1;
+      p.curve.getPoint(p.t, p.mesh.position);
+      p.mesh.rotation.x += .08; p.mesh.rotation.y += .06;
+    }
+    for(const b of playerBlocks){
+      if(b.userData.pop){
+        b.userData.pop = Math.max(0, b.userData.pop - .07);
+        const s = .01 + (1-.01)*(1-b.userData.pop);
+        b.scale.setScalar(s*(1 + Math.sin((1-b.userData.pop)*Math.PI)*.18));
+        if(!b.userData.pop) b.scale.setScalar(1);
+      }
+    }
+    renderer.render(scene, camera);
+  }
 })();
 
 $("#year").textContent = new Date().getFullYear();
