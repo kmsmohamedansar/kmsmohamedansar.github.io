@@ -42,16 +42,20 @@ def rel(path):
 
 
 def week_summary():
-    p = os.path.join(HERE, "audusd_daily_lastweek.csv")
-    if not os.path.exists(p):
+    # prefer this week's data if present, else last week's
+    p = next((os.path.join(HERE, f) for f in
+              ("audusd_daily_thisweek.csv", "audusd_daily_lastweek.csv")
+              if os.path.exists(os.path.join(HERE, f))), None)
+    if not p:
         return None
     d = pd.read_csv(p, parse_dates=["date"])
+    in_progress = d["date"].iloc[-1].date() >= dt.date.today()
     first, last = d["close"].iloc[0], d["close"].iloc[-1]
     move = (last - first) / 0.0001
     pct = (last / first - 1) * 100
     return {
         "range": f"{d['date'].iloc[0]:%d %b} – {d['date'].iloc[-1]:%d %b %Y}",
-        "close": last, "move": move, "pct": pct,
+        "close": last, "move": move, "pct": pct, "in_progress": in_progress,
         "dir": "UPTREND" if move > 0 else "DOWNTREND" if move < 0 else "FLAT",
     }
 
@@ -76,9 +80,11 @@ def upcoming_events():
         d = pd.read_csv(p)
         high = d[d.get("impact", "") == "High"] if "impact" in d.columns else d
         return {"n_high": len(high), "n_total": len(d), "file": p, "df": d}
-    # fall back to the static news_events.csv bundled with the repo
-    p = os.path.join(HERE, "news_events.csv")
-    if os.path.exists(p):
+    # fall back to a bundled calendar (prefer this week's)
+    p = next((os.path.join(HERE, f) for f in
+              ("news_events_thisweek.csv", "news_events.csv")
+              if os.path.exists(os.path.join(HERE, f))), None)
+    if p:
         d = pd.read_csv(p)
         high = d[d["impact"] == "High"] if "impact" in d.columns else d
         return {"n_high": len(high), "n_total": len(d), "file": p, "df": d}
@@ -103,9 +109,11 @@ def main():
 
     cards = []
     if ws:
-        cards.append(card("Last week (AUD/USD)", f"{ws['move']:+.0f} pips",
+        wtitle = "This week so far (AUD/USD)" if ws.get("in_progress") else "Last week (AUD/USD)"
+        cards.append(card(wtitle, f"{ws['move']:+.0f} pips",
                           f"{ws['range']} · {ws['pct']:+.2f}% · {ws['dir']}", DIR_COLOR[ws["dir"]]))
-        cards.append(card("Latest close", f"{ws['close']:.5f}", "daily backtest review"))
+        cards.append(card("Latest close", f"{ws['close']:.5f}",
+                          "in progress" if ws.get("in_progress") else "daily backtest review"))
     else:
         cards.append(card("Last week", "—", "run build_lastweek_report.py"))
     if nl:
