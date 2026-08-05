@@ -27,6 +27,7 @@
 <meta name="theme-color" content="#070b14" />
 <link rel="icon" href="/favicon.ico" type="image/x-icon" />
 
+<script src="https://cdn.jsdelivr.net/npm/phaser@3.87.0/dist/phaser.min.js"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,300;12..96,400;12..96,500;12..96,600;12..96,700;12..96,800&family=Instrument+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet" />
@@ -1481,6 +1482,45 @@ html.light-mode body::before{
     radial-gradient(800px 900px at 70% 100%,rgba(255,138,61,.05),transparent 55%),
     #f4f6fb;
 }
+
+/* ============ RPG GAME ============ */
+.rpg-frame{
+  border-radius:var(--r-lg);
+  border:1px solid var(--line-strong);
+  overflow:hidden;
+  background:var(--ink-1);
+  box-shadow:0 40px 100px rgba(0,0,0,.5),0 0 0 1px rgba(111,230,255,.05);
+}
+#rpg-host{
+  position:relative;
+  line-height:0;
+  background:#06090f;
+}
+#rpg-host canvas{
+  display:block;
+  width:100% !important;
+  height:auto !important;
+}
+.rpg-controls{
+  padding:10px 18px;
+  border-top:1px solid var(--line);
+  font-family:var(--f-mono);
+  font-size:.66rem;
+  letter-spacing:.1em;
+  color:var(--text-3);
+  display:flex;
+  align-items:center;
+  gap:8px;
+  flex-wrap:wrap;
+  background:rgba(7,10,18,.4);
+}
+.rpg-key{
+  border:1px solid var(--line-strong);
+  border-radius:5px;
+  padding:3px 8px;
+  color:var(--text-2);
+  background:rgba(10,16,32,.5);
+}
 </style>
 </head>
 <body>
@@ -1548,6 +1588,7 @@ html.light-mode body::before{
       <a class="nav-link" href="#source" data-nav="source">Source</a>
       <a class="nav-link" href="#ship" data-nav="ship">RepTrack</a>
       <a class="nav-link" href="#build" data-nav="build">Build</a>
+      <a class="nav-link" href="#game" data-nav="game">Play</a>
       <a class="nav-link" href="#world" data-nav="world">World</a>
       <a class="nav-link" href="#schema" data-nav="schema">Stack</a>
       <a class="nav-link" href="#lineage" data-nav="lineage">Lineage</a>
@@ -1568,10 +1609,11 @@ html.light-mode body::before{
   <a href="#source"><span class="idx">00</span> Source</a>
   <a href="#ship"><span class="idx">01</span> RepTrack</a>
   <a href="#build"><span class="idx">02</span> Build</a>
-  <a href="#world"><span class="idx">03</span> World</a>
-  <a href="#schema"><span class="idx">04</span> Stack</a>
-  <a href="#lineage"><span class="idx">05</span> Lineage</a>
-  <a href="#commit"><span class="idx">06</span> Contact</a>
+  <a href="#game"><span class="idx">03</span> Play</a>
+  <a href="#world"><span class="idx">04</span> World</a>
+  <a href="#schema"><span class="idx">05</span> Stack</a>
+  <a href="#lineage"><span class="idx">06</span> Lineage</a>
+  <a href="#commit"><span class="idx">07</span> Contact</a>
 </div>
 
 <main id="top">
@@ -1937,6 +1979,26 @@ html.light-mode body::before{
     </div>
   </div>
 </section>
+
+<!-- ============ 02b GAME / RPG ============ -->
+<section class="stage" id="game" aria-labelledby="game-h">
+  <div class="shell">
+    <div class="stage-head rv">
+      <span class="stage-step"><span class="dot"></span><b>stage 02b</b> · play — the job, gamified</span>
+      <h2 class="h-section" id="game-h">A day in the life of an <span class="grad-data">SE</span></h2>
+      <p class="lede">The Walgreens pricing feed just went down. Your PM is panicking. Play as a Solutions Engineer and fix the pipeline before the 4pm standup.</p>
+    </div>
+    <div class="rpg-frame rv-scale">
+      <div id="rpg-host"></div>
+      <div class="rpg-controls">
+        <span class="rpg-key">WASD</span> or <span class="rpg-key">↑↓←→</span> to move &nbsp;·&nbsp;
+        <span class="rpg-key">E</span> to interact &nbsp;·&nbsp;
+        <span style="color:var(--text-3)">Click works too</span>
+      </div>
+    </div>
+  </div>
+</section>
+
 <div class="divider-q" aria-hidden="true"><span class="kw mono">SELECT</span> <span class="mono">* <span class="kw mono">FROM</span> projects <span class="kw mono">WHERE</span> shipped = <span class="kw mono">TRUE</span></span></div>
 
 <!-- ============ 03 WORLD / VOXEL WAREHOUSE ============ -->
@@ -3332,6 +3394,577 @@ const $$ = (s,c)=> Array.from((c||document).querySelectorAll(s));
 
 $("#year").textContent = new Date().getFullYear();
 
+})();
+</script>
+
+<script>
+/* ============================================================
+   DATA CRISIS — SE RPG · Phaser 3
+   A playable "day in the life of a Solutions Engineer"
+   ============================================================ */
+(function rpgGame(){
+  if(!document.getElementById('rpg-host')) return;
+
+  const T = 32; // tile px
+  const COLS = 20, ROWS = 13;
+  const GW = COLS * T; // 640
+  const GH = ROWS * T; // 416
+
+  // 0=floor 1=wall 2=desk 3=window
+  const MAP = [
+    [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+    [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+    [1,0,2,2,0,0,0,2,2,0,0,2,2,0,0,0,2,2,0,1],
+    [1,0,2,2,0,0,0,2,2,0,0,2,2,0,0,0,2,2,0,1],
+    [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+    [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+    [1,0,2,2,0,0,0,0,0,0,0,0,0,0,0,0,2,2,0,1],
+    [1,0,2,2,0,0,0,0,0,0,0,0,0,0,0,0,2,2,0,1],
+    [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+    [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+    [1,0,2,2,0,0,0,2,2,0,0,2,2,0,0,0,2,2,0,1],
+    [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+    [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+  ];
+
+  const NPC_DATA = [
+    {
+      id:'pm', name:'Sam · PM', tileX:3, tileY:5,
+      color:0x6fe6ff, labelColor:'#6fe6ff',
+      dialog:[
+        'ALERT: The Walgreens pricing feed has been down for 2 hours.',
+        'Their entire planogram system is frozen because of us.',
+        'Talk to the client and Priya the engineer.',
+        'Fix it before the 4pm standup — please.'
+      ]
+    },
+    {
+      id:'client', name:'Alex · Client', tileX:16, tileY:9,
+      color:0xffb454, labelColor:'#ffb454',
+      dialog:[
+        'Do you have any idea what this is costing us?',
+        'We\'re missing price data for 12,000 SKUs right now.',
+        'Deloitte is calling every 20 minutes.',
+        'I don\'t care how — just fix it.'
+      ]
+    },
+    {
+      id:'eng', name:'Priya · Engineer', tileX:16, tileY:3,
+      color:0x5cf2a6, labelColor:'#5cf2a6',
+      dialog:[
+        'Found the issue — a NULL slipped through the upstream feed at 09:47.',
+        'It\'s crashing the Snowflake transform job on every retry.',
+        'Head to the terminal in the middle of the office.',
+        'Pick the right fix and I\'ll validate the output.'
+      ]
+    }
+  ];
+
+  const TERMINAL = {tileX:10, tileY:6};
+
+  const CHOICES = [
+    {
+      label:'A — COALESCE(value, 0)',
+      sub:'Wrap the column in COALESCE inside the transform query',
+      correct:true,
+      ok:'Correct. COALESCE handles the NULL gracefully — the row is kept, the job runs. Pipeline restored.',
+      fail:''
+    },
+    {
+      label:'B — DELETE FROM feed WHERE value IS NULL',
+      sub:'Remove the NULL record from the source table',
+      correct:false,
+      ok:'',
+      fail:'Wrong. Deleting source data is irreversible. You\'d lose the historical record permanently.'
+    },
+    {
+      label:'C — RESTART WAREHOUSE datasembly_prod',
+      sub:'Full warehouse restart to flush the stuck job',
+      correct:false,
+      ok:'',
+      fail:'Wrong. The bad record is still there — a restart just fails again. Fix the root cause.'
+    }
+  ];
+
+  /* ---- SCENE: INTRO ---- */
+  class IntroScene extends Phaser.Scene {
+    constructor(){ super('Intro'); }
+    create(){
+      const W=GW, H=GH;
+      this.add.rectangle(W/2,H/2,W,H,0x06090f);
+
+      // Grid
+      const g=this.add.graphics();
+      g.lineStyle(1,0x8ca8d6,0.04);
+      for(let x=0;x<W;x+=T){g.moveTo(x,0);g.lineTo(x,H);}
+      for(let y=0;y<H;y+=T){g.moveTo(0,y);g.lineTo(W,y);}
+      g.strokePath();
+
+      // Alert pill
+      const pill=this.add.graphics();
+      pill.fillStyle(0x1a0508,1); pill.fillRoundedRect(W/2-110,H/2-115,220,26,13);
+      pill.lineStyle(1,0xff6b8b,0.7); pill.strokeRoundedRect(W/2-110,H/2-115,220,26,13);
+      this.add.text(W/2,H/2-102,'⚠  PIPELINE INCIDENT  ⚠',{
+        fontFamily:'"JetBrains Mono",monospace',fontSize:'10px',color:'#ff6b8b',letterSpacing:2
+      }).setOrigin(0.5);
+
+      this.add.text(W/2,H/2-68,'DATA CRISIS',{
+        fontFamily:'"Bricolage Grotesque",sans-serif',fontSize:'40px',fontStyle:'bold',color:'#e9effb'
+      }).setOrigin(0.5);
+      this.add.text(W/2,H/2-32,'A Solutions Engineer Story',{
+        fontFamily:'"JetBrains Mono",monospace',fontSize:'12px',color:'#6fe6ff',letterSpacing:2
+      }).setOrigin(0.5);
+
+      this.add.text(W/2,H/2+10,
+        'The Walgreens pricing feed dropped at 09:47.\nYour PM is panicking. The client is furious.\nThree NPCs. One puzzle. Fix it.',
+        {fontFamily:'"JetBrains Mono",monospace',fontSize:'11px',color:'#a9b8d4',align:'center',lineSpacing:6}
+      ).setOrigin(0.5);
+
+      // Start button
+      const bx=W/2, by=H/2+90;
+      const btn=this.add.graphics();
+      btn.fillStyle(0x1fb3d6,0.1); btn.fillRoundedRect(bx-80,by-18,160,36,9);
+      btn.lineStyle(1,0x6fe6ff,0.6); btn.strokeRoundedRect(bx-80,by-18,160,36,9);
+      const btnTxt=this.add.text(bx,by,'CLOCK IN  →',{
+        fontFamily:'"JetBrains Mono",monospace',fontSize:'12px',fontStyle:'bold',color:'#6fe6ff',letterSpacing:2
+      }).setOrigin(0.5);
+
+      const zone=this.add.zone(bx,by,160,36).setInteractive({cursor:'pointer'});
+      zone.on('pointerover',()=>{btn.clear();btn.fillStyle(0x1fb3d6,0.22);btn.fillRoundedRect(bx-80,by-18,160,36,9);btn.lineStyle(1,0x6fe6ff,1);btn.strokeRoundedRect(bx-80,by-18,160,36,9);});
+      zone.on('pointerout',()=>{btn.clear();btn.fillStyle(0x1fb3d6,0.1);btn.fillRoundedRect(bx-80,by-18,160,36,9);btn.lineStyle(1,0x6fe6ff,0.6);btn.strokeRoundedRect(bx-80,by-18,160,36,9);});
+      zone.on('pointerdown',()=>this.scene.start('Game'));
+      this.input.keyboard.once('keydown',()=>this.scene.start('Game'));
+
+      // Blink cursor
+      const cur=this.add.rectangle(bx+56,by,7,14,0x6fe6ff);
+      this.tweens.add({targets:cur,alpha:0,duration:500,yoyo:true,repeat:-1});
+
+      this.add.text(W-10,H-10,'v1.0 · datasembly_prod_wh',{
+        fontFamily:'"JetBrains Mono",monospace',fontSize:'8px',color:'#1e2d47'
+      }).setOrigin(1,1);
+    }
+  }
+
+  /* ---- SCENE: GAME ---- */
+  class GameScene extends Phaser.Scene {
+    constructor(){ super('Game'); }
+
+    create(){
+      this.inDialog=false;
+      this.dialogQueue=[];
+      this.dialogIdx=0;
+      this.currentNPC=null;
+      this.talkedTo={pm:false,client:false,eng:false};
+      this.terminalReady=false;
+
+      this.buildMap();
+      this.buildNPCs();
+      this.buildTerminal();
+      this.buildPlayer();
+      this.buildHUD();
+      this.buildOverlays();
+
+      this.cursors=this.input.keyboard.createCursorKeys();
+      this.wasd=this.input.keyboard.addKeys({
+        up:Phaser.Input.Keyboard.KeyCodes.W,
+        down:Phaser.Input.Keyboard.KeyCodes.S,
+        left:Phaser.Input.Keyboard.KeyCodes.A,
+        right:Phaser.Input.Keyboard.KeyCodes.D
+      });
+      this.input.keyboard.on('keydown-E',()=>this.tryInteract());
+      this.input.keyboard.on('keydown-SPACE',()=>this.tryInteract());
+
+      this.cameras.main.fadeIn(500,6,9,15);
+    }
+
+    buildMap(){
+      const g=this.add.graphics();
+      for(let row=0;row<ROWS;row++){
+        for(let col=0;col<COLS;col++){
+          const tile=MAP[row][col];
+          const x=col*T, y=row*T;
+          if(tile===1){
+            g.fillStyle(0x050810); g.fillRect(x,y,T,T);
+            g.fillStyle(0x0c1526); g.fillRect(x+1,y+1,T-2,T-2);
+            g.fillStyle(0x172040,0.6); g.fillRect(x+2,y+2,T-4,5);
+          } else if(tile===0){
+            g.fillStyle(0x0b1422); g.fillRect(x,y,T,T);
+            g.fillStyle(0x0f1c30,0.5); g.fillRect(x,y,T,1);
+            g.fillStyle(0x0f1c30,0.5); g.fillRect(x,y,1,T);
+          } else if(tile===2){
+            g.fillStyle(0x0b1422); g.fillRect(x,y,T,T);
+            g.fillStyle(0x111e35); g.fillRect(x+2,y+5,T-4,T-9);
+            g.fillStyle(0x1a2f4a); g.fillRect(x+2,y+5,T-4,6);
+            // monitor screen
+            g.fillStyle(0x060e1c); g.fillRect(x+6,y+7,20,13);
+            g.fillStyle(0x0c2035); g.fillRect(x+7,y+8,18,11);
+            g.fillStyle(0x6fe6ff,0.06); g.fillRect(x+7,y+8,18,3);
+          }
+        }
+      }
+    }
+
+    buildNPCs(){
+      this.npcs=[];
+      for(const d of NPC_DATA){
+        const nx=d.tileX*T+T/2, ny=d.tileY*T+T/2;
+        const body=this.add.graphics();
+        body.fillStyle(d.color,1);
+        body.fillRoundedRect(-10,-10,20,20,4);
+        body.fillStyle(0x000000,0.25);
+        body.fillRect(-10,-10,20,5);
+        body.setPosition(nx,ny);
+
+        const lbl=this.add.text(nx,ny-17,d.name,{
+          fontFamily:'"JetBrains Mono",monospace',fontSize:'8px',
+          color:d.labelColor,backgroundColor:'#06090fcc',padding:{x:4,y:2}
+        }).setOrigin(0.5,1);
+
+        const ep=this.add.text(nx,ny+16,'[E]',{
+          fontFamily:'"JetBrains Mono",monospace',fontSize:'9px',color:'#ffffff'
+        }).setOrigin(0.5).setAlpha(0);
+
+        this.tweens.add({
+          targets:body, y:ny-4,
+          duration:800+Math.random()*400, yoyo:true, repeat:-1,
+          ease:'Sine.easeInOut', delay:Math.random()*700
+        });
+
+        this.npcs.push({...d,body,lbl,ep,nx,ny});
+      }
+    }
+
+    buildTerminal(){
+      const tx=TERMINAL.tileX*T, ty=TERMINAL.tileY*T;
+      const cx=tx+T/2, cy=ty+T/2;
+      const g=this.add.graphics();
+      g.fillStyle(0x0b1422); g.fillRect(tx,ty,T,T);
+      g.fillStyle(0x071522); g.fillRoundedRect(tx+3,ty+4,T-6,T-8,3);
+      g.fillStyle(0x6fe6ff,0.12); g.fillRect(tx+4,ty+5,T-8,T-10);
+      // scanlines
+      g.fillStyle(0x6fe6ff,0.2);
+      for(let i=0;i<4;i++) g.fillRect(tx+5,ty+8+i*5,T-12,1);
+
+      this.terminalLbl=this.add.text(cx,ty+T+4,'TERMINAL',{
+        fontFamily:'"JetBrains Mono",monospace',fontSize:'7px',color:'#1fb3d6',letterSpacing:1
+      }).setOrigin(0.5,0);
+
+      this.terminalGlow=this.add.graphics();
+      this.terminalGlow.lineStyle(2,0x6fe6ff,0.2);
+      this.terminalGlow.strokeRect(tx+1,ty+1,T-2,T-2);
+
+      this.terminalEP=this.add.text(cx,cy+20,'[E]',{
+        fontFamily:'"JetBrains Mono",monospace',fontSize:'9px',color:'#6fe6ff'
+      }).setOrigin(0.5).setAlpha(0);
+    }
+
+    buildPlayer(){
+      this.px=TERMINAL.tileX*T+T/2;
+      this.py=10*T+T/2;
+      this.pdir='up';
+      this.pspeed=2.2;
+      this.playerGfx=this.add.graphics();
+      this.redrawPlayer();
+    }
+
+    redrawPlayer(){
+      const g=this.playerGfx;
+      g.clear(); g.setPosition(this.px,this.py);
+      // shadow
+      g.fillStyle(0x000000,0.18); g.fillEllipse(0,11,14,6);
+      // body
+      g.fillStyle(0xe9effb); g.fillRoundedRect(-8,-8,16,16,3);
+      g.fillStyle(0xb0bfd8,0.4); g.fillRect(-8,-8,16,4);
+      // direction arrow
+      g.fillStyle(0x6fe6ff);
+      const a={up:[0,-12,-4,-7,4,-7],down:[0,12,-4,7,4,7],
+               left:[-12,0,-7,-4,-7,4],right:[12,0,7,-4,7,4]};
+      const p=a[this.pdir];
+      if(p) g.fillTriangle(p[0],p[1],p[2],p[3],p[4],p[5]);
+    }
+
+    canMove(px,py){
+      const m=7;
+      for(const [cx,cy] of [[px-m,py-m],[px+m,py-m],[px-m,py+m],[px+m,py+m]]){
+        const tx=Math.floor(cx/T), ty=Math.floor(cy/T);
+        if((MAP[ty]?.[tx]??1)!==0) return false;
+      }
+      return true;
+    }
+
+    buildHUD(){
+      this.hudBg=this.add.rectangle(GW/2,13,GW,26,0x03060d,0.9).setDepth(10);
+      this.hudTxt=this.add.text(10,5,'🔴  INCIDENT ACTIVE — talk to Sam, Alex and Priya',{
+        fontFamily:'"JetBrains Mono",monospace',fontSize:'9px',color:'#ff6b8b',letterSpacing:0.5
+      }).setDepth(11);
+      this.hudCount=this.add.text(GW-10,5,'0/3 NPCs',{
+        fontFamily:'"JetBrains Mono",monospace',fontSize:'9px',color:'#3d5070'
+      }).setOrigin(1,0).setDepth(11);
+    }
+
+    buildOverlays(){
+      const host=document.getElementById('rpg-host');
+
+      // Dialog box
+      const dlg=document.createElement('div');
+      dlg.style.cssText='display:none;position:absolute;bottom:0;left:0;right:0;'
+        +'background:rgba(4,7,14,0.93);border-top:1px solid rgba(140,168,214,.22);'
+        +'padding:12px 18px 10px;flex-direction:column;gap:5px;'
+        +'font-family:"JetBrains Mono",monospace;backdrop-filter:blur(10px);';
+      const dName=document.createElement('div');
+      dName.style.cssText='font-size:10px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:#6fe6ff;';
+      const dText=document.createElement('div');
+      dText.style.cssText='font-size:12px;color:#a9b8d4;line-height:1.75;';
+      const dHint=document.createElement('div');
+      dHint.style.cssText='font-size:9px;color:#2d3f5e;letter-spacing:.12em;text-align:right;margin-top:3px;';
+      dHint.textContent='PRESS E / SPACE / CLICK TO CONTINUE';
+      dlg.append(dName,dText,dHint);
+      dlg.addEventListener('click',()=>this.tryInteract());
+      host.appendChild(dlg);
+      this.dlgBox=dlg; this.dlgName=dName; this.dlgText=dText;
+
+      // Puzzle overlay
+      const pzl=document.createElement('div');
+      pzl.style.cssText='display:none;position:absolute;inset:0;'
+        +'background:rgba(3,6,12,0.97);flex-direction:column;align-items:center;'
+        +'justify-content:center;gap:12px;padding:22px;'
+        +'font-family:"JetBrains Mono",monospace;';
+
+      const pt=document.createElement('div');
+      pt.style.cssText='font-size:10px;color:#ff6b8b;letter-spacing:.22em;text-transform:uppercase;';
+      pt.textContent='⚠  SNOWFLAKE TRANSFORM FAILURE';
+
+      const pd=document.createElement('div');
+      pd.style.cssText='font-size:11px;color:#6fe6ff;text-align:center;max-width:440px;line-height:1.8;';
+      pd.innerHTML='The pipeline job is crashing on a NULL value in the upstream feed.<br>Choose the correct fix:';
+
+      const pc=document.createElement('div');
+      pc.style.cssText='display:flex;flex-direction:column;gap:8px;width:100%;max-width:480px;';
+
+      const pfb=document.createElement('div');
+      pfb.style.cssText='font-size:11px;text-align:center;min-height:1.6em;max-width:460px;line-height:1.5;color:#3d5070;';
+
+      for(const ch of CHOICES){
+        const btn=document.createElement('button');
+        btn.style.cssText='font-family:"JetBrains Mono",monospace;font-size:10px;'
+          +'padding:11px 16px;border-radius:8px;border:1px solid rgba(140,168,214,.18);'
+          +'background:rgba(11,20,34,.7);color:#a9b8d4;cursor:pointer;text-align:left;'
+          +'letter-spacing:.05em;transition:all .2s;width:100%;';
+        btn.innerHTML=`<strong>${ch.label}</strong><br><span style="color:#3d5070;font-size:9px;">${ch.sub}</span>`;
+        btn.addEventListener('mouseover',()=>{
+          if(btn.dataset.done) return;
+          btn.style.borderColor=ch.correct?'rgba(92,242,166,.4)':'rgba(255,107,139,.35)';
+          btn.style.background='rgba(14,23,48,.9)'; btn.style.color='#e9effb';
+        });
+        btn.addEventListener('mouseout',()=>{
+          if(btn.dataset.done) return;
+          btn.style.borderColor='rgba(140,168,214,.18)';
+          btn.style.background='rgba(11,20,34,.7)'; btn.style.color='#a9b8d4';
+        });
+        btn.addEventListener('click',()=>{
+          if(pzl.dataset.locked) return;
+          pzl.dataset.locked='1';
+          btn.dataset.done='1';
+          if(ch.correct){
+            btn.style.borderColor='#5cf2a6'; btn.style.background='rgba(92,242,166,.1)'; btn.style.color='#5cf2a6';
+            pfb.style.color='#5cf2a6'; pfb.textContent='✓  '+ch.ok;
+            setTimeout(()=>{ pzl.style.display='none'; this.inDialog=false; this.scene.start('Win'); },1900);
+          } else {
+            btn.style.borderColor='#ff6b8b'; btn.style.background='rgba(255,107,139,.07)'; btn.style.color='#ff6b8b';
+            pfb.style.color='#ff6b8b'; pfb.textContent='✗  '+ch.fail;
+            setTimeout(()=>{
+              delete pzl.dataset.locked; delete btn.dataset.done;
+              btn.style.borderColor='rgba(140,168,214,.18)'; btn.style.background='rgba(11,20,34,.7)'; btn.style.color='#a9b8d4';
+              pfb.style.color='#3d5070'; pfb.textContent='Try again — think about data integrity.';
+            },2200);
+          }
+        });
+        pc.appendChild(btn);
+      }
+
+      pzl.append(pt,pd,pc,pfb);
+      host.appendChild(pzl);
+      this.pzlBox=pzl;
+    }
+
+    tryInteract(){
+      if(this.pzlBox.style.display==='flex') return;
+      if(this.inDialog){ this.advanceDialog(); return; }
+
+      for(const npc of this.npcs){
+        if(Phaser.Math.Distance.Between(this.px,this.py,npc.nx,npc.ny)<50){
+          this.startDialog(npc); return;
+        }
+      }
+      if(this.terminalReady){
+        const tcx=TERMINAL.tileX*T+T/2, tcy=TERMINAL.tileY*T+T/2;
+        if(Phaser.Math.Distance.Between(this.px,this.py,tcx,tcy)<54){
+          this.openPuzzle();
+        }
+      }
+    }
+
+    startDialog(npc){
+      this.inDialog=true; this.currentNPC=npc;
+      this.dialogQueue=npc.dialog; this.dialogIdx=0;
+      this.showLine(npc.name,npc.dialog[0],npc.labelColor);
+    }
+
+    advanceDialog(){
+      this.dialogIdx++;
+      if(this.dialogIdx<this.dialogQueue.length){
+        this.showLine(this.currentNPC.name,this.dialogQueue[this.dialogIdx],this.currentNPC.labelColor);
+      } else {
+        this.dlgBox.style.display='none'; this.inDialog=false;
+        this.talkedTo[this.currentNPC.id]=true;
+        this.checkTerminal();
+      }
+    }
+
+    showLine(name,text,color){
+      this.dlgBox.style.display='flex';
+      this.dlgName.textContent=name; this.dlgName.style.color=color||'#6fe6ff';
+      this.dlgText.textContent=text;
+    }
+
+    checkTerminal(){
+      const n=Object.values(this.talkedTo).filter(Boolean).length;
+      this.hudCount.setText(n+'/3 NPCs');
+      if(n===3 && !this.terminalReady){
+        this.terminalReady=true;
+        this.hudTxt.setText('⚡  TERMINAL UNLOCKED — go to the terminal in the center');
+        this.hudTxt.setStyle({color:'#ffb454'});
+        // Pulse glow on terminal
+        this.tweens.add({
+          targets:this.terminalGlow, alpha:0.8,
+          duration:600, yoyo:true, repeat:-1
+        });
+      }
+    }
+
+    openPuzzle(){
+      this.inDialog=true;
+      this.pzlBox.style.display='flex';
+    }
+
+    update(){
+      if(this.inDialog || this.pzlBox.style.display==='flex') return;
+
+      const sp=this.pspeed;
+      let moved=false;
+
+      if((this.cursors.left.isDown||this.wasd.left.isDown) && this.canMove(this.px-sp,this.py)){
+        this.px-=sp; this.pdir='left'; moved=true;
+      } else if((this.cursors.right.isDown||this.wasd.right.isDown) && this.canMove(this.px+sp,this.py)){
+        this.px+=sp; this.pdir='right'; moved=true;
+      }
+      if((this.cursors.up.isDown||this.wasd.up.isDown) && this.canMove(this.px,this.py-sp)){
+        this.py-=sp; this.pdir='up'; moved=true;
+      } else if((this.cursors.down.isDown||this.wasd.down.isDown) && this.canMove(this.px,this.py+sp)){
+        this.py+=sp; this.pdir='down'; moved=true;
+      }
+      if(moved) this.redrawPlayer();
+
+      // NPC E prompts + talk count
+      let talked=0;
+      for(const npc of this.npcs){
+        if(this.talkedTo[npc.id]) talked++;
+        const near=Phaser.Math.Distance.Between(this.px,this.py,npc.nx,npc.ny)<50;
+        npc.ep.setAlpha(near&&!this.inDialog?1:0);
+      }
+      this.hudCount.setText(talked+'/3 NPCs');
+
+      // Terminal E prompt
+      if(this.terminalReady){
+        const tcx=TERMINAL.tileX*T+T/2, tcy=TERMINAL.tileY*T+T/2;
+        const near=Phaser.Math.Distance.Between(this.px,this.py,tcx,tcy)<54;
+        this.terminalEP.setAlpha(near?1:0);
+      }
+    }
+  }
+
+  /* ---- SCENE: WIN ---- */
+  class WinScene extends Phaser.Scene {
+    constructor(){ super('Win'); }
+    create(){
+      const W=GW, H=GH;
+      this.add.rectangle(W/2,H/2,W,H,0x06090f);
+
+      const flash=this.add.rectangle(W/2,H/2,W,H,0x5cf2a6,0);
+      this.tweens.add({targets:flash,alpha:0.08,duration:500,yoyo:true,repeat:3});
+
+      this.add.text(W/2,60,'✓  PIPELINE RESTORED',{
+        fontFamily:'"JetBrains Mono",monospace',fontSize:'11px',color:'#5cf2a6',letterSpacing:3
+      }).setOrigin(0.5);
+
+      this.add.text(W/2,96,'Incident Closed',{
+        fontFamily:'"Bricolage Grotesque",sans-serif',fontSize:'34px',fontStyle:'bold',color:'#e9effb'
+      }).setOrigin(0.5);
+
+      const rows=[
+        ['Root cause','NULL in upstream feed · 09:47 UTC'],
+        ['Fix applied','COALESCE(value, 0) in transform query'],
+        ['SKUs restored','12,000 (Walgreens pricing data)'],
+        ['Client verdict','Satisfied ✓'],
+        ['4pm standup','Ready ✓'],
+        ['Downtime','2h 13m'],
+      ];
+
+      let y=148;
+      const lx=W/2-170, rx=W/2+170;
+      const sep=this.add.graphics();
+      sep.lineStyle(1,0x1e3050,1);
+      sep.moveTo(lx,y-10); sep.lineTo(rx,y-10); sep.strokePath();
+
+      for(const [k,v] of rows){
+        this.add.text(lx,y,k,{fontFamily:'"JetBrains Mono",monospace',fontSize:'10px',color:'#3d5070',letterSpacing:1});
+        this.add.text(rx,y,v,{fontFamily:'"JetBrains Mono",monospace',fontSize:'10px',color:'#a9b8d4',letterSpacing:1}).setOrigin(1,0);
+        y+=24;
+      }
+
+      sep.moveTo(lx,y+2); sep.lineTo(rx,y+2); sep.strokePath();
+
+      this.add.text(W/2,y+18,'+500 XP  ·  SOLUTIONS ENGINEER  ·  SKILL: DATA TRIAGE UNLOCKED',{
+        fontFamily:'"JetBrains Mono",monospace',fontSize:'9px',color:'#ffb454',letterSpacing:1
+      }).setOrigin(0.5);
+
+      // Replay button
+      const bx=W/2, by=H-38;
+      const bg=this.add.graphics();
+      bg.lineStyle(1,0x2d3f5e,1); bg.strokeRoundedRect(bx-70,by-15,140,30,8);
+      this.add.text(bx,by,'PLAY AGAIN',{
+        fontFamily:'"JetBrains Mono",monospace',fontSize:'10px',color:'#3d5070',letterSpacing:2
+      }).setOrigin(0.5);
+      const zone=this.add.zone(bx,by,140,30).setInteractive({cursor:'pointer'});
+      zone.on('pointerover',()=>{bg.clear();bg.lineStyle(1,0x6fe6ff,1);bg.strokeRoundedRect(bx-70,by-15,140,30,8);});
+      zone.on('pointerout',()=>{bg.clear();bg.lineStyle(1,0x2d3f5e,1);bg.strokeRoundedRect(bx-70,by-15,140,30,8);});
+      zone.on('pointerdown',()=>this.scene.start('Intro'));
+      this.input.keyboard.once('keydown',()=>this.scene.start('Intro'));
+
+      this.cameras.main.fadeIn(700,6,9,15);
+    }
+  }
+
+  /* ---- BOOT ---- */
+  function launch(){
+    if(typeof Phaser==='undefined'){ setTimeout(launch,150); return; }
+    new Phaser.Game({
+      type:Phaser.AUTO,
+      parent:'rpg-host',
+      width:GW, height:GH,
+      backgroundColor:'#06090f',
+      scale:{
+        mode:Phaser.Scale.FIT,
+        autoCenter:Phaser.Scale.CENTER_BOTH,
+        parent:'rpg-host',
+        width:GW, height:GH
+      },
+      scene:[IntroScene,GameScene,WinScene],
+      audio:{disableWebAudio:true},
+      input:{mouse:{preventDefaultWheel:false}}
+    });
+  }
+  launch();
 })();
 </script>
 
