@@ -1534,7 +1534,7 @@ html.light-mode body::before{
 }
 .emet-grid{
   display:grid;
-  grid-template-columns:1fr 1.35fr;
+  grid-template-columns:1.35fr 1fr;
   gap:clamp(40px,6vw,80px);
   align-items:center;
 }
@@ -1616,37 +1616,23 @@ html.light-mode body::before{
   display:flex;flex-direction:column;
 }
 
-/* Boot log lines */
-.emet-line{
-  display:flex;justify-content:space-between;align-items:flex-start;gap:16px;
-  opacity:0;transform:translateX(-6px);
-  animation:emet-slide .32s var(--ease-out) forwards;
-}
+/* Typing animation */
 @keyframes emet-slide{to{opacity:1;transform:none}}
-.emet-dim{color:var(--text-3)}
-.emet-ok{color:var(--green)}
-.emet-warm{color:var(--amber)}
-
-/* Ready panel */
-.emet-ready{animation:emet-slide .5s var(--ease-out)}
-.emet-badge-row{
-  display:flex;align-items:center;gap:10px;flex-wrap:wrap;
-  margin-bottom:18px;
+@keyframes emet-blink{0%,100%{opacity:1}50%{opacity:0}}
+.emet-typed{
+  font-family:var(--f-mono);font-size:.74rem;line-height:1.85;
+  color:var(--text-2);white-space:pre-wrap;word-break:break-word;
+  flex:1;min-height:120px;margin-bottom:16px;
 }
-.emet-badge{
-  font-size:.64rem;letter-spacing:.16em;text-transform:uppercase;
-  color:var(--cyan);
-  border:1px solid rgba(111,230,255,.35);
-  border-radius:5px;padding:4px 10px;
+.emet-typed .t-title{color:var(--cyan);font-weight:600}
+.emet-typed .t-name{color:var(--text);font-weight:700}
+.emet-typed .t-dim{color:var(--text-3)}
+.emet-cursor{
+  display:inline-block;width:7px;height:.8em;
+  background:var(--cyan);margin-left:1px;
+  vertical-align:text-bottom;
+  animation:emet-blink .75s step-end infinite;
 }
-.emet-sub-badge{font-size:.63rem;color:var(--text-3);letter-spacing:.1em}
-.emet-intro{
-  font-family:var(--f-body);
-  font-size:.92rem;color:var(--text-2);
-  line-height:1.7;margin-bottom:22px;
-}
-.emet-intro p{margin-bottom:8px}
-.emet-intro b{color:var(--text);font-weight:600}
 .emet-hl{color:var(--cyan)}
 .emet-nav-label{
   font-size:.65rem;letter-spacing:.14em;text-transform:uppercase;
@@ -1706,6 +1692,23 @@ html.light-mode body::before{
 .proj.reptrack-feat:hover{border-color:rgba(255,180,84,.5)}
 .proj-live.warm{color:var(--amber);border-color:rgba(255,180,84,.3)}
 .proj-feat-actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:14px}
+
+/* Show more projects */
+.proj-collapse{display:none}
+.proj-grid.expanded .proj-collapse{display:flex;flex-direction:column;gap:inherit}
+.proj-more-btn{
+  grid-column:1/-1;
+  background:none;border:1px solid var(--line);border-radius:var(--r-sm);
+  color:var(--text-3);font-family:var(--f-mono);font-size:.7rem;
+  letter-spacing:.14em;text-transform:uppercase;
+  padding:12px 24px;cursor:pointer;
+  transition:border-color .2s,color .2s;
+}
+.proj-more-btn:hover{border-color:rgba(111,230,255,.4);color:var(--cyan)}
+.proj-grid.expanded .proj-more-btn{display:none}
+
+/* right identity panel */
+.emet-right{display:flex;flex-direction:column;justify-content:center}
 
 /* EMET kicker pills */
 .emet-kicker-row .pill{
@@ -1786,7 +1789,7 @@ html.light-mode .emet-bar{background:rgba(220,226,240,.6)}
   <div class="nav-inner">
     <a class="brand" href="#top">
       <span class="brand-sigil">MA</span>
-      <span>mohamed.ansar<small>solutions engineer · open to work</small></span>
+      <span>mohamed.ansar<small>solutions engineer</small></span>
     </a>
     <div class="nav-links">
       <a class="nav-link" href="#source" data-nav="source">Now</a>
@@ -1819,51 +1822,35 @@ html.light-mode .emet-bar{background:rgba(220,226,240,.6)}
   <div class="shell">
     <div class="emet-grid">
 
-      <!-- Left: typographic side -->
-      <div class="emet-left rv">
-        <div class="emet-kicker-row">
-          <span class="pill live">Open to work</span>
-          <span class="pill">Solutions Engineer</span>
-        </div>
-        <h1 class="emet-name">Mohamed<br>Ansar</h1>
-        <p class="emet-role">Data · Engineering · Shipped iOS</p>
-        <p class="emet-loc mono">Mississauga <span class="arr">→</span> Montreal</p>
-        <div class="emet-quick-links">
-          <a class="btn btn-primary" href="#build">Selected work <span class="arr">→</span></a>
-          <a class="btn btn-ghost" href="https://www.linkedin.com/in/kmsmohamedansar/" target="_blank" rel="noopener noreferrer">LinkedIn ↗</a>
-        </div>
-      </div>
-
-      <!-- Right: EMET terminal panel -->
-      <div class="emet-terminal rv-r">
+      <!-- Left: EMET terminal -->
+      <div class="emet-terminal rv">
         <div class="emet-bar">
           <span class="dots"><i></i><i></i><i></i></span>
           <span class="emet-bar-title mono">EMET-1 · ANCIENT KINGDOM ARCHIVE</span>
           <span class="emet-status" id="emet-status">BOOTING</span>
         </div>
         <div class="emet-body" id="emet-body">
-          <div id="emet-boot-log"></div>
-          <div id="emet-ready" hidden>
-            <div class="emet-badge-row">
-              <span class="emet-badge">EMET TERMINAL [READY]</span>
-              <span class="emet-sub-badge">Data · Engineering · Shipped iOS</span>
-            </div>
-            <div class="emet-intro">
-              <p>I hold the record of <b>Mohamed Ansar</b> — Solutions Engineer with 6+ years in data and ops. Deep SQL and Snowflake at production scale, recurring pipelines for enterprise clients, and one native iOS app shipped to the App Store.</p>
-              <p>Currently at <span class="emet-hl">Datasembly</span>, serving Deloitte, Target, and Walgreens. Ex-Amazon Prime Video. Open to new roles — relocating to Montreal.</p>
-            </div>
-            <p class="emet-nav-label mono">Type a number or click to explore:</p>
-            <div class="emet-opts" id="emet-opts">
-              <button class="emet-opt" data-n="1" data-go="#source"><span class="emet-n">1</span><span>What I do now</span></button>
-              <button class="emet-opt" data-n="2" data-go="#lineage"><span class="emet-n">2</span><span>Where I've been</span></button>
-              <button class="emet-opt" data-n="3" data-go="#build"><span class="emet-n">3</span><span>What I've built</span></button>
-              <button class="emet-opt" data-n="4" data-go="#commit"><span class="emet-n">4</span><span>Start a conversation</span></button>
-            </div>
-            <div class="emet-input-wrap">
-              <span class="emet-prompt-glyph">›</span>
-              <input class="emet-input" id="emet-input" type="text" autocomplete="off" spellcheck="false" placeholder="type 1–4 or press a button above…" />
-            </div>
+          <div class="emet-typed" id="emet-typed"></div>
+          <div class="emet-opts" id="emet-opts" style="opacity:0;pointer-events:none;transition:opacity .4s .1s">
+            <button class="emet-opt" data-n="1" data-go="#source"><span class="emet-n">1</span><span>What I do now</span></button>
+            <button class="emet-opt" data-n="2" data-go="#lineage"><span class="emet-n">2</span><span>Where I've been</span></button>
+            <button class="emet-opt" data-n="3" data-go="#build"><span class="emet-n">3</span><span>What I've built</span></button>
+            <button class="emet-opt" data-n="4" data-go="#commit"><span class="emet-n">4</span><span>Start a conversation</span></button>
           </div>
+          <div class="emet-input-wrap" id="emet-input-wrap" style="opacity:0;transition:opacity .4s .2s">
+            <span class="emet-prompt-glyph">›</span>
+            <input class="emet-input" id="emet-input" type="text" autocomplete="off" spellcheck="false" placeholder="type 1–4 or press a button above…" />
+          </div>
+        </div>
+      </div>
+
+      <!-- Right: identity -->
+      <div class="emet-right rv-r">
+        <h1 class="emet-name">Mohamed<br>Ansar</h1>
+        <p class="emet-role">Data · Engineering · Shipped iOS</p>
+        <div class="emet-quick-links">
+          <a class="btn btn-primary" href="#build">Selected work <span class="arr">→</span></a>
+          <a class="btn btn-ghost" href="https://www.linkedin.com/in/kmsmohamedansar/" target="_blank" rel="noopener noreferrer">LinkedIn ↗</a>
         </div>
       </div>
 
@@ -2025,7 +2012,7 @@ END OF COMMENTED-OUT SHIP SECTION -->
       <p class="lede">SQL tools, pipelines, ML, retrieval, automation, and one native iOS app shipped to the App Store — end to end, several with live demos.</p>
     </div>
 
-    <div class="proj-grid rv" data-stagger>
+    <div class="proj-grid rv" data-stagger id="proj-grid">
       <!-- RepTrack featured card -->
       <article class="card proj wide reptrack-feat">
         <div class="proj-top">
@@ -2073,7 +2060,9 @@ END OF COMMENTED-OUT SHIP SECTION -->
         <a class="proj-link" href="https://huggingface.co/spaces/kmsmohamedansar/high-value-customer-predictor" target="_blank" rel="noopener noreferrer">Open demo <span class="arr">→</span></a>
       </article>
 
-      <article class="card proj">
+      <button class="proj-more-btn" id="proj-more-btn">Show 6 more projects <span class="arr">↓</span></button>
+
+      <article class="card proj proj-collapse">
         <div class="proj-top">
           <span class="proj-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg></span>
           <span class="proj-live">Live demo</span>
@@ -2084,7 +2073,7 @@ END OF COMMENTED-OUT SHIP SECTION -->
         <a class="proj-link" href="https://huggingface.co/spaces/kmsmohamedansar/ai_knowledge_assistant" target="_blank" rel="noopener noreferrer">Open demo <span class="arr">→</span></a>
       </article>
 
-      <article class="card proj">
+      <article class="card proj proj-collapse">
         <div class="proj-top">
           <span class="proj-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M8 10h8M8 14h5"/><path d="M21 12a9 9 0 1 1-9-9 9 9 0 0 1 9 9z"/></svg></span>
         </div>
@@ -2093,7 +2082,7 @@ END OF COMMENTED-OUT SHIP SECTION -->
         <div class="tags"><span class="tag">NLP</span><span class="tag">Transformers</span><span class="tag">Sentiment</span></div>
       </article>
 
-      <article class="card proj">
+      <article class="card proj proj-collapse">
         <div class="proj-top">
           <span class="proj-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M3 17l6-6 4 4 8-8"/><path d="M14 7h7v7"/></svg></span>
         </div>
@@ -2102,7 +2091,7 @@ END OF COMMENTED-OUT SHIP SECTION -->
         <div class="tags"><span class="tag">Scraping</span><span class="tag">Automation</span><span class="tag">Python</span></div>
       </article>
 
-      <article class="card proj">
+      <article class="card proj proj-collapse">
         <div class="proj-top">
           <span class="proj-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M7 7h10v10H7z"/><path d="M3 3h4v4H3zM17 3h4v4h-4zM3 17h4v4H3zM17 17h4v4h-4z"/></svg></span>
         </div>
@@ -2111,7 +2100,7 @@ END OF COMMENTED-OUT SHIP SECTION -->
         <div class="tags"><span class="tag">Zero-shot</span><span class="tag">LLM / NLI</span><span class="tag">QA</span></div>
       </article>
 
-      <article class="card proj">
+      <article class="card proj proj-collapse">
         <div class="proj-top">
           <span class="proj-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="3.5"/><path d="M9.5 9.5l5 5"/></svg></span>
         </div>
@@ -2120,7 +2109,7 @@ END OF COMMENTED-OUT SHIP SECTION -->
         <div class="tags"><span class="tag">EDA</span><span class="tag">Python</span><span class="tag">Visualization</span></div>
       </article>
 
-      <article class="card proj">
+      <article class="card proj proj-collapse">
         <div class="proj-top">
           <span class="proj-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="12" r="9"/><path d="M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18M3.5 9h17M3.5 15h17"/></svg></span>
         </div>
@@ -2882,91 +2871,104 @@ const $$ = (s,c)=> Array.from((c||document).querySelectorAll(s));
 })();
 
 /* ============================================================
-   11b · EMET TERMINAL — boot sequence + navigation
+   11b · EMET TERMINAL — typewriter + navigation
    ============================================================ */
 (function emet(){
-  const body     = $("#emet-body");
-  const bootLog  = $("#emet-boot-log");
-  const readyEl  = $("#emet-ready");
+  const typedEl  = $("#emet-typed");
+  const optsEl   = $("#emet-opts");
+  const inputWrap= $("#emet-input-wrap");
   const statusEl = $("#emet-status");
   const input    = $("#emet-input");
-  if(!body || !bootLog || !readyEl) return;
+  if(!typedEl) return;
 
-  const bootLines = [
-    "EMET-1 ANCIENT KINGDOM ARCHIVE · initializing…",
-    "loading record of Mohamed Ansar · SE · active",
-    "data warehouse · Snowflake · connected",
-    "experience loaded: Datasembly · Amazon · iOS",
-    "RepTrack.app → App Store · verified",
-    "terminal ready · welcome"
+  /* script: array of {text, cls, sp (ms/char)} */
+  const SCRIPT = [
+    {text:"EMET-1 · ANCIENT KINGDOM ARCHIVE\n", cls:"t-title", sp:14},
+    {text:"─────────────────────────────────\n\n", cls:"t-dim",  sp:6},
+    {text:"I hold the record of ", sp:22},
+    {text:"Mohamed Ansar", cls:"t-name", sp:22},
+    {text:".\n\n", sp:22},
+    {text:"Solutions Engineer · 6 years in data ops,\npipelines, and analytics at scale.\nOne iOS app shipped to the App Store.\n\n", sp:18},
+    {text:"Navigate ", cls:"t-dim", sp:30},
+    {text:"↓\n", cls:"t-title", sp:30},
   ];
 
-  function addBootLine(text, delay){
-    return new Promise(res=>{
-      setTimeout(()=>{
-        const d = document.createElement("div");
-        d.className = "emet-line mono";
-        d.style.fontSize = ".72rem";
-        d.style.color = "var(--text-3)";
-        d.style.animationDelay = "0s";
-        d.textContent = "> " + text;
-        bootLog.appendChild(d);
-        bootLog.scrollTop = bootLog.scrollHeight;
-        res();
-      }, delay);
-    });
+  let cursorEl = null;
+  function placeCursor(){
+    if(cursorEl) cursorEl.remove();
+    cursorEl = document.createElement("span");
+    cursorEl.className = "emet-cursor";
+    typedEl.appendChild(cursorEl);
   }
 
-  async function runBoot(){
-    let t = 0;
-    for(const line of bootLines){
-      t += 220 + Math.random()*100;
-      await addBootLine(line, t);
+  function delay(ms){ return new Promise(r=>setTimeout(r,ms)); }
+
+  async function typeSegment(seg){
+    const span = document.createElement("span");
+    if(seg.cls) span.className = seg.cls;
+    typedEl.insertBefore(span, cursorEl);
+    for(const ch of seg.text){
+      span.textContent += ch;
+      await delay(seg.sp || 20);
     }
-    setTimeout(()=>{
-      bootLog.style.display = "none";
-      readyEl.hidden = false;
-      if(statusEl){ statusEl.textContent = "READY"; statusEl.classList.add("ready"); }
-      if(input) input.focus();
-    }, t + 300);
   }
 
-  /* start boot after the full-screen boot overlay finishes */
-  const start = ()=>{ if(!REDUCED) runBoot(); else { bootLog.style.display="none"; readyEl.hidden=false; if(statusEl){ statusEl.textContent="READY"; statusEl.classList.add("ready"); } } };
+  function revealNav(){
+    if(statusEl){ statusEl.textContent="READY"; statusEl.classList.add("ready"); }
+    if(optsEl){ optsEl.style.opacity="1"; optsEl.style.pointerEvents=""; }
+    if(inputWrap){ inputWrap.style.opacity="1"; }
+    if(cursorEl){ cursorEl.remove(); cursorEl=null; }
+  }
+
+  function showAll(){
+    /* reduced motion / fallback — show content immediately */
+    typedEl.innerHTML = "";
+    for(const seg of SCRIPT){
+      const s = document.createElement("span");
+      if(seg.cls) s.className = seg.cls;
+      s.textContent = seg.text;
+      typedEl.appendChild(s);
+    }
+    revealNav();
+  }
+
+  async function run(){
+    placeCursor();
+    for(const seg of SCRIPT) await typeSegment(seg);
+    revealNav();
+  }
+
+  const start = ()=>{ REDUCED ? showAll() : run(); };
   addEventListener("boot:done", start, {once:true});
   setTimeout(start, 4500); // safety fallback
 
-  /* navigate to a section */
+  /* navigation */
   function navTo(hash){
-    const t = document.querySelector(hash);
-    if(t) t.scrollIntoView({behavior: REDUCED?"auto":"smooth"});
+    document.querySelector(hash)?.scrollIntoView({behavior:REDUCED?"auto":"smooth"});
   }
-
-  /* click on option buttons */
   $$(".emet-opt").forEach(btn=>{
-    btn.addEventListener("click", ()=>{
-      const go = btn.dataset.go;
-      if(go) navTo(go);
-    });
+    btn.addEventListener("click", ()=>{ const g=btn.dataset.go; if(g) navTo(g); });
   });
-
-  /* typed input: accept 1–4 */
   if(input){
     input.addEventListener("keydown", e=>{
       if(e.key==="Enter"){
-        const v = input.value.trim();
-        const map = {"1":"#source","2":"#lineage","3":"#build","4":"#commit"};
-        if(map[v]) navTo(map[v]);
-        input.value = "";
+        const map={"1":"#source","2":"#lineage","3":"#build","4":"#commit"};
+        const g=map[input.value.trim()]; if(g){ navTo(g); input.value=""; }
       }
     });
     input.addEventListener("input", ()=>{
-      const v = input.value.trim();
-      if(["1","2","3","4"].includes(v)){
-        const map = {"1":"#source","2":"#lineage","3":"#build","4":"#commit"};
-        navTo(map[v]);
-        setTimeout(()=>{ input.value = ""; }, 120);
-      }
+      const map={"1":"#source","2":"#lineage","3":"#build","4":"#commit"};
+      const g=map[input.value.trim()];
+      if(g){ navTo(g); setTimeout(()=>{ input.value=""; },120); }
+    });
+  }
+
+  /* show more projects toggle */
+  const moreBtn = $("#proj-more-btn");
+  const projGrid = $("#proj-grid");
+  if(moreBtn && projGrid){
+    moreBtn.addEventListener("click", ()=>{
+      projGrid.classList.add("expanded");
     });
   }
 })();
