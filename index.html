@@ -1838,16 +1838,40 @@ html.light-mode .emet-bar{background:rgba(220,226,240,.6)}
 }
 .pw-scenario-title{color:var(--amber);font-weight:700;margin-bottom:6px}
 .pw-scenario-desc{color:var(--text-2)}
-.pw-choices{display:flex;flex-direction:column;gap:8px}
+.pw-choices{display:flex;flex-direction:row;gap:10px}
 .pw-choice-btn{
-  background:none;border:1px solid var(--line);border-radius:4px;
-  color:var(--text-2);font-family:var(--f-mono);font-size:.66rem;
-  padding:10px 14px;text-align:left;cursor:pointer;line-height:1.5;
-  transition:border-color .2s,color .2s,background .2s;white-space:pre-line;
+  flex:1;background:none;border:1px solid var(--line);border-radius:6px;
+  color:var(--text-2);font-family:var(--f-mono);
+  padding:12px 14px;text-align:left;cursor:pointer;line-height:1.5;
+  transition:border-color .2s,color .2s,background .2s;
+  display:flex;flex-direction:column;gap:5px;
 }
 .pw-choice-btn:hover:not(:disabled){border-color:rgba(111,230,255,.4);color:var(--cyan);background:rgba(111,230,255,.04)}
 .pw-choice-btn.correct{border-color:var(--green);color:var(--green);background:rgba(92,242,166,.06)}
 .pw-choice-btn.wrong{border-color:var(--rose);color:var(--rose);background:rgba(255,91,91,.06)}
+.pw-choice-key{
+  display:inline-flex;align-items:center;justify-content:center;
+  width:20px;height:20px;border-radius:4px;flex-shrink:0;
+  background:rgba(111,230,255,.12);border:1px solid rgba(111,230,255,.25);
+  color:var(--cyan);font-size:.6rem;font-weight:700;
+}
+.pw-choice-label{font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.04em;margin-top:2px}
+.pw-choice-sub{font-size:.6rem;color:var(--text-3);font-weight:400;text-transform:none;letter-spacing:0;line-height:1.4}
+.pw-result{
+  display:none;border-radius:6px;padding:12px 14px;margin-top:4px;
+  border:1px solid var(--line);background:rgba(255,255,255,.02);
+  font-family:var(--f-mono);
+}
+.pw-result.active{display:block}
+.pw-result-row{display:flex;align-items:baseline;gap:10px;margin-bottom:6px}
+.pw-result-badge{font-size:1.05rem;font-weight:700;letter-spacing:-.01em}
+.pw-result-badge.p1{color:var(--amber)}
+.pw-result-badge.p2{color:var(--cyan)}
+.pw-result-badge.p3{color:var(--text)}
+.pw-result-badge.dnf{color:var(--rose)}
+.pw-result-gap{font-size:.68rem;color:var(--text-3)}
+.pw-result-detail{font-size:.62rem;color:var(--text-2);line-height:1.6}
+.pw-result-fl{display:inline-flex;align-items:center;gap:5px;font-size:.59rem;color:#b48fff;margin-top:6px;letter-spacing:.05em}
 .pw-error-box{
   display:none;font-family:var(--f-mono);font-size:.65rem;line-height:1.7;
   color:var(--rose);border:1px solid rgba(255,91,91,.35);border-radius:4px;
@@ -2376,6 +2400,7 @@ END OF COMMENTED-OUT SHIP SECTION -->
           <button class="pw-choice-btn" id="pw-choice-a"></button>
           <button class="pw-choice-btn" id="pw-choice-b"></button>
         </div>
+        <div class="pw-result" id="pw-result"></div>
         <div class="pw-error-box" id="pw-error-box"></div>
         <button class="pw-retry-btn" id="pw-retry-btn">↺ Retry this scenario</button>
         <div class="pw-progress" id="pw-progress"></div>
@@ -3938,6 +3963,7 @@ $("#year").textContent = new Date().getFullYear();
   const choicesEl   = $("#pw-choices");
   const choiceA     = $("#pw-choice-a");
   const choiceB     = $("#pw-choice-b");
+  const resultEl    = $("#pw-result");
   const errorBox    = $("#pw-error-box");
   const retryBtn    = $("#pw-retry-btn");
   const progressEl  = $("#pw-progress");
@@ -3998,15 +4024,19 @@ $("#year").textContent = new Date().getFullYear();
     drawChart(cFuel, telData.fuel, "rgb(92,242,166)", 0, 105);
   }
 
-  const TRACK_PTS=(function(){
-    const pts=[], cx=140, cy=120;
-    const shape=[
-      [1.15,.35],[1,.1],[.7,-.05],[.35,-.1],[0,.0],[-.3,.15],[-.6,.3],
-      [-.75,.6],[-.6,.9],[-.25,1.0],[.2,1.05],[.6,1.0],[.95,.85],[1.1,.65],[1.15,.5]
-    ];
-    shape.forEach(([dx,dy])=>pts.push({x:cx+dx*90, y:cy+dy*90}));
-    return pts;
-  })();
+  // Circuit de Barcelona-Catalunya — approximate layout, clockwise from S/F
+  const TRACK_PTS=[
+    {x:200,y:214},{x:228,y:214},{x:250,y:207},   // Main straight
+    {x:263,y:192},{x:267,y:168},{x:261,y:140},    // T1/T2 hairpin (top-right)
+    {x:245,y:114},{x:222,y:98},{x:196,y:89},      // T2 exit, sweeping left
+    {x:168,y:86},{x:146,y:93},{x:130,y:108},      // Esses T3-T5
+    {x:118,y:122},{x:124,y:139},{x:144,y:150},    // T5 exit + T7-T9
+    {x:172,y:155},{x:202,y:154},{x:226,y:147},    // La Caixa approach (T10)
+    {x:238,y:131},{x:222,y:117},{x:195,y:120},    // T10 hairpin
+    {x:160,y:124},{x:116,y:130},{x:80,y:143},     // T11-T12, heading left
+    {x:56,y:161},{x:60,y:180},{x:82,y:194},       // Chicane T13 (Banc Sabadell)
+    {x:116,y:204},{x:156,y:210},{x:183,y:213},    // T15-T16 onto straight
+  ];
   let carPos=0;
 
   function drawTrack(){
@@ -4045,7 +4075,7 @@ $("#year").textContent = new Date().getFullYear();
 
   function animateTrack(){
     carPos=(carPos+0.0022)%1;
-    if(carPos<0.003){ lap=Math.min(57,lap+1); }
+    if(carPos<0.003){ lap=Math.min(66,lap+1); }
     drawTrack();
     trackRaf=requestAnimationFrame(animateTrack);
   }
@@ -4066,24 +4096,28 @@ $("#year").textContent = new Date().getFullYear();
 
   const SCENARIOS=[
     {
-      title:"⛈ SUDDEN DOWNPOUR — LAP 23",
+      title:"⛈ SUDDEN DOWNPOUR · LAP 23 / 66",
       desc:"Rain sensors: 80% precipitation. Track temp dropping 12°C. Soft tyres showing aquaplaning signatures. Safety Car deployed. Pit window: 2 laps.",
       choices:[
-        {label:"PIT FOR INTERMEDIATES\n→ 2.8s stop, trade track position for wet-compound safety", correct:true},
-        {label:"STAY OUT ON SLICKS\n→ Hope the rain passes, maintain current P3",correct:false}
+        {key:"A",label:"PIT NOW",sub:"Box for intermediates, 2.8s stop",correct:true,
+         result:{pos:"P1",gap:"FL +0.4s",detail:"Fastest lap in sector 2. Led from lap 26. Perfect read.",fastest:true}},
+        {key:"B",label:"STAY OUT",sub:"Ride slicks, trust the gap holds",correct:false,
+         result:{pos:"DNF",gap:"LAP 24",detail:"Aquaplane at T9. Rear locked, beached in gravel. Race over.",fastest:false}}
       ],
       error:"STRATEGY ERROR — TIRE_AQUAPLANE\nRunning slicks on wet tarmac is a DNF risk.\nDriver reported rear instability at 280 km/h.\nProtocol: wet-weather compounds mandatory.",
       modalTitle:"Smart call: pit for intermediates",
-      modalBody:"Staying on slicks in heavy rain risks a crash or DNF. The correct read was safety car deployment plus wet compound switch. This is the kind of data-driven, time-critical decision I bring to engineering: read the signals, act on evidence — not instinct.",
+      modalBody:"Staying on slicks in heavy rain risks a crash or DNF. The correct read was safety car deployment plus wet compound switch. This is the kind of data-driven, time-critical decision I bring to engineering: read the signals, act on evidence, not instinct.",
       modalTags:["Real-time decision making","Risk assessment","Data pipelines","Time-critical ops"],
       cta:{label:"See my work →",href:"#build"}
     },
     {
-      title:"⚡ ERS SYSTEM OVERHEAT — LAP 41",
+      title:"⚡ ERS OVERHEAT · LAP 41 / 66",
       desc:"MGU-K temp: 187°C (limit: 180°C). Energy store discharge rate unstable. Unchecked: thermal runaway in ~3 laps. Currently P2, 1.2s behind leader.",
       choices:[
-        {label:"DEPLOY DERATING PATCH\n→ Reduce harvest rate 15%, lose ~8 km/h top speed",correct:true},
-        {label:"FORCE MAXIMUM HARVESTING\n→ Push for overtake attempt this lap",correct:false}
+        {key:"A",label:"DERATE 15%",sub:"Lower harvest rate, protect the MGU-K",correct:true,
+         result:{pos:"P3",gap:"+2.1s",detail:"Finished. System stable. Points secured on merit.",fastest:false}},
+        {key:"B",label:"PUSH MAX",sub:"Force the overtake attempt this lap",correct:false,
+         result:{pos:"DNF",gap:"LAP 43",detail:"MGU-K failure at T1. Thermal runaway. Car retired.",fastest:false}}
       ],
       error:"CRITICAL — ERS_THERMAL_LIMIT_EXCEEDED\nMGU-K failure at Turn 1. Car retired from race.\nForcing max harvest above thermal limit caused\nunrecoverable hardware damage.",
       modalTitle:"System health over short-term gain",
@@ -4092,15 +4126,17 @@ $("#year").textContent = new Date().getFullYear();
       cta:{label:"See my projects →",href:"#build"}
     },
     {
-      title:"⚔ THE UNDERCUT — LAP 48",
-      desc:"Gap to P1: 1.8s. Car ahead on 18-lap-old hards, degrading. Our car on fresher mediums, delta +0.3s/lap. Pit crew staged. Window: this lap only.",
+      title:"⚔ THE UNDERCUT · LAP 48 / 66",
+      desc:"Gap to P1: 1.8s. Car ahead on 18-lap-old hards, degrading fast. Our car on fresher mediums, delta +0.3s/lap. Pit crew staged. Window: this lap only.",
       choices:[
-        {label:"EXECUTE 2.0s AUTOMATED SEQUENCE\n→ Pre-staged crew, ERS pre-loaded, fastest possible stop",correct:true},
-        {label:"DELAY PIT ENTRY 2 LAPS\n→ Wait for larger natural gap, safer execution",correct:false}
+        {key:"A",label:"PIT THIS LAP",sub:"Pre-staged crew, 2.0s target stop",correct:true,
+         result:{pos:"P1",gap:"-1.8s",detail:"Fastest lap. Undercut worked. Led every lap after the stop.",fastest:true}},
+        {key:"B",label:"WAIT 2 LAPS",sub:"Build more gap before boxing",correct:false,
+         result:{pos:"P2",gap:"+3.4s",detail:"P1 pitted first. Window closed. We never recovered the gap.",fastest:false}}
       ],
       error:"STRATEGY MISS — UNDERCUT_WINDOW_CLOSED\nP1 extended their stint, neutralizing our delta.\nDelayed entry allowed rival to pit first\nand steal the undercut opportunity.",
       modalTitle:"Execute on the window. Don't wait for perfect.",
-      modalBody:"The undercut requires timing precision. Waiting 2 laps closes the window permanently. I ship working software and data systems on the right window — not endlessly optimizing for a perfect moment that never comes. RepTrack went to the App Store. SQL Playground is live.",
+      modalBody:"The undercut requires timing precision. Waiting 2 laps closes the window permanently. I ship working software and data systems on the right window, not endlessly optimizing for a perfect moment that never comes. RepTrack went to the App Store. SQL Playground is live.",
       modalTags:["Execution timing","Pipeline orchestration","Shipped iOS app","Live deployments"],
       cta:{label:"RepTrack on App Store ↗",href:"https://apps.apple.com/us/app/reptrack-workout-log/id6761032027",external:true}
     }
@@ -4110,9 +4146,12 @@ $("#year").textContent = new Date().getFullYear();
     if(idx>=SCENARIOS.length){ allDone(); return; }
     currentScenario=idx;
     const sc=SCENARIOS[idx];
-    choiceA.className="pw-choice-btn"; choiceB.className="pw-choice-btn";
-    choiceA.disabled=false; choiceB.disabled=false;
-    choiceA.textContent=sc.choices[0].label; choiceB.textContent=sc.choices[1].label;
+    [choiceA, choiceB].forEach((btn,i)=>{
+      const c=sc.choices[i];
+      btn.className="pw-choice-btn"; btn.disabled=false;
+      btn.innerHTML=`<span class="pw-choice-key">${c.key}</span><span class="pw-choice-label">${c.label}</span><span class="pw-choice-sub">${c.sub}</span>`;
+    });
+    if(resultEl){ resultEl.className="pw-result"; resultEl.innerHTML=""; }
     errorBox.className="pw-error-box"; errorBox.textContent="";
     retryBtn.className="pw-retry-btn";
     if(pwIncident) pwIncident.classList.add("active");
@@ -4129,14 +4168,20 @@ $("#year").textContent = new Date().getFullYear();
     },2400);
   }
 
-  function handleChoice(correct, idx){
+  function handleChoice(choice, idx){
     choiceA.disabled=true; choiceB.disabled=true;
     const sc=SCENARIOS[currentScenario];
-    if(correct){
+    const res=choice.result;
+    const posClass=res.pos==="P1"?"p1":res.pos==="P2"?"p2":res.pos==="P3"?"p3":"dnf";
+    if(resultEl){
+      resultEl.innerHTML=`<div class="pw-result-row"><span class="pw-result-badge ${posClass}">${res.pos}</span><span class="pw-result-gap">${res.gap}</span></div><div class="pw-result-detail">${res.detail}</div>${res.fastest?'<div class="pw-result-fl">⬦ FASTEST LAP</div>':''}`;
+      resultEl.classList.add("active");
+    }
+    if(choice.correct){
       logRadio(`<span class="rlog-team">[PITWALL]</span> ✓ Confirmed. Executing sequence.`);
       if(pwIncident) pwIncident.classList.remove("active");
       if(pwStatus) pwStatus.textContent="STRATEGY LOCKED";
-      setTimeout(()=>showModal(sc),1100);
+      setTimeout(()=>showModal(sc),2200);
     } else {
       (idx===0?choiceA:choiceB).classList.add("wrong");
       (idx===0?choiceB:choiceA).classList.add("correct");
@@ -4186,12 +4231,12 @@ $("#year").textContent = new Date().getFullYear();
       const deg=telData.tyre[telData.tyre.length-1]||0;
       if(tyreLabel) tyreLabel.textContent=`TYRE: ${deg>70?"INTER":deg>50?"HARD":deg>30?"MED":"SOFT"} ${Math.round(deg)}%`;
       if(gapLabel) gapLabel.textContent=`GAP: +${(Math.random()*2.5+.5).toFixed(1)}s`;
-      if(lapLabel) lapLabel.textContent=`LAP ${lap} / 57`;
+      if(lapLabel) lapLabel.textContent=`LAP ${lap} / 66`;
     },2200);
   }
 
-  if(choiceA) choiceA.addEventListener("click",()=>handleChoice(SCENARIOS[currentScenario]?.choices[0]?.correct,0));
-  if(choiceB) choiceB.addEventListener("click",()=>handleChoice(SCENARIOS[currentScenario]?.choices[1]?.correct,1));
+  if(choiceA) choiceA.addEventListener("click",()=>handleChoice(SCENARIOS[currentScenario]?.choices[0],0));
+  if(choiceB) choiceB.addEventListener("click",()=>handleChoice(SCENARIOS[currentScenario]?.choices[1],1));
   if(retryBtn) retryBtn.addEventListener("click",()=>{ logRadio(`<span class="rlog-team">[PITWALL]</span> Reloading scenario. Make the right call.`); loadScenario(currentScenario); });
   if(modalClose) modalClose.addEventListener("click",()=>modal.classList.remove("open"));
   if(modal) modal.addEventListener("click",e=>{ if(e.target===modal) modal.classList.remove("open"); });
