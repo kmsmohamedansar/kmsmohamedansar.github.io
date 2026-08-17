@@ -1018,7 +1018,23 @@ section{position:relative}
 .role.current .role-node::after{background:var(--amber);animation:pulse 2s infinite}
 .role:hover.current .role-node{box-shadow:0 0 18px rgba(255,180,84,.55)}
 .role-card{padding:26px 28px}
-.role-head{display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px;align-items:baseline}
+.role-head{display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px;align-items:flex-start}
+.role-co-badge{
+  flex-shrink:0;display:flex;align-items:center;gap:8px;
+  margin-left:auto;
+}
+.role-co-logo{
+  width:40px;height:40px;border-radius:10px;border:1px solid var(--line);
+  display:grid;place-items:center;overflow:hidden;
+  background:rgba(255,255,255,.04);flex-shrink:0;
+}
+.role-co-logo svg{display:block}
+.role-co-name{
+  font-family:var(--f-mono);font-size:.6rem;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--text-3);
+  display:none;
+}
+@media(min-width:600px){.role-co-name{display:block}}
 .role-head h3{font-family:var(--f-display);font-weight:650;font-size:clamp(1.1rem,2vw,1.35rem);letter-spacing:-.015em}
 .role-head h3 span{color:var(--text-3);font-weight:500}
 .role-when{
@@ -1156,7 +1172,7 @@ footer{
 
 /* ---- CUSTOM CURSOR ---- */
 .cursor-dot,.cursor-ring{
-  position:fixed;top:0;left:0;z-index:130;pointer-events:none;
+  position:fixed;top:0;left:0;z-index:9999;pointer-events:none;
   transform:translate(-50%,-50%);
   opacity:0;
 }
@@ -2474,8 +2490,22 @@ END OF COMMENTED-OUT GAME SECTION -->
         <span class="role-node"></span>
         <div class="card role-card">
           <div class="role-head">
-            <h3>Solutions Engineer <span>· Datasembly</span></h3>
-            <span class="role-when">Jan 2026 to Present · Remote, Canada</span>
+            <div>
+              <h3>Solutions Engineer <span>· Datasembly</span></h3>
+              <span class="role-when">Jan 2026 to Present · Remote, Canada</span>
+            </div>
+            <div class="role-co-badge">
+              <span class="role-co-name">Datasembly</span>
+              <span class="role-co-logo" title="Datasembly">
+                <svg width="26" height="26" viewBox="0 0 26 26" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <circle cx="13" cy="8" r="4" fill="#6fe6ff" opacity=".9"/>
+                  <circle cx="7" cy="18" r="3" fill="#6fe6ff" opacity=".5"/>
+                  <circle cx="19" cy="18" r="3" fill="#6fe6ff" opacity=".5"/>
+                  <line x1="13" y1="12" x2="7" y2="15" stroke="#6fe6ff" stroke-width="1.2" opacity=".4"/>
+                  <line x1="13" y1="12" x2="19" y2="15" stroke="#6fe6ff" stroke-width="1.2" opacity=".4"/>
+                </svg>
+              </span>
+            </div>
           </div>
           <ul>
             <li>Design data solutions for retail pricing datasets: client needs, pre-sales analysis, and custom data requests.</li>
@@ -2490,8 +2520,22 @@ END OF COMMENTED-OUT GAME SECTION -->
         <span class="role-node"></span>
         <div class="card role-card">
           <div class="role-head">
-            <h3>Tech Support <span>· Datasembly</span></h3>
-            <span class="role-when">Aug 2024 to Dec 2025 · Remote, Canada</span>
+            <div>
+              <h3>Tech Support <span>· Datasembly</span></h3>
+              <span class="role-when">Aug 2024 to Dec 2025 · Remote, Canada</span>
+            </div>
+            <div class="role-co-badge">
+              <span class="role-co-name">Datasembly</span>
+              <span class="role-co-logo" title="Datasembly">
+                <svg width="26" height="26" viewBox="0 0 26 26" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <circle cx="13" cy="8" r="4" fill="#6fe6ff" opacity=".9"/>
+                  <circle cx="7" cy="18" r="3" fill="#6fe6ff" opacity=".5"/>
+                  <circle cx="19" cy="18" r="3" fill="#6fe6ff" opacity=".5"/>
+                  <line x1="13" y1="12" x2="7" y2="15" stroke="#6fe6ff" stroke-width="1.2" opacity=".4"/>
+                  <line x1="13" y1="12" x2="19" y2="15" stroke="#6fe6ff" stroke-width="1.2" opacity=".4"/>
+                </svg>
+              </span>
+            </div>
           </div>
           <ul>
             <li>Supported pricing analytics initiatives by building SQL-based reporting solutions and improving internal data workflows.</li>
@@ -2506,8 +2550,21 @@ END OF COMMENTED-OUT GAME SECTION -->
         <span class="role-node"></span>
         <div class="card role-card">
           <div class="role-head">
-            <h3>Business Development Intern · Business Analysis <span>· Spongelii</span></h3>
-            <span class="role-when">Jan 2024 to Apr 2024 · Remote, Canada</span>
+            <div>
+              <h3>Business Development Intern · Business Analysis <span>· Spongelii</span></h3>
+              <span class="role-when">Jan 2024 to Apr 2024 · Remote, Canada</span>
+            </div>
+            <div class="role-co-badge">
+              <span class="role-co-name">Spongelii</span>
+              <span class="role-co-logo" title="Spongelii">
+                <svg width="26" height="26" viewBox="0 0 26 26" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <rect x="4" y="10" width="18" height="10" rx="5" fill="#a78bfa" opacity=".7"/>
+                  <rect x="8" y="6" width="10" height="6" rx="3" fill="#a78bfa" opacity=".4"/>
+                  <circle cx="10" cy="15" r="1.5" fill="white" opacity=".6"/>
+                  <circle cx="16" cy="15" r="1.5" fill="white" opacity=".6"/>
+                </svg>
+              </span>
+            </div>
           </div>
           <ul>
             <li>Business analysis tied to data workflows, reporting needs, and stakeholder requirements.</li>
@@ -2522,8 +2579,20 @@ END OF COMMENTED-OUT GAME SECTION -->
         <span class="role-node"></span>
         <div class="card role-card">
           <div class="role-head">
-            <h3>Business Analyst II · Quality Auditing <span>· Amazon Prime Video</span></h3>
-            <span class="role-when">Oct 2021 to Aug 2022 · Hybrid, India</span>
+            <div>
+              <h3>Business Analyst II · Quality Auditing <span>· Amazon Prime Video</span></h3>
+              <span class="role-when">Oct 2021 to Aug 2022 · Hybrid, India</span>
+            </div>
+            <div class="role-co-badge">
+              <span class="role-co-name">Amazon Prime Video</span>
+              <span class="role-co-logo" title="Amazon Prime Video">
+                <svg width="26" height="26" viewBox="0 0 26 26" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M5 18c4-1.5 8-2 13-1" stroke="#FF9900" stroke-width="2" stroke-linecap="round"/>
+                  <path d="M16 15l3 2-2 3" stroke="#FF9900" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                  <text x="5" y="13" font-family="sans-serif" font-weight="700" font-size="9" fill="#00A8E0">prime</text>
+                </svg>
+              </span>
+            </div>
           </div>
           <ul>
             <li>Quality auditing and process improvement for Prime Video content operations.</li>
@@ -2538,8 +2607,20 @@ END OF COMMENTED-OUT GAME SECTION -->
         <span class="role-node"></span>
         <div class="card role-card">
           <div class="role-head">
-            <h3>Business Analyst I · Digital Content <span>· Amazon Prime Video</span></h3>
-            <span class="role-when">Aug 2019 to Sep 2021 · Hybrid, India</span>
+            <div>
+              <h3>Business Analyst I · Digital Content <span>· Amazon Prime Video</span></h3>
+              <span class="role-when">Aug 2019 to Sep 2021 · Hybrid, India</span>
+            </div>
+            <div class="role-co-badge">
+              <span class="role-co-name">Amazon Prime Video</span>
+              <span class="role-co-logo" title="Amazon Prime Video">
+                <svg width="26" height="26" viewBox="0 0 26 26" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M5 18c4-1.5 8-2 13-1" stroke="#FF9900" stroke-width="2" stroke-linecap="round"/>
+                  <path d="M16 15l3 2-2 3" stroke="#FF9900" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                  <text x="5" y="13" font-family="sans-serif" font-weight="700" font-size="9" fill="#00A8E0">prime</text>
+                </svg>
+              </span>
+            </div>
           </div>
           <ul>
             <li>Quality control and operational coordination for the digital content catalog.</li>
@@ -3992,7 +4073,7 @@ $("#year").textContent = new Date().getFullYear();
         {label:"STAY OUT ON SLICKS\n→ Hope the rain passes, maintain current P3",correct:false}
       ],
       error:"STRATEGY ERROR — TIRE_AQUAPLANE\nRunning slicks on wet tarmac is a DNF risk.\nDriver reported rear instability at 280 km/h.\nProtocol: wet-weather compounds mandatory.",
-      modalTitle:"Smart call — pit for intermediates",
+      modalTitle:"Smart call: pit for intermediates",
       modalBody:"Staying on slicks in heavy rain risks a crash or DNF. The correct read was safety car deployment plus wet compound switch. This is the kind of data-driven, time-critical decision I bring to engineering: read the signals, act on evidence — not instinct.",
       modalTags:["Real-time decision making","Risk assessment","Data pipelines","Time-critical ops"],
       cta:{label:"See my work →",href:"#build"}
@@ -4018,7 +4099,7 @@ $("#year").textContent = new Date().getFullYear();
         {label:"DELAY PIT ENTRY 2 LAPS\n→ Wait for larger natural gap, safer execution",correct:false}
       ],
       error:"STRATEGY MISS — UNDERCUT_WINDOW_CLOSED\nP1 extended their stint, neutralizing our delta.\nDelayed entry allowed rival to pit first\nand steal the undercut opportunity.",
-      modalTitle:"Execute on the window — don't wait for perfect",
+      modalTitle:"Execute on the window. Don't wait for perfect.",
       modalBody:"The undercut requires timing precision. Waiting 2 laps closes the window permanently. I ship working software and data systems on the right window — not endlessly optimizing for a perfect moment that never comes. RepTrack went to the App Store. SQL Playground is live.",
       modalTags:["Execution timing","Pipeline orchestration","Shipped iOS app","Live deployments"],
       cta:{label:"RepTrack on App Store ↗",href:"https://apps.apple.com/us/app/reptrack-workout-log/id6761032027",external:true}
