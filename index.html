@@ -1534,7 +1534,7 @@ html.light-mode body::before{
 }
 .emet-grid{
   display:grid;
-  grid-template-columns:1fr 1.35fr;
+  grid-template-columns:1.35fr 1fr;
   gap:clamp(40px,6vw,80px);
   align-items:center;
 }
@@ -1616,37 +1616,23 @@ html.light-mode body::before{
   display:flex;flex-direction:column;
 }
 
-/* Boot log lines */
-.emet-line{
-  display:flex;justify-content:space-between;align-items:flex-start;gap:16px;
-  opacity:0;transform:translateX(-6px);
-  animation:emet-slide .32s var(--ease-out) forwards;
-}
+/* Typing animation */
 @keyframes emet-slide{to{opacity:1;transform:none}}
-.emet-dim{color:var(--text-3)}
-.emet-ok{color:var(--green)}
-.emet-warm{color:var(--amber)}
-
-/* Ready panel */
-.emet-ready{animation:emet-slide .5s var(--ease-out)}
-.emet-badge-row{
-  display:flex;align-items:center;gap:10px;flex-wrap:wrap;
-  margin-bottom:18px;
+@keyframes emet-blink{0%,100%{opacity:1}50%{opacity:0}}
+.emet-typed{
+  font-family:var(--f-mono);font-size:.74rem;line-height:1.85;
+  color:var(--text-2);white-space:pre-wrap;word-break:break-word;
+  flex:1;min-height:120px;margin-bottom:16px;
 }
-.emet-badge{
-  font-size:.64rem;letter-spacing:.16em;text-transform:uppercase;
-  color:var(--cyan);
-  border:1px solid rgba(111,230,255,.35);
-  border-radius:5px;padding:4px 10px;
+.emet-typed .t-title{color:var(--cyan);font-weight:600}
+.emet-typed .t-name{color:var(--text);font-weight:700}
+.emet-typed .t-dim{color:var(--text-3)}
+.emet-cursor{
+  display:inline-block;width:7px;height:.8em;
+  background:var(--cyan);margin-left:1px;
+  vertical-align:text-bottom;
+  animation:emet-blink .75s step-end infinite;
 }
-.emet-sub-badge{font-size:.63rem;color:var(--text-3);letter-spacing:.1em}
-.emet-intro{
-  font-family:var(--f-body);
-  font-size:.92rem;color:var(--text-2);
-  line-height:1.7;margin-bottom:22px;
-}
-.emet-intro p{margin-bottom:8px}
-.emet-intro b{color:var(--text);font-weight:600}
 .emet-hl{color:var(--cyan)}
 .emet-nav-label{
   font-size:.65rem;letter-spacing:.14em;text-transform:uppercase;
@@ -1707,6 +1693,23 @@ html.light-mode body::before{
 .proj-live.warm{color:var(--amber);border-color:rgba(255,180,84,.3)}
 .proj-feat-actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:14px}
 
+/* Show more projects */
+.proj-collapse{display:none}
+.proj-grid.expanded .proj-collapse{display:flex;flex-direction:column;gap:inherit}
+.proj-more-btn{
+  grid-column:1/-1;
+  background:none;border:1px solid var(--line);border-radius:var(--r-sm);
+  color:var(--text-3);font-family:var(--f-mono);font-size:.7rem;
+  letter-spacing:.14em;text-transform:uppercase;
+  padding:12px 24px;cursor:pointer;
+  transition:border-color .2s,color .2s;
+}
+.proj-more-btn:hover{border-color:rgba(111,230,255,.4);color:var(--cyan)}
+.proj-grid.expanded .proj-more-btn{display:none}
+
+/* right identity panel */
+.emet-right{display:flex;flex-direction:column;justify-content:center}
+
 /* EMET kicker pills */
 .emet-kicker-row .pill{
   display:inline-flex;align-items:center;gap:6px;
@@ -1728,6 +1731,154 @@ html.light-mode body::before{
 /* light mode overrides */
 html.light-mode .emet-terminal{background:rgba(240,243,252,.85)}
 html.light-mode .emet-bar{background:rgba(220,226,240,.6)}
+
+/* ============================================================
+   F1 PIT WALL SIMULATOR
+   ============================================================ */
+.pitwall-section{padding:80px 0 100px;position:relative}
+.pitwall-header{
+  display:flex;align-items:center;gap:14px;flex-wrap:wrap;
+  background:var(--ink-1);border:1px solid var(--line);
+  border-radius:var(--r-sm) var(--r-sm) 0 0;
+  padding:10px 20px;font-family:var(--f-mono);font-size:.72rem;letter-spacing:.05em;
+}
+.pw-led{
+  width:8px;height:8px;border-radius:50%;background:var(--green);
+  box-shadow:0 0 6px var(--green);flex-shrink:0;
+}
+.pw-status{color:var(--green)}
+.pw-clock{color:var(--text-2);margin-left:auto}
+.pw-incident{
+  display:none;color:var(--amber);font-weight:700;
+  animation:pw-flash .8s step-end infinite;
+}
+.pw-incident.active{display:inline}
+@keyframes pw-flash{50%{opacity:0}}
+.pw-bypass-btn{
+  background:none;border:1px solid var(--line);border-radius:var(--r-sm);
+  color:var(--text-3);font-family:var(--f-mono);font-size:.65rem;
+  letter-spacing:.1em;padding:4px 12px;cursor:pointer;
+  text-transform:uppercase;transition:border-color .2s,color .2s;
+}
+.pw-bypass-btn:hover{border-color:rgba(111,230,255,.4);color:var(--cyan)}
+.pw-panels{
+  display:grid;grid-template-columns:1fr 1fr 1fr;gap:1px;
+  background:var(--line);border:1px solid var(--line);
+  border-top:none;border-radius:0 0 var(--r-sm) var(--r-sm);overflow:hidden;
+}
+.pw-panel{
+  background:var(--ink-0);padding:16px;
+  display:flex;flex-direction:column;gap:12px;min-height:420px;
+}
+.pw-panel-label{
+  font-family:var(--f-mono);font-size:.62rem;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--text-3);
+  padding-bottom:8px;border-bottom:1px solid var(--line);
+}
+.pw-chart-wrap{display:flex;flex-direction:column;gap:8px;flex:1}
+.pw-chart-row{display:flex;flex-direction:column;gap:3px;flex:1}
+.pw-chart-label{font-family:var(--f-mono);font-size:.59rem;color:var(--text-3);letter-spacing:.08em}
+.pw-chart-canvas{width:100%;flex:1;display:block;border-radius:3px}
+.pw-lap-info{
+  font-family:var(--f-mono);font-size:.65rem;color:var(--text-2);
+  display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;
+}
+.pw-radio-log{
+  font-family:var(--f-mono);font-size:.67rem;line-height:1.75;color:var(--text-2);
+  flex:1;overflow-y:auto;max-height:160px;min-height:80px;
+  border:1px solid var(--line);border-radius:4px;padding:10px;background:var(--ink-1);
+}
+.pw-radio-log p{margin:0}
+.rlog-team{color:var(--cyan)}
+.rlog-driver{color:var(--amber)}
+.rlog-alert{color:var(--rose);font-weight:700}
+.pw-scenario-box{
+  border:1px solid rgba(255,188,66,.3);border-radius:4px;padding:12px;
+  background:rgba(255,188,66,.04);font-family:var(--f-mono);
+  font-size:.68rem;line-height:1.6;
+}
+.pw-scenario-title{color:var(--amber);font-weight:700;margin-bottom:6px}
+.pw-scenario-desc{color:var(--text-2)}
+.pw-choices{display:flex;flex-direction:column;gap:8px}
+.pw-choice-btn{
+  background:none;border:1px solid var(--line);border-radius:4px;
+  color:var(--text-2);font-family:var(--f-mono);font-size:.66rem;
+  padding:10px 14px;text-align:left;cursor:pointer;line-height:1.5;
+  transition:border-color .2s,color .2s,background .2s;white-space:pre-line;
+}
+.pw-choice-btn:hover:not(:disabled){border-color:rgba(111,230,255,.4);color:var(--cyan);background:rgba(111,230,255,.04)}
+.pw-choice-btn.correct{border-color:var(--green);color:var(--green);background:rgba(92,242,166,.06)}
+.pw-choice-btn.wrong{border-color:var(--rose);color:var(--rose);background:rgba(255,91,91,.06)}
+.pw-error-box{
+  display:none;font-family:var(--f-mono);font-size:.65rem;line-height:1.7;
+  color:var(--rose);border:1px solid rgba(255,91,91,.35);border-radius:4px;
+  padding:10px 12px;background:rgba(255,91,91,.05);white-space:pre-line;
+}
+.pw-error-box.active{display:block}
+.pw-retry-btn{
+  display:none;background:none;border:1px solid rgba(255,91,91,.4);
+  border-radius:4px;color:var(--rose);font-family:var(--f-mono);
+  font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;
+  padding:6px 14px;cursor:pointer;transition:background .2s;
+}
+.pw-retry-btn.active{display:inline-block}
+.pw-retry-btn:hover{background:rgba(255,91,91,.1)}
+.pw-progress{font-family:var(--f-mono);font-size:.62rem;color:var(--text-3);text-align:right;margin-top:auto}
+.pw-modal-backdrop{
+  display:none;position:fixed;inset:0;background:rgba(5,8,15,.85);
+  z-index:1000;align-items:center;justify-content:center;
+  backdrop-filter:blur(8px);
+}
+.pw-modal-backdrop.open{display:flex}
+.pw-modal{
+  background:var(--ink-1);border:1px solid rgba(111,230,255,.2);
+  border-radius:var(--r-sm);padding:40px 44px;max-width:540px;width:90%;
+  position:relative;animation:emet-slide .35s ease both;
+}
+.pw-modal-header{
+  font-family:var(--f-mono);font-size:.65rem;color:var(--green);
+  letter-spacing:.14em;text-transform:uppercase;margin-bottom:18px;
+}
+.pw-modal h3{
+  font-size:1.45rem;font-weight:700;color:var(--text);
+  margin-bottom:12px;font-family:var(--f-display);line-height:1.2;
+}
+.pw-modal-body{font-size:.86rem;color:var(--text-2);line-height:1.7;margin-bottom:22px}
+.pw-modal-tags{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:26px}
+.pw-modal-tag{
+  font-family:var(--f-mono);font-size:.62rem;letter-spacing:.08em;
+  text-transform:uppercase;border:1px solid var(--line);
+  border-radius:40px;padding:4px 12px;color:var(--text-3);
+}
+.pw-modal-actions{display:flex;gap:12px;flex-wrap:wrap}
+.pw-modal-close{
+  position:absolute;top:14px;right:18px;background:none;border:none;
+  color:var(--text-3);cursor:pointer;font-size:1.3rem;line-height:1;
+  transition:color .2s;
+}
+.pw-modal-close:hover{color:var(--text)}
+.pw-bypass-panel{
+  display:none;background:var(--ink-1);border:1px solid var(--line);
+  border-top:none;border-radius:0 0 var(--r-sm) var(--r-sm);padding:32px;
+}
+.pw-bypass-panel.open{display:block}
+.pw-bypass-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;margin-top:20px}
+.pw-bypass-card{
+  border:1px solid var(--line);border-radius:6px;padding:16px;
+  background:var(--ink-0);transition:border-color .2s;
+}
+.pw-bypass-card:hover{border-color:rgba(111,230,255,.3)}
+.pw-bypass-card-label{
+  font-family:var(--f-mono);font-size:.59rem;color:var(--text-3);
+  letter-spacing:.12em;text-transform:uppercase;margin-bottom:8px;
+}
+.pw-bypass-card h4{font-size:.9rem;font-weight:600;color:var(--text);margin-bottom:6px}
+.pw-bypass-card p{font-size:.78rem;color:var(--text-2);line-height:1.55}
+@media(max-width:900px){
+  .pw-panels{grid-template-columns:1fr}
+  .pw-panel{min-height:260px}
+  .pw-radio-log{max-height:120px}
+}
 </style>
 </head>
 <body>
@@ -1786,7 +1937,7 @@ html.light-mode .emet-bar{background:rgba(220,226,240,.6)}
   <div class="nav-inner">
     <a class="brand" href="#top">
       <span class="brand-sigil">MA</span>
-      <span>mohamed.ansar<small>solutions engineer · open to work</small></span>
+      <span>mohamed.ansar<small>solutions engineer</small></span>
     </a>
     <div class="nav-links">
       <a class="nav-link" href="#source" data-nav="source">Now</a>
@@ -1819,51 +1970,35 @@ html.light-mode .emet-bar{background:rgba(220,226,240,.6)}
   <div class="shell">
     <div class="emet-grid">
 
-      <!-- Left: typographic side -->
-      <div class="emet-left rv">
-        <div class="emet-kicker-row">
-          <span class="pill live">Open to work</span>
-          <span class="pill">Solutions Engineer</span>
-        </div>
-        <h1 class="emet-name">Mohamed<br>Ansar</h1>
-        <p class="emet-role">Data · Engineering · Shipped iOS</p>
-        <p class="emet-loc mono">Mississauga <span class="arr">→</span> Montreal</p>
-        <div class="emet-quick-links">
-          <a class="btn btn-primary" href="#build">Selected work <span class="arr">→</span></a>
-          <a class="btn btn-ghost" href="https://www.linkedin.com/in/kmsmohamedansar/" target="_blank" rel="noopener noreferrer">LinkedIn ↗</a>
-        </div>
-      </div>
-
-      <!-- Right: EMET terminal panel -->
-      <div class="emet-terminal rv-r">
+      <!-- Left: EMET terminal -->
+      <div class="emet-terminal rv">
         <div class="emet-bar">
           <span class="dots"><i></i><i></i><i></i></span>
           <span class="emet-bar-title mono">EMET-1 · ANCIENT KINGDOM ARCHIVE</span>
           <span class="emet-status" id="emet-status">BOOTING</span>
         </div>
         <div class="emet-body" id="emet-body">
-          <div id="emet-boot-log"></div>
-          <div id="emet-ready" hidden>
-            <div class="emet-badge-row">
-              <span class="emet-badge">EMET TERMINAL [READY]</span>
-              <span class="emet-sub-badge">Data · Engineering · Shipped iOS</span>
-            </div>
-            <div class="emet-intro">
-              <p>I hold the record of <b>Mohamed Ansar</b> — Solutions Engineer with 6+ years in data and ops. Deep SQL and Snowflake at production scale, recurring pipelines for enterprise clients, and one native iOS app shipped to the App Store.</p>
-              <p>Currently at <span class="emet-hl">Datasembly</span>, serving Deloitte, Target, and Walgreens. Ex-Amazon Prime Video. Open to new roles — relocating to Montreal.</p>
-            </div>
-            <p class="emet-nav-label mono">Type a number or click to explore:</p>
-            <div class="emet-opts" id="emet-opts">
-              <button class="emet-opt" data-n="1" data-go="#source"><span class="emet-n">1</span><span>What I do now</span></button>
-              <button class="emet-opt" data-n="2" data-go="#lineage"><span class="emet-n">2</span><span>Where I've been</span></button>
-              <button class="emet-opt" data-n="3" data-go="#build"><span class="emet-n">3</span><span>What I've built</span></button>
-              <button class="emet-opt" data-n="4" data-go="#commit"><span class="emet-n">4</span><span>Start a conversation</span></button>
-            </div>
-            <div class="emet-input-wrap">
-              <span class="emet-prompt-glyph">›</span>
-              <input class="emet-input" id="emet-input" type="text" autocomplete="off" spellcheck="false" placeholder="type 1–4 or press a button above…" />
-            </div>
+          <div class="emet-typed" id="emet-typed"></div>
+          <div class="emet-opts" id="emet-opts" style="opacity:0;pointer-events:none;transition:opacity .4s .1s">
+            <button class="emet-opt" data-n="1" data-go="#source"><span class="emet-n">1</span><span>What I do now</span></button>
+            <button class="emet-opt" data-n="2" data-go="#lineage"><span class="emet-n">2</span><span>Where I've been</span></button>
+            <button class="emet-opt" data-n="3" data-go="#build"><span class="emet-n">3</span><span>What I've built</span></button>
+            <button class="emet-opt" data-n="4" data-go="#commit"><span class="emet-n">4</span><span>Start a conversation</span></button>
           </div>
+          <div class="emet-input-wrap" id="emet-input-wrap" style="opacity:0;transition:opacity .4s .2s">
+            <span class="emet-prompt-glyph">›</span>
+            <input class="emet-input" id="emet-input" type="text" autocomplete="off" spellcheck="false" placeholder="type 1–4 or press a button above…" />
+          </div>
+        </div>
+      </div>
+
+      <!-- Right: identity -->
+      <div class="emet-right rv-r">
+        <h1 class="emet-name">Mohamed<br>Ansar</h1>
+        <p class="emet-role">Data · Engineering · Shipped iOS</p>
+        <div class="emet-quick-links">
+          <a class="btn btn-primary" href="#build">Selected work <span class="arr">→</span></a>
+          <a class="btn btn-ghost" href="https://www.linkedin.com/in/kmsmohamedansar/" target="_blank" rel="noopener noreferrer">LinkedIn ↗</a>
         </div>
       </div>
 
@@ -2025,7 +2160,7 @@ END OF COMMENTED-OUT SHIP SECTION -->
       <p class="lede">SQL tools, pipelines, ML, retrieval, automation, and one native iOS app shipped to the App Store — end to end, several with live demos.</p>
     </div>
 
-    <div class="proj-grid rv" data-stagger>
+    <div class="proj-grid rv" data-stagger id="proj-grid">
       <!-- RepTrack featured card -->
       <article class="card proj wide reptrack-feat">
         <div class="proj-top">
@@ -2073,7 +2208,9 @@ END OF COMMENTED-OUT SHIP SECTION -->
         <a class="proj-link" href="https://huggingface.co/spaces/kmsmohamedansar/high-value-customer-predictor" target="_blank" rel="noopener noreferrer">Open demo <span class="arr">→</span></a>
       </article>
 
-      <article class="card proj">
+      <button class="proj-more-btn" id="proj-more-btn">Show 6 more projects <span class="arr">↓</span></button>
+
+      <article class="card proj proj-collapse">
         <div class="proj-top">
           <span class="proj-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg></span>
           <span class="proj-live">Live demo</span>
@@ -2084,7 +2221,7 @@ END OF COMMENTED-OUT SHIP SECTION -->
         <a class="proj-link" href="https://huggingface.co/spaces/kmsmohamedansar/ai_knowledge_assistant" target="_blank" rel="noopener noreferrer">Open demo <span class="arr">→</span></a>
       </article>
 
-      <article class="card proj">
+      <article class="card proj proj-collapse">
         <div class="proj-top">
           <span class="proj-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M8 10h8M8 14h5"/><path d="M21 12a9 9 0 1 1-9-9 9 9 0 0 1 9 9z"/></svg></span>
         </div>
@@ -2093,7 +2230,7 @@ END OF COMMENTED-OUT SHIP SECTION -->
         <div class="tags"><span class="tag">NLP</span><span class="tag">Transformers</span><span class="tag">Sentiment</span></div>
       </article>
 
-      <article class="card proj">
+      <article class="card proj proj-collapse">
         <div class="proj-top">
           <span class="proj-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M3 17l6-6 4 4 8-8"/><path d="M14 7h7v7"/></svg></span>
         </div>
@@ -2102,7 +2239,7 @@ END OF COMMENTED-OUT SHIP SECTION -->
         <div class="tags"><span class="tag">Scraping</span><span class="tag">Automation</span><span class="tag">Python</span></div>
       </article>
 
-      <article class="card proj">
+      <article class="card proj proj-collapse">
         <div class="proj-top">
           <span class="proj-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M7 7h10v10H7z"/><path d="M3 3h4v4H3zM17 3h4v4h-4zM3 17h4v4H3zM17 17h4v4h-4z"/></svg></span>
         </div>
@@ -2111,7 +2248,7 @@ END OF COMMENTED-OUT SHIP SECTION -->
         <div class="tags"><span class="tag">Zero-shot</span><span class="tag">LLM / NLI</span><span class="tag">QA</span></div>
       </article>
 
-      <article class="card proj">
+      <article class="card proj proj-collapse">
         <div class="proj-top">
           <span class="proj-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="3.5"/><path d="M9.5 9.5l5 5"/></svg></span>
         </div>
@@ -2120,7 +2257,7 @@ END OF COMMENTED-OUT SHIP SECTION -->
         <div class="tags"><span class="tag">EDA</span><span class="tag">Python</span><span class="tag">Visualization</span></div>
       </article>
 
-      <article class="card proj">
+      <article class="card proj proj-collapse">
         <div class="proj-top">
           <span class="proj-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="12" r="9"/><path d="M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18M3.5 9h17M3.5 15h17"/></svg></span>
         </div>
@@ -2133,6 +2270,123 @@ END OF COMMENTED-OUT SHIP SECTION -->
 </section>
 
 <div class="divider-q" aria-hidden="true"><span class="kw mono">SELECT</span> <span class="mono">role, impact</span> <span class="kw mono">FROM</span> <span class="mono">experience</span> <span class="kw mono">ORDER BY</span> <span class="mono">date DESC</span></div>
+
+<!-- ============ F1 PIT WALL ============ -->
+<section class="stage pitwall-section" id="pitwall" aria-labelledby="pitwall-h">
+  <div class="shell">
+    <div class="stage-head rv">
+      <span class="stage-step"><span class="dot"></span><b>stage 03b</b> · systems — the pit wall</span>
+      <h2 class="h-section" id="pitwall-h">F1 Telemetry <span class="grad-data">Pit Wall</span></h2>
+      <p class="lede">Race day. Three critical incidents. You're the strategy engineer — every millisecond matters. Make the right call.</p>
+    </div>
+
+    <div class="pitwall-header rv" id="pw-header">
+      <span class="pw-led" id="pw-led"></span>
+      <span class="pw-status" id="pw-status">SYSTEM NOMINAL</span>
+      <span class="pw-incident" id="pw-incident">⚠ INCIDENT REPORTED</span>
+      <span class="pw-clock" id="pw-clock">LAP 0 · 00:00</span>
+      <button class="pw-bypass-btn" id="pw-bypass-btn">Bypass simulation ↓</button>
+    </div>
+
+    <div class="pw-panels rv" id="pw-panels">
+      <!-- Panel 1: Track Map -->
+      <div class="pw-panel">
+        <div class="pw-panel-label">Track Map · Sector Data</div>
+        <canvas id="pw-track-canvas" width="280" height="240"></canvas>
+        <div class="pw-lap-info">
+          <span id="pw-lap-label">LAP 1 / 57</span>
+          <span id="pw-tyre-label">TYRE: SOFT</span>
+          <span id="pw-gap-label">GAP: +2.4s</span>
+        </div>
+      </div>
+
+      <!-- Panel 2: Telemetry -->
+      <div class="pw-panel">
+        <div class="pw-panel-label">Live Telemetry</div>
+        <div class="pw-chart-wrap">
+          <div class="pw-chart-row">
+            <div class="pw-chart-label">SPEED (km/h)</div>
+            <canvas class="pw-chart-canvas" id="pw-chart-speed" width="260" height="52"></canvas>
+          </div>
+          <div class="pw-chart-row">
+            <div class="pw-chart-label">TYRE DEG (%)</div>
+            <canvas class="pw-chart-canvas" id="pw-chart-tyre" width="260" height="52"></canvas>
+          </div>
+          <div class="pw-chart-row">
+            <div class="pw-chart-label">BRAKE TEMP (°C)</div>
+            <canvas class="pw-chart-canvas" id="pw-chart-brake" width="260" height="52"></canvas>
+          </div>
+          <div class="pw-chart-row">
+            <div class="pw-chart-label">FUEL LOAD (kg)</div>
+            <canvas class="pw-chart-canvas" id="pw-chart-fuel" width="260" height="52"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <!-- Panel 3: Radio Console -->
+      <div class="pw-panel">
+        <div class="pw-panel-label">Team Radio · Strategy Call</div>
+        <div class="pw-radio-log" id="pw-radio-log">
+          <p><span class="rlog-team">[PITWALL]</span> Systems online. Monitoring telemetry.</p>
+        </div>
+        <div class="pw-scenario-box" id="pw-scenario-box" style="display:none">
+          <div class="pw-scenario-title" id="pw-scenario-title"></div>
+          <div class="pw-scenario-desc" id="pw-scenario-desc"></div>
+        </div>
+        <div class="pw-choices" id="pw-choices" style="display:none">
+          <button class="pw-choice-btn" id="pw-choice-a"></button>
+          <button class="pw-choice-btn" id="pw-choice-b"></button>
+        </div>
+        <div class="pw-error-box" id="pw-error-box"></div>
+        <button class="pw-retry-btn" id="pw-retry-btn">↺ Retry this scenario</button>
+        <div class="pw-progress" id="pw-progress"></div>
+      </div>
+    </div>
+
+    <!-- Bypass panel -->
+    <div class="pw-bypass-panel" id="pw-bypass-panel">
+      <p class="mono" style="font-size:.65rem;color:var(--text-3);letter-spacing:.12em;text-transform:uppercase;margin-bottom:16px">SIMULATION BYPASSED · QUICK VIEW</p>
+      <h3 style="font-size:1.1rem;font-weight:700;color:var(--text);margin-bottom:20px">Mohamed Ansar — Data Engineer &amp; Solutions Engineer</h3>
+      <div class="pw-bypass-grid">
+        <div class="pw-bypass-card">
+          <div class="pw-bypass-card-label">iOS App</div>
+          <h4>RepTrack</h4>
+          <p>Workout logging app shipped to the App Store. Swift, SwiftUI, CoreData.</p>
+          <a class="btn btn-primary" href="https://apps.apple.com/us/app/reptrack-workout-log/id6761032027" target="_blank" rel="noopener noreferrer" style="display:inline-block;margin-top:12px;font-size:.72rem">App Store ↗</a>
+        </div>
+        <div class="pw-bypass-card">
+          <div class="pw-bypass-card-label">Data Engineering</div>
+          <h4>Pipeline &amp; Analytics</h4>
+          <p>6 years building data pipelines, ETL workflows, and analytics platforms at scale.</p>
+        </div>
+        <div class="pw-bypass-card">
+          <div class="pw-bypass-card-label">Live Demo</div>
+          <h4>SQL Playground</h4>
+          <p>Interactive in-browser SQL execution with schema explorer and result export.</p>
+          <a class="btn btn-ghost" href="https://kmsmohamedansar.github.io/sql-playground" target="_blank" rel="noopener noreferrer" style="display:inline-block;margin-top:12px;font-size:.72rem">Try it ↗</a>
+        </div>
+        <div class="pw-bypass-card">
+          <div class="pw-bypass-card-label">Contact</div>
+          <h4>Start a conversation</h4>
+          <p>Open to interesting problems in data, analytics, and engineering.</p>
+          <a class="btn btn-ghost" href="#commit" style="display:inline-block;margin-top:12px;font-size:.72rem">Get in touch →</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SUCCESS MODAL -->
+<div class="pw-modal-backdrop" id="pw-modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="pw-modal-title">
+  <div class="pw-modal">
+    <button class="pw-modal-close" id="pw-modal-close" aria-label="Close">×</button>
+    <div class="pw-modal-header">✓ CORRECT CALL · STRATEGY LOCKED IN</div>
+    <h3 id="pw-modal-title"></h3>
+    <div class="pw-modal-body" id="pw-modal-body"></div>
+    <div class="pw-modal-tags" id="pw-modal-tags"></div>
+    <div class="pw-modal-actions" id="pw-modal-actions"></div>
+  </div>
+</div>
 
 <!-- GAME SECTION COMMENTED OUT
 <section class="stage" id="game" aria-labelledby="game-h">
@@ -2882,91 +3136,104 @@ const $$ = (s,c)=> Array.from((c||document).querySelectorAll(s));
 })();
 
 /* ============================================================
-   11b · EMET TERMINAL — boot sequence + navigation
+   11b · EMET TERMINAL — typewriter + navigation
    ============================================================ */
 (function emet(){
-  const body     = $("#emet-body");
-  const bootLog  = $("#emet-boot-log");
-  const readyEl  = $("#emet-ready");
+  const typedEl  = $("#emet-typed");
+  const optsEl   = $("#emet-opts");
+  const inputWrap= $("#emet-input-wrap");
   const statusEl = $("#emet-status");
   const input    = $("#emet-input");
-  if(!body || !bootLog || !readyEl) return;
+  if(!typedEl) return;
 
-  const bootLines = [
-    "EMET-1 ANCIENT KINGDOM ARCHIVE · initializing…",
-    "loading record of Mohamed Ansar · SE · active",
-    "data warehouse · Snowflake · connected",
-    "experience loaded: Datasembly · Amazon · iOS",
-    "RepTrack.app → App Store · verified",
-    "terminal ready · welcome"
+  /* script: array of {text, cls, sp (ms/char)} */
+  const SCRIPT = [
+    {text:"EMET-1 · ANCIENT KINGDOM ARCHIVE\n", cls:"t-title", sp:14},
+    {text:"─────────────────────────────────\n\n", cls:"t-dim",  sp:6},
+    {text:"I hold the record of ", sp:22},
+    {text:"Mohamed Ansar", cls:"t-name", sp:22},
+    {text:".\n\n", sp:22},
+    {text:"Solutions Engineer · 6 years in data ops,\npipelines, and analytics at scale.\nOne iOS app shipped to the App Store.\n\n", sp:18},
+    {text:"Navigate ", cls:"t-dim", sp:30},
+    {text:"↓\n", cls:"t-title", sp:30},
   ];
 
-  function addBootLine(text, delay){
-    return new Promise(res=>{
-      setTimeout(()=>{
-        const d = document.createElement("div");
-        d.className = "emet-line mono";
-        d.style.fontSize = ".72rem";
-        d.style.color = "var(--text-3)";
-        d.style.animationDelay = "0s";
-        d.textContent = "> " + text;
-        bootLog.appendChild(d);
-        bootLog.scrollTop = bootLog.scrollHeight;
-        res();
-      }, delay);
-    });
+  let cursorEl = null;
+  function placeCursor(){
+    if(cursorEl) cursorEl.remove();
+    cursorEl = document.createElement("span");
+    cursorEl.className = "emet-cursor";
+    typedEl.appendChild(cursorEl);
   }
 
-  async function runBoot(){
-    let t = 0;
-    for(const line of bootLines){
-      t += 220 + Math.random()*100;
-      await addBootLine(line, t);
+  function delay(ms){ return new Promise(r=>setTimeout(r,ms)); }
+
+  async function typeSegment(seg){
+    const span = document.createElement("span");
+    if(seg.cls) span.className = seg.cls;
+    typedEl.insertBefore(span, cursorEl);
+    for(const ch of seg.text){
+      span.textContent += ch;
+      await delay(seg.sp || 20);
     }
-    setTimeout(()=>{
-      bootLog.style.display = "none";
-      readyEl.hidden = false;
-      if(statusEl){ statusEl.textContent = "READY"; statusEl.classList.add("ready"); }
-      if(input) input.focus();
-    }, t + 300);
   }
 
-  /* start boot after the full-screen boot overlay finishes */
-  const start = ()=>{ if(!REDUCED) runBoot(); else { bootLog.style.display="none"; readyEl.hidden=false; if(statusEl){ statusEl.textContent="READY"; statusEl.classList.add("ready"); } } };
+  function revealNav(){
+    if(statusEl){ statusEl.textContent="READY"; statusEl.classList.add("ready"); }
+    if(optsEl){ optsEl.style.opacity="1"; optsEl.style.pointerEvents=""; }
+    if(inputWrap){ inputWrap.style.opacity="1"; }
+    if(cursorEl){ cursorEl.remove(); cursorEl=null; }
+  }
+
+  function showAll(){
+    /* reduced motion / fallback — show content immediately */
+    typedEl.innerHTML = "";
+    for(const seg of SCRIPT){
+      const s = document.createElement("span");
+      if(seg.cls) s.className = seg.cls;
+      s.textContent = seg.text;
+      typedEl.appendChild(s);
+    }
+    revealNav();
+  }
+
+  async function run(){
+    placeCursor();
+    for(const seg of SCRIPT) await typeSegment(seg);
+    revealNav();
+  }
+
+  const start = ()=>{ REDUCED ? showAll() : run(); };
   addEventListener("boot:done", start, {once:true});
   setTimeout(start, 4500); // safety fallback
 
-  /* navigate to a section */
+  /* navigation */
   function navTo(hash){
-    const t = document.querySelector(hash);
-    if(t) t.scrollIntoView({behavior: REDUCED?"auto":"smooth"});
+    document.querySelector(hash)?.scrollIntoView({behavior:REDUCED?"auto":"smooth"});
   }
-
-  /* click on option buttons */
   $$(".emet-opt").forEach(btn=>{
-    btn.addEventListener("click", ()=>{
-      const go = btn.dataset.go;
-      if(go) navTo(go);
-    });
+    btn.addEventListener("click", ()=>{ const g=btn.dataset.go; if(g) navTo(g); });
   });
-
-  /* typed input: accept 1–4 */
   if(input){
     input.addEventListener("keydown", e=>{
       if(e.key==="Enter"){
-        const v = input.value.trim();
-        const map = {"1":"#source","2":"#lineage","3":"#build","4":"#commit"};
-        if(map[v]) navTo(map[v]);
-        input.value = "";
+        const map={"1":"#source","2":"#lineage","3":"#build","4":"#commit"};
+        const g=map[input.value.trim()]; if(g){ navTo(g); input.value=""; }
       }
     });
     input.addEventListener("input", ()=>{
-      const v = input.value.trim();
-      if(["1","2","3","4"].includes(v)){
-        const map = {"1":"#source","2":"#lineage","3":"#build","4":"#commit"};
-        navTo(map[v]);
-        setTimeout(()=>{ input.value = ""; }, 120);
-      }
+      const map={"1":"#source","2":"#lineage","3":"#build","4":"#commit"};
+      const g=map[input.value.trim()];
+      if(g){ navTo(g); setTimeout(()=>{ input.value=""; },120); }
+    });
+  }
+
+  /* show more projects toggle */
+  const moreBtn = $("#proj-more-btn");
+  const projGrid = $("#proj-grid");
+  if(moreBtn && projGrid){
+    moreBtn.addEventListener("click", ()=>{
+      projGrid.classList.add("expanded");
     });
   }
 })();
@@ -3548,6 +3815,290 @@ const $$ = (s,c)=> Array.from((c||document).querySelectorAll(s));
 })();
 
 $("#year").textContent = new Date().getFullYear();
+
+/* ============================================================
+   17b · F1 PIT WALL — telemetry simulator
+   ============================================================ */
+(function pitWall(){
+  const section = $("#pitwall");
+  if(!section) return;
+
+  const pwStatus    = $("#pw-status");
+  const pwIncident  = $("#pw-incident");
+  const pwClock     = $("#pw-clock");
+  const radioLog    = $("#pw-radio-log");
+  const scenBox     = $("#pw-scenario-box");
+  const scenTitle   = $("#pw-scenario-title");
+  const scenDesc    = $("#pw-scenario-desc");
+  const choicesEl   = $("#pw-choices");
+  const choiceA     = $("#pw-choice-a");
+  const choiceB     = $("#pw-choice-b");
+  const errorBox    = $("#pw-error-box");
+  const retryBtn    = $("#pw-retry-btn");
+  const progressEl  = $("#pw-progress");
+  const bypassBtn   = $("#pw-bypass-btn");
+  const bypassPanel = $("#pw-bypass-panel");
+  const modal       = $("#pw-modal-backdrop");
+  const modalClose  = $("#pw-modal-close");
+  const modalTitle  = $("#pw-modal-title");
+  const modalBody   = $("#pw-modal-body");
+  const modalTags   = $("#pw-modal-tags");
+  const modalActions= $("#pw-modal-actions");
+  const lapLabel    = $("#pw-lap-label");
+  const tyreLabel   = $("#pw-tyre-label");
+  const gapLabel    = $("#pw-gap-label");
+  const trackCanvas = $("#pw-track-canvas");
+  const cSpeed      = $("#pw-chart-speed");
+  const cTyre       = $("#pw-chart-tyre");
+  const cBrake      = $("#pw-chart-brake");
+  const cFuel       = $("#pw-chart-fuel");
+
+  let started = false, currentScenario = 0, raceStartTime = 0, lap = 1, trackRaf = null;
+
+  const POINTS = 80;
+  const telData = {
+    speed: Array.from({length:POINTS}, ()=>200+Math.random()*120),
+    tyre:  Array.from({length:POINTS}, (_,i)=>i*0.25),
+    brake: Array.from({length:POINTS}, ()=>80+Math.random()*160),
+    fuel:  Array.from({length:POINTS}, (_,i)=>100-i*0.4)
+  };
+  function pushTel(k,v){ telData[k].push(v); if(telData[k].length>POINTS) telData[k].shift(); }
+
+  function drawChart(canvas, data, color, minV, maxV){
+    if(!canvas) return;
+    const ctx=canvas.getContext("2d"), W=canvas.width, H=canvas.height;
+    ctx.clearRect(0,0,W,H);
+    ctx.fillStyle="rgba(5,8,15,.7)"; ctx.fillRect(0,0,W,H);
+    ctx.strokeStyle="rgba(255,255,255,.05)"; ctx.lineWidth=1;
+    for(let i=0;i<3;i++){ const y=Math.round(H*(i/2)); ctx.beginPath(); ctx.moveTo(0,y); ctx.lineTo(W,y); ctx.stroke(); }
+    if(!data.length) return;
+    const range=maxV-minV;
+    ctx.beginPath(); ctx.strokeStyle=color; ctx.lineWidth=1.5; ctx.lineJoin="round";
+    data.forEach((v,i)=>{ const x=(i/(POINTS-1))*W, y=H-((Math.max(minV,Math.min(maxV,v))-minV)/range)*H; i===0?ctx.moveTo(x,y):ctx.lineTo(x,y); });
+    ctx.stroke();
+    const lastX=W, lastY=H-((Math.max(minV,Math.min(maxV,data[data.length-1]))-minV)/range)*H;
+    ctx.lineTo(lastX,H); ctx.lineTo(0,H); ctx.closePath();
+    ctx.fillStyle=color.replace("rgb(","rgba(").replace(")",",0.1)"); ctx.fill();
+  }
+
+  function updateTelemetry(){
+    const t=Date.now()/1000;
+    pushTel("speed", 220+80*Math.sin(t*.8)+30*Math.sin(t*2.1)+(Math.random()-.5)*20);
+    pushTel("tyre",  Math.min(100,(telData.tyre[telData.tyre.length-1]||0)+.3+Math.random()*.2));
+    pushTel("brake", 80+350*Math.abs(Math.sin(t*.8))+Math.random()*80);
+    pushTel("fuel",  Math.max(0,(telData.fuel[telData.fuel.length-1]||100)-.08));
+    drawChart(cSpeed,telData.speed,"rgb(111,230,255)",60,380);
+    drawChart(cTyre, telData.tyre, "rgb(255,188,66)", 0, 100);
+    drawChart(cBrake,telData.brake,"rgb(255,91,91)",  0, 600);
+    drawChart(cFuel, telData.fuel, "rgb(92,242,166)", 0, 105);
+  }
+
+  const TRACK_PTS=(function(){
+    const pts=[], cx=140, cy=120;
+    const shape=[
+      [1.15,.35],[1,.1],[.7,-.05],[.35,-.1],[0,.0],[-.3,.15],[-.6,.3],
+      [-.75,.6],[-.6,.9],[-.25,1.0],[.2,1.05],[.6,1.0],[.95,.85],[1.1,.65],[1.15,.5]
+    ];
+    shape.forEach(([dx,dy])=>pts.push({x:cx+dx*90, y:cy+dy*90}));
+    return pts;
+  })();
+  let carPos=0;
+
+  function drawTrack(){
+    if(!trackCanvas) return;
+    const ctx=trackCanvas.getContext("2d"), W=trackCanvas.width, H=trackCanvas.height;
+    ctx.clearRect(0,0,W,H);
+    ctx.fillStyle="rgba(5,8,15,.95)"; ctx.fillRect(0,0,W,H);
+    const pts=TRACK_PTS;
+    // outer glow
+    ctx.beginPath();
+    pts.forEach((p,i)=>i===0?ctx.moveTo(p.x,p.y):ctx.lineTo(p.x,p.y)); ctx.closePath();
+    ctx.strokeStyle="rgba(255,255,255,.06)"; ctx.lineWidth=16; ctx.stroke();
+    // track
+    ctx.beginPath();
+    pts.forEach((p,i)=>i===0?ctx.moveTo(p.x,p.y):ctx.lineTo(p.x,p.y)); ctx.closePath();
+    ctx.strokeStyle="rgba(255,255,255,.12)"; ctx.lineWidth=12; ctx.stroke();
+    // sector colors
+    const L=pts.length;
+    [[0,Math.floor(L/3),"rgba(92,242,166,.35)"],[Math.floor(L/3),Math.floor(2*L/3),"rgba(255,188,66,.35)"],[Math.floor(2*L/3),L,"rgba(255,91,91,.35)"]].forEach(([s,e,c])=>{
+      ctx.beginPath();
+      for(let i=s;i<=e;i++){ const p=pts[i%L]; i===s?ctx.moveTo(p.x,p.y):ctx.lineTo(p.x,p.y); }
+      ctx.strokeStyle=c; ctx.lineWidth=8; ctx.stroke();
+    });
+    // start/finish
+    const sf=pts[0];
+    ctx.beginPath(); ctx.moveTo(sf.x-5,sf.y-10); ctx.lineTo(sf.x+5,sf.y+10);
+    ctx.strokeStyle="rgba(255,255,255,.6)"; ctx.lineWidth=2; ctx.stroke();
+    // car dot
+    const ci=Math.floor(carPos*L), p0=pts[ci%L], p1=pts[(ci+1)%L], fr=(carPos*L)-ci;
+    const cx2=p0.x+(p1.x-p0.x)*fr, cy2=p0.y+(p1.y-p0.y)*fr;
+    ctx.beginPath(); ctx.arc(cx2,cy2,9,0,Math.PI*2);
+    ctx.fillStyle="rgba(111,230,255,.18)"; ctx.fill();
+    ctx.beginPath(); ctx.arc(cx2,cy2,5,0,Math.PI*2);
+    ctx.fillStyle="rgb(111,230,255)"; ctx.fill();
+  }
+
+  function animateTrack(){
+    carPos=(carPos+0.0022)%1;
+    if(carPos<0.003){ lap=Math.min(57,lap+1); }
+    drawTrack();
+    trackRaf=requestAnimationFrame(animateTrack);
+  }
+
+  function tickClock(){
+    if(!raceStartTime||!pwClock) return;
+    const ms=Date.now()-raceStartTime, s=Math.floor(ms/1000), m=Math.floor(s/60), sec=s%60;
+    pwClock.textContent=`LAP ${lap} · ${String(m).padStart(2,"0")}:${String(sec).padStart(2,"0")}`;
+  }
+
+  function logRadio(html, delay2=0){
+    if(!radioLog) return;
+    setTimeout(()=>{
+      const p=document.createElement("p"); p.innerHTML=html;
+      radioLog.appendChild(p); radioLog.scrollTop=radioLog.scrollHeight;
+    }, delay2);
+  }
+
+  const SCENARIOS=[
+    {
+      title:"⛈ SUDDEN DOWNPOUR — LAP 23",
+      desc:"Rain sensors: 80% precipitation. Track temp dropping 12°C. Soft tyres showing aquaplaning signatures. Safety Car deployed. Pit window: 2 laps.",
+      choices:[
+        {label:"PIT FOR INTERMEDIATES\n→ 2.8s stop, trade track position for wet-compound safety", correct:true},
+        {label:"STAY OUT ON SLICKS\n→ Hope the rain passes, maintain current P3",correct:false}
+      ],
+      error:"STRATEGY ERROR — TIRE_AQUAPLANE\nRunning slicks on wet tarmac is a DNF risk.\nDriver reported rear instability at 280 km/h.\nProtocol: wet-weather compounds mandatory.",
+      modalTitle:"Smart call — pit for intermediates",
+      modalBody:"Staying on slicks in heavy rain risks a crash or DNF. The correct read was safety car deployment plus wet compound switch. This is the kind of data-driven, time-critical decision I bring to engineering: read the signals, act on evidence — not instinct.",
+      modalTags:["Real-time decision making","Risk assessment","Data pipelines","Time-critical ops"],
+      cta:{label:"See my work →",href:"#build"}
+    },
+    {
+      title:"⚡ ERS SYSTEM OVERHEAT — LAP 41",
+      desc:"MGU-K temp: 187°C (limit: 180°C). Energy store discharge rate unstable. Unchecked: thermal runaway in ~3 laps. Currently P2, 1.2s behind leader.",
+      choices:[
+        {label:"DEPLOY DERATING PATCH\n→ Reduce harvest rate 15%, lose ~8 km/h top speed",correct:true},
+        {label:"FORCE MAXIMUM HARVESTING\n→ Push for overtake attempt this lap",correct:false}
+      ],
+      error:"CRITICAL — ERS_THERMAL_LIMIT_EXCEEDED\nMGU-K failure at Turn 1. Car retired from race.\nForcing max harvest above thermal limit caused\nunrecoverable hardware damage.",
+      modalTitle:"System health over short-term gain",
+      modalBody:"Forcing maximum power through an overheating system causes cascade failure. The derating patch trades 3 positions for a finish. I apply this same principle in data systems: a healthy pipeline delivering at 90% beats a broken one that promised 100%.",
+      modalTags:["Systems thinking","Monitoring & alerting","Trade-off analysis","Data reliability"],
+      cta:{label:"See my projects →",href:"#build"}
+    },
+    {
+      title:"⚔ THE UNDERCUT — LAP 48",
+      desc:"Gap to P1: 1.8s. Car ahead on 18-lap-old hards, degrading. Our car on fresher mediums, delta +0.3s/lap. Pit crew staged. Window: this lap only.",
+      choices:[
+        {label:"EXECUTE 2.0s AUTOMATED SEQUENCE\n→ Pre-staged crew, ERS pre-loaded, fastest possible stop",correct:true},
+        {label:"DELAY PIT ENTRY 2 LAPS\n→ Wait for larger natural gap, safer execution",correct:false}
+      ],
+      error:"STRATEGY MISS — UNDERCUT_WINDOW_CLOSED\nP1 extended their stint, neutralizing our delta.\nDelayed entry allowed rival to pit first\nand steal the undercut opportunity.",
+      modalTitle:"Execute on the window — don't wait for perfect",
+      modalBody:"The undercut requires timing precision. Waiting 2 laps closes the window permanently. I ship working software and data systems on the right window — not endlessly optimizing for a perfect moment that never comes. RepTrack went to the App Store. SQL Playground is live.",
+      modalTags:["Execution timing","Pipeline orchestration","Shipped iOS app","Live deployments"],
+      cta:{label:"RepTrack on App Store ↗",href:"https://apps.apple.com/us/app/reptrack-workout-log/id6761032027",external:true}
+    }
+  ];
+
+  function loadScenario(idx){
+    if(idx>=SCENARIOS.length){ allDone(); return; }
+    currentScenario=idx;
+    const sc=SCENARIOS[idx];
+    choiceA.className="pw-choice-btn"; choiceB.className="pw-choice-btn";
+    choiceA.disabled=false; choiceB.disabled=false;
+    choiceA.textContent=sc.choices[0].label; choiceB.textContent=sc.choices[1].label;
+    errorBox.className="pw-error-box"; errorBox.textContent="";
+    retryBtn.className="pw-retry-btn";
+    if(pwIncident) pwIncident.classList.add("active");
+    if(pwStatus) pwStatus.textContent="INCIDENT DETECTED";
+    logRadio(`<span class="rlog-alert">[ALERT]</span> ${sc.title}`);
+    logRadio(`<span class="rlog-team">[PITWALL]</span> ${sc.desc}`,900);
+    logRadio(`<span class="rlog-team">[PITWALL]</span> Your call, engineer.`,2000);
+    setTimeout(()=>{
+      if(scenTitle) scenTitle.textContent=sc.title;
+      if(scenDesc)  scenDesc.textContent=sc.desc;
+      if(scenBox)   scenBox.style.display="";
+      if(choicesEl) choicesEl.style.display="";
+      if(progressEl) progressEl.textContent=`SCENARIO ${idx+1} / ${SCENARIOS.length}`;
+    },2400);
+  }
+
+  function handleChoice(correct, idx){
+    choiceA.disabled=true; choiceB.disabled=true;
+    const sc=SCENARIOS[currentScenario];
+    if(correct){
+      logRadio(`<span class="rlog-team">[PITWALL]</span> ✓ Confirmed. Executing sequence.`);
+      if(pwIncident) pwIncident.classList.remove("active");
+      if(pwStatus) pwStatus.textContent="STRATEGY LOCKED";
+      setTimeout(()=>showModal(sc),1100);
+    } else {
+      (idx===0?choiceA:choiceB).classList.add("wrong");
+      (idx===0?choiceB:choiceA).classList.add("correct");
+      logRadio(`<span class="rlog-alert">[ERROR]</span> ${sc.error.split("\n")[0]}`);
+      errorBox.textContent=sc.error; errorBox.classList.add("active");
+      retryBtn.classList.add("active");
+    }
+  }
+
+  function showModal(sc){
+    if(!modal) return;
+    if(modalTitle) modalTitle.textContent=sc.modalTitle;
+    if(modalBody)  modalBody.textContent=sc.modalBody;
+    if(modalTags)  modalTags.innerHTML=sc.modalTags.map(t=>`<span class="pw-modal-tag">${t}</span>`).join("");
+    if(modalActions){
+      const isExt=sc.cta.external;
+      modalActions.innerHTML=`<a class="btn btn-primary" href="${sc.cta.href}"${isExt?' target="_blank" rel="noopener noreferrer"':''}>${sc.cta.label}</a>`;
+      if(currentScenario+1<SCENARIOS.length){
+        const nb=document.createElement("button");
+        nb.className="btn btn-ghost"; nb.textContent="Next incident →";
+        nb.addEventListener("click",()=>{ modal.classList.remove("open"); loadScenario(currentScenario+1); });
+        modalActions.appendChild(nb);
+      }
+    }
+    modal.classList.add("open");
+  }
+
+  function allDone(){
+    logRadio(`<span class="rlog-team">[PITWALL]</span> All incidents resolved. P1. Race complete.`);
+    if(pwStatus) pwStatus.textContent="RACE COMPLETE ✓";
+    if(pwIncident) pwIncident.classList.remove("active");
+  }
+
+  function startSimulation(){
+    if(started) return; started=true;
+    raceStartTime=Date.now();
+    setInterval(tickClock,1000);
+    setInterval(updateTelemetry,130);
+    updateTelemetry();
+    drawTrack();
+    if(!REDUCED) animateTrack();
+    logRadio(`<span class="rlog-team">[PITWALL]</span> Race systems online. All channels open.`,800);
+    logRadio(`<span class="rlog-driver">[DRIVER]</span> Box is ready. Waiting for your call.`,2000);
+    logRadio(`<span class="rlog-team">[PITWALL]</span> Three incidents incoming. Trust the data.`,3200);
+    setTimeout(()=>loadScenario(0),5200);
+    setInterval(()=>{
+      const deg=telData.tyre[telData.tyre.length-1]||0;
+      if(tyreLabel) tyreLabel.textContent=`TYRE: ${deg>70?"INTER":deg>50?"HARD":deg>30?"MED":"SOFT"} ${Math.round(deg)}%`;
+      if(gapLabel) gapLabel.textContent=`GAP: +${(Math.random()*2.5+.5).toFixed(1)}s`;
+      if(lapLabel) lapLabel.textContent=`LAP ${lap} / 57`;
+    },2200);
+  }
+
+  if(choiceA) choiceA.addEventListener("click",()=>handleChoice(SCENARIOS[currentScenario]?.choices[0]?.correct,0));
+  if(choiceB) choiceB.addEventListener("click",()=>handleChoice(SCENARIOS[currentScenario]?.choices[1]?.correct,1));
+  if(retryBtn) retryBtn.addEventListener("click",()=>{ logRadio(`<span class="rlog-team">[PITWALL]</span> Reloading scenario. Make the right call.`); loadScenario(currentScenario); });
+  if(modalClose) modalClose.addEventListener("click",()=>modal.classList.remove("open"));
+  if(modal) modal.addEventListener("click",e=>{ if(e.target===modal) modal.classList.remove("open"); });
+  if(bypassBtn) bypassBtn.addEventListener("click",()=>{
+    if(!bypassPanel) return;
+    bypassPanel.classList.toggle("open");
+    bypassBtn.textContent=bypassPanel.classList.contains("open")?"Hide bypass ↑":"Bypass simulation ↓";
+  });
+
+  const io=new IntersectionObserver(entries=>{ if(entries[0].isIntersecting){ startSimulation(); io.disconnect(); } },{threshold:.12});
+  io.observe(section);
+})();
 
 })();
 </script>
