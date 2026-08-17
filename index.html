@@ -4,15 +4,16 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-<title>Mohamed Ansar — Solutions Engineer · SQL → Snowflake → Shipped iOS</title>
+<title>Mohamed Ansar · Solutions Engineer · SQL, Snowflake, Shipped iOS</title>
 
-<meta name="description" content="Associate Solutions Engineer at Datasembly. Production SQL & Snowflake pipelines, stakeholder-ready analytics, and native iOS shipped end-to-end (SwiftUI, SwiftData)." />
+<meta name="description" content="Solutions Engineer with 5+ years of enterprise data experience — SQL, Snowflake, Airflow, Python, and native iOS. Serving clients like Deloitte, Target, and Walgreens. Open to Data Engineer, Analytics Engineer, and SE roles across Canada." />
 <meta name="keywords" content="Solutions Engineer, SQL, Snowflake, data systems, iOS, SwiftUI, SwiftData, Python, analytics, AI" />
 <link rel="canonical" href="https://kmsmohamedansar.github.io/" />
 
 <meta property="og:title" content="Mohamed Ansar · Solutions Engineer who ships data & iOS" />
-<meta property="og:description" content="Production data work and native apps: SQL, Snowflake, stakeholder delivery, and App Store-ready iOS." />
+<meta property="og:description" content="Solutions Engineer with 5+ years of enterprise data experience — SQL, Snowflake, Airflow, Python, and native iOS. Serving clients like Deloitte, Target, and Walgreens. Open to Data Engineer, Analytics Engineer, and SE roles across Canada." />
 <meta property="og:image" content="https://kmsmohamedansar.github.io/preview.png" />
+<meta property="og:image:alt" content="Mohamed Ansar · Solutions Engineer portfolio preview" />
 <meta property="og:image:width" content="1200" />
 <meta property="og:image:height" content="630" />
 <meta property="og:url" content="https://kmsmohamedansar.github.io/" />
@@ -20,12 +21,13 @@
 
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:title" content="Mohamed Ansar · Solutions Engineer · Data & iOS" />
-<meta name="twitter:description" content="Production data work and native apps: SQL, Snowflake, stakeholder delivery, and App Store-ready iOS." />
+<meta name="twitter:description" content="Solutions Engineer with 5+ years of enterprise data experience — SQL, Snowflake, Airflow, Python, and native iOS. Serving clients like Deloitte, Target, and Walgreens. Open to Data Engineer, Analytics Engineer, and SE roles across Canada." />
 <meta name="twitter:image" content="https://kmsmohamedansar.github.io/preview.png" />
 
 <meta name="theme-color" content="#070b14" />
 <link rel="icon" href="/favicon.ico" type="image/x-icon" />
 
+<!-- Phaser CDN removed — game section disabled -->
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,300;12..96,400;12..96,500;12..96,600;12..96,700;12..96,800&family=Instrument+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet" />
@@ -157,14 +159,14 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 .h-display{
   font-family:var(--f-display);
   font-weight:700;
-  font-size:clamp(2.6rem,6.4vw,5.4rem);
+  font-size:clamp(3rem,7vw,6.2rem);
   line-height:1.02;
   letter-spacing:-.025em;
 }
 .h-section{
   font-family:var(--f-display);
   font-weight:650;
-  font-size:clamp(1.7rem,3.4vw,2.7rem);
+  font-size:clamp(2.1rem,4vw,3.4rem);
   line-height:1.08;
   letter-spacing:-.02em;
 }
@@ -1016,7 +1018,23 @@ section{position:relative}
 .role.current .role-node::after{background:var(--amber);animation:pulse 2s infinite}
 .role:hover.current .role-node{box-shadow:0 0 18px rgba(255,180,84,.55)}
 .role-card{padding:26px 28px}
-.role-head{display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px;align-items:baseline}
+.role-head{display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px;align-items:flex-start}
+.role-co-badge{
+  flex-shrink:0;display:flex;align-items:center;gap:8px;
+  margin-left:auto;
+}
+.role-co-logo{
+  width:40px;height:40px;border-radius:10px;border:1px solid var(--line);
+  display:grid;place-items:center;overflow:hidden;
+  background:rgba(255,255,255,.04);flex-shrink:0;
+}
+.role-co-logo svg{display:block}
+.role-co-name{
+  font-family:var(--f-mono);font-size:.6rem;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--text-3);
+  display:none;
+}
+@media(min-width:600px){.role-co-name{display:block}}
 .role-head h3{font-family:var(--f-display);font-weight:650;font-size:clamp(1.1rem,2vw,1.35rem);letter-spacing:-.015em}
 .role-head h3 span{color:var(--text-3);font-weight:500}
 .role-when{
@@ -1154,7 +1172,7 @@ footer{
 
 /* ---- CUSTOM CURSOR ---- */
 .cursor-dot,.cursor-ring{
-  position:fixed;top:0;left:0;z-index:130;pointer-events:none;
+  position:fixed;top:0;left:0;z-index:9999;pointer-events:none;
   transform:translate(-50%,-50%);
   opacity:0;
 }
@@ -1395,9 +1413,540 @@ body.cursor-on input,body.cursor-on textarea{cursor:text}
 .vbtn:hover{color:var(--text);border-color:var(--line-strong)}
 .vh-sub[hidden]{display:none !important}
 @media (prefers-reduced-motion:reduce){.voxel-loading .spin{animation:none}}
+
+/* ============ SKIP LINK ============ */
+.skip-link{
+  position:absolute;top:-100%;left:16px;z-index:200;
+  font-family:var(--f-mono);font-size:.8rem;
+  padding:10px 18px;background:var(--cyan);color:var(--ink-0);
+  border-radius:0 0 10px 10px;font-weight:700;
+  transition:top .2s;
+}
+.skip-link:focus{top:0}
+
+/* ============ THEME TOGGLE ============ */
+.theme-toggle{
+  font-family:var(--f-mono);font-size:.66rem;letter-spacing:.08em;
+  color:var(--text-2);border:1px solid var(--line);border-radius:8px;
+  padding:8px 11px;margin-left:8px;background:transparent;
+  transition:color .25s,border-color .25s,transform .25s;
+  cursor:pointer;display:inline-flex;align-items:center;
+}
+.theme-toggle:hover{color:var(--cyan);border-color:rgba(111,230,255,.4);transform:translateY(-2px)}
+
+/* ============ SUMMARY STRIP ============ */
+.summary-strip{
+  padding:48px 0;background:rgba(10,16,32,.45);
+  border-top:1px solid var(--line);border-bottom:1px solid var(--line);
+  backdrop-filter:blur(10px);
+}
+.ss-grid{
+  display:grid;grid-template-columns:repeat(4,1fr);gap:20px;
+}
+@media (max-width:900px){.ss-grid{grid-template-columns:repeat(2,1fr)}}
+@media (max-width:520px){.ss-grid{grid-template-columns:1fr}}
+.ss-card{
+  padding:22px 20px;border:1px solid var(--line);border-radius:16px;
+  background:var(--glass);transition:border-color .3s,transform .3s;
+}
+.ss-card:hover{border-color:rgba(111,230,255,.35);transform:translateY(-3px)}
+.ss-icon{font-size:1.6rem;display:block;margin-bottom:10px}
+.ss-card h3{
+  font-family:var(--f-display);font-weight:650;font-size:1rem;
+  color:var(--text);margin-bottom:8px;
+}
+.ss-card p{font-size:.88rem;color:var(--text-2);line-height:1.6}
+
+/* ============ HIRE FLOAT ============ */
+.hire-float{
+  position:fixed;bottom:28px;right:28px;z-index:45;
+  display:inline-flex;align-items:center;gap:10px;
+  font-family:var(--f-mono);font-size:.7rem;font-weight:700;
+  letter-spacing:.12em;text-transform:uppercase;
+  padding:12px 18px;border-radius:100px;
+  background:linear-gradient(120deg,var(--amber),#ffd398);color:#1c0f02;
+  box-shadow:0 8px 28px rgba(255,138,61,.35);
+  opacity:0;transform:translateY(14px);pointer-events:none;
+  transition:opacity .45s,transform .45s;
+}
+.hire-float.visible{opacity:1;transform:none;pointer-events:auto}
+.hf-dot{
+  width:8px;height:8px;border-radius:50%;background:#1c0f02;
+  animation:pulse 2s infinite;
+}
+
+/* ============ LIGHT MODE ============ */
+html.light-mode{
+  --ink-0:#f4f6fb;
+  --ink-1:#e8ecf5;
+  --ink-2:#dde3f0;
+  --ink-3:#cdd5e8;
+  --glass:rgba(240,243,252,.75);
+  --glass-hi:rgba(232,236,248,.75);
+  --line:rgba(80,100,150,.12);
+  --line-strong:rgba(80,100,150,.24);
+  --text:#0f1829;
+  --text-2:#2d3f5e;
+  --text-3:#5a6f96;
+}
+html.light-mode #datafield{display:none}
+html.light-mode #boot{display:none !important}
+html.light-mode body::before{
+  background:
+    radial-gradient(900px 600px at 12% -8%,rgba(142,125,255,.08),transparent 60%),
+    radial-gradient(1100px 700px at 88% 4%,rgba(31,179,214,.08),transparent 60%),
+    radial-gradient(800px 900px at 70% 100%,rgba(255,138,61,.05),transparent 55%),
+    #f4f6fb;
+}
+
+/* ============ RPG GAME ============ */
+.rpg-frame{
+  border-radius:var(--r-lg);
+  border:1px solid var(--line-strong);
+  overflow:hidden;
+  background:var(--ink-1);
+  box-shadow:0 40px 100px rgba(0,0,0,.5),0 0 0 1px rgba(111,230,255,.05);
+}
+#rpg-host{
+  position:relative;
+  line-height:0;
+  background:#06090f;
+}
+#rpg-host canvas{
+  display:block;
+  width:100% !important;
+  height:auto !important;
+}
+.rpg-controls{
+  padding:10px 18px;
+  border-top:1px solid var(--line);
+  font-family:var(--f-mono);
+  font-size:.66rem;
+  letter-spacing:.1em;
+  color:var(--text-3);
+  display:flex;
+  align-items:center;
+  gap:8px;
+  flex-wrap:wrap;
+  background:rgba(7,10,18,.4);
+}
+.rpg-key{
+  border:1px solid var(--line-strong);
+  border-radius:5px;
+  padding:3px 8px;
+  color:var(--text-2);
+  background:rgba(10,16,32,.5);
+}
+
+/* ============================================================
+   EMET — AI TERMINAL HERO
+   Named after EMET, the iron giant of the Ancient Kingdom (One Piece)
+   ============================================================ */
+.emet-hero{
+  min-height:100svh;
+  display:flex;flex-direction:column;justify-content:center;
+  padding-top:110px;padding-bottom:80px;
+  position:relative;
+}
+.emet-grid{
+  display:grid;
+  grid-template-columns:1.35fr 1fr;
+  gap:clamp(40px,6vw,80px);
+  align-items:center;
+}
+@media(max-width:900px){.emet-grid{grid-template-columns:1fr}}
+
+/* ── Left typographic side ── */
+.emet-kicker-row{
+  display:inline-flex;align-items:center;gap:10px;flex-wrap:wrap;
+  font-family:var(--f-mono);font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--text-2);margin-bottom:28px;
+}
+.emet-name{
+  font-family:var(--f-display);
+  font-size:clamp(4rem,9vw,8.5rem);
+  font-weight:800;
+  line-height:.9;
+  letter-spacing:-.04em;
+  color:var(--text);
+  margin-bottom:20px;
+}
+.emet-role{
+  font-family:var(--f-display);
+  font-size:clamp(1rem,2vw,1.45rem);
+  font-weight:500;
+  color:var(--cyan);
+  margin-bottom:6px;
+}
+.emet-loc{
+  font-size:.78rem;color:var(--text-3);
+  letter-spacing:.12em;margin-bottom:40px;
+}
+.emet-loc .arr{color:var(--cyan);margin:0 8px}
+.emet-quick-links{display:flex;gap:12px;flex-wrap:wrap}
+
+/* ── Terminal panel ── */
+.emet-terminal{
+  border-radius:var(--r-lg);
+  border:1px solid var(--line-strong);
+  background:rgba(6,9,15,.78);
+  backdrop-filter:blur(20px);
+  overflow:hidden;
+  position:relative;
+  box-shadow:
+    0 0 0 1px rgba(111,230,255,.09),
+    0 32px 100px rgba(6,9,15,.72),
+    0 0 100px rgba(111,230,255,.05) inset;
+}
+.emet-terminal::before{
+  content:"";position:absolute;inset:0 0 auto 0;height:2px;
+  background:linear-gradient(90deg,transparent,rgba(111,230,255,.5) 40%,rgba(111,230,255,.15) 100%);
+  pointer-events:none;z-index:1;
+}
+.emet-bar{
+  display:flex;align-items:center;gap:10px;
+  padding:11px 18px;
+  border-bottom:1px solid var(--line);
+  background:rgba(8,13,26,.72);
+}
+.emet-bar .dots{display:flex;gap:6px}
+.emet-bar .dots i{width:11px;height:11px;border-radius:50%}
+.emet-bar .dots i:nth-child(1){background:#ff5f57}
+.emet-bar .dots i:nth-child(2){background:#febc2e}
+.emet-bar .dots i:nth-child(3){background:#28c840}
+.emet-bar-title{
+  font-family:var(--f-mono);font-size:.65rem;
+  letter-spacing:.06em;
+  color:var(--text-3);flex:1;
+}
+.emet-bar-title b{color:var(--text-2);font-weight:600}
+.emet-status{
+  font-family:var(--f-mono);font-size:.58rem;
+  letter-spacing:.12em;text-transform:uppercase;
+  color:var(--amber);
+  border:1px solid rgba(255,180,84,.28);
+  border-radius:5px;padding:3px 9px;
+  transition:color .4s,border-color .4s;
+}
+.emet-status.ready{color:var(--green);border-color:rgba(92,242,166,.32)}
+
+.emet-body{
+  padding:24px 22px 18px;
+  min-height:380px;
+  font-family:var(--f-mono);
+  font-size:.8rem;
+  line-height:1.75;
+  display:flex;flex-direction:column;
+}
+
+/* Typing animation */
+@keyframes emet-slide{to{opacity:1;transform:none}}
+@keyframes emet-blink{0%,100%{opacity:1}50%{opacity:0}}
+.emet-typed{
+  font-family:var(--f-mono);font-size:.76rem;line-height:1.9;
+  color:var(--text-2);white-space:pre-wrap;word-break:break-word;
+  flex:1;min-height:120px;margin-bottom:18px;
+}
+.emet-typed .t-title{color:var(--cyan);font-weight:700;font-size:.82rem}
+.emet-typed .t-name{color:var(--text);font-weight:700}
+.emet-typed .t-key{color:var(--text-3)}
+.emet-typed .t-val{color:var(--text-2)}
+.emet-typed .t-dim{color:var(--text-3)}
+.emet-cursor{
+  display:inline-block;width:7px;height:.8em;
+  background:var(--cyan);margin-left:1px;
+  vertical-align:text-bottom;
+  animation:emet-blink .75s step-end infinite;
+}
+.emet-hl{color:var(--cyan)}
+.emet-nav-label{
+  font-size:.65rem;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--text-3);margin-bottom:10px;
+}
+.emet-opts{display:flex;flex-direction:column;gap:5px;margin-bottom:18px}
+.emet-opt{
+  display:flex;align-items:center;gap:14px;
+  padding:10px 14px;
+  border-radius:7px;
+  border:1px solid var(--line);
+  background:rgba(255,255,255,.02);
+  color:var(--text-2);
+  font-family:var(--f-mono);font-size:.76rem;letter-spacing:.04em;
+  text-align:left;cursor:pointer;
+  transition:border-color .18s,color .18s,background .18s,box-shadow .18s;
+  position:relative;
+}
+.emet-opt::before{
+  content:"";position:absolute;left:0;top:20%;bottom:20%;width:2px;
+  background:var(--cyan);border-radius:2px;opacity:0;
+  transition:opacity .18s;
+}
+.emet-opt:hover{
+  border-color:rgba(111,230,255,.35);
+  color:var(--cyan);
+  background:rgba(111,230,255,.05);
+  box-shadow:0 0 0 1px rgba(111,230,255,.07) inset;
+}
+.emet-opt:hover::before{opacity:1}
+.emet-n{
+  color:var(--text-3);font-weight:500;min-width:14px;font-size:.72rem;
+  border:1px solid var(--line);border-radius:4px;
+  width:22px;height:22px;display:grid;place-items:center;flex-shrink:0;
+  transition:color .18s,border-color .18s;
+}
+.emet-opt:hover .emet-n{color:var(--cyan);border-color:rgba(111,230,255,.4)}
+.emet-input-wrap{
+  display:flex;align-items:center;gap:10px;
+  border-top:1px solid var(--line);
+  padding-top:14px;margin-top:auto;
+}
+.emet-prompt-glyph{color:var(--cyan);font-size:1.1rem;line-height:1;user-select:none}
+.emet-input{
+  flex:1;background:transparent;border:none;outline:none;
+  color:var(--text);
+  font-family:var(--f-mono);font-size:.8rem;letter-spacing:.05em;
+  caret-color:var(--cyan);
+}
+.emet-input::placeholder{color:var(--text-3)}
+
+/* ── Expandable project cards ── */
+.proj-expand{
+  max-height:0;overflow:hidden;
+  transition:max-height .45s var(--ease-out);
+}
+.proj.open .proj-expand,.proj.wide .proj-expand{max-height:240px}
+.proj-toggle{
+  font-family:var(--f-mono);font-size:.62rem;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--text-3);padding:6px 0;margin-top:6px;
+  transition:color .2s;display:block;
+}
+.proj-toggle:hover{color:var(--cyan)}
+.proj.wide .proj-toggle{display:none}
+
+/* ── RepTrack featured card ── */
+.proj.reptrack-feat{
+  border-color:rgba(255,180,84,.25);
+  background:linear-gradient(135deg,rgba(255,180,84,.04) 0%,var(--glass) 60%);
+}
+.proj.reptrack-feat:hover{border-color:rgba(255,180,84,.5)}
+.proj-live.warm{color:var(--amber);border-color:rgba(255,180,84,.3)}
+.proj-feat-actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:14px}
+
+/* Show more projects */
+.proj-collapse{display:none}
+.proj-grid.expanded .proj-collapse{display:flex;flex-direction:column;gap:inherit}
+.proj-more-btn{
+  grid-column:1/-1;
+  background:none;border:1px solid var(--line);border-radius:var(--r-sm);
+  color:var(--text-3);font-family:var(--f-mono);font-size:.7rem;
+  letter-spacing:.14em;text-transform:uppercase;
+  padding:12px 24px;cursor:pointer;
+  transition:border-color .2s,color .2s;
+}
+.proj-more-btn:hover{border-color:rgba(111,230,255,.4);color:var(--cyan)}
+.proj-grid.expanded .proj-more-btn{display:none}
+
+/* right identity panel */
+.emet-right{display:flex;flex-direction:column;justify-content:center}
+
+/* EMET kicker pills */
+.emet-kicker-row .pill{
+  display:inline-flex;align-items:center;gap:6px;
+  padding:4px 12px;border-radius:99px;font-size:.7rem;font-family:var(--f-mono);
+  letter-spacing:.1em;text-transform:uppercase;
+  border:1px solid var(--line-strong);color:var(--text-2);
+  background:rgba(140,168,214,.06);
+}
+.emet-kicker-row .pill.live{color:var(--green);border-color:rgba(92,242,166,.35)}
+.emet-kicker-row .pill.live::before{
+  content:"";display:inline-block;width:6px;height:6px;border-radius:50%;
+  background:var(--green);animation:pulse 2s ease-in-out infinite;
+}
+
+/* warm proj-link */
+.proj-link.warm{color:var(--amber)}
+.proj-link.warm:hover{color:var(--amber-deep)}
+
+/* light mode overrides */
+html.light-mode .emet-terminal{background:rgba(240,243,252,.85)}
+html.light-mode .emet-bar{background:rgba(220,226,240,.6)}
+
+/* ============================================================
+   F1 PIT WALL SIMULATOR
+   ============================================================ */
+.pitwall-section{padding:80px 0 100px;position:relative}
+.pitwall-header{
+  display:flex;align-items:center;gap:14px;flex-wrap:wrap;
+  background:var(--ink-1);border:1px solid var(--line);
+  border-radius:var(--r-sm) var(--r-sm) 0 0;
+  padding:10px 20px;font-family:var(--f-mono);font-size:.72rem;letter-spacing:.05em;
+}
+.pw-led{
+  width:8px;height:8px;border-radius:50%;background:var(--green);
+  box-shadow:0 0 6px var(--green);flex-shrink:0;
+}
+.pw-status{color:var(--green)}
+.pw-clock{color:var(--text-2);margin-left:auto}
+.pw-incident{
+  display:none;color:var(--amber);font-weight:700;
+  animation:pw-flash .8s step-end infinite;
+}
+.pw-incident.active{display:inline}
+@keyframes pw-flash{50%{opacity:0}}
+.pw-bypass-btn{
+  background:none;border:1px solid var(--line);border-radius:var(--r-sm);
+  color:var(--text-3);font-family:var(--f-mono);font-size:.65rem;
+  letter-spacing:.1em;padding:4px 12px;cursor:pointer;
+  text-transform:uppercase;transition:border-color .2s,color .2s;
+}
+.pw-bypass-btn:hover{border-color:rgba(111,230,255,.4);color:var(--cyan)}
+.pw-panels{
+  display:grid;grid-template-columns:1fr 1fr 1fr;gap:1px;
+  background:var(--line);border:1px solid var(--line);
+  border-top:none;border-radius:0 0 var(--r-sm) var(--r-sm);overflow:hidden;
+}
+.pw-panel{
+  background:var(--ink-0);padding:16px;
+  display:flex;flex-direction:column;gap:12px;min-height:420px;
+}
+.pw-panel-label{
+  font-family:var(--f-mono);font-size:.62rem;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--text-3);
+  padding-bottom:8px;border-bottom:1px solid var(--line);
+}
+.pw-chart-wrap{display:flex;flex-direction:column;gap:8px;flex:1}
+.pw-chart-row{display:flex;flex-direction:column;gap:3px;flex:1}
+.pw-chart-label{font-family:var(--f-mono);font-size:.59rem;color:var(--text-3);letter-spacing:.08em}
+.pw-chart-canvas{width:100%;flex:1;display:block;border-radius:3px}
+.pw-lap-info{
+  font-family:var(--f-mono);font-size:.65rem;color:var(--text-2);
+  display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;
+}
+.pw-radio-log{
+  font-family:var(--f-mono);font-size:.67rem;line-height:1.75;color:var(--text-2);
+  flex:1;overflow-y:auto;max-height:160px;min-height:80px;
+  border:1px solid var(--line);border-radius:4px;padding:10px;background:var(--ink-1);
+}
+.pw-radio-log p{margin:0}
+.rlog-team{color:var(--cyan)}
+.rlog-driver{color:var(--amber)}
+.rlog-alert{color:var(--rose);font-weight:700}
+.pw-scenario-box{
+  border:1px solid rgba(255,188,66,.3);border-radius:4px;padding:12px;
+  background:rgba(255,188,66,.04);font-family:var(--f-mono);
+  font-size:.68rem;line-height:1.6;
+}
+.pw-scenario-title{color:var(--amber);font-weight:700;margin-bottom:6px}
+.pw-scenario-desc{color:var(--text-2)}
+.pw-choices{display:flex;flex-direction:row;gap:10px}
+.pw-choice-btn{
+  flex:1;background:none;border:1px solid var(--line);border-radius:6px;
+  color:var(--text-2);font-family:var(--f-mono);
+  padding:12px 14px;text-align:left;cursor:pointer;line-height:1.5;
+  transition:border-color .2s,color .2s,background .2s;
+  display:flex;flex-direction:column;gap:5px;
+}
+.pw-choice-btn:hover:not(:disabled){border-color:rgba(111,230,255,.4);color:var(--cyan);background:rgba(111,230,255,.04)}
+.pw-choice-btn.correct{border-color:var(--green);color:var(--green);background:rgba(92,242,166,.06)}
+.pw-choice-btn.wrong{border-color:var(--rose);color:var(--rose);background:rgba(255,91,91,.06)}
+.pw-choice-key{
+  display:inline-flex;align-items:center;justify-content:center;
+  width:20px;height:20px;border-radius:4px;flex-shrink:0;
+  background:rgba(111,230,255,.12);border:1px solid rgba(111,230,255,.25);
+  color:var(--cyan);font-size:.6rem;font-weight:700;
+}
+.pw-choice-label{font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.04em;margin-top:2px}
+.pw-choice-sub{font-size:.6rem;color:var(--text-3);font-weight:400;text-transform:none;letter-spacing:0;line-height:1.4}
+.pw-result{
+  display:none;border-radius:6px;padding:12px 14px;margin-top:4px;
+  border:1px solid var(--line);background:rgba(255,255,255,.02);
+  font-family:var(--f-mono);
+}
+.pw-result.active{display:block}
+.pw-result-row{display:flex;align-items:baseline;gap:10px;margin-bottom:6px}
+.pw-result-badge{font-size:1.05rem;font-weight:700;letter-spacing:-.01em}
+.pw-result-badge.p1{color:var(--amber)}
+.pw-result-badge.p2{color:var(--cyan)}
+.pw-result-badge.p3{color:var(--text)}
+.pw-result-badge.dnf{color:var(--rose)}
+.pw-result-gap{font-size:.68rem;color:var(--text-3)}
+.pw-result-detail{font-size:.62rem;color:var(--text-2);line-height:1.6}
+.pw-result-fl{display:inline-flex;align-items:center;gap:5px;font-size:.59rem;color:#b48fff;margin-top:6px;letter-spacing:.05em}
+.pw-error-box{
+  display:none;font-family:var(--f-mono);font-size:.65rem;line-height:1.7;
+  color:var(--rose);border:1px solid rgba(255,91,91,.35);border-radius:4px;
+  padding:10px 12px;background:rgba(255,91,91,.05);white-space:pre-line;
+}
+.pw-error-box.active{display:block}
+.pw-retry-btn{
+  display:none;background:none;border:1px solid rgba(255,91,91,.4);
+  border-radius:4px;color:var(--rose);font-family:var(--f-mono);
+  font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;
+  padding:6px 14px;cursor:pointer;transition:background .2s;
+}
+.pw-retry-btn.active{display:inline-block}
+.pw-retry-btn:hover{background:rgba(255,91,91,.1)}
+.pw-progress{font-family:var(--f-mono);font-size:.62rem;color:var(--text-3);text-align:right;margin-top:auto}
+.pw-modal-backdrop{
+  display:none;position:fixed;inset:0;background:rgba(5,8,15,.85);
+  z-index:1000;align-items:center;justify-content:center;
+  backdrop-filter:blur(8px);
+}
+.pw-modal-backdrop.open{display:flex}
+.pw-modal{
+  background:var(--ink-1);border:1px solid rgba(111,230,255,.2);
+  border-radius:var(--r-sm);padding:40px 44px;max-width:540px;width:90%;
+  position:relative;animation:emet-slide .35s ease both;
+}
+.pw-modal-header{
+  font-family:var(--f-mono);font-size:.65rem;color:var(--green);
+  letter-spacing:.14em;text-transform:uppercase;margin-bottom:18px;
+}
+.pw-modal h3{
+  font-size:1.45rem;font-weight:700;color:var(--text);
+  margin-bottom:12px;font-family:var(--f-display);line-height:1.2;
+}
+.pw-modal-body{font-size:.86rem;color:var(--text-2);line-height:1.7;margin-bottom:22px}
+.pw-modal-tags{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:26px}
+.pw-modal-tag{
+  font-family:var(--f-mono);font-size:.62rem;letter-spacing:.08em;
+  text-transform:uppercase;border:1px solid var(--line);
+  border-radius:40px;padding:4px 12px;color:var(--text-3);
+}
+.pw-modal-actions{display:flex;gap:12px;flex-wrap:wrap}
+.pw-modal-close{
+  position:absolute;top:14px;right:18px;background:none;border:none;
+  color:var(--text-3);cursor:pointer;font-size:1.3rem;line-height:1;
+  transition:color .2s;
+}
+.pw-modal-close:hover{color:var(--text)}
+.pw-bypass-panel{
+  display:none;background:var(--ink-1);border:1px solid var(--line);
+  border-top:none;border-radius:0 0 var(--r-sm) var(--r-sm);padding:32px;
+}
+.pw-bypass-panel.open{display:block}
+.pw-bypass-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;margin-top:20px}
+.pw-bypass-card{
+  border:1px solid var(--line);border-radius:6px;padding:16px;
+  background:var(--ink-0);transition:border-color .2s;
+}
+.pw-bypass-card:hover{border-color:rgba(111,230,255,.3)}
+.pw-bypass-card-label{
+  font-family:var(--f-mono);font-size:.59rem;color:var(--text-3);
+  letter-spacing:.12em;text-transform:uppercase;margin-bottom:8px;
+}
+.pw-bypass-card h4{font-size:.9rem;font-weight:600;color:var(--text);margin-bottom:6px}
+.pw-bypass-card p{font-size:.78rem;color:var(--text-2);line-height:1.55}
+@media(max-width:900px){
+  .pw-panels{grid-template-columns:1fr}
+  .pw-panel{min-height:260px}
+  .pw-radio-log{max-height:120px}
+}
 </style>
 </head>
 <body>
+
+<a href="#source" class="skip-link">Skip to main content</a>
 
 <canvas id="datafield" aria-hidden="true"></canvas>
 <div class="noise" aria-hidden="true"></div>
@@ -1409,7 +1958,7 @@ body.cursor-on input,body.cursor-on textarea{cursor:text}
     <div class="boot-logo">MA</div>
     <div class="boot-log" id="boot-log"></div>
     <div class="boot-bar"><i id="boot-bar"></i></div>
-    <div class="boot-foot">warehouse: DELIVERY_WH · region: ca-central · run #2026</div>
+    <div class="boot-foot">emet · portfolio terminal · session #2026</div>
   </div>
 </div>
 
@@ -1438,13 +1987,10 @@ body.cursor-on input,body.cursor-on textarea{cursor:text}
     <i class="rail-packet"></i><i class="rail-packet"></i><i class="rail-packet"></i>
   </div>
   <div class="rail-nodes" id="rail-nodes">
-    <a class="rail-node" href="#source" data-target="source" style="top:4%"><i></i><span class="tip">00 · source</span></a>
-    <a class="rail-node warm" href="#ship" data-target="ship" style="top:20%"><i></i><span class="tip">01 · ship</span></a>
-    <a class="rail-node" href="#build" data-target="build" style="top:38%"><i></i><span class="tip">02 · build</span></a>
-    <a class="rail-node" href="#world" data-target="world" style="top:55%"><i></i><span class="tip">03 · world</span></a>
-    <a class="rail-node" href="#schema" data-target="schema" style="top:71%"><i></i><span class="tip">04 · schema</span></a>
-    <a class="rail-node" href="#lineage" data-target="lineage" style="top:86%"><i></i><span class="tip">05 · lineage</span></a>
-    <a class="rail-node warm" href="#commit" data-target="commit" style="top:100%"><i></i><span class="tip">06 · commit</span></a>
+    <a class="rail-node" href="#source" data-target="source" style="top:12%"><i></i><span class="tip">01 · now</span></a>
+    <a class="rail-node" href="#lineage" data-target="lineage" style="top:45%"><i></i><span class="tip">02 · before</span></a>
+    <a class="rail-node" href="#build" data-target="build" style="top:75%"><i></i><span class="tip">03 · work</span></a>
+    <a class="rail-node warm" href="#commit" data-target="commit" style="top:100%"><i></i><span class="tip">04 · contact</span></a>
   </div>
   <span class="rail-pct" id="rail-pct">0%</span>
 </aside>
@@ -1454,17 +2000,15 @@ body.cursor-on input,body.cursor-on textarea{cursor:text}
   <div class="nav-inner">
     <a class="brand" href="#top">
       <span class="brand-sigil">MA</span>
-      <span>mohamed.ansar<small>solutions · data · ios</small></span>
+      <span>mohamed.ansar<small>solutions engineer</small></span>
     </a>
     <div class="nav-links">
-      <a class="nav-link" href="#source" data-nav="source">Source</a>
-      <a class="nav-link" href="#ship" data-nav="ship">RepTrack</a>
-      <a class="nav-link" href="#build" data-nav="build">Build</a>
-      <a class="nav-link" href="#world" data-nav="world">World</a>
-      <a class="nav-link" href="#schema" data-nav="schema">Stack</a>
-      <a class="nav-link" href="#lineage" data-nav="lineage">Lineage</a>
+      <a class="nav-link" href="#source" data-nav="source">Now</a>
+      <a class="nav-link" href="#lineage" data-nav="lineage">Before</a>
+      <a class="nav-link" href="#build" data-nav="build">Work</a>
       <button class="nav-kbd" id="open-palette" aria-label="Open command palette">⌘K</button>
-      <a class="nav-cta" href="#commit">Run query →</a>
+      <button class="theme-toggle" id="theme-toggle" aria-label="Toggle light/dark mode">🌙</button>
+      <a class="nav-cta" href="#commit">Contact →</a>
     </div>
     <button class="nav-burger" id="nav-burger" aria-label="Open menu" aria-expanded="false" aria-controls="mobile-menu">
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path stroke-linecap="round" d="M4 7h16M4 12h16M4 17h16"/></svg>
@@ -1476,99 +2020,53 @@ body.cursor-on input,body.cursor-on textarea{cursor:text}
   <button class="mobile-close" id="mobile-close" aria-label="Close menu">
     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path stroke-linecap="round" d="M6 6l12 12M18 6L6 18"/></svg>
   </button>
-  <a href="#source"><span class="idx">00</span> Source</a>
-  <a href="#ship"><span class="idx">01</span> RepTrack</a>
-  <a href="#build"><span class="idx">02</span> Build</a>
-  <a href="#world"><span class="idx">03</span> World</a>
-  <a href="#schema"><span class="idx">04</span> Stack</a>
-  <a href="#lineage"><span class="idx">05</span> Lineage</a>
-  <a href="#commit"><span class="idx">06</span> Contact</a>
+  <a href="#source"><span class="idx">01</span> Now</a>
+  <a href="#lineage"><span class="idx">02</span> Before</a>
+  <a href="#build"><span class="idx">03</span> Work</a>
+  <a href="#commit"><span class="idx">04</span> Contact</a>
 </div>
 
 <main id="top">
 
-<!-- ============ HERO ============ -->
-<header class="hero" id="hero">
+<!-- ============ EMET — AI TERMINAL HERO ============ -->
+<header class="emet-hero" id="hero">
   <div class="shell">
-    <div class="hero-grid">
-      <div>
-        <p class="hero-kicker">
-          <span class="pill live">Open to signal</span>
-          <span class="pill">Associate Solutions Engineer · Datasembly</span>
-          <span class="pill">Mississauga, CA</span>
-        </p>
-        <h1 class="h-display">
-          <span class="line"><span>Queries that hold.</span></span>
-          <span class="line"><span><span class="grad-data">Pipelines</span> that run.</span></span>
-          <span class="line"><span><span class="grad-ship">Apps</span> that ship.</span></span>
-        </h1>
-        <p class="hero-sub">
-          I work where <b>data meets decision-making</b> — deep SQL and Snowflake on retail-pricing-scale
-          datasets by day, and the same engineering standard applied to <b>native iOS</b> I've taken all
-          the way to App Store submission. Ex-Amazon (Prime Video).
-        </p>
-        <div class="hero-actions">
-          <a class="btn btn-warm" href="#ship">RepTrack · iOS <span class="arr">→</span></a>
+    <div class="emet-grid">
+
+      <!-- Left: EMET terminal -->
+      <div class="emet-terminal rv">
+        <div class="emet-bar">
+          <span class="dots"><i></i><i></i><i></i></span>
+          <span class="emet-bar-title mono"><b>emet</b> · portfolio assistant</span>
+          <span class="emet-status" id="emet-status">BOOTING</span>
+        </div>
+        <div class="emet-body" id="emet-body">
+          <div class="emet-typed" id="emet-typed"></div>
+          <div class="emet-opts" id="emet-opts" style="opacity:0;pointer-events:none;transition:opacity .4s .1s">
+            <button class="emet-opt" data-n="1" data-go="#source"><span class="emet-n">1</span><span>What does he do now?</span></button>
+            <button class="emet-opt" data-n="2" data-go="#lineage"><span class="emet-n">2</span><span>Where has he worked?</span></button>
+            <button class="emet-opt" data-n="3" data-go="#build"><span class="emet-n">3</span><span>What has he built?</span></button>
+            <button class="emet-opt" data-n="4" data-go="#commit"><span class="emet-n">4</span><span>How do I reach him?</span></button>
+          </div>
+          <div class="emet-input-wrap" id="emet-input-wrap" style="opacity:0;transition:opacity .4s .2s">
+            <span class="emet-prompt-glyph">›</span>
+            <input class="emet-input" id="emet-input" type="text" autocomplete="off" spellcheck="false" placeholder="type 1, 2, 3 or 4…" />
+          </div>
+        </div>
+      </div>
+
+      <!-- Right: identity -->
+      <div class="emet-right rv-r">
+        <h1 class="emet-name">Mohamed<br>Ansar</h1>
+        <p class="emet-role">Data · Engineering · Shipped iOS</p>
+        <div class="emet-quick-links">
           <a class="btn btn-primary" href="#build">Selected work <span class="arr">→</span></a>
           <a class="btn btn-ghost" href="https://www.linkedin.com/in/kmsmohamedansar/" target="_blank" rel="noopener noreferrer">LinkedIn ↗</a>
         </div>
       </div>
 
-      <div class="console" id="console" aria-label="Animated SQL console">
-        <div class="console-bar">
-          <span class="dots"><i></i><i></i><i></i></span>
-          <span class="title">mohamed_ansar.sql — worksheet</span>
-          <span class="env">SNOWFLAKE ❄ PROD</span>
-        </div>
-        <div class="console-body" id="console-body">
-          <div id="console-log">
-            <div class="q-block">
-              <div class="q-line"><span class="q-prompt">❯</span> <span id="typed"></span><span class="caret" id="caret"></span></div>
-              <div class="q-results" id="q-results">
-                <table class="q-table">
-                  <thead><tr><th>capability</th><th>proof</th><th>state</th></tr></thead>
-                  <tbody>
-                    <tr><td>sql · snowflake</td><td>production pricing analytics</td><td class="ok">VALIDATED</td></tr>
-                    <tr><td>pipelines</td><td>recurring stakeholder delivery</td><td class="ok">RUNNING</td></tr>
-                    <tr><td>swiftui · swiftdata</td><td>RepTrack — workout log</td><td class="shipped">SHIPPED ⭢ APP STORE</td></tr>
-                    <tr><td>applied ai</td><td>retrieval · NLP · automation</td><td class="ok">LIVE DEMOS</td></tr>
-                  </tbody>
-                </table>
-                <p class="q-meta"><span class="ok">✓</span> 4 rows returned · <span id="q-ms">0</span> ms · warehouse <span class="fn">DELIVERY_WH</span> · 0 rows dropped</p>
-                <p class="q-meta q-hint" style="margin-top:10px">this console is live — type a query, or try <span class="fn">help</span></p>
-              </div>
-            </div>
-          </div>
-          <div class="q-input-row" id="q-input-row" hidden>
-            <span class="q-prompt">❯</span>
-            <input id="q-input" class="q-input" type="text" autocomplete="off" autocapitalize="off" spellcheck="false" aria-label="Type a SQL query" placeholder="SELECT * FROM projects;" />
-          </div>
-        </div>
-        <div class="console-chips" id="console-chips" hidden>
-          <button class="chip" data-q="SELECT * FROM projects;">projects</button>
-          <button class="chip" data-q="SELECT * FROM experience;">experience</button>
-          <button class="chip" data-q="SELECT * FROM skills;">skills</button>
-          <button class="chip warm" data-q="SELECT * FROM contact;">contact</button>
-          <button class="chip" data-q="show tables;">tables</button>
-          <button class="chip" data-q="help">help</button>
-        </div>
-        <div class="console-foot">
-          <span><span class="blink-dot">●</span> session: open</span>
-          <span id="console-rows">role: solutions_engineer</span>
-          <span>autocommit: on</span>
-        </div>
-      </div>
-    </div>
-
-    <div class="hero-stats" id="hero-stats">
-      <div class="hero-stat"><div class="v"><span data-count="6" data-suffix="+">0</span><small>yrs</small></div><div class="k">data & ops experience</div></div>
-      <div class="hero-stat"><div class="v"><span data-count="1">0</span><small>app</small></div><div class="k">submitted to the App Store</div></div>
-      <div class="hero-stat"><div class="v"><span data-count="9" data-suffix="+">0</span><small>builds</small></div><div class="k">shipped projects & demos</div></div>
-      <div class="hero-stat"><div class="v"><span data-count="2">0</span><small>worlds</small></div><div class="k">data systems × native product</div></div>
     </div>
   </div>
-
-  <div class="scroll-cue"><span class="wheel"></span>scroll</div>
 </header>
 
 <!-- ============ MARQUEE ============ -->
@@ -1597,15 +2095,15 @@ body.cursor-on input,body.cursor-on textarea{cursor:text}
 <section class="stage" id="source" aria-labelledby="source-h">
   <div class="shell">
     <div class="stage-head rv">
-      <span class="stage-step"><span class="dot"></span><b>stage 00</b> · source</span>
+      <span class="stage-step"><span class="dot"></span><b>stage 01</b> · now</span>
       <h2 class="h-section" id="source-h">Technical builder at the intersection of<br /><span class="grad-data">data systems</span> and <span class="grad-ship">delivery</span></h2>
-      <p class="lede">Correct, explainable, operable — whether the interface is SQL, a dashboard, or TestFlight.</p>
+      <p class="lede">Correct, explainable, operable. Whether the interface is SQL, a dashboard, or TestFlight.</p>
     </div>
 
     <div class="about-grid">
       <div class="rv-l">
         <div class="card about-card">
-          <p>Most of my work sits where <b>data meets decision-making</b>: retail pricing-scale datasets, recurring pipelines, and analytics that teams run week after week — not one-off charts.</p>
+          <p>Most of my work sits where <b>data meets decision-making</b>: retail pricing-scale datasets, recurring pipelines, and analytics that teams run week after week. Not one-off charts.</p>
           <p>At <span class="hl-c">Datasembly</span>, that translates to deep SQL and Snowflake work, careful validation, stakeholder-ready reporting, and clean handoffs when scope moves.</p>
           <p>I apply the same standard to <span class="hl-w">software and applied AI</span>: end-to-end ownership when the right answer is a product, not only a query. This portfolio is the overlap of what I ship for clients and what I build to push my craft.</p>
         </div>
@@ -1614,7 +2112,7 @@ body.cursor-on input,body.cursor-on textarea{cursor:text}
         <div class="principles">
           <div class="principle">
             <span class="glyph"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><ellipse cx="12" cy="5" rx="8" ry="3"/><path d="M4 5v14c0 1.7 3.6 3 8 3s8-1.3 8-3V5"/><path d="M4 12c0 1.7 3.6 3 8 3s8-1.3 8-3"/></svg></span>
-            <div><h4>Production analytics</h4><p>Snowflake, SQL, validated pipelines — outputs teams trust on a recurring cadence, with lineage you can explain.</p></div>
+            <div><h4>Production analytics</h4><p>Snowflake, SQL, validated pipelines. Outputs teams trust on a recurring cadence, with lineage you can explain.</p></div>
           </div>
           <div class="principle">
             <span class="glyph"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/><circle cx="12" cy="12" r="3.2"/></svg></span>
@@ -1622,7 +2120,7 @@ body.cursor-on input,body.cursor-on textarea{cursor:text}
           </div>
           <div class="principle">
             <span class="glyph"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="6" y="2.5" width="12" height="19" rx="3"/><path d="M10.5 18.5h3"/></svg></span>
-            <div><h4>Native product</h4><p>SwiftUI and SwiftData built for repeat daily use — taken through Apple review and listing constraints, not slide screenshots.</p></div>
+            <div><h4>Native product</h4><p>SwiftUI and SwiftData built for repeat daily use. Taken through Apple review and listing constraints, not slide screenshots.</p></div>
           </div>
         </div>
       </div>
@@ -1630,8 +2128,7 @@ body.cursor-on input,body.cursor-on textarea{cursor:text}
   </div>
 </section>
 
-<div class="divider-q" aria-hidden="true"><span class="kw mono">JOIN</span> <span class="mono">data_systems</span> <span class="kw mono">ON</span> <span class="mono">product.craft = pipeline.discipline</span></div>
-<!-- ============ 01 SHIP / REPTRACK ============ -->
+<!-- SHIP SECTION COMMENTED OUT — RepTrack info folded into Build featured card
 <section class="stage ship" id="ship" aria-labelledby="ship-h">
   <div class="ship-bg"></div>
   <div class="shell">
@@ -1715,25 +2212,38 @@ body.cursor-on input,body.cursor-on textarea{cursor:text}
     </div>
   </div>
 </section>
+END OF COMMENTED-OUT SHIP SECTION -->
 
-<div class="divider-q" aria-hidden="true"><span class="kw mono">SELECT</span> <span class="mono">*</span> <span class="kw mono">FROM</span> <span class="mono">projects</span> <span class="kw mono">WHERE</span> <span class="mono">end_to_end = TRUE</span></div>
-
-<!-- ============ 02 BUILD / PROJECTS ============ -->
+<!-- ============ 03 WORK / PROJECTS ============ -->
 <section class="stage" id="build" aria-labelledby="build-h">
   <div class="shell">
     <div class="stage-head rv">
-      <span class="stage-step"><span class="dot"></span><b>stage 02</b> · build — archive</span>
-      <h2 class="h-section" id="build-h">Selected technical work</h2>
-      <p class="lede">SQL tools, pipelines, ML, retrieval, automation — samples of how I work end to end, several with live demos you can open right now.</p>
+      <span class="stage-step warm"><span class="dot"></span><b>stage 03</b> · work</span>
+      <h2 class="h-section" id="build-h">What I've built</h2>
+      <p class="lede">SQL tools, pipelines, ML, retrieval, automation, and one native iOS app shipped to the App Store. End to end, several with live demos.</p>
     </div>
 
-    <div class="proj-grid rv" data-stagger>
+    <div class="proj-grid rv" data-stagger id="proj-grid">
+      <!-- RepTrack featured card -->
+      <article class="card proj wide reptrack-feat">
+        <div class="proj-top">
+          <span class="proj-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="6" y="2.5" width="12" height="19" rx="3"/><path d="M10.5 18.5h3"/></svg></span>
+          <span class="proj-live warm">App Store</span>
+        </div>
+        <h3 class="h-card">RepTrack: workout log, <span style="color:var(--amber)">shipped iOS</span></h3>
+        <p>Log sets and reps fast; see last session without digging. SwiftUI + SwiftData, local-first, no account wall. Taken through Apple review and App Store Connect submission. End to end, nothing handed off.</p>
+        <div class="tags"><span class="tag">SwiftUI</span><span class="tag">SwiftData</span><span class="tag">iOS 17+</span><span class="tag">App Store</span></div>
+        <div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:14px">
+          <a class="proj-link" href="/projects/reptrack.html">Case study <span class="arr">→</span></a>
+          <a class="proj-link warm" href="https://apps.apple.com/us/app/reptrack-workout-log/id6761032027" target="_blank" rel="noopener noreferrer">View on App Store ↗</a>
+        </div>
+      </article>
       <article class="card proj wide">
         <div class="proj-top">
           <span class="proj-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><ellipse cx="12" cy="5" rx="8" ry="3"/><path d="M4 5v14c0 1.7 3.6 3 8 3s8-1.3 8-3V5"/><path d="M4 12c0 1.7 3.6 3 8 3s8-1.3 8-3"/></svg></span>
           <span class="proj-live">Live demo</span>
         </div>
-        <h3 class="h-card">SQL Playground — Snowflake style, in your browser</h3>
+        <h3 class="h-card">SQL Playground: Snowflake style, in your browser</h3>
         <p>A browser-based SQL practice environment on SQLite WASM with a lightweight Snowflake-style translation layer. Product thinking, SQL fluency, and a genuinely useful learning interface.</p>
         <div class="tags"><span class="tag">SQL</span><span class="tag">WASM</span><span class="tag">Browser app</span></div>
         <a class="proj-link" href="https://kmsmohamedansar.github.io/sql-playground" target="_blank" rel="noopener noreferrer">Open playground <span class="arr">→</span></a>
@@ -1744,8 +2254,8 @@ body.cursor-on input,body.cursor-on textarea{cursor:text}
           <span class="proj-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M21 12a9 9 0 1 1-2.6-6.4"/><path d="M21 3v6h-6"/></svg></span>
           <span class="proj-live">Live demo</span>
         </div>
-        <h3 class="h-card">TaskMaster — small ML pipeline with retries</h3>
-        <p>A production-style mini pipeline with idempotent steps, retry logic, structured logs, and a live interface. More than notebook ML — closer to real system behavior.</p>
+        <h3 class="h-card">TaskMaster: small ML pipeline with retries</h3>
+        <p>A production-style mini pipeline with idempotent steps, retry logic, structured logs, and a live interface. More than notebook ML, closer to real system behavior.</p>
         <div class="tags"><span class="tag">ML</span><span class="tag">Pipeline</span><span class="tag">Retries</span></div>
         <a class="proj-link" href="https://huggingface.co/spaces/kmsmohamedansar/TaskMaster-Job-Scheduler" target="_blank" rel="noopener noreferrer">Open demo <span class="arr">→</span></a>
       </article>
@@ -1756,23 +2266,25 @@ body.cursor-on input,body.cursor-on textarea{cursor:text}
           <span class="proj-live">Live demo</span>
         </div>
         <h3 class="h-card">High-value customer predictor</h3>
-        <p>Retention-focused model with validation, explainability, and basic MLOps hygiene — modeling with stakeholder usability in mind.</p>
+        <p>Retention-focused model with validation, explainability, and basic MLOps hygiene. Modeling with stakeholder usability in mind.</p>
         <div class="tags"><span class="tag">ML</span><span class="tag">Retention</span><span class="tag">Explainability</span></div>
         <a class="proj-link" href="https://huggingface.co/spaces/kmsmohamedansar/high-value-customer-predictor" target="_blank" rel="noopener noreferrer">Open demo <span class="arr">→</span></a>
       </article>
 
-      <article class="card proj">
+      <button class="proj-more-btn" id="proj-more-btn">Show 6 more projects <span class="arr">↓</span></button>
+
+      <article class="card proj proj-collapse">
         <div class="proj-top">
           <span class="proj-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg></span>
           <span class="proj-live">Live demo</span>
         </div>
-        <h3 class="h-card">Grocery AI assistant — local semantic search</h3>
+        <h3 class="h-card">Grocery AI assistant: local semantic search</h3>
         <p>Offline product search and grounded Q&amp;A using embeddings, FAISS, and a lightweight local model. Retrieval, local AI, practical interfaces.</p>
         <div class="tags"><span class="tag">Search</span><span class="tag">LLM</span><span class="tag">Local-first</span></div>
         <a class="proj-link" href="https://huggingface.co/spaces/kmsmohamedansar/ai_knowledge_assistant" target="_blank" rel="noopener noreferrer">Open demo <span class="arr">→</span></a>
       </article>
 
-      <article class="card proj">
+      <article class="card proj proj-collapse">
         <div class="proj-top">
           <span class="proj-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M8 10h8M8 14h5"/><path d="M21 12a9 9 0 1 1-9-9 9 9 0 0 1 9 9z"/></svg></span>
         </div>
@@ -1781,7 +2293,7 @@ body.cursor-on input,body.cursor-on textarea{cursor:text}
         <div class="tags"><span class="tag">NLP</span><span class="tag">Transformers</span><span class="tag">Sentiment</span></div>
       </article>
 
-      <article class="card proj">
+      <article class="card proj proj-collapse">
         <div class="proj-top">
           <span class="proj-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M3 17l6-6 4 4 8-8"/><path d="M14 7h7v7"/></svg></span>
         </div>
@@ -1790,144 +2302,31 @@ body.cursor-on input,body.cursor-on textarea{cursor:text}
         <div class="tags"><span class="tag">Scraping</span><span class="tag">Automation</span><span class="tag">Python</span></div>
       </article>
 
-      <article class="card proj">
+      <article class="card proj proj-collapse">
         <div class="proj-top">
           <span class="proj-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M7 7h10v10H7z"/><path d="M3 3h4v4H3zM17 3h4v4h-4zM3 17h4v4H3zM17 17h4v4h-4z"/></svg></span>
         </div>
-        <h3 class="h-card">Smart product categorization — zero-shot</h3>
+        <h3 class="h-card">Smart product categorization: zero-shot</h3>
         <p>Category validation with BART-MNLI plus lightweight rules for low-label review queues.</p>
         <div class="tags"><span class="tag">Zero-shot</span><span class="tag">LLM / NLI</span><span class="tag">QA</span></div>
       </article>
 
-      <article class="card proj">
+      <article class="card proj proj-collapse">
         <div class="proj-top">
           <span class="proj-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="3.5"/><path d="M9.5 9.5l5 5"/></svg></span>
         </div>
-        <h3 class="h-card">Spotify music trends — quick EDA</h3>
+        <h3 class="h-card">Spotify music trends: quick EDA</h3>
         <p>Audio features and popularity over time, focused on clean data storytelling and visualization.</p>
         <div class="tags"><span class="tag">EDA</span><span class="tag">Python</span><span class="tag">Visualization</span></div>
       </article>
 
-      <article class="card proj">
+      <article class="card proj proj-collapse">
         <div class="proj-top">
           <span class="proj-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="12" r="9"/><path d="M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18M3.5 9h17M3.5 15h17"/></svg></span>
         </div>
-        <h3 class="h-card">Canadian Premier League — Dream XI (2019)</h3>
+        <h3 class="h-card">Canadian Premier League: Dream XI (2019)</h3>
         <p>Role-aware KPI model for player selection with a Power BI dashboard for storytelling.</p>
         <div class="tags"><span class="tag">Sports analytics</span><span class="tag">Power BI</span><span class="tag">Scoring logic</span></div>
-      </article>
-    </div>
-  </div>
-</section>
-<div class="divider-q" aria-hidden="true"><span class="kw mono">CALL</span> <span class="mono">render_world(<span class="str">'voxel'</span>)</span></div>
-
-<!-- ============ 03 WORLD / VOXEL WAREHOUSE ============ -->
-<section class="stage" id="world" aria-labelledby="world-h">
-  <div class="shell">
-    <div class="stage-head rv">
-      <span class="stage-step"><span class="dot"></span><b>stage 03</b> · world — the warehouse, rendered</span>
-      <h2 class="h-section" id="world-h">Walk the data warehouse.<br /><span class="grad-data">Then build on it.</span></h2>
-      <p class="lede">A live 3D voxel world of this portfolio — every structure on the island is a real part of the work. Drag to orbit, click a structure to inspect it, or flip to build mode and leave your own blocks behind.</p>
-    </div>
-
-    <div class="voxel-frame rv-scale">
-      <div class="voxel-stage" id="voxel-host">
-        <canvas id="voxel-canvas" aria-label="Interactive 3D voxel world. Drag to orbit, click structures to inspect."></canvas>
-        <div class="voxel-loading" id="voxel-loading"><span class="spin"></span>compiling world…</div>
-        <div class="voxel-fallback" id="voxel-fallback" hidden>3D unavailable on this device —<br />the rest of the pipeline still runs.</div>
-        <div class="voxel-tip" id="voxel-tip" hidden>
-          <b id="vt-name"></b>
-          <p id="vt-desc"></p>
-          <div class="vt-row">
-            <button class="chip" id="vt-go">open section →</button>
-            <button class="chip" id="vt-close">close</button>
-          </div>
-        </div>
-        <div class="voxel-hint" id="voxel-hint">drag · orbit &nbsp;·&nbsp; scroll · zoom &nbsp;·&nbsp; click · inspect</div>
-      </div>
-      <div class="voxel-hud">
-        <div class="vh-group">
-          <span class="vh-label">mode</span>
-          <button class="vmode on" id="vm-explore">explore</button>
-          <button class="vmode warm" id="vm-build">build</button>
-          <span class="vh-group vh-sub" id="vh-build-tools" hidden>
-            <button class="vswatch on" data-c="cyan" aria-label="Cyan blocks"></button>
-            <button class="vswatch" data-c="violet" aria-label="Violet blocks"></button>
-            <button class="vswatch" data-c="amber" aria-label="Amber blocks"></button>
-            <button class="vswatch" data-c="green" aria-label="Green blocks"></button>
-            <button class="vswatch" data-c="rose" aria-label="Rose blocks"></button>
-            <button class="vmode" id="vm-erase">erase</button>
-          </span>
-        </div>
-        <div class="vh-group">
-          <span class="vh-count">blocks placed: <b id="vh-count">0</b></span>
-          <button class="vbtn" id="vh-zoom-in" aria-label="Zoom in">+</button>
-          <button class="vbtn" id="vh-zoom-out" aria-label="Zoom out">−</button>
-          <button class="vbtn" id="vh-reset">reset blocks</button>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<div class="divider-q" aria-hidden="true"><span class="kw mono">DESCRIBE</span> <span class="mono">SCHEMA capability_matrix</span></div>
-
-<!-- ============ 03 SCHEMA / STACK ============ -->
-<section class="stage" id="schema" aria-labelledby="schema-h">
-  <div class="shell">
-    <div class="stage-head rv">
-      <span class="stage-step"><span class="dot"></span><b>stage 04</b> · schema — capability matrix</span>
-      <h2 class="h-section" id="schema-h">Four channels, one standard</h2>
-      <p class="lede">Warehouse SQL, orchestration, BI, and the product layers on top — described the way I'd describe a table: columns, types, and how full each one runs.</p>
-    </div>
-
-    <div class="schema-grid rv" data-stagger>
-      <article class="card schema-card" style="--lvl:.95">
-        <div class="sc-head"><span class="ch">CH-01</span><span>core</span></div>
-        <h3 class="h-card">Data systems</h3>
-        <ul class="schema-rows">
-          <li>SQL <em>fluent</em></li>
-          <li>Snowflake <em>daily</em></li>
-          <li>BigQuery <em>working</em></li>
-          <li>DuckDB <em>working</em></li>
-        </ul>
-        <div class="sc-bar"><i></i></div>
-      </article>
-
-      <article class="card schema-card" style="--lvl:.85">
-        <div class="sc-head"><span class="ch">CH-02</span><span>flow</span></div>
-        <h3 class="h-card">Workflows</h3>
-        <ul class="schema-rows">
-          <li>Airflow <em>orchestration</em></li>
-          <li>ETL / ELT <em>recurring</em></li>
-          <li>Validation <em>built-in</em></li>
-          <li>Data delivery <em>cadenced</em></li>
-        </ul>
-        <div class="sc-bar"><i></i></div>
-      </article>
-
-      <article class="card schema-card" style="--lvl:.88">
-        <div class="sc-head"><span class="ch">CH-03</span><span>signal</span></div>
-        <h3 class="h-card">Analytics</h3>
-        <ul class="schema-rows">
-          <li>Tableau <em>dashboards</em></li>
-          <li>Power BI <em>dashboards</em></li>
-          <li>pandas <em>analysis</em></li>
-          <li>Reporting <em>stakeholder</em></li>
-        </ul>
-        <div class="sc-bar"><i></i></div>
-      </article>
-
-      <article class="card schema-card warm" style="--lvl:.8">
-        <div class="sc-head"><span class="ch">CH-04</span><span>expansion</span></div>
-        <h3 class="h-card">Product & AI</h3>
-        <ul class="schema-rows">
-          <li>SwiftUI / SwiftData <em>shipped</em></li>
-          <li>Python depth <em>systems</em></li>
-          <li>AI workflows <em>retrieval · NLP</em></li>
-          <li>Automation <em>practical</em></li>
-        </ul>
-        <div class="sc-bar"><i></i></div>
       </article>
     </div>
   </div>
@@ -1935,13 +2334,179 @@ body.cursor-on input,body.cursor-on textarea{cursor:text}
 
 <div class="divider-q" aria-hidden="true"><span class="kw mono">SELECT</span> <span class="mono">role, impact</span> <span class="kw mono">FROM</span> <span class="mono">experience</span> <span class="kw mono">ORDER BY</span> <span class="mono">date DESC</span></div>
 
-<!-- ============ 04 LINEAGE / EXPERIENCE ============ -->
+<!-- ============ F1 PIT WALL ============ -->
+<section class="stage pitwall-section" id="pitwall" aria-labelledby="pitwall-h">
+  <div class="shell">
+    <div class="stage-head rv">
+      <span class="stage-step"><span class="dot"></span><b>stage 03b</b> · systems — the pit wall</span>
+      <h2 class="h-section" id="pitwall-h">F1 Telemetry <span class="grad-data">Pit Wall</span></h2>
+      <p class="lede">Race day. Three critical incidents. You are the strategy engineer. Every millisecond matters. Make the right call.</p>
+    </div>
+
+    <div class="pitwall-header rv" id="pw-header">
+      <span class="pw-led" id="pw-led"></span>
+      <span class="pw-status" id="pw-status">SYSTEM NOMINAL</span>
+      <span class="pw-incident" id="pw-incident">⚠ INCIDENT REPORTED</span>
+      <span class="pw-clock" id="pw-clock">LAP 0 · 00:00</span>
+      <button class="pw-bypass-btn" id="pw-bypass-btn">Bypass simulation ↓</button>
+    </div>
+
+    <div class="pw-panels rv" id="pw-panels">
+      <!-- Panel 1: Track Map -->
+      <div class="pw-panel">
+        <div class="pw-panel-label">Track Map · Sector Data</div>
+        <canvas id="pw-track-canvas" width="280" height="240"></canvas>
+        <div class="pw-lap-info">
+          <span id="pw-lap-label">LAP 1 / 57</span>
+          <span id="pw-tyre-label">TYRE: SOFT</span>
+          <span id="pw-gap-label">GAP: +2.4s</span>
+        </div>
+      </div>
+
+      <!-- Panel 2: Telemetry -->
+      <div class="pw-panel">
+        <div class="pw-panel-label">Live Telemetry</div>
+        <div class="pw-chart-wrap">
+          <div class="pw-chart-row">
+            <div class="pw-chart-label">SPEED (km/h)</div>
+            <canvas class="pw-chart-canvas" id="pw-chart-speed" width="260" height="52"></canvas>
+          </div>
+          <div class="pw-chart-row">
+            <div class="pw-chart-label">TYRE DEG (%)</div>
+            <canvas class="pw-chart-canvas" id="pw-chart-tyre" width="260" height="52"></canvas>
+          </div>
+          <div class="pw-chart-row">
+            <div class="pw-chart-label">BRAKE TEMP (°C)</div>
+            <canvas class="pw-chart-canvas" id="pw-chart-brake" width="260" height="52"></canvas>
+          </div>
+          <div class="pw-chart-row">
+            <div class="pw-chart-label">FUEL LOAD (kg)</div>
+            <canvas class="pw-chart-canvas" id="pw-chart-fuel" width="260" height="52"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <!-- Panel 3: Radio Console -->
+      <div class="pw-panel">
+        <div class="pw-panel-label">Team Radio · Strategy Call</div>
+        <div class="pw-radio-log" id="pw-radio-log">
+          <p><span class="rlog-team">[PITWALL]</span> Systems online. Monitoring telemetry.</p>
+        </div>
+        <div class="pw-scenario-box" id="pw-scenario-box" style="display:none">
+          <div class="pw-scenario-title" id="pw-scenario-title"></div>
+          <div class="pw-scenario-desc" id="pw-scenario-desc"></div>
+        </div>
+        <div class="pw-choices" id="pw-choices" style="display:none">
+          <button class="pw-choice-btn" id="pw-choice-a"></button>
+          <button class="pw-choice-btn" id="pw-choice-b"></button>
+        </div>
+        <div class="pw-result" id="pw-result"></div>
+        <div class="pw-error-box" id="pw-error-box"></div>
+        <button class="pw-retry-btn" id="pw-retry-btn">↺ Retry this scenario</button>
+        <div class="pw-progress" id="pw-progress"></div>
+      </div>
+    </div>
+
+    <!-- Bypass panel -->
+    <div class="pw-bypass-panel" id="pw-bypass-panel">
+      <p class="mono" style="font-size:.65rem;color:var(--text-3);letter-spacing:.12em;text-transform:uppercase;margin-bottom:16px">SIMULATION BYPASSED · QUICK VIEW</p>
+      <h3 style="font-size:1.1rem;font-weight:700;color:var(--text);margin-bottom:20px">Mohamed Ansar · Data Engineer · Solutions Engineer</h3>
+      <div class="pw-bypass-grid">
+        <div class="pw-bypass-card">
+          <div class="pw-bypass-card-label">iOS App</div>
+          <h4>RepTrack</h4>
+          <p>Workout logging app shipped to the App Store. Swift, SwiftUI, CoreData.</p>
+          <a class="btn btn-primary" href="https://apps.apple.com/us/app/reptrack-workout-log/id6761032027" target="_blank" rel="noopener noreferrer" style="display:inline-block;margin-top:12px;font-size:.72rem">App Store ↗</a>
+        </div>
+        <div class="pw-bypass-card">
+          <div class="pw-bypass-card-label">Data Engineering</div>
+          <h4>Pipeline &amp; Analytics</h4>
+          <p>6 years building data pipelines, ETL workflows, and analytics platforms at scale.</p>
+        </div>
+        <div class="pw-bypass-card">
+          <div class="pw-bypass-card-label">Live Demo</div>
+          <h4>SQL Playground</h4>
+          <p>Interactive in-browser SQL execution with schema explorer and result export.</p>
+          <a class="btn btn-ghost" href="https://kmsmohamedansar.github.io/sql-playground" target="_blank" rel="noopener noreferrer" style="display:inline-block;margin-top:12px;font-size:.72rem">Try it ↗</a>
+        </div>
+        <div class="pw-bypass-card">
+          <div class="pw-bypass-card-label">Contact</div>
+          <h4>Start a conversation</h4>
+          <p>Open to interesting problems in data, analytics, and engineering.</p>
+          <a class="btn btn-ghost" href="#commit" style="display:inline-block;margin-top:12px;font-size:.72rem">Get in touch →</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SUCCESS MODAL -->
+<div class="pw-modal-backdrop" id="pw-modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="pw-modal-title">
+  <div class="pw-modal">
+    <button class="pw-modal-close" id="pw-modal-close" aria-label="Close">×</button>
+    <div class="pw-modal-header">✓ CORRECT CALL · STRATEGY LOCKED IN</div>
+    <h3 id="pw-modal-title"></h3>
+    <div class="pw-modal-body" id="pw-modal-body"></div>
+    <div class="pw-modal-tags" id="pw-modal-tags"></div>
+    <div class="pw-modal-actions" id="pw-modal-actions"></div>
+  </div>
+</div>
+
+<!-- GAME SECTION COMMENTED OUT
+<section class="stage" id="game" aria-labelledby="game-h">
+  <div class="shell">
+    <div class="stage-head rv">
+      <span class="stage-step"><span class="dot"></span><b>stage 02b</b> · play — the job, gamified</span>
+      <h2 class="h-section" id="game-h">A day in the life of an <span class="grad-data">SE</span></h2>
+      <p class="lede">The Walgreens pricing feed just went down. Your PM is panicking. Play as a Solutions Engineer and fix the pipeline before the 4pm standup.</p>
+    </div>
+    <div class="rpg-frame rv-scale">
+      <div id="rpg-host"></div>
+      <div class="rpg-controls">
+        <span class="rpg-key">WASD</span> or <span class="rpg-key">↑↓←→</span> to move &nbsp;·&nbsp;
+        <span class="rpg-key">E</span> to interact &nbsp;·&nbsp;
+        <span style="color:var(--text-3)">Click works too</span>
+      </div>
+    </div>
+  </div>
+</section>
+END OF COMMENTED-OUT GAME SECTION -->
+
+<div style="display:none" aria-hidden="true">
+  <!-- World + Schema sections hidden — not a big fan of these -—>
+  <section class="stage" id="world" aria-labelledby="world-h">
+    <div class="shell">
+      <div class="stage-head rv">
+        <span class="stage-step"><span class="dot"></span><b>stage 03</b> · world — the warehouse, rendered</span>
+        <h2 class="h-section" id="world-h">Walk the data warehouse.<br /><span class="grad-data">Then build on it.</span></h2>
+      </div>
+      <div class="voxel-frame rv-scale">
+        <div class="voxel-stage" id="voxel-host">
+          <canvas id="voxel-canvas"></canvas>
+          <div class="voxel-loading" id="voxel-loading"><span class="spin"></span>compiling world…</div>
+          <div class="voxel-fallback" id="voxel-fallback" hidden></div>
+          <div class="voxel-tip" id="voxel-tip" hidden><b id="vt-name"></b><p id="vt-desc"></p><div class="vt-row"><button class="chip" id="vt-go">open section →</button><button class="chip" id="vt-close">close</button></div></div>
+          <div class="voxel-hint" id="voxel-hint"></div>
+        </div>
+        <div class="voxel-hud">
+          <div class="vh-group"><button class="vmode on" id="vm-explore">explore</button><button class="vmode warm" id="vm-build">build</button><span class="vh-group vh-sub" id="vh-build-tools" hidden><button class="vswatch on" data-c="cyan"></button><button class="vswatch" data-c="violet"></button><button class="vswatch" data-c="amber"></button><button class="vswatch" data-c="green"></button><button class="vswatch" data-c="rose"></button><button class="vmode" id="vm-erase">erase</button></span></div>
+          <div class="vh-group"><span class="vh-count">blocks placed: <b id="vh-count">0</b></span><button class="vbtn" id="vh-zoom-in">+</button><button class="vbtn" id="vh-zoom-out">-</button><button class="vbtn" id="vh-reset">reset blocks</button></div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <section class="stage" id="schema" aria-labelledby="schema-h">
+    <div class="shell"><div class="stage-head rv"><span class="stage-step"><b>stage 04</b> · schema</span><h2 class="h-section" id="schema-h">Four channels, one standard</h2></div><div class="schema-grid rv" data-stagger></div></div>
+  </section>
+</div>
+
+<!-- ============ 02 BEFORE / EXPERIENCE ============ -->
 <section class="stage" id="lineage" aria-labelledby="lineage-h">
   <div class="shell">
     <div class="stage-head rv">
-      <span class="stage-step"><span class="dot"></span><b>stage 05</b> · lineage — roles & impact</span>
-      <h2 class="h-section" id="lineage-h">Every row has a source</h2>
-      <p class="lede">Solutions engineering and analytics operations — progressively more technical ownership, from content operations at Amazon through pre-sales solution design at Datasembly.</p>
+      <span class="stage-step"><span class="dot"></span><b>stage 02</b> · before</span>
+      <h2 class="h-section" id="lineage-h">Where I've been</h2>
+      <p class="lede">Solutions engineering and analytics operations. Progressively more technical ownership, from content operations at Amazon through pre-sales solution design at Datasembly.</p>
     </div>
 
     <div class="lineage" id="lineage-rail">
@@ -1950,11 +2515,25 @@ body.cursor-on input,body.cursor-on textarea{cursor:text}
         <span class="role-node"></span>
         <div class="card role-card">
           <div class="role-head">
-            <h3>Associate Solutions Engineer <span>· Datasembly</span></h3>
-            <span class="role-when">Jan 2026 — Present · Remote, Canada</span>
+            <div>
+              <h3>Solutions Engineer <span>· Datasembly</span></h3>
+              <span class="role-when">Jan 2026 to Present · Remote, Canada</span>
+            </div>
+            <div class="role-co-badge">
+              <span class="role-co-name">Datasembly</span>
+              <span class="role-co-logo" title="Datasembly">
+                <svg width="26" height="26" viewBox="0 0 26 26" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <circle cx="13" cy="8" r="4" fill="#6fe6ff" opacity=".9"/>
+                  <circle cx="7" cy="18" r="3" fill="#6fe6ff" opacity=".5"/>
+                  <circle cx="19" cy="18" r="3" fill="#6fe6ff" opacity=".5"/>
+                  <line x1="13" y1="12" x2="7" y2="15" stroke="#6fe6ff" stroke-width="1.2" opacity=".4"/>
+                  <line x1="13" y1="12" x2="19" y2="15" stroke="#6fe6ff" stroke-width="1.2" opacity=".4"/>
+                </svg>
+              </span>
+            </div>
           </div>
           <ul>
-            <li>Design data solutions for retail pricing datasets — client needs, pre-sales analysis, and custom data requests.</li>
+            <li>Design data solutions for retail pricing datasets: client needs, pre-sales analysis, and custom data requests.</li>
             <li>Use SQL and Snowflake to investigate complex data issues, validate outputs, and deliver reliable stakeholder-ready solutions.</li>
             <li>Partner with internal teams to translate business questions into clear technical approaches and usable deliverables.</li>
           </ul>
@@ -1966,8 +2545,22 @@ body.cursor-on input,body.cursor-on textarea{cursor:text}
         <span class="role-node"></span>
         <div class="card role-card">
           <div class="role-head">
-            <h3>Tech Support <span>· Datasembly</span></h3>
-            <span class="role-when">Aug 2024 — Dec 2025 · Remote, Canada</span>
+            <div>
+              <h3>Tech Support <span>· Datasembly</span></h3>
+              <span class="role-when">Aug 2024 to Dec 2025 · Remote, Canada</span>
+            </div>
+            <div class="role-co-badge">
+              <span class="role-co-name">Datasembly</span>
+              <span class="role-co-logo" title="Datasembly">
+                <svg width="26" height="26" viewBox="0 0 26 26" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <circle cx="13" cy="8" r="4" fill="#6fe6ff" opacity=".9"/>
+                  <circle cx="7" cy="18" r="3" fill="#6fe6ff" opacity=".5"/>
+                  <circle cx="19" cy="18" r="3" fill="#6fe6ff" opacity=".5"/>
+                  <line x1="13" y1="12" x2="7" y2="15" stroke="#6fe6ff" stroke-width="1.2" opacity=".4"/>
+                  <line x1="13" y1="12" x2="19" y2="15" stroke="#6fe6ff" stroke-width="1.2" opacity=".4"/>
+                </svg>
+              </span>
+            </div>
           </div>
           <ul>
             <li>Supported pricing analytics initiatives by building SQL-based reporting solutions and improving internal data workflows.</li>
@@ -1982,8 +2575,21 @@ body.cursor-on input,body.cursor-on textarea{cursor:text}
         <span class="role-node"></span>
         <div class="card role-card">
           <div class="role-head">
-            <h3>Business Development Intern — Business Analysis <span>· Spongelii</span></h3>
-            <span class="role-when">Jan 2024 — Apr 2024 · Remote, Canada</span>
+            <div>
+              <h3>Business Development Intern · Business Analysis <span>· Spongelii</span></h3>
+              <span class="role-when">Jan 2024 to Apr 2024 · Remote, Canada</span>
+            </div>
+            <div class="role-co-badge">
+              <span class="role-co-name">Spongelii</span>
+              <span class="role-co-logo" title="Spongelii">
+                <svg width="26" height="26" viewBox="0 0 26 26" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <rect x="4" y="10" width="18" height="10" rx="5" fill="#a78bfa" opacity=".7"/>
+                  <rect x="8" y="6" width="10" height="6" rx="3" fill="#a78bfa" opacity=".4"/>
+                  <circle cx="10" cy="15" r="1.5" fill="white" opacity=".6"/>
+                  <circle cx="16" cy="15" r="1.5" fill="white" opacity=".6"/>
+                </svg>
+              </span>
+            </div>
           </div>
           <ul>
             <li>Business analysis tied to data workflows, reporting needs, and stakeholder requirements.</li>
@@ -1998,8 +2604,20 @@ body.cursor-on input,body.cursor-on textarea{cursor:text}
         <span class="role-node"></span>
         <div class="card role-card">
           <div class="role-head">
-            <h3>Business Analyst II — Quality Auditing <span>· Amazon Prime Video</span></h3>
-            <span class="role-when">Oct 2021 — Aug 2022 · Hybrid, India</span>
+            <div>
+              <h3>Business Analyst II · Quality Auditing <span>· Amazon Prime Video</span></h3>
+              <span class="role-when">Oct 2021 to Aug 2022 · Hybrid, India</span>
+            </div>
+            <div class="role-co-badge">
+              <span class="role-co-name">Amazon Prime Video</span>
+              <span class="role-co-logo" title="Amazon Prime Video">
+                <svg width="26" height="26" viewBox="0 0 26 26" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M5 18c4-1.5 8-2 13-1" stroke="#FF9900" stroke-width="2" stroke-linecap="round"/>
+                  <path d="M16 15l3 2-2 3" stroke="#FF9900" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                  <text x="5" y="13" font-family="sans-serif" font-weight="700" font-size="9" fill="#00A8E0">prime</text>
+                </svg>
+              </span>
+            </div>
           </div>
           <ul>
             <li>Quality auditing and process improvement for Prime Video content operations.</li>
@@ -2014,8 +2632,20 @@ body.cursor-on input,body.cursor-on textarea{cursor:text}
         <span class="role-node"></span>
         <div class="card role-card">
           <div class="role-head">
-            <h3>Business Analyst I — Digital Content <span>· Amazon Prime Video</span></h3>
-            <span class="role-when">Aug 2019 — Sep 2021 · Hybrid, India</span>
+            <div>
+              <h3>Business Analyst I · Digital Content <span>· Amazon Prime Video</span></h3>
+              <span class="role-when">Aug 2019 to Sep 2021 · Hybrid, India</span>
+            </div>
+            <div class="role-co-badge">
+              <span class="role-co-name">Amazon Prime Video</span>
+              <span class="role-co-logo" title="Amazon Prime Video">
+                <svg width="26" height="26" viewBox="0 0 26 26" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M5 18c4-1.5 8-2 13-1" stroke="#FF9900" stroke-width="2" stroke-linecap="round"/>
+                  <path d="M16 15l3 2-2 3" stroke="#FF9900" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                  <text x="5" y="13" font-family="sans-serif" font-weight="700" font-size="9" fill="#00A8E0">prime</text>
+                </svg>
+              </span>
+            </div>
           </div>
           <ul>
             <li>Quality control and operational coordination for the digital content catalog.</li>
@@ -2035,11 +2665,11 @@ body.cursor-on input,body.cursor-on textarea{cursor:text}
     <div class="card commit-card rv-scale">
       <span class="commit-query mono"><span class="kw">INSERT INTO</span> your_team (engineer) <span class="kw">VALUES</span> (<span class="str">'mohamed_ansar'</span>); <span class="kw">COMMIT</span>;</span>
       <h2 class="h-section" id="commit-h">The pipeline ends where<br />a conversation <span class="grad-data">starts</span></h2>
-      <p class="lede">Whether it's a data problem that needs untangling, a pipeline that needs to hold, or a product that needs to ship — I'd be glad to talk.</p>
+      <p class="lede">Whether it's a data problem that needs untangling, a pipeline that needs to hold, or a product that needs to ship, I'd be glad to talk.</p>
       <div class="commit-actions">
         <a class="btn btn-primary" href="mailto:mohamedansarkms@gmail.com">Email me <span class="arr">→</span></a>
         <a class="btn btn-ghost" href="https://www.linkedin.com/in/kmsmohamedansar/" target="_blank" rel="noopener noreferrer">LinkedIn ↗</a>
-        <a class="btn btn-ghost" href="https://apps.apple.com/us/app/reptrack-workout-log/id6761032027" target="_blank" rel="noopener noreferrer">RepTrack ↗</a>
+        <a class="btn btn-ghost" href="/resume.pdf" download="Mohamed_Ansar_Resume.pdf">Download Resume ↓</a>
       </div>
       <p class="commit-mail">direct: <a href="mailto:mohamedansarkms@gmail.com">mohamedansarkms@gmail.com</a></p>
     </div>
@@ -2416,7 +3046,7 @@ const $$ = (s,c)=> Array.from((c||document).querySelectorAll(s));
   const bar  = $("#progress-bar");
   const nodes= $$(".rail-node");
   const navLinks = $$("[data-nav]");
-  const sections = ["source","ship","build","world","schema","lineage","commit"]
+  const sections = ["source","lineage","build","commit"]
     .map(id=>document.getElementById(id)).filter(Boolean);
 
   function onScroll(){
@@ -2441,6 +3071,44 @@ const $$ = (s,c)=> Array.from((c||document).querySelectorAll(s));
     },{rootMargin:"-38% 0px -52% 0px"});
     sections.forEach(s=>io.observe(s));
   }
+})();
+
+/* ============================================================
+   5 · THEME TOGGLE
+   ============================================================ */
+(function theme(){
+  const html = document.documentElement;
+  const btn = $("#theme-toggle");
+  const key = "theme";
+  const saved = localStorage.getItem(key);
+  if(saved==="light") html.classList.add("light-mode");
+  function updateIcon(){
+    const isDark = !html.classList.contains("light-mode");
+    btn.textContent = isDark ? "☀️" : "🌙";
+  }
+  updateIcon();
+  if(btn) btn.addEventListener("click", ()=>{
+    html.classList.toggle("light-mode");
+    const isDark = !html.classList.contains("light-mode");
+    localStorage.setItem(key, isDark?"dark":"light");
+    updateIcon();
+  });
+})();
+
+/* ============================================================
+   5b · HIRE FLOAT — scroll-triggered CTA
+   ============================================================ */
+(function hireFloat(){
+  const hireFloat = document.getElementById("hire-float");
+  const commitEl = document.getElementById("commit");
+  if(!hireFloat || !commitEl) return;
+  function updateFloat(){
+    const pastHero = window.scrollY > window.innerHeight * 0.8;
+    const nearCommit = commitEl.getBoundingClientRect().top < window.innerHeight * 0.6;
+    hireFloat.classList.toggle("visible", pastHero && !nearCommit);
+  }
+  window.addEventListener("scroll", updateFloat, {passive:true});
+  updateFloat();
 })();
 
 /* ============================================================
@@ -2567,11 +3235,12 @@ const $$ = (s,c)=> Array.from((c||document).querySelectorAll(s));
   if(REDUCED){ el.remove(); return; }
   const logEl = $("#boot-log"), bar = $("#boot-bar");
   const lines = [
-    ["init","mohamed_ansar.portfolio v2.0","ok"],
-    ["conn","warehouse DELIVERY_WH … connected","ok"],
-    ["load","schemas: projects · experience · skills","ok"],
-    ["mount","RepTrack.app → App Store binary","warm"],
-    ["exec","compiling hero query","ok"]
+    ["boot","emet · portfolio terminal · online","ok"],
+    ["init","loading record of Mohamed Ansar · SE","ok"],
+    ["conn","data warehouse · Snowflake · connected","ok"],
+    ["load","experience: Datasembly · Amazon · iOS","ok"],
+    ["sync","RepTrack.app → App Store · verified","warm"],
+    ["ready","session open · standing by","ok"]
   ];
   let i = 0;
   function step(){
@@ -2593,6 +3262,110 @@ const $$ = (s,c)=> Array.from((c||document).querySelectorAll(s));
     }
   }
   setTimeout(step, 200);
+})();
+
+/* ============================================================
+   11b · EMET TERMINAL — typewriter + navigation
+   ============================================================ */
+(function emet(){
+  const typedEl  = $("#emet-typed");
+  const optsEl   = $("#emet-opts");
+  const inputWrap= $("#emet-input-wrap");
+  const statusEl = $("#emet-status");
+  const input    = $("#emet-input");
+  if(!typedEl) return;
+
+  /* script: array of {text, cls, sp (ms/char)} */
+  const SCRIPT = [
+    {text:"emet\n", cls:"t-title", sp:12},
+    {text:"──────────────────\n\n", cls:"t-dim", sp:5},
+    {text:"Hi. I'm emet.\n\n", sp:20},
+    {text:"I keep the record on ", sp:18},
+    {text:"Mohamed Ansar", cls:"t-name", sp:18},
+    {text:".\n\n", sp:18},
+    {text:"He's a Solutions Engineer with 6 years\nbuilding data systems, pipelines, and\nanalytics at scale. One iOS app shipped\nto the App Store.\n\n", sp:15},
+    {text:"What would you like to know?\n", cls:"t-dim", sp:22},
+  ];
+
+  let cursorEl = null;
+  function placeCursor(){
+    if(cursorEl) cursorEl.remove();
+    cursorEl = document.createElement("span");
+    cursorEl.className = "emet-cursor";
+    typedEl.appendChild(cursorEl);
+  }
+
+  function delay(ms){ return new Promise(r=>setTimeout(r,ms)); }
+
+  async function typeSegment(seg){
+    const span = document.createElement("span");
+    if(seg.cls) span.className = seg.cls;
+    typedEl.insertBefore(span, cursorEl);
+    for(const ch of seg.text){
+      span.textContent += ch;
+      await delay(seg.sp || 20);
+    }
+  }
+
+  function revealNav(){
+    if(statusEl){ statusEl.textContent="READY"; statusEl.classList.add("ready"); }
+    if(optsEl){ optsEl.style.opacity="1"; optsEl.style.pointerEvents=""; }
+    if(inputWrap){ inputWrap.style.opacity="1"; }
+    if(cursorEl){ cursorEl.remove(); cursorEl=null; }
+  }
+
+  function showAll(){
+    /* reduced motion / fallback — show content immediately */
+    typedEl.innerHTML = "";
+    for(const seg of SCRIPT){
+      const s = document.createElement("span");
+      if(seg.cls) s.className = seg.cls;
+      s.textContent = seg.text;
+      typedEl.appendChild(s);
+    }
+    revealNav();
+  }
+
+  async function run(){
+    placeCursor();
+    for(const seg of SCRIPT) await typeSegment(seg);
+    revealNav();
+  }
+
+  let _started = false;
+  const start = ()=>{ if(_started) return; _started=true; REDUCED ? showAll() : run(); };
+  addEventListener("boot:done", start, {once:true});
+  setTimeout(start, 4500); // safety fallback
+
+  /* navigation */
+  function navTo(hash){
+    document.querySelector(hash)?.scrollIntoView({behavior:REDUCED?"auto":"smooth"});
+  }
+  $$(".emet-opt").forEach(btn=>{
+    btn.addEventListener("click", ()=>{ const g=btn.dataset.go; if(g) navTo(g); });
+  });
+  if(input){
+    input.addEventListener("keydown", e=>{
+      if(e.key==="Enter"){
+        const map={"1":"#source","2":"#lineage","3":"#build","4":"#commit"};
+        const g=map[input.value.trim()]; if(g){ navTo(g); input.value=""; }
+      }
+    });
+    input.addEventListener("input", ()=>{
+      const map={"1":"#source","2":"#lineage","3":"#build","4":"#commit"};
+      const g=map[input.value.trim()];
+      if(g){ navTo(g); setTimeout(()=>{ input.value=""; },120); }
+    });
+  }
+
+  /* show more projects toggle */
+  const moreBtn = $("#proj-more-btn");
+  const projGrid = $("#proj-grid");
+  if(moreBtn && projGrid){
+    moreBtn.addEventListener("click", ()=>{
+      projGrid.classList.add("expanded");
+    });
+  }
 })();
 
 /* ============================================================
@@ -2635,19 +3408,16 @@ const $$ = (s,c)=> Array.from((c||document).querySelectorAll(s));
   const pal = $("#palette"), inp = $("#palette-input"), list = $("#palette-list");
   if(!pal) return;
   const ITEMS = [
-    {ico:"00", label:"Source — about & principles", k:"section", go:"#source"},
-    {ico:"01", label:"RepTrack — flagship iOS app", k:"section", go:"#ship", warm:true},
-    {ico:"02", label:"Build — selected projects", k:"section", go:"#build"},
-    {ico:"03", label:"World — 3D voxel warehouse", k:"section", go:"#world"},
-    {ico:"04", label:"Schema — capability matrix", k:"section", go:"#schema"},
-    {ico:"05", label:"Lineage — roles & impact", k:"section", go:"#lineage"},
-    {ico:"06", label:"Commit — contact", k:"section", go:"#commit"},
+    {ico:"01", label:"Now · what he does at Datasembly", k:"section", go:"#source"},
+    {ico:"02", label:"Before · roles and experience", k:"section", go:"#lineage"},
+    {ico:"03", label:"Work · selected projects", k:"section", go:"#build"},
+    {ico:"04", label:"Contact · start a conversation", k:"section", go:"#commit"},
     {ico:"↗", label:"RepTrack on the App Store", k:"open", url:"https://apps.apple.com/us/app/reptrack-workout-log/id6761032027", warm:true},
-    {ico:"↗", label:"LinkedIn — kmsmohamedansar", k:"open", url:"https://www.linkedin.com/in/kmsmohamedansar/"},
-    {ico:"↗", label:"SQL Playground — live demo", k:"open", url:"https://kmsmohamedansar.github.io/sql-playground"},
-    {ico:"↗", label:"TaskMaster pipeline — live demo", k:"open", url:"https://huggingface.co/spaces/kmsmohamedansar/TaskMaster-Job-Scheduler"},
-    {ico:"↗", label:"Grocery AI assistant — live demo", k:"open", url:"https://huggingface.co/spaces/kmsmohamedansar/ai_knowledge_assistant"},
-    {ico:"@", label:"Email — mohamedansarkms@gmail.com", k:"mail", url:"mailto:mohamedansarkms@gmail.com", warm:true}
+    {ico:"↗", label:"LinkedIn · kmsmohamedansar", k:"open", url:"https://www.linkedin.com/in/kmsmohamedansar/"},
+    {ico:"↗", label:"SQL Playground · live demo", k:"open", url:"https://kmsmohamedansar.github.io/sql-playground"},
+    {ico:"↗", label:"TaskMaster pipeline · live demo", k:"open", url:"https://huggingface.co/spaces/kmsmohamedansar/TaskMaster-Job-Scheduler"},
+    {ico:"↗", label:"Grocery AI assistant · live demo", k:"open", url:"https://huggingface.co/spaces/kmsmohamedansar/ai_knowledge_assistant"},
+    {ico:"@", label:"Email · mohamedansarkms@gmail.com", k:"mail", url:"mailto:mohamedansarkms@gmail.com", warm:true}
   ];
   let filtered = ITEMS, sel = 0;
 
@@ -3176,7 +3946,885 @@ const $$ = (s,c)=> Array.from((c||document).querySelectorAll(s));
 
 $("#year").textContent = new Date().getFullYear();
 
+/* ============================================================
+   17b · F1 PIT WALL — telemetry simulator
+   ============================================================ */
+(function pitWall(){
+  const section = $("#pitwall");
+  if(!section) return;
+
+  const pwStatus    = $("#pw-status");
+  const pwIncident  = $("#pw-incident");
+  const pwClock     = $("#pw-clock");
+  const radioLog    = $("#pw-radio-log");
+  const scenBox     = $("#pw-scenario-box");
+  const scenTitle   = $("#pw-scenario-title");
+  const scenDesc    = $("#pw-scenario-desc");
+  const choicesEl   = $("#pw-choices");
+  const choiceA     = $("#pw-choice-a");
+  const choiceB     = $("#pw-choice-b");
+  const resultEl    = $("#pw-result");
+  const errorBox    = $("#pw-error-box");
+  const retryBtn    = $("#pw-retry-btn");
+  const progressEl  = $("#pw-progress");
+  const bypassBtn   = $("#pw-bypass-btn");
+  const bypassPanel = $("#pw-bypass-panel");
+  const modal       = $("#pw-modal-backdrop");
+  const modalClose  = $("#pw-modal-close");
+  const modalTitle  = $("#pw-modal-title");
+  const modalBody   = $("#pw-modal-body");
+  const modalTags   = $("#pw-modal-tags");
+  const modalActions= $("#pw-modal-actions");
+  const lapLabel    = $("#pw-lap-label");
+  const tyreLabel   = $("#pw-tyre-label");
+  const gapLabel    = $("#pw-gap-label");
+  const trackCanvas = $("#pw-track-canvas");
+  const cSpeed      = $("#pw-chart-speed");
+  const cTyre       = $("#pw-chart-tyre");
+  const cBrake      = $("#pw-chart-brake");
+  const cFuel       = $("#pw-chart-fuel");
+
+  let started = false, currentScenario = 0, raceStartTime = 0, lap = 1, trackRaf = null;
+
+  const POINTS = 80;
+  const telData = {
+    speed: Array.from({length:POINTS}, ()=>200+Math.random()*120),
+    tyre:  Array.from({length:POINTS}, (_,i)=>i*0.25),
+    brake: Array.from({length:POINTS}, ()=>80+Math.random()*160),
+    fuel:  Array.from({length:POINTS}, (_,i)=>100-i*0.4)
+  };
+  function pushTel(k,v){ telData[k].push(v); if(telData[k].length>POINTS) telData[k].shift(); }
+
+  function drawChart(canvas, data, color, minV, maxV){
+    if(!canvas) return;
+    const ctx=canvas.getContext("2d"), W=canvas.width, H=canvas.height;
+    ctx.clearRect(0,0,W,H);
+    ctx.fillStyle="rgba(5,8,15,.7)"; ctx.fillRect(0,0,W,H);
+    ctx.strokeStyle="rgba(255,255,255,.05)"; ctx.lineWidth=1;
+    for(let i=0;i<3;i++){ const y=Math.round(H*(i/2)); ctx.beginPath(); ctx.moveTo(0,y); ctx.lineTo(W,y); ctx.stroke(); }
+    if(!data.length) return;
+    const range=maxV-minV;
+    ctx.beginPath(); ctx.strokeStyle=color; ctx.lineWidth=1.5; ctx.lineJoin="round";
+    data.forEach((v,i)=>{ const x=(i/(POINTS-1))*W, y=H-((Math.max(minV,Math.min(maxV,v))-minV)/range)*H; i===0?ctx.moveTo(x,y):ctx.lineTo(x,y); });
+    ctx.stroke();
+    const lastX=W, lastY=H-((Math.max(minV,Math.min(maxV,data[data.length-1]))-minV)/range)*H;
+    ctx.lineTo(lastX,H); ctx.lineTo(0,H); ctx.closePath();
+    ctx.fillStyle=color.replace("rgb(","rgba(").replace(")",",0.1)"); ctx.fill();
+  }
+
+  function updateTelemetry(){
+    const t=Date.now()/1000;
+    pushTel("speed", 220+80*Math.sin(t*.8)+30*Math.sin(t*2.1)+(Math.random()-.5)*20);
+    pushTel("tyre",  Math.min(100,(telData.tyre[telData.tyre.length-1]||0)+.3+Math.random()*.2));
+    pushTel("brake", 80+350*Math.abs(Math.sin(t*.8))+Math.random()*80);
+    pushTel("fuel",  Math.max(0,(telData.fuel[telData.fuel.length-1]||100)-.08));
+    drawChart(cSpeed,telData.speed,"rgb(111,230,255)",60,380);
+    drawChart(cTyre, telData.tyre, "rgb(255,188,66)", 0, 100);
+    drawChart(cBrake,telData.brake,"rgb(255,91,91)",  0, 600);
+    drawChart(cFuel, telData.fuel, "rgb(92,242,166)", 0, 105);
+  }
+
+  // Circuit de Barcelona-Catalunya — approximate layout, clockwise from S/F
+  const TRACK_PTS=[
+    {x:200,y:214},{x:228,y:214},{x:250,y:207},   // Main straight
+    {x:263,y:192},{x:267,y:168},{x:261,y:140},    // T1/T2 hairpin (top-right)
+    {x:245,y:114},{x:222,y:98},{x:196,y:89},      // T2 exit, sweeping left
+    {x:168,y:86},{x:146,y:93},{x:130,y:108},      // Esses T3-T5
+    {x:118,y:122},{x:124,y:139},{x:144,y:150},    // T5 exit + T7-T9
+    {x:172,y:155},{x:202,y:154},{x:226,y:147},    // La Caixa approach (T10)
+    {x:238,y:131},{x:222,y:117},{x:195,y:120},    // T10 hairpin
+    {x:160,y:124},{x:116,y:130},{x:80,y:143},     // T11-T12, heading left
+    {x:56,y:161},{x:60,y:180},{x:82,y:194},       // Chicane T13 (Banc Sabadell)
+    {x:116,y:204},{x:156,y:210},{x:183,y:213},    // T15-T16 onto straight
+  ];
+  let carPos=0;
+
+  function drawTrack(){
+    if(!trackCanvas) return;
+    const ctx=trackCanvas.getContext("2d"), W=trackCanvas.width, H=trackCanvas.height;
+    ctx.clearRect(0,0,W,H);
+    ctx.fillStyle="rgba(5,8,15,.95)"; ctx.fillRect(0,0,W,H);
+    const pts=TRACK_PTS;
+    // outer glow
+    ctx.beginPath();
+    pts.forEach((p,i)=>i===0?ctx.moveTo(p.x,p.y):ctx.lineTo(p.x,p.y)); ctx.closePath();
+    ctx.strokeStyle="rgba(255,255,255,.06)"; ctx.lineWidth=16; ctx.stroke();
+    // track
+    ctx.beginPath();
+    pts.forEach((p,i)=>i===0?ctx.moveTo(p.x,p.y):ctx.lineTo(p.x,p.y)); ctx.closePath();
+    ctx.strokeStyle="rgba(255,255,255,.12)"; ctx.lineWidth=12; ctx.stroke();
+    // sector colors
+    const L=pts.length;
+    [[0,Math.floor(L/3),"rgba(92,242,166,.35)"],[Math.floor(L/3),Math.floor(2*L/3),"rgba(255,188,66,.35)"],[Math.floor(2*L/3),L,"rgba(255,91,91,.35)"]].forEach(([s,e,c])=>{
+      ctx.beginPath();
+      for(let i=s;i<=e;i++){ const p=pts[i%L]; i===s?ctx.moveTo(p.x,p.y):ctx.lineTo(p.x,p.y); }
+      ctx.strokeStyle=c; ctx.lineWidth=8; ctx.stroke();
+    });
+    // start/finish
+    const sf=pts[0];
+    ctx.beginPath(); ctx.moveTo(sf.x-5,sf.y-10); ctx.lineTo(sf.x+5,sf.y+10);
+    ctx.strokeStyle="rgba(255,255,255,.6)"; ctx.lineWidth=2; ctx.stroke();
+    // car dot
+    const ci=Math.floor(carPos*L), p0=pts[ci%L], p1=pts[(ci+1)%L], fr=(carPos*L)-ci;
+    const cx2=p0.x+(p1.x-p0.x)*fr, cy2=p0.y+(p1.y-p0.y)*fr;
+    ctx.beginPath(); ctx.arc(cx2,cy2,9,0,Math.PI*2);
+    ctx.fillStyle="rgba(111,230,255,.18)"; ctx.fill();
+    ctx.beginPath(); ctx.arc(cx2,cy2,5,0,Math.PI*2);
+    ctx.fillStyle="rgb(111,230,255)"; ctx.fill();
+  }
+
+  function animateTrack(){
+    carPos=(carPos+0.0022)%1;
+    if(carPos<0.003){ lap=Math.min(66,lap+1); }
+    drawTrack();
+    trackRaf=requestAnimationFrame(animateTrack);
+  }
+
+  function tickClock(){
+    if(!raceStartTime||!pwClock) return;
+    const ms=Date.now()-raceStartTime, s=Math.floor(ms/1000), m=Math.floor(s/60), sec=s%60;
+    pwClock.textContent=`LAP ${lap} · ${String(m).padStart(2,"0")}:${String(sec).padStart(2,"0")}`;
+  }
+
+  function logRadio(html, delay2=0){
+    if(!radioLog) return;
+    setTimeout(()=>{
+      const p=document.createElement("p"); p.innerHTML=html;
+      radioLog.appendChild(p); radioLog.scrollTop=radioLog.scrollHeight;
+    }, delay2);
+  }
+
+  const SCENARIOS=[
+    {
+      title:"⛈ SUDDEN DOWNPOUR · LAP 23 / 66",
+      desc:"Rain sensors: 80% precipitation. Track temp dropping 12°C. Soft tyres showing aquaplaning signatures. Safety Car deployed. Pit window: 2 laps.",
+      choices:[
+        {key:"A",label:"PIT NOW",sub:"Box for intermediates, 2.8s stop",correct:true,
+         result:{pos:"P1",gap:"FL +0.4s",detail:"Fastest lap in sector 2. Led from lap 26. Perfect read.",fastest:true}},
+        {key:"B",label:"STAY OUT",sub:"Ride slicks, trust the gap holds",correct:false,
+         result:{pos:"DNF",gap:"LAP 24",detail:"Aquaplane at T9. Rear locked, beached in gravel. Race over.",fastest:false}}
+      ],
+      error:"STRATEGY ERROR — TIRE_AQUAPLANE\nRunning slicks on wet tarmac is a DNF risk.\nDriver reported rear instability at 280 km/h.\nProtocol: wet-weather compounds mandatory.",
+      modalTitle:"Smart call: pit for intermediates",
+      modalBody:"Staying on slicks in heavy rain risks a crash or DNF. The correct read was safety car deployment plus wet compound switch. This is the kind of data-driven, time-critical decision I bring to engineering: read the signals, act on evidence, not instinct.",
+      modalTags:["Real-time decision making","Risk assessment","Data pipelines","Time-critical ops"],
+      cta:{label:"See my work →",href:"#build"}
+    },
+    {
+      title:"⚡ ERS OVERHEAT · LAP 41 / 66",
+      desc:"MGU-K temp: 187°C (limit: 180°C). Energy store discharge rate unstable. Unchecked: thermal runaway in ~3 laps. Currently P2, 1.2s behind leader.",
+      choices:[
+        {key:"A",label:"DERATE 15%",sub:"Lower harvest rate, protect the MGU-K",correct:true,
+         result:{pos:"P3",gap:"+2.1s",detail:"Finished. System stable. Points secured on merit.",fastest:false}},
+        {key:"B",label:"PUSH MAX",sub:"Force the overtake attempt this lap",correct:false,
+         result:{pos:"DNF",gap:"LAP 43",detail:"MGU-K failure at T1. Thermal runaway. Car retired.",fastest:false}}
+      ],
+      error:"CRITICAL — ERS_THERMAL_LIMIT_EXCEEDED\nMGU-K failure at Turn 1. Car retired from race.\nForcing max harvest above thermal limit caused\nunrecoverable hardware damage.",
+      modalTitle:"System health over short-term gain",
+      modalBody:"Forcing maximum power through an overheating system causes cascade failure. The derating patch trades 3 positions for a finish. I apply this same principle in data systems: a healthy pipeline delivering at 90% beats a broken one that promised 100%.",
+      modalTags:["Systems thinking","Monitoring & alerting","Trade-off analysis","Data reliability"],
+      cta:{label:"See my projects →",href:"#build"}
+    },
+    {
+      title:"⚔ THE UNDERCUT · LAP 48 / 66",
+      desc:"Gap to P1: 1.8s. Car ahead on 18-lap-old hards, degrading fast. Our car on fresher mediums, delta +0.3s/lap. Pit crew staged. Window: this lap only.",
+      choices:[
+        {key:"A",label:"PIT THIS LAP",sub:"Pre-staged crew, 2.0s target stop",correct:true,
+         result:{pos:"P1",gap:"-1.8s",detail:"Fastest lap. Undercut worked. Led every lap after the stop.",fastest:true}},
+        {key:"B",label:"WAIT 2 LAPS",sub:"Build more gap before boxing",correct:false,
+         result:{pos:"P2",gap:"+3.4s",detail:"P1 pitted first. Window closed. We never recovered the gap.",fastest:false}}
+      ],
+      error:"STRATEGY MISS — UNDERCUT_WINDOW_CLOSED\nP1 extended their stint, neutralizing our delta.\nDelayed entry allowed rival to pit first\nand steal the undercut opportunity.",
+      modalTitle:"Execute on the window. Don't wait for perfect.",
+      modalBody:"The undercut requires timing precision. Waiting 2 laps closes the window permanently. I ship working software and data systems on the right window, not endlessly optimizing for a perfect moment that never comes. RepTrack went to the App Store. SQL Playground is live.",
+      modalTags:["Execution timing","Pipeline orchestration","Shipped iOS app","Live deployments"],
+      cta:{label:"RepTrack on App Store ↗",href:"https://apps.apple.com/us/app/reptrack-workout-log/id6761032027",external:true}
+    }
+  ];
+
+  function loadScenario(idx){
+    if(idx>=SCENARIOS.length){ allDone(); return; }
+    currentScenario=idx;
+    const sc=SCENARIOS[idx];
+    [choiceA, choiceB].forEach((btn,i)=>{
+      const c=sc.choices[i];
+      btn.className="pw-choice-btn"; btn.disabled=false;
+      btn.innerHTML=`<span class="pw-choice-key">${c.key}</span><span class="pw-choice-label">${c.label}</span><span class="pw-choice-sub">${c.sub}</span>`;
+    });
+    if(resultEl){ resultEl.className="pw-result"; resultEl.innerHTML=""; }
+    errorBox.className="pw-error-box"; errorBox.textContent="";
+    retryBtn.className="pw-retry-btn";
+    if(pwIncident) pwIncident.classList.add("active");
+    if(pwStatus) pwStatus.textContent="INCIDENT DETECTED";
+    logRadio(`<span class="rlog-alert">[ALERT]</span> ${sc.title}`);
+    logRadio(`<span class="rlog-team">[PITWALL]</span> ${sc.desc}`,900);
+    logRadio(`<span class="rlog-team">[PITWALL]</span> Your call, engineer.`,2000);
+    setTimeout(()=>{
+      if(scenTitle) scenTitle.textContent=sc.title;
+      if(scenDesc)  scenDesc.textContent=sc.desc;
+      if(scenBox)   scenBox.style.display="";
+      if(choicesEl) choicesEl.style.display="";
+      if(progressEl) progressEl.textContent=`SCENARIO ${idx+1} / ${SCENARIOS.length}`;
+    },2400);
+  }
+
+  function handleChoice(choice, idx){
+    choiceA.disabled=true; choiceB.disabled=true;
+    const sc=SCENARIOS[currentScenario];
+    const res=choice.result;
+    const posClass=res.pos==="P1"?"p1":res.pos==="P2"?"p2":res.pos==="P3"?"p3":"dnf";
+    if(resultEl){
+      resultEl.innerHTML=`<div class="pw-result-row"><span class="pw-result-badge ${posClass}">${res.pos}</span><span class="pw-result-gap">${res.gap}</span></div><div class="pw-result-detail">${res.detail}</div>${res.fastest?'<div class="pw-result-fl">⬦ FASTEST LAP</div>':''}`;
+      resultEl.classList.add("active");
+    }
+    if(choice.correct){
+      logRadio(`<span class="rlog-team">[PITWALL]</span> ✓ Confirmed. Executing sequence.`);
+      if(pwIncident) pwIncident.classList.remove("active");
+      if(pwStatus) pwStatus.textContent="STRATEGY LOCKED";
+      setTimeout(()=>showModal(sc),2200);
+    } else {
+      (idx===0?choiceA:choiceB).classList.add("wrong");
+      (idx===0?choiceB:choiceA).classList.add("correct");
+      logRadio(`<span class="rlog-alert">[ERROR]</span> ${sc.error.split("\n")[0]}`);
+      errorBox.textContent=sc.error; errorBox.classList.add("active");
+      retryBtn.classList.add("active");
+    }
+  }
+
+  function showModal(sc){
+    if(!modal) return;
+    if(modalTitle) modalTitle.textContent=sc.modalTitle;
+    if(modalBody)  modalBody.textContent=sc.modalBody;
+    if(modalTags)  modalTags.innerHTML=sc.modalTags.map(t=>`<span class="pw-modal-tag">${t}</span>`).join("");
+    if(modalActions){
+      const isExt=sc.cta.external;
+      modalActions.innerHTML=`<a class="btn btn-primary" href="${sc.cta.href}"${isExt?' target="_blank" rel="noopener noreferrer"':''}>${sc.cta.label}</a>`;
+      if(currentScenario+1<SCENARIOS.length){
+        const nb=document.createElement("button");
+        nb.className="btn btn-ghost"; nb.textContent="Next incident →";
+        nb.addEventListener("click",()=>{ modal.classList.remove("open"); loadScenario(currentScenario+1); });
+        modalActions.appendChild(nb);
+      }
+    }
+    modal.classList.add("open");
+  }
+
+  function allDone(){
+    logRadio(`<span class="rlog-team">[PITWALL]</span> All incidents resolved. P1. Race complete.`);
+    if(pwStatus) pwStatus.textContent="RACE COMPLETE ✓";
+    if(pwIncident) pwIncident.classList.remove("active");
+  }
+
+  function startSimulation(){
+    if(started) return; started=true;
+    raceStartTime=Date.now();
+    setInterval(tickClock,1000);
+    setInterval(updateTelemetry,130);
+    updateTelemetry();
+    drawTrack();
+    if(!REDUCED) animateTrack();
+    logRadio(`<span class="rlog-team">[PITWALL]</span> Race systems online. All channels open.`,800);
+    logRadio(`<span class="rlog-driver">[DRIVER]</span> Box is ready. Waiting for your call.`,2000);
+    logRadio(`<span class="rlog-team">[PITWALL]</span> Three incidents incoming. Trust the data.`,3200);
+    setTimeout(()=>loadScenario(0),5200);
+    setInterval(()=>{
+      const deg=telData.tyre[telData.tyre.length-1]||0;
+      if(tyreLabel) tyreLabel.textContent=`TYRE: ${deg>70?"INTER":deg>50?"HARD":deg>30?"MED":"SOFT"} ${Math.round(deg)}%`;
+      if(gapLabel) gapLabel.textContent=`GAP: +${(Math.random()*2.5+.5).toFixed(1)}s`;
+      if(lapLabel) lapLabel.textContent=`LAP ${lap} / 66`;
+    },2200);
+  }
+
+  if(choiceA) choiceA.addEventListener("click",()=>handleChoice(SCENARIOS[currentScenario]?.choices[0],0));
+  if(choiceB) choiceB.addEventListener("click",()=>handleChoice(SCENARIOS[currentScenario]?.choices[1],1));
+  if(retryBtn) retryBtn.addEventListener("click",()=>{ logRadio(`<span class="rlog-team">[PITWALL]</span> Reloading scenario. Make the right call.`); loadScenario(currentScenario); });
+  if(modalClose) modalClose.addEventListener("click",()=>modal.classList.remove("open"));
+  if(modal) modal.addEventListener("click",e=>{ if(e.target===modal) modal.classList.remove("open"); });
+  if(bypassBtn) bypassBtn.addEventListener("click",()=>{
+    if(!bypassPanel) return;
+    bypassPanel.classList.toggle("open");
+    bypassBtn.textContent=bypassPanel.classList.contains("open")?"Hide bypass ↑":"Bypass simulation ↓";
+  });
+
+  const io=new IntersectionObserver(entries=>{ if(entries[0].isIntersecting){ startSimulation(); io.disconnect(); } },{threshold:.12});
+  io.observe(section);
+})();
+
 })();
 </script>
+
+<script type="text/x-disabled">
+/* DATA CRISIS — SE RPG · Phaser 3 — DISABLED (game section hidden) */
+(function rpgGame(){
+  if(!document.getElementById('rpg-host')) return;
+
+  const T = 32; // tile px
+  const COLS = 20, ROWS = 13;
+  const GW = COLS * T; // 640
+  const GH = ROWS * T; // 416
+
+  // 0=floor 1=wall 2=desk 3=window
+  const MAP = [
+    [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+    [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+    [1,0,2,2,0,0,0,2,2,0,0,2,2,0,0,0,2,2,0,1],
+    [1,0,2,2,0,0,0,2,2,0,0,2,2,0,0,0,2,2,0,1],
+    [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+    [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+    [1,0,2,2,0,0,0,0,0,0,0,0,0,0,0,0,2,2,0,1],
+    [1,0,2,2,0,0,0,0,0,0,0,0,0,0,0,0,2,2,0,1],
+    [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+    [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+    [1,0,2,2,0,0,0,2,2,0,0,2,2,0,0,0,2,2,0,1],
+    [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+    [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+  ];
+
+  const NPC_DATA = [
+    {
+      id:'pm', name:'Sam · PM', tileX:3, tileY:5,
+      color:0x6fe6ff, labelColor:'#6fe6ff',
+      dialog:[
+        'ALERT: The Walgreens pricing feed has been down for 2 hours.',
+        'Their entire planogram system is frozen because of us.',
+        'Talk to the client and Priya the engineer.',
+        'Fix it before the 4pm standup — please.'
+      ]
+    },
+    {
+      id:'client', name:'Alex · Client', tileX:16, tileY:9,
+      color:0xffb454, labelColor:'#ffb454',
+      dialog:[
+        'Do you have any idea what this is costing us?',
+        'We\'re missing price data for 12,000 SKUs right now.',
+        'Deloitte is calling every 20 minutes.',
+        'I don\'t care how — just fix it.'
+      ]
+    },
+    {
+      id:'eng', name:'Priya · Engineer', tileX:16, tileY:3,
+      color:0x5cf2a6, labelColor:'#5cf2a6',
+      dialog:[
+        'Found the issue — a NULL slipped through the upstream feed at 09:47.',
+        'It\'s crashing the Snowflake transform job on every retry.',
+        'Head to the terminal in the middle of the office.',
+        'Pick the right fix and I\'ll validate the output.'
+      ]
+    }
+  ];
+
+  const TERMINAL = {tileX:10, tileY:6};
+
+  const CHOICES = [
+    {
+      label:'A — COALESCE(value, 0)',
+      sub:'Wrap the column in COALESCE inside the transform query',
+      correct:true,
+      ok:'Correct. COALESCE handles the NULL gracefully — the row is kept, the job runs. Pipeline restored.',
+      fail:''
+    },
+    {
+      label:'B — DELETE FROM feed WHERE value IS NULL',
+      sub:'Remove the NULL record from the source table',
+      correct:false,
+      ok:'',
+      fail:'Wrong. Deleting source data is irreversible. You\'d lose the historical record permanently.'
+    },
+    {
+      label:'C — RESTART WAREHOUSE datasembly_prod',
+      sub:'Full warehouse restart to flush the stuck job',
+      correct:false,
+      ok:'',
+      fail:'Wrong. The bad record is still there — a restart just fails again. Fix the root cause.'
+    }
+  ];
+
+  /* ---- SCENE: INTRO ---- */
+  class IntroScene extends Phaser.Scene {
+    constructor(){ super('Intro'); }
+    create(){
+      const W=GW, H=GH;
+      this.add.rectangle(W/2,H/2,W,H,0x06090f);
+
+      // Grid
+      const g=this.add.graphics();
+      g.lineStyle(1,0x8ca8d6,0.04);
+      for(let x=0;x<W;x+=T){g.moveTo(x,0);g.lineTo(x,H);}
+      for(let y=0;y<H;y+=T){g.moveTo(0,y);g.lineTo(W,y);}
+      g.strokePath();
+
+      // Alert pill
+      const pill=this.add.graphics();
+      pill.fillStyle(0x1a0508,1); pill.fillRoundedRect(W/2-110,H/2-115,220,26,13);
+      pill.lineStyle(1,0xff6b8b,0.7); pill.strokeRoundedRect(W/2-110,H/2-115,220,26,13);
+      this.add.text(W/2,H/2-102,'⚠  PIPELINE INCIDENT  ⚠',{
+        fontFamily:'"JetBrains Mono",monospace',fontSize:'10px',color:'#ff6b8b',letterSpacing:2
+      }).setOrigin(0.5);
+
+      this.add.text(W/2,H/2-68,'DATA CRISIS',{
+        fontFamily:'"Bricolage Grotesque",sans-serif',fontSize:'40px',fontStyle:'bold',color:'#e9effb'
+      }).setOrigin(0.5);
+      this.add.text(W/2,H/2-32,'A Solutions Engineer Story',{
+        fontFamily:'"JetBrains Mono",monospace',fontSize:'12px',color:'#6fe6ff',letterSpacing:2
+      }).setOrigin(0.5);
+
+      this.add.text(W/2,H/2+10,
+        'The Walgreens pricing feed dropped at 09:47.\nYour PM is panicking. The client is furious.\nThree NPCs. One puzzle. Fix it.',
+        {fontFamily:'"JetBrains Mono",monospace',fontSize:'11px',color:'#a9b8d4',align:'center',lineSpacing:6}
+      ).setOrigin(0.5);
+
+      // Start button
+      const bx=W/2, by=H/2+90;
+      const btn=this.add.graphics();
+      btn.fillStyle(0x1fb3d6,0.1); btn.fillRoundedRect(bx-80,by-18,160,36,9);
+      btn.lineStyle(1,0x6fe6ff,0.6); btn.strokeRoundedRect(bx-80,by-18,160,36,9);
+      const btnTxt=this.add.text(bx,by,'CLOCK IN  →',{
+        fontFamily:'"JetBrains Mono",monospace',fontSize:'12px',fontStyle:'bold',color:'#6fe6ff',letterSpacing:2
+      }).setOrigin(0.5);
+
+      const zone=this.add.zone(bx,by,160,36).setInteractive({cursor:'pointer'});
+      zone.on('pointerover',()=>{btn.clear();btn.fillStyle(0x1fb3d6,0.22);btn.fillRoundedRect(bx-80,by-18,160,36,9);btn.lineStyle(1,0x6fe6ff,1);btn.strokeRoundedRect(bx-80,by-18,160,36,9);});
+      zone.on('pointerout',()=>{btn.clear();btn.fillStyle(0x1fb3d6,0.1);btn.fillRoundedRect(bx-80,by-18,160,36,9);btn.lineStyle(1,0x6fe6ff,0.6);btn.strokeRoundedRect(bx-80,by-18,160,36,9);});
+      zone.on('pointerdown',()=>this.scene.start('Game'));
+      this.input.keyboard.once('keydown',()=>this.scene.start('Game'));
+
+      // Blink cursor
+      const cur=this.add.rectangle(bx+56,by,7,14,0x6fe6ff);
+      this.tweens.add({targets:cur,alpha:0,duration:500,yoyo:true,repeat:-1});
+
+      this.add.text(W-10,H-10,'v1.0 · datasembly_prod_wh',{
+        fontFamily:'"JetBrains Mono",monospace',fontSize:'8px',color:'#1e2d47'
+      }).setOrigin(1,1);
+    }
+  }
+
+  /* ---- SCENE: GAME ---- */
+  class GameScene extends Phaser.Scene {
+    constructor(){ super('Game'); }
+
+    create(){
+      this.inDialog=false;
+      this.dialogQueue=[];
+      this.dialogIdx=0;
+      this.currentNPC=null;
+      this.talkedTo={pm:false,client:false,eng:false};
+      this.terminalReady=false;
+
+      this.buildMap();
+      this.buildNPCs();
+      this.buildTerminal();
+      this.buildPlayer();
+      this.buildHUD();
+      this.buildOverlays();
+
+      this.cursors=this.input.keyboard.createCursorKeys();
+      this.wasd=this.input.keyboard.addKeys({
+        up:Phaser.Input.Keyboard.KeyCodes.W,
+        down:Phaser.Input.Keyboard.KeyCodes.S,
+        left:Phaser.Input.Keyboard.KeyCodes.A,
+        right:Phaser.Input.Keyboard.KeyCodes.D
+      });
+      this.input.keyboard.on('keydown-E',()=>this.tryInteract());
+      this.input.keyboard.on('keydown-SPACE',()=>this.tryInteract());
+
+      this.cameras.main.fadeIn(500,6,9,15);
+    }
+
+    buildMap(){
+      const g=this.add.graphics();
+      for(let row=0;row<ROWS;row++){
+        for(let col=0;col<COLS;col++){
+          const tile=MAP[row][col];
+          const x=col*T, y=row*T;
+          if(tile===1){
+            g.fillStyle(0x050810); g.fillRect(x,y,T,T);
+            g.fillStyle(0x0c1526); g.fillRect(x+1,y+1,T-2,T-2);
+            g.fillStyle(0x172040,0.6); g.fillRect(x+2,y+2,T-4,5);
+          } else if(tile===0){
+            g.fillStyle(0x0b1422); g.fillRect(x,y,T,T);
+            g.fillStyle(0x0f1c30,0.5); g.fillRect(x,y,T,1);
+            g.fillStyle(0x0f1c30,0.5); g.fillRect(x,y,1,T);
+          } else if(tile===2){
+            g.fillStyle(0x0b1422); g.fillRect(x,y,T,T);
+            g.fillStyle(0x111e35); g.fillRect(x+2,y+5,T-4,T-9);
+            g.fillStyle(0x1a2f4a); g.fillRect(x+2,y+5,T-4,6);
+            // monitor screen
+            g.fillStyle(0x060e1c); g.fillRect(x+6,y+7,20,13);
+            g.fillStyle(0x0c2035); g.fillRect(x+7,y+8,18,11);
+            g.fillStyle(0x6fe6ff,0.06); g.fillRect(x+7,y+8,18,3);
+          }
+        }
+      }
+    }
+
+    buildNPCs(){
+      this.npcs=[];
+      for(const d of NPC_DATA){
+        const nx=d.tileX*T+T/2, ny=d.tileY*T+T/2;
+        const body=this.add.graphics();
+        body.fillStyle(d.color,1);
+        body.fillRoundedRect(-10,-10,20,20,4);
+        body.fillStyle(0x000000,0.25);
+        body.fillRect(-10,-10,20,5);
+        body.setPosition(nx,ny);
+
+        const lbl=this.add.text(nx,ny-17,d.name,{
+          fontFamily:'"JetBrains Mono",monospace',fontSize:'8px',
+          color:d.labelColor,backgroundColor:'#06090fcc',padding:{x:4,y:2}
+        }).setOrigin(0.5,1);
+
+        const ep=this.add.text(nx,ny+16,'[E]',{
+          fontFamily:'"JetBrains Mono",monospace',fontSize:'9px',color:'#ffffff'
+        }).setOrigin(0.5).setAlpha(0);
+
+        this.tweens.add({
+          targets:body, y:ny-4,
+          duration:800+Math.random()*400, yoyo:true, repeat:-1,
+          ease:'Sine.easeInOut', delay:Math.random()*700
+        });
+
+        this.npcs.push({...d,body,lbl,ep,nx,ny});
+      }
+    }
+
+    buildTerminal(){
+      const tx=TERMINAL.tileX*T, ty=TERMINAL.tileY*T;
+      const cx=tx+T/2, cy=ty+T/2;
+      const g=this.add.graphics();
+      g.fillStyle(0x0b1422); g.fillRect(tx,ty,T,T);
+      g.fillStyle(0x071522); g.fillRoundedRect(tx+3,ty+4,T-6,T-8,3);
+      g.fillStyle(0x6fe6ff,0.12); g.fillRect(tx+4,ty+5,T-8,T-10);
+      // scanlines
+      g.fillStyle(0x6fe6ff,0.2);
+      for(let i=0;i<4;i++) g.fillRect(tx+5,ty+8+i*5,T-12,1);
+
+      this.terminalLbl=this.add.text(cx,ty+T+4,'TERMINAL',{
+        fontFamily:'"JetBrains Mono",monospace',fontSize:'7px',color:'#1fb3d6',letterSpacing:1
+      }).setOrigin(0.5,0);
+
+      this.terminalGlow=this.add.graphics();
+      this.terminalGlow.lineStyle(2,0x6fe6ff,0.2);
+      this.terminalGlow.strokeRect(tx+1,ty+1,T-2,T-2);
+
+      this.terminalEP=this.add.text(cx,cy+20,'[E]',{
+        fontFamily:'"JetBrains Mono",monospace',fontSize:'9px',color:'#6fe6ff'
+      }).setOrigin(0.5).setAlpha(0);
+    }
+
+    buildPlayer(){
+      this.px=TERMINAL.tileX*T+T/2;
+      this.py=10*T+T/2;
+      this.pdir='up';
+      this.pspeed=2.2;
+      this.playerGfx=this.add.graphics();
+      this.redrawPlayer();
+    }
+
+    redrawPlayer(){
+      const g=this.playerGfx;
+      g.clear(); g.setPosition(this.px,this.py);
+      // shadow
+      g.fillStyle(0x000000,0.18); g.fillEllipse(0,11,14,6);
+      // body
+      g.fillStyle(0xe9effb); g.fillRoundedRect(-8,-8,16,16,3);
+      g.fillStyle(0xb0bfd8,0.4); g.fillRect(-8,-8,16,4);
+      // direction arrow
+      g.fillStyle(0x6fe6ff);
+      const a={up:[0,-12,-4,-7,4,-7],down:[0,12,-4,7,4,7],
+               left:[-12,0,-7,-4,-7,4],right:[12,0,7,-4,7,4]};
+      const p=a[this.pdir];
+      if(p) g.fillTriangle(p[0],p[1],p[2],p[3],p[4],p[5]);
+    }
+
+    canMove(px,py){
+      const m=7;
+      for(const [cx,cy] of [[px-m,py-m],[px+m,py-m],[px-m,py+m],[px+m,py+m]]){
+        const tx=Math.floor(cx/T), ty=Math.floor(cy/T);
+        if((MAP[ty]?.[tx]??1)!==0) return false;
+      }
+      return true;
+    }
+
+    buildHUD(){
+      this.hudBg=this.add.rectangle(GW/2,13,GW,26,0x03060d,0.9).setDepth(10);
+      this.hudTxt=this.add.text(10,5,'🔴  INCIDENT ACTIVE — talk to Sam, Alex and Priya',{
+        fontFamily:'"JetBrains Mono",monospace',fontSize:'9px',color:'#ff6b8b',letterSpacing:0.5
+      }).setDepth(11);
+      this.hudCount=this.add.text(GW-10,5,'0/3 NPCs',{
+        fontFamily:'"JetBrains Mono",monospace',fontSize:'9px',color:'#3d5070'
+      }).setOrigin(1,0).setDepth(11);
+    }
+
+    buildOverlays(){
+      const host=document.getElementById('rpg-host');
+
+      // Dialog box
+      const dlg=document.createElement('div');
+      dlg.style.cssText='display:none;position:absolute;bottom:0;left:0;right:0;'
+        +'background:rgba(4,7,14,0.93);border-top:1px solid rgba(140,168,214,.22);'
+        +'padding:12px 18px 10px;flex-direction:column;gap:5px;'
+        +'font-family:"JetBrains Mono",monospace;backdrop-filter:blur(10px);';
+      const dName=document.createElement('div');
+      dName.style.cssText='font-size:10px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:#6fe6ff;';
+      const dText=document.createElement('div');
+      dText.style.cssText='font-size:12px;color:#a9b8d4;line-height:1.75;';
+      const dHint=document.createElement('div');
+      dHint.style.cssText='font-size:9px;color:#2d3f5e;letter-spacing:.12em;text-align:right;margin-top:3px;';
+      dHint.textContent='PRESS E / SPACE / CLICK TO CONTINUE';
+      dlg.append(dName,dText,dHint);
+      dlg.addEventListener('click',()=>this.tryInteract());
+      host.appendChild(dlg);
+      this.dlgBox=dlg; this.dlgName=dName; this.dlgText=dText;
+
+      // Puzzle overlay
+      const pzl=document.createElement('div');
+      pzl.style.cssText='display:none;position:absolute;inset:0;'
+        +'background:rgba(3,6,12,0.97);flex-direction:column;align-items:center;'
+        +'justify-content:center;gap:12px;padding:22px;'
+        +'font-family:"JetBrains Mono",monospace;';
+
+      const pt=document.createElement('div');
+      pt.style.cssText='font-size:10px;color:#ff6b8b;letter-spacing:.22em;text-transform:uppercase;';
+      pt.textContent='⚠  SNOWFLAKE TRANSFORM FAILURE';
+
+      const pd=document.createElement('div');
+      pd.style.cssText='font-size:11px;color:#6fe6ff;text-align:center;max-width:440px;line-height:1.8;';
+      pd.innerHTML='The pipeline job is crashing on a NULL value in the upstream feed.<br>Choose the correct fix:';
+
+      const pc=document.createElement('div');
+      pc.style.cssText='display:flex;flex-direction:column;gap:8px;width:100%;max-width:480px;';
+
+      const pfb=document.createElement('div');
+      pfb.style.cssText='font-size:11px;text-align:center;min-height:1.6em;max-width:460px;line-height:1.5;color:#3d5070;';
+
+      for(const ch of CHOICES){
+        const btn=document.createElement('button');
+        btn.style.cssText='font-family:"JetBrains Mono",monospace;font-size:10px;'
+          +'padding:11px 16px;border-radius:8px;border:1px solid rgba(140,168,214,.18);'
+          +'background:rgba(11,20,34,.7);color:#a9b8d4;cursor:pointer;text-align:left;'
+          +'letter-spacing:.05em;transition:all .2s;width:100%;';
+        btn.innerHTML=`<strong>${ch.label}</strong><br><span style="color:#3d5070;font-size:9px;">${ch.sub}</span>`;
+        btn.addEventListener('mouseover',()=>{
+          if(btn.dataset.done) return;
+          btn.style.borderColor=ch.correct?'rgba(92,242,166,.4)':'rgba(255,107,139,.35)';
+          btn.style.background='rgba(14,23,48,.9)'; btn.style.color='#e9effb';
+        });
+        btn.addEventListener('mouseout',()=>{
+          if(btn.dataset.done) return;
+          btn.style.borderColor='rgba(140,168,214,.18)';
+          btn.style.background='rgba(11,20,34,.7)'; btn.style.color='#a9b8d4';
+        });
+        btn.addEventListener('click',()=>{
+          if(pzl.dataset.locked) return;
+          pzl.dataset.locked='1';
+          btn.dataset.done='1';
+          if(ch.correct){
+            btn.style.borderColor='#5cf2a6'; btn.style.background='rgba(92,242,166,.1)'; btn.style.color='#5cf2a6';
+            pfb.style.color='#5cf2a6'; pfb.textContent='✓  '+ch.ok;
+            setTimeout(()=>{ pzl.style.display='none'; this.inDialog=false; this.scene.start('Win'); },1900);
+          } else {
+            btn.style.borderColor='#ff6b8b'; btn.style.background='rgba(255,107,139,.07)'; btn.style.color='#ff6b8b';
+            pfb.style.color='#ff6b8b'; pfb.textContent='✗  '+ch.fail;
+            setTimeout(()=>{
+              delete pzl.dataset.locked; delete btn.dataset.done;
+              btn.style.borderColor='rgba(140,168,214,.18)'; btn.style.background='rgba(11,20,34,.7)'; btn.style.color='#a9b8d4';
+              pfb.style.color='#3d5070'; pfb.textContent='Try again — think about data integrity.';
+            },2200);
+          }
+        });
+        pc.appendChild(btn);
+      }
+
+      pzl.append(pt,pd,pc,pfb);
+      host.appendChild(pzl);
+      this.pzlBox=pzl;
+    }
+
+    tryInteract(){
+      if(this.pzlBox.style.display==='flex') return;
+      if(this.inDialog){ this.advanceDialog(); return; }
+
+      for(const npc of this.npcs){
+        if(Phaser.Math.Distance.Between(this.px,this.py,npc.nx,npc.ny)<50){
+          this.startDialog(npc); return;
+        }
+      }
+      if(this.terminalReady){
+        const tcx=TERMINAL.tileX*T+T/2, tcy=TERMINAL.tileY*T+T/2;
+        if(Phaser.Math.Distance.Between(this.px,this.py,tcx,tcy)<54){
+          this.openPuzzle();
+        }
+      }
+    }
+
+    startDialog(npc){
+      this.inDialog=true; this.currentNPC=npc;
+      this.dialogQueue=npc.dialog; this.dialogIdx=0;
+      this.showLine(npc.name,npc.dialog[0],npc.labelColor);
+    }
+
+    advanceDialog(){
+      this.dialogIdx++;
+      if(this.dialogIdx<this.dialogQueue.length){
+        this.showLine(this.currentNPC.name,this.dialogQueue[this.dialogIdx],this.currentNPC.labelColor);
+      } else {
+        this.dlgBox.style.display='none'; this.inDialog=false;
+        this.talkedTo[this.currentNPC.id]=true;
+        this.checkTerminal();
+      }
+    }
+
+    showLine(name,text,color){
+      this.dlgBox.style.display='flex';
+      this.dlgName.textContent=name; this.dlgName.style.color=color||'#6fe6ff';
+      this.dlgText.textContent=text;
+    }
+
+    checkTerminal(){
+      const n=Object.values(this.talkedTo).filter(Boolean).length;
+      this.hudCount.setText(n+'/3 NPCs');
+      if(n===3 && !this.terminalReady){
+        this.terminalReady=true;
+        this.hudTxt.setText('⚡  TERMINAL UNLOCKED — go to the terminal in the center');
+        this.hudTxt.setStyle({color:'#ffb454'});
+        // Pulse glow on terminal
+        this.tweens.add({
+          targets:this.terminalGlow, alpha:0.8,
+          duration:600, yoyo:true, repeat:-1
+        });
+      }
+    }
+
+    openPuzzle(){
+      this.inDialog=true;
+      this.pzlBox.style.display='flex';
+    }
+
+    update(){
+      if(this.inDialog || this.pzlBox.style.display==='flex') return;
+
+      const sp=this.pspeed;
+      let moved=false;
+
+      if((this.cursors.left.isDown||this.wasd.left.isDown) && this.canMove(this.px-sp,this.py)){
+        this.px-=sp; this.pdir='left'; moved=true;
+      } else if((this.cursors.right.isDown||this.wasd.right.isDown) && this.canMove(this.px+sp,this.py)){
+        this.px+=sp; this.pdir='right'; moved=true;
+      }
+      if((this.cursors.up.isDown||this.wasd.up.isDown) && this.canMove(this.px,this.py-sp)){
+        this.py-=sp; this.pdir='up'; moved=true;
+      } else if((this.cursors.down.isDown||this.wasd.down.isDown) && this.canMove(this.px,this.py+sp)){
+        this.py+=sp; this.pdir='down'; moved=true;
+      }
+      if(moved) this.redrawPlayer();
+
+      // NPC E prompts + talk count
+      let talked=0;
+      for(const npc of this.npcs){
+        if(this.talkedTo[npc.id]) talked++;
+        const near=Phaser.Math.Distance.Between(this.px,this.py,npc.nx,npc.ny)<50;
+        npc.ep.setAlpha(near&&!this.inDialog?1:0);
+      }
+      this.hudCount.setText(talked+'/3 NPCs');
+
+      // Terminal E prompt
+      if(this.terminalReady){
+        const tcx=TERMINAL.tileX*T+T/2, tcy=TERMINAL.tileY*T+T/2;
+        const near=Phaser.Math.Distance.Between(this.px,this.py,tcx,tcy)<54;
+        this.terminalEP.setAlpha(near?1:0);
+      }
+    }
+  }
+
+  /* ---- SCENE: WIN ---- */
+  class WinScene extends Phaser.Scene {
+    constructor(){ super('Win'); }
+    create(){
+      const W=GW, H=GH;
+      this.add.rectangle(W/2,H/2,W,H,0x06090f);
+
+      const flash=this.add.rectangle(W/2,H/2,W,H,0x5cf2a6,0);
+      this.tweens.add({targets:flash,alpha:0.08,duration:500,yoyo:true,repeat:3});
+
+      this.add.text(W/2,60,'✓  PIPELINE RESTORED',{
+        fontFamily:'"JetBrains Mono",monospace',fontSize:'11px',color:'#5cf2a6',letterSpacing:3
+      }).setOrigin(0.5);
+
+      this.add.text(W/2,96,'Incident Closed',{
+        fontFamily:'"Bricolage Grotesque",sans-serif',fontSize:'34px',fontStyle:'bold',color:'#e9effb'
+      }).setOrigin(0.5);
+
+      const rows=[
+        ['Root cause','NULL in upstream feed · 09:47 UTC'],
+        ['Fix applied','COALESCE(value, 0) in transform query'],
+        ['SKUs restored','12,000 (Walgreens pricing data)'],
+        ['Client verdict','Satisfied ✓'],
+        ['4pm standup','Ready ✓'],
+        ['Downtime','2h 13m'],
+      ];
+
+      let y=148;
+      const lx=W/2-170, rx=W/2+170;
+      const sep=this.add.graphics();
+      sep.lineStyle(1,0x1e3050,1);
+      sep.moveTo(lx,y-10); sep.lineTo(rx,y-10); sep.strokePath();
+
+      for(const [k,v] of rows){
+        this.add.text(lx,y,k,{fontFamily:'"JetBrains Mono",monospace',fontSize:'10px',color:'#3d5070',letterSpacing:1});
+        this.add.text(rx,y,v,{fontFamily:'"JetBrains Mono",monospace',fontSize:'10px',color:'#a9b8d4',letterSpacing:1}).setOrigin(1,0);
+        y+=24;
+      }
+
+      sep.moveTo(lx,y+2); sep.lineTo(rx,y+2); sep.strokePath();
+
+      this.add.text(W/2,y+18,'+500 XP  ·  SOLUTIONS ENGINEER  ·  SKILL: DATA TRIAGE UNLOCKED',{
+        fontFamily:'"JetBrains Mono",monospace',fontSize:'9px',color:'#ffb454',letterSpacing:1
+      }).setOrigin(0.5);
+
+      // Replay button
+      const bx=W/2, by=H-38;
+      const bg=this.add.graphics();
+      bg.lineStyle(1,0x2d3f5e,1); bg.strokeRoundedRect(bx-70,by-15,140,30,8);
+      this.add.text(bx,by,'PLAY AGAIN',{
+        fontFamily:'"JetBrains Mono",monospace',fontSize:'10px',color:'#3d5070',letterSpacing:2
+      }).setOrigin(0.5);
+      const zone=this.add.zone(bx,by,140,30).setInteractive({cursor:'pointer'});
+      zone.on('pointerover',()=>{bg.clear();bg.lineStyle(1,0x6fe6ff,1);bg.strokeRoundedRect(bx-70,by-15,140,30,8);});
+      zone.on('pointerout',()=>{bg.clear();bg.lineStyle(1,0x2d3f5e,1);bg.strokeRoundedRect(bx-70,by-15,140,30,8);});
+      zone.on('pointerdown',()=>this.scene.start('Intro'));
+      this.input.keyboard.once('keydown',()=>this.scene.start('Intro'));
+
+      this.cameras.main.fadeIn(700,6,9,15);
+    }
+  }
+
+  /* ---- BOOT ---- */
+  function launch(){
+    if(typeof Phaser==='undefined'){ setTimeout(launch,150); return; }
+    new Phaser.Game({
+      type:Phaser.AUTO,
+      parent:'rpg-host',
+      width:GW, height:GH,
+      backgroundColor:'#06090f',
+      scale:{
+        mode:Phaser.Scale.FIT,
+        autoCenter:Phaser.Scale.CENTER_BOTH,
+        parent:'rpg-host',
+        width:GW, height:GH
+      },
+      scene:[IntroScene,GameScene,WinScene],
+      audio:{disableWebAudio:true},
+      input:{mouse:{preventDefaultWheel:false}}
+    });
+  }
+  launch();
+})();
+</script>
+
+<a href="#commit" class="hire-float" id="hire-float" aria-label="Contact Mohamed">
+  <span>Open to work</span>
+  <span class="hf-dot"></span>
+</a>
+
 </body>
 </html>
