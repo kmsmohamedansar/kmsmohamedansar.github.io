@@ -3203,7 +3203,8 @@ const $$ = (s,c)=> Array.from((c||document).querySelectorAll(s));
     revealNav();
   }
 
-  const start = ()=>{ REDUCED ? showAll() : run(); };
+  let _started = false;
+  const start = ()=>{ if(_started) return; _started=true; REDUCED ? showAll() : run(); };
   addEventListener("boot:done", start, {once:true});
   setTimeout(start, 4500); // safety fallback
 
