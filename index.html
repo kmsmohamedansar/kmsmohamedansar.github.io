@@ -1573,19 +1573,25 @@ html.light-mode body::before{
 .emet-terminal{
   border-radius:var(--r-lg);
   border:1px solid var(--line-strong);
-  background:rgba(6,9,15,.72);
-  backdrop-filter:blur(16px);
+  background:rgba(6,9,15,.78);
+  backdrop-filter:blur(20px);
   overflow:hidden;
+  position:relative;
   box-shadow:
-    0 0 0 1px rgba(111,230,255,.07),
-    0 32px 100px rgba(6,9,15,.7),
-    0 0 80px rgba(111,230,255,.04) inset;
+    0 0 0 1px rgba(111,230,255,.09),
+    0 32px 100px rgba(6,9,15,.72),
+    0 0 100px rgba(111,230,255,.05) inset;
+}
+.emet-terminal::before{
+  content:"";position:absolute;inset:0 0 auto 0;height:2px;
+  background:linear-gradient(90deg,transparent,rgba(111,230,255,.5) 40%,rgba(111,230,255,.15) 100%);
+  pointer-events:none;z-index:1;
 }
 .emet-bar{
   display:flex;align-items:center;gap:10px;
-  padding:12px 18px;
+  padding:11px 18px;
   border-bottom:1px solid var(--line);
-  background:rgba(10,16,32,.6);
+  background:rgba(8,13,26,.72);
 }
 .emet-bar .dots{display:flex;gap:6px}
 .emet-bar .dots i{width:11px;height:11px;border-radius:50%}
@@ -1593,22 +1599,23 @@ html.light-mode body::before{
 .emet-bar .dots i:nth-child(2){background:#febc2e}
 .emet-bar .dots i:nth-child(3){background:#28c840}
 .emet-bar-title{
-  font-family:var(--f-mono);font-size:.64rem;
-  letter-spacing:.14em;text-transform:uppercase;
+  font-family:var(--f-mono);font-size:.65rem;
+  letter-spacing:.06em;
   color:var(--text-3);flex:1;
 }
+.emet-bar-title b{color:var(--text-2);font-weight:600}
 .emet-status{
-  font-family:var(--f-mono);font-size:.6rem;
-  letter-spacing:.14em;text-transform:uppercase;
+  font-family:var(--f-mono);font-size:.58rem;
+  letter-spacing:.12em;text-transform:uppercase;
   color:var(--amber);
-  border:1px solid rgba(255,180,84,.3);
+  border:1px solid rgba(255,180,84,.28);
   border-radius:5px;padding:3px 9px;
   transition:color .4s,border-color .4s;
 }
-.emet-status.ready{color:var(--green);border-color:rgba(92,242,166,.35)}
+.emet-status.ready{color:var(--green);border-color:rgba(92,242,166,.32)}
 
 .emet-body{
-  padding:22px;
+  padding:24px 22px 18px;
   min-height:380px;
   font-family:var(--f-mono);
   font-size:.8rem;
@@ -1620,12 +1627,14 @@ html.light-mode body::before{
 @keyframes emet-slide{to{opacity:1;transform:none}}
 @keyframes emet-blink{0%,100%{opacity:1}50%{opacity:0}}
 .emet-typed{
-  font-family:var(--f-mono);font-size:.74rem;line-height:1.85;
+  font-family:var(--f-mono);font-size:.76rem;line-height:1.9;
   color:var(--text-2);white-space:pre-wrap;word-break:break-word;
-  flex:1;min-height:120px;margin-bottom:16px;
+  flex:1;min-height:120px;margin-bottom:18px;
 }
-.emet-typed .t-title{color:var(--cyan);font-weight:600}
+.emet-typed .t-title{color:var(--cyan);font-weight:700;font-size:.82rem}
 .emet-typed .t-name{color:var(--text);font-weight:700}
+.emet-typed .t-key{color:var(--text-3)}
+.emet-typed .t-val{color:var(--text-2)}
 .emet-typed .t-dim{color:var(--text-3)}
 .emet-cursor{
   display:inline-block;width:7px;height:.8em;
@@ -1638,24 +1647,38 @@ html.light-mode body::before{
   font-size:.65rem;letter-spacing:.14em;text-transform:uppercase;
   color:var(--text-3);margin-bottom:10px;
 }
-.emet-opts{display:flex;flex-direction:column;gap:6px;margin-bottom:18px}
+.emet-opts{display:flex;flex-direction:column;gap:5px;margin-bottom:18px}
 .emet-opt{
   display:flex;align-items:center;gap:14px;
   padding:10px 14px;
-  border-radius:8px;
-  border:1px solid var(--line);background:transparent;
+  border-radius:7px;
+  border:1px solid var(--line);
+  background:rgba(255,255,255,.02);
   color:var(--text-2);
-  font-family:var(--f-mono);font-size:.78rem;letter-spacing:.05em;
+  font-family:var(--f-mono);font-size:.76rem;letter-spacing:.04em;
   text-align:left;cursor:pointer;
-  transition:border-color .2s,color .2s,background .2s,transform .2s;
+  transition:border-color .18s,color .18s,background .18s,box-shadow .18s;
+  position:relative;
+}
+.emet-opt::before{
+  content:"";position:absolute;left:0;top:20%;bottom:20%;width:2px;
+  background:var(--cyan);border-radius:2px;opacity:0;
+  transition:opacity .18s;
 }
 .emet-opt:hover{
-  border-color:rgba(111,230,255,.4);
+  border-color:rgba(111,230,255,.35);
   color:var(--cyan);
-  background:rgba(111,230,255,.06);
-  transform:translateX(4px);
+  background:rgba(111,230,255,.05);
+  box-shadow:0 0 0 1px rgba(111,230,255,.07) inset;
 }
-.emet-n{color:var(--cyan);font-weight:700;min-width:16px;font-size:.82rem}
+.emet-opt:hover::before{opacity:1}
+.emet-n{
+  color:var(--text-3);font-weight:500;min-width:14px;font-size:.72rem;
+  border:1px solid var(--line);border-radius:4px;
+  width:22px;height:22px;display:grid;place-items:center;flex-shrink:0;
+  transition:color .18s,border-color .18s;
+}
+.emet-opt:hover .emet-n{color:var(--cyan);border-color:rgba(111,230,255,.4)}
 .emet-input-wrap{
   display:flex;align-items:center;gap:10px;
   border-top:1px solid var(--line);
@@ -1895,7 +1918,7 @@ html.light-mode .emet-bar{background:rgba(220,226,240,.6)}
     <div class="boot-logo">MA</div>
     <div class="boot-log" id="boot-log"></div>
     <div class="boot-bar"><i id="boot-bar"></i></div>
-    <div class="boot-foot">EMET-1 ONLINE · ancient kingdom archive · session #2026</div>
+    <div class="boot-foot">emet · portfolio terminal · session #2026</div>
   </div>
 </div>
 
@@ -1974,7 +1997,7 @@ html.light-mode .emet-bar{background:rgba(220,226,240,.6)}
       <div class="emet-terminal rv">
         <div class="emet-bar">
           <span class="dots"><i></i><i></i><i></i></span>
-          <span class="emet-bar-title mono">EMET-1 · ANCIENT KINGDOM ARCHIVE</span>
+          <span class="emet-bar-title mono"><b>emet</b> — portfolio terminal</span>
           <span class="emet-status" id="emet-status">BOOTING</span>
         </div>
         <div class="emet-body" id="emet-body">
@@ -3106,7 +3129,7 @@ const $$ = (s,c)=> Array.from((c||document).querySelectorAll(s));
   if(REDUCED){ el.remove(); return; }
   const logEl = $("#boot-log"), bar = $("#boot-bar");
   const lines = [
-    ["boot","EMET-1 ANCIENT KINGDOM ARCHIVE · online","ok"],
+    ["boot","emet · portfolio terminal · online","ok"],
     ["init","loading record of Mohamed Ansar · SE","ok"],
     ["conn","data warehouse · Snowflake · connected","ok"],
     ["load","experience: Datasembly · Amazon · iOS","ok"],
@@ -3148,14 +3171,17 @@ const $$ = (s,c)=> Array.from((c||document).querySelectorAll(s));
 
   /* script: array of {text, cls, sp (ms/char)} */
   const SCRIPT = [
-    {text:"EMET-1 · ANCIENT KINGDOM ARCHIVE\n", cls:"t-title", sp:14},
-    {text:"─────────────────────────────────\n\n", cls:"t-dim",  sp:6},
-    {text:"I hold the record of ", sp:22},
-    {text:"Mohamed Ansar", cls:"t-name", sp:22},
-    {text:".\n\n", sp:22},
-    {text:"Solutions Engineer · 6 years in data ops,\npipelines, and analytics at scale.\nOne iOS app shipped to the App Store.\n\n", sp:18},
-    {text:"Navigate ", cls:"t-dim", sp:30},
-    {text:"↓\n", cls:"t-title", sp:30},
+    {text:"emet\n", cls:"t-title", sp:12},
+    {text:"────────────────────\n\n", cls:"t-dim", sp:5},
+    {text:"name    ", cls:"t-key", sp:18},
+    {text:"Mohamed Ansar\n", cls:"t-name", sp:18},
+    {text:"role    ", cls:"t-key", sp:18},
+    {text:"Solutions Engineer\n", cls:"t-val", sp:18},
+    {text:"exp     ", cls:"t-key", sp:18},
+    {text:"6 yrs · data, pipelines, analytics\n", cls:"t-val", sp:16},
+    {text:"shipped ", cls:"t-key", sp:18},
+    {text:"iOS app to the App Store\n\n", cls:"t-val", sp:16},
+    {text:"navigate ↓\n", cls:"t-dim", sp:28},
   ];
 
   let cursorEl = null;
