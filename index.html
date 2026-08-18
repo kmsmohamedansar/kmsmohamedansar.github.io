@@ -1772,176 +1772,24 @@ html.light-mode .emet-terminal{background:rgba(240,243,252,.85)}
 html.light-mode .emet-bar{background:rgba(220,226,240,.6)}
 
 /* ============================================================
-   F1 PIT WALL SIMULATOR
+   THE SHORT VERSION — story arc
    ============================================================ */
-.pitwall-section{padding:80px 0 100px;position:relative}
-.pitwall-header{
-  display:flex;align-items:center;gap:14px;flex-wrap:wrap;
-  background:var(--ink-1);border:1px solid var(--line);
-  border-radius:var(--r-sm) var(--r-sm) 0 0;
-  padding:10px 20px;font-family:var(--f-mono);font-size:.72rem;letter-spacing:.05em;
+.story-points{margin-top:8px;display:grid;gap:0;border:1px solid var(--line);border-radius:var(--r-md);overflow:hidden;max-width:760px}
+.story-point{
+  display:flex;gap:18px;align-items:flex-start;
+  padding:22px 24px;
+  background:rgba(10,16,32,.4);
+  border-bottom:1px solid var(--line);
+  transition:background .3s,padding-left .3s var(--ease-out);
 }
-.pw-led{
-  width:8px;height:8px;border-radius:50%;background:var(--green);
-  box-shadow:0 0 6px var(--green);flex-shrink:0;
-}
-.pw-status{color:var(--green)}
-.pw-clock{color:var(--text-2);margin-left:auto}
-.pw-incident{
-  display:none;color:var(--amber);font-weight:700;
-  animation:pw-flash .8s step-end infinite;
-}
-.pw-incident.active{display:inline}
-@keyframes pw-flash{50%{opacity:0}}
-.pw-bypass-btn{
-  background:none;border:1px solid var(--line);border-radius:var(--r-sm);
-  color:var(--text-3);font-family:var(--f-mono);font-size:.65rem;
-  letter-spacing:.1em;padding:4px 12px;cursor:pointer;
-  text-transform:uppercase;transition:border-color .2s,color .2s;
-}
-.pw-bypass-btn:hover{border-color:rgba(111,230,255,.4);color:var(--cyan)}
-.pw-panels{
-  display:grid;grid-template-columns:1fr 1fr 1fr;gap:1px;
-  background:var(--line);border:1px solid var(--line);
-  border-top:none;border-radius:0 0 var(--r-sm) var(--r-sm);overflow:hidden;
-}
-.pw-panel{
-  background:var(--ink-0);padding:16px;
-  display:flex;flex-direction:column;gap:12px;min-height:420px;
-}
-.pw-panel-label{
-  font-family:var(--f-mono);font-size:.62rem;letter-spacing:.14em;
-  text-transform:uppercase;color:var(--text-3);
-  padding-bottom:8px;border-bottom:1px solid var(--line);
-}
-.pw-chart-wrap{display:flex;flex-direction:column;gap:8px;flex:1}
-.pw-chart-row{display:flex;flex-direction:column;gap:3px;flex:1}
-.pw-chart-label{font-family:var(--f-mono);font-size:.59rem;color:var(--text-3);letter-spacing:.08em}
-.pw-chart-canvas{width:100%;flex:1;display:block;border-radius:3px}
-.pw-lap-info{
-  font-family:var(--f-mono);font-size:.65rem;color:var(--text-2);
-  display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;
-}
-.pw-radio-log{
-  font-family:var(--f-mono);font-size:.67rem;line-height:1.75;color:var(--text-2);
-  flex:1;overflow-y:auto;max-height:160px;min-height:80px;
-  border:1px solid var(--line);border-radius:4px;padding:10px;background:var(--ink-1);
-}
-.pw-radio-log p{margin:0}
-.rlog-team{color:var(--cyan)}
-.rlog-driver{color:var(--amber)}
-.rlog-alert{color:var(--rose);font-weight:700}
-.pw-scenario-box{
-  border:1px solid rgba(255,188,66,.3);border-radius:4px;padding:12px;
-  background:rgba(255,188,66,.04);font-family:var(--f-mono);
-  font-size:.68rem;line-height:1.6;
-}
-.pw-scenario-title{color:var(--amber);font-weight:700;margin-bottom:6px}
-.pw-scenario-desc{color:var(--text-2)}
-.pw-choices{display:flex;flex-direction:row;gap:10px}
-.pw-choice-btn{
-  flex:1;background:none;border:1px solid var(--line);border-radius:6px;
-  color:var(--text-2);font-family:var(--f-mono);
-  padding:12px 14px;text-align:left;cursor:pointer;line-height:1.5;
-  transition:border-color .2s,color .2s,background .2s;
-  display:flex;flex-direction:column;gap:5px;
-}
-.pw-choice-btn:hover:not(:disabled){border-color:rgba(111,230,255,.4);color:var(--cyan);background:rgba(111,230,255,.04)}
-.pw-choice-btn.correct{border-color:var(--green);color:var(--green);background:rgba(92,242,166,.06)}
-.pw-choice-btn.wrong{border-color:var(--rose);color:var(--rose);background:rgba(255,91,91,.06)}
-.pw-choice-key{
-  display:inline-flex;align-items:center;justify-content:center;
-  width:20px;height:20px;border-radius:4px;flex-shrink:0;
-  background:rgba(111,230,255,.12);border:1px solid rgba(111,230,255,.25);
-  color:var(--cyan);font-size:.6rem;font-weight:700;
-}
-.pw-choice-label{font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.04em;margin-top:2px}
-.pw-choice-sub{font-size:.6rem;color:var(--text-3);font-weight:400;text-transform:none;letter-spacing:0;line-height:1.4}
-.pw-result{
-  display:none;border-radius:6px;padding:12px 14px;margin-top:4px;
-  border:1px solid var(--line);background:rgba(255,255,255,.02);
-  font-family:var(--f-mono);
-}
-.pw-result.active{display:block}
-.pw-result-row{display:flex;align-items:baseline;gap:10px;margin-bottom:6px}
-.pw-result-badge{font-size:1.05rem;font-weight:700;letter-spacing:-.01em}
-.pw-result-badge.p1{color:var(--amber)}
-.pw-result-badge.p2{color:var(--cyan)}
-.pw-result-badge.p3{color:var(--text)}
-.pw-result-badge.dnf{color:var(--rose)}
-.pw-result-gap{font-size:.68rem;color:var(--text-3)}
-.pw-result-detail{font-size:.62rem;color:var(--text-2);line-height:1.6}
-.pw-result-fl{display:inline-flex;align-items:center;gap:5px;font-size:.59rem;color:#b48fff;margin-top:6px;letter-spacing:.05em}
-.pw-error-box{
-  display:none;font-family:var(--f-mono);font-size:.65rem;line-height:1.7;
-  color:var(--rose);border:1px solid rgba(255,91,91,.35);border-radius:4px;
-  padding:10px 12px;background:rgba(255,91,91,.05);white-space:pre-line;
-}
-.pw-error-box.active{display:block}
-.pw-retry-btn{
-  display:none;background:none;border:1px solid rgba(255,91,91,.4);
-  border-radius:4px;color:var(--rose);font-family:var(--f-mono);
-  font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;
-  padding:6px 14px;cursor:pointer;transition:background .2s;
-}
-.pw-retry-btn.active{display:inline-block}
-.pw-retry-btn:hover{background:rgba(255,91,91,.1)}
-.pw-progress{font-family:var(--f-mono);font-size:.62rem;color:var(--text-3);text-align:right;margin-top:auto}
-.pw-modal-backdrop{
-  display:none;position:fixed;inset:0;background:rgba(5,8,15,.85);
-  z-index:1000;align-items:center;justify-content:center;
-  backdrop-filter:blur(8px);
-}
-.pw-modal-backdrop.open{display:flex}
-.pw-modal{
-  background:var(--ink-1);border:1px solid rgba(111,230,255,.2);
-  border-radius:var(--r-sm);padding:40px 44px;max-width:540px;width:90%;
-  position:relative;animation:emet-slide .35s ease both;
-}
-.pw-modal-header{
-  font-family:var(--f-mono);font-size:.65rem;color:var(--green);
-  letter-spacing:.14em;text-transform:uppercase;margin-bottom:18px;
-}
-.pw-modal h3{
-  font-size:1.45rem;font-weight:700;color:var(--text);
-  margin-bottom:12px;font-family:var(--f-display);line-height:1.2;
-}
-.pw-modal-body{font-size:.86rem;color:var(--text-2);line-height:1.7;margin-bottom:22px}
-.pw-modal-tags{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:26px}
-.pw-modal-tag{
-  font-family:var(--f-mono);font-size:.62rem;letter-spacing:.08em;
-  text-transform:uppercase;border:1px solid var(--line);
-  border-radius:40px;padding:4px 12px;color:var(--text-3);
-}
-.pw-modal-actions{display:flex;gap:12px;flex-wrap:wrap}
-.pw-modal-close{
-  position:absolute;top:14px;right:18px;background:none;border:none;
-  color:var(--text-3);cursor:pointer;font-size:1.3rem;line-height:1;
-  transition:color .2s;
-}
-.pw-modal-close:hover{color:var(--text)}
-.pw-bypass-panel{
-  display:none;background:var(--ink-1);border:1px solid var(--line);
-  border-top:none;border-radius:0 0 var(--r-sm) var(--r-sm);padding:32px;
-}
-.pw-bypass-panel.open{display:block}
-.pw-bypass-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;margin-top:20px}
-.pw-bypass-card{
-  border:1px solid var(--line);border-radius:6px;padding:16px;
-  background:var(--ink-0);transition:border-color .2s;
-}
-.pw-bypass-card:hover{border-color:rgba(111,230,255,.3)}
-.pw-bypass-card-label{
-  font-family:var(--f-mono);font-size:.59rem;color:var(--text-3);
-  letter-spacing:.12em;text-transform:uppercase;margin-bottom:8px;
-}
-.pw-bypass-card h4{font-size:.9rem;font-weight:600;color:var(--text);margin-bottom:6px}
-.pw-bypass-card p{font-size:.78rem;color:var(--text-2);line-height:1.55}
-@media(max-width:900px){
-  .pw-panels{grid-template-columns:1fr}
-  .pw-panel{min-height:260px}
-  .pw-radio-log{max-height:120px}
-}
+.story-point:last-child{border-bottom:0}
+.story-point:hover{background:rgba(111,230,255,.045);padding-left:30px}
+.story-point .n{font-family:var(--f-mono);font-size:.66rem;color:var(--cyan);letter-spacing:.1em;padding-top:4px;flex:none;min-width:20px}
+.story-point h4{font-size:1rem;font-weight:700;color:var(--text);margin-bottom:6px}
+.story-point p{color:var(--text-2);font-size:.9rem;line-height:1.7}
+.story-close{margin-top:26px;max-width:760px;font-size:.98rem;color:var(--text-2);font-style:italic;border-left:2px solid var(--cyan);padding-left:16px}
+html.light-mode .story-point{background:rgba(255,255,255,.4)}
+html.light-mode .story-point:hover{background:rgba(111,230,255,.08)}
 </style>
 </head>
 <body>
@@ -2491,125 +2339,51 @@ END OF COMMENTED-OUT SHIP SECTION -->
   </div>
 </section>
 
-<div class="divider-q" aria-hidden="true"><span class="kw mono">SELECT</span> <span class="mono">role, impact</span> <span class="kw mono">FROM</span> <span class="mono">experience</span> <span class="kw mono">ORDER BY</span> <span class="mono">date DESC</span></div>
+<div class="divider-q" aria-hidden="true"><span class="kw mono">SELECT</span> <span class="mono">motivation, evidence</span> <span class="kw mono">FROM</span> <span class="mono">career</span> <span class="kw mono">WHERE</span> <span class="mono">consistent = true</span></div>
 
-<!-- ============ F1 PIT WALL ============ -->
-<section class="stage pitwall-section" id="pitwall" aria-labelledby="pitwall-h">
+<!-- ============ 03B STORY / WHY ============ -->
+<section class="stage" id="story" aria-labelledby="story-h">
   <div class="shell">
     <div class="stage-head rv">
-      <span class="stage-step"><span class="dot"></span><b>stage 03b</b> · systems — the pit wall</span>
-      <h2 class="h-section" id="pitwall-h">F1 Telemetry <span class="grad-data">Pit Wall</span></h2>
-      <p class="lede">Race day. Three critical incidents. You are the strategy engineer. Every millisecond matters. Make the right call.</p>
+      <span class="stage-step"><span class="dot"></span><b>stage 03b</b> · the short version</span>
+      <h2 class="h-section" id="story-h">Why I do this work</h2>
+      <p class="lede">Not a resume. The throughline behind it.</p>
     </div>
 
-    <div class="pitwall-header rv" id="pw-header">
-      <span class="pw-led" id="pw-led"></span>
-      <span class="pw-status" id="pw-status">SYSTEM NOMINAL</span>
-      <span class="pw-incident" id="pw-incident">⚠ INCIDENT REPORTED</span>
-      <span class="pw-clock" id="pw-clock">LAP 0 · 00:00</span>
-      <button class="pw-bypass-btn" id="pw-bypass-btn">Bypass simulation ↓</button>
-    </div>
-
-    <div class="pw-panels rv" id="pw-panels">
-      <!-- Panel 1: Track Map -->
-      <div class="pw-panel">
-        <div class="pw-panel-label">Track Map · Sector Data</div>
-        <canvas id="pw-track-canvas" width="280" height="240"></canvas>
-        <div class="pw-lap-info">
-          <span id="pw-lap-label">LAP 1 / 57</span>
-          <span id="pw-tyre-label">TYRE: SOFT</span>
-          <span id="pw-gap-label">GAP: +2.4s</span>
+    <div class="story-points rv" data-stagger>
+      <div class="story-point">
+        <span class="n">01</span>
+        <div>
+          <h4>Operations first</h4>
+          <p>I started in content and quality operations at Amazon Prime Video, auditing catalogs and chasing down why numbers didn't match. That is where I learned the real cost of bad data: it rarely shows up as an error. It shows up two teams downstream as a wrong decision.</p>
         </div>
       </div>
-
-      <!-- Panel 2: Telemetry -->
-      <div class="pw-panel">
-        <div class="pw-panel-label">Live Telemetry</div>
-        <div class="pw-chart-wrap">
-          <div class="pw-chart-row">
-            <div class="pw-chart-label">SPEED (km/h)</div>
-            <canvas class="pw-chart-canvas" id="pw-chart-speed" width="260" height="52"></canvas>
-          </div>
-          <div class="pw-chart-row">
-            <div class="pw-chart-label">TYRE DEG (%)</div>
-            <canvas class="pw-chart-canvas" id="pw-chart-tyre" width="260" height="52"></canvas>
-          </div>
-          <div class="pw-chart-row">
-            <div class="pw-chart-label">BRAKE TEMP (°C)</div>
-            <canvas class="pw-chart-canvas" id="pw-chart-brake" width="260" height="52"></canvas>
-          </div>
-          <div class="pw-chart-row">
-            <div class="pw-chart-label">FUEL LOAD (kg)</div>
-            <canvas class="pw-chart-canvas" id="pw-chart-fuel" width="260" height="52"></canvas>
-          </div>
+      <div class="story-point">
+        <span class="n">02</span>
+        <div>
+          <h4>The pull toward data</h4>
+          <p>Business analysis work at Spongelii pulled me deeper into SQL and Snowflake. The questions got more interesting than the answers. I wanted to be the person building the pipeline, not just reading what came out of it.</p>
         </div>
       </div>
-
-      <!-- Panel 3: Radio Console -->
-      <div class="pw-panel">
-        <div class="pw-panel-label">Team Radio · Strategy Call</div>
-        <div class="pw-radio-log" id="pw-radio-log">
-          <p><span class="rlog-team">[PITWALL]</span> Systems online. Monitoring telemetry.</p>
+      <div class="story-point">
+        <span class="n">03</span>
+        <div>
+          <h4>Making it the job</h4>
+          <p>At Datasembly, that became the actual work: SQL and Snowflake at retail pricing scale, pre-sales solution design, and being the person a stakeholder trusts to explain why a number is right, not just that it is.</p>
         </div>
-        <div class="pw-scenario-box" id="pw-scenario-box" style="display:none">
-          <div class="pw-scenario-title" id="pw-scenario-title"></div>
-          <div class="pw-scenario-desc" id="pw-scenario-desc"></div>
+      </div>
+      <div class="story-point">
+        <span class="n">04</span>
+        <div>
+          <h4>Building outside the job too</h4>
+          <p>RepTrack, shipped to the App Store. An in-browser SQL playground. A handful of ML pipelines. None of it was assigned. Working a real problem end to end, not just the data layer, is how I actually learn something.</p>
         </div>
-        <div class="pw-choices" id="pw-choices" style="display:none">
-          <button class="pw-choice-btn" id="pw-choice-a"></button>
-          <button class="pw-choice-btn" id="pw-choice-b"></button>
-        </div>
-        <div class="pw-result" id="pw-result"></div>
-        <div class="pw-error-box" id="pw-error-box"></div>
-        <button class="pw-retry-btn" id="pw-retry-btn">↺ Retry this scenario</button>
-        <div class="pw-progress" id="pw-progress"></div>
       </div>
     </div>
 
-    <!-- Bypass panel -->
-    <div class="pw-bypass-panel" id="pw-bypass-panel">
-      <p class="mono" style="font-size:.65rem;color:var(--text-3);letter-spacing:.12em;text-transform:uppercase;margin-bottom:16px">SIMULATION BYPASSED · QUICK VIEW</p>
-      <h3 style="font-size:1.1rem;font-weight:700;color:var(--text);margin-bottom:20px">Mohamed Ansar · Data Engineer · Solutions Engineer</h3>
-      <div class="pw-bypass-grid">
-        <div class="pw-bypass-card">
-          <div class="pw-bypass-card-label">iOS App</div>
-          <h4>RepTrack</h4>
-          <p>Workout logging app shipped to the App Store. Swift, SwiftUI, CoreData.</p>
-          <a class="btn btn-primary" href="https://apps.apple.com/us/app/reptrack-workout-log/id6761032027" target="_blank" rel="noopener noreferrer" style="display:inline-block;margin-top:12px;font-size:.72rem">App Store ↗</a>
-        </div>
-        <div class="pw-bypass-card">
-          <div class="pw-bypass-card-label">Data Engineering</div>
-          <h4>Pipeline &amp; Analytics</h4>
-          <p>6 years building data pipelines, ETL workflows, and analytics platforms at scale.</p>
-        </div>
-        <div class="pw-bypass-card">
-          <div class="pw-bypass-card-label">Live Demo</div>
-          <h4>SQL Playground</h4>
-          <p>Interactive in-browser SQL execution with schema explorer and result export.</p>
-          <a class="btn btn-ghost" href="https://kmsmohamedansar.github.io/sql-playground" target="_blank" rel="noopener noreferrer" style="display:inline-block;margin-top:12px;font-size:.72rem">Try it ↗</a>
-        </div>
-        <div class="pw-bypass-card">
-          <div class="pw-bypass-card-label">Contact</div>
-          <h4>Start a conversation</h4>
-          <p>Open to interesting problems in data, analytics, and engineering.</p>
-          <a class="btn btn-ghost" href="#commit" style="display:inline-block;margin-top:12px;font-size:.72rem">Get in touch →</a>
-        </div>
-      </div>
-    </div>
+    <p class="story-close rv">Everything below is what that looks like in practice.</p>
   </div>
 </section>
-
-<!-- SUCCESS MODAL -->
-<div class="pw-modal-backdrop" id="pw-modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="pw-modal-title">
-  <div class="pw-modal">
-    <button class="pw-modal-close" id="pw-modal-close" aria-label="Close">×</button>
-    <div class="pw-modal-header">✓ CORRECT CALL · STRATEGY LOCKED IN</div>
-    <h3 id="pw-modal-title"></h3>
-    <div class="pw-modal-body" id="pw-modal-body"></div>
-    <div class="pw-modal-tags" id="pw-modal-tags"></div>
-    <div class="pw-modal-actions" id="pw-modal-actions"></div>
-  </div>
-</div>
 
 <!-- GAME SECTION COMMENTED OUT
 <section class="stage" id="game" aria-labelledby="game-h">
@@ -3945,310 +3719,6 @@ const $$ = (s,c)=> Array.from((c||document).querySelectorAll(s));
 })();
 
 $("#year").textContent = new Date().getFullYear();
-
-/* ============================================================
-   17b · F1 PIT WALL — telemetry simulator
-   ============================================================ */
-(function pitWall(){
-  const section = $("#pitwall");
-  if(!section) return;
-
-  const pwStatus    = $("#pw-status");
-  const pwIncident  = $("#pw-incident");
-  const pwClock     = $("#pw-clock");
-  const radioLog    = $("#pw-radio-log");
-  const scenBox     = $("#pw-scenario-box");
-  const scenTitle   = $("#pw-scenario-title");
-  const scenDesc    = $("#pw-scenario-desc");
-  const choicesEl   = $("#pw-choices");
-  const choiceA     = $("#pw-choice-a");
-  const choiceB     = $("#pw-choice-b");
-  const resultEl    = $("#pw-result");
-  const errorBox    = $("#pw-error-box");
-  const retryBtn    = $("#pw-retry-btn");
-  const progressEl  = $("#pw-progress");
-  const bypassBtn   = $("#pw-bypass-btn");
-  const bypassPanel = $("#pw-bypass-panel");
-  const modal       = $("#pw-modal-backdrop");
-  const modalClose  = $("#pw-modal-close");
-  const modalTitle  = $("#pw-modal-title");
-  const modalBody   = $("#pw-modal-body");
-  const modalTags   = $("#pw-modal-tags");
-  const modalActions= $("#pw-modal-actions");
-  const lapLabel    = $("#pw-lap-label");
-  const tyreLabel   = $("#pw-tyre-label");
-  const gapLabel    = $("#pw-gap-label");
-  const trackCanvas = $("#pw-track-canvas");
-  const cSpeed      = $("#pw-chart-speed");
-  const cTyre       = $("#pw-chart-tyre");
-  const cBrake      = $("#pw-chart-brake");
-  const cFuel       = $("#pw-chart-fuel");
-
-  let started = false, currentScenario = 0, raceStartTime = 0, lap = 1, trackRaf = null;
-
-  const POINTS = 80;
-  const telData = {
-    speed: Array.from({length:POINTS}, ()=>200+Math.random()*120),
-    tyre:  Array.from({length:POINTS}, (_,i)=>i*0.25),
-    brake: Array.from({length:POINTS}, ()=>80+Math.random()*160),
-    fuel:  Array.from({length:POINTS}, (_,i)=>100-i*0.4)
-  };
-  function pushTel(k,v){ telData[k].push(v); if(telData[k].length>POINTS) telData[k].shift(); }
-
-  function drawChart(canvas, data, color, minV, maxV){
-    if(!canvas) return;
-    const ctx=canvas.getContext("2d"), W=canvas.width, H=canvas.height;
-    ctx.clearRect(0,0,W,H);
-    ctx.fillStyle="rgba(5,8,15,.7)"; ctx.fillRect(0,0,W,H);
-    ctx.strokeStyle="rgba(255,255,255,.05)"; ctx.lineWidth=1;
-    for(let i=0;i<3;i++){ const y=Math.round(H*(i/2)); ctx.beginPath(); ctx.moveTo(0,y); ctx.lineTo(W,y); ctx.stroke(); }
-    if(!data.length) return;
-    const range=maxV-minV;
-    ctx.beginPath(); ctx.strokeStyle=color; ctx.lineWidth=1.5; ctx.lineJoin="round";
-    data.forEach((v,i)=>{ const x=(i/(POINTS-1))*W, y=H-((Math.max(minV,Math.min(maxV,v))-minV)/range)*H; i===0?ctx.moveTo(x,y):ctx.lineTo(x,y); });
-    ctx.stroke();
-    const lastX=W, lastY=H-((Math.max(minV,Math.min(maxV,data[data.length-1]))-minV)/range)*H;
-    ctx.lineTo(lastX,H); ctx.lineTo(0,H); ctx.closePath();
-    ctx.fillStyle=color.replace("rgb(","rgba(").replace(")",",0.1)"); ctx.fill();
-  }
-
-  function updateTelemetry(){
-    const t=Date.now()/1000;
-    pushTel("speed", 220+80*Math.sin(t*.8)+30*Math.sin(t*2.1)+(Math.random()-.5)*20);
-    pushTel("tyre",  Math.min(100,(telData.tyre[telData.tyre.length-1]||0)+.3+Math.random()*.2));
-    pushTel("brake", 80+350*Math.abs(Math.sin(t*.8))+Math.random()*80);
-    pushTel("fuel",  Math.max(0,(telData.fuel[telData.fuel.length-1]||100)-.08));
-    drawChart(cSpeed,telData.speed,"rgb(111,230,255)",60,380);
-    drawChart(cTyre, telData.tyre, "rgb(255,188,66)", 0, 100);
-    drawChart(cBrake,telData.brake,"rgb(255,91,91)",  0, 600);
-    drawChart(cFuel, telData.fuel, "rgb(92,242,166)", 0, 105);
-  }
-
-  // Circuit de Barcelona-Catalunya — approximate layout, clockwise from S/F
-  const TRACK_PTS=[
-    {x:200,y:214},{x:228,y:214},{x:250,y:207},   // Main straight
-    {x:263,y:192},{x:267,y:168},{x:261,y:140},    // T1/T2 hairpin (top-right)
-    {x:245,y:114},{x:222,y:98},{x:196,y:89},      // T2 exit, sweeping left
-    {x:168,y:86},{x:146,y:93},{x:130,y:108},      // Esses T3-T5
-    {x:118,y:122},{x:124,y:139},{x:144,y:150},    // T5 exit + T7-T9
-    {x:172,y:155},{x:202,y:154},{x:226,y:147},    // La Caixa approach (T10)
-    {x:238,y:131},{x:222,y:117},{x:195,y:120},    // T10 hairpin
-    {x:160,y:124},{x:116,y:130},{x:80,y:143},     // T11-T12, heading left
-    {x:56,y:161},{x:60,y:180},{x:82,y:194},       // Chicane T13 (Banc Sabadell)
-    {x:116,y:204},{x:156,y:210},{x:183,y:213},    // T15-T16 onto straight
-  ];
-  let carPos=0;
-
-  function drawTrack(){
-    if(!trackCanvas) return;
-    const ctx=trackCanvas.getContext("2d"), W=trackCanvas.width, H=trackCanvas.height;
-    ctx.clearRect(0,0,W,H);
-    ctx.fillStyle="rgba(5,8,15,.95)"; ctx.fillRect(0,0,W,H);
-    const pts=TRACK_PTS;
-    // outer glow
-    ctx.beginPath();
-    pts.forEach((p,i)=>i===0?ctx.moveTo(p.x,p.y):ctx.lineTo(p.x,p.y)); ctx.closePath();
-    ctx.strokeStyle="rgba(255,255,255,.06)"; ctx.lineWidth=16; ctx.stroke();
-    // track
-    ctx.beginPath();
-    pts.forEach((p,i)=>i===0?ctx.moveTo(p.x,p.y):ctx.lineTo(p.x,p.y)); ctx.closePath();
-    ctx.strokeStyle="rgba(255,255,255,.12)"; ctx.lineWidth=12; ctx.stroke();
-    // sector colors
-    const L=pts.length;
-    [[0,Math.floor(L/3),"rgba(92,242,166,.35)"],[Math.floor(L/3),Math.floor(2*L/3),"rgba(255,188,66,.35)"],[Math.floor(2*L/3),L,"rgba(255,91,91,.35)"]].forEach(([s,e,c])=>{
-      ctx.beginPath();
-      for(let i=s;i<=e;i++){ const p=pts[i%L]; i===s?ctx.moveTo(p.x,p.y):ctx.lineTo(p.x,p.y); }
-      ctx.strokeStyle=c; ctx.lineWidth=8; ctx.stroke();
-    });
-    // start/finish
-    const sf=pts[0];
-    ctx.beginPath(); ctx.moveTo(sf.x-5,sf.y-10); ctx.lineTo(sf.x+5,sf.y+10);
-    ctx.strokeStyle="rgba(255,255,255,.6)"; ctx.lineWidth=2; ctx.stroke();
-    // car dot
-    const ci=Math.floor(carPos*L), p0=pts[ci%L], p1=pts[(ci+1)%L], fr=(carPos*L)-ci;
-    const cx2=p0.x+(p1.x-p0.x)*fr, cy2=p0.y+(p1.y-p0.y)*fr;
-    ctx.beginPath(); ctx.arc(cx2,cy2,9,0,Math.PI*2);
-    ctx.fillStyle="rgba(111,230,255,.18)"; ctx.fill();
-    ctx.beginPath(); ctx.arc(cx2,cy2,5,0,Math.PI*2);
-    ctx.fillStyle="rgb(111,230,255)"; ctx.fill();
-  }
-
-  function animateTrack(){
-    carPos=(carPos+0.0022)%1;
-    if(carPos<0.003){ lap=Math.min(66,lap+1); }
-    drawTrack();
-    trackRaf=requestAnimationFrame(animateTrack);
-  }
-
-  function tickClock(){
-    if(!raceStartTime||!pwClock) return;
-    const ms=Date.now()-raceStartTime, s=Math.floor(ms/1000), m=Math.floor(s/60), sec=s%60;
-    pwClock.textContent=`LAP ${lap} · ${String(m).padStart(2,"0")}:${String(sec).padStart(2,"0")}`;
-  }
-
-  function logRadio(html, delay2=0){
-    if(!radioLog) return;
-    setTimeout(()=>{
-      const p=document.createElement("p"); p.innerHTML=html;
-      radioLog.appendChild(p); radioLog.scrollTop=radioLog.scrollHeight;
-    }, delay2);
-  }
-
-  const SCENARIOS=[
-    {
-      title:"⛈ SUDDEN DOWNPOUR · LAP 23 / 66",
-      desc:"Rain sensors: 80% precipitation. Track temp dropping 12°C. Soft tyres showing aquaplaning signatures. Safety Car deployed. Pit window: 2 laps.",
-      choices:[
-        {key:"A",label:"PIT NOW",sub:"Box for intermediates, 2.8s stop",correct:true,
-         result:{pos:"P1",gap:"FL +0.4s",detail:"Fastest lap in sector 2. Led from lap 26. Perfect read.",fastest:true}},
-        {key:"B",label:"STAY OUT",sub:"Ride slicks, trust the gap holds",correct:false,
-         result:{pos:"DNF",gap:"LAP 24",detail:"Aquaplane at T9. Rear locked, beached in gravel. Race over.",fastest:false}}
-      ],
-      error:"STRATEGY ERROR — TIRE_AQUAPLANE\nRunning slicks on wet tarmac is a DNF risk.\nDriver reported rear instability at 280 km/h.\nProtocol: wet-weather compounds mandatory.",
-      modalTitle:"Smart call: pit for intermediates",
-      modalBody:"Staying on slicks in heavy rain risks a crash or DNF. The correct read was safety car deployment plus wet compound switch. This is the kind of data-driven, time-critical decision I bring to engineering: read the signals, act on evidence, not instinct.",
-      modalTags:["Real-time decision making","Risk assessment","Data pipelines","Time-critical ops"],
-      cta:{label:"See my work →",href:"#build"}
-    },
-    {
-      title:"⚡ ERS OVERHEAT · LAP 41 / 66",
-      desc:"MGU-K temp: 187°C (limit: 180°C). Energy store discharge rate unstable. Unchecked: thermal runaway in ~3 laps. Currently P2, 1.2s behind leader.",
-      choices:[
-        {key:"A",label:"DERATE 15%",sub:"Lower harvest rate, protect the MGU-K",correct:true,
-         result:{pos:"P3",gap:"+2.1s",detail:"Finished. System stable. Points secured on merit.",fastest:false}},
-        {key:"B",label:"PUSH MAX",sub:"Force the overtake attempt this lap",correct:false,
-         result:{pos:"DNF",gap:"LAP 43",detail:"MGU-K failure at T1. Thermal runaway. Car retired.",fastest:false}}
-      ],
-      error:"CRITICAL — ERS_THERMAL_LIMIT_EXCEEDED\nMGU-K failure at Turn 1. Car retired from race.\nForcing max harvest above thermal limit caused\nunrecoverable hardware damage.",
-      modalTitle:"System health over short-term gain",
-      modalBody:"Forcing maximum power through an overheating system causes cascade failure. The derating patch trades 3 positions for a finish. I apply this same principle in data systems: a healthy pipeline delivering at 90% beats a broken one that promised 100%.",
-      modalTags:["Systems thinking","Monitoring & alerting","Trade-off analysis","Data reliability"],
-      cta:{label:"See my projects →",href:"#build"}
-    },
-    {
-      title:"⚔ THE UNDERCUT · LAP 48 / 66",
-      desc:"Gap to P1: 1.8s. Car ahead on 18-lap-old hards, degrading fast. Our car on fresher mediums, delta +0.3s/lap. Pit crew staged. Window: this lap only.",
-      choices:[
-        {key:"A",label:"PIT THIS LAP",sub:"Pre-staged crew, 2.0s target stop",correct:true,
-         result:{pos:"P1",gap:"-1.8s",detail:"Fastest lap. Undercut worked. Led every lap after the stop.",fastest:true}},
-        {key:"B",label:"WAIT 2 LAPS",sub:"Build more gap before boxing",correct:false,
-         result:{pos:"P2",gap:"+3.4s",detail:"P1 pitted first. Window closed. We never recovered the gap.",fastest:false}}
-      ],
-      error:"STRATEGY MISS — UNDERCUT_WINDOW_CLOSED\nP1 extended their stint, neutralizing our delta.\nDelayed entry allowed rival to pit first\nand steal the undercut opportunity.",
-      modalTitle:"Execute on the window. Don't wait for perfect.",
-      modalBody:"The undercut requires timing precision. Waiting 2 laps closes the window permanently. I ship working software and data systems on the right window, not endlessly optimizing for a perfect moment that never comes. RepTrack went to the App Store. SQL Playground is live.",
-      modalTags:["Execution timing","Pipeline orchestration","Shipped iOS app","Live deployments"],
-      cta:{label:"RepTrack on App Store ↗",href:"https://apps.apple.com/us/app/reptrack-workout-log/id6761032027",external:true}
-    }
-  ];
-
-  function loadScenario(idx){
-    if(idx>=SCENARIOS.length){ allDone(); return; }
-    currentScenario=idx;
-    const sc=SCENARIOS[idx];
-    [choiceA, choiceB].forEach((btn,i)=>{
-      const c=sc.choices[i];
-      btn.className="pw-choice-btn"; btn.disabled=false;
-      btn.innerHTML=`<span class="pw-choice-key">${c.key}</span><span class="pw-choice-label">${c.label}</span><span class="pw-choice-sub">${c.sub}</span>`;
-    });
-    if(resultEl){ resultEl.className="pw-result"; resultEl.innerHTML=""; }
-    errorBox.className="pw-error-box"; errorBox.textContent="";
-    retryBtn.className="pw-retry-btn";
-    if(pwIncident) pwIncident.classList.add("active");
-    if(pwStatus) pwStatus.textContent="INCIDENT DETECTED";
-    logRadio(`<span class="rlog-alert">[ALERT]</span> ${sc.title}`);
-    logRadio(`<span class="rlog-team">[PITWALL]</span> ${sc.desc}`,900);
-    logRadio(`<span class="rlog-team">[PITWALL]</span> Your call, engineer.`,2000);
-    setTimeout(()=>{
-      if(scenTitle) scenTitle.textContent=sc.title;
-      if(scenDesc)  scenDesc.textContent=sc.desc;
-      if(scenBox)   scenBox.style.display="";
-      if(choicesEl) choicesEl.style.display="";
-      if(progressEl) progressEl.textContent=`SCENARIO ${idx+1} / ${SCENARIOS.length}`;
-    },2400);
-  }
-
-  function handleChoice(choice, idx){
-    choiceA.disabled=true; choiceB.disabled=true;
-    const sc=SCENARIOS[currentScenario];
-    const res=choice.result;
-    const posClass=res.pos==="P1"?"p1":res.pos==="P2"?"p2":res.pos==="P3"?"p3":"dnf";
-    if(resultEl){
-      resultEl.innerHTML=`<div class="pw-result-row"><span class="pw-result-badge ${posClass}">${res.pos}</span><span class="pw-result-gap">${res.gap}</span></div><div class="pw-result-detail">${res.detail}</div>${res.fastest?'<div class="pw-result-fl">⬦ FASTEST LAP</div>':''}`;
-      resultEl.classList.add("active");
-    }
-    if(choice.correct){
-      logRadio(`<span class="rlog-team">[PITWALL]</span> ✓ Confirmed. Executing sequence.`);
-      if(pwIncident) pwIncident.classList.remove("active");
-      if(pwStatus) pwStatus.textContent="STRATEGY LOCKED";
-      setTimeout(()=>showModal(sc),2200);
-    } else {
-      (idx===0?choiceA:choiceB).classList.add("wrong");
-      (idx===0?choiceB:choiceA).classList.add("correct");
-      logRadio(`<span class="rlog-alert">[ERROR]</span> ${sc.error.split("\n")[0]}`);
-      errorBox.textContent=sc.error; errorBox.classList.add("active");
-      retryBtn.classList.add("active");
-    }
-  }
-
-  function showModal(sc){
-    if(!modal) return;
-    if(modalTitle) modalTitle.textContent=sc.modalTitle;
-    if(modalBody)  modalBody.textContent=sc.modalBody;
-    if(modalTags)  modalTags.innerHTML=sc.modalTags.map(t=>`<span class="pw-modal-tag">${t}</span>`).join("");
-    if(modalActions){
-      const isExt=sc.cta.external;
-      modalActions.innerHTML=`<a class="btn btn-primary" href="${sc.cta.href}"${isExt?' target="_blank" rel="noopener noreferrer"':''}>${sc.cta.label}</a>`;
-      if(currentScenario+1<SCENARIOS.length){
-        const nb=document.createElement("button");
-        nb.className="btn btn-ghost"; nb.textContent="Next incident →";
-        nb.addEventListener("click",()=>{ modal.classList.remove("open"); loadScenario(currentScenario+1); });
-        modalActions.appendChild(nb);
-      }
-    }
-    modal.classList.add("open");
-  }
-
-  function allDone(){
-    logRadio(`<span class="rlog-team">[PITWALL]</span> All incidents resolved. P1. Race complete.`);
-    if(pwStatus) pwStatus.textContent="RACE COMPLETE ✓";
-    if(pwIncident) pwIncident.classList.remove("active");
-  }
-
-  function startSimulation(){
-    if(started) return; started=true;
-    raceStartTime=Date.now();
-    setInterval(tickClock,1000);
-    setInterval(updateTelemetry,130);
-    updateTelemetry();
-    drawTrack();
-    if(!REDUCED) animateTrack();
-    logRadio(`<span class="rlog-team">[PITWALL]</span> Race systems online. All channels open.`,800);
-    logRadio(`<span class="rlog-driver">[DRIVER]</span> Box is ready. Waiting for your call.`,2000);
-    logRadio(`<span class="rlog-team">[PITWALL]</span> Three incidents incoming. Trust the data.`,3200);
-    setTimeout(()=>loadScenario(0),5200);
-    setInterval(()=>{
-      const deg=telData.tyre[telData.tyre.length-1]||0;
-      if(tyreLabel) tyreLabel.textContent=`TYRE: ${deg>70?"INTER":deg>50?"HARD":deg>30?"MED":"SOFT"} ${Math.round(deg)}%`;
-      if(gapLabel) gapLabel.textContent=`GAP: +${(Math.random()*2.5+.5).toFixed(1)}s`;
-      if(lapLabel) lapLabel.textContent=`LAP ${lap} / 66`;
-    },2200);
-  }
-
-  if(choiceA) choiceA.addEventListener("click",()=>handleChoice(SCENARIOS[currentScenario]?.choices[0],0));
-  if(choiceB) choiceB.addEventListener("click",()=>handleChoice(SCENARIOS[currentScenario]?.choices[1],1));
-  if(retryBtn) retryBtn.addEventListener("click",()=>{ logRadio(`<span class="rlog-team">[PITWALL]</span> Reloading scenario. Make the right call.`); loadScenario(currentScenario); });
-  if(modalClose) modalClose.addEventListener("click",()=>modal.classList.remove("open"));
-  if(modal) modal.addEventListener("click",e=>{ if(e.target===modal) modal.classList.remove("open"); });
-  if(bypassBtn) bypassBtn.addEventListener("click",()=>{
-    if(!bypassPanel) return;
-    bypassPanel.classList.toggle("open");
-    bypassBtn.textContent=bypassPanel.classList.contains("open")?"Hide bypass ↑":"Bypass simulation ↓";
-  });
-
-  const io=new IntersectionObserver(entries=>{ if(entries[0].isIntersecting){ startSimulation(); io.disconnect(); } },{threshold:.12});
-  io.observe(section);
-})();
 
 })();
 </script>
