@@ -183,20 +183,20 @@ export default function AmbientField() {
     <>
       <div
         aria-hidden
-        className="fixed inset-0 -z-20 pointer-events-none"
+        className="fixed inset-0 z-0 pointer-events-none"
       >
         <div
           className="ambient-drift absolute -inset-[20%]"
           style={{
             background:
-              "radial-gradient(42% 42% at 22% 28%, rgba(34,211,238,.18), transparent 70%), radial-gradient(38% 38% at 80% 65%, rgba(251,191,36,.14), transparent 70%), radial-gradient(34% 34% at 55% 12%, rgba(142,125,255,.13), transparent 70%)",
+              "radial-gradient(80% 80% at 20% 26%, rgba(34,211,238,.4) 0%, rgba(34,211,238,.14) 45%, transparent 85%), radial-gradient(75% 75% at 82% 68%, rgba(251,191,36,.32) 0%, rgba(251,191,36,.11) 45%, transparent 85%), radial-gradient(70% 70% at 55% 8%, rgba(142,125,255,.3) 0%, rgba(142,125,255,.1) 45%, transparent 85%), #050b14",
           }}
         />
       </div>
       <canvas
         ref={canvasRef}
         aria-hidden
-        className="fixed inset-0 -z-10 pointer-events-none opacity-90"
+        className="fixed inset-0 z-0 pointer-events-none"
       />
     </>
   );

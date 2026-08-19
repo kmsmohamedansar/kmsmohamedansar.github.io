@@ -190,19 +190,21 @@ function AppShell() {
   return (
     <div className={`relative ${theme === "light" ? "bg-slate-50 text-slate-900 min-h-screen" : "bg-ink text-slate-100 min-h-screen"}`}>
       {theme === "dark" && <AmbientField />}
-      <Nav />
-      <main id="hero">
-        <HeroGrid />
-        <ContentSections />
-        {devMode && <SandboxStubs onClose={toggleDevMode} />}
-      </main>
-      <footer className="border-t border-white/8 py-8 px-5">
-        <div className="mx-auto max-w-[1180px] flex flex-wrap items-center justify-between gap-3 font-mono text-[.68rem] text-slate-500">
-          <span>© {new Date().getFullYear()} Mohamed Ansar</span>
-          <span>Built with React · Vite · Tailwind · Framer Motion</span>
-        </div>
-      </footer>
-      <CommandPalette />
+      <div className="relative z-10">
+        <Nav />
+        <main id="hero">
+          <HeroGrid />
+          <ContentSections />
+          {devMode && <SandboxStubs onClose={toggleDevMode} />}
+        </main>
+        <footer className="border-t border-white/8 py-8 px-5">
+          <div className="mx-auto max-w-[1180px] flex flex-wrap items-center justify-between gap-3 font-mono text-[.68rem] text-slate-500">
+            <span>© {new Date().getFullYear()} Mohamed Ansar</span>
+            <span>Built with React · Vite · Tailwind · Framer Motion</span>
+          </div>
+        </footer>
+        <CommandPalette />
+      </div>
     </div>
   );
 }
