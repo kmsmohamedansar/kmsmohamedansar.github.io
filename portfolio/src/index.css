@@ -121,6 +121,34 @@
   }
 }
 
+.crt-spotlight {
+  --spot-x: 50%;
+  --spot-y: 50%;
+  --spot-o: 0;
+  position: relative;
+}
+.crt-spotlight::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  pointer-events: none;
+  border-radius: inherit;
+  opacity: var(--spot-o);
+  transition: opacity 0.4s ease;
+  background: radial-gradient(
+    260px circle at var(--spot-x) var(--spot-y),
+    rgba(34, 211, 238, 0.1),
+    transparent 70%
+  );
+  mix-blend-mode: screen;
+}
+@media (hover: none) {
+  .crt-spotlight::before {
+    display: none;
+  }
+}
+
 .blink-cursor {
   animation: blink 0.75s step-end infinite;
 }

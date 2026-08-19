@@ -166,8 +166,34 @@ function useParticleVortex(canvasRef, { label = "ANSAR" } = {}) {
   }, [canvasRef, label]);
 }
 
+/* Cursor-reactive spotlight — a soft glow that follows the pointer
+   across the chassis, brightening the scanlines near it. Pure CSS
+   custom properties updated on mousemove, no re-renders. */
 function CrtChassis({ children, className = "" }) {
-  return <div className={`crt-shell glass rounded-[1.75rem] ${className}`}>{children}</div>;
+  const ref = useRef(null);
+
+  function onMouseMove(e) {
+    const el = ref.current;
+    if (!el) return;
+    const rect = el.getBoundingClientRect();
+    el.style.setProperty("--spot-x", `${e.clientX - rect.left}px`);
+    el.style.setProperty("--spot-y", `${e.clientY - rect.top}px`);
+    el.style.setProperty("--spot-o", "1");
+  }
+  function onMouseLeave() {
+    ref.current?.style.setProperty("--spot-o", "0");
+  }
+
+  return (
+    <div
+      ref={ref}
+      onMouseMove={onMouseMove}
+      onMouseLeave={onMouseLeave}
+      className={`crt-shell crt-spotlight glass rounded-[1.75rem] ${className}`}
+    >
+      {children}
+    </div>
+  );
 }
 
 function MonitorBar({ title, status, statusTone = "green" }) {

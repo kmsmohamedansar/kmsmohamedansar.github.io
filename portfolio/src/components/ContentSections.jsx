@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { AnimatePresence, motion } from "framer-motion";
+import { useRef, useState } from "react";
+import { AnimatePresence, motion, useMotionValue, useSpring, useTransform } from "framer-motion";
 import {
   Database,
   Compass,
@@ -18,10 +18,10 @@ function Reveal({ children, className = "", delay = 0, y = 28 }) {
   return (
     <motion.div
       className={className}
-      initial={{ opacity: 0, y }}
-      whileInView={{ opacity: 1, y: 0 }}
+      initial={{ opacity: 0, y, filter: "blur(6px)" }}
+      whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
       viewport={{ once: true, amount: 0.2 }}
-      transition={{ duration: 0.7, delay, ease: EASE }}
+      transition={{ duration: 0.75, delay, ease: EASE }}
     >
       {children}
     </motion.div>
@@ -172,12 +172,48 @@ function BeforeSection() {
   );
 }
 
+/* Subtle pointer-tracked 3D tilt — perspective rotation follows the
+   cursor within the card bounds, spring-smoothed back to flat on
+   leave. Skipped on touch devices via the (hover: hover) media check
+   already applied by only firing on mousemove (touch never does). */
+function TiltCard({ children, className = "" }) {
+  const ref = useRef(null);
+  const px = useMotionValue(0);
+  const py = useMotionValue(0);
+  const spring = { stiffness: 300, damping: 28, mass: 0.6 };
+  const rotateX = useSpring(useTransform(py, [-0.5, 0.5], [6, -6]), spring);
+  const rotateY = useSpring(useTransform(px, [-0.5, 0.5], [-6, 6]), spring);
+
+  function onMouseMove(e) {
+    const rect = ref.current?.getBoundingClientRect();
+    if (!rect) return;
+    px.set((e.clientX - rect.left) / rect.width - 0.5);
+    py.set((e.clientY - rect.top) / rect.height - 0.5);
+  }
+  function onMouseLeave() {
+    px.set(0);
+    py.set(0);
+  }
+
+  return (
+    <motion.div
+      ref={ref}
+      onMouseMove={onMouseMove}
+      onMouseLeave={onMouseLeave}
+      style={{ rotateX, rotateY, transformPerspective: 900 }}
+      className={className}
+    >
+      {children}
+    </motion.div>
+  );
+}
+
 /* ── WORK ────────────────────────────────────────────────── */
 function ProjectCard({ project, delay }) {
   return (
     <Reveal delay={delay} className={project.featured ? "md:col-span-2" : ""}>
-      <div
-        className={`glass rounded-xl p-6 h-full flex flex-col ${
+      <TiltCard
+        className={`glass rounded-xl p-6 h-full flex flex-col will-change-transform ${
           project.warm ? "border-amber/25" : ""
         }`}
       >
@@ -212,7 +248,7 @@ function ProjectCard({ project, delay }) {
             {link.label} <ExternalLink size={12} />
           </a>
         ))}
-      </div>
+      </TiltCard>
     </Reveal>
   );
 }
