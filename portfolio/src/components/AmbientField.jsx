@@ -10,6 +10,7 @@ function makeGlowSprite(color) {
   off.width = size;
   off.height = size;
   const octx = off.getContext("2d");
+  if (!octx) return null; // canvas blocked by a privacy extension / browser policy
   const grad = octx.createRadialGradient(size / 2, size / 2, 0, size / 2, size / 2, size / 2);
   grad.addColorStop(0, `rgba(${color},0.95)`);
   grad.addColorStop(0.35, `rgba(${color},0.5)`);
@@ -38,10 +39,12 @@ export default function AmbientField() {
     const canvas = canvasRef.current;
     if (!canvas) return;
     const ctx = canvas.getContext("2d");
+    if (!ctx) return; // canvas blocked by a privacy extension / browser policy
     const reduced = prefersReducedMotion();
 
     const spriteCyan = makeGlowSprite("120,225,255");
     const spriteAmber = makeGlowSprite("251,191,36");
+    if (!spriteCyan || !spriteAmber) return;
 
     let raf;
     let width = 0;
