@@ -217,7 +217,7 @@ export default function HeroGrid() {
           viewport={{ once: true, amount: 0.2 }}
           transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
         >
-          <CrtChassis className="grid grid-cols-1 md:grid-cols-2 md:divide-x md:divide-white/10">
+          <CrtChassis className="grid grid-cols-1 md:grid-cols-[7fr_3fr] md:divide-x md:divide-white/10">
             {/* LEFT HALF — EMET terminal */}
             <div className="flex flex-col border-b border-white/10 md:border-b-0">
               <MonitorBar title="emet · portfolio assistant" status={done ? "READY" : "BOOTING"} statusTone={done ? "green" : "amber"} />
