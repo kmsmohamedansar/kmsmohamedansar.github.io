@@ -254,13 +254,13 @@ export default function HeroGrid() {
         }}
       />
 
-      {/* left gutter rail */}
-      <div className="hidden 2xl:block absolute inset-y-0 left-0 z-10 w-[calc((100%-1180px)/2)] py-24">
+      {/* left gutter rail — width self-collapses to 0 below ~1220px, no breakpoint guesswork needed */}
+      <div className="hidden lg:block absolute inset-y-0 left-0 z-10 w-[calc((100%-1180px)/2)] overflow-hidden py-24">
         <VerticalStrip words={["EMET"]} tone="cyan" />
       </div>
       {/* right gutter rail */}
-      <div className="hidden 2xl:block absolute inset-y-0 right-0 z-10 w-[calc((100%-1180px)/2)] py-24">
-        <GiantSilhouette className="absolute inset-0 m-auto h-[70%] w-auto text-amber" />
+      <div className="hidden lg:block absolute inset-y-0 right-0 z-10 w-[calc((100%-1180px)/2)] overflow-hidden py-24">
+        <GiantSilhouette className="absolute inset-0 m-auto h-[70%] w-auto max-w-none text-amber" />
         <VerticalStrip words={["MOHAMED ANSAR"]} tone="amber" />
       </div>
 
