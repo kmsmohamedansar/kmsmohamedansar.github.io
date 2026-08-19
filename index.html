@@ -6,12 +6,12 @@
 
 <title>Mohamed Ansar · Solutions Engineer · SQL, Snowflake, Shipped iOS</title>
 
-<meta name="description" content="Solutions Engineer with 5+ years of enterprise data experience — SQL, Snowflake, Airflow, Python, and native iOS. Serving clients like Deloitte, Target, and Walgreens. Open to Data Engineer, Analytics Engineer, and SE roles across Canada." />
+<meta name="description" content="Solutions Engineer with 6 years of enterprise data experience — SQL, Snowflake, Airflow, Python, and native iOS. One iOS app shipped to the App Store." />
 <meta name="keywords" content="Solutions Engineer, SQL, Snowflake, data systems, iOS, SwiftUI, SwiftData, Python, analytics, AI" />
 <link rel="canonical" href="https://kmsmohamedansar.github.io/" />
 
 <meta property="og:title" content="Mohamed Ansar · Solutions Engineer who ships data & iOS" />
-<meta property="og:description" content="Solutions Engineer with 5+ years of enterprise data experience — SQL, Snowflake, Airflow, Python, and native iOS. Serving clients like Deloitte, Target, and Walgreens. Open to Data Engineer, Analytics Engineer, and SE roles across Canada." />
+<meta property="og:description" content="Solutions Engineer with 6 years of enterprise data experience — SQL, Snowflake, Airflow, Python, and native iOS. One iOS app shipped to the App Store." />
 <meta property="og:image" content="https://kmsmohamedansar.github.io/preview.png" />
 <meta property="og:image:alt" content="Mohamed Ansar · Solutions Engineer portfolio preview" />
 <meta property="og:image:width" content="1200" />
@@ -21,7 +21,7 @@
 
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:title" content="Mohamed Ansar · Solutions Engineer · Data & iOS" />
-<meta name="twitter:description" content="Solutions Engineer with 5+ years of enterprise data experience — SQL, Snowflake, Airflow, Python, and native iOS. Serving clients like Deloitte, Target, and Walgreens. Open to Data Engineer, Analytics Engineer, and SE roles across Canada." />
+<meta name="twitter:description" content="Solutions Engineer with 6 years of enterprise data experience — SQL, Snowflake, Airflow, Python, and native iOS. One iOS app shipped to the App Store." />
 <meta name="twitter:image" content="https://kmsmohamedansar.github.io/preview.png" />
 
 <meta name="theme-color" content="#070b14" />
@@ -1547,12 +1547,26 @@ html.light-mode body::before{
   display:flex;flex-direction:column;justify-content:center;
   padding-top:110px;padding-bottom:80px;
   position:relative;
+  overflow:hidden;
 }
+.emet-hero::before{
+  content:"";position:absolute;inset:-10%;z-index:0;pointer-events:none;
+  background:
+    radial-gradient(38% 42% at 22% 38%,rgba(111,230,255,.12),transparent 70%),
+    radial-gradient(34% 38% at 82% 62%,rgba(255,180,84,.08),transparent 70%);
+  animation:hero-glow-drift 16s ease-in-out infinite;
+}
+@keyframes hero-glow-drift{
+  0%,100%{transform:translate(0,0) scale(1)}
+  50%{transform:translate(-1.5%,2%) scale(1.05)}
+}
+@media(prefers-reduced-motion: reduce){.emet-hero::before{animation:none}}
 .emet-grid{
   display:grid;
-  grid-template-columns:1.35fr 1fr;
-  gap:clamp(40px,6vw,80px);
+  grid-template-columns:1.1fr 1fr;
+  gap:clamp(32px,5vw,64px);
   align-items:center;
+  position:relative;z-index:1;
 }
 @media(max-width:900px){.emet-grid{grid-template-columns:1fr}}
 
@@ -1564,28 +1578,30 @@ html.light-mode body::before{
 }
 .emet-name{
   font-family:"Instrument Serif",var(--f-display),serif;
-  font-size:clamp(4.2rem,9.5vw,8.8rem);
+  font-size:clamp(3rem,6.4vw,5.4rem);
   font-weight:400;
   font-style:normal;
-  line-height:.92;
+  line-height:.94;
   letter-spacing:-.01em;
   color:var(--text);
-  margin-bottom:20px;
+  margin-bottom:16px;
+  position:relative;z-index:1;
 }
 .emet-name em{font-style:italic;color:var(--cyan)}
 .emet-role{
   font-family:var(--f-display);
-  font-size:clamp(1rem,2vw,1.45rem);
+  font-size:clamp(.9rem,1.6vw,1.1rem);
   font-weight:500;
   color:var(--cyan);
-  margin-bottom:6px;
+  margin-bottom:24px;
+  position:relative;z-index:1;
 }
 .emet-loc{
   font-size:.78rem;color:var(--text-3);
   letter-spacing:.12em;margin-bottom:40px;
 }
 .emet-loc .arr{color:var(--cyan);margin:0 8px}
-.emet-quick-links{display:flex;gap:12px;flex-wrap:wrap}
+.emet-quick-links{display:flex;gap:12px;flex-wrap:wrap;position:relative;z-index:1}
 
 /* ── Terminal panel — retro CRT monitor ── */
 .emet-terminal{
@@ -1770,8 +1786,42 @@ html.light-mode body::before{
 .proj-more-btn:hover{border-color:rgba(111,230,255,.4);color:var(--cyan)}
 .proj-grid.expanded .proj-more-btn{display:none}
 
-/* right identity panel */
-.emet-right{display:flex;flex-direction:column;justify-content:center}
+/* right identity panel — twin CRT monitor */
+.emet-id-panel{display:flex;flex-direction:column}
+.emet-id-body{
+  padding:30px 30px 24px;
+  min-height:380px;
+  display:flex;flex-direction:column;
+  position:relative;overflow:hidden;
+}
+.emet-id-content{flex:1;display:flex;flex-direction:column;justify-content:center;position:relative}
+.emet-id-graphic{
+  position:absolute;top:50%;right:-10%;transform:translateY(-50%);
+  width:340px;height:340px;opacity:.16;pointer-events:none;z-index:0;
+  animation:id-graphic-spin 60s linear infinite;
+}
+@media(prefers-reduced-motion: reduce){.emet-id-graphic{animation:none}}
+@keyframes id-graphic-spin{to{transform:translateY(-50%) rotate(360deg)}}
+.emet-id-dock{
+  display:flex;gap:8px;
+  border-top:1px solid var(--line);
+  padding-top:18px;margin-top:22px;
+  position:relative;z-index:1;
+}
+.emet-dock-item{
+  flex:1;display:flex;flex-direction:column;align-items:center;gap:7px;
+  font-family:var(--f-mono);font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--text-3);padding:8px 4px;border-radius:10px;
+  transition:color .2s;
+}
+.emet-dock-ico{
+  width:34px;height:34px;border-radius:9px;
+  border:1px solid var(--line);
+  display:grid;place-items:center;color:var(--text-2);
+  transition:border-color .2s,color .2s,transform .25s var(--ease-spring);
+}
+.emet-dock-item:hover{color:var(--cyan)}
+.emet-dock-item:hover .emet-dock-ico{border-color:rgba(111,230,255,.45);color:var(--cyan);transform:translateY(-2px)}
 
 /* EMET kicker pills */
 .emet-kicker-row .pill{
@@ -1927,13 +1977,46 @@ html.light-mode .story-point:hover{background:rgba(111,230,255,.08)}
         </div>
       </div>
 
-      <!-- Right: identity -->
-      <div class="emet-right rv-r">
-        <h1 class="emet-name">Mohamed<br><em>Ansar</em></h1>
-        <p class="emet-role">Data · Engineering · Shipped iOS</p>
-        <div class="emet-quick-links">
-          <a class="btn btn-primary" href="#build">Selected work <span class="arr">→</span></a>
-          <a class="btn btn-ghost" href="https://www.linkedin.com/in/kmsmohamedansar/" target="_blank" rel="noopener noreferrer">LinkedIn ↗</a>
+      <!-- Right: identity panel (twin CRT monitor) -->
+      <div class="emet-terminal emet-id-panel rv-r">
+        <div class="emet-bar">
+          <span class="dots"><i></i><i></i><i></i></span>
+          <span class="emet-bar-title mono"><b>mohamed.sys</b> · identity</span>
+          <span class="emet-status ready">ONLINE</span>
+        </div>
+        <div class="emet-id-body">
+          <div class="emet-id-content">
+            <svg class="emet-id-graphic" viewBox="0 0 200 200" aria-hidden="true">
+              <circle cx="100" cy="40" r="14" fill="none" stroke="#6fe6ff" stroke-width="1.4"/>
+              <circle cx="40" cy="150" r="10" fill="none" stroke="#6fe6ff" stroke-width="1.4"/>
+              <circle cx="160" cy="150" r="10" fill="none" stroke="#6fe6ff" stroke-width="1.4"/>
+              <circle cx="100" cy="110" r="7" fill="#6fe6ff"/>
+              <line x1="100" y1="54" x2="100" y2="103" stroke="#6fe6ff" stroke-width="1"/>
+              <line x1="46" y1="144" x2="94" y2="114" stroke="#6fe6ff" stroke-width="1"/>
+              <line x1="154" y1="144" x2="106" y2="114" stroke="#6fe6ff" stroke-width="1"/>
+              <line x1="40" y1="150" x2="160" y2="150" stroke="#6fe6ff" stroke-width="1" opacity=".5"/>
+            </svg>
+            <h1 class="emet-name">Mohamed<br><em>Ansar</em></h1>
+            <p class="emet-role">Data · Engineering · Shipped iOS</p>
+            <div class="emet-quick-links">
+              <a class="btn btn-primary" href="#build">Selected work <span class="arr">→</span></a>
+              <a class="btn btn-ghost" href="https://www.linkedin.com/in/kmsmohamedansar/" target="_blank" rel="noopener noreferrer">LinkedIn ↗</a>
+            </div>
+          </div>
+          <div class="emet-id-dock">
+            <a class="emet-dock-item" href="#lineage">
+              <span class="emet-dock-ico"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M12 8v4l3 2"/><circle cx="12" cy="12" r="9"/></svg></span>
+              <span>Before</span>
+            </a>
+            <a class="emet-dock-item" href="#build">
+              <span class="emet-dock-ico"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="3" y="4" width="18" height="14" rx="2"/><path d="M8 21h8M12 18v3"/></svg></span>
+              <span>Work</span>
+            </a>
+            <a class="emet-dock-item" href="#commit">
+              <span class="emet-dock-ico"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M4 4h16v12H7l-3 3z"/></svg></span>
+              <span>Contact</span>
+            </a>
+          </div>
         </div>
       </div>
 
