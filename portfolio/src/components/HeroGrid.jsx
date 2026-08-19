@@ -211,7 +211,7 @@ export default function HeroGrid() {
       />
 
       <div className="relative z-10 mx-auto w-full max-w-[1180px] px-5">
-        <div className="grid grid-cols-1 lg:grid-cols-[1.1fr_1fr] gap-8 lg:gap-14 items-center">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-14 items-center">
           {/* LEFT MONITOR — EMET terminal */}
           <motion.div
             initial={{ opacity: 0, y: 24 }}
