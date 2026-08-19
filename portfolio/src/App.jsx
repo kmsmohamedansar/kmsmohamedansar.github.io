@@ -4,6 +4,7 @@ import HeroGrid from "./components/HeroGrid";
 import ContentSections from "./components/ContentSections";
 import SandboxStubs from "./components/SandboxStubs";
 import CommandPalette from "./components/CommandPalette";
+import AmbientField from "./components/AmbientField";
 import { NAV_SECTIONS } from "./data/content";
 
 /* ============================================================
@@ -176,7 +177,8 @@ function AppShell() {
   const { devMode, toggleDevMode } = useSandbox();
 
   return (
-    <div className={theme === "light" ? "bg-slate-50 text-slate-900 min-h-screen" : "bg-ink text-slate-100 min-h-screen"}>
+    <div className={`relative ${theme === "light" ? "bg-slate-50 text-slate-900 min-h-screen" : "bg-ink text-slate-100 min-h-screen"}`}>
+      {theme === "dark" && <AmbientField />}
       <Nav />
       <main id="hero">
         <HeroGrid />
