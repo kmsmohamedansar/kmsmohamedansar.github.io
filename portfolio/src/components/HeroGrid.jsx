@@ -170,6 +170,50 @@ function CrtChassis({ children, className = "" }) {
   return <div className={`crt-shell glass rounded-[1.75rem] ${className}`}>{children}</div>;
 }
 
+/* ── Side gutter rails — fill the empty margins either side of the
+   centered hero panel on wide screens with a slow vertical text
+   stream, so the frame reads as one composition edge to edge. ── */
+function VerticalStrip({ words, tone = "cyan" }) {
+  const repeated = Array.from({ length: 16 }, (_, i) => words[i % words.length]);
+  const color = tone === "cyan" ? "text-cyan/20" : "text-amber/20";
+  return (
+    <div className="h-full w-full overflow-hidden flex justify-center">
+      <div className="flex flex-col items-center gap-14 animate-[strip-scroll_26s_linear_infinite]">
+        {[...repeated, ...repeated].map((w, i) => (
+          <span
+            key={i}
+            className={`font-mono text-[.62rem] tracking-[.35em] uppercase ${color} [writing-mode:vertical-rl] select-none`}
+          >
+            {w}
+          </span>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+/* Abstract line-art giant silhouette — a nod to EMET's namesake (the
+   Ancient Kingdom's iron giant), kept deliberately geometric/abstract
+   rather than depicting any actual copyrighted character design. */
+function GiantSilhouette({ className = "" }) {
+  return (
+    <svg
+      viewBox="0 0 120 320"
+      aria-hidden
+      className={`pointer-events-none ${className}`}
+      fill="none"
+      stroke="currentColor"
+    >
+      <circle cx="60" cy="34" r="22" strokeWidth="1.2" opacity=".5" />
+      <path d="M28 60 L60 50 L92 60 L98 100 L86 100 L60 88 L34 100 L22 100 Z" strokeWidth="1.2" opacity=".5" />
+      <rect x="30" y="98" width="60" height="120" rx="10" strokeWidth="1.2" opacity=".5" />
+      <path d="M30 120h60M30 150h60M30 180h60" strokeWidth="1" opacity=".3" />
+      <path d="M22 100 L10 190 L26 210 M98 100 L110 190 L94 210" strokeWidth="1.2" opacity=".5" />
+      <path d="M40 218 L34 300 L52 300 L58 230 M80 218 L86 300 L68 300 L62 230" strokeWidth="1.2" opacity=".5" />
+    </svg>
+  );
+}
+
 function MonitorBar({ title, status, statusTone = "green" }) {
   const tone =
     statusTone === "green"
@@ -209,6 +253,16 @@ export default function HeroGrid() {
             "radial-gradient(38% 42% at 22% 38%, rgba(34,211,238,.12), transparent 70%), radial-gradient(34% 38% at 82% 62%, rgba(251,191,36,.08), transparent 70%)",
         }}
       />
+
+      {/* left gutter rail */}
+      <div className="hidden 2xl:block absolute inset-y-0 left-0 z-10 w-[calc((100%-1180px)/2)] py-24">
+        <VerticalStrip words={["EMET"]} tone="cyan" />
+      </div>
+      {/* right gutter rail */}
+      <div className="hidden 2xl:block absolute inset-y-0 right-0 z-10 w-[calc((100%-1180px)/2)] py-24">
+        <GiantSilhouette className="absolute inset-0 m-auto h-[70%] w-auto text-amber" />
+        <VerticalStrip words={["MOHAMED ANSAR"]} tone="amber" />
+      </div>
 
       <div className="relative z-10 mx-auto w-full max-w-[1180px] px-5">
         <motion.div
@@ -362,6 +416,10 @@ export default function HeroGrid() {
       </div>
       <style>{`
         @keyframes marquee { to { transform: translateX(-50%); } }
+        @keyframes strip-scroll { to { transform: translateY(-50%); } }
+        @media (prefers-reduced-motion: reduce) {
+          [class*="animate-[strip-scroll"] { animation: none !important; }
+        }
       `}</style>
     </header>
   );
