@@ -211,15 +211,15 @@ export default function HeroGrid() {
       />
 
       <div className="relative z-10 mx-auto w-full max-w-[1180px] px-5">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-14 items-center">
-          {/* LEFT MONITOR — EMET terminal */}
-          <motion.div
-            initial={{ opacity: 0, y: 24 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0.2 }}
-            transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
-          >
-            <CrtChassis>
+        <motion.div
+          initial={{ opacity: 0, y: 24 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.2 }}
+          transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+        >
+          <CrtChassis className="grid grid-cols-1 md:grid-cols-2 md:divide-x md:divide-white/10">
+            {/* LEFT HALF — EMET terminal */}
+            <div className="flex flex-col border-b border-white/10 md:border-b-0">
               <MonitorBar title="emet · portfolio assistant" status={done ? "READY" : "BOOTING"} statusTone={done ? "green" : "amber"} />
               <div className="p-6 min-h-[380px] flex flex-col font-mono text-[.82rem] leading-[1.85]">
                 <pre className="whitespace-pre-wrap break-words flex-1 mb-4 text-slate-300 text-glow-cyan">
@@ -283,17 +283,10 @@ export default function HeroGrid() {
                   </motion.div>
                 )}
               </div>
-            </CrtChassis>
-          </motion.div>
+            </div>
 
-          {/* RIGHT MONITOR — Identity & generative loop */}
-          <motion.div
-            initial={{ opacity: 0, y: 24 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0.2 }}
-            transition={{ duration: 0.7, delay: 0.12, ease: [0.16, 1, 0.3, 1] }}
-          >
-            <CrtChassis>
+            {/* RIGHT HALF — Identity & generative loop */}
+            <div className="flex flex-col">
               <MonitorBar title="mohamed.sys · identity" status="ONLINE" statusTone="green" />
               <div className="relative p-7 min-h-[380px] flex flex-col overflow-hidden">
                 <canvas
@@ -352,9 +345,9 @@ export default function HeroGrid() {
                   ))}
                 </div>
               </div>
-            </CrtChassis>
-          </motion.div>
-        </div>
+            </div>
+          </CrtChassis>
+        </motion.div>
       </div>
 
       {/* infinite stack ticker */}
