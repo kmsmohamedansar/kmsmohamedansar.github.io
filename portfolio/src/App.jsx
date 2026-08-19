@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useMemo, useState } from "react";
+import { Component, createContext, useContext, useEffect, useMemo, useState } from "react";
 import { Sun, Moon, Command, Menu, X } from "lucide-react";
 import HeroGrid from "./components/HeroGrid";
 import ContentSections from "./components/ContentSections";
@@ -16,11 +16,22 @@ export const useTheme = () => useContext(ThemeContext);
 function ThemeProvider({ children }) {
   const [theme, setTheme] = useState(() => {
     if (typeof window === "undefined") return "dark";
-    return localStorage.getItem("ma-theme") || "dark";
+    try {
+      return localStorage.getItem("ma-theme") || "dark";
+    } catch {
+      // Storage can throw in private browsing / locked-down browsers —
+      // fall back to dark rather than crashing the whole app before
+      // React ever gets to mount anything.
+      return "dark";
+    }
   });
 
   useEffect(() => {
-    localStorage.setItem("ma-theme", theme);
+    try {
+      localStorage.setItem("ma-theme", theme);
+    } catch {
+      // Non-fatal — theme just won't persist across visits.
+    }
     document.documentElement.dataset.theme = theme;
   }, [theme]);
 
@@ -196,12 +207,56 @@ function AppShell() {
   );
 }
 
+/* ============================================================
+   ERROR BOUNDARY — a visible fallback instead of a blank screen if
+   anything in the tree throws during render.
+   ============================================================ */
+class ErrorBoundary extends Component {
+  constructor(props) {
+    super(props);
+    this.state = { hasError: false };
+  }
+  static getDerivedStateFromError() {
+    return { hasError: true };
+  }
+  componentDidCatch(error) {
+    // eslint-disable-next-line no-console
+    console.error("Portfolio crashed:", error);
+  }
+  render() {
+    if (this.state.hasError) {
+      return (
+        <div className="min-h-screen bg-ink text-slate-100 flex items-center justify-center px-6">
+          <div className="text-center max-w-md">
+            <p className="font-mono text-[.7rem] uppercase tracking-[.14em] text-rose mb-3">
+              something broke
+            </p>
+            <h1 className="font-display text-2xl font-semibold mb-3">This page hit an error</h1>
+            <p className="text-slate-400 text-sm mb-6">
+              Try reloading — if it keeps happening, the contact details still work.
+            </p>
+            <a
+              href="mailto:mohamedansarkms@gmail.com"
+              className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-lg bg-gradient-to-r from-cyan to-[#9be9ff] text-ink text-[.8rem] font-bold"
+            >
+              mohamedansarkms@gmail.com
+            </a>
+          </div>
+        </div>
+      );
+    }
+    return this.props.children;
+  }
+}
+
 export default function App() {
   return (
-    <ThemeProvider>
-      <SandboxProvider>
-        <AppShell />
-      </SandboxProvider>
-    </ThemeProvider>
+    <ErrorBoundary>
+      <ThemeProvider>
+        <SandboxProvider>
+          <AppShell />
+        </SandboxProvider>
+      </ThemeProvider>
+    </ErrorBoundary>
   );
 }
