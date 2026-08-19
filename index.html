@@ -30,7 +30,7 @@
 <!-- Phaser CDN removed — game section disabled -->
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,300;12..96,400;12..96,500;12..96,600;12..96,700;12..96,800&family=Instrument+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,300;12..96,400;12..96,500;12..96,600;12..96,700;12..96,800&family=Instrument+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet" />
 
 <style>
 /* ============================================================
@@ -1563,14 +1563,16 @@ html.light-mode body::before{
   color:var(--text-2);margin-bottom:28px;
 }
 .emet-name{
-  font-family:var(--f-display);
-  font-size:clamp(4rem,9vw,8.5rem);
-  font-weight:800;
-  line-height:.9;
-  letter-spacing:-.04em;
+  font-family:"Instrument Serif",var(--f-display),serif;
+  font-size:clamp(4.2rem,9.5vw,8.8rem);
+  font-weight:400;
+  font-style:normal;
+  line-height:.92;
+  letter-spacing:-.01em;
   color:var(--text);
   margin-bottom:20px;
 }
+.emet-name em{font-style:italic;color:var(--cyan)}
 .emet-role{
   font-family:var(--f-display);
   font-size:clamp(1rem,2vw,1.45rem);
@@ -1585,9 +1587,9 @@ html.light-mode body::before{
 .emet-loc .arr{color:var(--cyan);margin:0 8px}
 .emet-quick-links{display:flex;gap:12px;flex-wrap:wrap}
 
-/* ── Terminal panel ── */
+/* ── Terminal panel — retro CRT monitor ── */
 .emet-terminal{
-  border-radius:var(--r-lg);
+  border-radius:30px;
   border:1px solid var(--line-strong);
   background:rgba(6,9,15,.78);
   backdrop-filter:blur(20px);
@@ -1596,12 +1598,33 @@ html.light-mode body::before{
   box-shadow:
     0 0 0 1px rgba(111,230,255,.09),
     0 32px 100px rgba(6,9,15,.72),
-    0 0 100px rgba(111,230,255,.05) inset;
+    0 0 100px rgba(111,230,255,.05) inset,
+    0 0 0 8px rgba(4,6,11,.55);
 }
 .emet-terminal::before{
   content:"";position:absolute;inset:0 0 auto 0;height:2px;
   background:linear-gradient(90deg,transparent,rgba(111,230,255,.5) 40%,rgba(111,230,255,.15) 100%);
-  pointer-events:none;z-index:1;
+  pointer-events:none;z-index:2;
+}
+.emet-terminal::after{
+  content:"";position:absolute;inset:0;pointer-events:none;z-index:3;
+  border-radius:inherit;
+  background:
+    repeating-linear-gradient(to bottom,rgba(255,255,255,.045) 0px,rgba(255,255,255,.045) 1px,transparent 1px,transparent 3px),
+    radial-gradient(ellipse at 50% 42%,transparent 58%,rgba(0,0,0,.4) 100%);
+  animation:crt-flicker 7s ease-in-out infinite;
+}
+@keyframes crt-flicker{
+  0%,91%,100%{opacity:1}
+  93%{opacity:.94}
+  95%{opacity:1}
+  96%{opacity:.97}
+}
+@media(prefers-reduced-motion: reduce){
+  .emet-terminal::after{animation:none}
+}
+.emet-typed,.emet-opt,.emet-bar-title,.emet-status,.emet-input,.emet-nav-label,.emet-n,.emet-prompt-glyph{
+  text-shadow:0 0 6px rgba(111,230,255,.28);
 }
 .emet-bar{
   display:flex;align-items:center;gap:10px;
@@ -1656,6 +1679,7 @@ html.light-mode body::before{
   display:inline-block;width:7px;height:.8em;
   background:var(--cyan);margin-left:1px;
   vertical-align:text-bottom;
+  box-shadow:0 0 8px rgba(111,230,255,.7);
   animation:emet-blink .75s step-end infinite;
 }
 .emet-hl{color:var(--cyan)}
@@ -1905,7 +1929,7 @@ html.light-mode .story-point:hover{background:rgba(111,230,255,.08)}
 
       <!-- Right: identity -->
       <div class="emet-right rv-r">
-        <h1 class="emet-name">Mohamed<br>Ansar</h1>
+        <h1 class="emet-name">Mohamed<br><em>Ansar</em></h1>
         <p class="emet-role">Data · Engineering · Shipped iOS</p>
         <div class="emet-quick-links">
           <a class="btn btn-primary" href="#build">Selected work <span class="arr">→</span></a>
