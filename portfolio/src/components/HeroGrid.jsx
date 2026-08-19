@@ -13,19 +13,19 @@ const prefersReducedMotion = () =>
    then pauses before the next segment starts. Reduced-motion users get
    the full text immediately instead of an animated queue. */
 const SCRIPT = [
-  { text: "emet\n", cls: "text-cyan text-glow-cyan font-bold", speed: 12 },
-  { text: "──────────────────\n\n", cls: "text-slate-500", speed: 5 },
+  { text: "emet\n", cls: "text-glow-phosphor font-bold", speed: 12 },
+  { text: "──────────────────\n\n", cls: "opacity-40", speed: 5 },
   { text: "Hi. I'm emet.\n\n", cls: "", speed: 20 },
   { text: "I keep the record on ", cls: "", speed: 18 },
-  { text: "Mohamed Ansar", cls: "text-slate-100 font-bold", speed: 18 },
+  { text: "Mohamed Ansar", cls: "text-glow-phosphor font-bold", speed: 18 },
   { text: ".\n\n", cls: "", speed: 18 },
   {
     text:
-      "He's a Solutions Engineer with 6 years\nbuilding data systems, pipelines, and\nanalytics at scale. One iOS app shipped\nto the App Store.\n\n",
+      "He's a Solutions Engineer with 6 years building data systems, pipelines, and analytics at scale. One iOS app shipped to the App Store.\n\n",
     cls: "",
     speed: 15,
   },
-  { text: "What would you like to know?\n", cls: "text-slate-500", speed: 22 },
+  { text: "What would you like to know?\n", cls: "opacity-40", speed: 22 },
 ];
 
 function useTypewriter(script, startDelay = 500) {
@@ -172,9 +172,11 @@ function CrtChassis({ children, className = "" }) {
 
 function MonitorBar({ title, status, statusTone = "green" }) {
   const tone =
-    statusTone === "green"
-      ? "text-green border-green/30"
-      : "text-amber border-amber/30";
+    statusTone === "phosphor"
+      ? "text-[#39ff14] border-[#39ff14]/30"
+      : statusTone === "green"
+        ? "text-green border-green/30"
+        : "text-amber border-amber/30";
   return (
     <div className="flex items-center gap-3 px-5 py-3 border-b border-white/8 bg-black/20">
       <span className="flex gap-1.5">
@@ -218,17 +220,17 @@ export default function HeroGrid() {
           transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
         >
           <CrtChassis className="grid grid-cols-1 md:grid-cols-[7fr_3fr] md:divide-x md:divide-white/10">
-            {/* LEFT HALF — EMET terminal */}
-            <div className="flex flex-col border-b border-white/10 md:border-b-0">
-              <MonitorBar title="emet · portfolio assistant" status={done ? "READY" : "BOOTING"} statusTone={done ? "green" : "amber"} />
-              <div className="p-6 min-h-[380px] flex flex-col font-mono text-[.82rem] leading-[1.85]">
-                <pre className="whitespace-pre-wrap break-words flex-1 mb-4 text-slate-300 text-glow-cyan">
+            {/* LEFT HALF — EMET terminal, styled as a genuine green-phosphor CRT */}
+            <div className="flex flex-col border-b border-white/10 md:border-b-0 bg-black">
+              <MonitorBar title="emet · portfolio assistant" status={done ? "READY" : "BOOTING"} statusTone={done ? "phosphor" : "amber"} />
+              <div className="p-6 min-h-[380px] flex flex-col font-mono text-[.82rem] leading-[1.85] text-[#33ff33]/85">
+                <pre className="whitespace-pre-wrap break-words flex-1 mb-4">
                   {segments.map((seg, i) => (
                     <span key={i} className={seg.cls}>
                       {seg.text}
                     </span>
                   ))}
-                  {!done && <span className="inline-block w-[7px] h-[1em] bg-cyan align-text-bottom blink-cursor ml-0.5" />}
+                  {!done && <span className="inline-block w-[7px] h-[1em] bg-[#39ff14] align-text-bottom blink-cursor ml-0.5" />}
                 </pre>
 
                 {done && (
@@ -242,9 +244,9 @@ export default function HeroGrid() {
                       <a
                         key={item.n}
                         href={item.go}
-                        className="group flex items-center gap-3.5 px-3.5 py-2.5 rounded-lg border border-white/8 bg-white/[.02] text-slate-300 hover:text-cyan hover:border-cyan/35 hover:bg-cyan/5 transition-colors"
+                        className="group flex items-center gap-3.5 px-3.5 py-2.5 rounded-lg border border-[#33ff33]/15 bg-[#33ff33]/[.02] text-[#33ff33]/75 hover:text-[#39ff14] hover:border-[#39ff14]/45 hover:bg-[#33ff33]/5 transition-colors"
                       >
-                        <span className="w-[22px] h-[22px] grid place-items-center rounded border border-white/10 text-[.7rem] text-slate-500 group-hover:text-cyan group-hover:border-cyan/40 transition-colors">
+                        <span className="w-[22px] h-[22px] grid place-items-center rounded border border-[#33ff33]/25 text-[.7rem] text-[#33ff33]/60 group-hover:text-[#39ff14] group-hover:border-[#39ff14]/50 transition-colors">
                           {item.n}
                         </span>
                         <span className="text-[.76rem]">{item.label}</span>
@@ -258,13 +260,13 @@ export default function HeroGrid() {
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     transition={{ duration: 0.4, delay: 0.25 }}
-                    className="flex items-center gap-2.5 border-t border-white/8 pt-3.5 mt-auto"
+                    className="flex items-center gap-2.5 border-t border-[#33ff33]/15 pt-3.5 mt-auto"
                   >
-                    <span className="text-cyan text-lg leading-none">›</span>
+                    <span className="text-[#39ff14] text-lg leading-none">›</span>
                     <input
                       type="text"
                       placeholder="type 1, 2, 3 or 4…"
-                      className="flex-1 bg-transparent outline-none text-[.8rem] text-slate-100 placeholder:text-slate-500"
+                      className="flex-1 bg-transparent outline-none text-[.8rem] text-[#39ff14] placeholder:text-[#33ff33]/35 [caret-color:#39ff14]"
                       autoComplete="off"
                       spellCheck={false}
                       onKeyDown={(e) => {
