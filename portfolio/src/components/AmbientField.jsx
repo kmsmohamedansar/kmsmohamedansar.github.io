@@ -54,7 +54,7 @@ export default function AmbientField() {
 
     function nodeCount() {
       const area = width * height;
-      return Math.min(85, Math.max(50, Math.round(area / 18000)));
+      return Math.min(130, Math.max(70, Math.round(area / 12000)));
     }
 
     let nodes = [];
@@ -62,10 +62,12 @@ export default function AmbientField() {
       nodes = Array.from({ length: nodeCount() }, () => ({
         x: Math.random() * width,
         y: Math.random() * height,
-        vx: (Math.random() - 0.5) * 0.34,
-        vy: (Math.random() - 0.5) * 0.34,
-        r: 1.4 + Math.random() * 2,
-        warm: Math.random() > 0.86,
+        vx: (Math.random() - 0.5) * 0.62,
+        vy: (Math.random() - 0.5) * 0.62,
+        r: 1.4 + Math.random() * 2.2,
+        warm: Math.random() > 0.82,
+        twinkleSpeed: 0.6 + Math.random() * 1.4,
+        twinklePhase: Math.random() * Math.PI * 2,
       }));
     }
 
@@ -100,19 +102,10 @@ export default function AmbientField() {
     window.addEventListener("pointermove", onPointerMove, { passive: true });
     window.addEventListener("pointerleave", onPointerLeave, { passive: true });
 
-    const LINK_DIST = 150;
-    const POINTER_RADIUS = 260;
+    const LINK_DIST = 165;
+    const POINTER_RADIUS = 280;
 
-    // Ambient drift is slow enough that redrawing at ~30fps instead of
-    // 60fps is invisible — skipping every other frame roughly halves
-    // the cost of running a second canvas loop alongside the hero's.
-    let frameSkip = 0;
-    function draw() {
-      frameSkip++;
-      if (frameSkip % 2 === 0) {
-        raf = requestAnimationFrame(draw);
-        return;
-      }
+    function draw(t) {
       ctx.clearRect(0, 0, width, height);
 
       ctx.lineWidth = 1;
@@ -124,7 +117,7 @@ export default function AmbientField() {
           const dy = a.y - b.y;
           const dist = Math.sqrt(dx * dx + dy * dy);
           if (dist < LINK_DIST) {
-            const alpha = (1 - dist / LINK_DIST) * 0.32;
+            const alpha = (1 - dist / LINK_DIST) * 0.34;
             ctx.strokeStyle = `rgba(120,225,255,${alpha})`;
             ctx.beginPath();
             ctx.moveTo(a.x, a.y);
@@ -135,7 +128,8 @@ export default function AmbientField() {
       }
 
       for (const n of nodes) {
-        let alpha = n.warm ? 0.85 : 0.75;
+        const twinkle = reduced ? 1 : 0.65 + 0.35 * Math.sin(t * 0.001 * n.twinkleSpeed + n.twinklePhase);
+        let alpha = (n.warm ? 0.85 : 0.75) * twinkle;
         let r = n.r;
         if (pointer.active) {
           const dx = n.x - pointer.x;

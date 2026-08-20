@@ -1,12 +1,14 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { motion } from "framer-motion";
-import { History, Briefcase, Mail, ArrowRight, Link2 } from "lucide-react";
+import { History, Briefcase, Mail, ArrowRight, Link2, ChevronDown } from "lucide-react";
 import { EMET_SHORTCUTS, STACK_TAGS } from "../data/content";
 import { useSandbox } from "../App";
 
 const prefersReducedMotion = () =>
   typeof window !== "undefined" &&
   window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+const EASE = [0.16, 1, 0.3, 1];
 
 /* ── Typewriter automation queue ──────────────────────────────
    Each segment types character-by-character at its own speed (ms/char),
@@ -241,16 +243,19 @@ export default function HeroGrid() {
 
       <div className="relative z-10 mx-auto w-full max-w-[1760px] px-6 lg:px-10">
         <motion.div
-          initial={{ opacity: 0, y: 24 }}
-          whileInView={{ opacity: 1, y: 0 }}
+          initial="hidden"
+          whileInView="show"
           viewport={{ once: true, amount: 0.2 }}
-          transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+          variants={{ hidden: {}, show: { transition: { staggerChildren: 0.18, delayChildren: 0.05 } } }}
         >
           <CrtChassis className="grid grid-cols-1 md:grid-cols-[7fr_3fr] md:divide-x md:divide-white/10">
             {/* LEFT HALF — EMET terminal, black-CRT chassis in the site's own cyan */}
-            <div className="flex flex-col border-b border-white/10 md:border-b-0 bg-black">
+            <motion.div
+              variants={{ hidden: { opacity: 0, x: -36 }, show: { opacity: 1, x: 0, transition: { duration: 0.7, ease: EASE } } }}
+              className="flex flex-col border-b border-white/10 md:border-b-0 bg-black"
+            >
               <MonitorBar title="emet · portfolio assistant" status={done ? "READY" : "BOOTING"} statusTone={done ? "cyan" : "amber"} />
-              <div className="p-6 min-h-[380px] flex flex-col font-mono text-[.82rem] leading-[1.85] text-cyan/85">
+              <div className="p-6 min-h-[380px] flex flex-col font-mono text-[.92rem] leading-[1.85] text-cyan/85">
                 <pre className="whitespace-pre-wrap break-words flex-1 mb-4">
                   {segments.map((seg, i) => (
                     <span key={i} className={seg.cls}>
@@ -312,10 +317,13 @@ export default function HeroGrid() {
                   </motion.div>
                 )}
               </div>
-            </div>
+            </motion.div>
 
             {/* RIGHT HALF — Identity & generative loop */}
-            <div className="flex flex-col">
+            <motion.div
+              variants={{ hidden: { opacity: 0, x: 36 }, show: { opacity: 1, x: 0, transition: { duration: 0.7, ease: EASE } } }}
+              className="flex flex-col"
+            >
               <MonitorBar title="mohamed.sys · identity" status="ONLINE" statusTone="green" />
               <div className="relative p-7 min-h-[380px] flex flex-col overflow-hidden">
                 <canvas
@@ -331,26 +339,30 @@ export default function HeroGrid() {
                   >
                     Mohamed
                     <br />
-                    <em className="italic text-cyan text-glow-cyan">Ansar</em>
+                    <em className="glow-pulse italic text-cyan text-glow-cyan">Ansar</em>
                   </h1>
                   <p className="font-display text-cyan text-[.95rem] mb-6">
                     Data · Engineering · Shipped iOS
                   </p>
                   <div className="flex flex-wrap gap-3">
-                    <a
+                    <motion.a
                       href="#build"
-                      className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-lg bg-gradient-to-r from-cyan to-[#9be9ff] text-ink text-[.78rem] font-bold font-mono tracking-wide hover:-translate-y-0.5 transition-transform"
+                      whileHover={{ scale: 1.045, y: -2 }}
+                      whileTap={{ scale: 0.97 }}
+                      className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-lg bg-gradient-to-r from-cyan to-[#9be9ff] text-ink text-[.78rem] font-bold font-mono tracking-wide"
                     >
                       Selected work <ArrowRight size={13} />
-                    </a>
-                    <a
+                    </motion.a>
+                    <motion.a
                       href="https://www.linkedin.com/in/kmsmohamedansar/"
                       target="_blank"
                       rel="noopener noreferrer"
+                      whileHover={{ scale: 1.045, y: -2 }}
+                      whileTap={{ scale: 0.97 }}
                       className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-lg border border-white/12 text-slate-200 text-[.78rem] font-mono tracking-wide hover:border-cyan/40 hover:text-cyan transition-colors"
                     >
                       <Link2 size={13} /> LinkedIn
-                    </a>
+                    </motion.a>
                   </div>
                 </div>
 
@@ -374,9 +386,19 @@ export default function HeroGrid() {
                   ))}
                 </div>
               </div>
-            </div>
+            </motion.div>
           </CrtChassis>
         </motion.div>
+
+        <motion.a
+          href="#source"
+          aria-label="Scroll to explore"
+          className="float-y relative z-10 mt-8 mx-auto w-9 h-9 grid place-items-center rounded-full border border-white/10 text-slate-400 hover:text-cyan hover:border-cyan/40 transition-colors"
+          whileHover={{ scale: 1.12 }}
+          whileTap={{ scale: 0.94 }}
+        >
+          <ChevronDown size={16} />
+        </motion.a>
       </div>
 
       {/* infinite stack ticker */}
