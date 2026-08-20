@@ -1,4 +1,5 @@
 import { Component, createContext, useContext, useEffect, useMemo, useState } from "react";
+import { motion, useScroll, useSpring } from "framer-motion";
 import { Sun, Moon, Command, Menu, X } from "lucide-react";
 import HeroGrid from "./components/HeroGrid";
 import ContentSections from "./components/ContentSections";
@@ -147,12 +148,14 @@ function Nav() {
           >
             {theme === "dark" ? <Sun size={14} /> : <Moon size={14} />}
           </button>
-          <a
+          <motion.a
             href="#commit"
-            className="ml-2 px-4 py-2 rounded-lg bg-gradient-to-r from-cyan to-[#9be9ff] text-ink font-mono text-[.72rem] font-bold tracking-[.08em] uppercase hover:-translate-y-0.5 transition-transform"
+            whileHover={{ scale: 1.05, y: -2 }}
+            whileTap={{ scale: 0.96 }}
+            className="ml-2 px-4 py-2 rounded-lg bg-gradient-to-r from-cyan to-[#9be9ff] text-ink font-mono text-[.72rem] font-bold tracking-[.08em] uppercase"
           >
             Contact →
-          </a>
+          </motion.a>
         </div>
 
         <button
@@ -183,6 +186,18 @@ function Nav() {
   );
 }
 
+function ScrollProgress() {
+  const { scrollYProgress } = useScroll();
+  const scaleX = useSpring(scrollYProgress, { stiffness: 200, damping: 32, mass: 0.3 });
+  return (
+    <motion.div
+      aria-hidden
+      className="fixed top-0 inset-x-0 z-[110] h-[3px] origin-left bg-gradient-to-r from-cyan via-[#9be9ff] to-amber"
+      style={{ scaleX }}
+    />
+  );
+}
+
 function AppShell() {
   const { theme } = useTheme();
   const { devMode, toggleDevMode } = useSandbox();
@@ -191,6 +206,7 @@ function AppShell() {
     <div className={`relative ${theme === "light" ? "bg-slate-50 text-slate-900 min-h-screen" : "bg-ink text-slate-100 min-h-screen"}`}>
       {theme === "dark" && <AmbientField />}
       <div className="relative z-10">
+        <ScrollProgress />
         <Nav />
         <main id="hero">
           <HeroGrid />

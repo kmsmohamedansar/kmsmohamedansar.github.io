@@ -288,13 +288,15 @@ function WorkSection() {
           </AnimatePresence>
         </div>
         {hidden.length > 0 && (
-          <button
+          <motion.button
             onClick={() => setExpanded((v) => !v)}
+            whileHover={{ scale: 1.03 }}
+            whileTap={{ scale: 0.97 }}
             className="mt-8 w-full md:w-auto mx-auto flex items-center justify-center gap-2 px-6 py-3 rounded-lg border border-white/10 font-mono text-[.7rem] uppercase tracking-[.14em] text-slate-400 hover:text-cyan hover:border-cyan/40 transition-colors"
           >
             {expanded ? "Show fewer projects" : `Show ${hidden.length} more projects`}
             <ChevronDown size={14} className={`transition-transform ${expanded ? "rotate-180" : ""}`} />
-          </button>
+          </motion.button>
         )}
       </div>
     </section>
@@ -349,20 +351,24 @@ function ContactSection() {
               product that needs to ship, I'd be glad to talk.
             </p>
             <div className="flex flex-wrap justify-center gap-3 mb-6">
-              <a
+              <motion.a
                 href={`mailto:${CONTACT.email}`}
-                className="inline-flex items-center gap-2 px-6 py-3 rounded-lg bg-gradient-to-r from-cyan to-[#9be9ff] text-ink font-bold text-[.85rem] hover:-translate-y-0.5 transition-transform"
+                whileHover={{ scale: 1.045, y: -2 }}
+                whileTap={{ scale: 0.97 }}
+                className="inline-flex items-center gap-2 px-6 py-3 rounded-lg bg-gradient-to-r from-cyan to-[#9be9ff] text-ink font-bold text-[.85rem]"
               >
                 <Mail size={15} /> Email me <ArrowRight size={14} />
-              </a>
-              <a
+              </motion.a>
+              <motion.a
                 href={CONTACT.linkedin}
                 target="_blank"
                 rel="noopener noreferrer"
+                whileHover={{ scale: 1.045, y: -2 }}
+                whileTap={{ scale: 0.97 }}
                 className="inline-flex items-center gap-2 px-6 py-3 rounded-lg border border-white/12 text-slate-200 font-medium text-[.85rem] hover:border-cyan/40 hover:text-cyan transition-colors"
               >
                 <Link2 size={15} /> LinkedIn
-              </a>
+              </motion.a>
             </div>
             <p className="font-mono text-[.75rem] text-slate-500">
               direct:{" "}
