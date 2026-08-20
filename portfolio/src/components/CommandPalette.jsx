@@ -120,14 +120,14 @@ export default function CommandPalette() {
                 onChange={(e) => setQuery(e.target.value)}
                 onKeyDown={onKeyDownList}
                 placeholder="Jump to a section or link…"
-                className="flex-1 bg-transparent outline-none text-sm font-mono text-slate-100 placeholder:text-slate-500"
+                className="flex-1 bg-transparent outline-none text-sm font-mono text-[color:var(--ink-100)] placeholder:text-slate-500"
                 autoComplete="off"
                 spellCheck={false}
               />
               <button
                 onClick={() => setOpen(false)}
                 aria-label="Close command palette"
-                className="text-slate-500 hover:text-slate-200 transition-colors"
+                className="text-slate-500 hover:text-[color:var(--ink-200)] transition-colors"
               >
                 <X size={15} />
               </button>
@@ -150,7 +150,7 @@ export default function CommandPalette() {
                       className={`w-full flex items-center justify-between gap-3 px-4 py-2.5 text-left text-sm transition-colors ${
                         item._index === activeIndex
                           ? "bg-cyan/10 text-cyan"
-                          : "text-slate-300 hover:bg-white/5"
+                          : "text-[color:var(--ink-300)] hover:bg-white/5"
                       }`}
                     >
                       <span className="font-mono">{item.label}</span>

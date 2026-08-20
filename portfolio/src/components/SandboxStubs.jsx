@@ -139,7 +139,7 @@ function SchemaPreview() {
             onMouseEnter={() => setActive(n.id)}
             onMouseLeave={() => setActive(null)}
             className={`px-3 py-2 rounded-lg border font-mono text-[.68rem] transition-colors ${
-              active === n.id ? "border-cyan/50 text-cyan bg-cyan/10" : "border-white/10 text-slate-400"
+              active === n.id ? "border-cyan/50 text-cyan bg-cyan/10" : "border-white/10 text-[color:var(--ink-400)]"
             }`}
           >
             {n.label}
@@ -195,13 +195,13 @@ export default function SandboxStubs({ onClose }) {
             <span className="font-mono text-[.68rem] uppercase tracking-[.14em] text-cyan">
               dev_mode · sandbox
             </span>
-            <h2 className="font-display text-2xl font-semibold text-slate-50 mt-2">
+            <h2 className="font-display text-2xl font-semibold text-[color:var(--ink-50)] mt-2">
               Dormant experiments
             </h2>
           </div>
           <button
             onClick={onClose}
-            className="w-9 h-9 grid place-items-center rounded-lg border border-white/10 text-slate-400 hover:text-cyan hover:border-cyan/40 transition-colors"
+            className="w-9 h-9 grid place-items-center rounded-lg border border-white/10 text-[color:var(--ink-400)] hover:text-cyan hover:border-cyan/40 transition-colors"
             aria-label="Close sandbox"
           >
             <X size={16} />
@@ -216,8 +216,8 @@ export default function SandboxStubs({ onClose }) {
                 <span className="w-9 h-9 grid place-items-center rounded-lg border border-white/10 text-cyan mb-4">
                   <Icon size={16} />
                 </span>
-                <h3 className="font-semibold text-slate-100 mb-2">{stub.title}</h3>
-                <p className="text-[.8rem] text-slate-400 leading-relaxed mb-4 flex-1">{stub.body}</p>
+                <h3 className="font-semibold text-[color:var(--ink-100)] mb-2">{stub.title}</h3>
+                <p className="text-[.8rem] text-[color:var(--ink-400)] leading-relaxed mb-4 flex-1">{stub.body}</p>
                 <Render />
               </div>
             );

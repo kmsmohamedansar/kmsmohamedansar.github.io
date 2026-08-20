@@ -31,14 +31,14 @@ function Reveal({ children, className = "", delay = 0, y = 28 }) {
 function SectionHead({ step, kicker, title, lede }) {
   return (
     <Reveal className="max-w-2xl mb-14">
-      <span className="inline-flex items-center gap-2 font-mono text-[.72rem] tracking-[.14em] uppercase text-slate-400 mb-4">
+      <span className="inline-flex items-center gap-2 font-mono text-[.72rem] tracking-[.14em] uppercase text-[color:var(--ink-400)] mb-4">
         <span className="w-1.5 h-1.5 rounded-full bg-cyan" />
         stage {step} · {kicker}
       </span>
-      <h2 className="font-display text-[clamp(1.8rem,3.4vw,2.6rem)] font-semibold leading-tight text-slate-50 mb-4">
+      <h2 className="font-display text-[clamp(1.8rem,3.4vw,2.6rem)] font-semibold leading-tight text-[color:var(--ink-50)] mb-4">
         {title}
       </h2>
-      {lede && <p className="text-slate-400 text-[1.02rem] leading-relaxed">{lede}</p>}
+      {lede && <p className="text-[color:var(--ink-400)] text-[1.02rem] leading-relaxed">{lede}</p>}
     </Reveal>
   );
 }
@@ -63,9 +63,9 @@ function NowSection() {
         />
         <div className="grid lg:grid-cols-[1.15fr_1fr] gap-8">
           <Reveal delay={0.05}>
-            <div className="glass rounded-2xl p-8 space-y-4 text-slate-300 leading-relaxed">
+            <div className="glass rounded-2xl p-8 space-y-4 text-[color:var(--ink-300)] leading-relaxed">
               <p>
-                Most of my work sits where <b className="text-slate-100">data meets decision-making</b>:
+                Most of my work sits where <b className="text-[color:var(--ink-100)]">data meets decision-making</b>:
                 retail pricing-scale datasets, recurring pipelines, and analytics that teams run week
                 after week. Not one-off charts.
               </p>
@@ -90,8 +90,8 @@ function NowSection() {
                       <Icon size={17} />
                     </span>
                     <div>
-                      <h4 className="font-semibold text-slate-100 mb-1">{p.title}</h4>
-                      <p className="text-[.88rem] text-slate-400 leading-relaxed">{p.body}</p>
+                      <h4 className="font-semibold text-[color:var(--ink-100)] mb-1">{p.title}</h4>
+                      <p className="text-[.88rem] text-[color:var(--ink-400)] leading-relaxed">{p.body}</p>
                     </div>
                   </div>
                 </Reveal>
@@ -131,12 +131,12 @@ function BeforeSection() {
                   <div className="glass rounded-xl p-6">
                     <div className="flex flex-wrap items-start justify-between gap-3 mb-3">
                       <div>
-                        <h3 className="font-semibold text-slate-100">
+                        <h3 className="font-semibold text-[color:var(--ink-100)]">
                           {role.title} <span className="text-slate-500 font-normal">· {role.company}</span>
                         </h3>
                         <span className="font-mono text-[.7rem] text-slate-500">{role.when}</span>
                       </div>
-                      <span className="w-9 h-9 rounded-lg border border-white/10 grid place-items-center text-[.65rem] font-mono text-slate-400">
+                      <span className="w-9 h-9 rounded-lg border border-white/10 grid place-items-center text-[.65rem] font-mono text-[color:var(--ink-400)]">
                         {role.company
                           .split(" ")
                           .map((w) => w[0])
@@ -146,7 +146,7 @@ function BeforeSection() {
                     </div>
                     <ul className="space-y-1.5 mb-4">
                       {role.bullets.map((b) => (
-                        <li key={b} className="text-[.88rem] text-slate-400 leading-relaxed pl-4 relative before:content-['·'] before:absolute before:left-0 before:text-cyan">
+                        <li key={b} className="text-[.88rem] text-[color:var(--ink-400)] leading-relaxed pl-4 relative before:content-['·'] before:absolute before:left-0 before:text-cyan">
                           {b}
                         </li>
                       ))}
@@ -155,7 +155,7 @@ function BeforeSection() {
                       {role.tags.map((t) => (
                         <span
                           key={t}
-                          className="font-mono text-[.62rem] tracking-wide uppercase px-2.5 py-1 rounded-full border border-white/10 text-slate-400"
+                          className="font-mono text-[.62rem] tracking-wide uppercase px-2.5 py-1 rounded-full border border-white/10 text-[color:var(--ink-400)]"
                         >
                           {t}
                         </span>
@@ -226,8 +226,8 @@ function ProjectCard({ project, delay }) {
             {project.kicker}
           </span>
         )}
-        <h3 className="font-display font-semibold text-slate-100 text-[1.1rem] mb-2">{project.title}</h3>
-        <p className="text-[.88rem] text-slate-400 leading-relaxed mb-4 flex-1">{project.body}</p>
+        <h3 className="font-display font-semibold text-[color:var(--ink-100)] text-[1.1rem] mb-2">{project.title}</h3>
+        <p className="text-[.88rem] text-[color:var(--ink-400)] leading-relaxed mb-4 flex-1">{project.body}</p>
         <div className="flex flex-wrap gap-2 mb-4">
           {project.tags?.map((t) => (
             <span key={t} className="font-mono text-[.6rem] uppercase tracking-wide px-2 py-1 rounded-full border border-white/10 text-slate-500">
@@ -292,7 +292,7 @@ function WorkSection() {
             onClick={() => setExpanded((v) => !v)}
             whileHover={{ scale: 1.03 }}
             whileTap={{ scale: 0.97 }}
-            className="mt-8 w-full md:w-auto mx-auto flex items-center justify-center gap-2 px-6 py-3 rounded-lg border border-white/10 font-mono text-[.7rem] uppercase tracking-[.14em] text-slate-400 hover:text-cyan hover:border-cyan/40 transition-colors"
+            className="mt-8 w-full md:w-auto mx-auto flex items-center justify-center gap-2 px-6 py-3 rounded-lg border border-white/10 font-mono text-[.7rem] uppercase tracking-[.14em] text-[color:var(--ink-400)] hover:text-cyan hover:border-cyan/40 transition-colors"
           >
             {expanded ? "Show fewer projects" : `Show ${hidden.length} more projects`}
             <ChevronDown size={14} className={`transition-transform ${expanded ? "rotate-180" : ""}`} />
@@ -314,14 +314,14 @@ function StorySection() {
             <Reveal key={beat.n} delay={i * 0.07} y={16}>
               <div className="bg-white/[.015] p-6 h-full hover:bg-cyan/[.03] transition-colors">
                 <span className="font-mono text-[.65rem] text-cyan tracking-widest">{beat.n}</span>
-                <h4 className="font-semibold text-slate-100 mt-2 mb-2">{beat.title}</h4>
-                <p className="text-[.85rem] text-slate-400 leading-relaxed">{beat.body}</p>
+                <h4 className="font-semibold text-[color:var(--ink-100)] mt-2 mb-2">{beat.title}</h4>
+                <p className="text-[.85rem] text-[color:var(--ink-400)] leading-relaxed">{beat.body}</p>
               </div>
             </Reveal>
           ))}
         </div>
         <Reveal delay={0.3}>
-          <p className="mt-8 max-w-3xl italic text-slate-400 border-l-2 border-cyan pl-4">
+          <p className="mt-8 max-w-3xl italic text-[color:var(--ink-400)] border-l-2 border-cyan pl-4">
             The projects above are what that looks like in practice.
           </p>
         </Reveal>
@@ -342,11 +342,11 @@ function ContactSection() {
               <span className="text-rose">VALUES</span> (<span className="text-green">'mohamed_ansar'</span>);{" "}
               <span className="text-rose">COMMIT</span>;
             </p>
-            <h2 className="font-display text-[clamp(1.8rem,3.6vw,2.6rem)] font-semibold text-slate-50 leading-tight mb-4">
+            <h2 className="font-display text-[clamp(1.8rem,3.6vw,2.6rem)] font-semibold text-[color:var(--ink-50)] leading-tight mb-4">
               The pipeline ends where
               <br />a conversation <span className="text-cyan">starts</span>
             </h2>
-            <p className="text-slate-400 mb-8 max-w-xl mx-auto">
+            <p className="text-[color:var(--ink-400)] mb-8 max-w-xl mx-auto">
               Whether it's a data problem that needs untangling, a pipeline that needs to hold, or a
               product that needs to ship, I'd be glad to talk.
             </p>
@@ -365,7 +365,7 @@ function ContactSection() {
                 rel="noopener noreferrer"
                 whileHover={{ scale: 1.045, y: -2 }}
                 whileTap={{ scale: 0.97 }}
-                className="inline-flex items-center gap-2 px-6 py-3 rounded-lg border border-white/12 text-slate-200 font-medium text-[.85rem] hover:border-cyan/40 hover:text-cyan transition-colors"
+                className="inline-flex items-center gap-2 px-6 py-3 rounded-lg border border-white/12 text-[color:var(--ink-200)] font-medium text-[.85rem] hover:border-cyan/40 hover:text-cyan transition-colors"
               >
                 <Link2 size={15} /> LinkedIn
               </motion.a>

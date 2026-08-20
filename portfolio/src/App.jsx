@@ -104,15 +104,25 @@ function Nav() {
     window.dispatchEvent(new KeyboardEvent("keydown", { key: "k", metaKey: true }));
   }
 
+  const light = theme === "light";
+
   return (
     <nav
       className={`fixed top-0 inset-x-0 z-[100] transition-colors ${
-        scrolled ? "bg-ink/70 backdrop-blur-xl border-b border-white/8" : "border-b border-transparent"
+        scrolled
+          ? light
+            ? "bg-slate-50/80 backdrop-blur-xl border-b border-slate-900/8"
+            : "bg-ink/70 backdrop-blur-xl border-b border-white/8"
+          : "border-b border-transparent"
       }`}
     >
       <div className="mx-auto max-w-[1260px] flex items-center justify-between px-5 py-4">
         <a href="#hero" className="flex items-center gap-3 font-mono text-[.85rem] font-semibold">
-          <span className="w-8 h-8 rounded-lg grid place-items-center bg-gradient-to-br from-cyan/20 to-violet/20 border border-white/10 text-cyan text-[.68rem]">
+          <span
+            className={`w-8 h-8 rounded-lg grid place-items-center bg-gradient-to-br from-cyan/20 to-violet/20 border text-cyan text-[.68rem] ${
+              light ? "border-slate-900/10" : "border-white/10"
+            }`}
+          >
             MA
           </span>
           <span>
@@ -129,7 +139,11 @@ function Nav() {
               key={s.id}
               href={`#${s.id}`}
               className={`font-mono text-[.72rem] tracking-[.12em] uppercase px-3 py-2 rounded-lg transition-colors ${
-                active === s.id ? "text-cyan" : "text-slate-400 hover:text-slate-100 hover:bg-white/5"
+                active === s.id
+                  ? "text-cyan"
+                  : light
+                    ? "text-slate-500 hover:text-slate-900 hover:bg-black/5"
+                    : "text-slate-400 hover:text-slate-100 hover:bg-white/5"
               }`}
             >
               {s.label}
@@ -137,14 +151,18 @@ function Nav() {
           ))}
           <button
             onClick={openPalette}
-            className="ml-1 flex items-center gap-1 px-2.5 py-2 rounded-lg border border-white/10 text-slate-500 hover:text-cyan hover:border-cyan/30 transition-colors font-mono text-[.65rem]"
+            className={`ml-1 flex items-center gap-1 px-2.5 py-2 rounded-lg border text-slate-500 hover:text-cyan hover:border-cyan/30 transition-colors font-mono text-[.65rem] ${
+              light ? "border-slate-900/10" : "border-white/10"
+            }`}
             aria-label="Open command palette"
           >
             <Command size={11} /> K
           </button>
           <button
             onClick={toggleTheme}
-            className="ml-1 w-8 h-8 grid place-items-center rounded-lg border border-white/10 text-slate-400 hover:text-cyan hover:border-cyan/30 transition-colors"
+            className={`ml-1 w-8 h-8 grid place-items-center rounded-lg border hover:text-cyan hover:border-cyan/30 transition-colors ${
+              light ? "border-slate-900/10 text-slate-600" : "border-white/10 text-slate-400"
+            }`}
             aria-label="Toggle theme"
           >
             {theme === "dark" ? <Sun size={14} /> : <Moon size={14} />}
@@ -160,7 +178,9 @@ function Nav() {
         </div>
 
         <button
-          className="md:hidden w-10 h-10 grid place-items-center rounded-lg border border-white/10 text-slate-300"
+          className={`md:hidden w-10 h-10 grid place-items-center rounded-lg border ${
+            light ? "border-slate-900/10 text-slate-700" : "border-white/10 text-slate-300"
+          }`}
           onClick={() => setMobileOpen((v) => !v)}
           aria-label="Toggle menu"
           aria-expanded={mobileOpen}
@@ -170,13 +190,13 @@ function Nav() {
       </div>
 
       {mobileOpen && (
-        <div className="md:hidden bg-ink/95 backdrop-blur-xl border-t border-white/8 px-5 py-6 flex flex-col gap-2">
+        <div className="dark-surface md:hidden bg-ink/95 backdrop-blur-xl border-t border-white/8 px-5 py-6 flex flex-col gap-2">
           {NAV_SECTIONS.map((s) => (
             <a
               key={s.id}
               href={`#${s.id}`}
               onClick={() => setMobileOpen(false)}
-              className="font-mono text-sm uppercase tracking-widest text-slate-300 py-2"
+              className="font-mono text-sm uppercase tracking-widest text-[color:var(--ink-300)] py-2"
             >
               {s.label}
             </a>
