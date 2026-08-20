@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import { History, Briefcase, Mail, ArrowRight, Link2, ChevronDown } from "lucide-react";
 import { EMET_SHORTCUTS, STACK_TAGS } from "../data/content";
 import { useSandbox } from "../App";
+import MagneticButton from "./MagneticButton";
 
 const prefersReducedMotion = () =>
   typeof window !== "undefined" &&
@@ -345,24 +346,24 @@ export default function HeroGrid() {
                     Data · Engineering · Shipped iOS
                   </p>
                   <div className="flex flex-wrap gap-3">
-                    <motion.a
+                    <MagneticButton
                       href="#build"
-                      whileHover={{ scale: 1.045, y: -2 }}
+                      whileHover={{ scale: 1.045 }}
                       whileTap={{ scale: 0.97 }}
                       className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-lg bg-gradient-to-r from-cyan to-[#9be9ff] text-ink text-[.78rem] font-bold font-mono tracking-wide"
                     >
                       Selected work <ArrowRight size={13} />
-                    </motion.a>
-                    <motion.a
+                    </MagneticButton>
+                    <MagneticButton
                       href="https://www.linkedin.com/in/kmsmohamedansar/"
                       target="_blank"
                       rel="noopener noreferrer"
-                      whileHover={{ scale: 1.045, y: -2 }}
+                      whileHover={{ scale: 1.045 }}
                       whileTap={{ scale: 0.97 }}
                       className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-lg border border-white/12 text-[color:var(--ink-200)] text-[.78rem] font-mono tracking-wide hover:border-cyan/40 hover:text-cyan transition-colors"
                     >
                       <Link2 size={13} /> LinkedIn
-                    </motion.a>
+                    </MagneticButton>
                   </div>
                 </div>
 

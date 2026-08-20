@@ -349,3 +349,40 @@
 .mono-scroll::-webkit-scrollbar-track {
   background: transparent;
 }
+
+/* ============================================================
+   CUSTOM CURSOR — a dot + trailing ring, desktop/fine-pointer only.
+   ============================================================ */
+.has-custom-cursor,
+.has-custom-cursor * {
+  cursor: none !important;
+}
+.ma-cursor-dot,
+.ma-cursor-ring {
+  position: fixed;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+  z-index: 9999;
+  border-radius: 50%;
+  transition: opacity 0.2s ease, width 0.18s ease, height 0.18s ease, background 0.18s ease;
+}
+.ma-cursor-dot {
+  width: 6px;
+  height: 6px;
+  margin: -3px 0 0 -3px;
+  background: var(--color-cyan);
+}
+.ma-cursor-ring {
+  width: 34px;
+  height: 34px;
+  margin: -17px 0 0 -17px;
+  border: 1px solid rgba(34, 211, 238, 0.4);
+}
+.ma-cursor-ring[data-active="1"] {
+  width: 52px;
+  height: 52px;
+  margin: -26px 0 0 -26px;
+  border-color: rgba(34, 211, 238, 0.75);
+  background: rgba(34, 211, 238, 0.08);
+}
