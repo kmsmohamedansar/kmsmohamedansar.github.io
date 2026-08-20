@@ -26,6 +26,40 @@
   --ease-spring: cubic-bezier(.34,1.45,.5,1);
 }
 
+/* ============================================================
+   THEME-AWARE TEXT TOKENS
+   Near-white "ink" shades read fine on the always-dark ink
+   background, but go invisible on the light theme's plain white/
+   aurora background. These flip to dark shades under
+   [data-theme="light"] — EXCEPT inside permanently-dark surfaces
+   (.glass cards, the CRT chassis) which re-declare them back to
+   their light-on-dark values, since those stay dark-tinted in both
+   themes by design.
+   ============================================================ */
+:root {
+  --ink-50: #f8fafc;
+  --ink-100: #f1f5f9;
+  --ink-200: #e2e8f0;
+  --ink-300: #cbd5e1;
+  --ink-400: #94a3b8;
+}
+:root[data-theme="light"] {
+  --ink-50: #0f172a;
+  --ink-100: #1e293b;
+  --ink-200: #334155;
+  --ink-300: #475569;
+  --ink-400: #64748b;
+}
+.glass,
+.crt-shell,
+.dark-surface {
+  --ink-50: #f8fafc;
+  --ink-100: #f1f5f9;
+  --ink-200: #e2e8f0;
+  --ink-300: #cbd5e1;
+  --ink-400: #94a3b8;
+}
+
 @layer base {
   html {
     scroll-behavior: smooth;

@@ -213,7 +213,7 @@ function MonitorBar({ title, status, statusTone = "green" }) {
         <i className="w-2.5 h-2.5 rounded-full bg-[#febc2e]" />
         <i className="w-2.5 h-2.5 rounded-full bg-[#28c840]" />
       </span>
-      <span className="flex-1 font-mono text-[.68rem] tracking-wide text-slate-400">
+      <span className="flex-1 font-mono text-[.68rem] tracking-wide text-[color:var(--ink-400)]">
         {title}
       </span>
       <span className={`font-mono text-[.58rem] uppercase tracking-[.12em] border rounded px-2 py-0.5 ${tone}`}>
@@ -359,7 +359,7 @@ export default function HeroGrid() {
                       rel="noopener noreferrer"
                       whileHover={{ scale: 1.045, y: -2 }}
                       whileTap={{ scale: 0.97 }}
-                      className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-lg border border-white/12 text-slate-200 text-[.78rem] font-mono tracking-wide hover:border-cyan/40 hover:text-cyan transition-colors"
+                      className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-lg border border-white/12 text-[color:var(--ink-200)] text-[.78rem] font-mono tracking-wide hover:border-cyan/40 hover:text-cyan transition-colors"
                     >
                       <Link2 size={13} /> LinkedIn
                     </motion.a>
@@ -378,7 +378,7 @@ export default function HeroGrid() {
                       href={href}
                       className="group flex-1 flex flex-col items-center gap-1.5 py-2 rounded-lg text-slate-500 hover:text-cyan transition-colors font-mono text-[.6rem] uppercase tracking-[.1em]"
                     >
-                      <span className="w-[34px] h-[34px] grid place-items-center rounded-lg border border-white/10 text-slate-300 group-hover:border-cyan/45 group-hover:text-cyan group-hover:-translate-y-0.5 transition-all">
+                      <span className="w-[34px] h-[34px] grid place-items-center rounded-lg border border-white/10 text-[color:var(--ink-300)] group-hover:border-cyan/45 group-hover:text-cyan group-hover:-translate-y-0.5 transition-all">
                         <Icon size={15} />
                       </span>
                       {label}
@@ -393,7 +393,7 @@ export default function HeroGrid() {
         <motion.a
           href="#source"
           aria-label="Scroll to explore"
-          className="float-y relative z-10 mt-8 mx-auto w-9 h-9 grid place-items-center rounded-full border border-white/10 text-slate-400 hover:text-cyan hover:border-cyan/40 transition-colors"
+          className="float-y relative z-10 mt-8 mx-auto w-9 h-9 grid place-items-center rounded-full border border-white/10 text-[color:var(--ink-400)] hover:text-cyan hover:border-cyan/40 transition-colors"
           whileHover={{ scale: 1.12 }}
           whileTap={{ scale: 0.94 }}
         >
