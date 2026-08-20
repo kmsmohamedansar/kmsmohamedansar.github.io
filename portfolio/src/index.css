@@ -215,6 +215,84 @@
   }
 }
 
+/* ============================================================
+   LIGHT-THEME AURORA — soft morphing pastel blobs, distinct from
+   the dark theme's neon data mesh. Blurred + blended so they read
+   as diffuse daylight washes rather than hard shapes.
+   ============================================================ */
+.aurora-blob {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(60px);
+  mix-blend-mode: multiply;
+  opacity: 0.55;
+  will-change: transform;
+}
+.aurora-blob-1 {
+  width: 46vw;
+  height: 46vw;
+  top: -12%;
+  left: -8%;
+  background: radial-gradient(circle, rgba(34, 211, 238, 0.5), transparent 70%);
+  animation: aurora-drift-1 24s ease-in-out infinite;
+}
+.aurora-blob-2 {
+  width: 38vw;
+  height: 38vw;
+  top: 18%;
+  right: -10%;
+  background: radial-gradient(circle, rgba(251, 191, 36, 0.45), transparent 70%);
+  animation: aurora-drift-2 28s ease-in-out infinite;
+}
+.aurora-blob-3 {
+  width: 42vw;
+  height: 42vw;
+  bottom: -14%;
+  left: 12%;
+  background: radial-gradient(circle, rgba(142, 125, 255, 0.4), transparent 70%);
+  animation: aurora-drift-3 32s ease-in-out infinite;
+}
+.aurora-blob-4 {
+  width: 30vw;
+  height: 30vw;
+  bottom: 6%;
+  right: 14%;
+  background: radial-gradient(circle, rgba(52, 211, 153, 0.32), transparent 70%);
+  animation: aurora-drift-1 20s ease-in-out infinite reverse;
+}
+@keyframes aurora-drift-1 {
+  0%,
+  100% {
+    transform: translate(0, 0) scale(1);
+  }
+  50% {
+    transform: translate(6%, 8%) scale(1.12);
+  }
+}
+@keyframes aurora-drift-2 {
+  0%,
+  100% {
+    transform: translate(0, 0) scale(1);
+  }
+  50% {
+    transform: translate(-8%, 6%) scale(1.08);
+  }
+}
+@keyframes aurora-drift-3 {
+  0%,
+  100% {
+    transform: translate(0, 0) scale(1);
+  }
+  50% {
+    transform: translate(5%, -7%) scale(1.1);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .aurora-blob {
+    animation: none;
+  }
+}
+
 /* Thin scrollbar for terminal-style scroll areas */
 .mono-scroll::-webkit-scrollbar {
   width: 6px;

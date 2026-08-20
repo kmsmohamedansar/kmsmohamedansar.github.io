@@ -6,6 +6,7 @@ import ContentSections from "./components/ContentSections";
 import SandboxStubs from "./components/SandboxStubs";
 import CommandPalette from "./components/CommandPalette";
 import AmbientField from "./components/AmbientField";
+import LightAmbientField from "./components/LightAmbientField";
 import { NAV_SECTIONS } from "./data/content";
 
 /* ============================================================
@@ -204,7 +205,7 @@ function AppShell() {
 
   return (
     <div className={`relative ${theme === "light" ? "bg-slate-50 text-slate-900 min-h-screen" : "bg-ink text-slate-100 min-h-screen"}`}>
-      {theme === "dark" && <AmbientField />}
+      {theme === "dark" ? <AmbientField /> : <LightAmbientField />}
       <div className="relative z-10">
         <ScrollProgress />
         <Nav />
