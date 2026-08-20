@@ -11,6 +11,7 @@ import {
   ArrowRight,
 } from "lucide-react";
 import { PRINCIPLES, ROLES, PROJECTS, STORY_BEATS, CONTACT } from "../data/content";
+import MagneticButton from "./MagneticButton";
 
 const EASE = [0.16, 1, 0.3, 1];
 
@@ -351,24 +352,24 @@ function ContactSection() {
               product that needs to ship, I'd be glad to talk.
             </p>
             <div className="flex flex-wrap justify-center gap-3 mb-6">
-              <motion.a
+              <MagneticButton
                 href={`mailto:${CONTACT.email}`}
-                whileHover={{ scale: 1.045, y: -2 }}
+                whileHover={{ scale: 1.045 }}
                 whileTap={{ scale: 0.97 }}
                 className="inline-flex items-center gap-2 px-6 py-3 rounded-lg bg-gradient-to-r from-cyan to-[#9be9ff] text-ink font-bold text-[.85rem]"
               >
                 <Mail size={15} /> Email me <ArrowRight size={14} />
-              </motion.a>
-              <motion.a
+              </MagneticButton>
+              <MagneticButton
                 href={CONTACT.linkedin}
                 target="_blank"
                 rel="noopener noreferrer"
-                whileHover={{ scale: 1.045, y: -2 }}
+                whileHover={{ scale: 1.045 }}
                 whileTap={{ scale: 0.97 }}
                 className="inline-flex items-center gap-2 px-6 py-3 rounded-lg border border-white/12 text-[color:var(--ink-200)] font-medium text-[.85rem] hover:border-cyan/40 hover:text-cyan transition-colors"
               >
                 <Link2 size={15} /> LinkedIn
-              </motion.a>
+              </MagneticButton>
             </div>
             <p className="font-mono text-[.75rem] text-slate-500">
               direct:{" "}

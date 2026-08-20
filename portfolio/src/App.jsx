@@ -1,5 +1,5 @@
-import { Component, createContext, useContext, useEffect, useMemo, useState } from "react";
-import { motion, useScroll, useSpring } from "framer-motion";
+import { Component, createContext, useContext, useEffect, useMemo, useRef, useState } from "react";
+import { motion, animate, useScroll, useSpring } from "framer-motion";
 import { Sun, Moon, Command, Menu, X } from "lucide-react";
 import HeroGrid from "./components/HeroGrid";
 import ContentSections from "./components/ContentSections";
@@ -7,6 +7,9 @@ import SandboxStubs from "./components/SandboxStubs";
 import CommandPalette from "./components/CommandPalette";
 import AmbientField from "./components/AmbientField";
 import LightAmbientField from "./components/LightAmbientField";
+import BootSequence from "./components/BootSequence";
+import CustomCursor from "./components/CustomCursor";
+import MagneticButton from "./components/MagneticButton";
 import { NAV_SECTIONS } from "./data/content";
 
 /* ============================================================
@@ -27,6 +30,8 @@ function ThemeProvider({ children }) {
       return "dark";
     }
   });
+  const overlayRef = useRef(null);
+  const flashRef = useRef(null);
 
   useEffect(() => {
     try {
@@ -37,12 +42,48 @@ function ThemeProvider({ children }) {
     document.documentElement.dataset.theme = theme;
   }, [theme]);
 
-  const value = useMemo(
-    () => ({ theme, toggleTheme: () => setTheme((t) => (t === "dark" ? "light" : "dark")) }),
-    [theme]
-  );
+  // Theme flips get a CRT power-cycle instead of an instant swap: the
+  // screen collapses to a line (old theme), the theme swaps hidden
+  // behind full black, a bright scanline flashes ("power on"), then
+  // it expands back out onto the new theme.
+  async function toggleTheme() {
+    const next = theme === "dark" ? "light" : "dark";
+    const reduced =
+      typeof window !== "undefined" &&
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const el = overlayRef.current;
+    if (reduced || !el) {
+      setTheme(next);
+      return;
+    }
+    await animate(el, { scaleY: [0, 1] }, { duration: 0.16, ease: [0.7, 0, 1, 1] }).finished;
+    setTheme(next);
+    const flash = flashRef.current;
+    if (flash) {
+      animate(flash, { opacity: [0, 1, 0] }, { duration: 0.24, times: [0, 0.3, 1] });
+    }
+    await animate(el, { scaleY: [1, 0] }, { duration: 0.24, ease: [0, 0, 0.3, 1] }).finished;
+  }
 
-  return <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>;
+  const value = useMemo(() => ({ theme, toggleTheme }), [theme]);
+
+  return (
+    <ThemeContext.Provider value={value}>
+      {children}
+      <div
+        ref={overlayRef}
+        aria-hidden
+        style={{ transform: "scaleY(0)", transformOrigin: "center" }}
+        className="fixed inset-0 z-[900] bg-black pointer-events-none"
+      />
+      <div
+        ref={flashRef}
+        aria-hidden
+        style={{ opacity: 0 }}
+        className="fixed inset-x-0 top-1/2 -translate-y-1/2 h-[2px] z-[901] pointer-events-none bg-cyan shadow-[0_0_24px_6px_rgba(34,211,238,0.8)]"
+      />
+    </ThemeContext.Provider>
+  );
 }
 
 /* ============================================================
@@ -167,14 +208,15 @@ function Nav() {
           >
             {theme === "dark" ? <Sun size={14} /> : <Moon size={14} />}
           </button>
-          <motion.a
+          <MagneticButton
             href="#commit"
-            whileHover={{ scale: 1.05, y: -2 }}
+            strength={0.4}
+            whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.96 }}
             className="ml-2 px-4 py-2 rounded-lg bg-gradient-to-r from-cyan to-[#9be9ff] text-ink font-mono text-[.72rem] font-bold tracking-[.08em] uppercase"
           >
             Contact →
-          </motion.a>
+          </MagneticButton>
         </div>
 
         <button
@@ -291,6 +333,8 @@ class ErrorBoundary extends Component {
 export default function App() {
   return (
     <ErrorBoundary>
+      <CustomCursor />
+      <BootSequence />
       <ThemeProvider>
         <SandboxProvider>
           <AppShell />
