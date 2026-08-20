@@ -32,9 +32,11 @@
    background, but go invisible on the light theme's plain white/
    aurora background. These flip to dark shades under
    [data-theme="light"] — EXCEPT inside permanently-dark surfaces
-   (.glass cards, the CRT chassis) which re-declare them back to
-   their light-on-dark values, since those stay dark-tinted in both
-   themes by design.
+   (the CRT chassis, the mobile nav dropdown) which re-declare them
+   back to their light-on-dark values, since those stay dark-tinted
+   in both themes by design. .glass itself flips its background too
+   (see below), so its text follows the page-level tokens instead of
+   being forced back to white.
    ============================================================ */
 :root {
   --ink-50: #f8fafc;
@@ -50,7 +52,6 @@
   --ink-300: #475569;
   --ink-400: #64748b;
 }
-.glass,
 .crt-shell,
 .dark-surface {
   --ink-50: #f8fafc;
@@ -84,6 +85,11 @@
     background: rgba(2, 6, 16, 0.4);
     border: 1px solid rgba(255, 255, 255, 0.06);
   }
+  :root[data-theme="light"] .glass {
+    background: rgba(255, 255, 255, 0.62);
+    border: 1px solid rgba(15, 23, 42, 0.08);
+    box-shadow: 0 1px 3px rgba(15, 23, 42, 0.05);
+  }
   .text-glow-cyan {
     text-shadow: 0 0 6px rgba(34, 211, 238, 0.32);
   }
@@ -100,6 +106,11 @@
   overflow: hidden;
   border-radius: 1.75rem;
   isolation: isolate;
+  /* Always dark, in both themes — the retro CRT terminal look is the
+     point, unlike .glass cards which flip light in light theme. */
+  backdrop-filter: blur(16px);
+  background: rgba(2, 6, 16, 0.4);
+  border: 1px solid rgba(255, 255, 255, 0.06);
 }
 .crt-shell::before {
   content: "";

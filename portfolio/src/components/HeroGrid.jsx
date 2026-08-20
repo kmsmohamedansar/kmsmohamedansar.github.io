@@ -192,7 +192,7 @@ function CrtChassis({ children, className = "" }) {
       ref={ref}
       onMouseMove={onMouseMove}
       onMouseLeave={onMouseLeave}
-      className={`crt-shell crt-spotlight glass rounded-[1.75rem] ${className}`}
+      className={`crt-shell crt-spotlight rounded-[1.75rem] ${className}`}
     >
       {children}
     </div>
