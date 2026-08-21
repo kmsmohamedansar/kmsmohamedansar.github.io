@@ -1,15 +1,16 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
-import { History, Briefcase, Mail, ArrowRight, Link2, ChevronDown } from "lucide-react";
+import { ArrowRight, Link2, ChevronDown } from "lucide-react";
 import { EMET_SHORTCUTS, STACK_TAGS } from "../data/content";
 import { useSandbox } from "../App";
 import MagneticButton from "./MagneticButton";
+import { HEAVY_OBJECT, EASE_OUT } from "../lib/motion";
 
 const prefersReducedMotion = () =>
   typeof window !== "undefined" &&
   window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-const EASE = [0.16, 1, 0.3, 1];
+const EASE = EASE_OUT;
 
 /* ── Typewriter automation queue ──────────────────────────────
    Each segment types character-by-character at its own speed (ms/char),
@@ -76,105 +77,11 @@ function useTypewriter(script, startDelay = 500) {
   return { segments, done };
 }
 
-/* ── Canvas particle-vortex "data gravity well" ────────────── */
-function useParticleVortex(canvasRef, { label = "ANSAR" } = {}) {
-  useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    const ctx = canvas.getContext("2d");
-    if (!ctx) return; // canvas blocked by a privacy extension / browser policy
-    const reduced = prefersReducedMotion();
-
-    let raf;
-    let width = 0;
-    let height = 0;
-    let dpr = Math.min(window.devicePixelRatio || 1, 2);
-
-    const PARTICLE_COUNT = 90;
-    const particles = Array.from({ length: PARTICLE_COUNT }, (_, i) => {
-      const angle = Math.random() * Math.PI * 2;
-      const radius = 40 + Math.random() * 120;
-      return {
-        angle,
-        radius,
-        speed: 0.002 + Math.random() * 0.004,
-        size: 0.8 + Math.random() * 1.8,
-        hueMix: Math.random(),
-        wobble: Math.random() * Math.PI * 2,
-      };
-    });
-
-    function resize() {
-      const rect = canvas.parentElement.getBoundingClientRect();
-      width = rect.width;
-      height = rect.height;
-      dpr = Math.min(window.devicePixelRatio || 1, 2);
-      canvas.width = width * dpr;
-      canvas.height = height * dpr;
-      canvas.style.width = width + "px";
-      canvas.style.height = height + "px";
-      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    }
-    resize();
-    window.addEventListener("resize", resize);
-
-    function draw(t) {
-      ctx.clearRect(0, 0, width, height);
-      const cx = width / 2;
-      const cy = height / 2;
-
-      // faint concentric rings — the "gravity well"
-      for (let r = 40; r < Math.min(width, height) / 2; r += 34) {
-        ctx.beginPath();
-        ctx.arc(cx, cy, r, 0, Math.PI * 2);
-        ctx.strokeStyle = "rgba(34,211,238,0.05)";
-        ctx.lineWidth = 1;
-        ctx.stroke();
-      }
-
-      particles.forEach((p) => {
-        if (!reduced) p.angle += p.speed;
-        const wob = Math.sin(t * 0.0006 + p.wobble) * 4;
-        const r = p.radius + wob;
-        const x = cx + Math.cos(p.angle) * r;
-        const y = cy + Math.sin(p.angle) * r * 0.62; // slight ellipse for depth
-        const alpha = 0.25 + 0.5 * (1 - r / 170);
-        ctx.beginPath();
-        ctx.arc(x, y, p.size, 0, Math.PI * 2);
-        ctx.fillStyle =
-          p.hueMix > 0.85 ? `rgba(251,191,36,${alpha})` : `rgba(34,211,238,${alpha})`;
-        ctx.fill();
-      });
-
-      // center label
-      ctx.font = "700 15px 'JetBrains Mono', monospace";
-      ctx.textAlign = "center";
-      ctx.textBaseline = "middle";
-      ctx.fillStyle = "rgba(34,211,238,0.5)";
-      ctx.letterSpacing = "6px";
-      ctx.fillText(label, cx, cy);
-
-      raf = requestAnimationFrame(draw);
-    }
-
-    if (reduced) {
-      draw(0);
-    } else {
-      raf = requestAnimationFrame(draw);
-    }
-
-    return () => {
-      cancelAnimationFrame(raf);
-      window.removeEventListener("resize", resize);
-    };
-  }, [canvasRef, label]);
-}
-
-/* Cursor-reactive spotlight + physics-dampened 3D tilt — the whole
-   twin-monitor assembly pivots on rotateX/rotateY as the cursor
-   glides across it (spring-smoothed, not raw 1:1 tracking), while a
-   soft glow follows the pointer via CSS custom properties (no
-   re-renders for that half). Tilt is skipped under reduced motion.
+/* Cursor-reactive spotlight + physics-dampened 3D tilt — this single
+   panel pivots on rotateX/rotateY as the cursor glides near it
+   (spring-smoothed, not raw 1:1 tracking), while a soft glow follows
+   the pointer via CSS custom properties (no re-renders for that
+   half). Tilt is skipped under reduced motion.
 
    The hit-test rect is measured on a STATIC outer wrapper, not on the
    element being rotated — measuring on the rotating element itself
@@ -189,20 +96,16 @@ function CrtChassis({ children, className = "" }) {
 
   const px = useMotionValue(0.5);
   const py = useMotionValue(0.5);
-  const spring = { stiffness: 150, damping: 22, mass: 0.6 };
+  const spring = HEAVY_OBJECT;
   const springX = useSpring(px, spring);
   const springY = useSpring(py, spring);
-  const rotateX = useTransform(springY, [0, 1], [11, -11]);
-  const rotateY = useTransform(springX, [0, 1], [-15, 15]);
+  const rotateX = useTransform(springY, [0, 1], [9, -9]);
+  const rotateY = useTransform(springX, [0, 1], [-12, 12]);
 
   function onMouseMove(e) {
     const el = outerRef.current;
     if (!el) return;
     const rect = el.getBoundingClientRect();
-    // Spotlight custom properties must land on innerRef — it's the
-    // element carrying .crt-spotlight, whose own stylesheet default
-    // (--spot-x: 50%, etc.) would otherwise shadow a value inherited
-    // from the outer wrapper.
     innerRef.current?.style.setProperty("--spot-x", `${e.clientX - rect.left}px`);
     innerRef.current?.style.setProperty("--spot-y", `${e.clientY - rect.top}px`);
     innerRef.current?.style.setProperty("--spot-o", "1");
@@ -217,12 +120,7 @@ function CrtChassis({ children, className = "" }) {
   }
 
   return (
-    <div
-      ref={outerRef}
-      onMouseMove={onMouseMove}
-      onMouseLeave={onMouseLeave}
-      style={{ perspective: "1400px" }}
-    >
+    <div ref={outerRef} onMouseMove={onMouseMove} onMouseLeave={onMouseLeave} style={{ perspective: "1400px" }}>
       <motion.div
         ref={innerRef}
         style={{
@@ -230,7 +128,7 @@ function CrtChassis({ children, className = "" }) {
           rotateY: reduced ? 0 : rotateY,
           transformStyle: "preserve-3d",
         }}
-        className={`crt-shell crt-spotlight rounded-[1.75rem] will-change-transform ${className}`}
+        className={`crt-shell crt-spotlight rounded-2xl will-change-transform ${className}`}
       >
         {children}
       </motion.div>
@@ -238,7 +136,7 @@ function CrtChassis({ children, className = "" }) {
   );
 }
 
-function MonitorBar({ title, status, statusTone = "green" }) {
+function MonitorBar({ title, status, statusTone = "cyan" }) {
   const tone =
     statusTone === "cyan"
       ? "text-cyan border-cyan/30"
@@ -246,31 +144,33 @@ function MonitorBar({ title, status, statusTone = "green" }) {
         ? "text-green border-green/30"
         : "text-amber border-amber/30";
   return (
-    <div className="flex items-center gap-3 px-5 py-3 border-b border-white/8 bg-black/20">
+    <div className="flex items-center gap-3 px-4 py-2.5 border-b border-white/8 bg-black/20">
       <span className="flex gap-1.5">
-        <i className="w-2.5 h-2.5 rounded-full bg-[#ff5f57]" />
-        <i className="w-2.5 h-2.5 rounded-full bg-[#febc2e]" />
-        <i className="w-2.5 h-2.5 rounded-full bg-[#28c840]" />
+        <i className="w-2 h-2 rounded-full bg-[#ff5f57]" />
+        <i className="w-2 h-2 rounded-full bg-[#febc2e]" />
+        <i className="w-2 h-2 rounded-full bg-[#28c840]" />
       </span>
-      <span className="flex-1 font-mono text-[.68rem] tracking-wide text-[color:var(--ink-400)]">
-        {title}
-      </span>
-      <span className={`font-mono text-[.58rem] uppercase tracking-[.12em] border rounded px-2 py-0.5 ${tone}`}>
+      <span className="flex-1 font-mono text-[.64rem] tracking-wide text-[color:var(--ink-400)]">{title}</span>
+      <span className={`font-mono text-[.56rem] uppercase tracking-[.12em] border rounded px-1.5 py-0.5 ${tone}`}>
         {status}
       </span>
     </div>
   );
 }
 
+/**
+ * Hero as an editorial scene rather than a pair of equal boxed panels:
+ * the name is the dominant visual gesture (large, open, unboxed), and
+ * "emet" is one smaller floating object placed asymmetrically beside
+ * it — a physical thing in the scene, not 50% of the viewport in a
+ * rounded rectangle.
+ */
 export default function HeroGrid({ ready = true }) {
   const { segments, done } = useTypewriter(SCRIPT);
-  const canvasRef = useRef(null);
-  useParticleVortex(canvasRef, { label: "ANSAR" });
   const { toggleDevMode } = useSandbox();
 
   return (
-    <header className="relative min-h-[100svh] flex flex-col justify-center overflow-hidden pt-28 pb-16">
-      {/* ambient background glow */}
+    <header className="relative min-h-[100svh] flex flex-col justify-center overflow-hidden pt-32 pb-20">
       <div
         aria-hidden
         className="ambient-drift pointer-events-none absolute -inset-[10%] z-0"
@@ -280,36 +180,102 @@ export default function HeroGrid({ ready = true }) {
         }}
       />
 
-      <div className="relative z-10 mx-auto w-full max-w-[1760px] px-6 lg:px-10">
-        <motion.div
-          initial="hidden"
-          animate={ready ? "show" : "hidden"}
-          variants={{
-            hidden: { opacity: 0, rotateX: 18, rotateY: -24 },
-            show: {
-              opacity: 1,
-              rotateX: 0,
-              rotateY: 0,
-              transition: { duration: 0.9, ease: EASE, staggerChildren: 0.18, delayChildren: 0.15 },
-            },
-          }}
-          style={{ transformPerspective: 1600 }}
-        >
-          <CrtChassis className="grid grid-cols-1 md:grid-cols-[7fr_3fr] md:divide-x md:divide-white/10">
-            {/* LEFT HALF — EMET terminal, black-CRT chassis in the site's own cyan */}
-            <motion.div
-              variants={{ hidden: { opacity: 0, x: -36 }, show: { opacity: 1, x: 0, transition: { duration: 0.7, ease: EASE } } }}
-              className="flex flex-col border-b border-white/10 md:border-b-0 bg-black"
+      <div className="relative z-10 mx-auto w-full max-w-[1760px] px-6 lg:px-14">
+        <div className="grid lg:grid-cols-[1.25fr_1fr] gap-16 lg:gap-10 items-start">
+          {/* ── Identity statement — the large gesture, no box ── */}
+          <motion.div
+            initial="hidden"
+            animate={ready ? "show" : "hidden"}
+            variants={{
+              hidden: {},
+              show: { transition: { staggerChildren: 0.14, delayChildren: 0.1 } },
+            }}
+          >
+            <motion.span
+              variants={{ hidden: { opacity: 0, y: 10 }, show: { opacity: 1, y: 0, transition: { duration: 0.6, ease: EASE } } }}
+              className="font-mono text-[.72rem] tracking-[.22em] uppercase text-cyan/70"
             >
+              solutions engineer — data · systems · delivery
+            </motion.span>
+
+            <motion.h1
+              variants={{
+                hidden: { opacity: 0, y: 28, rotateX: 10 },
+                show: { opacity: 1, y: 0, rotateX: 0, transition: { duration: 0.9, ease: EASE } },
+              }}
+              style={{ transformPerspective: 1200 }}
+              className="mt-5 text-[clamp(3.4rem,8.6vw,7.6rem)] leading-[.9] font-display font-semibold text-[color:var(--ink-50)]"
+            >
+              Mohamed
+              <br />
+              <em className="glow-pulse italic text-cyan text-glow-cyan" style={{ fontFamily: "'Instrument Serif', serif" }}>
+                Ansar
+              </em>
+            </motion.h1>
+
+            <motion.p
+              variants={{ hidden: { opacity: 0, y: 16 }, show: { opacity: 1, y: 0, transition: { duration: 0.7, ease: EASE } } }}
+              className="mt-6 max-w-md text-[1.05rem] leading-relaxed text-[color:var(--ink-400)]"
+            >
+              Six years building data systems, pipelines, and analytics at scale. One iOS app shipped to the App
+              Store.
+            </motion.p>
+
+            <motion.div
+              variants={{ hidden: { opacity: 0, y: 16 }, show: { opacity: 1, y: 0, transition: { duration: 0.7, ease: EASE } } }}
+              className="mt-8 flex flex-wrap items-center gap-5"
+            >
+              <MagneticButton
+                href="#build"
+                whileHover={{ scale: 1.04 }}
+                whileTap={{ scale: 0.97 }}
+                className="inline-flex items-center gap-1.5 px-5 py-3 rounded-lg bg-gradient-to-r from-cyan to-[#9be9ff] text-ink text-[.82rem] font-bold font-mono tracking-wide"
+              >
+                Selected work <ArrowRight size={13} />
+              </MagneticButton>
+              <MagneticButton
+                href="https://www.linkedin.com/in/kmsmohamedansar/"
+                target="_blank"
+                rel="noopener noreferrer"
+                whileHover={{ scale: 1.04 }}
+                whileTap={{ scale: 0.97 }}
+                className="inline-flex items-center gap-1.5 text-[.82rem] font-mono tracking-wide text-[color:var(--ink-300)] hover:text-cyan transition-colors"
+              >
+                <Link2 size={13} /> LinkedIn
+              </MagneticButton>
+            </motion.div>
+
+            <motion.div
+              variants={{ hidden: { opacity: 0 }, show: { opacity: 1, transition: { duration: 0.8, delay: 0.1 } } }}
+              className="mt-14 flex gap-7 font-mono text-[.65rem] uppercase tracking-[.14em] text-slate-500"
+            >
+              <a href="#lineage" className="hover:text-cyan transition-colors">Before</a>
+              <a href="#build" className="hover:text-cyan transition-colors">Work</a>
+              <a href="#commit" className="hover:text-cyan transition-colors">Contact</a>
+            </motion.div>
+          </motion.div>
+
+          {/* ── emet — one floating object, asymmetrically placed ── */}
+          <motion.div
+            initial="hidden"
+            animate={ready ? "show" : "hidden"}
+            variants={{
+              hidden: { opacity: 0, y: 30, rotateY: -16 },
+              show: { opacity: 1, y: 0, rotateY: 0, transition: { duration: 1, ease: EASE, delay: 0.35 } },
+            }}
+            style={{ transformPerspective: 1200 }}
+            className="lg:mt-20"
+          >
+            <CrtChassis className="bg-black">
               <MonitorBar title="emet · portfolio assistant" status={done ? "READY" : "BOOTING"} statusTone={done ? "cyan" : "amber"} />
-              <div className="p-6 min-h-[380px] flex flex-col font-mono text-[.92rem] leading-[1.85] text-cyan/85">
-                <pre className="whitespace-pre-wrap break-words flex-1 mb-4">
+              <div className="p-5 min-h-[300px] flex flex-col font-mono text-[.8rem] leading-[1.8] text-cyan/85">
+                <pre className="whitespace-pre-wrap break-words flex-1 mb-3">
                   {segments.map((seg, i) => (
                     <span key={i} className={seg.cls}>
                       {seg.text}
                     </span>
                   ))}
-                  {!done && <span className="inline-block w-[7px] h-[1em] bg-cyan align-text-bottom blink-cursor ml-0.5" />}
+                  {!done && <span className="inline-block w-[6px] h-[1em] bg-cyan align-text-bottom blink-cursor ml-0.5" />}
                 </pre>
 
                 {done && (
@@ -317,18 +283,18 @@ export default function HeroGrid({ ready = true }) {
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     transition={{ duration: 0.4, delay: 0.15 }}
-                    className="flex flex-col gap-1.5 mb-4"
+                    className="flex flex-col gap-1.5 mb-3"
                   >
                     {EMET_SHORTCUTS.map((item) => (
                       <a
                         key={item.n}
                         href={item.go}
-                        className="group flex items-center gap-3.5 px-3.5 py-2.5 rounded-lg border border-cyan/15 bg-cyan/[.02] text-cyan/75 hover:text-cyan hover:border-cyan/45 hover:bg-cyan/5 transition-colors"
+                        className="group flex items-center gap-3 px-3 py-2 rounded-lg border border-cyan/15 bg-cyan/[.02] text-cyan/75 hover:text-cyan hover:border-cyan/45 hover:bg-cyan/5 transition-colors"
                       >
-                        <span className="w-[22px] h-[22px] grid place-items-center rounded border border-cyan/25 text-[.7rem] text-cyan/60 group-hover:text-cyan group-hover:border-cyan/50 transition-colors">
+                        <span className="w-[18px] h-[18px] grid place-items-center rounded border border-cyan/25 text-[.64rem] text-cyan/60 group-hover:text-cyan group-hover:border-cyan/50 transition-colors">
                           {item.n}
                         </span>
-                        <span className="text-[.76rem]">{item.label}</span>
+                        <span className="text-[.7rem]">{item.label}</span>
                       </a>
                     ))}
                   </motion.div>
@@ -339,13 +305,13 @@ export default function HeroGrid({ ready = true }) {
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     transition={{ duration: 0.4, delay: 0.25 }}
-                    className="flex items-center gap-2.5 border-t border-cyan/15 pt-3.5 mt-auto"
+                    className="flex items-center gap-2 border-t border-cyan/15 pt-3 mt-auto"
                   >
                     <span className="text-cyan text-lg leading-none">›</span>
                     <input
                       type="text"
                       placeholder="type 1, 2, 3 or 4…"
-                      className="flex-1 bg-transparent outline-none text-[.8rem] text-cyan placeholder:text-cyan/35 caret-cyan"
+                      className="flex-1 bg-transparent outline-none text-[.75rem] text-cyan placeholder:text-cyan/35 caret-cyan"
                       autoComplete="off"
                       spellCheck={false}
                       onKeyDown={(e) => {
@@ -364,83 +330,14 @@ export default function HeroGrid({ ready = true }) {
                   </motion.div>
                 )}
               </div>
-            </motion.div>
-
-            {/* RIGHT HALF — Identity & generative loop */}
-            <motion.div
-              variants={{ hidden: { opacity: 0, x: 36 }, show: { opacity: 1, x: 0, transition: { duration: 0.7, ease: EASE } } }}
-              className="flex flex-col"
-            >
-              <MonitorBar title="mohamed.sys · identity" status="ONLINE" statusTone="green" />
-              <div className="relative p-7 min-h-[380px] flex flex-col overflow-hidden">
-                <canvas
-                  ref={canvasRef}
-                  aria-hidden
-                  className="absolute inset-0 w-full h-full opacity-70 pointer-events-none"
-                />
-
-                <div className="relative z-10 flex-1 flex flex-col justify-center">
-                  <h1
-                    className="text-[clamp(2.6rem,5.2vw,4.4rem)] leading-[.96] mb-4"
-                    style={{ fontFamily: "'Instrument Serif', serif" }}
-                  >
-                    Mohamed
-                    <br />
-                    <em className="glow-pulse italic text-cyan text-glow-cyan">Ansar</em>
-                  </h1>
-                  <p className="font-display text-cyan text-[.95rem] mb-6">
-                    Data · Engineering · Shipped iOS
-                  </p>
-                  <div className="flex flex-wrap gap-3">
-                    <MagneticButton
-                      href="#build"
-                      whileHover={{ scale: 1.045 }}
-                      whileTap={{ scale: 0.97 }}
-                      className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-lg bg-gradient-to-r from-cyan to-[#9be9ff] text-ink text-[.78rem] font-bold font-mono tracking-wide"
-                    >
-                      Selected work <ArrowRight size={13} />
-                    </MagneticButton>
-                    <MagneticButton
-                      href="https://www.linkedin.com/in/kmsmohamedansar/"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      whileHover={{ scale: 1.045 }}
-                      whileTap={{ scale: 0.97 }}
-                      className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-lg border border-white/12 text-[color:var(--ink-200)] text-[.78rem] font-mono tracking-wide hover:border-cyan/40 hover:text-cyan transition-colors"
-                    >
-                      <Link2 size={13} /> LinkedIn
-                    </MagneticButton>
-                  </div>
-                </div>
-
-                {/* bottom dock */}
-                <div className="relative z-10 flex gap-2 border-t border-white/8 pt-4 mt-5">
-                  {[
-                    { icon: History, label: "Before", href: "#lineage" },
-                    { icon: Briefcase, label: "Work", href: "#build" },
-                    { icon: Mail, label: "Contact", href: "#commit" },
-                  ].map(({ icon: Icon, label, href }) => (
-                    <a
-                      key={label}
-                      href={href}
-                      className="group flex-1 flex flex-col items-center gap-1.5 py-2 rounded-lg text-slate-500 hover:text-cyan transition-colors font-mono text-[.6rem] uppercase tracking-[.1em]"
-                    >
-                      <span className="w-[34px] h-[34px] grid place-items-center rounded-lg border border-white/10 text-[color:var(--ink-300)] group-hover:border-cyan/45 group-hover:text-cyan group-hover:-translate-y-0.5 transition-all">
-                        <Icon size={15} />
-                      </span>
-                      {label}
-                    </a>
-                  ))}
-                </div>
-              </div>
-            </motion.div>
-          </CrtChassis>
-        </motion.div>
+            </CrtChassis>
+          </motion.div>
+        </div>
 
         <motion.a
           href="#source"
           aria-label="Scroll to explore"
-          className="float-y relative z-10 mt-8 mx-auto w-9 h-9 grid place-items-center rounded-full border border-white/10 text-[color:var(--ink-400)] hover:text-cyan hover:border-cyan/40 transition-colors"
+          className="float-y relative z-10 mt-16 mx-auto w-9 h-9 grid place-items-center rounded-full border border-white/10 text-[color:var(--ink-400)] hover:text-cyan hover:border-cyan/40 transition-colors"
           whileHover={{ scale: 1.12 }}
           whileTap={{ scale: 0.94 }}
         >

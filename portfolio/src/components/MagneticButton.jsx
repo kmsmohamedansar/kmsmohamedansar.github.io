@@ -1,5 +1,6 @@
 import { useRef } from "react";
 import { motion, useMotionValue, useSpring } from "framer-motion";
+import { MEDIUM_OBJECT } from "../lib/motion";
 
 /**
  * Wraps a CTA in a magnetic pull — the button drifts toward the
@@ -10,7 +11,7 @@ export default function MagneticButton({ children, className = "", as: As = moti
   const ref = useRef(null);
   const x = useMotionValue(0);
   const y = useMotionValue(0);
-  const spring = { stiffness: 220, damping: 18, mass: 0.4 };
+  const spring = MEDIUM_OBJECT;
   const springX = useSpring(x, spring);
   const springY = useSpring(y, spring);
 
