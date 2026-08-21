@@ -170,13 +170,12 @@ function drawMark(ctx, mark, accent) {
   ctx.restore();
 }
 
-// A picture instead of a drawn mark, for the four destinations that
-// have a real image to show — cropped full-bleed to fill the entire
-// card, edge to edge, with no background or tile showing around it.
-// A logo's own edges get cropped a little in exchange for actually
-// looking like a card instead of a screenshot pasted onto one; the
-// destination page you land on is free to show that same logo
-// uncropped.
+// A picture instead of a drawn mark, for the destinations that have
+// a real image to show — cropped full-bleed to fill the entire card,
+// edge to edge, with no background or tile showing around it. Right
+// for a piece of art (EMET) where cropping a little off the edges
+// doesn't lose the point of the image; wrong for a wordmark or a
+// wide banner, which is what drawContainImage below is for instead.
 function drawFullBleedImage(ctx, img, w, h) {
   const ir = img.width / img.height;
   const br = w / h;
@@ -195,14 +194,42 @@ function drawFullBleedImage(ctx, img, w, h) {
   ctx.drawImage(img, sx, sy, sw, sh, 0, 0, w, h);
 }
 
+// The "zoomed out" alternative: the whole image, nothing cropped off
+// it, scaled down and centered with real breathing room — right for
+// a logo or a wide banner where every letter matters and a tight
+// crop would slice through the wordmark. The backdrop is a faint
+// tint of the card's own accent rather than flat white, so a logo
+// that already carries its own white background doesn't look like a
+// sticker pasted onto the card.
+function drawContainImage(ctx, img, w, h, rgb) {
+  const tint = rgb.map((c) => Math.round(255 * 0.93 + c * 0.07));
+  ctx.fillStyle = `rgb(${tint.join(",")})`;
+  ctx.fillRect(0, 0, w, h);
+
+  const scale = 0.8;
+  const ir = img.width / img.height;
+  const br = w / h;
+  let dw, dh;
+  if (ir > br) {
+    dw = w * scale;
+    dh = dw / ir;
+  } else {
+    dh = h * scale;
+    dw = dh * ir;
+  }
+  const dx = (w - dw) / 2;
+  const dy = (h - dh) / 2;
+  ctx.drawImage(img, dx, dy, dw, dh);
+}
+
 // Each card face carries no text at all — the destination's name
 // shows as a floating label above the card on hover instead (see
-// NavCardDeck), so the picture is the whole card. Four of the five
-// have a real image, passed in already-loaded so this stays
-// synchronous; Contact (and any card whose image failed to load)
-// falls back to its drawn mark, centered and enlarged since it no
-// longer shares the face with a title, on a soft pastel tint of the
-// card's own accent color.
+// NavCardDeck), so the picture is the whole card. All five now have
+// a real image, passed in already-loaded so this stays synchronous;
+// card.imageFit picks full-bleed ("cover") vs zoomed-out ("contain").
+// Any card whose image failed to load falls back to its drawn mark,
+// centered and enlarged since it no longer shares the face with a
+// title, on a soft pastel tint of the card's own accent color.
 export function buildNavCardTexture(card, { accent = "#22d3ee", image = null } = {}) {
   const w = 512;
   const h = 716;
@@ -212,7 +239,11 @@ export function buildNavCardTexture(card, { accent = "#22d3ee", image = null } =
   const ctx = canvas.getContext("2d");
 
   if (image) {
-    drawFullBleedImage(ctx, image, w, h);
+    if (card.imageFit === "contain") {
+      drawContainImage(ctx, image, w, h, hexToRgb(accent));
+    } else {
+      drawFullBleedImage(ctx, image, w, h);
+    }
   } else {
     const rgb = hexToRgb(accent);
     const bg = ctx.createLinearGradient(0, 0, w, h);
