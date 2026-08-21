@@ -2,6 +2,7 @@ import { Component, createContext, useContext, useEffect, useMemo, useRef, useSt
 import { motion, animate, useScroll, useSpring } from "framer-motion";
 import { Sun, Moon, Command, Menu, X } from "lucide-react";
 import HeroGrid from "./components/HeroGrid";
+import EmetSection from "./components/EmetSection";
 import ContentSections from "./components/ContentSections";
 import SandboxStubs from "./components/SandboxStubs";
 import CommandPalette from "./components/CommandPalette";
@@ -279,6 +280,7 @@ function AppShell({ bootDone }) {
             cards) establishes its own local perspective instead. */}
         <main id="hero">
           <HeroGrid ready={bootDone} />
+          <EmetSection />
           <ContentSections />
           {devMode && <SandboxStubs onClose={toggleDevMode} />}
         </main>

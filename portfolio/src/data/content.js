@@ -4,10 +4,23 @@
 // from the same list and can't drift out of sync.
 
 export const NAV_SECTIONS = [
+  { id: "emet", label: "Emet", index: 0 },
   { id: "source", label: "Now", index: 1 },
   { id: "lineage", label: "Before", index: 2 },
   { id: "build", label: "Work", index: 3 },
   { id: "commit", label: "Contact", index: 4 },
+];
+
+// The hero's card deck — one card per major destination on the page.
+// EMET scrolls to the terminal instead of expanding inline, same as
+// the other four, so all five behave identically: click a card, land
+// on the section it represents.
+export const HERO_DECK = [
+  { id: "emet", go: "#emet", kicker: "assistant", title: "EMET", tagline: "Ask the terminal", warm: false, mark: ">_" },
+  { id: "now", go: "#source", kicker: "current", title: "Now", tagline: "Solutions Engineer, Datasembly", warm: false, mark: "01" },
+  { id: "before", go: "#lineage", kicker: "career", title: "Before", tagline: "Amazon · Spongelii · Datasembly", warm: true, mark: "02" },
+  { id: "work", go: "#build", kicker: "built", title: "Work", tagline: "RepTrack + 9 more shipped", warm: false, mark: "03" },
+  { id: "contact", go: "#commit", kicker: "reach", title: "Contact", tagline: "Say hello", warm: true, mark: "@" },
 ];
 
 export const EMET_SHORTCUTS = [
