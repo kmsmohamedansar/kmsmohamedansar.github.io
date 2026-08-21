@@ -1,5 +1,5 @@
-import { useRef, useState } from "react";
-import { AnimatePresence, motion, useMotionValue, useSpring, useTransform } from "framer-motion";
+import { useEffect, useRef, useState } from "react";
+import { AnimatePresence, animate, motion, useMotionValue, useSpring, useTransform } from "framer-motion";
 import {
   Database,
   Compass,
@@ -17,6 +17,10 @@ import MagneticButton from "./MagneticButton";
 import { MEDIUM_OBJECT, EASE_OUT } from "../lib/motion";
 
 const EASE = EASE_OUT;
+
+const prefersReducedMotion = () =>
+  typeof window !== "undefined" &&
+  window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
 function Reveal({ children, className = "", delay = 0, y = 28 }) {
   return (
@@ -49,8 +53,12 @@ function SectionHead({ step, kicker, title, lede }) {
 
 /* Small window-chrome bar — a lighter echo of the hero's MonitorBar,
    used to frame a section as a "live dashboard" rather than a plain
-   content block. */
-function DashboardBar({ title, status = "ONLINE" }) {
+   content block. `pulse` gives the status badge an actual heartbeat
+   instead of just sitting there saying "ONLINE" — this is the one
+   page about right-now, so its signature motion is a live status,
+   not a scene transition. */
+function DashboardBar({ title, status = "ONLINE", pulse = false }) {
+  const reduced = prefersReducedMotion();
   return (
     <div className="flex items-center gap-3 px-5 py-3 border-b border-white/8 bg-black/10">
       <span className="flex gap-1.5">
@@ -59,7 +67,14 @@ function DashboardBar({ title, status = "ONLINE" }) {
         <i className="w-2.5 h-2.5 rounded-full bg-[#28c840]" />
       </span>
       <span className="flex-1 font-mono text-[.68rem] tracking-wide text-[color:var(--ink-400)]">{title}</span>
-      <span className="font-mono text-[.58rem] uppercase tracking-[.12em] border rounded px-2 py-0.5 text-cyan border-cyan/30">
+      <span className="inline-flex items-center gap-1.5 font-mono text-[.58rem] uppercase tracking-[.12em] border rounded px-2 py-0.5 text-cyan border-cyan/30">
+        {pulse && (
+          <motion.i
+            className="w-1.5 h-1.5 rounded-full bg-cyan"
+            animate={reduced ? {} : { opacity: [1, 0.35, 1], scale: [1, 1.4, 1] }}
+            transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut" }}
+          />
+        )}
         {status}
       </span>
     </div>
@@ -74,7 +89,7 @@ export function NowSection() {
       <div className="w-full max-w-[1180px]">
         <SectionHead
           step="01"
-          kicker="now"
+          kicker="current"
           title={
             <>
               Technical builder at the intersection of{" "}
@@ -86,7 +101,7 @@ export function NowSection() {
         />
         <Reveal delay={0.02}>
           <div className="glass rounded-2xl overflow-hidden">
-            <DashboardBar title="now.dashboard · live" />
+            <DashboardBar title="now.dashboard · live" pulse />
             <div className="p-6 md:p-8 grid lg:grid-cols-[1.15fr_1fr] gap-8">
               <Reveal delay={0.05}>
                 <div className="space-y-5 text-[1.02rem] text-[color:var(--ink-300)] leading-relaxed max-w-lg">
@@ -161,6 +176,29 @@ export function BeforeSection() {
           title="Where I've been"
           lede="Solutions engineering and analytics operations. Progressively more technical ownership, from content operations at Amazon through pre-sales solution design at Datasembly."
         />
+        {/* A timeline drawing itself in, not another card — the
+            signature motion here is career progression, left to
+            right, one role settling into place after another. */}
+        <motion.div
+          className="relative h-px bg-white/10 mb-10 origin-left"
+          initial={{ scaleX: 0 }}
+          whileInView={{ scaleX: 1 }}
+          viewport={{ once: true }}
+          transition={{ duration: 1, ease: EASE }}
+        >
+          <div className="absolute inset-0 flex justify-between items-center px-[2px]">
+            {[...ROLES].reverse().map((role, i) => (
+              <motion.span
+                key={role.company + role.title}
+                className={`w-2 h-2 rounded-full ${role.current ? "bg-amber shadow-[0_0_8px_2px_rgba(251,191,36,0.5)]" : "bg-amber/40"}`}
+                initial={{ scale: 0 }}
+                whileInView={{ scale: 1 }}
+                viewport={{ once: true }}
+                transition={{ delay: 0.4 + i * 0.12, duration: 0.35, ease: EASE }}
+              />
+            ))}
+          </div>
+        </motion.div>
         <div className="grid sm:grid-cols-2 lg:grid-cols-4 grid-flow-row-dense gap-5 auto-rows-[minmax(160px,auto)]">
           {ROLES.map((role, i) => {
             if (expandedIdx === i) return null;
@@ -431,21 +469,56 @@ function ProjectRow({ project, index }) {
   );
 }
 
+/* Numbers that count themselves up on mount instead of just sitting
+   there printed — the signature motion for a page about shipped
+   output. Jumps straight to the final value under reduced motion. */
+function StatCounter({ value, label, delay = 0 }) {
+  const [display, setDisplay] = useState(prefersReducedMotion() ? value : 0);
+
+  useEffect(() => {
+    if (prefersReducedMotion()) return;
+    const controls = animate(0, value, {
+      duration: 1.3,
+      delay,
+      ease: EASE,
+      onUpdate: (v) => setDisplay(Math.round(v)),
+    });
+    return () => controls.stop();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  return (
+    <div>
+      <span className="font-display text-[2.2rem] font-semibold text-[color:var(--ink-50)] tabular-nums">
+        {display}
+        <span className="text-green">+</span>
+      </span>
+      <span className="block mt-1 font-mono text-[.66rem] uppercase tracking-[.1em] text-slate-500">{label}</span>
+    </div>
+  );
+}
+
 export function WorkSection() {
   const [expanded, setExpanded] = useState(false);
   const featured = PROJECTS.find((p) => p.featured);
   const rest = PROJECTS.filter((p) => p !== featured && !p.collapsed);
   const hidden = PROJECTS.filter((p) => p.collapsed);
+  const liveDemoCount = PROJECTS.filter((p) => p.kicker === "Live demo").length;
 
   return (
     <section className="min-h-full flex flex-col items-center justify-center px-5 py-14">
       <div className="w-full max-w-[1180px]">
         <SectionHead
           step="03"
-          kicker="work"
+          kicker="projects"
           title="What I've built"
           lede="SQL tools, pipelines, ML, retrieval, automation, and one native iOS app shipped to the App Store. End to end, several with live demos."
         />
+        <div className="flex flex-wrap gap-x-12 gap-y-6 mb-14 -mt-4">
+          <StatCounter value={PROJECTS.length} label="projects shipped" delay={0.05} />
+          <StatCounter value={1} label="App Store launch" delay={0.2} />
+          <StatCounter value={liveDemoCount} label="live demos" delay={0.35} />
+        </div>
         {featured && <div className="mb-20">{<RepTrackShowcase project={featured} />}</div>}
         <div>
           {rest.map((p, i) => (

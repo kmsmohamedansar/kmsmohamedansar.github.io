@@ -1,6 +1,6 @@
 import { Component, createContext, useContext, useEffect, useMemo, useRef, useState } from "react";
 import { AnimatePresence, motion, animate } from "framer-motion";
-import { Sun, Moon, Command, Menu, X } from "lucide-react";
+import { Sun, Moon, Command } from "lucide-react";
 import DeckView from "./components/DeckView";
 import EmetSection from "./components/EmetSection";
 import { NowSection, BeforeSection, WorkSection, StorySection, ContactSection } from "./components/ContentSections";
@@ -10,8 +10,7 @@ import AmbientField from "./components/AmbientField";
 import LightAmbientField from "./components/LightAmbientField";
 import BootSequence from "./components/BootSequence";
 import CustomCursor from "./components/CustomCursor";
-import MagneticButton from "./components/MagneticButton";
-import { NAV_SECTIONS, ROUTE_THEME } from "./data/content";
+import { ROUTE_THEME } from "./data/content";
 import { EASE_OUT } from "./lib/motion";
 
 /* ============================================================
@@ -142,14 +141,19 @@ function SandboxProvider({ children }) {
   return <SandboxContext.Provider value={value}>{children}</SandboxContext.Provider>;
 }
 
+// Deliberately no section links here (EMET / Current / Before /
+// Projects / Contact) and no Contact CTA — that row was a plain-text
+// shortcut around the deck's whole reason for existing: an actual
+// 3D scene you navigate by clicking a card, not a menu bar. The one
+// thing every view still needs is a way back, so the logo doubles as
+// a Home control, made explicit with a label once you're not already
+// on the deck. ⌘K stays as the accessibility/power-user fallback —
+// it's opt-in, not a visible competing menu.
 function Nav() {
   const { theme, toggleTheme } = useTheme();
-  const { route } = useRoute();
-  const active = route === "deck" ? null : route;
-  const [mobileOpen, setMobileOpen] = useState(false);
-  // Transparent only over the landing deck; opaque on every other
-  // view — there's no scroll position to key this off anymore.
-  const scrolled = route !== "deck";
+  const { route, navigate } = useRoute();
+  const onDeck = route === "deck";
+  const scrolled = !onDeck;
 
   function openPalette() {
     window.dispatchEvent(new KeyboardEvent("keydown", { key: "k", metaKey: true }));
@@ -184,22 +188,17 @@ function Nav() {
           </span>
         </a>
 
-        <div className="hidden md:flex items-center gap-1">
-          {NAV_SECTIONS.map((s) => (
-            <a
-              key={s.id}
-              href={`#${s.id}`}
-              className={`font-mono text-[.72rem] tracking-[.12em] uppercase px-3 py-2 rounded-lg transition-colors ${
-                active === s.id
-                  ? "text-cyan"
-                  : light
-                    ? "text-slate-500 hover:text-slate-900 hover:bg-black/5"
-                    : "text-slate-400 hover:text-slate-100 hover:bg-white/5"
+        <div className="flex items-center gap-1">
+          {!onDeck && (
+            <button
+              onClick={() => navigate("deck")}
+              className={`flex items-center gap-1.5 px-3 py-2 rounded-lg border text-cyan hover:border-cyan/40 transition-colors font-mono text-[.68rem] uppercase tracking-[.1em] ${
+                light ? "border-slate-900/10" : "border-white/10"
               }`}
             >
-              {s.label}
-            </a>
-          ))}
+              ← Home
+            </button>
+          )}
           <button
             onClick={openPalette}
             className={`ml-1 flex items-center gap-1 px-2.5 py-2 rounded-lg border text-slate-500 hover:text-cyan hover:border-cyan/30 transition-colors font-mono text-[.65rem] ${
@@ -218,43 +217,8 @@ function Nav() {
           >
             {theme === "dark" ? <Sun size={14} /> : <Moon size={14} />}
           </button>
-          <MagneticButton
-            href="#commit"
-            strength={0.4}
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.96 }}
-            className="ml-2 px-4 py-2 rounded-lg bg-gradient-to-r from-cyan to-[#9be9ff] text-ink font-mono text-[.72rem] font-bold tracking-[.08em] uppercase"
-          >
-            Contact →
-          </MagneticButton>
         </div>
-
-        <button
-          className={`md:hidden w-10 h-10 grid place-items-center rounded-lg border ${
-            light ? "border-slate-900/10 text-slate-700" : "border-white/10 text-slate-300"
-          }`}
-          onClick={() => setMobileOpen((v) => !v)}
-          aria-label="Toggle menu"
-          aria-expanded={mobileOpen}
-        >
-          {mobileOpen ? <X size={18} /> : <Menu size={18} />}
-        </button>
       </div>
-
-      {mobileOpen && (
-        <div className="dark-surface md:hidden bg-ink/95 backdrop-blur-xl border-t border-white/8 px-5 py-6 flex flex-col gap-2">
-          {NAV_SECTIONS.map((s) => (
-            <a
-              key={s.id}
-              href={`#${s.id}`}
-              onClick={() => setMobileOpen(false)}
-              className="font-mono text-sm uppercase tracking-widest text-[color:var(--ink-300)] py-2"
-            >
-              {s.label}
-            </a>
-          ))}
-        </div>
-      )}
     </nav>
   );
 }
