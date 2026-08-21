@@ -192,8 +192,8 @@ function CrtChassis({ children, className = "" }) {
   const spring = { stiffness: 150, damping: 22, mass: 0.6 };
   const springX = useSpring(px, spring);
   const springY = useSpring(py, spring);
-  const rotateX = useTransform(springY, [0, 1], [7, -7]);
-  const rotateY = useTransform(springX, [0, 1], [-9, 9]);
+  const rotateX = useTransform(springY, [0, 1], [11, -11]);
+  const rotateY = useTransform(springX, [0, 1], [-15, 15]);
 
   function onMouseMove(e) {
     const el = outerRef.current;
@@ -262,7 +262,7 @@ function MonitorBar({ title, status, statusTone = "green" }) {
   );
 }
 
-export default function HeroGrid() {
+export default function HeroGrid({ ready = true }) {
   const { segments, done } = useTypewriter(SCRIPT);
   const canvasRef = useRef(null);
   useParticleVortex(canvasRef, { label: "ANSAR" });
@@ -283,9 +283,17 @@ export default function HeroGrid() {
       <div className="relative z-10 mx-auto w-full max-w-[1760px] px-6 lg:px-10">
         <motion.div
           initial="hidden"
-          whileInView="show"
-          viewport={{ once: true, amount: 0.2 }}
-          variants={{ hidden: {}, show: { transition: { staggerChildren: 0.18, delayChildren: 0.05 } } }}
+          animate={ready ? "show" : "hidden"}
+          variants={{
+            hidden: { opacity: 0, rotateX: 18, rotateY: -24 },
+            show: {
+              opacity: 1,
+              rotateX: 0,
+              rotateY: 0,
+              transition: { duration: 0.9, ease: EASE, staggerChildren: 0.18, delayChildren: 0.15 },
+            },
+          }}
+          style={{ transformPerspective: 1600 }}
         >
           <CrtChassis className="grid grid-cols-1 md:grid-cols-[7fr_3fr] md:divide-x md:divide-white/10">
             {/* LEFT HALF — EMET terminal, black-CRT chassis in the site's own cyan */}
