@@ -23,17 +23,20 @@ export default function DeckView({ ready = true }) {
       <Suspense fallback={<div className="w-full h-full" aria-hidden="true" />}>
         <NavCardDeck />
       </Suspense>
-      <footer className="absolute inset-x-0 bottom-0 z-10 flex items-center justify-between px-5 sm:px-8 py-4 sm:py-5 font-mono text-[.68rem] text-slate-500">
-        <div className="flex items-center gap-4">
-          <a href={CONTACT.github} target="_blank" rel="noreferrer" className="hover:text-slate-900 transition-colors">
-            GitHub
-          </a>
-          <a href={CONTACT.linkedin} target="_blank" rel="noreferrer" className="hover:text-slate-900 transition-colors">
-            LinkedIn
-          </a>
-          <a href={`mailto:${CONTACT.email}`} className="hover:text-slate-900 transition-colors">
-            Email
-          </a>
+      <footer className="absolute inset-x-0 bottom-0 z-10 flex items-end justify-between px-5 sm:px-8 py-4 sm:py-5 font-mono text-[.68rem] text-slate-500">
+        <div>
+          <p className="mb-1.5 text-[.62rem] uppercase tracking-[.14em] text-slate-400">Personal Portfolio</p>
+          <div className="flex items-center gap-4">
+            <a href={CONTACT.github} target="_blank" rel="noreferrer" className="hover:text-slate-900 transition-colors">
+              GitHub
+            </a>
+            <a href={CONTACT.linkedin} target="_blank" rel="noreferrer" className="hover:text-slate-900 transition-colors">
+              LinkedIn
+            </a>
+            <a href={`mailto:${CONTACT.email}`} className="hover:text-slate-900 transition-colors">
+              Email
+            </a>
+          </div>
         </div>
         <p className="hidden sm:block text-slate-400">Solutions Engineer · Remote, Canada</p>
       </footer>

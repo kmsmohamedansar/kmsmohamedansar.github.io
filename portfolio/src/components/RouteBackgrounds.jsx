@@ -443,3 +443,103 @@ export function PingBackground() {
     </div>
   );
 }
+
+/* ============================================================
+   DECK (homepage) — a bright water surface: soft ripples expand
+   outward from a few recurring drops, each ring picked out with a
+   highlight/shadow pair like light catching a raised edge of water,
+   and small data glyphs — the same vocabulary as the five
+   destinations beyond it — ride each ring's circumference, surfacing
+   as the ripple reaches them and sinking back under as it passes.
+   Light and bright by design, the one background meant to feel like
+   daylight on water rather than a screen.
+   ============================================================ */
+const WATER_GLYPHS = ["0", "1", "%", "$", "+", "#", "░", "▒", "▓", "SQL", "99%", "42"];
+
+function setupWaterDrop(width, height) {
+  const dropSpecs = [
+    { xr: 0.24, yr: 0.32, period: 5200 },
+    { xr: 0.78, yr: 0.6, period: 6400 },
+    { xr: 0.52, yr: 0.88, period: 7200 },
+  ];
+  const drops = dropSpecs.map((spec, i) => ({
+    x: spec.xr * width,
+    y: spec.yr * height,
+    period: spec.period,
+    startOffset: i * 1900,
+    glyphs: Array.from({ length: 10 }, () => ({
+      angle: Math.random() * Math.PI * 2,
+      text: WATER_GLYPHS[Math.floor(Math.random() * WATER_GLYPHS.length)],
+    })),
+  }));
+  return { drops };
+}
+
+function renderWaterDrop(ctx, width, height, t, state, reduced) {
+  const bg = ctx.createLinearGradient(0, 0, width, height);
+  bg.addColorStop(0, "#eef8ff");
+  bg.addColorStop(0.55, "#f7fcff");
+  bg.addColorStop(1, "#ffffff");
+  ctx.fillStyle = bg;
+  ctx.fillRect(0, 0, width, height);
+
+  const maxR = Math.max(width, height) * 0.85;
+  const ringsPerDrop = 3;
+
+  for (const drop of state.drops) {
+    for (let ringIdx = 0; ringIdx < ringsPerDrop; ringIdx++) {
+      const phase = reduced
+        ? (ringIdx + 0.5) / ringsPerDrop
+        : (((t + drop.startOffset) % drop.period) / drop.period + ringIdx / ringsPerDrop) % 1;
+      const r = phase * maxR;
+      const alpha = (1 - phase) * 0.4;
+      if (alpha <= 0.01) continue;
+
+      // A raised-water ring: a teal edge with a bright highlight just
+      // outside it, like light catching the rim.
+      ctx.beginPath();
+      ctx.arc(drop.x, drop.y, r, 0, Math.PI * 2);
+      ctx.strokeStyle = `rgba(14,116,144,${alpha})`;
+      ctx.lineWidth = 2;
+      ctx.stroke();
+
+      ctx.beginPath();
+      ctx.arc(drop.x, drop.y, r + 2.5, 0, Math.PI * 2);
+      ctx.strokeStyle = `rgba(255,255,255,${alpha * 0.9})`;
+      ctx.lineWidth = 1.5;
+      ctx.stroke();
+
+      ctx.font = "600 12px 'JetBrains Mono', monospace";
+      for (const glyph of drop.glyphs) {
+        const gx = drop.x + Math.cos(glyph.angle) * r;
+        const gy = drop.y + Math.sin(glyph.angle) * r;
+        if (gx < -30 || gx > width + 30 || gy < -20 || gy > height + 20) continue;
+        ctx.fillStyle = `rgba(14,116,144,${Math.min(0.55, alpha * 1.4)})`;
+        ctx.fillText(glyph.text, gx, gy);
+      }
+    }
+
+    // A brief bright flash at the origin the instant a new ring is
+    // "born" — the moment the drop hits the water.
+    if (!reduced) {
+      const birthPhase = ((t + drop.startOffset) % drop.period) / drop.period;
+      if (birthPhase < 0.06) {
+        const flashAlpha = (1 - birthPhase / 0.06) * 0.5;
+        const grad = ctx.createRadialGradient(drop.x, drop.y, 0, drop.x, drop.y, 40);
+        grad.addColorStop(0, `rgba(255,255,255,${flashAlpha})`);
+        grad.addColorStop(1, "rgba(255,255,255,0)");
+        ctx.fillStyle = grad;
+        ctx.fillRect(drop.x - 40, drop.y - 40, 80, 80);
+      }
+    }
+  }
+}
+
+export function WaterDropBackground() {
+  const canvasRef = useAnimatedCanvas(setupWaterDrop, renderWaterDrop);
+  return (
+    <div aria-hidden className="fixed inset-0 z-0 pointer-events-none overflow-hidden bg-white">
+      <canvas ref={canvasRef} className="block" />
+    </div>
+  );
+}
