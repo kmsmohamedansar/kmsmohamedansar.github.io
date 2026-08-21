@@ -64,11 +64,117 @@ function drawPattern(ctx, id, w, h) {
   }
 }
 
+// A drawn icon instead of a bare index number — "01/02/03" says
+// nothing about what a card is, a small pulse/clock/rocket/envelope
+// does. EMET keeps its terminal-prompt glyph, already a real symbol.
+function drawMark(ctx, mark, accent) {
+  const cx = 138;
+  const cy = 300;
+  ctx.save();
+  ctx.strokeStyle = accent;
+  ctx.fillStyle = accent;
+  ctx.lineJoin = "round";
+  ctx.lineCap = "round";
+
+  if (mark === "terminal") {
+    ctx.globalAlpha = 0.9;
+    ctx.font = "700 170px 'JetBrains Mono', monospace";
+    ctx.textBaseline = "alphabetic";
+    ctx.fillText(">_", 30, 390);
+  } else if (mark === "pulse") {
+    ctx.lineWidth = 11;
+    ctx.beginPath();
+    ctx.moveTo(20, cy);
+    ctx.lineTo(72, cy);
+    ctx.lineTo(102, cy - 75);
+    ctx.lineTo(142, cy + 95);
+    ctx.lineTo(178, cy - 35);
+    ctx.lineTo(212, cy);
+    ctx.lineTo(262, cy);
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.arc(262, cy, 15, 0, Math.PI * 2);
+    ctx.fill();
+  } else if (mark === "clock") {
+    const r = 96;
+    ctx.lineWidth = 10;
+    ctx.beginPath();
+    ctx.arc(cx, cy, r, 0, Math.PI * 2);
+    ctx.stroke();
+    for (let i = 0; i < 12; i++) {
+      const a = (i / 12) * Math.PI * 2;
+      ctx.lineWidth = 6;
+      ctx.beginPath();
+      ctx.moveTo(cx + Math.cos(a) * (r - 15), cy + Math.sin(a) * (r - 15));
+      ctx.lineTo(cx + Math.cos(a) * (r - 3), cy + Math.sin(a) * (r - 3));
+      ctx.stroke();
+    }
+    ctx.lineWidth = 9;
+    ctx.beginPath();
+    ctx.moveTo(cx, cy);
+    ctx.lineTo(cx, cy - 56);
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.moveTo(cx, cy);
+    ctx.lineTo(cx + 42, cy + 18);
+    ctx.stroke();
+  } else if (mark === "rocket") {
+    ctx.translate(cx - 8, cy + 6);
+    ctx.rotate(-0.36);
+    ctx.beginPath();
+    ctx.moveTo(0, -112);
+    ctx.quadraticCurveTo(46, -42, 46, 40);
+    ctx.lineTo(46, 68);
+    ctx.lineTo(-46, 68);
+    ctx.lineTo(-46, 40);
+    ctx.quadraticCurveTo(-46, -42, 0, -112);
+    ctx.closePath();
+    ctx.fill();
+    ctx.beginPath();
+    ctx.moveTo(-46, 38);
+    ctx.lineTo(-88, 90);
+    ctx.lineTo(-46, 74);
+    ctx.closePath();
+    ctx.fill();
+    ctx.beginPath();
+    ctx.moveTo(46, 38);
+    ctx.lineTo(88, 90);
+    ctx.lineTo(46, 74);
+    ctx.closePath();
+    ctx.fill();
+    ctx.globalCompositeOperation = "destination-out";
+    ctx.beginPath();
+    ctx.arc(0, -12, 17, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.globalCompositeOperation = "source-over";
+    ctx.globalAlpha = 0.55;
+    ctx.beginPath();
+    ctx.moveTo(-24, 68);
+    ctx.lineTo(0, 118);
+    ctx.lineTo(24, 68);
+    ctx.closePath();
+    ctx.fill();
+  } else if (mark === "mail") {
+    const x = 34;
+    const y = 232;
+    const ew = 208;
+    const eh = 140;
+    ctx.lineWidth = 9;
+    ctx.strokeRect(x, y, ew, eh);
+    ctx.beginPath();
+    ctx.moveTo(x, y);
+    ctx.lineTo(x + ew / 2, y + eh * 0.58);
+    ctx.lineTo(x + ew, y);
+    ctx.stroke();
+  }
+  ctx.restore();
+}
+
 // Each nav card has no screenshot to show — it's a destination, not a
 // project — so the face is a small typographic composition: a kicker,
-// a dominant mark (glyph/index), and the destination's title. Drawn on
-// an offscreen canvas rather than a generic gradient placeholder, with
-// the background gradient and line motif both tied to the card's own
+// a drawn mark, and the destination's title. Drawn on an offscreen
+// canvas rather than a generic gradient placeholder, with the
+// background gradient and line motif both tied to the card's own
 // accent color so each of the five reads as a distinct place, not a
 // recolored template.
 export function buildNavCardTexture(card, { accent = "#22d3ee" } = {}) {
@@ -92,13 +198,7 @@ export function buildNavCardTexture(card, { accent = "#22d3ee" } = {}) {
   ctx.font = "600 20px 'JetBrains Mono', monospace";
   ctx.fillText(card.kicker.toUpperCase(), 34, 58);
 
-  ctx.save();
-  ctx.globalAlpha = 0.9;
-  ctx.fillStyle = accent;
-  ctx.font = "700 190px 'JetBrains Mono', monospace";
-  ctx.textBaseline = "alphabetic";
-  ctx.fillText(card.mark, 30, 400);
-  ctx.restore();
+  drawMark(ctx, card.mark, accent);
 
   ctx.fillStyle = "#f4f6f8";
   ctx.font = "600 52px 'Space Grotesk', sans-serif";

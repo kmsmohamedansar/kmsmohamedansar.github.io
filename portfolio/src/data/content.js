@@ -5,9 +5,9 @@
 
 export const NAV_SECTIONS = [
   { id: "emet", label: "Emet", index: 0 },
-  { id: "source", label: "Now", index: 1 },
+  { id: "source", label: "Current", index: 1 },
   { id: "lineage", label: "Before", index: 2 },
-  { id: "build", label: "Work", index: 3 },
+  { id: "build", label: "Projects", index: 3 },
   { id: "commit", label: "Contact", index: 4 },
 ];
 
@@ -18,13 +18,15 @@ export const NAV_SECTIONS = [
 // pulled from the site's existing palette — that color rides along
 // onto the card face and into the ambient background of the view it
 // opens, so a destination has one consistent identity everywhere it
-// shows up, not just inside the deck.
+// shows up, not just inside the deck. "mark" names an icon drawn on
+// the card face (see three/cardTexture.js) rather than a bare index
+// number — a numeral doesn't say what a card is, an icon does.
 export const HERO_DECK = [
-  { id: "emet", go: "#emet", kicker: "assistant", title: "EMET", tagline: "Ask the terminal", accent: "#22d3ee", mark: ">_" },
-  { id: "now", go: "#source", kicker: "current", title: "Now", tagline: "Solutions Engineer, Datasembly", accent: "#8e7dff", mark: "01" },
-  { id: "before", go: "#lineage", kicker: "career", title: "Before", tagline: "Amazon · Spongelii · Datasembly", accent: "#fbbf24", mark: "02" },
-  { id: "work", go: "#build", kicker: "built", title: "Work", tagline: "RepTrack + 9 more shipped", accent: "#34d399", mark: "03" },
-  { id: "contact", go: "#commit", kicker: "reach", title: "Contact", tagline: "Say hello", accent: "#fb7185", mark: "@" },
+  { id: "emet", go: "#emet", kicker: "assistant", title: "EMET", tagline: "Ask the terminal", accent: "#22d3ee", mark: "terminal" },
+  { id: "now", go: "#source", kicker: "current role", title: "Current", tagline: "Solutions Engineer, Datasembly", accent: "#8e7dff", mark: "pulse" },
+  { id: "before", go: "#lineage", kicker: "career", title: "Before", tagline: "Amazon · Spongelii · Datasembly", accent: "#fbbf24", mark: "clock" },
+  { id: "work", go: "#build", kicker: "shipped", title: "Projects", tagline: "RepTrack + 9 more shipped", accent: "#34d399", mark: "rocket" },
+  { id: "contact", go: "#commit", kicker: "reach", title: "Contact", tagline: "Say hello", accent: "#fb7185", mark: "mail" },
 ];
 
 // Per-view ambient background theme — keyed by route (not card id,
@@ -44,7 +46,7 @@ export const ROUTE_THEME = {
 export const EMET_SHORTCUTS = [
   { n: 1, label: "What does he do now?", go: "#source" },
   { n: 2, label: "Where has he worked?", go: "#lineage" },
-  { n: 3, label: "What has he built?", go: "#build" },
+  { n: 3, label: "What has he shipped?", go: "#build" },
   { n: 4, label: "How do I reach him?", go: "#commit" },
 ];
 
@@ -247,9 +249,9 @@ export const CONTACT = {
 };
 
 export const COMMAND_ITEMS = [
-  { label: "Now — what he does today", go: "#source", group: "Sections" },
+  { label: "Current — what he does today", go: "#source", group: "Sections" },
   { label: "Before — where he's worked", go: "#lineage", group: "Sections" },
-  { label: "Work — what he's built", go: "#build", group: "Sections" },
+  { label: "Projects — what he's shipped", go: "#build", group: "Sections" },
   { label: "Why — the short version", go: "#story", group: "Sections" },
   { label: "Contact", go: "#commit", group: "Sections" },
   { label: "RepTrack on the App Store", href: "https://apps.apple.com/us/app/reptrack-workout-log/id6761032027", group: "Links" },

@@ -164,6 +164,7 @@ function MonitorBar({ title, status, statusTone = "cyan" }) {
 export default function EmetSection() {
   const { segments, done } = useTypewriter(SCRIPT);
   const { toggleDevMode } = useSandbox();
+  const reduced = prefersReducedMotion();
 
   return (
     <section className="min-h-full flex items-center px-5 py-14">
@@ -184,7 +185,31 @@ export default function EmetSection() {
           animate={{ opacity: 1, y: 0, rotateY: 0 }}
           transition={{ duration: 0.9, ease: EASE }}
           style={{ transformPerspective: 1200 }}
+          className="relative"
         >
+          {/* An old-monitor power-on beat before the terminal starts
+              typing — a bright flash that clears fast, then a single
+              scanline sweeping down once the tube's caught up. This
+              is emet's one signature entrance, not a color swap. */}
+          {!reduced && (
+            <>
+              <motion.div
+                aria-hidden
+                className="absolute inset-0 bg-white pointer-events-none z-30 rounded-2xl"
+                initial={{ opacity: 0.85 }}
+                animate={{ opacity: 0 }}
+                transition={{ duration: 0.45, ease: "easeOut" }}
+              />
+              <motion.div
+                aria-hidden
+                className="absolute inset-x-3 h-20 pointer-events-none z-20 rounded-full"
+                style={{ background: "linear-gradient(180deg, transparent, rgba(34,211,238,0.4), transparent)" }}
+                initial={{ top: "-8%", opacity: 0 }}
+                animate={{ top: ["-8%", "104%"], opacity: [0, 1, 1, 0] }}
+                transition={{ duration: 1, delay: 0.25, ease: "easeInOut" }}
+              />
+            </>
+          )}
           <CrtChassis className="bg-black">
             <MonitorBar title="emet · portfolio assistant" status={done ? "READY" : "BOOTING"} statusTone={done ? "cyan" : "amber"} />
             <div className="p-5 min-h-[300px] flex flex-col font-mono text-[.8rem] leading-[1.8] text-cyan/85">
