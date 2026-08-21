@@ -170,16 +170,6 @@ function drawMark(ctx, mark, accent) {
   ctx.restore();
 }
 
-function roundRectPath(ctx, x, y, w, h, r) {
-  ctx.beginPath();
-  ctx.moveTo(x + r, y);
-  ctx.arcTo(x + w, y, x + w, y + h, r);
-  ctx.arcTo(x + w, y + h, x, y + h, r);
-  ctx.arcTo(x, y + h, x, y, r);
-  ctx.arcTo(x, y, x + w, y, r);
-  ctx.closePath();
-}
-
 // The linear gradient behind everything runs diagonally from a
 // lighter accent-tinted top-left to a near-black bottom-right; this
 // mirrors that math for a single y so the image band's fade-out can
@@ -194,79 +184,28 @@ function bgColorAtY(rgb, h, y) {
 }
 
 // A picture instead of a drawn mark, for the four destinations that
-// have a real image to show. "cover" crops full-bleed edge-to-edge —
-// right for a piece of art, wrong for a wordmark (would slice off
-// letters) — so a logo gets "contain" instead: the whole mark kept
-// intact on its own soft tile, never cropped.
-function drawImageBand(ctx, img, accent, fit, w, bandH, rgb, h) {
-  if (fit === "cover") {
-    const ir = img.width / img.height;
-    const br = w / bandH;
-    let sw, sh, sx, sy;
-    if (ir > br) {
-      sh = img.height;
-      sw = sh * br;
-      sy = 0;
-      sx = (img.width - sw) / 2;
-    } else {
-      sw = img.width;
-      sh = sw / br;
-      sx = 0;
-      sy = (img.height - sh) / 2;
-    }
-    ctx.drawImage(img, sx, sy, sw, sh, 0, 0, w, bandH);
-
-    const fadeH = 110;
-    const seamColor = bgColorAtY(rgb, h, bandH);
-    const fade = ctx.createLinearGradient(0, bandH - fadeH, 0, bandH);
-    fade.addColorStop(0, `rgba(${seamColor.join(",")},0)`);
-    fade.addColorStop(1, `rgba(${seamColor.join(",")},1)`);
-    ctx.fillStyle = fade;
-    ctx.fillRect(0, bandH - fadeH, w, fadeH);
+// have a real image to show — cropped full-bleed to fill the entire
+// card, edge to edge, with no background or tile showing around it.
+// A logo's own edges get cropped a little in exchange for actually
+// looking like a card instead of a screenshot pasted onto one; the
+// destination page you land on is free to show that same logo
+// uncropped.
+function drawFullBleedImage(ctx, img, w, h) {
+  const ir = img.width / img.height;
+  const br = w / h;
+  let sw, sh, sx, sy;
+  if (ir > br) {
+    sh = img.height;
+    sw = sh * br;
+    sy = 0;
+    sx = (img.width - sw) / 2;
   } else {
-    const pad = 56;
-    const boxX = pad;
-    const boxY = 40;
-    const boxW = w - pad * 2;
-    const boxH = bandH - boxY - 24;
-    ctx.save();
-    roundRectPath(ctx, boxX, boxY, boxW, boxH, 22);
-    ctx.fillStyle = "rgba(255,255,255,0.05)";
-    ctx.fill();
-    ctx.restore();
-
-    const ir = img.width / img.height;
-    const br = boxW / boxH;
-    let dw, dh;
-    if (ir > br) {
-      dw = boxW * 0.82;
-      dh = dw / ir;
-    } else {
-      dh = boxH * 0.82;
-      dw = dh * ir;
-    }
-    const dx = boxX + (boxW - dw) / 2;
-    const dy = boxY + (boxH - dh) / 2;
-    // Most real-world logo exports carry an opaque (often white) fill
-    // rather than true alpha transparency, so drawn at its own square
-    // corners it reads as a pasted screenshot. Clipping to a rounded
-    // rect keeps the logo intact (still "contain", nothing cropped
-    // off it) while making the tile look drawn on purpose.
-    ctx.save();
-    roundRectPath(ctx, dx, dy, dw, dh, 14);
-    ctx.clip();
-    ctx.drawImage(img, dx, dy, dw, dh);
-    ctx.restore();
+    sw = img.width;
+    sh = sw / br;
+    sx = 0;
+    sy = (img.height - sh) / 2;
   }
-
-  ctx.strokeStyle = accent;
-  ctx.globalAlpha = 0.35;
-  ctx.lineWidth = 2;
-  ctx.beginPath();
-  ctx.moveTo(0, bandH);
-  ctx.lineTo(w, bandH);
-  ctx.stroke();
-  ctx.globalAlpha = 1;
+  ctx.drawImage(img, sx, sy, sw, sh, 0, 0, w, h);
 }
 
 function wrapText(ctx, text, x, y, maxWidth, lineHeight) {
@@ -296,7 +235,7 @@ function wrapText(ctx, text, x, y, maxWidth, lineHeight) {
 // gradient and line motif both tied to the card's own accent color so
 // each of the five reads as a distinct place, not a recolored
 // template.
-export function buildNavCardTexture(card, { accent = "#22d3ee", image = null, imageFit = "contain" } = {}) {
+export function buildNavCardTexture(card, { accent = "#22d3ee", image = null } = {}) {
   const w = 512;
   const h = 716;
   const canvas = document.createElement("canvas");
@@ -304,31 +243,40 @@ export function buildNavCardTexture(card, { accent = "#22d3ee", image = null, im
   canvas.height = h;
   const ctx = canvas.getContext("2d");
 
-  const rgb = hexToRgb(accent);
-  const bg = ctx.createLinearGradient(0, 0, w, h);
-  bg.addColorStop(0, `rgb(${bgColorAtY(rgb, h, 0).join(",")})`);
-  bg.addColorStop(1, `rgb(${bgColorAtY(rgb, h, h).join(",")})`);
-  ctx.fillStyle = bg;
-  ctx.fillRect(0, 0, w, h);
-
-  drawPattern(ctx, card.id, w, h);
-
   if (image) {
-    const bandH = 336;
-    drawImageBand(ctx, image, accent, imageFit, w, bandH, rgb, h);
+    drawFullBleedImage(ctx, image, w, h);
+
+    // A caption plate, not a background — just enough of a scrim for
+    // the kicker/title/tagline to stay legible over whatever the
+    // photo is doing underneath, however bright or busy.
+    const scrimH = 300;
+    const scrim = ctx.createLinearGradient(0, h - scrimH, 0, h);
+    scrim.addColorStop(0, "rgba(6,8,13,0)");
+    scrim.addColorStop(1, "rgba(6,8,13,0.94)");
+    ctx.fillStyle = scrim;
+    ctx.fillRect(0, h - scrimH, w, scrimH);
 
     ctx.fillStyle = accent;
     ctx.font = "600 20px 'JetBrains Mono', monospace";
-    ctx.fillText(card.kicker.toUpperCase(), 34, bandH + 46);
+    ctx.fillText(card.kicker.toUpperCase(), 34, h - 190);
 
-    ctx.fillStyle = "#f4f6f8";
-    ctx.font = "600 44px 'Space Grotesk', sans-serif";
-    ctx.fillText(card.title, 34, bandH + 108);
+    ctx.fillStyle = "#f8fafc";
+    ctx.font = "600 46px 'Space Grotesk', sans-serif";
+    ctx.fillText(card.title, 34, h - 126);
 
-    ctx.fillStyle = "rgba(255,255,255,0.55)";
+    ctx.fillStyle = "rgba(255,255,255,0.62)";
     ctx.font = "500 21px 'JetBrains Mono', monospace";
-    wrapText(ctx, card.tagline, 34, bandH + 150, w - 68, 28);
+    wrapText(ctx, card.tagline, 34, h - 82, w - 68, 27);
   } else {
+    const rgb = hexToRgb(accent);
+    const bg = ctx.createLinearGradient(0, 0, w, h);
+    bg.addColorStop(0, `rgb(${bgColorAtY(rgb, h, 0).join(",")})`);
+    bg.addColorStop(1, `rgb(${bgColorAtY(rgb, h, h).join(",")})`);
+    ctx.fillStyle = bg;
+    ctx.fillRect(0, 0, w, h);
+
+    drawPattern(ctx, card.id, w, h);
+
     ctx.fillStyle = accent;
     ctx.font = "600 20px 'JetBrains Mono', monospace";
     ctx.fillText(card.kicker.toUpperCase(), 34, 58);

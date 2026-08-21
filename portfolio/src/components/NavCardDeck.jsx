@@ -107,7 +107,7 @@ export default function NavCardDeck() {
       const spacing = Math.min(1.62, Math.max(0.62, availableHalfWidth / mid - CARD_W * 0.3));
 
       const cards = HERO_DECK.map((card, index) => {
-        const texture = buildNavCardTexture(card, { accent: card.accent, image: images[index], imageFit: card.imageFit });
+        const texture = buildNavCardTexture(card, { accent: card.accent, image: images[index] });
         const accent = new THREE.Color(card.accent);
 
         const frontMat = new THREE.ShaderMaterial({
