@@ -3,6 +3,11 @@
 // component that needs it — hero dock, command palette, nav — reads
 // from the same list and can't drift out of sync.
 
+import emetArt from "../assets/cards/emet-art.webp";
+import datasemblyMark from "../assets/cards/datasembly-mark.png";
+import primeVideoMark from "../assets/cards/prime-video-mark.png";
+import projectsMark from "../assets/cards/projects-mark.png";
+
 export const NAV_SECTIONS = [
   { id: "emet", label: "Emet", index: 0 },
   { id: "source", label: "Current", index: 1 },
@@ -20,12 +25,15 @@ export const NAV_SECTIONS = [
 // opens, so a destination has one consistent identity everywhere it
 // shows up, not just inside the deck. "mark" names an icon drawn on
 // the card face (see three/cardTexture.js) rather than a bare index
-// number — a numeral doesn't say what a card is, an icon does.
+// number — a numeral doesn't say what a card is, an icon does. "image"
+// is optional: when set, the card face uses that picture instead of
+// the drawn mark ("cover" crops full-bleed for artwork, "contain"
+// keeps a logo whole on its own tile instead of cropping it).
 export const HERO_DECK = [
-  { id: "emet", go: "#emet", kicker: "assistant", title: "EMET", tagline: "Ask the terminal", accent: "#22d3ee", mark: "terminal" },
-  { id: "now", go: "#source", kicker: "current role", title: "Current", tagline: "Solutions Engineer, Datasembly", accent: "#8e7dff", mark: "pulse" },
-  { id: "before", go: "#lineage", kicker: "career", title: "Before", tagline: "Amazon · Spongelii · Datasembly", accent: "#fbbf24", mark: "clock" },
-  { id: "work", go: "#build", kicker: "shipped", title: "Projects", tagline: "RepTrack + 9 more shipped", accent: "#34d399", mark: "rocket" },
+  { id: "emet", go: "#emet", kicker: "assistant", title: "EMET", tagline: "Ask the terminal", accent: "#22d3ee", mark: "terminal", image: emetArt, imageFit: "cover" },
+  { id: "now", go: "#source", kicker: "current role", title: "Current", tagline: "Solutions Engineer, Datasembly", accent: "#8e7dff", mark: "pulse", image: datasemblyMark, imageFit: "contain" },
+  { id: "before", go: "#lineage", kicker: "career", title: "Before", tagline: "Amazon · Spongelii · Datasembly", accent: "#fbbf24", mark: "clock", image: primeVideoMark, imageFit: "contain" },
+  { id: "work", go: "#build", kicker: "shipped", title: "Projects", tagline: "RepTrack + 9 more shipped", accent: "#34d399", mark: "rocket", image: projectsMark, imageFit: "contain" },
   { id: "contact", go: "#commit", kicker: "reach", title: "Contact", tagline: "Say hello", accent: "#fb7185", mark: "mail" },
 ];
 

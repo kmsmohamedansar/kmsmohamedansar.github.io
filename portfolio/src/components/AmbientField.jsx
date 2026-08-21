@@ -162,6 +162,15 @@ export default function AmbientField({ theme }) {
   const mode = MODES[theme?.mode] || MODES.stream;
   const accent = theme?.accent || "34,211,238";
   const accent2 = theme?.accent2 || "251,191,36";
+  // "stream" is the deck's mode exclusively — no other view uses it —
+  // so it doubles as the flag for "this is the homepage." Every other
+  // view fades to near-black; the landing deck gets a lighter base and
+  // an extra soft wash so it reads as the bright, welcoming one.
+  const isHome = theme?.mode === "stream";
+  const base = isHome ? "#16233d" : "#050b14";
+  const homeWash = isHome
+    ? `radial-gradient(65% 55% at 50% 36%, rgba(255,255,255,.14) 0%, rgba(255,255,255,.05) 45%, transparent 78%), `
+    : "";
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -311,7 +320,7 @@ export default function AmbientField({ theme }) {
         <div
           className="ambient-drift absolute -inset-[20%]"
           style={{
-            background: `radial-gradient(80% 80% at 20% 26%, rgba(${accent},.4) 0%, rgba(${accent},.14) 45%, transparent 85%), radial-gradient(75% 75% at 82% 68%, rgba(${accent2},.32) 0%, rgba(${accent2},.11) 45%, transparent 85%), radial-gradient(70% 70% at 55% 8%, rgba(142,125,255,.22) 0%, rgba(142,125,255,.08) 45%, transparent 85%), #050b14`,
+            background: `${homeWash}radial-gradient(80% 80% at 20% 26%, rgba(${accent},.4) 0%, rgba(${accent},.14) 45%, transparent 85%), radial-gradient(75% 75% at 82% 68%, rgba(${accent2},.32) 0%, rgba(${accent2},.11) 45%, transparent 85%), radial-gradient(70% 70% at 55% 8%, rgba(142,125,255,.22) 0%, rgba(142,125,255,.08) 45%, transparent 85%), ${base}`,
           }}
         />
       </div>
