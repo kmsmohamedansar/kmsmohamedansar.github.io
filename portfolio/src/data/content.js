@@ -5,7 +5,7 @@
 
 import emetArt from "../assets/cards/emet-art.webp";
 import datasemblyMark from "../assets/cards/datasembly-mark.png";
-import primeVideoMark from "../assets/cards/prime-video-mark.png";
+import amazonMark from "../assets/cards/amazon-mark.png";
 import projectsMark from "../assets/cards/projects-mark.png";
 
 export const NAV_SECTIONS = [
@@ -32,23 +32,24 @@ export const NAV_SECTIONS = [
 export const HERO_DECK = [
   { id: "emet", go: "#emet", kicker: "assistant", title: "EMET", tagline: "Ask the terminal", accent: "#22d3ee", mark: "terminal", image: emetArt },
   { id: "now", go: "#source", kicker: "current role", title: "Current", tagline: "Solutions Engineer, Datasembly", accent: "#8e7dff", mark: "pulse", image: datasemblyMark },
-  { id: "before", go: "#lineage", kicker: "career", title: "Before", tagline: "Amazon · Spongelii · Datasembly", accent: "#fbbf24", mark: "clock", image: primeVideoMark },
+  { id: "before", go: "#lineage", kicker: "career", title: "Before", tagline: "Amazon · Spongelii · Datasembly", accent: "#fbbf24", mark: "clock", image: amazonMark },
   { id: "work", go: "#build", kicker: "shipped", title: "Projects", tagline: "RepTrack + 9 more shipped", accent: "#34d399", mark: "rocket", image: projectsMark },
   { id: "contact", go: "#commit", kicker: "reach", title: "Contact", tagline: "Say hello", accent: "#fb7185", mark: "mail" },
 ];
 
 // Per-view ambient background theme — keyed by route (not card id,
 // since routes and card ids don't share a naming scheme). "mode"
-// picks the particle behavior in AmbientField; light theme only
-// borrows the colors, keeping its own calmer motion language.
+// picks the particle behavior in LightAmbientField; the two accent
+// colors ride along into that view's aurora blobs and motes so each
+// destination reads as its own place, not a shared wash.
 export const ROUTE_THEME = {
-  deck: { accent: "34,211,238", accent2: "251,191,36", lightAccent: "14,116,144", lightAccent2: "180,83,9", mode: "stream" },
-  emet: { accent: "34,211,238", accent2: "14,116,144", lightAccent: "14,116,144", lightAccent2: "12,74,110", mode: "signal" },
-  source: { accent: "142,125,255", accent2: "34,211,238", lightAccent: "109,40,217", lightAccent2: "14,116,144", mode: "pulse" },
-  lineage: { accent: "251,191,36", accent2: "245,158,11", lightAccent: "180,83,9", lightAccent2: "146,64,14", mode: "settle" },
-  build: { accent: "52,211,153", accent2: "34,211,238", lightAccent: "4,120,87", lightAccent2: "14,116,144", mode: "lattice" },
-  story: { accent: "142,125,255", accent2: "251,113,133", lightAccent: "109,40,217", lightAccent2: "190,18,60", mode: "pulse" },
-  commit: { accent: "251,113,133", accent2: "142,125,255", lightAccent: "190,18,60", lightAccent2: "109,40,217", mode: "converge" },
+  deck: { accent: "14,116,144", accent2: "180,83,9", mode: "stream" },
+  emet: { accent: "14,116,144", accent2: "12,74,110", mode: "signal" },
+  source: { accent: "109,40,217", accent2: "14,116,144", mode: "pulse" },
+  lineage: { accent: "180,83,9", accent2: "146,64,14", mode: "settle" },
+  build: { accent: "4,120,87", accent2: "14,116,144", mode: "lattice" },
+  story: { accent: "109,40,217", accent2: "190,18,60", mode: "pulse" },
+  commit: { accent: "190,18,60", accent2: "109,40,217", mode: "converge" },
 };
 
 export const EMET_SHORTCUTS = [
@@ -254,6 +255,7 @@ export const STORY_BEATS = [
 export const CONTACT = {
   email: "mohamedansarkms@gmail.com",
   linkedin: "https://www.linkedin.com/in/kmsmohamedansar/",
+  github: "https://github.com/kmsmohamedansar",
 };
 
 export const COMMAND_ITEMS = [

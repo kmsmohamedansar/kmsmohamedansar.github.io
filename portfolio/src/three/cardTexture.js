@@ -9,7 +9,7 @@ function hexToRgb(hex) {
 // wordless signal that these five cards aren't just recolored copies
 // of one template.
 function drawPattern(ctx, id, w, h) {
-  ctx.strokeStyle = "rgba(255,255,255,0.055)";
+  ctx.strokeStyle = "rgba(15,23,42,0.07)";
   ctx.lineWidth = 1;
 
   if (id === "emet") {
@@ -170,19 +170,6 @@ function drawMark(ctx, mark, accent) {
   ctx.restore();
 }
 
-// The linear gradient behind everything runs diagonally from a
-// lighter accent-tinted top-left to a near-black bottom-right; this
-// mirrors that math for a single y so the image band's fade-out can
-// end on a color that actually matches the backdrop at the seam,
-// instead of a flat tone that shows a visible seam line.
-function bgColorAtY(rgb, h, y) {
-  const [r, g, b] = rgb;
-  const t = Math.min(1, y / h);
-  const c0 = [r * 0.1 + 10, g * 0.1 + 11, b * 0.12 + 15];
-  const c1 = [r * 0.04 + 5, g * 0.04 + 6, b * 0.05 + 8];
-  return c0.map((v, i) => Math.round(v + (c1[i] - v) * t));
-}
-
 // A picture instead of a drawn mark, for the four destinations that
 // have a real image to show — cropped full-bleed to fill the entire
 // card, edge to edge, with no background or tile showing around it.
@@ -208,33 +195,14 @@ function drawFullBleedImage(ctx, img, w, h) {
   ctx.drawImage(img, sx, sy, sw, sh, 0, 0, w, h);
 }
 
-function wrapText(ctx, text, x, y, maxWidth, lineHeight) {
-  const words = text.split(" ");
-  let line = "";
-  let cy = y;
-  for (const word of words) {
-    const test = line ? `${line} ${word}` : word;
-    if (ctx.measureText(test).width > maxWidth && line) {
-      ctx.fillText(line, x, cy);
-      line = word;
-      cy += lineHeight;
-    } else {
-      line = test;
-    }
-  }
-  if (line) ctx.fillText(line, x, cy);
-}
-
-// Each nav card has no screenshot to show by default — it's a
-// destination, not a project — so the face is a small typographic
-// composition: a kicker, a drawn mark, and the destination's title.
-// Four of the five now carry a real picture instead (a company logo,
-// or — for EMET — a piece of art), passed in as an already-loaded
-// image so this stays synchronous. Drawn on an offscreen canvas
-// rather than a generic gradient placeholder, with the background
-// gradient and line motif both tied to the card's own accent color so
-// each of the five reads as a distinct place, not a recolored
-// template.
+// Each card face carries no text at all — the destination's name
+// shows as a floating label above the card on hover instead (see
+// NavCardDeck), so the picture is the whole card. Four of the five
+// have a real image, passed in already-loaded so this stays
+// synchronous; Contact (and any card whose image failed to load)
+// falls back to its drawn mark, centered and enlarged since it no
+// longer shares the face with a title, on a soft pastel tint of the
+// card's own accent color.
 export function buildNavCardTexture(card, { accent = "#22d3ee", image = null } = {}) {
   const w = 512;
   const h = 716;
@@ -245,51 +213,22 @@ export function buildNavCardTexture(card, { accent = "#22d3ee", image = null } =
 
   if (image) {
     drawFullBleedImage(ctx, image, w, h);
-
-    // A caption plate, not a background — just enough of a scrim for
-    // the kicker/title/tagline to stay legible over whatever the
-    // photo is doing underneath, however bright or busy.
-    const scrimH = 300;
-    const scrim = ctx.createLinearGradient(0, h - scrimH, 0, h);
-    scrim.addColorStop(0, "rgba(6,8,13,0)");
-    scrim.addColorStop(1, "rgba(6,8,13,0.94)");
-    ctx.fillStyle = scrim;
-    ctx.fillRect(0, h - scrimH, w, scrimH);
-
-    ctx.fillStyle = accent;
-    ctx.font = "600 20px 'JetBrains Mono', monospace";
-    ctx.fillText(card.kicker.toUpperCase(), 34, h - 190);
-
-    ctx.fillStyle = "#f8fafc";
-    ctx.font = "600 46px 'Space Grotesk', sans-serif";
-    ctx.fillText(card.title, 34, h - 126);
-
-    ctx.fillStyle = "rgba(255,255,255,0.62)";
-    ctx.font = "500 21px 'JetBrains Mono', monospace";
-    wrapText(ctx, card.tagline, 34, h - 82, w - 68, 27);
   } else {
     const rgb = hexToRgb(accent);
     const bg = ctx.createLinearGradient(0, 0, w, h);
-    bg.addColorStop(0, `rgb(${bgColorAtY(rgb, h, 0).join(",")})`);
-    bg.addColorStop(1, `rgb(${bgColorAtY(rgb, h, h).join(",")})`);
+    bg.addColorStop(0, `rgba(${rgb.join(",")},0.18)`);
+    bg.addColorStop(1, "#ffffff");
     ctx.fillStyle = bg;
     ctx.fillRect(0, 0, w, h);
 
     drawPattern(ctx, card.id, w, h);
 
-    ctx.fillStyle = accent;
-    ctx.font = "600 20px 'JetBrains Mono', monospace";
-    ctx.fillText(card.kicker.toUpperCase(), 34, 58);
-
+    ctx.save();
+    ctx.translate(w / 2, h / 2);
+    ctx.scale(1.35, 1.35);
+    ctx.translate(-138, -300);
     drawMark(ctx, card.mark, accent);
-
-    ctx.fillStyle = "#f4f6f8";
-    ctx.font = "600 52px 'Space Grotesk', sans-serif";
-    ctx.fillText(card.title, 34, 520);
-
-    ctx.fillStyle = "rgba(255,255,255,0.55)";
-    ctx.font = "500 22px 'JetBrains Mono', monospace";
-    wrapText(ctx, card.tagline, 34, 570, w - 68, 30);
+    ctx.restore();
   }
 
   const texture = new THREE.CanvasTexture(canvas);

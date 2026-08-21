@@ -5,8 +5,12 @@ import { buildCardGeometry } from "../three/cardGeometry";
 import { buildNavCardTexture } from "../three/cardTexture";
 import { cardVertexShader, cardFrontFragmentShader, cardBackFragmentShader, cardEdgeFragmentShader } from "../three/shaders";
 
-const CARD_W = 1.5;
-const CARD_H = 2.1;
+// Scaled up from the original 1.5 x 2.1 so the deck reads as "cards
+// filling the screen" rather than a row of small tiles floating in a
+// lot of empty space.
+const CARD_SCALE = 1.18;
+const CARD_W = 1.5 * CARD_SCALE;
+const CARD_H = 2.1 * CARD_SCALE;
 
 function easeOutCubic(t) {
   return 1 - Math.pow(1 - t, 3);
@@ -50,6 +54,9 @@ function preloadCardImages(cards) {
  */
 export default function NavCardDeck() {
   const mountRef = useRef(null);
+  const labelRef = useRef(null);
+  const labelTitleRef = useRef(null);
+  const labelTaglineRef = useRef(null);
   const [ready, setReady] = useState(false);
   const [failed, setFailed] = useState(false);
 
@@ -104,7 +111,7 @@ export default function NavCardDeck() {
       // otherwise clip the outer cards.
       const vFovHalfTan = Math.tan((camera.fov * Math.PI) / 360);
       const availableHalfWidth = CAMERA_Z * vFovHalfTan * camera.aspect;
-      const spacing = Math.min(1.62, Math.max(0.62, availableHalfWidth / mid - CARD_W * 0.3));
+      const spacing = Math.min(1.62 * CARD_SCALE, Math.max(0.62 * CARD_SCALE, availableHalfWidth / mid - CARD_W * 0.3));
 
       const cards = HERO_DECK.map((card, index) => {
         const texture = buildNavCardTexture(card, { accent: card.accent, image: images[index] });
@@ -124,7 +131,7 @@ export default function NavCardDeck() {
         const backMat = new THREE.ShaderMaterial({
           vertexShader: cardVertexShader,
           fragmentShader: cardBackFragmentShader,
-          uniforms: { baseColor: { value: new THREE.Color("#151a20") }, accentColor: { value: accent } },
+          uniforms: { baseColor: { value: new THREE.Color("#eef1f6") }, accentColor: { value: accent } },
         });
         const edgeMat = new THREE.ShaderMaterial({
           vertexShader: cardVertexShader,
@@ -161,7 +168,9 @@ export default function NavCardDeck() {
       const raycaster = new THREE.Raycaster();
       const pointerNDC = new THREE.Vector2(0, 0);
       const pointerTarget = new THREE.Vector2(0, 0);
+      const labelWorldPos = new THREE.Vector3();
       let hoveredCard = null;
+      let currentLabelId = null;
       let startTime = performance.now();
       let rafId;
 
@@ -219,6 +228,9 @@ export default function NavCardDeck() {
           container.style.cursor = hoveredCard ? "pointer" : "default";
         }
 
+        let labelCard = null;
+        let labelHover = 0;
+
         for (const card of cards) {
           const dealProgress = Math.min(1, Math.max(0, (elapsed - card.dealDelay) / 700));
           const eased = easeOutCubic(dealProgress);
@@ -260,6 +272,39 @@ export default function NavCardDeck() {
 
           card.hoverAmount += ((card === hoveredCard ? 1 : 0) - card.hoverAmount) * 0.15;
           card.frontMat.uniforms.hover.value = card.hoverAmount;
+
+          // The floating name label follows whichever card currently
+          // has the most hover — not just the live raycast hit — so
+          // it fades in/out along the same curve as the card's own
+          // lift instead of snapping the instant the pointer crosses
+          // an edge.
+          if (card.hoverAmount > labelHover) {
+            labelHover = card.hoverAmount;
+            labelCard = card;
+          }
+        }
+
+        const labelEl = labelRef.current;
+        if (labelEl) {
+          if (labelCard && labelHover > 0.01) {
+            if (currentLabelId !== labelCard.card.id) {
+              currentLabelId = labelCard.card.id;
+              if (labelTitleRef.current) labelTitleRef.current.textContent = labelCard.card.title;
+              if (labelTaglineRef.current) labelTaglineRef.current.textContent = labelCard.card.tagline;
+            }
+            labelCard.mesh.getWorldPosition(labelWorldPos);
+            labelWorldPos.y += CARD_H / 2 + 0.24;
+            labelWorldPos.project(camera);
+            const px = (labelWorldPos.x * 0.5 + 0.5) * container.clientWidth;
+            // Clamped so a card dealt near the top of a short/narrow
+            // viewport can't push the label up under the fixed nav bar.
+            const py = Math.max(100, (-labelWorldPos.y * 0.5 + 0.5) * container.clientHeight);
+            labelEl.style.transform = `translate3d(${px}px, ${py}px, 0) translate(-50%, -100%)`;
+            labelEl.style.opacity = String(labelHover);
+          } else {
+            currentLabelId = null;
+            labelEl.style.opacity = "0";
+          }
         }
 
         renderer.render(scene, camera);
@@ -306,6 +351,19 @@ export default function NavCardDeck() {
             </ul>
           </nav>
           <div ref={mountRef} className="h-full w-full" aria-hidden={!ready} />
+          {/* The card face carries no text — this floating label is
+              the only place a hovered card's name appears, positioned
+              every frame above whichever card currently has the most
+              hover (see the tick loop). */}
+          <div
+            ref={labelRef}
+            aria-hidden
+            className="pointer-events-none absolute left-0 top-0 z-20 text-center whitespace-nowrap"
+            style={{ opacity: 0 }}
+          >
+            <p ref={labelTitleRef} className="font-display text-xl font-semibold text-slate-900" />
+            <p ref={labelTaglineRef} className="mt-0.5 font-mono text-[.68rem] text-slate-500" />
+          </div>
         </>
       )}
       {failed && (
@@ -314,7 +372,7 @@ export default function NavCardDeck() {
             <a
               key={card.id}
               href={card.go}
-              className="group block rounded-xl border border-white/10 hover:border-cyan/40 px-5 py-6 transition-colors"
+              className="group block rounded-xl border border-slate-900/10 hover:border-cyan/40 px-5 py-6 transition-colors"
             >
               <span className="font-mono text-[.62rem] uppercase tracking-[.14em] text-cyan/70">{card.kicker}</span>
               <p className="mt-2 font-display text-xl font-semibold text-[color:var(--ink-50)] group-hover:text-cyan transition-colors">

@@ -34,12 +34,14 @@ function makeGlowSprite(color) {
  */
 export default function LightAmbientField({ theme }) {
   const canvasRef = useRef(null);
-  const accent = theme?.lightAccent || "14,116,144";
-  const accent2 = theme?.lightAccent2 || "180,83,9";
-  // Same "stream" mode is exclusive to the deck in light theme too —
-  // it's already the brightest view by default, but a stronger,
-  // warmer wash still sets the homepage apart from the calmer glow on
-  // every other destination.
+  const accent = theme?.accent || "14,116,144";
+  const accent2 = theme?.accent2 || "180,83,9";
+  // "stream" mode is exclusive to the deck — it doubles as "this is
+  // the homepage." Every other destination keeps the calm aurora +
+  // motes; the homepage gets a brighter white base plus two extra
+  // layers (a slow-rotating light-ray sweep and a breathing sun glow)
+  // so it feels like the bright, welcoming one, not just a lighter
+  // version of the same background.
   const isHome = theme?.mode === "stream";
 
   useEffect(() => {
@@ -189,7 +191,7 @@ export default function LightAmbientField({ theme }) {
 
   return (
     <>
-      <div aria-hidden className="fixed inset-0 z-0 pointer-events-none overflow-hidden bg-slate-50">
+      <div aria-hidden className={`fixed inset-0 z-0 pointer-events-none overflow-hidden ${isHome ? "bg-white" : "bg-slate-50"}`}>
         <div
           className="aurora-blob aurora-blob-1"
           style={{ background: `radial-gradient(circle, rgba(${accent},${isHome ? 0.62 : 0.4}), transparent 70%)` }}
@@ -201,10 +203,10 @@ export default function LightAmbientField({ theme }) {
         <div className="aurora-blob aurora-blob-3" />
         <div className="aurora-blob aurora-blob-4" />
         {isHome && (
-          <div
-            className="absolute inset-0"
-            style={{ background: "radial-gradient(60% 55% at 50% 32%, rgba(255,236,196,.55) 0%, rgba(255,236,196,.18) 45%, transparent 78%)" }}
-          />
+          <>
+            <div className="absolute inset-0 sunburst-rotate" />
+            <div className="absolute inset-0 sun-breathe" />
+          </>
         )}
       </div>
       <canvas ref={canvasRef} aria-hidden className="fixed inset-0 z-0 pointer-events-none" />
