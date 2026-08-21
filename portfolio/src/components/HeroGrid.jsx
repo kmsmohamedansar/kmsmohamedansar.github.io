@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { motion } from "framer-motion";
+import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
 import { History, Briefcase, Mail, ArrowRight, Link2, ChevronDown } from "lucide-react";
 import { EMET_SHORTCUTS, STACK_TAGS } from "../data/content";
 import { useSandbox } from "../App";
@@ -170,32 +170,70 @@ function useParticleVortex(canvasRef, { label = "ANSAR" } = {}) {
   }, [canvasRef, label]);
 }
 
-/* Cursor-reactive spotlight — a soft glow that follows the pointer
-   across the chassis, brightening the scanlines near it. Pure CSS
-   custom properties updated on mousemove, no re-renders. */
+/* Cursor-reactive spotlight + physics-dampened 3D tilt — the whole
+   twin-monitor assembly pivots on rotateX/rotateY as the cursor
+   glides across it (spring-smoothed, not raw 1:1 tracking), while a
+   soft glow follows the pointer via CSS custom properties (no
+   re-renders for that half). Tilt is skipped under reduced motion.
+
+   The hit-test rect is measured on a STATIC outer wrapper, not on the
+   element being rotated — measuring on the rotating element itself
+   creates a feedback loop (tilting shifts its own bounding rect,
+   which can push the cursor "outside" mid-gesture and cancel the
+   tilt), which is why the tilt and the mouse handlers live on
+   different elements here. */
 function CrtChassis({ children, className = "" }) {
-  const ref = useRef(null);
+  const outerRef = useRef(null);
+  const innerRef = useRef(null);
+  const reduced = prefersReducedMotion();
+
+  const px = useMotionValue(0.5);
+  const py = useMotionValue(0.5);
+  const spring = { stiffness: 150, damping: 22, mass: 0.6 };
+  const springX = useSpring(px, spring);
+  const springY = useSpring(py, spring);
+  const rotateX = useTransform(springY, [0, 1], [7, -7]);
+  const rotateY = useTransform(springX, [0, 1], [-9, 9]);
 
   function onMouseMove(e) {
-    const el = ref.current;
+    const el = outerRef.current;
     if (!el) return;
     const rect = el.getBoundingClientRect();
-    el.style.setProperty("--spot-x", `${e.clientX - rect.left}px`);
-    el.style.setProperty("--spot-y", `${e.clientY - rect.top}px`);
-    el.style.setProperty("--spot-o", "1");
+    // Spotlight custom properties must land on innerRef — it's the
+    // element carrying .crt-spotlight, whose own stylesheet default
+    // (--spot-x: 50%, etc.) would otherwise shadow a value inherited
+    // from the outer wrapper.
+    innerRef.current?.style.setProperty("--spot-x", `${e.clientX - rect.left}px`);
+    innerRef.current?.style.setProperty("--spot-y", `${e.clientY - rect.top}px`);
+    innerRef.current?.style.setProperty("--spot-o", "1");
+    if (reduced) return;
+    px.set((e.clientX - rect.left) / rect.width);
+    py.set((e.clientY - rect.top) / rect.height);
   }
   function onMouseLeave() {
-    ref.current?.style.setProperty("--spot-o", "0");
+    innerRef.current?.style.setProperty("--spot-o", "0");
+    px.set(0.5);
+    py.set(0.5);
   }
 
   return (
     <div
-      ref={ref}
+      ref={outerRef}
       onMouseMove={onMouseMove}
       onMouseLeave={onMouseLeave}
-      className={`crt-shell crt-spotlight rounded-[1.75rem] ${className}`}
+      style={{ perspective: "1400px" }}
     >
-      {children}
+      <motion.div
+        ref={innerRef}
+        style={{
+          rotateX: reduced ? 0 : rotateX,
+          rotateY: reduced ? 0 : rotateY,
+          transformStyle: "preserve-3d",
+        }}
+        className={`crt-shell crt-spotlight rounded-[1.75rem] will-change-transform ${className}`}
+      >
+        {children}
+      </motion.div>
     </div>
   );
 }
