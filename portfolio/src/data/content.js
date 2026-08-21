@@ -38,18 +38,15 @@ export const HERO_DECK = [
 ];
 
 // Per-view ambient background theme — keyed by route (not card id,
-// since routes and card ids don't share a naming scheme). "mode"
-// picks the particle behavior in LightAmbientField; the two accent
-// colors ride along into that view's aurora blobs and motes so each
-// destination reads as its own place, not a shared wash.
+// since routes and card ids don't share a naming scheme). Only for
+// routes that use the general-purpose LightAmbientField backdrop —
+// the deck itself, and "story" (reachable only from the command
+// palette, not one of the five deck destinations). Each of the five
+// destinations has its own bespoke animated background instead (see
+// RouteBackgrounds.jsx), so it no longer needs an entry here.
 export const ROUTE_THEME = {
   deck: { accent: "14,116,144", accent2: "180,83,9", mode: "stream" },
-  emet: { accent: "14,116,144", accent2: "12,74,110", mode: "signal" },
-  source: { accent: "109,40,217", accent2: "14,116,144", mode: "pulse" },
-  lineage: { accent: "180,83,9", accent2: "146,64,14", mode: "settle" },
-  build: { accent: "4,120,87", accent2: "14,116,144", mode: "lattice" },
   story: { accent: "109,40,217", accent2: "190,18,60", mode: "pulse" },
-  commit: { accent: "190,18,60", accent2: "109,40,217", mode: "converge" },
 };
 
 export const EMET_SHORTCUTS = [
