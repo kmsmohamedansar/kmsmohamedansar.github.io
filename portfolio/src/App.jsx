@@ -1,9 +1,9 @@
 import { Component, createContext, useContext, useEffect, useMemo, useRef, useState } from "react";
-import { motion, animate, useScroll, useSpring } from "framer-motion";
+import { AnimatePresence, motion, animate } from "framer-motion";
 import { Sun, Moon, Command, Menu, X } from "lucide-react";
-import HeroGrid from "./components/HeroGrid";
+import DeckView from "./components/DeckView";
 import EmetSection from "./components/EmetSection";
-import ContentSections from "./components/ContentSections";
+import { NowSection, BeforeSection, WorkSection, StorySection, ContactSection } from "./components/ContentSections";
 import SandboxStubs from "./components/SandboxStubs";
 import CommandPalette from "./components/CommandPalette";
 import AmbientField from "./components/AmbientField";
@@ -12,6 +12,45 @@ import BootSequence from "./components/BootSequence";
 import CustomCursor from "./components/CustomCursor";
 import MagneticButton from "./components/MagneticButton";
 import { NAV_SECTIONS } from "./data/content";
+import { EASE_OUT } from "./lib/motion";
+
+/* ============================================================
+   ROUTER — the whole site is one screen at a time, swapped by
+   URL hash. No document scroll between "sections": click a card
+   or a nav link, the current view is replaced by the next one.
+   Hash-based so plain <a href="#build"> links everywhere (nav,
+   command palette, emet's shortcuts) keep working unmodified —
+   the browser's native hash change is all the trigger this needs.
+   ============================================================ */
+const VIEWS = { hero: "deck", "": "deck", emet: "emet", source: "source", lineage: "lineage", build: "build", story: "story", commit: "commit" };
+
+function readRoute() {
+  if (typeof window === "undefined") return "deck";
+  const h = window.location.hash.replace(/^#/, "");
+  return VIEWS[h] || "deck";
+}
+
+const RouteContext = createContext(null);
+export const useRoute = () => useContext(RouteContext);
+
+function RouteProvider({ children }) {
+  const [route, setRoute] = useState(readRoute);
+
+  useEffect(() => {
+    function onHashChange() {
+      setRoute(readRoute());
+    }
+    window.addEventListener("hashchange", onHashChange);
+    return () => window.removeEventListener("hashchange", onHashChange);
+  }, []);
+
+  const navigate = (id) => {
+    window.location.hash = id === "deck" ? "" : id;
+  };
+
+  const value = useMemo(() => ({ route, navigate }), [route]);
+  return <RouteContext.Provider value={value}>{children}</RouteContext.Provider>;
+}
 
 /* ============================================================
    THEME PROVIDER — persisted dark/light toggle
@@ -103,44 +142,14 @@ function SandboxProvider({ children }) {
   return <SandboxContext.Provider value={value}>{children}</SandboxContext.Provider>;
 }
 
-/* ============================================================
-   VIEWPORT CONTROLLER — active-section tracking for the nav
-   ============================================================ */
-function useActiveSection() {
-  const [active, setActive] = useState("source");
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) setActive(entry.target.id);
-        });
-      },
-      { rootMargin: "-40% 0px -50% 0px", threshold: 0 }
-    );
-    NAV_SECTIONS.forEach((s) => {
-      const el = document.getElementById(s.id);
-      if (el) observer.observe(el);
-    });
-    return () => observer.disconnect();
-  }, []);
-
-  return active;
-}
-
 function Nav() {
   const { theme, toggleTheme } = useTheme();
-  const active = useActiveSection();
+  const { route } = useRoute();
+  const active = route === "deck" ? null : route;
   const [mobileOpen, setMobileOpen] = useState(false);
-  const [scrolled, setScrolled] = useState(false);
-
-  useEffect(() => {
-    function onScroll() {
-      setScrolled(window.scrollY > 20);
-    }
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
+  // Transparent only over the landing deck; opaque on every other
+  // view — there's no scroll position to key this off anymore.
+  const scrolled = route !== "deck";
 
   function openPalette() {
     window.dispatchEvent(new KeyboardEvent("keydown", { key: "k", metaKey: true }));
@@ -250,49 +259,67 @@ function Nav() {
   );
 }
 
-function ScrollProgress() {
-  const { scrollYProgress } = useScroll();
-  const scaleX = useSpring(scrollYProgress, { stiffness: 200, damping: 32, mass: 0.3 });
+const VIEW_COMPONENTS = {
+  deck: DeckView,
+  emet: EmetSection,
+  source: NowSection,
+  lineage: BeforeSection,
+  build: WorkSection,
+  story: StorySection,
+  commit: ContactSection,
+};
+
+function Stage({ bootDone }) {
+  const { route } = useRoute();
+  const { devMode, toggleDevMode } = useSandbox();
+  const mainRef = useRef(null);
+  const ActiveView = VIEW_COMPONENTS[route];
+
+  // Every view swap starts scrolled to its own top — this is a fresh
+  // "page," not a continuation of wherever the last one left off.
+  useEffect(() => {
+    if (mainRef.current) mainRef.current.scrollTop = 0;
+  }, [route]);
+
   return (
-    <motion.div
-      aria-hidden
-      className="fixed top-0 inset-x-0 z-[110] h-[3px] origin-left bg-gradient-to-r from-cyan via-[#9be9ff] to-amber"
-      style={{ scaleX }}
-    />
+    <main ref={mainRef} className="flex-1 min-h-0 overflow-y-auto mono-scroll">
+      <AnimatePresence mode="wait">
+        <motion.div
+          key={route}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.28, ease: EASE_OUT }}
+          className="min-h-full"
+        >
+          {route === "deck" ? <ActiveView ready={bootDone} /> : <ActiveView />}
+        </motion.div>
+      </AnimatePresence>
+      {devMode && <SandboxStubs onClose={toggleDevMode} />}
+    </main>
   );
 }
 
 function AppShell({ bootDone }) {
   const { theme } = useTheme();
-  const { devMode, toggleDevMode } = useSandbox();
 
   return (
-    <div className={`relative ${theme === "light" ? "bg-slate-50 text-slate-900 min-h-screen" : "bg-ink text-slate-100 min-h-screen"}`}>
-      {theme === "dark" ? <AmbientField /> : <LightAmbientField />}
-      <div className="relative z-10">
-        <ScrollProgress />
-        <Nav />
-        {/* No page-level `perspective` here on purpose: setting it on an
-            ancestor this high up turns it into the CSS containing block
-            for every `position: fixed` descendant (modals, overlays)
-            anywhere in the tree, breaking their viewport-relative
-            positioning. Each 3D component (hero chassis, project
-            cards) establishes its own local perspective instead. */}
-        <main id="hero">
-          <HeroGrid ready={bootDone} />
-          <EmetSection />
-          <ContentSections />
-          {devMode && <SandboxStubs onClose={toggleDevMode} />}
-        </main>
-        <footer className="border-t border-white/8 py-8 px-5">
-          <div className="mx-auto max-w-[1180px] flex flex-wrap items-center justify-between gap-3 font-mono text-[.68rem] text-slate-500">
-            <span>© {new Date().getFullYear()} Mohamed Ansar</span>
-            <span>Built with React · Vite · Tailwind · Framer Motion</span>
-          </div>
-        </footer>
-        <CommandPalette />
+    <RouteProvider>
+      <div className={`relative ${theme === "light" ? "bg-slate-50 text-slate-900" : "bg-ink text-slate-100"} h-[100dvh] overflow-hidden`}>
+        {theme === "dark" ? <AmbientField /> : <LightAmbientField />}
+        <div className="relative z-10 h-full flex flex-col">
+          <Nav />
+          {/* No page-level `perspective` here on purpose: setting it on an
+              ancestor this high up turns it into the CSS containing block
+              for every `position: fixed` descendant (modals, overlays)
+              anywhere in the tree, breaking their viewport-relative
+              positioning. Each 3D component (deck cards, emet's chassis,
+              project cards) establishes its own local perspective instead. */}
+          <Stage bootDone={bootDone} />
+          <CommandPalette />
+        </div>
       </div>
-    </div>
+    </RouteProvider>
   );
 }
 

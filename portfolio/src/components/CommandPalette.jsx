@@ -59,8 +59,7 @@ export default function CommandPalette() {
     if (item.action === "toggle-sandbox") {
       toggleDevMode();
     } else if (item.go) {
-      const el = document.querySelector(item.go);
-      el?.scrollIntoView({ behavior: "smooth", block: "start" });
+      window.location.hash = item.go.replace(/^#/, "");
     } else if (item.href) {
       window.open(item.href, item.href.startsWith("mailto:") ? "_self" : "_blank", "noopener,noreferrer");
     }

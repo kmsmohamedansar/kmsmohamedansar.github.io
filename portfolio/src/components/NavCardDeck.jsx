@@ -15,16 +15,16 @@ function easeOutCubic(t) {
 }
 
 function goTo(hash) {
-  document.querySelector(hash)?.scrollIntoView({ behavior: "smooth", block: "start" });
+  window.location.hash = hash.replace(/^#/, "");
 }
 
 /**
- * The hero's primary gesture: five procedurally-built cards (EMET,
- * Now, Before, Work, Contact), each its own destination. Same
- * card-deck machinery as a Balatro-style build — sampled rounded-rect
- * geometry, hand-written GLSL front/back/edge shaders, raycast hover
- * tilt — but clicking a card scrolls to what it represents instead of
- * opening a detail view.
+ * The whole landing view: five procedurally-built cards (EMET, Now,
+ * Before, Work, Contact), each its own destination. Same card-deck
+ * machinery as a Balatro-style build — sampled rounded-rect geometry,
+ * hand-written GLSL front/back/edge shaders, raycast hover tilt — but
+ * clicking a card swaps the app's current view (via the URL hash)
+ * instead of scrolling to it; there's no document scroll to speak of.
  */
 export default function NavCardDeck() {
   const mountRef = useRef(null);
@@ -238,7 +238,7 @@ export default function NavCardDeck() {
   }, []);
 
   return (
-    <div className="relative">
+    <div className="relative h-full w-full flex items-center justify-center">
       {!failed && (
         <>
           {/* The canvas deck is decorative to a screen reader, so the
@@ -252,11 +252,11 @@ export default function NavCardDeck() {
               ))}
             </ul>
           </nav>
-          <div ref={mountRef} className="h-[380px] md:h-[460px] w-full" aria-hidden={!ready} />
+          <div ref={mountRef} className="h-full w-full" aria-hidden={!ready} />
         </>
       )}
       {failed && (
-        <nav aria-label="Jump to section" className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3">
+        <nav aria-label="Jump to section" className="w-full grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3">
           {HERO_DECK.map((card) => (
             <a
               key={card.id}

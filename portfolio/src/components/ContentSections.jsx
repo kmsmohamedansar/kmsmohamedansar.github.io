@@ -67,11 +67,11 @@ function DashboardBar({ title, status = "ONLINE" }) {
 }
 
 /* ── NOW ─────────────────────────────────────────────────── */
-function NowSection() {
+export function NowSection() {
   const icons = [Database, Compass, Smartphone];
   return (
-    <section id="source" className="py-28 px-5 scroll-mt-24">
-      <div className="mx-auto max-w-[1180px]">
+    <section className="min-h-full flex flex-col items-center justify-center px-5 py-14">
+      <div className="w-full max-w-[1180px]">
         <SectionHead
           step="01"
           kicker="now"
@@ -148,13 +148,13 @@ function NowSection() {
    centered detail panel — same technique as Linear/Vercel-style card
    expansions — while the tile itself unmounts so the grid reflows
    to fill the gap ("shifting adjacent modules out of the way"). */
-function BeforeSection() {
+export function BeforeSection() {
   const [expandedIdx, setExpandedIdx] = useState(null);
   const expandedRole = expandedIdx !== null ? ROLES[expandedIdx] : null;
 
   return (
-    <section id="lineage" className="py-28 px-5 scroll-mt-24">
-      <div className="mx-auto max-w-[1180px]">
+    <section className="min-h-full flex flex-col items-center justify-center px-5 py-14">
+      <div className="w-full max-w-[1180px]">
         <SectionHead
           step="02"
           kicker="before"
@@ -431,15 +431,15 @@ function ProjectRow({ project, index }) {
   );
 }
 
-function WorkSection() {
+export function WorkSection() {
   const [expanded, setExpanded] = useState(false);
   const featured = PROJECTS.find((p) => p.featured);
   const rest = PROJECTS.filter((p) => p !== featured && !p.collapsed);
   const hidden = PROJECTS.filter((p) => p.collapsed);
 
   return (
-    <section id="build" className="py-28 px-5 scroll-mt-24">
-      <div className="mx-auto max-w-[1180px]">
+    <section className="min-h-full flex flex-col items-center justify-center px-5 py-14">
+      <div className="w-full max-w-[1180px]">
         <SectionHead
           step="03"
           kicker="work"
@@ -484,10 +484,10 @@ function WorkSection() {
 }
 
 /* ── WHY / STORY ─────────────────────────────────────────── */
-function StorySection() {
+export function StorySection() {
   return (
-    <section id="story" className="py-28 px-5 scroll-mt-24">
-      <div className="mx-auto max-w-[1180px]">
+    <section className="min-h-full flex flex-col items-center justify-center px-5 py-14">
+      <div className="w-full max-w-[1180px]">
         <SectionHead step="03b" kicker="the short version" title="Why I do this work" lede="Not a resume. The throughline behind it." />
         <div className="grid md:grid-cols-2 gap-px rounded-2xl overflow-hidden border border-white/8 max-w-3xl">
           {STORY_BEATS.map((beat, i) => (
@@ -511,10 +511,10 @@ function StorySection() {
 }
 
 /* ── CONTACT ─────────────────────────────────────────────── */
-function ContactSection() {
+export function ContactSection() {
   return (
-    <section id="commit" className="py-28 px-5 scroll-mt-24">
-      <div className="mx-auto max-w-[1180px]">
+    <section className="min-h-full flex flex-col items-center justify-center px-5 py-14">
+      <div className="w-full max-w-[1180px]">
         <Reveal>
           <div className="glass rounded-3xl p-10 md:p-14 text-center max-w-3xl mx-auto">
             <p className="font-mono text-[.7rem] md:text-[.8rem] text-slate-500 mb-6 break-words">
@@ -558,19 +558,10 @@ function ContactSection() {
             </p>
           </div>
         </Reveal>
+        <p className="mt-8 text-center font-mono text-[.64rem] text-slate-600">
+          © {new Date().getFullYear()} Mohamed Ansar · Built with React · Vite · Tailwind · Framer Motion
+        </p>
       </div>
     </section>
-  );
-}
-
-export default function ContentSections() {
-  return (
-    <>
-      <NowSection />
-      <BeforeSection />
-      <WorkSection />
-      <StorySection />
-      <ContactSection />
-    </>
   );
 }
