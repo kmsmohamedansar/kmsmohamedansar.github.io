@@ -164,12 +164,18 @@ export default function AmbientField({ theme }) {
   const accent2 = theme?.accent2 || "251,191,36";
   // "stream" is the deck's mode exclusively — no other view uses it —
   // so it doubles as the flag for "this is the homepage." Every other
-  // view fades to near-black; the landing deck gets a lighter base and
-  // an extra soft wash so it reads as the bright, welcoming one.
+  // view fades to near-black; the landing deck gets a visibly lighter
+  // base, a bigger warm wash, and stronger accent glow so it actually
+  // reads as bright next to the moodier destinations, not just a
+  // slightly-less-dark version of the same navy.
   const isHome = theme?.mode === "stream";
-  const base = isHome ? "#16233d" : "#050b14";
+  const base = isHome ? "#41598c" : "#050b14";
+  const glowA1 = isHome ? 0.58 : 0.4;
+  const glowA1b = isHome ? 0.24 : 0.14;
+  const glowA2 = isHome ? 0.46 : 0.32;
+  const glowA2b = isHome ? 0.2 : 0.11;
   const homeWash = isHome
-    ? `radial-gradient(65% 55% at 50% 36%, rgba(255,255,255,.14) 0%, rgba(255,255,255,.05) 45%, transparent 78%), `
+    ? `radial-gradient(72% 62% at 50% 30%, rgba(255,255,255,.28) 0%, rgba(255,255,255,.1) 45%, transparent 80%), `
     : "";
 
   useEffect(() => {
@@ -320,7 +326,7 @@ export default function AmbientField({ theme }) {
         <div
           className="ambient-drift absolute -inset-[20%]"
           style={{
-            background: `${homeWash}radial-gradient(80% 80% at 20% 26%, rgba(${accent},.4) 0%, rgba(${accent},.14) 45%, transparent 85%), radial-gradient(75% 75% at 82% 68%, rgba(${accent2},.32) 0%, rgba(${accent2},.11) 45%, transparent 85%), radial-gradient(70% 70% at 55% 8%, rgba(142,125,255,.22) 0%, rgba(142,125,255,.08) 45%, transparent 85%), ${base}`,
+            background: `${homeWash}radial-gradient(80% 80% at 20% 26%, rgba(${accent},${glowA1}) 0%, rgba(${accent},${glowA1b}) 45%, transparent 85%), radial-gradient(75% 75% at 82% 68%, rgba(${accent2},${glowA2}) 0%, rgba(${accent2},${glowA2b}) 45%, transparent 85%), radial-gradient(70% 70% at 55% 8%, rgba(142,125,255,.22) 0%, rgba(142,125,255,.08) 45%, transparent 85%), ${base}`,
           }}
         />
       </div>

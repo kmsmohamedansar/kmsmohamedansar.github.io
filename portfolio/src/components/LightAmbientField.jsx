@@ -36,6 +36,11 @@ export default function LightAmbientField({ theme }) {
   const canvasRef = useRef(null);
   const accent = theme?.lightAccent || "14,116,144";
   const accent2 = theme?.lightAccent2 || "180,83,9";
+  // Same "stream" mode is exclusive to the deck in light theme too —
+  // it's already the brightest view by default, but a stronger,
+  // warmer wash still sets the homepage apart from the calmer glow on
+  // every other destination.
+  const isHome = theme?.mode === "stream";
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -187,14 +192,20 @@ export default function LightAmbientField({ theme }) {
       <div aria-hidden className="fixed inset-0 z-0 pointer-events-none overflow-hidden bg-slate-50">
         <div
           className="aurora-blob aurora-blob-1"
-          style={{ background: `radial-gradient(circle, rgba(${accent},0.4), transparent 70%)` }}
+          style={{ background: `radial-gradient(circle, rgba(${accent},${isHome ? 0.62 : 0.4}), transparent 70%)` }}
         />
         <div
           className="aurora-blob aurora-blob-2"
-          style={{ background: `radial-gradient(circle, rgba(${accent2},0.35), transparent 70%)` }}
+          style={{ background: `radial-gradient(circle, rgba(${accent2},${isHome ? 0.55 : 0.35}), transparent 70%)` }}
         />
         <div className="aurora-blob aurora-blob-3" />
         <div className="aurora-blob aurora-blob-4" />
+        {isHome && (
+          <div
+            className="absolute inset-0"
+            style={{ background: "radial-gradient(60% 55% at 50% 32%, rgba(255,236,196,.55) 0%, rgba(255,236,196,.18) 45%, transparent 78%)" }}
+          />
+        )}
       </div>
       <canvas ref={canvasRef} aria-hidden className="fixed inset-0 z-0 pointer-events-none" />
     </>

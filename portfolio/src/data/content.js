@@ -26,14 +26,14 @@ export const NAV_SECTIONS = [
 // shows up, not just inside the deck. "mark" names an icon drawn on
 // the card face (see three/cardTexture.js) rather than a bare index
 // number — a numeral doesn't say what a card is, an icon does. "image"
-// is optional: when set, the card face uses that picture instead of
-// the drawn mark ("cover" crops full-bleed for artwork, "contain"
-// keeps a logo whole on its own tile instead of cropping it).
+// is optional: when set, the card face is that picture full-bleed
+// instead of the drawn mark — no background or tile around it, just
+// the photo, cropped edge to edge to fill the card.
 export const HERO_DECK = [
-  { id: "emet", go: "#emet", kicker: "assistant", title: "EMET", tagline: "Ask the terminal", accent: "#22d3ee", mark: "terminal", image: emetArt, imageFit: "cover" },
-  { id: "now", go: "#source", kicker: "current role", title: "Current", tagline: "Solutions Engineer, Datasembly", accent: "#8e7dff", mark: "pulse", image: datasemblyMark, imageFit: "contain" },
-  { id: "before", go: "#lineage", kicker: "career", title: "Before", tagline: "Amazon · Spongelii · Datasembly", accent: "#fbbf24", mark: "clock", image: primeVideoMark, imageFit: "contain" },
-  { id: "work", go: "#build", kicker: "shipped", title: "Projects", tagline: "RepTrack + 9 more shipped", accent: "#34d399", mark: "rocket", image: projectsMark, imageFit: "contain" },
+  { id: "emet", go: "#emet", kicker: "assistant", title: "EMET", tagline: "Ask the terminal", accent: "#22d3ee", mark: "terminal", image: emetArt },
+  { id: "now", go: "#source", kicker: "current role", title: "Current", tagline: "Solutions Engineer, Datasembly", accent: "#8e7dff", mark: "pulse", image: datasemblyMark },
+  { id: "before", go: "#lineage", kicker: "career", title: "Before", tagline: "Amazon · Spongelii · Datasembly", accent: "#fbbf24", mark: "clock", image: primeVideoMark },
+  { id: "work", go: "#build", kicker: "shipped", title: "Projects", tagline: "RepTrack + 9 more shipped", accent: "#34d399", mark: "rocket", image: projectsMark },
   { id: "contact", go: "#commit", kicker: "reach", title: "Contact", tagline: "Say hello", accent: "#fb7185", mark: "mail" },
 ];
 
