@@ -163,7 +163,14 @@ export default function NavCardDeck() {
       camera.position.y += (0.2 + pointerNDC.y * 0.22 - camera.position.y) * 0.04;
       camera.lookAt(0, 0, 0);
 
-      raycaster.setFromCamera(pointerNDC, camera);
+      // Hit-testing uses the raw pointer position, not the lerped one
+      // below — pointerNDC is smoothed for the cosmetic camera
+      // parallax/tilt and lags real cursor movement by design, which
+      // is fine for a slow drift but means a quick move-then-click
+      // (exactly what a click is) can raycast against where the
+      // cursor recently *was* rather than where it now is, hovering
+      // — and therefore selecting — the wrong card.
+      raycaster.setFromCamera(pointerTarget, camera);
       const hits = raycaster.intersectObjects(cards.map((c) => c.mesh));
       const hit = hits[0]?.object;
       const nextHovered = cards.find((c) => c.mesh === hit) || null;
