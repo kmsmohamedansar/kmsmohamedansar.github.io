@@ -14,8 +14,9 @@ import {
 } from "lucide-react";
 import { PRINCIPLES, ROLES, PROJECTS, STORY_BEATS, CONTACT } from "../data/content";
 import MagneticButton from "./MagneticButton";
+import { MEDIUM_OBJECT, EASE_OUT } from "../lib/motion";
 
-const EASE = [0.16, 1, 0.3, 1];
+const EASE = EASE_OUT;
 
 function Reveal({ children, className = "", delay = 0, y = 28 }) {
   return (
@@ -38,7 +39,7 @@ function SectionHead({ step, kicker, title, lede }) {
         <span className="w-1.5 h-1.5 rounded-full bg-cyan" />
         stage {step} · {kicker}
       </span>
-      <h2 className="font-display text-[clamp(1.8rem,3.4vw,2.6rem)] font-semibold leading-tight text-[color:var(--ink-50)] mb-4">
+      <h2 className="font-display text-[clamp(2.1rem,4.6vw,3.4rem)] font-semibold leading-[1.05] text-[color:var(--ink-50)] mb-4">
         {title}
       </h2>
       {lede && <p className="text-[color:var(--ink-400)] text-[1.02rem] leading-relaxed">{lede}</p>}
@@ -88,7 +89,7 @@ function NowSection() {
             <DashboardBar title="now.dashboard · live" />
             <div className="p-6 md:p-8 grid lg:grid-cols-[1.15fr_1fr] gap-8">
               <Reveal delay={0.05}>
-                <div className="glass rounded-2xl p-8 space-y-4 text-[color:var(--ink-300)] leading-relaxed">
+                <div className="space-y-5 text-[1.02rem] text-[color:var(--ink-300)] leading-relaxed max-w-lg">
                   <p>
                     Most of my work sits where <b className="text-[color:var(--ink-100)]">data meets decision-making</b>:
                     retail pricing-scale datasets, recurring pipelines, and analytics that teams run week
@@ -270,13 +271,13 @@ function BeforeSection() {
    itself creates a feedback loop (tilting shifts its own bounding
    rect, which can push the cursor "outside" mid-gesture and cancel
    the tilt). */
-function TiltCard({ children, className = "" }) {
+function TiltCard({ children, className = "", perspective = 1000, strength = 12 }) {
   const outerRef = useRef(null);
   const px = useMotionValue(0);
   const py = useMotionValue(0);
-  const spring = { stiffness: 300, damping: 28, mass: 0.6 };
-  const rotateX = useSpring(useTransform(py, [-0.5, 0.5], [12, -12]), spring);
-  const rotateY = useSpring(useTransform(px, [-0.5, 0.5], [-12, 12]), spring);
+  const spring = MEDIUM_OBJECT;
+  const rotateX = useSpring(useTransform(py, [-0.5, 0.5], [strength, -strength]), spring);
+  const rotateY = useSpring(useTransform(px, [-0.5, 0.5], [-strength, strength]), spring);
 
   function onMouseMove(e) {
     const rect = outerRef.current?.getBoundingClientRect();
@@ -290,7 +291,7 @@ function TiltCard({ children, className = "" }) {
   }
 
   return (
-    <div ref={outerRef} onMouseMove={onMouseMove} onMouseLeave={onMouseLeave} className={className} style={{ perspective: "1000px" }}>
+    <div ref={outerRef} onMouseMove={onMouseMove} onMouseLeave={onMouseLeave} className={className} style={{ perspective: `${perspective}px` }}>
       <motion.div
         style={{ rotateX, rotateY, transformStyle: "preserve-3d" }}
         className="relative h-full will-change-transform"
@@ -302,95 +303,138 @@ function TiltCard({ children, className = "" }) {
 }
 
 /* ── WORK ────────────────────────────────────────────────── */
-/* Three depth layers riding the same TiltCard rotation:
-   A (translateZ -40) — decorative dot-mesh, deepest, barely moves
-   B (translateZ  28) — the "device frame" window holding the copy
-   C (translateZ  76) — telemetry tag chips, floating past the card's
-                         own edge so they visually hover in front */
-function ProjectCard({ project, delay }) {
+/* A stylized representation of RepTrack's UI — there's no production
+   screenshot asset to work with, so this is a deliberate, meaningful
+   HTML/CSS approximation of the real app rather than a generic
+   gradient placeholder. */
+function PhoneMockup() {
+  const rows = [
+    ["Bench press", "4×8 · 185lb"],
+    ["Pull-ups", "3×10 · BW+25"],
+    ["Squat", "5×5 · 225lb"],
+  ];
   return (
-    <Reveal delay={delay} className={project.featured ? "md:col-span-2" : ""}>
-      <motion.div
-        initial={{ opacity: 0, rotateX: 14, rotateY: -18 }}
-        whileInView={{ opacity: 1, rotateX: 0, rotateY: 0 }}
-        viewport={{ once: true, amount: 0.3 }}
-        transition={{ duration: 0.7, ease: EASE }}
-        style={{ transformPerspective: 1000 }}
-        className="h-full"
-      >
-      <TiltCard className="h-full rounded-xl">
-        <div
-          aria-hidden
-          className="absolute inset-0 rounded-xl opacity-40 pointer-events-none"
-          style={{
-            transform: "translateZ(-40px) scale(1.06)",
-            backgroundImage:
-              "radial-gradient(circle, rgba(34,211,238,0.5) 1px, transparent 1px)",
-            backgroundSize: "16px 16px",
-          }}
-        />
-
-        <div
-          className={`glass relative rounded-xl p-6 h-full flex flex-col ${
-            project.warm ? "border-amber/25" : ""
-          }`}
-          style={{ transform: "translateZ(28px)" }}
-        >
-          <span className="flex gap-1.5 mb-4" aria-hidden>
-            <i className="w-2 h-2 rounded-full bg-[#ff5f57]/70" />
-            <i className="w-2 h-2 rounded-full bg-[#febc2e]/70" />
-            <i className="w-2 h-2 rounded-full bg-[#28c840]/70" />
-          </span>
-          {project.kicker && (
-            <span
-              className={`self-start font-mono text-[.6rem] uppercase tracking-[.12em] px-2.5 py-1 rounded-full border mb-4 ${
-                project.warm ? "text-amber border-amber/30" : "text-cyan border-cyan/30"
-              }`}
-            >
-              {project.kicker}
-            </span>
-          )}
-          <h3 className="font-display font-semibold text-[color:var(--ink-100)] text-[1.1rem] mb-2">{project.title}</h3>
-          <p className="text-[.88rem] text-[color:var(--ink-400)] leading-relaxed mb-4 flex-1">{project.body}</p>
-          {project.links?.map((link) => (
-            <a
-              key={link.href}
-              href={link.href}
-              target={link.external ? "_blank" : undefined}
-              rel={link.external ? "noopener noreferrer" : undefined}
-              className={`inline-flex items-center gap-1.5 text-[.82rem] font-medium ${
-                link.warm ? "text-amber" : "text-cyan"
-              } hover:gap-2.5 transition-all w-fit`}
-            >
-              {link.label} <ExternalLink size={12} />
-            </a>
-          ))}
+    <div className="mx-auto w-full max-w-[270px] rounded-[2.1rem] border border-white/10 bg-black p-2 shadow-2xl shadow-black/50">
+      <div className="rounded-[1.6rem] overflow-hidden bg-gradient-to-b from-[#0e1730] to-black">
+        <div className="flex items-center justify-between px-5 pt-3.5 pb-2 font-mono text-[.58rem] text-slate-500">
+          <span>9:41</span>
+          <i className="w-4 h-2 rounded-[2px] bg-slate-600" />
         </div>
-
-        {project.tags && (
-          <div
-            className="absolute -bottom-3 right-4 flex flex-wrap gap-1.5 justify-end max-w-[85%] pointer-events-none"
-            style={{ transform: "translateZ(76px)" }}
-          >
-            {project.tags.map((t) => (
-              <span
-                key={t}
-                className="glass font-mono text-[.58rem] uppercase tracking-wide px-2 py-1 rounded-full text-[color:var(--ink-300)] shadow-lg shadow-black/20"
-              >
-                {t}
-              </span>
+        <div className="px-5 pb-7">
+          <p className="font-display text-slate-100 text-[1.05rem] font-semibold mb-1">This week</p>
+          <p className="text-cyan text-[.66rem] font-mono mb-4">4 sessions logged</p>
+          <div className="space-y-2">
+            {rows.map(([name, meta]) => (
+              <div key={name} className="flex items-center justify-between rounded-lg bg-white/[.05] px-3 py-2.5">
+                <span className="text-slate-200 text-[.74rem] font-medium">{name}</span>
+                <span className="font-mono text-[.58rem] text-slate-500">{meta}</span>
+              </div>
             ))}
           </div>
-        )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* RepTrack presented as an object being examined — a large, editorial
+   composition rather than a card in a grid. The phone mockup and its
+   two floating annotation chips sit at different translateZ depths
+   inside one TiltCard, so they separate visibly as it tilts. */
+function RepTrackShowcase({ project }) {
+  return (
+    <Reveal>
+      <TiltCard perspective={1800} strength={5} className="rounded-2xl">
+        <div className="grid lg:grid-cols-[1fr_1.15fr] gap-10 lg:gap-16 items-center py-2">
+          <div className="relative order-2 lg:order-1" style={{ transform: "translateZ(30px)" }}>
+            <PhoneMockup />
+            <div
+              className="glass absolute top-2 right-2 lg:right-0 px-3 py-1.5 rounded-lg font-mono text-[.64rem] text-cyan shadow-lg shadow-black/30"
+              style={{ transform: "translateZ(70px)" }}
+            >
+              App Store · Live
+            </div>
+            <div
+              className="glass absolute bottom-6 left-2 lg:left-0 px-3 py-1.5 rounded-lg font-mono text-[.64rem] text-amber shadow-lg shadow-black/30"
+              style={{ transform: "translateZ(70px)" }}
+            >
+              SwiftUI + SwiftData
+            </div>
+          </div>
+          <div className="order-1 lg:order-2" style={{ transform: "translateZ(15px)" }}>
+            <span className="font-mono text-[.7rem] uppercase tracking-[.18em] text-amber">{project.kicker}</span>
+            <h3 className="mt-3 font-display text-[clamp(1.9rem,3.6vw,2.9rem)] font-semibold leading-tight text-[color:var(--ink-50)]">
+              {project.title}
+            </h3>
+            <p className="mt-5 text-[color:var(--ink-400)] leading-relaxed max-w-md">{project.body}</p>
+            <div className="mt-6 flex flex-wrap gap-x-4 gap-y-1.5">
+              {project.tags?.map((t) => (
+                <span key={t} className="font-mono text-[.64rem] uppercase tracking-wide text-slate-500">
+                  {t}
+                </span>
+              ))}
+            </div>
+            {project.links?.map((link) => (
+              <a
+                key={link.href}
+                href={link.href}
+                target={link.external ? "_blank" : undefined}
+                rel={link.external ? "noopener noreferrer" : undefined}
+                className="mt-7 inline-flex items-center gap-1.5 text-amber font-medium hover:gap-2.5 transition-all w-fit"
+              >
+                {link.label} <ExternalLink size={14} />
+              </a>
+            ))}
+          </div>
+        </div>
       </TiltCard>
-      </motion.div>
+    </Reveal>
+  );
+}
+
+/* Remaining projects as a quiet index list — an editorial line-up
+   rather than a repeated grid of cards. */
+function ProjectRow({ project, index }) {
+  const link = project.links?.[0];
+  const Wrapper = link ? "a" : "div";
+  const linkProps = link
+    ? { href: link.href, target: link.external ? "_blank" : undefined, rel: link.external ? "noopener noreferrer" : undefined }
+    : {};
+  return (
+    <Reveal delay={index * 0.04}>
+      <Wrapper
+        {...linkProps}
+        className="group grid grid-cols-[2rem_1fr_auto] sm:grid-cols-[2.5rem_1fr_auto_1.5rem] items-center gap-4 sm:gap-6 py-5 border-b border-white/8 hover:border-cyan/30 transition-colors"
+      >
+        <span className="font-mono text-[.7rem] text-slate-600">{String(index + 1).padStart(2, "0")}</span>
+        <div className="min-w-0">
+          <h4 className="font-display font-semibold text-[color:var(--ink-100)] group-hover:text-cyan transition-colors truncate">
+            {project.title}
+          </h4>
+          <p className="hidden sm:block text-[.82rem] text-[color:var(--ink-400)] mt-1 max-w-lg truncate">{project.body}</p>
+        </div>
+        <div className="hidden sm:flex gap-3 justify-end shrink-0">
+          {project.tags?.slice(0, 3).map((t) => (
+            <span key={t} className="font-mono text-[.6rem] uppercase tracking-wide text-slate-500">
+              {t}
+            </span>
+          ))}
+        </div>
+        {link && (
+          <ExternalLink
+            size={15}
+            className="text-slate-500 group-hover:text-cyan group-hover:-translate-y-0.5 group-hover:translate-x-0.5 transition-all shrink-0"
+          />
+        )}
+      </Wrapper>
     </Reveal>
   );
 }
 
 function WorkSection() {
   const [expanded, setExpanded] = useState(false);
-  const visible = PROJECTS.filter((p) => !p.collapsed);
+  const featured = PROJECTS.find((p) => p.featured);
+  const rest = PROJECTS.filter((p) => p !== featured && !p.collapsed);
   const hidden = PROJECTS.filter((p) => p.collapsed);
 
   return (
@@ -402,9 +446,10 @@ function WorkSection() {
           title="What I've built"
           lede="SQL tools, pipelines, ML, retrieval, automation, and one native iOS app shipped to the App Store. End to end, several with live demos."
         />
-        <div className="grid md:grid-cols-2 gap-5">
-          {visible.map((p, i) => (
-            <ProjectCard key={p.title} project={p} delay={i * 0.06} />
+        {featured && <div className="mb-20">{<RepTrackShowcase project={featured} />}</div>}
+        <div>
+          {rest.map((p, i) => (
+            <ProjectRow key={p.title} project={p} index={i} />
           ))}
           <AnimatePresence>
             {expanded &&
@@ -417,7 +462,7 @@ function WorkSection() {
                   transition={{ duration: 0.35, ease: EASE }}
                   className="overflow-hidden"
                 >
-                  <ProjectCard project={p} delay={i * 0.04} />
+                  <ProjectRow project={p} index={rest.length + i} />
                 </motion.div>
               ))}
           </AnimatePresence>
@@ -477,7 +522,7 @@ function ContactSection() {
               <span className="text-rose">VALUES</span> (<span className="text-green">'mohamed_ansar'</span>);{" "}
               <span className="text-rose">COMMIT</span>;
             </p>
-            <h2 className="font-display text-[clamp(1.8rem,3.6vw,2.6rem)] font-semibold text-[color:var(--ink-50)] leading-tight mb-4">
+            <h2 className="font-display text-[clamp(2.1rem,4.2vw,3.2rem)] font-semibold text-[color:var(--ink-50)] leading-[1.05] mb-4">
               The pipeline ends where
               <br />a conversation <span className="text-cyan">starts</span>
             </h2>
