@@ -15,11 +15,11 @@ const EASE = EASE_OUT;
    then pauses before the next segment starts. Reduced-motion users get
    the full text immediately instead of an animated queue. */
 const SCRIPT = [
-  { text: "emet\n", cls: "text-glow-cyan font-bold", speed: 12 },
+  { text: "emet\n", cls: "text-glow-green font-bold", speed: 12 },
   { text: "──────────────────\n\n", cls: "opacity-40", speed: 5 },
   { text: "Hi. I'm emet.\n\n", cls: "", speed: 20 },
   { text: "I keep the record on ", cls: "", speed: 18 },
-  { text: "Mohamed Ansar", cls: "text-glow-cyan font-bold", speed: 18 },
+  { text: "Mohamed Ansar", cls: "text-glow-green font-bold", speed: 18 },
   { text: ".\n\n", cls: "", speed: 18 },
   {
     text:
@@ -167,12 +167,17 @@ export default function EmetSection() {
   const reduced = prefersReducedMotion();
 
   return (
-    <section className="min-h-full flex items-center px-5 py-14">
+    // dark-surface: emet stays a dark green terminal in every theme,
+    // same "permanently dark" exception the CRT chassis already makes
+    // — it re-declares the shared --ink-* tokens back to their
+    // light-on-dark values, so the heading/paragraph below don't need
+    // their own color overrides to stay readable over the matrix rain.
+    <section className="dark-surface min-h-full flex items-center px-5 py-14">
       <div className="mx-auto max-w-[1180px] grid lg:grid-cols-[0.9fr_1.1fr] gap-14 items-center">
         <div>
-          <span className="font-mono text-[.7rem] tracking-[.2em] uppercase text-cyan/70">assistant</span>
+          <span className="font-mono text-[.7rem] tracking-[.2em] uppercase text-green/70">assistant</span>
           <h2 className="mt-4 font-display text-[clamp(2.1rem,4.6vw,3.4rem)] font-semibold leading-[1.05] text-[color:var(--ink-50)]">
-            Ask <span className="italic text-cyan" style={{ fontFamily: "'Instrument Serif', serif" }}>emet</span>
+            Ask <span className="italic text-green" style={{ fontFamily: "'Instrument Serif', serif" }}>emet</span>
           </h2>
           <p className="mt-5 max-w-md text-[1.02rem] leading-relaxed text-[color:var(--ink-400)]">
             A small terminal that keeps the record straight — what he does now, where he's worked, what he's
@@ -203,7 +208,7 @@ export default function EmetSection() {
               <motion.div
                 aria-hidden
                 className="absolute inset-x-3 h-20 pointer-events-none z-20 rounded-full"
-                style={{ background: "linear-gradient(180deg, transparent, rgba(34,211,238,0.4), transparent)" }}
+                style={{ background: "linear-gradient(180deg, transparent, rgba(52,211,153,0.4), transparent)" }}
                 initial={{ top: "-8%", opacity: 0 }}
                 animate={{ top: ["-8%", "104%"], opacity: [0, 1, 1, 0] }}
                 transition={{ duration: 1, delay: 0.25, ease: "easeInOut" }}
@@ -211,15 +216,18 @@ export default function EmetSection() {
             </>
           )}
           <CrtChassis className="bg-black">
-            <MonitorBar title="emet · portfolio assistant" status={done ? "READY" : "BOOTING"} statusTone={done ? "cyan" : "amber"} />
-            <div className="p-5 min-h-[300px] flex flex-col font-mono text-[.8rem] leading-[1.8] text-cyan/85">
+            <MonitorBar title="emet · portfolio assistant" status={done ? "READY" : "BOOTING"} statusTone={done ? "green" : "amber"} />
+            <div className="p-5 min-h-[300px] flex flex-col font-mono text-[.8rem] leading-[1.8] text-green/85">
               <pre className="whitespace-pre-wrap break-words flex-1 mb-3">
                 {segments.map((seg, i) => (
                   <span key={i} className={seg.cls}>
                     {seg.text}
                   </span>
                 ))}
-                {!done && <span className="inline-block w-[6px] h-[1em] bg-cyan align-text-bottom blink-cursor ml-0.5" />}
+                {/* A fat block cursor, not a thin I-beam — closer to the
+                    solid-block cursor on an early IBM terminal than to
+                    a modern text-editor caret. */}
+                {!done && <span className="inline-block w-[10px] h-[1.15em] bg-green align-text-bottom blink-cursor ml-0.5" />}
               </pre>
 
               {done && (
@@ -233,9 +241,9 @@ export default function EmetSection() {
                     <a
                       key={item.n}
                       href={item.go}
-                      className="group flex items-center gap-3 px-3 py-2 rounded-lg border border-cyan/15 bg-cyan/[.02] text-cyan/75 hover:text-cyan hover:border-cyan/45 hover:bg-cyan/5 transition-colors"
+                      className="group flex items-center gap-3 px-3 py-2 rounded-lg border border-green/15 bg-green/[.02] text-green/75 hover:text-green hover:border-green/45 hover:bg-green/5 transition-colors"
                     >
-                      <span className="w-[18px] h-[18px] grid place-items-center rounded border border-cyan/25 text-[.64rem] text-cyan/60 group-hover:text-cyan group-hover:border-cyan/50 transition-colors">
+                      <span className="w-[18px] h-[18px] grid place-items-center rounded border border-green/25 text-[.64rem] text-green/60 group-hover:text-green group-hover:border-green/50 transition-colors">
                         {item.n}
                       </span>
                       <span className="text-[.7rem]">{item.label}</span>
@@ -249,13 +257,13 @@ export default function EmetSection() {
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   transition={{ duration: 0.4, delay: 0.25 }}
-                  className="flex items-center gap-2 border-t border-cyan/15 pt-3 mt-auto"
+                  className="flex items-center gap-2 border-t border-green/15 pt-3 mt-auto"
                 >
-                  <span className="text-cyan text-lg leading-none">›</span>
+                  <span className="text-green text-lg leading-none">›</span>
                   <input
                     type="text"
                     placeholder="type 1, 2, 3 or 4…"
-                    className="flex-1 bg-transparent outline-none text-[.75rem] text-cyan placeholder:text-cyan/35 caret-cyan"
+                    className="flex-1 bg-transparent outline-none text-[.75rem] text-green placeholder:text-green/35 caret-green"
                     autoComplete="off"
                     spellCheck={false}
                     onKeyDown={(e) => {

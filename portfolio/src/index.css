@@ -96,6 +96,9 @@
   .text-glow-amber {
     text-shadow: 0 0 6px rgba(251, 191, 36, 0.28);
   }
+  .text-glow-green {
+    text-shadow: 0 0 6px rgba(52, 211, 153, 0.36);
+  }
 }
 
 /* ============================================================
@@ -120,8 +123,8 @@
   background: linear-gradient(
     90deg,
     transparent,
-    rgba(34, 211, 238, 0.55) 40%,
-    rgba(34, 211, 238, 0.15) 100%
+    rgba(52, 211, 153, 0.55) 40%,
+    rgba(52, 211, 153, 0.15) 100%
   );
   pointer-events: none;
   z-index: 2;
@@ -184,7 +187,7 @@
   transition: opacity 0.4s ease;
   background: radial-gradient(
     260px circle at var(--spot-x) var(--spot-y),
-    rgba(34, 211, 238, 0.1),
+    rgba(52, 211, 153, 0.1),
     transparent 70%
   );
   mix-blend-mode: screen;

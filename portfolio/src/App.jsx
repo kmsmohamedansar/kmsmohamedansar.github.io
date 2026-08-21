@@ -7,6 +7,7 @@ import { NowSection, BeforeSection, WorkSection, StorySection, ContactSection } 
 import SandboxStubs from "./components/SandboxStubs";
 import CommandPalette from "./components/CommandPalette";
 import LightAmbientField from "./components/LightAmbientField";
+import { MatrixBackground, DataFlowBackground, StudioBackground, StatsBackground, PingBackground } from "./components/RouteBackgrounds";
 import BootSequence from "./components/BootSequence";
 import CustomCursor from "./components/CustomCursor";
 import { ROUTE_THEME } from "./data/content";
@@ -190,8 +191,24 @@ function Stage({ bootDone }) {
   );
 }
 
+// Each of the five deck destinations gets its own bespoke animated
+// backdrop instead of a shared particle field recolored per route —
+// emet's terminal rain, Current's data flow, Before's studio
+// spotlights, Projects' stats board, Contact's signal pings. The
+// deck itself and the one route outside the deck (story, reachable
+// only from the command palette) keep the general-purpose aurora.
+const ROUTE_BACKGROUNDS = {
+  emet: MatrixBackground,
+  source: DataFlowBackground,
+  lineage: StudioBackground,
+  build: StatsBackground,
+  commit: PingBackground,
+};
+
 function Backdrop() {
   const { route } = useRoute();
+  const RouteBackground = ROUTE_BACKGROUNDS[route];
+  if (RouteBackground) return <RouteBackground key={route} />;
   const routeTheme = ROUTE_THEME[route] || ROUTE_THEME.deck;
   return <LightAmbientField key={route} theme={routeTheme} />;
 }
