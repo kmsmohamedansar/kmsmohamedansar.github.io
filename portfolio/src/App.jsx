@@ -11,7 +11,7 @@ import LightAmbientField from "./components/LightAmbientField";
 import BootSequence from "./components/BootSequence";
 import CustomCursor from "./components/CustomCursor";
 import MagneticButton from "./components/MagneticButton";
-import { NAV_SECTIONS } from "./data/content";
+import { NAV_SECTIONS, ROUTE_THEME } from "./data/content";
 import { EASE_OUT } from "./lib/motion";
 
 /* ============================================================
@@ -300,13 +300,24 @@ function Stage({ bootDone }) {
   );
 }
 
+function Backdrop() {
+  const { theme } = useTheme();
+  const { route } = useRoute();
+  const routeTheme = ROUTE_THEME[route] || ROUTE_THEME.deck;
+  return theme === "dark" ? (
+    <AmbientField key={route} theme={routeTheme} />
+  ) : (
+    <LightAmbientField key={route} theme={routeTheme} />
+  );
+}
+
 function AppShell({ bootDone }) {
   const { theme } = useTheme();
 
   return (
     <RouteProvider>
       <div className={`relative ${theme === "light" ? "bg-slate-50 text-slate-900" : "bg-ink text-slate-100"} h-[100dvh] overflow-hidden`}>
-        {theme === "dark" ? <AmbientField /> : <LightAmbientField />}
+        <Backdrop />
         <div className="relative z-10 h-full flex flex-col">
           <Nav />
           {/* No page-level `perspective` here on purpose: setting it on an

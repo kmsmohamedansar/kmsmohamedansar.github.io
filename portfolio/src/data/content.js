@@ -14,14 +14,32 @@ export const NAV_SECTIONS = [
 // The hero's card deck — one card per major destination on the page.
 // EMET scrolls to the terminal instead of expanding inline, same as
 // the other four, so all five behave identically: click a card, land
-// on the section it represents.
+// on the section it represents. Each card carries its own accent color
+// pulled from the site's existing palette — that color rides along
+// onto the card face and into the ambient background of the view it
+// opens, so a destination has one consistent identity everywhere it
+// shows up, not just inside the deck.
 export const HERO_DECK = [
-  { id: "emet", go: "#emet", kicker: "assistant", title: "EMET", tagline: "Ask the terminal", warm: false, mark: ">_" },
-  { id: "now", go: "#source", kicker: "current", title: "Now", tagline: "Solutions Engineer, Datasembly", warm: false, mark: "01" },
-  { id: "before", go: "#lineage", kicker: "career", title: "Before", tagline: "Amazon · Spongelii · Datasembly", warm: true, mark: "02" },
-  { id: "work", go: "#build", kicker: "built", title: "Work", tagline: "RepTrack + 9 more shipped", warm: false, mark: "03" },
-  { id: "contact", go: "#commit", kicker: "reach", title: "Contact", tagline: "Say hello", warm: true, mark: "@" },
+  { id: "emet", go: "#emet", kicker: "assistant", title: "EMET", tagline: "Ask the terminal", accent: "#22d3ee", mark: ">_" },
+  { id: "now", go: "#source", kicker: "current", title: "Now", tagline: "Solutions Engineer, Datasembly", accent: "#8e7dff", mark: "01" },
+  { id: "before", go: "#lineage", kicker: "career", title: "Before", tagline: "Amazon · Spongelii · Datasembly", accent: "#fbbf24", mark: "02" },
+  { id: "work", go: "#build", kicker: "built", title: "Work", tagline: "RepTrack + 9 more shipped", accent: "#34d399", mark: "03" },
+  { id: "contact", go: "#commit", kicker: "reach", title: "Contact", tagline: "Say hello", accent: "#fb7185", mark: "@" },
 ];
+
+// Per-view ambient background theme — keyed by route (not card id,
+// since routes and card ids don't share a naming scheme). "mode"
+// picks the particle behavior in AmbientField; light theme only
+// borrows the colors, keeping its own calmer motion language.
+export const ROUTE_THEME = {
+  deck: { accent: "34,211,238", accent2: "251,191,36", lightAccent: "14,116,144", lightAccent2: "180,83,9", mode: "stream" },
+  emet: { accent: "34,211,238", accent2: "14,116,144", lightAccent: "14,116,144", lightAccent2: "12,74,110", mode: "signal" },
+  source: { accent: "142,125,255", accent2: "34,211,238", lightAccent: "109,40,217", lightAccent2: "14,116,144", mode: "pulse" },
+  lineage: { accent: "251,191,36", accent2: "245,158,11", lightAccent: "180,83,9", lightAccent2: "146,64,14", mode: "settle" },
+  build: { accent: "52,211,153", accent2: "34,211,238", lightAccent: "4,120,87", lightAccent2: "14,116,144", mode: "lattice" },
+  story: { accent: "142,125,255", accent2: "251,113,133", lightAccent: "109,40,217", lightAccent2: "190,18,60", mode: "pulse" },
+  commit: { accent: "251,113,133", accent2: "142,125,255", lightAccent: "190,18,60", lightAccent2: "109,40,217", mode: "converge" },
+};
 
 export const EMET_SHORTCUTS = [
   { n: 1, label: "What does he do now?", go: "#source" },

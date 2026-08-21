@@ -27,10 +27,15 @@ function makeGlowSprite(color) {
  * neon "data mesh": soft morphing aurora blobs (CSS) plus slow-rising
  * bokeh motes (canvas) that sway and fade like dust in daylight, no
  * connecting lines. Interconnected wireframe lines read as
- * "cyberpunk" against white; drifting light does not.
+ * "cyberpunk" against white; drifting light does not. Keeps that one
+ * calm motion language across every view, but the two leading blobs
+ * and half the motes pick up the current view's own accent pair so
+ * the destination still reads as itself, not a shared neutral wash.
  */
-export default function LightAmbientField() {
+export default function LightAmbientField({ theme }) {
   const canvasRef = useRef(null);
+  const accent = theme?.lightAccent || "14,116,144";
+  const accent2 = theme?.lightAccent2 || "180,83,9";
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -39,11 +44,11 @@ export default function LightAmbientField() {
     if (!ctx) return; // canvas blocked by a privacy extension / browser policy
     const reduced = prefersReducedMotion();
 
-    const spriteCyan = makeGlowSprite("14,116,144");
-    const spriteAmber = makeGlowSprite("217,119,6");
-    const spriteViolet = makeGlowSprite("109,89,222");
-    if (!spriteCyan || !spriteAmber || !spriteViolet) return;
-    const sprites = [spriteCyan, spriteAmber, spriteViolet];
+    const spriteAccent = makeGlowSprite(accent);
+    const spriteAccent2 = makeGlowSprite(accent2);
+    const spriteNeutral = makeGlowSprite("109,89,222");
+    if (!spriteAccent || !spriteAccent2 || !spriteNeutral) return;
+    const sprites = [spriteAccent, spriteAccent, spriteAccent2, spriteNeutral];
 
     let raf;
     let width = 0;
@@ -174,13 +179,20 @@ export default function LightAmbientField() {
       window.removeEventListener("pointermove", onPointerMove);
       window.removeEventListener("pointerleave", onPointerLeave);
     };
-  }, []);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [accent, accent2]);
 
   return (
     <>
       <div aria-hidden className="fixed inset-0 z-0 pointer-events-none overflow-hidden bg-slate-50">
-        <div className="aurora-blob aurora-blob-1" />
-        <div className="aurora-blob aurora-blob-2" />
+        <div
+          className="aurora-blob aurora-blob-1"
+          style={{ background: `radial-gradient(circle, rgba(${accent},0.4), transparent 70%)` }}
+        />
+        <div
+          className="aurora-blob aurora-blob-2"
+          style={{ background: `radial-gradient(circle, rgba(${accent2},0.35), transparent 70%)` }}
+        />
         <div className="aurora-blob aurora-blob-3" />
         <div className="aurora-blob aurora-blob-4" />
       </div>
