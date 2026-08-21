@@ -1,0 +1,6 @@
+__pycache__/
+*.pyc
+
+# FastF1 HTTP cache and pulled session data — regenerate with the scripts here
+cache/
+f1_data/
