@@ -111,7 +111,7 @@ export default function CommandPalette() {
             aria-modal="true"
             aria-label="Command palette"
           >
-            <div className="flex items-center gap-3 px-4 py-3 border-b border-white/8">
+            <div className="flex items-center gap-3 px-4 py-3 border-b border-slate-900/8">
               <Search size={16} className="text-cyan shrink-0" />
               <input
                 ref={inputRef}
@@ -149,7 +149,7 @@ export default function CommandPalette() {
                       className={`w-full flex items-center justify-between gap-3 px-4 py-2.5 text-left text-sm transition-colors ${
                         item._index === activeIndex
                           ? "bg-cyan/10 text-cyan"
-                          : "text-[color:var(--ink-300)] hover:bg-white/5"
+                          : "text-[color:var(--ink-300)] hover:bg-slate-900/5"
                       }`}
                     >
                       <span className="font-mono">{item.label}</span>
@@ -160,7 +160,7 @@ export default function CommandPalette() {
               ))}
             </div>
 
-            <div className="flex items-center gap-4 px-4 py-2.5 border-t border-white/8 text-[.62rem] font-mono text-slate-500">
+            <div className="flex items-center gap-4 px-4 py-2.5 border-t border-slate-900/8 text-[.62rem] font-mono text-slate-500">
               <span className="flex items-center gap-1">
                 <ArrowUp size={11} />
                 <ArrowDown size={11} /> navigate
