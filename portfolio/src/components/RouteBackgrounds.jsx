@@ -1,10 +1,39 @@
 import { useAnimatedCanvas } from "../lib/useAnimatedCanvas";
 
+function roundRect(ctx, x, y, w, h, r) {
+  ctx.beginPath();
+  ctx.moveTo(x + r, y);
+  ctx.arcTo(x + w, y, x + w, y + h, r);
+  ctx.arcTo(x + w, y + h, x, y + h, r);
+  ctx.arcTo(x, y + h, x, y, r);
+  ctx.arcTo(x, y, x + w, y, r);
+  ctx.closePath();
+}
+
+function drawGrid(ctx, width, height, color, step = 46) {
+  ctx.strokeStyle = color;
+  ctx.lineWidth = 1;
+  for (let x = 0; x < width; x += step) {
+    ctx.beginPath();
+    ctx.moveTo(x, 0);
+    ctx.lineTo(x, height);
+    ctx.stroke();
+  }
+  for (let y = 0; y < height; y += step) {
+    ctx.beginPath();
+    ctx.moveTo(0, y);
+    ctx.lineTo(width, y);
+    ctx.stroke();
+  }
+}
+
 /* ============================================================
    EMET — classic terminal rain: falling green glyph columns over
    near-black, the "first IBM computer" mood the CRT chassis already
    leans into. The only one of the five that's a full dark takeover
    (see .dark-surface on EmetSection) rather than a light-bg motif.
+   Untouched by the rest of this file's redesign — it was already
+   right.
    ============================================================ */
 const MATRIX_GLYPHS = "アイウエオカキクケコサシスセソ0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
@@ -50,11 +79,19 @@ export function MatrixBackground() {
 }
 
 /* ============================================================
-   CURRENT (Datasembly) — an analytics dashboard that never stops
-   moving: soft sparkline traces drifting across the page and small
-   metric readouts rising and fading, in the route's own violet.
+   CURRENT (Datasembly) — an actual analytics dashboard glimpsed in
+   the background: a graph-paper grid, two live area charts with
+   gradient fills, a couple of KPI tiles with real numbers, metric
+   readouts rising past them, and a soft scanline sweeping across
+   like a live cursor — the "always-on dashboard" feel, made literal
+   instead of just a couple of faint sparklines.
    ============================================================ */
 const DATA_TICKS = ["+2.4%", "148ms", "+912 rows", "0.03%", "SELECT *", "99.98%", "p95 88ms", "OK", "342 rows", "+18"];
+const DATA_TILES = [
+  { x: 0.06, y: 0.12, label: "QUERIES/MIN", value: "428" },
+  { x: 0.74, y: 0.66, label: "LATENCY", value: "88ms" },
+  { x: 0.08, y: 0.74, label: "UPTIME", value: "99.98%" },
+];
 
 function spawnTick(width, height) {
   return {
@@ -67,45 +104,90 @@ function spawnTick(width, height) {
 }
 
 function setupDataFlow(width, height) {
-  const lines = Array.from({ length: 4 }, (_, i) => ({
-    baseY: height * (0.14 + i * 0.24),
-    amp: 16 + Math.random() * 14,
+  const lines = Array.from({ length: 3 }, (_, i) => ({
+    baseY: height * (0.2 + i * 0.28),
+    amp: 24 + Math.random() * 18,
     speed: 0.5 + Math.random() * 0.4,
     phase: Math.random() * Math.PI * 2,
   }));
-  const ticks = Array.from({ length: 9 }, () => spawnTick(width, height));
-  return { lines, ticks };
+  const ticks = Array.from({ length: 10 }, () => spawnTick(width, height));
+  const tiles = DATA_TILES.map((tile) => ({ ...tile, phase: Math.random() * Math.PI * 2 }));
+  return { lines, ticks, tiles, scanX: -200 };
 }
 
 function renderDataFlow(ctx, width, height, t, state, reduced) {
   ctx.clearRect(0, 0, width, height);
   const time = reduced ? 0 : t;
 
+  drawGrid(ctx, width, height, "rgba(109,40,217,0.05)");
+
   for (const line of state.lines) {
     ctx.beginPath();
-    ctx.strokeStyle = "rgba(109,40,217,0.14)";
-    ctx.lineWidth = 2;
     for (let x = 0; x <= width; x += 10) {
       const y =
         line.baseY +
-        Math.sin(x * 0.014 + time * 0.0006 * line.speed + line.phase) * line.amp +
-        Math.sin(x * 0.045 + time * 0.0004 * line.speed) * (line.amp * 0.3);
+        Math.sin(x * 0.012 + time * 0.0006 * line.speed + line.phase) * line.amp +
+        Math.sin(x * 0.04 + time * 0.0004 * line.speed) * (line.amp * 0.35);
       if (x === 0) ctx.moveTo(x, y);
       else ctx.lineTo(x, y);
     }
+    ctx.strokeStyle = "rgba(109,40,217,0.34)";
+    ctx.lineWidth = 2.5;
     ctx.stroke();
+
+    ctx.lineTo(width, height);
+    ctx.lineTo(0, height);
+    ctx.closePath();
+    const fillGrad = ctx.createLinearGradient(0, line.baseY - line.amp, 0, height);
+    fillGrad.addColorStop(0, "rgba(109,40,217,0.12)");
+    fillGrad.addColorStop(1, "rgba(109,40,217,0)");
+    ctx.fillStyle = fillGrad;
+    ctx.fill();
+  }
+
+  // Below tablet width there's rarely open canvas away from stacked
+  // content — the headline and the dashboard card both run edge to
+  // edge, so a floating tile just collides with real text.
+  const tiles = width < 700 ? [] : state.tiles;
+  for (const tile of tiles) {
+    const px = tile.x * width;
+    const py = tile.y * height;
+    const pulse = reduced ? 1 : 0.85 + Math.sin(time * 0.0012 + tile.phase) * 0.15;
+    ctx.save();
+    ctx.globalAlpha = pulse;
+    roundRect(ctx, px, py, 128, 58, 10);
+    ctx.fillStyle = "rgba(255,255,255,0.5)";
+    ctx.fill();
+    ctx.strokeStyle = "rgba(109,40,217,0.3)";
+    ctx.lineWidth = 1.2;
+    ctx.stroke();
+    ctx.fillStyle = "rgba(109,40,217,0.6)";
+    ctx.font = "600 10px 'JetBrains Mono', monospace";
+    ctx.fillText(tile.label, px + 12, py + 21);
+    ctx.fillStyle = "rgba(109,40,217,0.78)";
+    ctx.font = "700 19px 'JetBrains Mono', monospace";
+    ctx.fillText(tile.value, px + 12, py + 43);
+    ctx.restore();
   }
 
   ctx.font = "500 12px 'JetBrains Mono', monospace";
   for (const tick of state.ticks) {
     tick.alpha = Math.min(1, tick.alpha + 0.02);
-    ctx.fillStyle = `rgba(109,40,217,${0.32 * tick.alpha})`;
+    ctx.fillStyle = `rgba(109,40,217,${0.4 * tick.alpha})`;
     ctx.fillText(tick.text, tick.x, tick.y);
     if (!reduced) {
       tick.y -= tick.speed;
       if (tick.y < -20) Object.assign(tick, spawnTick(width, height));
     }
   }
+
+  if (!reduced) state.scanX = state.scanX > width + 200 ? -200 : state.scanX + 1.1;
+  const scanGrad = ctx.createLinearGradient(state.scanX - 90, 0, state.scanX + 90, 0);
+  scanGrad.addColorStop(0, "rgba(109,40,217,0)");
+  scanGrad.addColorStop(0.5, "rgba(109,40,217,0.07)");
+  scanGrad.addColorStop(1, "rgba(109,40,217,0)");
+  ctx.fillStyle = scanGrad;
+  ctx.fillRect(state.scanX - 90, 0, 180, height);
 }
 
 export function DataFlowBackground() {
@@ -119,40 +201,42 @@ export function DataFlowBackground() {
 
 /* ============================================================
    BEFORE (Amazon) — a screening-room mood for the Prime Video years:
-   slow spotlight beams sweeping from overhead and warm bokeh drifting
-   like a premiere, in the route's own amber.
+   brighter spotlight beams sweeping from overhead, warm bokeh
+   drifting like a premiere, and a filmstrip — sprocket holes and
+   frame dividers — drifting along the bottom edge, the one literal
+   cinema prop in an otherwise abstract scene.
    ============================================================ */
 function setupStudio(width, height) {
   const spots = Array.from({ length: 3 }, (_, i) => ({
     angle: (i / 3) * Math.PI * 2,
     speed: 0.00007 + i * 0.00002,
   }));
-  const bokeh = Array.from({ length: 16 }, () => ({
+  const bokeh = Array.from({ length: 20 }, () => ({
     x: Math.random() * width,
     y: Math.random() * height,
-    r: 18 + Math.random() * 46,
+    r: 20 + Math.random() * 54,
     speed: 0.3 + Math.random() * 0.4,
     phase: Math.random() * Math.PI * 2,
   }));
-  return { spots, bokeh };
+  return { spots, bokeh, filmX: 0 };
 }
 
 function renderStudio(ctx, width, height, t, state, reduced) {
   ctx.clearRect(0, 0, width, height);
   const time = reduced ? 0 : t;
   const cx = width * 0.5;
-  const cy = height * 0.3;
-  const reach = Math.max(width, height) * 0.9;
+  const cy = height * 0.28;
+  const reach = Math.max(width, height) * 0.95;
 
   for (const spot of state.spots) {
     const a = spot.angle + time * spot.speed;
     const x2 = cx + Math.cos(a) * reach;
     const y2 = cy + Math.sin(a) * reach * 0.6;
     const grad = ctx.createLinearGradient(cx, cy, x2, y2);
-    grad.addColorStop(0, "rgba(180,83,9,0.09)");
+    grad.addColorStop(0, "rgba(180,83,9,0.16)");
     grad.addColorStop(1, "rgba(180,83,9,0)");
     ctx.strokeStyle = grad;
-    ctx.lineWidth = 140;
+    ctx.lineWidth = 170;
     ctx.beginPath();
     ctx.moveTo(cx, cy);
     ctx.lineTo(x2, y2);
@@ -160,14 +244,32 @@ function renderStudio(ctx, width, height, t, state, reduced) {
   }
 
   for (const b of state.bokeh) {
-    const yy = b.y + Math.sin(time * 0.0005 * b.speed + b.phase) * 12;
-    const xx = b.x + Math.cos(time * 0.0004 * b.speed + b.phase) * 8;
+    const yy = b.y + Math.sin(time * 0.0005 * b.speed + b.phase) * 14;
+    const xx = b.x + Math.cos(time * 0.0004 * b.speed + b.phase) * 10;
     const grad = ctx.createRadialGradient(xx, yy, 0, xx, yy, b.r);
-    grad.addColorStop(0, "rgba(255,196,102,0.16)");
+    grad.addColorStop(0, "rgba(255,196,102,0.22)");
     grad.addColorStop(1, "rgba(255,196,102,0)");
     ctx.fillStyle = grad;
     ctx.beginPath();
     ctx.arc(xx, yy, b.r, 0, Math.PI * 2);
+    ctx.fill();
+  }
+
+  if (!reduced) state.filmX = (state.filmX + 0.25) % 64;
+  const stripY = height - 46;
+  ctx.fillStyle = "rgba(120,53,15,0.1)";
+  ctx.fillRect(0, stripY, width, 46);
+  for (let x = -state.filmX; x < width + 64; x += 64) {
+    ctx.strokeStyle = "rgba(120,53,15,0.16)";
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(x, stripY);
+    ctx.lineTo(x, stripY + 46);
+    ctx.stroke();
+    ctx.fillStyle = "rgba(255,255,255,0.75)";
+    roundRect(ctx, x + 24, stripY + 8, 12, 9, 2);
+    ctx.fill();
+    roundRect(ctx, x + 24, stripY + 29, 12, 9, 2);
     ctx.fill();
   }
 }
@@ -182,11 +284,23 @@ export function StudioBackground() {
 }
 
 /* ============================================================
-   PROJECTS — a stats board that keeps ticking: a faint bar-chart
-   silhouette breathing along the bottom edge and shipped-metric
-   labels rising past it, in the route's own green.
+   PROJECTS — a stats board that keeps shipping: a brighter bar-chart
+   silhouette breathing along the bottom edge, shipped-metric labels
+   rising past it, and a CI build log tailing up the right edge like
+   a real deploy console — "shipped," made literal.
    ============================================================ */
 const STAT_LABELS = ["+24%", "1.2k rows/s", "99.95%", "SLA OK", "p50 12ms", "10 shipped", "App Store ✓", "CI green"];
+const BUILD_LOG_LINES = [
+  "✓ npm run build",
+  "✓ Tests: 42 passed",
+  "Deploying to App Store Connect…",
+  "✓ TestFlight build uploaded",
+  "✓ Lint: 0 errors",
+  "Bundling assets…",
+  "✓ CI pipeline green",
+  "Shipping RepTrack v1.4",
+  "✓ SQL playground deployed",
+];
 
 function spawnStat(width, height) {
   return {
@@ -199,34 +313,53 @@ function spawnStat(width, height) {
 }
 
 function setupStats(width, height) {
-  const barCount = Math.max(10, Math.floor(width / 70));
+  const barCount = Math.max(10, Math.floor(width / 60));
   const bars = Array.from({ length: barCount }, (_, i) => ({
     x: (i + 0.5) * (width / barCount),
     h: 30 + Math.random() * 100,
-    target: 30 + Math.random() * 160,
+    target: 30 + Math.random() * 200,
   }));
   const labels = Array.from({ length: 7 }, () => spawnStat(width, height));
-  return { bars, labels };
+  const logLines = Array.from({ length: 8 }, (_, i) => ({
+    text: BUILD_LOG_LINES[i % BUILD_LOG_LINES.length],
+    y: height - i * 30,
+  }));
+  return { bars, labels, logLines };
 }
 
 function renderStats(ctx, width, height, t, state, reduced) {
   ctx.clearRect(0, 0, width, height);
-  const baseY = height * 0.88;
+  const baseY = height * 0.9;
 
   for (const bar of state.bars) {
-    if (!reduced && Math.random() < 0.006) bar.target = 30 + Math.random() * 180;
+    if (!reduced && Math.random() < 0.006) bar.target = 30 + Math.random() * 220;
     if (!reduced) bar.h += (bar.target - bar.h) * 0.02;
     const grad = ctx.createLinearGradient(0, baseY - bar.h, 0, baseY);
-    grad.addColorStop(0, "rgba(4,120,87,0.13)");
-    grad.addColorStop(1, "rgba(4,120,87,0.02)");
+    grad.addColorStop(0, "rgba(4,120,87,0.22)");
+    grad.addColorStop(1, "rgba(4,120,87,0.03)");
     ctx.fillStyle = grad;
-    ctx.fillRect(bar.x - 15, baseY - bar.h, 30, bar.h);
+    ctx.fillRect(bar.x - 14, baseY - bar.h, 28, bar.h);
   }
 
+  // Same reasoning as the KPI tiles on Current: below tablet width
+  // there's no open column on the right for a log to live in without
+  // running straight through the project copy.
   ctx.font = "500 12px 'JetBrains Mono', monospace";
+  ctx.textAlign = "right";
+  const logLines = width < 700 ? [] : state.logLines;
+  for (const line of logLines) {
+    const distFromBottom = height - line.y;
+    const alpha = Math.max(0, 0.4 - distFromBottom / 900);
+    ctx.fillStyle = `rgba(4,120,87,${alpha})`;
+    ctx.fillText(line.text, width - 24, line.y);
+    if (!reduced) line.y -= 0.18;
+    if (line.y < -20) line.y = height + Math.random() * 60;
+  }
+  ctx.textAlign = "left";
+
   for (const label of state.labels) {
     label.alpha = Math.min(1, label.alpha + 0.015);
-    ctx.fillStyle = `rgba(4,120,87,${0.3 * label.alpha})`;
+    ctx.fillStyle = `rgba(4,120,87,${0.4 * label.alpha})`;
     ctx.fillText(label.text, label.x, label.y);
     if (!reduced) {
       label.y -= 0.14;
@@ -247,36 +380,42 @@ export function StatsBackground() {
 
 /* ============================================================
    CONTACT — signal rings pulsing outward from the middle of the
-   page like a radar sweep, with small particles drifting in toward
-   the center, in the route's own rose. "Reach out," rendered
-   literally.
+   page like a radar sweep, a warm core glow at the center, and
+   particles drifting in toward it. "Reach out," rendered literally,
+   now with more presence than before.
    ============================================================ */
 function spawnPingDot(width, height) {
   return {
     angle: Math.random() * Math.PI * 2,
-    dist: 60 + Math.random() * Math.max(width, height) * 0.45,
+    dist: 60 + Math.random() * Math.max(width, height) * 0.48,
     speed: 0.12 + Math.random() * 0.14,
-    r: 1.5 + Math.random() * 2,
+    r: 1.5 + Math.random() * 2.2,
   };
 }
 
 function setupPing(width, height) {
   const rings = [0, 1, 2, 3].map((i) => ({ delay: i * 1500 }));
-  const dots = Array.from({ length: 24 }, () => spawnPingDot(width, height));
+  const dots = Array.from({ length: 30 }, () => spawnPingDot(width, height));
   return { rings, dots };
 }
 
 function renderPing(ctx, width, height, t, state, reduced) {
   ctx.clearRect(0, 0, width, height);
   const cx = width * 0.5;
-  const cy = height * 0.42;
-  const maxR = Math.max(width, height) * 0.5;
+  const cy = height * 0.4;
+  const maxR = Math.max(width, height) * 0.55;
+
+  const coreGrad = ctx.createRadialGradient(cx, cy, 0, cx, cy, 100);
+  coreGrad.addColorStop(0, "rgba(190,18,60,0.16)");
+  coreGrad.addColorStop(1, "rgba(190,18,60,0)");
+  ctx.fillStyle = coreGrad;
+  ctx.fillRect(cx - 100, cy - 100, 200, 200);
 
   for (const ring of state.rings) {
     const cyc = reduced ? 0.5 : ((t + ring.delay) % 6000) / 6000;
     const r = cyc * maxR;
-    ctx.strokeStyle = `rgba(190,18,60,${(1 - cyc) * 0.16})`;
-    ctx.lineWidth = 1.5;
+    ctx.strokeStyle = `rgba(190,18,60,${(1 - cyc) * 0.26})`;
+    ctx.lineWidth = 2;
     ctx.beginPath();
     ctx.arc(cx, cy, r, 0, Math.PI * 2);
     ctx.stroke();
@@ -285,7 +424,7 @@ function renderPing(ctx, width, height, t, state, reduced) {
   for (const dot of state.dots) {
     const x = cx + Math.cos(dot.angle) * dot.dist;
     const y = cy + Math.sin(dot.angle) * dot.dist;
-    ctx.fillStyle = "rgba(190,18,60,0.35)";
+    ctx.fillStyle = "rgba(190,18,60,0.5)";
     ctx.beginPath();
     ctx.arc(x, y, dot.r, 0, Math.PI * 2);
     ctx.fill();

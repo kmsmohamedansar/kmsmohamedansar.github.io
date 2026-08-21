@@ -17,7 +17,13 @@
   --color-rose: #fb7185;
   --color-green: #34d399;
 
-  --font-display: "Bricolage Grotesque", sans-serif;
+  /* Instrument Sans for headings everywhere except emet (see
+     .dark-surface override below) — it's the sans companion Google
+     designed to sit alongside Instrument Serif, which the site
+     already uses for its italic accent words, so the two now read as
+     one deliberate type system instead of two unrelated fonts. */
+  --font-display: "Instrument Sans", sans-serif;
+  --font-display-legacy: "Bricolage Grotesque", sans-serif;
   --font-serif: "Instrument Serif", serif;
   --font-body: "Plus Jakarta Sans", sans-serif;
   --font-mono: "JetBrains Mono", monospace;
@@ -59,6 +65,12 @@
   --ink-200: #e2e8f0;
   --ink-300: #cbd5e1;
   --ink-400: #94a3b8;
+}
+/* emet is the one section this portfolio-wide font refresh skips —
+   it already looked right, so it keeps the previous heading font
+   exactly as it was rather than picking up Instrument Sans. */
+.dark-surface .font-display {
+  font-family: var(--font-display-legacy);
 }
 
 @layer base {
