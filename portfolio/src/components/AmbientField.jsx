@@ -29,16 +29,139 @@ function flowAngle(x, y, t) {
   return Math.sin(x * 0.0021 + t * 0.00018) * Math.PI + Math.cos(y * 0.0026 - t * 0.00014) * 0.9;
 }
 
+// Each destination has its own particle "mood" so the backdrop is
+// part of that view's identity, not just a shared wash behind
+// whatever's mounted. Every mode shares the same seed/render
+// machinery (glow sprites, trails, pointer boost, reduced-motion
+// bailout) and only swaps how a particle moves per frame and how
+// long a trail it leaves.
+const MODES = {
+  // deck — the neutral home state: a slow directional current.
+  stream: {
+    trail: 7,
+    seed: () => ({ speed: 0.5 + Math.random() * 0.9 }),
+    update(s, t, width, height) {
+      const angle = flowAngle(s.x, s.y, t);
+      s.x += Math.cos(angle) * s.speed;
+      s.y += Math.sin(angle) * s.speed * 0.6 + s.speed * 0.35;
+      if (s.x < -20) s.x = width + 20;
+      if (s.x > width + 20) s.x = -20;
+      if (s.y > height + 20) {
+        s.y = -20;
+        s.x = Math.random() * width;
+        return true; // respawned — caller resets the trail
+      }
+      return false;
+    },
+  },
+  // emet — data scrolling down a terminal: fast, mostly vertical,
+  // narrow lateral jitter.
+  signal: {
+    trail: 9,
+    seed: () => ({ speed: 1.1 + Math.random() * 1.3 }),
+    update(s, t, width, height) {
+      s.y += s.speed;
+      s.x += Math.sin(t * 0.0007 + s.twinklePhase) * 0.35;
+      if (s.x < -20) s.x = width + 20;
+      if (s.x > width + 20) s.x = -20;
+      if (s.y > height + 20) {
+        s.y = -20;
+        s.x = Math.random() * width;
+        return true;
+      }
+      return false;
+    },
+  },
+  // now — a live status pulse: particles hold position and breathe
+  // in place rather than travel.
+  pulse: {
+    trail: 1,
+    seed: (width, height) => {
+      const ox = Math.random() * width;
+      const oy = Math.random() * height;
+      return { ox, oy, orbit: 8 + Math.random() * 22, orbitPhase: Math.random() * Math.PI * 2, orbitSpeed: 0.3 + Math.random() * 0.4 };
+    },
+    update(s, t) {
+      s.x = s.ox + Math.cos(t * 0.0004 * s.orbitSpeed + s.orbitPhase) * s.orbit;
+      s.y = s.oy + Math.sin(t * 0.0005 * s.orbitSpeed + s.orbitPhase) * s.orbit;
+      return false;
+    },
+    pulseAmp: 0.6,
+  },
+  // before — dust settling: drifts down, decelerating, then fades
+  // and resets — a quiet, retrospective motion.
+  settle: {
+    trail: 4,
+    seed: () => ({ vy: 0.35 + Math.random() * 0.35, sway: Math.random() * Math.PI * 2 }),
+    update(s, t, width, height) {
+      s.vy *= 0.997;
+      s.y += Math.max(s.vy, 0.03);
+      s.x += Math.sin(t * 0.0003 + s.sway) * 0.15;
+      if (s.y > height + 20 || s.vy < 0.035) {
+        s.y = -20;
+        s.x = Math.random() * width;
+        s.vy = 0.35 + Math.random() * 0.35;
+        return true;
+      }
+      return false;
+    },
+  },
+  // work — particles ease into a loose grid, like a system
+  // assembling itself into structure.
+  lattice: {
+    trail: 1,
+    seed: (width, height) => {
+      const cell = 90;
+      const cols = Math.max(1, Math.round(width / cell));
+      const rows = Math.max(1, Math.round(height / cell));
+      const gx = (Math.floor(Math.random() * cols) + 0.5) * (width / cols);
+      const gy = (Math.floor(Math.random() * rows) + 0.5) * (height / rows);
+      return { gx, gy, jitterPhase: Math.random() * Math.PI * 2 };
+    },
+    update(s, t) {
+      s.x += (s.gx - s.x) * 0.018 + Math.sin(t * 0.001 + s.jitterPhase) * 0.25;
+      s.y += (s.gy - s.y) * 0.018 + Math.cos(t * 0.0011 + s.jitterPhase) * 0.25;
+      return false;
+    },
+  },
+  // contact — signals converging toward a center point, brightening
+  // as they connect, then re-emitting from the edge.
+  converge: {
+    trail: 6,
+    seed: () => ({ speed: 0.006 + Math.random() * 0.01 }),
+    update(s, t, width, height) {
+      const cx = width / 2;
+      const cy = height / 2;
+      const dx = cx - s.x;
+      const dy = cy - s.y;
+      const dist = Math.hypot(dx, dy);
+      s.x += dx * s.speed;
+      s.y += dy * s.speed;
+      if (dist < 24) {
+        const edge = Math.floor(Math.random() * 4);
+        if (edge === 0) { s.x = Math.random() * width; s.y = -20; }
+        else if (edge === 1) { s.x = width + 20; s.y = Math.random() * height; }
+        else if (edge === 2) { s.x = Math.random() * width; s.y = height + 20; }
+        else { s.x = -20; s.y = Math.random() * height; }
+        return true;
+      }
+      return false;
+    },
+    convergeGlow: true,
+  },
+};
+
 /**
- * Fixed, viewport-sized backdrop: particles riding a slow directional
- * flow field, each trailing a short fading comet instead of sitting
- * still and wiring up to its neighbors. Reads as data moving through a
- * system (a signal, a stream) rather than a static proximity mesh —
- * the previous "everyone's connected to everyone nearby" look. Glow is
- * a pre-rendered sprite blit (cheap) rather than per-frame shadowBlur.
+ * Fixed, viewport-sized backdrop: particles riding whichever motion
+ * mood the current view specifies (`theme.mode`), colored from that
+ * view's own accent pair. Glow is a pre-rendered sprite blit (cheap)
+ * rather than per-frame shadowBlur.
  */
-export default function AmbientField() {
+export default function AmbientField({ theme }) {
   const canvasRef = useRef(null);
+  const mode = MODES[theme?.mode] || MODES.stream;
+  const accent = theme?.accent || "34,211,238";
+  const accent2 = theme?.accent2 || "251,191,36";
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -47,9 +170,9 @@ export default function AmbientField() {
     if (!ctx) return; // canvas blocked by a privacy extension / browser policy
     const reduced = prefersReducedMotion();
 
-    const spriteCyan = makeGlowSprite("120,225,255");
-    const spriteAmber = makeGlowSprite("251,191,36");
-    if (!spriteCyan || !spriteAmber) return;
+    const spriteA = makeGlowSprite(accent);
+    const spriteB = makeGlowSprite(accent2);
+    if (!spriteA || !spriteB) return;
 
     let raf;
     let width = 0;
@@ -57,28 +180,28 @@ export default function AmbientField() {
     let dpr = Math.min(window.devicePixelRatio || 1, 2);
     const pointer = { x: -9999, y: -9999, active: false };
 
-    function streamCount() {
+    function particleCount() {
       const area = width * height;
       return Math.min(110, Math.max(50, Math.round(area / 15000)));
     }
 
-    const TRAIL_LEN = 7;
+    const trailLen = mode.trail;
 
-    let streams = [];
+    let particles = [];
     function seed() {
-      streams = Array.from({ length: streamCount() }, () => {
+      particles = Array.from({ length: particleCount() }, () => {
         const x = Math.random() * width;
         const y = Math.random() * height;
-        return {
+        const base = {
           x,
           y,
-          speed: 0.5 + Math.random() * 0.9,
           r: 1.3 + Math.random() * 2,
-          warm: Math.random() > 0.85,
+          warm: Math.random() > 0.82,
           twinkleSpeed: 0.6 + Math.random() * 1.2,
           twinklePhase: Math.random() * Math.PI * 2,
-          trail: Array.from({ length: TRAIL_LEN }, () => ({ x, y })),
+          trail: Array.from({ length: trailLen }, () => ({ x, y })),
         };
+        return Object.assign(base, mode.seed(width, height));
       });
     }
 
@@ -114,30 +237,24 @@ export default function AmbientField() {
     window.addEventListener("pointerleave", onPointerLeave, { passive: true });
 
     const POINTER_RADIUS = 260;
+    const pulseAmp = mode.pulseAmp || 0.3;
 
     function draw(t) {
       ctx.clearRect(0, 0, width, height);
 
-      for (const s of streams) {
+      for (const s of particles) {
         if (!reduced) {
-          const angle = flowAngle(s.x, s.y, t);
-          s.x += Math.cos(angle) * s.speed;
-          s.y += Math.sin(angle) * s.speed * 0.6 + s.speed * 0.35;
-
-          if (s.x < -20) s.x = width + 20;
-          if (s.x > width + 20) s.x = -20;
-          if (s.y > height + 20) {
-            s.y = -20;
-            s.x = Math.random() * width;
-            s.trail = Array.from({ length: TRAIL_LEN }, () => ({ x: s.x, y: s.y }));
+          const respawned = mode.update(s, t, width, height);
+          if (respawned) {
+            s.trail = Array.from({ length: trailLen }, () => ({ x: s.x, y: s.y }));
+          } else {
+            s.trail.push({ x: s.x, y: s.y });
+            s.trail.shift();
           }
-
-          s.trail.push({ x: s.x, y: s.y });
-          s.trail.shift();
         }
 
-        const twinkle = reduced ? 1 : 0.7 + 0.3 * Math.sin(t * 0.001 * s.twinkleSpeed + s.twinklePhase);
-        const sprite = s.warm ? spriteAmber : spriteCyan;
+        const twinkle = reduced ? 1 : 1 - pulseAmp + pulseAmp * (0.5 + 0.5 * Math.sin(t * 0.001 * s.twinkleSpeed + s.twinklePhase));
+        const sprite = s.warm ? spriteB : spriteA;
         const baseAlpha = (s.warm ? 0.8 : 0.7) * twinkle;
 
         let pointerBoost = 0;
@@ -182,7 +299,8 @@ export default function AmbientField() {
       window.removeEventListener("pointermove", onPointerMove);
       window.removeEventListener("pointerleave", onPointerLeave);
     };
-  }, []);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [theme?.mode, accent, accent2]);
 
   return (
     <>
@@ -193,8 +311,7 @@ export default function AmbientField() {
         <div
           className="ambient-drift absolute -inset-[20%]"
           style={{
-            background:
-              "radial-gradient(80% 80% at 20% 26%, rgba(34,211,238,.4) 0%, rgba(34,211,238,.14) 45%, transparent 85%), radial-gradient(75% 75% at 82% 68%, rgba(251,191,36,.32) 0%, rgba(251,191,36,.11) 45%, transparent 85%), radial-gradient(70% 70% at 55% 8%, rgba(142,125,255,.3) 0%, rgba(142,125,255,.1) 45%, transparent 85%), #050b14",
+            background: `radial-gradient(80% 80% at 20% 26%, rgba(${accent},.4) 0%, rgba(${accent},.14) 45%, transparent 85%), radial-gradient(75% 75% at 82% 68%, rgba(${accent2},.32) 0%, rgba(${accent2},.11) 45%, transparent 85%), radial-gradient(70% 70% at 55% 8%, rgba(142,125,255,.22) 0%, rgba(142,125,255,.08) 45%, transparent 85%), #050b14`,
           }}
         />
       </div>

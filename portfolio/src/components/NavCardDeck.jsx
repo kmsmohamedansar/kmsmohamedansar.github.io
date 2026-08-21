@@ -5,8 +5,6 @@ import { buildCardGeometry } from "../three/cardGeometry";
 import { buildNavCardTexture } from "../three/cardTexture";
 import { cardVertexShader, cardFrontFragmentShader, cardBackFragmentShader, cardEdgeFragmentShader } from "../three/shaders";
 
-const ACCENT = new THREE.Color("#22d3ee");
-const WARM = new THREE.Color("#f2c78a");
 const CARD_W = 1.5;
 const CARD_H = 2.1;
 
@@ -79,8 +77,8 @@ export default function NavCardDeck() {
     const spacing = Math.min(1.62, Math.max(0.62, availableHalfWidth / mid - CARD_W * 0.3));
 
     const cards = HERO_DECK.map((card, index) => {
-      const texture = buildNavCardTexture(card, { accent: card.warm ? "#f2c78a" : "#22d3ee" });
-      const accent = card.warm ? WARM : ACCENT;
+      const texture = buildNavCardTexture(card, { accent: card.accent });
+      const accent = new THREE.Color(card.accent);
 
       const frontMat = new THREE.ShaderMaterial({
         vertexShader: cardVertexShader,
