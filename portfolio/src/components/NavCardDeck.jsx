@@ -58,12 +58,24 @@ export default function NavCardDeck() {
     container.appendChild(renderer.domElement);
 
     const scene = new THREE.Scene();
+    const CAMERA_Z = 8.6;
     const camera = new THREE.PerspectiveCamera(34, width / height, 0.1, 100);
-    camera.position.set(0, 0.2, 8.6);
+    camera.position.set(0, 0.2, CAMERA_Z);
     camera.lookAt(0, 0, 0);
 
     const geometry = buildCardGeometry({ width: CARD_W, height: CARD_H, depth: 0.03, radius: 0.1 });
     const n = HERO_DECK.length;
+    const mid = (n - 1) / 2;
+
+    // The fan's horizontal spread has to fit inside whatever's
+    // actually visible at this aspect ratio — on a narrow portrait
+    // screen the frustum is much narrower than on desktop, so a fixed
+    // spacing would push the outer cards (EMET, Contact) off-frame
+    // entirely. Derive spacing from the real available half-width at
+    // z=0 instead of a constant.
+    const vFovHalfTan = Math.tan((camera.fov * Math.PI) / 360);
+    const availableHalfWidth = CAMERA_Z * vFovHalfTan * camera.aspect * 0.82;
+    const spacing = Math.min(1.62, Math.max(0.62, availableHalfWidth / mid - CARD_W * 0.35));
 
     const cards = HERO_DECK.map((card, index) => {
       const texture = buildNavCardTexture(card, { accent: card.warm ? "#f2c78a" : "#22d3ee" });
@@ -93,9 +105,8 @@ export default function NavCardDeck() {
 
       const mesh = new THREE.Mesh(geometry, [frontMat, backMat, edgeMat]);
 
-      const mid = (n - 1) / 2;
       const offset = index - mid;
-      const fanPosition = new THREE.Vector3(offset * 1.62, -Math.abs(offset) * 0.32, -Math.abs(offset) * 0.55);
+      const fanPosition = new THREE.Vector3(offset * spacing, -Math.abs(offset) * 0.32, -Math.abs(offset) * 0.55);
       const fanRotation = new THREE.Euler(0, 0, -offset * 0.1);
       const dealStart = new THREE.Vector3(0, -4.2, -2);
 
