@@ -206,7 +206,7 @@ function drawContainImage(ctx, img, w, h, rgb) {
   ctx.fillStyle = `rgb(${tint.join(",")})`;
   ctx.fillRect(0, 0, w, h);
 
-  const scale = 0.8;
+  const scale = 1.08;
   const ir = img.width / img.height;
   const br = w / h;
   let dw, dh;

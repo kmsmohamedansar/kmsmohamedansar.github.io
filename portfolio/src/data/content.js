@@ -33,10 +33,10 @@ export const NAV_SECTIONS = [
 // whole image with room to breathe (right for a wordmark or a wide
 // banner, where a tight crop would slice through it).
 export const HERO_DECK = [
-  { id: "emet", go: "#emet", kicker: "assistant", title: "EMET", tagline: "Ask the terminal", accent: "#22d3ee", mark: "terminal", image: emetArt, imageFit: "cover" },
-  { id: "now", go: "#source", kicker: "current role", title: "Current", tagline: "Solutions Engineer, Datasembly", accent: "#8e7dff", mark: "pulse", image: datasemblyMark, imageFit: "contain" },
-  { id: "before", go: "#lineage", kicker: "career", title: "Before", tagline: "Amazon · Spongelii · Datasembly", accent: "#fbbf24", mark: "clock", image: amazonMark, imageFit: "contain" },
-  { id: "work", go: "#build", kicker: "shipped", title: "Projects", tagline: "RepTrack + 9 more shipped", accent: "#34d399", mark: "rocket", image: projectsBanner, imageFit: "contain" },
+  { id: "emet", go: "#emet", kicker: "assistant", title: "EMET", tagline: "Ask the AI terminal", accent: "#22d3ee", mark: "terminal", image: emetArt, imageFit: "cover" },
+  { id: "now", go: "#source", kicker: "current work experience", title: "Current", tagline: "Solutions Engineer, Datasembly", accent: "#8e7dff", mark: "pulse", image: datasemblyMark, imageFit: "contain" },
+  { id: "before", go: "#lineage", kicker: "previous work experience", title: "Before", tagline: "Amazon · Spongelii · Datasembly", accent: "#fbbf24", mark: "clock", image: amazonMark, imageFit: "contain" },
+  { id: "work", go: "#build", kicker: "project work", title: "Projects", tagline: "RepTrack + 9 more shipped", accent: "#34d399", mark: "rocket", image: projectsBanner, imageFit: "contain" },
   { id: "contact", go: "#commit", kicker: "reach", title: "Contact", tagline: "Say hello", accent: "#fb7185", mark: "mail", image: contactBook, imageFit: "contain" },
 ];
 

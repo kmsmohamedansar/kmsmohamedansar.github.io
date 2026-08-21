@@ -89,7 +89,7 @@ export function NowSection() {
       <div className="w-full max-w-[1180px]">
         <SectionHead
           step="01"
-          kicker="current"
+          kicker="current work experience"
           title={
             <>
               Technical builder at the intersection of{" "}
@@ -172,7 +172,7 @@ export function BeforeSection() {
       <div className="w-full max-w-[1180px]">
         <SectionHead
           step="02"
-          kicker="before"
+          kicker="previous work experience"
           title="Where I've been"
           lede="Solutions engineering and analytics operations. Progressively more technical ownership, from content operations at Amazon through pre-sales solution design at Datasembly."
         />
@@ -510,7 +510,7 @@ export function WorkSection() {
       <div className="w-full max-w-[1180px]">
         <SectionHead
           step="03"
-          kicker="projects"
+          kicker="project work"
           title="What I've built"
           lede="SQL tools, pipelines, ML, retrieval, automation, and one native iOS app shipped to the App Store. End to end, several with live demos."
         />
