@@ -275,8 +275,8 @@ function TiltCard({ children, className = "" }) {
   const px = useMotionValue(0);
   const py = useMotionValue(0);
   const spring = { stiffness: 300, damping: 28, mass: 0.6 };
-  const rotateX = useSpring(useTransform(py, [-0.5, 0.5], [8, -8]), spring);
-  const rotateY = useSpring(useTransform(px, [-0.5, 0.5], [-8, 8]), spring);
+  const rotateX = useSpring(useTransform(py, [-0.5, 0.5], [12, -12]), spring);
+  const rotateY = useSpring(useTransform(px, [-0.5, 0.5], [-12, 12]), spring);
 
   function onMouseMove(e) {
     const rect = outerRef.current?.getBoundingClientRect();
@@ -310,6 +310,14 @@ function TiltCard({ children, className = "" }) {
 function ProjectCard({ project, delay }) {
   return (
     <Reveal delay={delay} className={project.featured ? "md:col-span-2" : ""}>
+      <motion.div
+        initial={{ opacity: 0, rotateX: 14, rotateY: -18 }}
+        whileInView={{ opacity: 1, rotateX: 0, rotateY: 0 }}
+        viewport={{ once: true, amount: 0.3 }}
+        transition={{ duration: 0.7, ease: EASE }}
+        style={{ transformPerspective: 1000 }}
+        className="h-full"
+      >
       <TiltCard className="h-full rounded-xl">
         <div
           aria-hidden
@@ -375,6 +383,7 @@ function ProjectCard({ project, delay }) {
           </div>
         )}
       </TiltCard>
+      </motion.div>
     </Reveal>
   );
 }

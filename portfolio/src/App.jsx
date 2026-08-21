@@ -261,7 +261,7 @@ function ScrollProgress() {
   );
 }
 
-function AppShell() {
+function AppShell({ bootDone }) {
   const { theme } = useTheme();
   const { devMode, toggleDevMode } = useSandbox();
 
@@ -278,7 +278,7 @@ function AppShell() {
             positioning. Each 3D component (hero chassis, project
             cards) establishes its own local perspective instead. */}
         <main id="hero">
-          <HeroGrid />
+          <HeroGrid ready={bootDone} />
           <ContentSections />
           {devMode && <SandboxStubs onClose={toggleDevMode} />}
         </main>
@@ -337,13 +337,18 @@ class ErrorBoundary extends Component {
 }
 
 export default function App() {
+  // The hero's 3D entrance tilt waits for this instead of firing the
+  // instant it mounts — on a first visit it would otherwise animate
+  // entirely behind the opaque boot sequence, unseen; on a repeat
+  // visit it'd fire too fast (before the page has painted) to notice.
+  const [bootDone, setBootDone] = useState(false);
   return (
     <ErrorBoundary>
       <CustomCursor />
-      <BootSequence />
+      <BootSequence onDone={() => setBootDone(true)} />
       <ThemeProvider>
         <SandboxProvider>
-          <AppShell />
+          <AppShell bootDone={bootDone} />
         </SandboxProvider>
       </ThemeProvider>
     </ErrorBoundary>
