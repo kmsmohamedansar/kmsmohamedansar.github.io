@@ -194,19 +194,29 @@ function drawFullBleedImage(ctx, img, w, h) {
   ctx.drawImage(img, sx, sy, sw, sh, 0, 0, w, h);
 }
 
-// The "zoomed out" alternative: the whole image, nothing cropped off
-// it, scaled down and centered with real breathing room — right for
-// a logo or a wide banner where every letter matters and a tight
-// crop would slice through the wordmark. The backdrop is a faint
-// tint of the card's own accent rather than flat white, so a logo
-// that already carries its own white background doesn't look like a
-// sticker pasted onto the card.
-function drawContainImage(ctx, img, w, h, rgb) {
-  const tint = rgb.map((c) => Math.round(255 * 0.93 + c * 0.07));
-  ctx.fillStyle = `rgb(${tint.join(",")})`;
-  ctx.fillRect(0, 0, w, h);
+// The "no crop" alternative: the whole image, nothing sliced off it —
+// right for a wordmark or a wide banner, where a tight crop cuts
+// through the letters. A flat tint behind it read as a visible
+// "frame," so instead the backdrop is a blurred, oversized copy of
+// the same image — a soft continuation of its own colors, the same
+// trick Spotify/Apple Music use behind album art. The sharp image on
+// top is scaled up close to the frame's edge (not held back to a
+// timid, fully-clear "contain") so the card still reads as filled,
+// without ever cropping into the logo itself.
+function drawContainImage(ctx, img, w, h) {
+  ctx.save();
+  ctx.filter = "blur(34px)";
+  const pad = 60;
+  ctx.translate(-pad, -pad);
+  drawFullBleedImage(ctx, img, w + pad * 2, h + pad * 2);
+  ctx.restore();
 
-  const scale = 1.08;
+  ctx.save();
+  ctx.fillStyle = "rgba(255,255,255,0.3)";
+  ctx.fillRect(0, 0, w, h);
+  ctx.restore();
+
+  const scale = 0.97;
   const ir = img.width / img.height;
   const br = w / h;
   let dw, dh;
@@ -240,7 +250,7 @@ export function buildNavCardTexture(card, { accent = "#22d3ee", image = null } =
 
   if (image) {
     if (card.imageFit === "contain") {
-      drawContainImage(ctx, image, w, h, hexToRgb(accent));
+      drawContainImage(ctx, image, w, h);
     } else {
       drawFullBleedImage(ctx, image, w, h);
     }

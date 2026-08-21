@@ -7,7 +7,14 @@ import { NowSection, BeforeSection, WorkSection, StorySection, ContactSection } 
 import SandboxStubs from "./components/SandboxStubs";
 import CommandPalette from "./components/CommandPalette";
 import LightAmbientField from "./components/LightAmbientField";
-import { MatrixBackground, DataFlowBackground, StudioBackground, StatsBackground, PingBackground } from "./components/RouteBackgrounds";
+import {
+  MatrixBackground,
+  DataFlowBackground,
+  StudioBackground,
+  StatsBackground,
+  PingBackground,
+  WaterDropBackground,
+} from "./components/RouteBackgrounds";
 import BootSequence from "./components/BootSequence";
 import CustomCursor from "./components/CustomCursor";
 import { ROUTE_THEME } from "./data/content";
@@ -194,10 +201,12 @@ function Stage({ bootDone }) {
 // Each of the five deck destinations gets its own bespoke animated
 // backdrop instead of a shared particle field recolored per route —
 // emet's terminal rain, Current's data flow, Before's studio
-// spotlights, Projects' stats board, Contact's signal pings. The
-// deck itself and the one route outside the deck (story, reachable
-// only from the command palette) keep the general-purpose aurora.
+// spotlights, Projects' stats board, Contact's signal pings, and the
+// deck itself a bright water surface. Only "story" (reachable from
+// the command palette, not one of the five deck destinations) still
+// falls back to the general-purpose aurora.
 const ROUTE_BACKGROUNDS = {
+  deck: WaterDropBackground,
   emet: MatrixBackground,
   source: DataFlowBackground,
   lineage: StudioBackground,
