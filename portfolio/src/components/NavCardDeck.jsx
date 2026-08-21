@@ -15,16 +15,16 @@ function easeOutCubic(t) {
 }
 
 function goTo(hash) {
-  document.querySelector(hash)?.scrollIntoView({ behavior: "smooth", block: "start" });
+  window.location.hash = hash.replace(/^#/, "");
 }
 
 /**
- * The hero's primary gesture: five procedurally-built cards (EMET,
- * Now, Before, Work, Contact), each its own destination. Same
- * card-deck machinery as a Balatro-style build — sampled rounded-rect
- * geometry, hand-written GLSL front/back/edge shaders, raycast hover
- * tilt — but clicking a card scrolls to what it represents instead of
- * opening a detail view.
+ * The whole landing view: five procedurally-built cards (EMET, Now,
+ * Before, Work, Contact), each its own destination. Same card-deck
+ * machinery as a Balatro-style build — sampled rounded-rect geometry,
+ * hand-written GLSL front/back/edge shaders, raycast hover tilt — but
+ * clicking a card swaps the app's current view (via the URL hash)
+ * instead of scrolling to it; there's no document scroll to speak of.
  */
 export default function NavCardDeck() {
   const mountRef = useRef(null);
@@ -58,12 +58,25 @@ export default function NavCardDeck() {
     container.appendChild(renderer.domElement);
 
     const scene = new THREE.Scene();
+    const CAMERA_Z = 8.6;
     const camera = new THREE.PerspectiveCamera(34, width / height, 0.1, 100);
-    camera.position.set(0, 0.2, 8.6);
+    camera.position.set(0, 0.2, CAMERA_Z);
     camera.lookAt(0, 0, 0);
 
     const geometry = buildCardGeometry({ width: CARD_W, height: CARD_H, depth: 0.03, radius: 0.1 });
     const n = HERO_DECK.length;
+    const mid = (n - 1) / 2;
+
+    // The fan's horizontal spread has to fit inside whatever's
+    // actually visible at this aspect ratio — on a narrow portrait
+    // screen the frustum is much narrower than on desktop, so a fixed
+    // spacing would push the outer cards (EMET, Contact) off-frame
+    // entirely. 1.62 is the spacing that looks right on a desktop-wide
+    // frustum; only pull it in when the available width would
+    // otherwise clip the outer cards.
+    const vFovHalfTan = Math.tan((camera.fov * Math.PI) / 360);
+    const availableHalfWidth = CAMERA_Z * vFovHalfTan * camera.aspect;
+    const spacing = Math.min(1.62, Math.max(0.62, availableHalfWidth / mid - CARD_W * 0.3));
 
     const cards = HERO_DECK.map((card, index) => {
       const texture = buildNavCardTexture(card, { accent: card.warm ? "#f2c78a" : "#22d3ee" });
@@ -93,9 +106,8 @@ export default function NavCardDeck() {
 
       const mesh = new THREE.Mesh(geometry, [frontMat, backMat, edgeMat]);
 
-      const mid = (n - 1) / 2;
       const offset = index - mid;
-      const fanPosition = new THREE.Vector3(offset * 1.62, -Math.abs(offset) * 0.32, -Math.abs(offset) * 0.55);
+      const fanPosition = new THREE.Vector3(offset * spacing, -Math.abs(offset) * 0.32, -Math.abs(offset) * 0.55);
       const fanRotation = new THREE.Euler(0, 0, -offset * 0.1);
       const dealStart = new THREE.Vector3(0, -4.2, -2);
 
@@ -163,7 +175,14 @@ export default function NavCardDeck() {
       camera.position.y += (0.2 + pointerNDC.y * 0.22 - camera.position.y) * 0.04;
       camera.lookAt(0, 0, 0);
 
-      raycaster.setFromCamera(pointerNDC, camera);
+      // Hit-testing uses the raw pointer position, not the lerped one
+      // below — pointerNDC is smoothed for the cosmetic camera
+      // parallax/tilt and lags real cursor movement by design, which
+      // is fine for a slow drift but means a quick move-then-click
+      // (exactly what a click is) can raycast against where the
+      // cursor recently *was* rather than where it now is, hovering
+      // — and therefore selecting — the wrong card.
+      raycaster.setFromCamera(pointerTarget, camera);
       const hits = raycaster.intersectObjects(cards.map((c) => c.mesh));
       const hit = hits[0]?.object;
       const nextHovered = cards.find((c) => c.mesh === hit) || null;
@@ -238,7 +257,7 @@ export default function NavCardDeck() {
   }, []);
 
   return (
-    <div className="relative">
+    <div className="relative h-full w-full flex items-center justify-center">
       {!failed && (
         <>
           {/* The canvas deck is decorative to a screen reader, so the
@@ -252,11 +271,11 @@ export default function NavCardDeck() {
               ))}
             </ul>
           </nav>
-          <div ref={mountRef} className="h-[380px] md:h-[460px] w-full" aria-hidden={!ready} />
+          <div ref={mountRef} className="h-full w-full" aria-hidden={!ready} />
         </>
       )}
       {failed && (
-        <nav aria-label="Jump to section" className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3">
+        <nav aria-label="Jump to section" className="w-full grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3">
           {HERO_DECK.map((card) => (
             <a
               key={card.id}

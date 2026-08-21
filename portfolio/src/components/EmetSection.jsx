@@ -157,18 +157,16 @@ function MonitorBar({ title, status, statusTone = "cyan" }) {
 }
 
 /**
- * emet's dedicated spot — a scroll destination (from the hero's EMET
- * card, the top nav, or the command palette) rather than something
- * boxed into the hero itself. The terminal is still one floating
- * object, just given room of its own instead of sharing the fold with
- * a card deck.
+ * emet's dedicated view — reached from the deck's EMET card, the top
+ * nav, or the command palette. A full view of its own rather than
+ * something boxed into the landing deck.
  */
 export default function EmetSection() {
   const { segments, done } = useTypewriter(SCRIPT);
   const { toggleDevMode } = useSandbox();
 
   return (
-    <section id="emet" className="py-28 px-5 scroll-mt-24">
+    <section className="min-h-full flex items-center px-5 py-14">
       <div className="mx-auto max-w-[1180px] grid lg:grid-cols-[0.9fr_1.1fr] gap-14 items-center">
         <div>
           <span className="font-mono text-[.7rem] tracking-[.2em] uppercase text-cyan/70">assistant</span>
@@ -183,8 +181,7 @@ export default function EmetSection() {
 
         <motion.div
           initial={{ opacity: 0, y: 30, rotateY: -16 }}
-          whileInView={{ opacity: 1, y: 0, rotateY: 0 }}
-          viewport={{ once: true, margin: "-10%" }}
+          animate={{ opacity: 1, y: 0, rotateY: 0 }}
           transition={{ duration: 0.9, ease: EASE }}
           style={{ transformPerspective: 1200 }}
         >
@@ -245,7 +242,7 @@ export default function EmetSection() {
                         return;
                       }
                       const target = EMET_SHORTCUTS.find((s) => String(s.n) === raw);
-                      if (target) document.querySelector(target.go)?.scrollIntoView({ behavior: "smooth" });
+                      if (target) window.location.hash = target.go.replace(/^#/, "");
                       e.currentTarget.value = "";
                     }}
                   />
