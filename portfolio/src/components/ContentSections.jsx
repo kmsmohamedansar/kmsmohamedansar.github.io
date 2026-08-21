@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { lazy, Suspense, useRef, useState } from "react";
 import { AnimatePresence, motion, useMotionValue, useSpring, useTransform } from "framer-motion";
 import {
   Database,
@@ -14,6 +14,7 @@ import {
 } from "lucide-react";
 import { PRINCIPLES, ROLES, PROJECTS, STORY_BEATS, CONTACT } from "../data/content";
 import MagneticButton from "./MagneticButton";
+const CardDeckScene = lazy(() => import("./CardDeckScene"));
 import { MEDIUM_OBJECT, EASE_OUT } from "../lib/motion";
 
 const EASE = EASE_OUT;
@@ -433,6 +434,7 @@ function ProjectRow({ project, index }) {
 
 function WorkSection() {
   const [expanded, setExpanded] = useState(false);
+  const [deckFailed, setDeckFailed] = useState(false);
   const featured = PROJECTS.find((p) => p.featured);
   const rest = PROJECTS.filter((p) => p !== featured && !p.collapsed);
   const hidden = PROJECTS.filter((p) => p.collapsed);
@@ -444,39 +446,50 @@ function WorkSection() {
           step="03"
           kicker="work"
           title="What I've built"
-          lede="SQL tools, pipelines, ML, retrieval, automation, and one native iOS app shipped to the App Store. End to end, several with live demos."
+          lede="SQL tools, pipelines, ML, retrieval, automation, and one native iOS app shipped to the App Store. End to end, several with live demos. Hover the deck, click a card."
         />
-        {featured && <div className="mb-20">{<RepTrackShowcase project={featured} />}</div>}
-        <div>
-          {rest.map((p, i) => (
-            <ProjectRow key={p.title} project={p} index={i} />
-          ))}
-          <AnimatePresence>
-            {expanded &&
-              hidden.map((p, i) => (
-                <motion.div
-                  key={p.title}
-                  initial={{ opacity: 0, height: 0 }}
-                  animate={{ opacity: 1, height: "auto" }}
-                  exit={{ opacity: 0, height: 0 }}
-                  transition={{ duration: 0.35, ease: EASE }}
-                  className="overflow-hidden"
-                >
-                  <ProjectRow project={p} index={rest.length + i} />
-                </motion.div>
+        {!deckFailed && (
+          <div className="mb-16">
+            <Suspense fallback={<div className="h-[440px] md:h-[560px]" aria-hidden="true" />}>
+              <CardDeckScene projects={PROJECTS} onFallback={() => setDeckFailed(true)} />
+            </Suspense>
+          </div>
+        )}
+        {deckFailed && (
+          <>
+            {featured && <div className="mb-20">{<RepTrackShowcase project={featured} />}</div>}
+            <div>
+              {rest.map((p, i) => (
+                <ProjectRow key={p.title} project={p} index={i} />
               ))}
-          </AnimatePresence>
-        </div>
-        {hidden.length > 0 && (
-          <motion.button
-            onClick={() => setExpanded((v) => !v)}
-            whileHover={{ scale: 1.03 }}
-            whileTap={{ scale: 0.97 }}
-            className="mt-8 w-full md:w-auto mx-auto flex items-center justify-center gap-2 px-6 py-3 rounded-lg border border-white/10 font-mono text-[.7rem] uppercase tracking-[.14em] text-[color:var(--ink-400)] hover:text-cyan hover:border-cyan/40 transition-colors"
-          >
-            {expanded ? "Show fewer projects" : `Show ${hidden.length} more projects`}
-            <ChevronDown size={14} className={`transition-transform ${expanded ? "rotate-180" : ""}`} />
-          </motion.button>
+              <AnimatePresence>
+                {expanded &&
+                  hidden.map((p, i) => (
+                    <motion.div
+                      key={p.title}
+                      initial={{ opacity: 0, height: 0 }}
+                      animate={{ opacity: 1, height: "auto" }}
+                      exit={{ opacity: 0, height: 0 }}
+                      transition={{ duration: 0.35, ease: EASE }}
+                      className="overflow-hidden"
+                    >
+                      <ProjectRow project={p} index={rest.length + i} />
+                    </motion.div>
+                  ))}
+              </AnimatePresence>
+            </div>
+            {hidden.length > 0 && (
+              <motion.button
+                onClick={() => setExpanded((v) => !v)}
+                whileHover={{ scale: 1.03 }}
+                whileTap={{ scale: 0.97 }}
+                className="mt-8 w-full md:w-auto mx-auto flex items-center justify-center gap-2 px-6 py-3 rounded-lg border border-white/10 font-mono text-[.7rem] uppercase tracking-[.14em] text-[color:var(--ink-400)] hover:text-cyan hover:border-cyan/40 transition-colors"
+              >
+                {expanded ? "Show fewer projects" : `Show ${hidden.length} more projects`}
+                <ChevronDown size={14} className={`transition-transform ${expanded ? "rotate-180" : ""}`} />
+              </motion.button>
+            )}
+          </>
         )}
       </div>
     </section>
