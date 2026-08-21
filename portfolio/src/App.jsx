@@ -1,12 +1,11 @@
 import { Component, createContext, useContext, useEffect, useMemo, useRef, useState } from "react";
-import { AnimatePresence, motion, animate } from "framer-motion";
-import { Sun, Moon, Command } from "lucide-react";
+import { AnimatePresence, motion } from "framer-motion";
+import { Command } from "lucide-react";
 import DeckView from "./components/DeckView";
 import EmetSection from "./components/EmetSection";
 import { NowSection, BeforeSection, WorkSection, StorySection, ContactSection } from "./components/ContentSections";
 import SandboxStubs from "./components/SandboxStubs";
 import CommandPalette from "./components/CommandPalette";
-import AmbientField from "./components/AmbientField";
 import LightAmbientField from "./components/LightAmbientField";
 import BootSequence from "./components/BootSequence";
 import CustomCursor from "./components/CustomCursor";
@@ -52,77 +51,21 @@ function RouteProvider({ children }) {
 }
 
 /* ============================================================
-   THEME PROVIDER — persisted dark/light toggle
+   THEME — one theme, light, always. Still a context (not a bare
+   constant) because the CSS variable system keyed off
+   document.documentElement.dataset.theme, and every component that
+   reads useTheme().theme, both assume it exists.
    ============================================================ */
 const ThemeContext = createContext(null);
 export const useTheme = () => useContext(ThemeContext);
 
 function ThemeProvider({ children }) {
-  const [theme, setTheme] = useState(() => {
-    if (typeof window === "undefined") return "dark";
-    try {
-      return localStorage.getItem("ma-theme") || "dark";
-    } catch {
-      // Storage can throw in private browsing / locked-down browsers —
-      // fall back to dark rather than crashing the whole app before
-      // React ever gets to mount anything.
-      return "dark";
-    }
-  });
-  const overlayRef = useRef(null);
-  const flashRef = useRef(null);
-
   useEffect(() => {
-    try {
-      localStorage.setItem("ma-theme", theme);
-    } catch {
-      // Non-fatal — theme just won't persist across visits.
-    }
-    document.documentElement.dataset.theme = theme;
-  }, [theme]);
+    document.documentElement.dataset.theme = "light";
+  }, []);
 
-  // Theme flips get a CRT power-cycle instead of an instant swap: the
-  // screen collapses to a line (old theme), the theme swaps hidden
-  // behind full black, a bright scanline flashes ("power on"), then
-  // it expands back out onto the new theme.
-  async function toggleTheme() {
-    const next = theme === "dark" ? "light" : "dark";
-    const reduced =
-      typeof window !== "undefined" &&
-      window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    const el = overlayRef.current;
-    if (reduced || !el) {
-      setTheme(next);
-      return;
-    }
-    await animate(el, { scaleY: [0, 1] }, { duration: 0.16, ease: [0.7, 0, 1, 1] }).finished;
-    setTheme(next);
-    const flash = flashRef.current;
-    if (flash) {
-      animate(flash, { opacity: [0, 1, 0] }, { duration: 0.24, times: [0, 0.3, 1] });
-    }
-    await animate(el, { scaleY: [1, 0] }, { duration: 0.24, ease: [0, 0, 0.3, 1] }).finished;
-  }
-
-  const value = useMemo(() => ({ theme, toggleTheme }), [theme]);
-
-  return (
-    <ThemeContext.Provider value={value}>
-      {children}
-      <div
-        ref={overlayRef}
-        aria-hidden
-        style={{ transform: "scaleY(0)", transformOrigin: "center" }}
-        className="fixed inset-0 z-[900] bg-black pointer-events-none"
-      />
-      <div
-        ref={flashRef}
-        aria-hidden
-        style={{ opacity: 0 }}
-        className="fixed inset-x-0 top-1/2 -translate-y-1/2 h-[2px] z-[901] pointer-events-none bg-cyan shadow-[0_0_24px_6px_rgba(34,211,238,0.8)]"
-      />
-    </ThemeContext.Provider>
-  );
+  const value = useMemo(() => ({ theme: "light" }), []);
+  return <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>;
 }
 
 /* ============================================================
@@ -150,34 +93,22 @@ function SandboxProvider({ children }) {
 // on the deck. ⌘K stays as the accessibility/power-user fallback —
 // it's opt-in, not a visible competing menu.
 function Nav() {
-  const { theme, toggleTheme } = useTheme();
   const { route, navigate } = useRoute();
   const onDeck = route === "deck";
-  const scrolled = !onDeck;
 
   function openPalette() {
     window.dispatchEvent(new KeyboardEvent("keydown", { key: "k", metaKey: true }));
   }
 
-  const light = theme === "light";
-
   return (
     <nav
       className={`fixed top-0 inset-x-0 z-[100] transition-colors ${
-        scrolled
-          ? light
-            ? "bg-slate-50/80 backdrop-blur-xl border-b border-slate-900/8"
-            : "bg-ink/70 backdrop-blur-xl border-b border-white/8"
-          : "border-b border-transparent"
+        onDeck ? "border-b border-transparent" : "bg-slate-50/80 backdrop-blur-xl border-b border-slate-900/8"
       }`}
     >
       <div className="mx-auto max-w-[1260px] flex items-center justify-between px-5 py-4">
         <a href="#hero" className="flex items-center gap-3 font-mono text-[.85rem] font-semibold">
-          <span
-            className={`w-8 h-8 rounded-lg grid place-items-center bg-gradient-to-br from-cyan/20 to-violet/20 border text-cyan text-[.68rem] ${
-              light ? "border-slate-900/10" : "border-white/10"
-            }`}
-          >
+          <span className="w-8 h-8 rounded-lg grid place-items-center bg-gradient-to-br from-cyan/20 to-violet/20 border border-slate-900/10 text-cyan text-[.68rem]">
             MA
           </span>
           <span>
@@ -189,33 +120,28 @@ function Nav() {
         </a>
 
         <div className="flex items-center gap-1">
+          {onDeck && (
+            <a
+              href="#commit"
+              className="mr-1 hidden sm:inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-slate-900 text-white hover:bg-slate-700 transition-colors font-mono text-[.68rem] uppercase tracking-[.1em]"
+            >
+              Get in touch
+            </a>
+          )}
           {!onDeck && (
             <button
               onClick={() => navigate("deck")}
-              className={`flex items-center gap-1.5 px-3 py-2 rounded-lg border text-cyan hover:border-cyan/40 transition-colors font-mono text-[.68rem] uppercase tracking-[.1em] ${
-                light ? "border-slate-900/10" : "border-white/10"
-              }`}
+              className="flex items-center gap-1.5 px-3 py-2 rounded-lg border border-slate-900/10 text-cyan hover:border-cyan/40 transition-colors font-mono text-[.68rem] uppercase tracking-[.1em]"
             >
               ← Home
             </button>
           )}
           <button
             onClick={openPalette}
-            className={`ml-1 flex items-center gap-1 px-2.5 py-2 rounded-lg border text-slate-500 hover:text-cyan hover:border-cyan/30 transition-colors font-mono text-[.65rem] ${
-              light ? "border-slate-900/10" : "border-white/10"
-            }`}
+            className="ml-1 flex items-center gap-1 px-2.5 py-2 rounded-lg border border-slate-900/10 text-slate-500 hover:text-cyan hover:border-cyan/30 transition-colors font-mono text-[.65rem]"
             aria-label="Open command palette"
           >
             <Command size={11} /> K
-          </button>
-          <button
-            onClick={toggleTheme}
-            className={`ml-1 w-8 h-8 grid place-items-center rounded-lg border hover:text-cyan hover:border-cyan/30 transition-colors ${
-              light ? "border-slate-900/10 text-slate-600" : "border-white/10 text-slate-400"
-            }`}
-            aria-label="Toggle theme"
-          >
-            {theme === "dark" ? <Sun size={14} /> : <Moon size={14} />}
           </button>
         </div>
       </div>
@@ -265,22 +191,15 @@ function Stage({ bootDone }) {
 }
 
 function Backdrop() {
-  const { theme } = useTheme();
   const { route } = useRoute();
   const routeTheme = ROUTE_THEME[route] || ROUTE_THEME.deck;
-  return theme === "dark" ? (
-    <AmbientField key={route} theme={routeTheme} />
-  ) : (
-    <LightAmbientField key={route} theme={routeTheme} />
-  );
+  return <LightAmbientField key={route} theme={routeTheme} />;
 }
 
 function AppShell({ bootDone }) {
-  const { theme } = useTheme();
-
   return (
     <RouteProvider>
-      <div className={`relative ${theme === "light" ? "bg-slate-50 text-slate-900" : "bg-ink text-slate-100"} h-[100dvh] overflow-hidden`}>
+      <div className="relative bg-slate-50 text-slate-900 h-[100dvh] overflow-hidden">
         <Backdrop />
         <div className="relative z-10 h-full flex flex-col">
           <Nav />

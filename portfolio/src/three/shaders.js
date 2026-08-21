@@ -107,7 +107,7 @@ export const cardEdgeFragmentShader = /* glsl */ `
   void main() {
     float facing = clamp(dot(vNormal, vViewDir), -1.0, 1.0);
     float glow = smoothstep(-0.2, 1.0, facing);
-    vec3 color = mix(vec3(0.05, 0.06, 0.08), accentColor, glow * 0.55);
+    vec3 color = mix(vec3(0.82, 0.85, 0.9), accentColor, glow * 0.55);
     gl_FragColor = vec4(color, 1.0);
   }
 `;

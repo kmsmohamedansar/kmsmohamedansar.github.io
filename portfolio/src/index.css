@@ -338,6 +338,59 @@
   }
 }
 
+/* ============================================================
+   HOMEPAGE SUNBURST — the deck's two extra background layers, on
+   top of the shared aurora. A conic-gradient light-ray sweep that
+   rotates almost imperceptibly slowly (a full turn takes a minute),
+   plus a warm glow that breathes in and out, together read as
+   sunlight moving rather than a static gradient.
+   ============================================================ */
+.sunburst-rotate {
+  background: conic-gradient(
+    from 0deg at 50% 28%,
+    transparent 0deg,
+    rgba(255, 214, 140, 0.14) 6deg,
+    transparent 14deg,
+    transparent 58deg,
+    rgba(148, 210, 255, 0.12) 66deg,
+    transparent 74deg,
+    transparent 132deg,
+    rgba(255, 214, 140, 0.1) 140deg,
+    transparent 148deg,
+    transparent 360deg
+  );
+  mix-blend-mode: multiply;
+  animation: sunburst-spin 70s linear infinite;
+  will-change: transform;
+}
+@keyframes sunburst-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+.sun-breathe {
+  background: radial-gradient(60% 55% at 50% 28%, rgba(255, 236, 196, 0.6) 0%, rgba(255, 236, 196, 0.2) 45%, transparent 78%);
+  animation: sun-breathe-pulse 8s ease-in-out infinite;
+  will-change: opacity, transform;
+}
+@keyframes sun-breathe-pulse {
+  0%,
+  100% {
+    opacity: 0.85;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.07);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .sunburst-rotate,
+  .sun-breathe {
+    animation: none;
+  }
+}
+
 /* Thin scrollbar for terminal-style scroll areas */
 .mono-scroll::-webkit-scrollbar {
   width: 6px;
