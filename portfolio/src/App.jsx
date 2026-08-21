@@ -271,6 +271,12 @@ function AppShell() {
       <div className="relative z-10">
         <ScrollProgress />
         <Nav />
+        {/* No page-level `perspective` here on purpose: setting it on an
+            ancestor this high up turns it into the CSS containing block
+            for every `position: fixed` descendant (modals, overlays)
+            anywhere in the tree, breaking their viewport-relative
+            positioning. Each 3D component (hero chassis, project
+            cards) establishes its own local perspective instead. */}
         <main id="hero">
           <HeroGrid />
           <ContentSections />
