@@ -58,20 +58,25 @@ export default function LightAmbientField() {
 
     let motes = [];
     function seed() {
-      motes = Array.from({ length: moteCount() }, () => ({
-        x: Math.random() * width,
-        y: Math.random() * height,
-        // gentle upward drift with per-mote sway, not a bouncing field
-        riseSpeed: 0.08 + Math.random() * 0.16,
-        swaySpeed: 0.4 + Math.random() * 0.5,
-        swayAmp: 10 + Math.random() * 22,
-        swayPhase: Math.random() * Math.PI * 2,
-        r: 1.6 + Math.random() * 2.6,
-        sprite: sprites[Math.floor(Math.random() * sprites.length)],
-        twinkleSpeed: 0.4 + Math.random() * 0.9,
-        twinklePhase: Math.random() * Math.PI * 2,
-        baseAlpha: 0.22 + Math.random() * 0.24,
-      }));
+      motes = Array.from({ length: moteCount() }, () => {
+        const x = Math.random() * width;
+        const y = Math.random() * height;
+        return {
+          x,
+          y,
+          // gentle upward drift with per-mote sway, not a bouncing field
+          riseSpeed: 0.08 + Math.random() * 0.16,
+          swaySpeed: 0.4 + Math.random() * 0.5,
+          swayAmp: 10 + Math.random() * 22,
+          swayPhase: Math.random() * Math.PI * 2,
+          r: 1.6 + Math.random() * 2.6,
+          sprite: sprites[Math.floor(Math.random() * sprites.length)],
+          twinkleSpeed: 0.4 + Math.random() * 0.9,
+          twinklePhase: Math.random() * Math.PI * 2,
+          baseAlpha: 0.22 + Math.random() * 0.24,
+          trail: [{ x, y }, { x, y }, { x, y }],
+        };
+      });
     }
 
     function resize() {
@@ -129,16 +134,26 @@ export default function LightAmbientField() {
           }
         }
 
-        const s = r * 7;
-        ctx.globalAlpha = alpha;
-        ctx.drawImage(m.sprite, drawX - s / 2, m.y - s / 2, s, s);
+        // A short, soft trail so each mote reads as gently smeared
+        // light rising through the frame rather than a blinking dot.
+        const trail = reduced ? [{ x: drawX, y: m.y }] : [...m.trail, { x: drawX, y: m.y }];
+        for (let i = 0; i < trail.length; i++) {
+          const p = trail[i];
+          const fade = (i + 1) / trail.length;
+          const s = r * 7 * (0.7 + fade * 0.3);
+          ctx.globalAlpha = alpha * fade * 0.8;
+          ctx.drawImage(m.sprite, p.x - s / 2, p.y - s / 2, s, s);
+        }
         ctx.globalAlpha = 1;
 
         if (!reduced) {
+          m.trail.push({ x: drawX, y: m.y });
+          m.trail.shift();
           m.y -= m.riseSpeed;
           if (m.y < -20) {
             m.y = height + 20;
             m.x = Math.random() * width;
+            m.trail = [{ x: m.x, y: m.y }, { x: m.x, y: m.y }, { x: m.x, y: m.y }];
           }
         }
       }
