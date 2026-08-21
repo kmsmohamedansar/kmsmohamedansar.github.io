@@ -290,7 +290,7 @@ function Stage({ bootDone }) {
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           transition={{ duration: 0.28, ease: EASE_OUT }}
-          className="min-h-full"
+          className="h-full"
         >
           {route === "deck" ? <ActiveView ready={bootDone} /> : <ActiveView />}
         </motion.div>
