@@ -274,10 +274,12 @@ export default function NavCardDeck() {
           dealt.y += breathe;
           card.mesh.position.lerp(dealt, dealProgress < 1 ? 1 : 0.14);
 
-          // Driven by hoverAmount (the same smoothed 0-1 value the tilt
-          // below uses) instead of its own separately-smoothed boolean
-          // target, so lift and tilt fade in/out on the same curve.
-          card.mesh.position.y += 0.16 * card.hoverAmount;
+          // No vertical lift on hover — a hovered card announces itself
+          // through tilt, the glow uniform, and the floating label
+          // alone. The lift was one more moving part riding on top of
+          // the same hoverAmount curve as the tilt below, and removing
+          // it cuts down on how much visibly changes at once when the
+          // cursor crosses between two overlapping fanned cards.
 
           // Scaled by the already-smoothed hoverAmount rather than gated
           // by a hard "is this the hovered card" boolean — the cards fan
