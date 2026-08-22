@@ -139,7 +139,7 @@ function SchemaPreview() {
             onMouseEnter={() => setActive(n.id)}
             onMouseLeave={() => setActive(null)}
             className={`px-3 py-2 rounded-lg border font-mono text-[.68rem] transition-colors ${
-              active === n.id ? "border-cyan/50 text-cyan bg-cyan/10" : "border-white/10 text-[color:var(--ink-400)]"
+              active === n.id ? "border-cyan/50 text-cyan bg-cyan/10" : "border-slate-900/10 text-[color:var(--ink-400)]"
             }`}
           >
             {n.label}
@@ -201,7 +201,7 @@ export default function SandboxStubs({ onClose }) {
           </div>
           <button
             onClick={onClose}
-            className="w-9 h-9 grid place-items-center rounded-lg border border-white/10 text-[color:var(--ink-400)] hover:text-cyan hover:border-cyan/40 transition-colors"
+            className="w-9 h-9 grid place-items-center rounded-lg border border-slate-900/10 text-[color:var(--ink-400)] hover:text-cyan hover:border-cyan/40 transition-colors"
             aria-label="Close sandbox"
           >
             <X size={16} />
@@ -213,7 +213,7 @@ export default function SandboxStubs({ onClose }) {
             const Render = stub.render;
             return (
               <div key={stub.id} className="glass rounded-xl p-5 flex flex-col">
-                <span className="w-9 h-9 grid place-items-center rounded-lg border border-white/10 text-cyan mb-4">
+                <span className="w-9 h-9 grid place-items-center rounded-lg border border-slate-900/10 text-cyan mb-4">
                   <Icon size={16} />
                 </span>
                 <h3 className="font-semibold text-[color:var(--ink-100)] mb-2">{stub.title}</h3>

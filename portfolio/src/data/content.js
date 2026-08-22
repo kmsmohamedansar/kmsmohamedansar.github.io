@@ -31,12 +31,29 @@ export const NAV_SECTIONS = [
 // the picture fills the card: "cover" crops full-bleed edge to edge
 // (right for a photo/art piece), "contain" zooms out to show the
 // whole image with room to breathe (right for a wordmark or a wide
-// banner, where a tight crop would slice through it).
+// banner, where a tight crop would slice through it). "imageInset"
+// trims a fraction off the top/bottom of the source before a "cover"
+// crop — EMET's art has thin black letterbox bars baked into the
+// file that a plain crop can't remove on its own. "title" is what
+// the floating hover label shows (see NavCardDeck) — EMET and
+// Contact stay short, the other three spell out "work exp[erience]"
+// since a bare "Current"/"Before" reads as unclear on its own.
 export const HERO_DECK = [
-  { id: "emet", go: "#emet", kicker: "assistant", title: "EMET", tagline: "Ask the AI terminal", accent: "#22d3ee", mark: "terminal", image: emetArt, imageFit: "cover" },
-  { id: "now", go: "#source", kicker: "current work experience", title: "Current", tagline: "Solutions Engineer, Datasembly", accent: "#8e7dff", mark: "pulse", image: datasemblyMark, imageFit: "contain" },
-  { id: "before", go: "#lineage", kicker: "previous work experience", title: "Before", tagline: "Amazon · Spongelii · Datasembly", accent: "#fbbf24", mark: "clock", image: amazonMark, imageFit: "contain" },
-  { id: "work", go: "#build", kicker: "project work", title: "Projects", tagline: "RepTrack + 9 more shipped", accent: "#34d399", mark: "rocket", image: projectsBanner, imageFit: "contain" },
+  {
+    id: "emet",
+    go: "#emet",
+    kicker: "assistant",
+    title: "EMET",
+    tagline: "Ask the AI terminal",
+    accent: "#22d3ee",
+    mark: "terminal",
+    image: emetArt,
+    imageFit: "cover",
+    imageInset: { top: 0.045, bottom: 0.045 },
+  },
+  { id: "now", go: "#source", kicker: "current work experience", title: "Current Work Exp", tagline: "Solutions Engineer, Datasembly", accent: "#8e7dff", mark: "pulse", image: datasemblyMark, imageFit: "contain" },
+  { id: "before", go: "#lineage", kicker: "previous work experience", title: "Previous Work Exp", tagline: "Amazon · Spongelii · Datasembly", accent: "#fbbf24", mark: "clock", image: amazonMark, imageFit: "contain" },
+  { id: "work", go: "#build", kicker: "project work", title: "Project Work", tagline: "RepTrack + 9 more shipped", accent: "#34d399", mark: "rocket", image: projectsBanner, imageFit: "contain" },
   { id: "contact", go: "#commit", kicker: "reach", title: "Contact", tagline: "Say hello", accent: "#fb7185", mark: "mail", image: contactBook, imageFit: "contain" },
 ];
 

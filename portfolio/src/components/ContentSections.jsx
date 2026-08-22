@@ -127,7 +127,7 @@ export function NowSection() {
                   return (
                     <Reveal key={p.title} delay={0.1 + i * 0.08}>
                       <div className="glass rounded-xl p-5 flex gap-4">
-                        <span className="w-9 h-9 shrink-0 grid place-items-center rounded-lg border border-white/10 text-cyan">
+                        <span className="w-9 h-9 shrink-0 grid place-items-center rounded-lg border border-slate-900/10 text-cyan">
                           <Icon size={17} />
                         </span>
                         <div>
@@ -180,7 +180,7 @@ export function BeforeSection() {
             signature motion here is career progression, left to
             right, one role settling into place after another. */}
         <motion.div
-          className="relative h-px bg-white/10 mb-10 origin-left"
+          className="relative h-px bg-slate-900/10 mb-10 origin-left"
           initial={{ scaleX: 0 }}
           whileInView={{ scaleX: 1 }}
           viewport={{ once: true }}
@@ -249,7 +249,7 @@ export function BeforeSection() {
             />
             <motion.div
               layoutId={`role-tile-${expandedIdx}`}
-              className="dark-surface glass fixed inset-x-4 top-[8vh] md:inset-x-auto md:left-1/2 md:-translate-x-1/2 md:w-full md:max-w-xl z-[301] rounded-2xl p-8 max-h-[80vh] overflow-y-auto mono-scroll"
+              className="glass fixed inset-x-4 top-[8vh] md:inset-x-auto md:left-1/2 md:-translate-x-1/2 md:w-full md:max-w-xl z-[301] rounded-2xl p-8 max-h-[80vh] overflow-y-auto mono-scroll"
             >
               <div className="flex items-start justify-between gap-4 mb-4">
                 <div>
@@ -260,7 +260,7 @@ export function BeforeSection() {
                 </div>
                 <button
                   onClick={() => setExpandedIdx(null)}
-                  className="w-8 h-8 grid place-items-center rounded-lg border border-white/10 text-[color:var(--ink-400)] hover:text-cyan hover:border-cyan/40 transition-colors shrink-0"
+                  className="w-8 h-8 grid place-items-center rounded-lg border border-slate-900/10 text-[color:var(--ink-400)] hover:text-cyan hover:border-cyan/40 transition-colors shrink-0"
                   aria-label="Close"
                 >
                   <X size={15} />
@@ -281,7 +281,7 @@ export function BeforeSection() {
                   {expandedRole.tags.map((t) => (
                     <span
                       key={t}
-                      className="font-mono text-[.62rem] tracking-wide uppercase px-2.5 py-1 rounded-full border border-white/10 text-[color:var(--ink-400)]"
+                      className="font-mono text-[.62rem] tracking-wide uppercase px-2.5 py-1 rounded-full border border-slate-900/10 text-[color:var(--ink-400)]"
                     >
                       {t}
                     </span>
@@ -442,7 +442,7 @@ function ProjectRow({ project, index }) {
     <Reveal delay={index * 0.04}>
       <Wrapper
         {...linkProps}
-        className="group grid grid-cols-[2rem_1fr_auto] sm:grid-cols-[2.5rem_1fr_auto_1.5rem] items-center gap-4 sm:gap-6 py-5 border-b border-white/8 hover:border-cyan/30 transition-colors"
+        className="group grid grid-cols-[2rem_1fr_auto] sm:grid-cols-[2.5rem_1fr_auto_1.5rem] items-center gap-4 sm:gap-6 py-5 border-b border-slate-900/8 hover:border-cyan/30 transition-colors"
       >
         <span className="font-mono text-[.7rem] text-slate-600">{String(index + 1).padStart(2, "0")}</span>
         <div className="min-w-0">
@@ -545,7 +545,7 @@ export function WorkSection() {
             onClick={() => setExpanded((v) => !v)}
             whileHover={{ scale: 1.03 }}
             whileTap={{ scale: 0.97 }}
-            className="mt-8 w-full md:w-auto mx-auto flex items-center justify-center gap-2 px-6 py-3 rounded-lg border border-white/10 font-mono text-[.7rem] uppercase tracking-[.14em] text-[color:var(--ink-400)] hover:text-cyan hover:border-cyan/40 transition-colors"
+            className="mt-8 w-full md:w-auto mx-auto flex items-center justify-center gap-2 px-6 py-3 rounded-lg border border-slate-900/10 font-mono text-[.7rem] uppercase tracking-[.14em] text-[color:var(--ink-400)] hover:text-cyan hover:border-cyan/40 transition-colors"
           >
             {expanded ? "Show fewer projects" : `Show ${hidden.length} more projects`}
             <ChevronDown size={14} className={`transition-transform ${expanded ? "rotate-180" : ""}`} />
@@ -562,10 +562,10 @@ export function StorySection() {
     <section className="min-h-full flex flex-col items-center justify-center px-5 py-14">
       <div className="w-full max-w-[1180px]">
         <SectionHead step="03b" kicker="the short version" title="Why I do this work" lede="Not a resume. The throughline behind it." />
-        <div className="grid md:grid-cols-2 gap-px rounded-2xl overflow-hidden border border-white/8 max-w-3xl">
+        <div className="grid md:grid-cols-2 gap-px rounded-2xl overflow-hidden border border-slate-900/8 max-w-3xl">
           {STORY_BEATS.map((beat, i) => (
             <Reveal key={beat.n} delay={i * 0.07} y={16}>
-              <div className="bg-white/[.015] p-6 h-full hover:bg-cyan/[.03] transition-colors">
+              <div className="bg-slate-900/[.015] p-6 h-full hover:bg-cyan/[.03] transition-colors">
                 <span className="font-mono text-[.65rem] text-cyan tracking-widest">{beat.n}</span>
                 <h4 className="font-semibold text-[color:var(--ink-100)] mt-2 mb-2">{beat.title}</h4>
                 <p className="text-[.85rem] text-[color:var(--ink-400)] leading-relaxed">{beat.body}</p>
@@ -618,7 +618,7 @@ export function ContactSection() {
                 rel="noopener noreferrer"
                 whileHover={{ scale: 1.045 }}
                 whileTap={{ scale: 0.97 }}
-                className="inline-flex items-center gap-2 px-6 py-3 rounded-lg border border-white/12 text-[color:var(--ink-200)] font-medium text-[.85rem] hover:border-cyan/40 hover:text-cyan transition-colors"
+                className="inline-flex items-center gap-2 px-6 py-3 rounded-lg border border-slate-900/12 text-[color:var(--ink-200)] font-medium text-[.85rem] hover:border-cyan/40 hover:text-cyan transition-colors"
               >
                 <Link2 size={15} /> LinkedIn
               </MagneticButton>

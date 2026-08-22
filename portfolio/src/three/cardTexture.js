@@ -176,20 +176,27 @@ function drawMark(ctx, mark, accent) {
 // for a piece of art (EMET) where cropping a little off the edges
 // doesn't lose the point of the image; wrong for a wordmark or a
 // wide banner, which is what drawContainImage below is for instead.
-function drawFullBleedImage(ctx, img, w, h) {
-  const ir = img.width / img.height;
+// insetTop/insetBottom (0-1) exclude a band from the top/bottom of
+// the source before cropping — EMET's source art has thin black
+// letterbox bars baked into the file, and a plain cover-fit crop
+// (which only ever trims left/right, never top/bottom) can't cut
+// those out on its own.
+function drawFullBleedImage(ctx, img, w, h, insetTop = 0, insetBottom = 0) {
+  const naturalY = img.height * insetTop;
+  const naturalH = img.height * (1 - insetTop - insetBottom);
+  const ir = img.width / naturalH;
   const br = w / h;
   let sw, sh, sx, sy;
   if (ir > br) {
-    sh = img.height;
+    sh = naturalH;
     sw = sh * br;
-    sy = 0;
+    sy = naturalY;
     sx = (img.width - sw) / 2;
   } else {
     sw = img.width;
     sh = sw / br;
     sx = 0;
-    sy = (img.height - sh) / 2;
+    sy = naturalY + (naturalH - sh) / 2;
   }
   ctx.drawImage(img, sx, sy, sw, sh, 0, 0, w, h);
 }
@@ -252,7 +259,8 @@ export function buildNavCardTexture(card, { accent = "#22d3ee", image = null } =
     if (card.imageFit === "contain") {
       drawContainImage(ctx, image, w, h);
     } else {
-      drawFullBleedImage(ctx, image, w, h);
+      const inset = card.imageInset || {};
+      drawFullBleedImage(ctx, image, w, h, inset.top || 0, inset.bottom || 0);
     }
   } else {
     const rgb = hexToRgb(accent);
