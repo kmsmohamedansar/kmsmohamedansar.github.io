@@ -1,4 +1,4 @@
-import { Component, createContext, useContext, useEffect, useMemo, useRef, useState } from "react";
+import { Component, createContext, lazy, Suspense, useContext, useEffect, useMemo, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { Command } from "lucide-react";
 import DeckView from "./components/DeckView";
@@ -13,12 +13,13 @@ import {
   StudioBackground,
   StatsBackground,
   PingBackground,
-  WaterDropBackground,
 } from "./components/RouteBackgrounds";
 import BootSequence from "./components/BootSequence";
 import CustomCursor from "./components/CustomCursor";
 import { ROUTE_THEME } from "./data/content";
 import { EASE_OUT } from "./lib/motion";
+
+const WaterBackground3D = lazy(() => import("./components/WaterBackground3D"));
 
 /* ============================================================
    ROUTER — the whole site is one screen at a time, swapped by
@@ -206,7 +207,7 @@ function Stage({ bootDone }) {
 // the command palette, not one of the five deck destinations) still
 // falls back to the general-purpose aurora.
 const ROUTE_BACKGROUNDS = {
-  deck: WaterDropBackground,
+  deck: WaterBackground3D,
   emet: MatrixBackground,
   source: DataFlowBackground,
   lineage: StudioBackground,
@@ -217,7 +218,13 @@ const ROUTE_BACKGROUNDS = {
 function Backdrop() {
   const { route } = useRoute();
   const RouteBackground = ROUTE_BACKGROUNDS[route];
-  if (RouteBackground) return <RouteBackground key={route} />;
+  if (RouteBackground) {
+    return (
+      <Suspense fallback={<div className="fixed inset-0 z-0 bg-white" aria-hidden="true" />}>
+        <RouteBackground key={route} />
+      </Suspense>
+    );
+  }
   const routeTheme = ROUTE_THEME[route] || ROUTE_THEME.deck;
   return <LightAmbientField key={route} theme={routeTheme} />;
 }
