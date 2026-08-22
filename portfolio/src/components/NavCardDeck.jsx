@@ -98,6 +98,18 @@ export default function NavCardDeck() {
       camera.position.set(0, 0.2, CAMERA_Z);
       camera.lookAt(0, 0, 0);
 
+      // A second, fixed camera used only for hit-testing — `camera`
+      // above keeps drifting toward a new position for a second or two
+      // after every pointer move (the cosmetic parallax), and raycasting
+      // against a target that's itself still gliding made a hit near a
+      // seam between two overlapping fanned cards unstable for that
+      // entire settle window, not just a brief instant. Hit-testing
+      // against a pose that never moves removes that whole axis of
+      // noise, leaving only the cards' own tiny idle "breathe" wobble.
+      const hitCamera = new THREE.PerspectiveCamera(34, width / height, 0.1, 100);
+      hitCamera.position.set(0, 0.2, CAMERA_Z);
+      hitCamera.lookAt(0, 0, 0);
+
       const geometry = buildCardGeometry({ width: CARD_W, height: CARD_H, depth: 0.03, radius: 0.1 });
       const n = HERO_DECK.length;
       const mid = (n - 1) / 2;
@@ -195,6 +207,8 @@ export default function NavCardDeck() {
         if (w === 0 || h === 0) return;
         camera.aspect = w / h;
         camera.updateProjectionMatrix();
+        hitCamera.aspect = w / h;
+        hitCamera.updateProjectionMatrix();
         renderer.setSize(w, h);
       }
 
@@ -220,8 +234,11 @@ export default function NavCardDeck() {
         // is fine for a slow drift but means a quick move-then-click
         // (exactly what a click is) can raycast against where the
         // cursor recently *was* rather than where it now is, hovering
-        // — and therefore selecting — the wrong card.
-        raycaster.setFromCamera(pointerTarget, camera);
+        // — and therefore selecting — the wrong card. It also uses the
+        // fixed hitCamera, not the cosmetic `camera` above, which is
+        // itself still gliding toward a new parallax position for a
+        // second or two after every move.
+        raycaster.setFromCamera(pointerTarget, hitCamera);
         const hits = raycaster.intersectObjects(cards.map((c) => c.mesh));
         const hit = hits[0]?.object;
         const nextHovered = cards.find((c) => c.mesh === hit) || null;
