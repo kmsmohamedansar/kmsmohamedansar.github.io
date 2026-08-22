@@ -445,63 +445,45 @@ export function PingBackground() {
 }
 
 /* ============================================================
-   DECK (homepage) — a bright water surface: a single drop lands at
-   one point and sends out real waves, not thin geometric rings —
-   each one a wobbly, textured band with a bright highlight riding
-   its outer edge, the way light catches a raised swell of water.
-   The full circumference of every wave is packed with the same
-   vocabulary as the five destinations beyond it: stats, queries,
-   metrics, small calculations, surfacing as the wave reaches them
-   and sinking back under as it passes. Light and bright by design,
-   the one background meant to feel like daylight on water rather
-   than a screen.
+   DECK (homepage) — a real water surface, not a data motif: a
+   single drop lands at one point and sends out thin, irregular
+   rings that flatten and soften as they spread, the way an actual
+   ripple decays with distance. Soft caustic light drifts slowly
+   across the plane, the kind of shifting glow sunlight makes on the
+   floor of shallow water. No text, no glyphs — just water behaving
+   like water, light and bright by design.
    ============================================================ */
-const WAVE_SNIPPETS = [
-  "SELECT *",
-  "GROUP BY",
-  "COUNT(*)",
-  "O(n log n)",
-  "p95 88ms",
-  "99.98%",
-  "$128k",
-  "6 yrs exp",
-  "CI: green",
-  "42 req/s",
-  "0.03",
-  "+18%",
-  "JOIN",
-  "1,024",
-  "avg 4.2",
-  "npm run build",
-  "git push",
-  "200 OK",
-  "3.14159",
-  "n=512",
-  "MTTR 9m",
-  "ROI +2.4x",
-];
-
 function setupWaterDrop(width, height) {
   const drop = { x: width * 0.5, y: height * 0.46 };
-  const wavesPerCycle = 4;
-  const cyclePeriod = 6600;
+  const wavesPerCycle = 5;
+  const cyclePeriod = 7200;
   const waves = Array.from({ length: wavesPerCycle }, (_, i) => ({
     startOffset: -(i * (cyclePeriod / wavesPerCycle)),
     wobbleSeed: Math.random() * Math.PI * 2,
-    glyphs: Array.from({ length: 26 }, (_, gi) => ({
-      angle: (gi / 26) * Math.PI * 2 + (Math.random() - 0.5) * 0.12,
-      text: WAVE_SNIPPETS[Math.floor(Math.random() * WAVE_SNIPPETS.length)],
-    })),
   }));
-  return { drop, waves, cyclePeriod };
+  const caustics = Array.from({ length: 5 }, () => ({
+    xr: 0.15 + Math.random() * 0.7,
+    yr: 0.15 + Math.random() * 0.7,
+    r: 120 + Math.random() * 160,
+    phase: Math.random() * Math.PI * 2,
+    speed: 0.00012 + Math.random() * 0.00008,
+  }));
+  return { drop, waves, cyclePeriod, caustics };
 }
 
-function waveRadius(ctx, drop, r, t, wave) {
+// An uneven ring, not a perfect circle — three overlapping wobbles
+// at different frequencies for a natural, irregular edge, and their
+// amplitude eases off as `settle` (0-1, how far the ripple has
+// traveled) grows, the way real ripples flatten out with distance.
+function waveRadius(ctx, drop, r, t, wave, settle) {
   ctx.beginPath();
-  const steps = 96;
+  const steps = 110;
   for (let i = 0; i <= steps; i++) {
     const a = (i / steps) * Math.PI * 2;
-    const wobble = Math.sin(a * 5 + wave.wobbleSeed + t * 0.00045) * 6 + Math.sin(a * 9 - wave.wobbleSeed) * 2.5;
+    const wobble =
+      Math.sin(a * 4 + wave.wobbleSeed + t * 0.0003) * 4.5 * (1 - settle * 0.55) +
+      Math.sin(a * 7 - wave.wobbleSeed * 1.4 + t * 0.00022) * 2.2 * (1 - settle * 0.35) +
+      Math.sin(a * 13 + wave.wobbleSeed * 0.6) * 1.1;
     const rr = r + wobble;
     const x = drop.x + Math.cos(a) * rr;
     const y = drop.y + Math.sin(a) * rr;
@@ -513,11 +495,25 @@ function waveRadius(ctx, drop, r, t, wave) {
 
 function renderWaterDrop(ctx, width, height, t, state, reduced) {
   const bg = ctx.createLinearGradient(0, 0, width, height);
-  bg.addColorStop(0, "#eef8ff");
-  bg.addColorStop(0.55, "#f7fcff");
+  bg.addColorStop(0, "#e9f6ff");
+  bg.addColorStop(0.55, "#f5fbff");
   bg.addColorStop(1, "#ffffff");
   ctx.fillStyle = bg;
   ctx.fillRect(0, 0, width, height);
+
+  // Caustic light: soft, slow-drifting glow patches, the way
+  // sunlight refracts and pools on the floor of shallow water.
+  for (const c of state.caustics) {
+    const drift = reduced ? 0 : t * c.speed;
+    const cx = c.xr * width + Math.sin(drift + c.phase) * width * 0.05;
+    const cy = c.yr * height + Math.cos(drift * 0.8 + c.phase) * height * 0.05;
+    const pulse = reduced ? 0.5 : 0.5 + Math.sin(drift * 2 + c.phase) * 0.5;
+    const grad = ctx.createRadialGradient(cx, cy, 0, cx, cy, c.r);
+    grad.addColorStop(0, `rgba(186,230,253,${0.16 + pulse * 0.1})`);
+    grad.addColorStop(1, "rgba(186,230,253,0)");
+    ctx.fillStyle = grad;
+    ctx.fillRect(cx - c.r, cy - c.r, c.r * 2, c.r * 2);
+  }
 
   const { drop, cyclePeriod } = state;
   const maxR = Math.max(width, height) * 0.85;
@@ -528,40 +524,20 @@ function renderWaterDrop(ctx, width, height, t, state, reduced) {
       ? (idx + 0.5) / state.waves.length
       : (((t + wave.startOffset) % cyclePeriod) + cyclePeriod) % cyclePeriod / cyclePeriod;
     const r = phase * maxR;
-    const alpha = (1 - phase) * 0.45;
+    const alpha = (1 - phase) * 0.4;
     if (alpha <= 0.012) continue;
 
-    // The wave itself: a thick teal band (the body of the swell)
-    // with a bright, thinner highlight riding its outer crest.
-    waveRadius(ctx, drop, r, t, wave, width, height);
-    ctx.strokeStyle = `rgba(14,116,144,${alpha * 0.55})`;
-    ctx.lineWidth = 22;
+    // A thin, irregular ring with a faint highlight just inside it —
+    // enough dimension to read as water, not a drawn circle.
+    waveRadius(ctx, drop, r, t, wave, phase);
+    ctx.strokeStyle = `rgba(14,116,144,${alpha})`;
+    ctx.lineWidth = 1.6;
     ctx.stroke();
 
-    waveRadius(ctx, drop, r + 9, t, wave, width, height);
-    ctx.strokeStyle = `rgba(255,255,255,${alpha * 0.95})`;
-    ctx.lineWidth = 2.5;
+    waveRadius(ctx, drop, r - 3, t, wave, phase);
+    ctx.strokeStyle = `rgba(255,255,255,${alpha * 0.8})`;
+    ctx.lineWidth = 1;
     ctx.stroke();
-
-    waveRadius(ctx, drop, r - 9, t, wave, width, height);
-    ctx.strokeStyle = `rgba(14,116,144,${alpha * 0.7})`;
-    ctx.lineWidth = 1.5;
-    ctx.stroke();
-
-    ctx.font = "600 12px 'JetBrains Mono', monospace";
-    ctx.textAlign = "center";
-    ctx.textBaseline = "middle";
-    for (const glyph of wave.glyphs) {
-      const wobble = Math.sin(glyph.angle * 5 + wave.wobbleSeed + t * 0.00045) * 6 + Math.sin(glyph.angle * 9 - wave.wobbleSeed) * 2.5;
-      const rr = r + wobble;
-      const gx = drop.x + Math.cos(glyph.angle) * rr;
-      const gy = drop.y + Math.sin(glyph.angle) * rr;
-      if (gx < -60 || gx > width + 60 || gy < -20 || gy > height + 20) continue;
-      ctx.fillStyle = `rgba(14,116,144,${Math.min(0.6, alpha * 1.3)})`;
-      ctx.fillText(glyph.text, gx, gy);
-    }
-    ctx.textAlign = "start";
-    ctx.textBaseline = "alphabetic";
   }
 
   // A brief bright flash at the origin the instant a new wave is
@@ -570,12 +546,12 @@ function renderWaterDrop(ctx, width, height, t, state, reduced) {
     for (const wave of state.waves) {
       const birthPhase = (((t + wave.startOffset) % cyclePeriod) + cyclePeriod) % cyclePeriod / cyclePeriod;
       if (birthPhase < 0.05) {
-        const flashAlpha = (1 - birthPhase / 0.05) * 0.55;
-        const grad = ctx.createRadialGradient(drop.x, drop.y, 0, drop.x, drop.y, 46);
+        const flashAlpha = (1 - birthPhase / 0.05) * 0.5;
+        const grad = ctx.createRadialGradient(drop.x, drop.y, 0, drop.x, drop.y, 40);
         grad.addColorStop(0, `rgba(255,255,255,${flashAlpha})`);
         grad.addColorStop(1, "rgba(255,255,255,0)");
         ctx.fillStyle = grad;
-        ctx.fillRect(drop.x - 46, drop.y - 46, 92, 92);
+        ctx.fillRect(drop.x - 40, drop.y - 40, 80, 80);
       }
     }
   }
