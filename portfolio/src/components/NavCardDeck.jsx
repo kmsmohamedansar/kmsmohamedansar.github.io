@@ -170,6 +170,8 @@ export default function NavCardDeck() {
       const pointerTarget = new THREE.Vector2(0, 0);
       const labelWorldPos = new THREE.Vector3();
       let hoveredCard = null;
+      let pendingHovered = null;
+      let pendingHoveredStreak = 0;
       let currentLabelId = null;
       let startTime = performance.now();
       let rafId;
@@ -223,8 +225,23 @@ export default function NavCardDeck() {
         const hits = raycaster.intersectObjects(cards.map((c) => c.mesh));
         const hit = hits[0]?.object;
         const nextHovered = cards.find((c) => c.mesh === hit) || null;
-        if (nextHovered !== hoveredCard) {
-          hoveredCard = nextHovered;
+
+        // The fanned cards overlap, so near a seam between two of them
+        // the raycast result can flip every single frame as their idle
+        // "breathe" drift or the camera's own pointer-driven parallax
+        // shifts which one is nearer — committing that instantly made
+        // the affected cards' tilt/lift targets flip just as fast,
+        // reading as a rapid twitch. Requiring the same candidate for a
+        // few consecutive frames before switching filters that out
+        // without adding perceptible input lag (~50ms at 60fps).
+        if (nextHovered === pendingHovered) {
+          pendingHoveredStreak++;
+        } else {
+          pendingHovered = nextHovered;
+          pendingHoveredStreak = 1;
+        }
+        if (pendingHoveredStreak >= 3 && hoveredCard !== pendingHovered) {
+          hoveredCard = pendingHovered;
           container.style.cursor = hoveredCard ? "pointer" : "default";
         }
 
@@ -240,10 +257,10 @@ export default function NavCardDeck() {
           dealt.y += breathe;
           card.mesh.position.lerp(dealt, dealProgress < 1 ? 1 : 0.14);
 
-          const hoverLift = card === hoveredCard ? 0.16 : 0;
-          card.mesh.userData.lift = card.mesh.userData.lift || 0;
-          card.mesh.userData.lift += (hoverLift - card.mesh.userData.lift) * 0.18;
-          card.mesh.position.y += card.mesh.userData.lift;
+          // Driven by hoverAmount (the same smoothed 0-1 value the tilt
+          // below uses) instead of its own separately-smoothed boolean
+          // target, so lift and tilt fade in/out on the same curve.
+          card.mesh.position.y += 0.16 * card.hoverAmount;
 
           // Scaled by the already-smoothed hoverAmount rather than gated
           // by a hard "is this the hovered card" boolean — the cards fan
