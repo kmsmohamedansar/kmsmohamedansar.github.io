@@ -245,8 +245,17 @@ export default function NavCardDeck() {
           card.mesh.userData.lift += (hoverLift - card.mesh.userData.lift) * 0.18;
           card.mesh.position.y += card.mesh.userData.lift;
 
-          const tiltX = card === hoveredCard ? -pointerNDC.y * 0.2 : 0;
-          const tiltY = card === hoveredCard ? pointerNDC.x * 0.26 : 0;
+          // Scaled by the already-smoothed hoverAmount rather than gated
+          // by a hard "is this the hovered card" boolean — the cards fan
+          // out overlapping each other, so sweeping the cursor across the
+          // row crosses several raycast hit boundaries per second, and a
+          // boolean gate made the rotation *target* snap abruptly between
+          // "tracking the pointer" and "flat" on every crossing, reading
+          // as a rapid twitch since the slerp below never got to settle
+          // before the target jumped again. Fading by hoverAmount instead
+          // makes the tilt itself ramp in/out smoothly.
+          const tiltX = -pointerNDC.y * 0.2 * card.hoverAmount;
+          const tiltY = pointerNDC.x * 0.26 * card.hoverAmount;
 
           const qTarget = new THREE.Quaternion().setFromEuler(
             new THREE.Euler(
