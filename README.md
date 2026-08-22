@@ -1,29 +1,31 @@
 # kmsmohamedansar.github.io
 
-Personal site and a small workspace of side projects.
+Full-stack engineer building native apps, data tools, and web experiences.
 
-**Live site:** [kmsmohamedansar.github.io](https://kmsmohamedansar.github.io)
+**Live portfolio:** [kmsmohamedansar.github.io](https://kmsmohamedansar.github.io)
 
-> The repo name has to stay exactly `kmsmohamedansar.github.io` — that's
-> what makes GitHub Pages serve it as a user site.
+## Highlights
 
-## Structure
+- **RepTrack** — iOS workout tracker shipped to the App Store. SwiftUI + SwiftData for a smooth native experience.
+- **Cerebra** — native macOS canvas app for sketching and thinking. Built with SwiftUI, infinite board with shapes, connectors, and freehand strokes.
+- **Forex tools** — Python backtesting and sentiment analysis on real tick data with scheduled news events.
+- **F1 telemetry** — Python data pipeline pulling live F1 session and car telemetry from FastF1 and OpenF1 APIs.
+- **Portfolio site** — React + Vite + Tailwind personal site deployed to GitHub Pages.
+
+## Repository Structure
 
 ```
-portfolio/     The live site — React + Vite + Tailwind. See portfolio/README.md.
-projects/      Side projects, kept here but out of the way of the site:
-  flowdesk/      Cerebra — a native macOS smart-canvas app (SwiftUI + SwiftData)
-  reptrack/      RepTrack — a native iOS workout tracker, shipped to the App Store
-  forex/         Python scripts: AUD/USD backtests, news sentiment, a static dashboard
-  f1-telemetry/  Python scripts: pull F1 session and car telemetry data
-.github/workflows/  CI: builds and deploys portfolio/ to GitHub Pages
+portfolio/           React + Vite site, deployed to GitHub Pages
+projects/
+  reptrack/          iOS app (App Store)
+  flowdesk/          macOS canvas app (Cerebra)
+  forex/             AUD/USD trading analysis
+  f1-telemetry/      Formula 1 data pulling
+.github/workflows/   CI/CD for portfolio deployment
 ```
 
-Each project folder has its own README with more detail.
+Each project folder has its own README with setup and usage details.
 
-## Deployment
+## How It's Built
 
-`.github/workflows/deploy-portfolio.yml` builds `portfolio/` with
-`npm ci && npm run build` and publishes `portfolio/dist` to GitHub Pages
-via `actions/deploy-pages`, on every push to `main` that touches
-`portfolio/**`.
+The portfolio site auto-deploys to GitHub Pages on every push to `main` that touches `portfolio/**`, via `.github/workflows/deploy-portfolio.yml` using `npm run build`.
