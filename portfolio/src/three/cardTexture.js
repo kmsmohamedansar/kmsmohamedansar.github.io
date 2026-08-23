@@ -223,7 +223,7 @@ function drawContainImage(ctx, img, w, h) {
   ctx.fillRect(0, 0, w, h);
   ctx.restore();
 
-  const scale = 0.97;
+  const scale = 1.2;
   const ir = img.width / img.height;
   const br = w / h;
   let dw, dh;
