@@ -118,12 +118,13 @@ export default function NavCardDeck() {
       // actually visible at this aspect ratio — on a narrow portrait
       // screen the frustum is much narrower than on desktop, so a fixed
       // spacing would push the outer cards (EMET, Contact) off-frame
-      // entirely. 0.4 card-widths is a very tight, heavily-overlapping
-      // stack, only loosened when the available width would otherwise
-      // clip the outer cards.
+      // entirely. 1.62 card-scales is the spread that reads as five
+      // distinct fanned cards on desktop; it's only pulled in toward
+      // 0.62 when the available width would otherwise clip the outer
+      // cards on a narrow screen.
       const vFovHalfTan = Math.tan((camera.fov * Math.PI) / 360);
       const availableHalfWidth = CAMERA_Z * vFovHalfTan * camera.aspect;
-      const spacing = Math.min(0.4 * CARD_W, Math.max(0.22 * CARD_W, availableHalfWidth / mid - CARD_W * 0.3));
+      const spacing = Math.min(1.62 * CARD_SCALE, Math.max(0.62 * CARD_SCALE, availableHalfWidth / mid - CARD_W * 0.3));
 
       const cards = HERO_DECK.map((card, index) => {
         const texture = buildNavCardTexture(card, { accent: card.accent, image: images[index] });
