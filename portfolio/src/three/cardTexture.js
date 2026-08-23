@@ -212,7 +212,7 @@ function drawFullBleedImage(ctx, img, w, h, insetTop = 0, insetBottom = 0) {
 // without ever cropping into the logo itself.
 function drawContainImage(ctx, img, w, h) {
   ctx.save();
-  ctx.filter = "blur(34px)";
+  ctx.filter = "blur(34px) grayscale(1)";
   const pad = 60;
   ctx.translate(-pad, -pad);
   drawFullBleedImage(ctx, img, w + pad * 2, h + pad * 2);
@@ -256,12 +256,19 @@ export function buildNavCardTexture(card, { accent = "#22d3ee", image = null } =
   const ctx = canvas.getContext("2d");
 
   if (image) {
+    // Every card's photo/logo runs through the same monochrome
+    // treatment — a consistent, editorial look across the deck
+    // instead of five different source palettes competing with
+    // each other. Colored accents live on the mark/tilt/glow instead.
+    ctx.save();
+    ctx.filter = "grayscale(1)";
     if (card.imageFit === "contain") {
       drawContainImage(ctx, image, w, h);
     } else {
       const inset = card.imageInset || {};
       drawFullBleedImage(ctx, image, w, h, inset.top || 0, inset.bottom || 0);
     }
+    ctx.restore();
   } else {
     const rgb = hexToRgb(accent);
     const bg = ctx.createLinearGradient(0, 0, w, h);

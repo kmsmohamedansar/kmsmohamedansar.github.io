@@ -17,12 +17,11 @@
   --color-rose: #fb7185;
   --color-green: #34d399;
 
-  /* Instrument Sans for headings everywhere except emet (see
-     .dark-surface override below) — it's the sans companion Google
-     designed to sit alongside Instrument Serif, which the site
-     already uses for its italic accent words, so the two now read as
-     one deliberate type system instead of two unrelated fonts. */
-  --font-display: "Instrument Sans", sans-serif;
+  /* Outfit for headings everywhere except emet (see .dark-surface
+     override below) — a bold, geometric grotesk closer to the
+     typeface used on the portfolio site referenced as a style match,
+     replacing Instrument Sans. */
+  --font-display: "Outfit", sans-serif;
   --font-display-legacy: "Bricolage Grotesque", sans-serif;
   --font-serif: "Instrument Serif", serif;
   --font-body: "Plus Jakarta Sans", sans-serif;
@@ -68,7 +67,7 @@
 }
 /* emet is the one section this portfolio-wide font refresh skips —
    it already looked right, so it keeps the previous heading font
-   exactly as it was rather than picking up Instrument Sans. */
+   exactly as it was rather than picking up the new display font. */
 .dark-surface .font-display {
   font-family: var(--font-display-legacy);
 }
