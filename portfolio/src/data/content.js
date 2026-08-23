@@ -7,7 +7,7 @@ import emetArt from "../assets/cards/emet-art.webp";
 import datasemblyMark from "../assets/cards/datasembly-mark.png";
 import amazonMark from "../assets/cards/amazon-mark.png";
 import projectsBanner from "../assets/cards/projects-banner.png";
-import contactBook from "../assets/cards/contact-book.png";
+import contactBook from "../assets/cards/contact-book.webp";
 
 export const NAV_SECTIONS = [
   { id: "emet", label: "Emet", index: 0 },
