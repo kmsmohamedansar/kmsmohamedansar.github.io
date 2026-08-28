@@ -69,11 +69,70 @@ export const ROUTE_THEME = {
   story: { accent: "109,40,217", accent2: "190,18,60", mode: "pulse" },
 };
 
-export const EMET_SHORTCUTS = [
-  { n: 1, label: "What does he do now?", go: "#source" },
-  { n: 2, label: "Where has he worked?", go: "#lineage" },
-  { n: 3, label: "What has he shipped?", go: "#build" },
-  { n: 4, label: "How do I reach him?", go: "#commit" },
+// emet answers these itself, inline in the terminal, instead of just
+// linking off to the section — "go" is kept only as an optional
+// "see the full page" escape hatch shown once the answer's done
+// typing, not the primary way to get the information. "keywords"
+// lets freeform input match a topic (e.g. typing "amazon" or "sql")
+// without needing the exact numbered shortcut.
+export const EMET_TOPICS = [
+  {
+    n: 1,
+    label: "What does he do now?",
+    go: "#source",
+    keywords: ["now", "current", "today", "sql", "snowflake", "datasembly", "job", "role"],
+    answer: [
+      { text: "Solutions Engineer at " },
+      { text: "Datasembly", cls: "font-bold" },
+      {
+        text:
+          " since Jan 2026 — SQL and Snowflake at retail pricing scale, pre-sales solution design, and turning stakeholder questions into technical approaches they actually trust.",
+      },
+    ],
+  },
+  {
+    n: 2,
+    label: "Where has he worked?",
+    go: "#lineage",
+    keywords: ["before", "worked", "history", "amazon", "spongelii", "experience", "past"],
+    answer: [
+      { text: "Datasembly", cls: "font-bold" },
+      { text: " (Solutions Engineer, then Tech Support) · " },
+      { text: "Spongelii", cls: "font-bold" },
+      { text: " (business analysis) · " },
+      { text: "Amazon Prime Video", cls: "font-bold" },
+      { text: " (quality auditing, digital content) — progressively more technical ownership at each stop." },
+    ],
+  },
+  {
+    n: 3,
+    label: "What has he shipped?",
+    go: "#build",
+    keywords: ["shipped", "built", "projects", "ios", "app", "reptrack", "swift", "demo"],
+    answer: [
+      { text: "10+ projects. " },
+      { text: "RepTrack", cls: "font-bold" },
+      { text: " — a SwiftUI workout log — is live on the " },
+      { text: "App Store", cls: "font-bold" },
+      {
+        text:
+          ", built and submitted solo. Plus a SQL playground, an ML pipeline with retries, a retention model, and a local semantic search assistant — most with live demos.",
+      },
+    ],
+  },
+  {
+    n: 4,
+    label: "How do I reach him?",
+    go: "#commit",
+    keywords: ["reach", "contact", "email", "linkedin", "hire", "talk", "hello", "hi"],
+    answer: [
+      { text: "Fastest: " },
+      { text: "mohamedansarkms@gmail.com", cls: "font-bold" },
+      { text: ". Also on LinkedIn — " },
+      { text: "kmsmohamedansar", cls: "font-bold" },
+      { text: ". Say hello, he reads everything." },
+    ],
+  },
 ];
 
 export const STACK_TAGS = [
