@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
-import { EMET_SHORTCUTS } from "../data/content";
+import { EMET_TOPICS } from "../data/content";
 import { useSandbox } from "../App";
 import { HEAVY_OBJECT, EASE_OUT } from "../lib/motion";
 
@@ -29,6 +29,124 @@ const SCRIPT = [
   },
   { text: "What would you like to know?\n", cls: "opacity-40", speed: 22 },
 ];
+
+const FALLBACK_ANSWER = [
+  { text: "Not sure about that one — try 1-4 below, or ask about " },
+  { text: "SQL, Snowflake, iOS", cls: "font-bold" },
+  { text: ", or how to " },
+  { text: "reach him", cls: "font-bold" },
+  { text: "." },
+];
+
+// Freeform input is matched against each topic's keyword list; the
+// number "1"-"4" still works as a direct shortcut. First match wins,
+// so more specific keywords (company names) are listed before generic
+// ones in content.js.
+function matchTopic(raw) {
+  const q = raw.trim().toLowerCase();
+  if (!q) return null;
+  const byNumber = EMET_TOPICS.find((t) => String(t.n) === q);
+  if (byNumber) return byNumber;
+  return EMET_TOPICS.find((t) => t.keywords.some((k) => q.includes(k))) || null;
+}
+
+/* A single emet response: types its segments out once on mount (or
+   renders instantly under reduced motion / once already-typed history
+   replays), then calls onDone — used to reveal the "open full page"
+   link only after the answer has finished appearing, not alongside it. */
+function TypedAnswer({ segments, onDone, instant = false }) {
+  const reduced = instant || prefersReducedMotion();
+  const [progress, setProgress] = useState({ seg: 0, char: 0 });
+  const [localDone, setLocalDone] = useState(reduced);
+  const onDoneRef = useRef(onDone);
+  onDoneRef.current = onDone;
+
+  useEffect(() => {
+    if (reduced) {
+      onDoneRef.current?.();
+      return;
+    }
+    // No "already started" guard here on purpose — React 18 StrictMode
+    // double-invokes this effect once in dev (mount, cleanup, remount),
+    // and a guard backed by a ref survives that cleanup, so the second
+    // (real) invocation would see it already set and never schedule a
+    // timer at all. Letting each invocation start its own timer and
+    // relying on cleanup to cancel the discarded one is what the boot
+    // sequence's useTypewriter above already does.
+    let cancelled = false;
+    let timeoutId;
+    function tick(segIdx, charIdx) {
+      if (cancelled) return;
+      if (segIdx >= segments.length) {
+        setLocalDone(true);
+        onDoneRef.current?.();
+        return;
+      }
+      const seg = segments[segIdx];
+      const speed = seg.speed ?? 14;
+      const nextChar = charIdx + 1;
+      setProgress({ seg: segIdx, char: nextChar });
+      if (nextChar >= seg.text.length) {
+        timeoutId = setTimeout(() => tick(segIdx + 1, 0), Math.max(speed * 2, 30));
+      } else {
+        timeoutId = setTimeout(() => tick(segIdx, nextChar), speed);
+      }
+    }
+    timeoutId = setTimeout(() => tick(0, 0), 100);
+    return () => {
+      cancelled = true;
+      clearTimeout(timeoutId);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [reduced]);
+
+  const rendered = useMemo(() => {
+    if (localDone) return segments;
+    return segments.map((seg, i) => {
+      if (i < progress.seg) return seg;
+      if (i === progress.seg) return { ...seg, text: seg.text.slice(0, progress.char) };
+      return { ...seg, text: "" };
+    });
+  }, [segments, progress, localDone]);
+
+  return (
+    <p className="whitespace-pre-wrap break-words">
+      {rendered.map((seg, i) => (
+        <span key={i} className={seg.cls}>
+          {seg.text}
+        </span>
+      ))}
+      {!localDone && (
+        <span className="inline-block w-[7px] h-[1em] bg-green align-text-bottom blink-cursor ml-0.5" />
+      )}
+    </p>
+  );
+}
+
+/* One emet response in the transcript — the answer types itself out,
+   then (only once it's finished, so it never competes with the text
+   for attention) an optional "open full page" link fades in for
+   anyone who wants the fuller section instead of the terminal's
+   summary. */
+function EmetAnswer({ msg }) {
+  const [revealed, setRevealed] = useState(false);
+  return (
+    <div className="mt-1.5">
+      <TypedAnswer segments={msg.segments} onDone={() => setRevealed(true)} />
+      {msg.go && (
+        <motion.a
+          href={msg.go}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: revealed ? 1 : 0 }}
+          transition={{ duration: 0.3 }}
+          className="mt-0.5 inline-flex items-center gap-1 text-[.68rem] text-green/55 hover:text-green underline decoration-green/25 underline-offset-2 transition-colors"
+        >
+          → open full page
+        </motion.a>
+      )}
+    </div>
+  );
+}
 
 function useTypewriter(script, startDelay = 350) {
   const [progress, setProgress] = useState({ seg: 0, char: 0 });
@@ -166,6 +284,68 @@ export default function EmetSection() {
   const { toggleDevMode } = useSandbox();
   const reduced = prefersReducedMotion();
 
+  // The Q&A transcript that grows below the boot script — emet answers
+  // inline here instead of navigating away, so asking a question never
+  // interrupts whatever you were reading. "you" entries echo the
+  // question instantly; "emet" entries carry the answer segments and
+  // type themselves out via TypedAnswer, revealing their optional
+  // "open full page" link only once that finishes.
+  const [history, setHistory] = useState([]);
+  const idRef = useRef(0);
+  const scrollRef = useRef(null);
+  const inputRef = useRef(null);
+  const lastQueryRef = useRef("");
+
+  useEffect(() => {
+    if (!done) return;
+    const el = scrollRef.current;
+    if (!el) return;
+    el.scrollTop = el.scrollHeight;
+    const t = setTimeout(() => {
+      if (el) el.scrollTop = el.scrollHeight;
+    }, 500);
+    return () => clearTimeout(t);
+  }, [history.length, done]);
+
+  // Autofocus once the boot script finishes — a visitor who's read the
+  // intro is being invited to type, so the cursor should already be
+  // waiting for them instead of requiring an extra click.
+  useEffect(() => {
+    if (done) inputRef.current?.focus();
+  }, [done]);
+
+  function ask(raw, displayLabel) {
+    const trimmed = raw.trim();
+    if (!trimmed) return;
+    lastQueryRef.current = trimmed;
+
+    const youId = (idRef.current += 1);
+    const emetId = (idRef.current += 1);
+
+    if (trimmed.toLowerCase() === "dev_mode") {
+      toggleDevMode();
+      setHistory((h) => [
+        ...h,
+        { id: youId, kind: "you", text: displayLabel || trimmed },
+        { id: emetId, kind: "emet", segments: [{ text: "→ dev_mode toggled.", cls: "opacity-60" }], go: null },
+      ]);
+      return;
+    }
+
+    const topic = matchTopic(trimmed);
+    setHistory((h) => [
+      ...h,
+      { id: youId, kind: "you", text: displayLabel || trimmed },
+      {
+        id: emetId,
+        kind: "emet",
+        segments: topic ? topic.answer : FALLBACK_ANSWER,
+        go: topic ? topic.go : null,
+        label: topic ? topic.label : null,
+      },
+    ]);
+  }
+
   return (
     // dark-surface: emet stays a dark green terminal in every theme,
     // same "permanently dark" exception the CRT chassis already makes
@@ -180,8 +360,8 @@ export default function EmetSection() {
             Ask <span className="italic text-green" style={{ fontFamily: "'Instrument Serif', serif" }}>emet</span>
           </h2>
           <p className="mt-5 max-w-md text-[1.02rem] leading-relaxed text-[color:var(--ink-400)]">
-            A small terminal that keeps the record straight — what he does now, where he's worked, what he's
-            built. Type a number, or just read along.
+            A small terminal that keeps the record straight — and answers right there, no page changes. Type a
+            number, or just ask about SQL, Snowflake, the App Store launch, or how to reach him.
           </p>
         </div>
 
@@ -217,69 +397,88 @@ export default function EmetSection() {
           )}
           <CrtChassis className="bg-black">
             <MonitorBar title="emet · portfolio assistant" status={done ? "READY" : "BOOTING"} statusTone={done ? "green" : "amber"} />
-            <div className="p-5 min-h-[300px] flex flex-col font-mono text-[.8rem] leading-[1.8] text-green/85">
-              <pre className="whitespace-pre-wrap break-words flex-1 mb-3">
-                {segments.map((seg, i) => (
-                  <span key={i} className={seg.cls}>
-                    {seg.text}
-                  </span>
-                ))}
-                {/* A fat block cursor, not a thin I-beam — closer to the
-                    solid-block cursor on an early IBM terminal than to
-                    a modern text-editor caret. */}
-                {!done && <span className="inline-block w-[10px] h-[1.15em] bg-green align-text-bottom blink-cursor ml-0.5" />}
-              </pre>
-
-              {done && (
-                <motion.div
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ duration: 0.4, delay: 0.15 }}
-                  className="flex flex-col gap-1.5 mb-3"
-                >
-                  {EMET_SHORTCUTS.map((item) => (
-                    <a
-                      key={item.n}
-                      href={item.go}
-                      className="group flex items-center gap-3 px-3 py-2 rounded-lg border border-green/15 bg-green/[.02] text-green/75 hover:text-green hover:border-green/45 hover:bg-green/5 transition-colors"
-                    >
-                      <span className="w-[18px] h-[18px] grid place-items-center rounded border border-green/25 text-[.64rem] text-green/60 group-hover:text-green group-hover:border-green/50 transition-colors">
-                        {item.n}
-                      </span>
-                      <span className="text-[.7rem]">{item.label}</span>
-                    </a>
+            <div className="p-5 flex flex-col font-mono text-[.8rem] leading-[1.8] text-green/85">
+              {/* Fixed-height + scrolling instead of letting the panel
+                  grow with every question — a long back-and-forth would
+                  otherwise keep pushing the input (and the rest of the
+                  page) further down. */}
+              <div ref={scrollRef} className="min-h-[220px] max-h-[360px] overflow-y-auto mono-scroll pr-1 mb-3">
+                <pre className="whitespace-pre-wrap break-words">
+                  {segments.map((seg, i) => (
+                    <span key={i} className={seg.cls}>
+                      {seg.text}
+                    </span>
                   ))}
-                </motion.div>
-              )}
+                  {/* A fat block cursor, not a thin I-beam — closer to the
+                      solid-block cursor on an early IBM terminal than to
+                      a modern text-editor caret. */}
+                  {!done && <span className="inline-block w-[10px] h-[1.15em] bg-green align-text-bottom blink-cursor ml-0.5" />}
+                </pre>
+
+                {done && (
+                  <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ duration: 0.4, delay: 0.15 }}
+                    className="flex flex-col gap-1.5 mt-3"
+                  >
+                    {EMET_TOPICS.map((item) => (
+                      <button
+                        key={item.n}
+                        type="button"
+                        onClick={() => ask(String(item.n), item.label)}
+                        className="group flex items-center gap-3 px-3 py-2 rounded-lg border border-green/15 bg-green/[.02] text-green/75 hover:text-green hover:border-green/45 hover:bg-green/5 transition-colors text-left"
+                      >
+                        <span className="w-[18px] h-[18px] grid place-items-center rounded border border-green/25 text-[.64rem] text-green/60 group-hover:text-green group-hover:border-green/50 transition-colors">
+                          {item.n}
+                        </span>
+                        <span className="text-[.7rem]">{item.label}</span>
+                      </button>
+                    ))}
+                  </motion.div>
+                )}
+
+                {history.map((msg) =>
+                  msg.kind === "you" ? (
+                    <p key={msg.id} className="mt-3 text-[color:var(--ink-100)]/75">
+                      › {msg.text}
+                    </p>
+                  ) : (
+                    <EmetAnswer key={msg.id} msg={msg} />
+                  )
+                )}
+              </div>
 
               {done && (
-                <motion.div
+                <motion.form
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   transition={{ duration: 0.4, delay: 0.25 }}
-                  className="flex items-center gap-2 border-t border-green/15 pt-3 mt-auto"
+                  className="flex items-center gap-2 border-t border-green/15 pt-3"
+                  onSubmit={(e) => {
+                    e.preventDefault();
+                    const el = inputRef.current;
+                    if (!el) return;
+                    ask(el.value);
+                    el.value = "";
+                  }}
                 >
                   <span className="text-green text-lg leading-none">›</span>
                   <input
+                    ref={inputRef}
                     type="text"
-                    placeholder="type 1, 2, 3 or 4…"
+                    placeholder="ask about SQL, iOS, or type 1-4…"
                     className="flex-1 bg-transparent outline-none text-[.75rem] text-green placeholder:text-green/35 caret-green"
                     autoComplete="off"
                     spellCheck={false}
                     onKeyDown={(e) => {
-                      if (e.key !== "Enter") return;
-                      const raw = e.currentTarget.value.trim();
-                      if (raw.toLowerCase() === "dev_mode") {
-                        toggleDevMode();
-                        e.currentTarget.value = "";
-                        return;
+                      if (e.key === "ArrowUp" && !e.currentTarget.value && lastQueryRef.current) {
+                        e.preventDefault();
+                        e.currentTarget.value = lastQueryRef.current;
                       }
-                      const target = EMET_SHORTCUTS.find((s) => String(s.n) === raw);
-                      if (target) window.location.hash = target.go.replace(/^#/, "");
-                      e.currentTarget.value = "";
                     }}
                   />
-                </motion.div>
+                </motion.form>
               )}
             </div>
           </CrtChassis>
