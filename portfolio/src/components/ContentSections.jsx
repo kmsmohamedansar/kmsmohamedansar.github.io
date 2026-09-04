@@ -39,9 +39,11 @@ function Reveal({ children, className = "", delay = 0, y = 28 }) {
 function SectionHead({ step, kicker, title, lede }) {
   return (
     <Reveal className="max-w-2xl mb-14">
-      <span className="inline-flex items-center gap-2 font-mono text-[.72rem] tracking-[.14em] uppercase text-[color:var(--ink-400)] mb-4">
-        <span className="w-1.5 h-1.5 rounded-full bg-cyan" />
-        stage {step} · {kicker}
+      <span className="inline-flex items-center gap-2.5 font-mono text-[.72rem] font-semibold tracking-[.16em] uppercase text-[color:var(--ink-400)] mb-4">
+        <span className="w-1.5 h-1.5 rounded-full bg-cyan shadow-[0_0_5px_1px_rgba(34,211,238,0.5)]" />
+        stage {step}
+        <span className="inline-block w-6 h-px bg-current opacity-25" aria-hidden="true" />
+        {kicker}
       </span>
       <h2 className="font-display text-[clamp(2.1rem,4.6vw,3.4rem)] font-semibold leading-[1.05] text-[color:var(--ink-50)] mb-4">
         {title}

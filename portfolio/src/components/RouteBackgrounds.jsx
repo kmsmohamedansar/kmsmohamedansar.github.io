@@ -87,11 +87,17 @@ export function MatrixBackground() {
    instead of just a couple of faint sparklines.
    ============================================================ */
 const DATA_TICKS = ["+2.4%", "148ms", "+912 rows", "0.03%", "SELECT *", "99.98%", "p95 88ms", "OK", "342 rows", "+18"];
+// Anchored to the viewport edge (not a fraction of width) and gated
+// on a wide-enough margin outside the 1180px content column — a
+// fractional position drifted into the headline/body copy at common
+// laptop widths where the "open" margin is actually narrower than
+// the tile itself.
 const DATA_TILES = [
-  { x: 0.06, y: 0.12, label: "QUERIES/MIN", value: "428" },
-  { x: 0.74, y: 0.66, label: "LATENCY", value: "88ms" },
-  { x: 0.08, y: 0.74, label: "UPTIME", value: "99.98%" },
+  { side: "left", vy: 0.14, label: "QUERIES/MIN", value: "428" },
+  { side: "right", vy: 0.56, label: "LATENCY", value: "88ms" },
+  { side: "left", vy: 0.82, label: "UPTIME", value: "99.98%" },
 ];
+const DATA_TILE_MIN_WIDTH = 1620;
 
 function spawnTick(width, height) {
   return {
@@ -145,17 +151,20 @@ function renderDataFlow(ctx, width, height, t, state, reduced) {
     ctx.fill();
   }
 
-  // Below tablet width there's rarely open canvas away from stacked
-  // content — the headline and the dashboard card both run edge to
-  // edge, so a floating tile just collides with real text.
-  const tiles = width < 700 ? [] : state.tiles;
+  // Only rendered once the viewport is wide enough that the margin
+  // outside the 1180px content column can actually clear a 128px
+  // tile — below that, "open canvas" doesn't exist and a floating
+  // tile just collides with the headline or the dashboard card.
+  const tiles = width < DATA_TILE_MIN_WIDTH ? [] : state.tiles;
+  const TILE_W = 128;
+  const EDGE_MARGIN = 32;
   for (const tile of tiles) {
-    const px = tile.x * width;
-    const py = tile.y * height;
+    const px = tile.side === "right" ? width - EDGE_MARGIN - TILE_W : EDGE_MARGIN;
+    const py = tile.vy * height;
     const pulse = reduced ? 1 : 0.85 + Math.sin(time * 0.0012 + tile.phase) * 0.15;
     ctx.save();
     ctx.globalAlpha = pulse;
-    roundRect(ctx, px, py, 128, 58, 10);
+    roundRect(ctx, px, py, TILE_W, 58, 10);
     ctx.fillStyle = "rgba(255,255,255,0.5)";
     ctx.fill();
     ctx.strokeStyle = "rgba(109,40,217,0.3)";
@@ -341,12 +350,13 @@ function renderStats(ctx, width, height, t, state, reduced) {
     ctx.fillRect(bar.x - 14, baseY - bar.h, 28, bar.h);
   }
 
-  // Same reasoning as the KPI tiles on Current: below tablet width
-  // there's no open column on the right for a log to live in without
-  // running straight through the project copy.
+  // Same reasoning as the KPI tiles on Current: the 1180px content
+  // column leaves a real margin only once the viewport is wide enough
+  // to clear it — below that, right-aligned log text at the edge
+  // still runs under the project copy, just fainter.
   ctx.font = "500 12px 'JetBrains Mono', monospace";
   ctx.textAlign = "right";
-  const logLines = width < 700 ? [] : state.logLines;
+  const logLines = width < DATA_TILE_MIN_WIDTH ? [] : state.logLines;
   for (const line of logLines) {
     const distFromBottom = height - line.y;
     const alpha = Math.max(0, 0.4 - distFromBottom / 900);

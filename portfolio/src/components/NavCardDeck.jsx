@@ -130,6 +130,12 @@ export default function NavCardDeck() {
         const texture = buildNavCardTexture(card, { accent: card.accent, image: images[index] });
         const accent = new THREE.Color(card.accent);
 
+        // Depth grading: 0 at the fan's center card, 1 at the outermost
+        // — the further back a card sits in the stack, the more its
+        // shaders haze/darken it toward the backdrop, so the fan reads
+        // as real recession in space even before anything is hovered.
+        const depthFade = mid > 0 ? Math.abs(index - mid) / mid : 0;
+
         const frontMat = new THREE.ShaderMaterial({
           vertexShader: cardVertexShader,
           fragmentShader: cardFrontFragmentShader,
@@ -138,18 +144,23 @@ export default function NavCardDeck() {
             cardAspect: { value: new THREE.Vector2(CARD_W, CARD_H) },
             textureAspect: { value: new THREE.Vector2(512, 716) },
             hover: { value: 0 },
+            depthFade: { value: depthFade },
             accentColor: { value: accent },
           },
         });
         const backMat = new THREE.ShaderMaterial({
           vertexShader: cardVertexShader,
           fragmentShader: cardBackFragmentShader,
-          uniforms: { baseColor: { value: new THREE.Color("#eef1f6") }, accentColor: { value: accent } },
+          uniforms: {
+            baseColor: { value: new THREE.Color("#eef1f6") },
+            accentColor: { value: accent },
+            depthFade: { value: depthFade },
+          },
         });
         const edgeMat = new THREE.ShaderMaterial({
           vertexShader: cardVertexShader,
           fragmentShader: cardEdgeFragmentShader,
-          uniforms: { accentColor: { value: accent } },
+          uniforms: { accentColor: { value: accent }, hover: { value: 0 }, depthFade: { value: depthFade } },
         });
 
         const mesh = new THREE.Mesh(geometry, [frontMat, backMat, edgeMat]);
@@ -171,6 +182,7 @@ export default function NavCardDeck() {
           card,
           index,
           frontMat,
+          edgeMat,
           fanPosition,
           fanRotation,
           dealStart,
@@ -180,6 +192,32 @@ export default function NavCardDeck() {
           seed: Math.random() * 10,
         };
       });
+
+      // A single soft contact shadow ellipse beneath the whole row —
+      // grounds the fan as one physical object sitting on a surface
+      // instead of five cards floating with nothing under them.
+      const shadowCanvas = document.createElement("canvas");
+      shadowCanvas.width = 512;
+      shadowCanvas.height = 256;
+      const shadowCtx = shadowCanvas.getContext("2d");
+      const shadowGrad = shadowCtx.createRadialGradient(256, 128, 0, 256, 128, 256);
+      shadowGrad.addColorStop(0, "rgba(15,23,42,0.32)");
+      shadowGrad.addColorStop(0.6, "rgba(15,23,42,0.14)");
+      shadowGrad.addColorStop(1, "rgba(15,23,42,0)");
+      shadowCtx.fillStyle = shadowGrad;
+      shadowCtx.fillRect(0, 0, 512, 256);
+      const shadowTexture = new THREE.CanvasTexture(shadowCanvas);
+      const shadowGeometry = new THREE.PlaneGeometry(spacing * (n - 1) + CARD_W * 2.4, CARD_H * 0.9);
+      const shadowMaterial = new THREE.MeshBasicMaterial({
+        map: shadowTexture,
+        transparent: true,
+        opacity: 0,
+        depthWrite: false,
+      });
+      const shadowMesh = new THREE.Mesh(shadowGeometry, shadowMaterial);
+      shadowMesh.position.set(0, -CARD_H / 2 - 0.32, -1.1);
+      shadowMesh.rotation.x = -Math.PI / 2.6;
+      scene.add(shadowMesh);
 
       const raycaster = new THREE.Raycaster();
       const pointerNDC = new THREE.Vector2(0, 0);
@@ -223,6 +261,7 @@ export default function NavCardDeck() {
 
       function tick(now) {
         rafId = requestAnimationFrame(tick);
+        if (document.hidden) return;
         const elapsed = now - startTime;
         const t = elapsed / 1000;
 
@@ -231,6 +270,9 @@ export default function NavCardDeck() {
         camera.position.x += (pointerNDC.x * 0.4 - camera.position.x) * 0.04;
         camera.position.y += (0.2 + pointerNDC.y * 0.22 - camera.position.y) * 0.04;
         camera.lookAt(0, 0, 0);
+
+        const shadowProgress = Math.min(1, Math.max(0, (elapsed - (n - 1) * 90) / 700));
+        shadowMaterial.opacity += (easeOutCubic(shadowProgress) * 0.5 - shadowMaterial.opacity) * 0.1;
 
         // Hit-testing uses the raw pointer position, not the lerped one
         // below — pointerNDC is smoothed for the cosmetic camera
@@ -276,6 +318,11 @@ export default function NavCardDeck() {
           const breathe = Math.sin(t * 0.8 + card.seed) * 0.025 + Math.cos(t * 0.55 + card.seed) * 0.018;
           const dealt = new THREE.Vector3().lerpVectors(card.dealStart, card.fanPosition, eased);
           dealt.y += breathe;
+          // A hovered card rises toward the camera (not upward — the
+          // fan is already flat on one line) and settles back once
+          // hoverAmount fades, scaled by the same smoothed value the
+          // tilt uses so it ramps in/out instead of snapping.
+          dealt.z += card.hoverAmount * 0.42;
           card.mesh.position.lerp(dealt, dealProgress < 1 ? 1 : 0.14);
 
           // No vertical lift on hover — a hovered card announces itself
@@ -315,12 +362,13 @@ export default function NavCardDeck() {
               pulseScale = 1 + Math.sin(pt * Math.PI) * 0.1;
             }
           }
-          const targetScale = (dealProgress < 1 ? eased : 1) * pulseScale;
+          const targetScale = (dealProgress < 1 ? eased : 1) * pulseScale * (1 + card.hoverAmount * 0.035);
           const currentScale = card.mesh.scale.x;
           card.mesh.scale.setScalar(currentScale + (targetScale - currentScale) * (dealProgress < 1 ? 1 : 0.22));
 
           card.hoverAmount += ((card === hoveredCard ? 1 : 0) - card.hoverAmount) * 0.15;
           card.frontMat.uniforms.hover.value = card.hoverAmount;
+          card.edgeMat.uniforms.hover.value = card.hoverAmount;
 
           // The floating name label follows whichever card currently
           // has the most hover — not just the live raycast hit — so
@@ -373,6 +421,9 @@ export default function NavCardDeck() {
           card.mesh.material[2].dispose();
         }
         geometry.dispose();
+        shadowGeometry.dispose();
+        shadowMaterial.dispose();
+        shadowTexture.dispose();
         renderer.dispose();
         if (renderer.domElement.parentNode === container) container.removeChild(renderer.domElement);
       };
