@@ -18,7 +18,11 @@ import {
 } from "../three/planetTextures";
 
 const SCALE = 1.6; // AU -> scene units, after the sqrt compression in orbitalMechanics.js
-const SUN_RADIUS = 1.5;
+// Kept well under Mercury's display radius (sqrt(0.387)*1.6 ~= 0.995) so
+// no planet's orbit sits inside the sun's own sphere — the camera now
+// visits Earth (1.6) and Mars (1.97) up close as you scroll, and at
+// that range a larger sun would loom right next to them.
+const SUN_RADIUS = 0.55;
 // Page content (headings, stats, the card deck) is a centered column,
 // but camera.lookAt(0,0,0) would put the sun — sitting at the world
 // origin — dead center behind it every time. Aiming the camera at a
@@ -39,6 +43,45 @@ const SECTION_ACCENTS = {
   build: "#34d399",
   commit: "#fb7185",
 };
+
+// As each content section scrolls into view, the camera "visits" the
+// planet that fits its theme — null keeps the hero's wide inner-system
+// overview. Chosen in scroll order, inner to outer: Earth (home, "now"),
+// Mars (the ground already covered), Saturn (its rings read as the most
+// literally "built" structure in the system), Neptune (the far, reflective
+// closing note).
+const SECTION_PLANETS = {
+  hero: null,
+  source: "Earth",
+  lineage: "Mars",
+  build: "Saturn",
+  commit: "Neptune",
+};
+
+// Camera offset for a planet visit: mostly outward (away from the sun,
+// along the planet's own current radial direction) plus a fixed elevated
+// tilt, so the "signature" diagonal angle stays consistent across the
+// tour. Deriving it from the planet's own position — rather than a single
+// fixed world-space direction — matters for the inner planets: Earth and
+// Mars orbit close enough to the sun that a fixed offset would sometimes
+// land the camera on the sun-facing side of the planet (depending on
+// where the planet happens to be on its orbit when a visitor scrolls in),
+// putting the sun uncomfortably close instead of a safe distance away.
+// Going outward-first keeps the sun farther from the camera than from
+// the planet on every visit, regardless of orbital phase.
+function planetVisitOffset(planetPos, distance) {
+  const outward = new THREE.Vector3(planetPos.x, 0, planetPos.z);
+  if (outward.lengthSq() < 1e-6) outward.set(1, 0, 0);
+  outward.normalize();
+  const dir = outward.multiplyScalar(0.55).add(new THREE.Vector3(0, 0.78, 0.28)).normalize();
+  return dir.multiplyScalar(distance);
+}
+
+function planetVisitDistance(planet) {
+  const base = Math.max(1.3, planet.radius * 7);
+  // Saturn's rings extend well past its own radius; give it more room.
+  return planet.ring ? base * 1.8 : base;
+}
 
 /**
  * The persistent backdrop for the whole scrollable experience — a
@@ -184,7 +227,10 @@ export default function SolarSystemBackground({ scrollContainerRef }) {
     // Tuned against the camera's closest approach (~13 units, at the
     // hero): a scale comparable to camera distance itself would read
     // as a huge blob filling most of the frame rather than a corona.
-    sunGlow.scale.setScalar(SUN_RADIUS * 3);
+    // Decoupled from SUN_RADIUS (kept at the same 4.5 the old
+    // SUN_RADIUS*3 produced) so shrinking the solid sphere for the
+    // orbit-containment fix above didn't also shrink the corona.
+    sunGlow.scale.setScalar(4.5);
     scene.add(sunGlow);
 
     // Higher segment count than a flat-color sphere would need — worth
@@ -298,6 +344,10 @@ export default function SolarSystemBackground({ scrollContainerRef }) {
     // slowly pulls the sun's glow toward that section's accent color.
     const targetAccent = new THREE.Color(SECTION_ACCENTS.hero);
     const currentAccent = new THREE.Color(SECTION_ACCENTS.hero);
+    // Which planet the camera should currently be visiting — updated
+    // by the same "most visible section" observer as the accent color,
+    // read each frame in renderFrame.
+    let targetPlanetName = SECTION_PLANETS.hero;
     let observer;
     const scrollEl = scrollContainerRef?.current;
     if (scrollEl && !reduced) {
@@ -314,23 +364,15 @@ export default function SolarSystemBackground({ scrollContainerRef }) {
             }
           }
           if (bestKey && SECTION_ACCENTS[bestKey]) targetAccent.set(SECTION_ACCENTS[bestKey]);
+          if (bestKey && bestKey in SECTION_PLANETS) targetPlanetName = SECTION_PLANETS[bestKey];
         },
         { root: scrollEl, threshold: [0, 0.25, 0.5, 0.75, 1] }
       );
       scrollEl.querySelectorAll("[data-star-accent]").forEach((el) => observer.observe(el));
     }
 
-    function scrollProgress() {
-      const el = scrollContainerRef?.current;
-      if (!el) return 0;
-      const max = el.scrollHeight - el.clientHeight;
-      if (max <= 0) return 0;
-      return Math.min(1, Math.max(0, el.scrollTop / max));
-    }
-
     let raf;
     const startTime = performance.now();
-    let progressSmoothed = 0;
     let camXSmoothed = 0;
     // A steep, elevated diagonal view throughout — not just for the
     // classic "orbital diagram" look, but because it keeps outer
@@ -343,6 +385,7 @@ export default function SolarSystemBackground({ scrollContainerRef }) {
     // does at close range, lit side or not.
     let camYSmoothed = 10;
     let camZSmoothed = 9;
+    const lookAtSmoothed = new THREE.Vector3(LOOK_TARGET_X, 0, 0);
     let simDaysAccum = 0;
     let lastNow = startTime;
 
@@ -378,20 +421,41 @@ export default function SolarSystemBackground({ scrollContainerRef }) {
       currentAccent.lerp(targetAccent, 0.02);
       sunGlowMaterial.color.copy(currentAccent);
 
-      const targetProgress = scrollProgress();
-      progressSmoothed += (targetProgress - progressSmoothed) * 0.06;
+      // Camera "visits" whichever planet the current section is themed
+      // around — flying near its live orbital position and looking at
+      // it — or holds the hero's wide inner-system overview when no
+      // section claims a planet. Both the position and look-at targets
+      // are smoothed at a slow lerp rate so the whole scroll-length of
+      // a section gives the camera time to glide there, never snapping.
+      const visitedEntry = targetPlanetName
+        ? planetMeshes.find((entry) => entry.planet.name === targetPlanetName)
+        : null;
+      let baseCamTarget;
+      let baseLookTarget;
+      if (visitedEntry) {
+        const dist = planetVisitDistance(visitedEntry.planet);
+        baseCamTarget = visitedEntry.mesh.position.clone().add(planetVisitOffset(visitedEntry.mesh.position, dist));
+        // Same fixed-world -X nudge the hero view uses (see LOOK_TARGET_X
+        // above) to clear the left-aligned content column — a camera-relative
+        // "right" vector was tried here instead, but it depends on the
+        // camera's current (slowly-lerping) look direction, which lags
+        // during a visit's transition and briefly points the offset the
+        // wrong way. The fixed axis has no such lag and reads fine for
+        // every planet in practice, since the camera's horizontal facing
+        // stays within a fairly narrow range across visits.
+        const lookOffsetX = -Math.min(dist * 0.5, 3.5);
+        baseLookTarget = visitedEntry.mesh.position.clone().add(new THREE.Vector3(lookOffsetX, 0, 0));
+      } else {
+        baseCamTarget = new THREE.Vector3(0, 10, 9);
+        baseLookTarget = new THREE.Vector3(LOOK_TARGET_X, 0, 0);
+      }
 
-      // Camera pulls back from framing just the inner rocky planets
-      // (close) to the full system out past Neptune (far) as the
-      // visitor scrolls from the hero down to Contact.
-      const targetY = 10 + progressSmoothed * 22;
-      const targetZ = 9 + progressSmoothed * 20;
-      const targetX = pointerTarget.x * 0.6;
-      camXSmoothed += (targetX - camXSmoothed) * 0.03;
-      camYSmoothed += (targetY + pointerTarget.y * 0.4 - camYSmoothed) * 0.05;
-      camZSmoothed += (targetZ - camZSmoothed) * 0.05;
+      camXSmoothed += (baseCamTarget.x + pointerTarget.x * 0.6 - camXSmoothed) * 0.025;
+      camYSmoothed += (baseCamTarget.y + pointerTarget.y * 0.4 - camYSmoothed) * 0.025;
+      camZSmoothed += (baseCamTarget.z - camZSmoothed) * 0.025;
       camera.position.set(camXSmoothed, camYSmoothed, camZSmoothed);
-      camera.lookAt(LOOK_TARGET_X, 0, 0);
+      lookAtSmoothed.lerp(baseLookTarget, 0.03);
+      camera.lookAt(lookAtSmoothed);
 
       renderScene();
     }

@@ -62,9 +62,9 @@ export function planetPosition(planet, days) {
   const e = planet.e;
   const E = solveEccentricAnomaly(M, e);
 
-  // Position in the orbital plane, perihelion on the +x axis.
-  const xOrbit = Math.cos(E) - e;
-  const yOrbit = Math.sqrt(1 - e * e) * Math.sin(E);
+  // Position in the orbital plane (AU), perihelion on the +x axis.
+  const xOrbit = planet.a * (Math.cos(E) - e);
+  const yOrbit = planet.a * Math.sqrt(1 - e * e) * Math.sin(E);
   const r = Math.sqrt(xOrbit * xOrbit + yOrbit * yOrbit);
   const trueAnomaly = Math.atan2(yOrbit, xOrbit);
 
