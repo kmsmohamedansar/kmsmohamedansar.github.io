@@ -1,5 +1,10 @@
 import { useEffect, useRef, useState } from "react";
 import * as THREE from "three";
+import { EffectComposer } from "three/examples/jsm/postprocessing/EffectComposer.js";
+import { RenderPass } from "three/examples/jsm/postprocessing/RenderPass.js";
+import { UnrealBloomPass } from "three/examples/jsm/postprocessing/UnrealBloomPass.js";
+import { ShaderPass } from "three/examples/jsm/postprocessing/ShaderPass.js";
+import { OutputPass } from "three/examples/jsm/postprocessing/OutputPass.js";
 import { PLANETS, planetPosition, displayRadius, buildOrbitPoints } from "../three/orbitalMechanics";
 import { starVertexShader, starFragmentShader } from "../three/starShaders";
 import {
@@ -157,15 +162,84 @@ export default function SolarSystemBackground({ scrollContainerRef }) {
     const isNarrow = width < 700;
 
     const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: false, powerPreference: "high-performance" });
-    const pixelRatio = Math.min(window.devicePixelRatio || 1, isNarrow ? 1.5 : 2);
+    // Uncapped (up to a sane ceiling) rather than the old flat 2x: a 4K
+    // desktop monitor is commonly devicePixelRatio 1 already (native
+    // resolution, not "retina" scaled) and was rendering at full
+    // sharpness before — the real loss was on HiDPI laptops/phones
+    // (dPR 2-3), which this now renders at their true density too.
+    // Mobile keeps a lower ceiling; a phone's GPU pays for every extra
+    // fragment at a much higher relative cost than a desktop's.
+    const pixelRatio = Math.min(window.devicePixelRatio || 1, isNarrow ? 2 : 3);
     renderer.setPixelRatio(pixelRatio);
     renderer.setSize(width, height);
     renderer.outputColorSpace = THREE.SRGBColorSpace;
+    // ACES filmic tone mapping — the same curve real rendered space
+    // imagery uses for its highlight rolloff, so the sun and bright
+    // stars read as properly exposed light sources instead of flat
+    // clipped-white circles.
+    renderer.toneMapping = THREE.ACESFilmicToneMapping;
+    renderer.toneMappingExposure = 1;
     renderer.setClearColor(new THREE.Color("#02050c"), 1);
     container.appendChild(renderer.domElement);
 
     const scene = new THREE.Scene();
     const camera = new THREE.PerspectiveCamera(50, width / height, 0.05, 500);
+
+    // Bloom on the sun only — the soft light-source glow real rendered
+    // space imagery has, versus a flat clipped-white circle. A plain
+    // brightness threshold can't isolate "just the sun": the star
+    // shader already draws its brightest stars at similar or higher
+    // raw luminance than the sun's mid-tones (that's what makes them
+    // read as sharp named stars), so thresholding either blooms every
+    // bright star into a soft blob too, or excludes the sun. Selective
+    // bloom via a render layer sidesteps that — only objects flagged
+    // BLOOM_LAYER are visible to the isolated bloom pass, so stars and
+    // planets are structurally excluded regardless of their pixel
+    // brightness, not just dimmed below some threshold.
+    const BLOOM_LAYER = 1;
+    const bloomComposer = new EffectComposer(renderer);
+    bloomComposer.renderToScreen = false;
+    const bloomRenderPass = new RenderPass(scene, camera);
+    // Force a pure black clear for this pass specifically — otherwise
+    // it inherits the renderer's navy background clear color, which
+    // (dim as it is) still blooms into a faint full-frame wash once
+    // blurred and boosted across the bloom pass's multiple mip levels.
+    bloomRenderPass.clearColor = new THREE.Color(0x000000);
+    bloomRenderPass.clearAlpha = 1;
+    bloomComposer.addPass(bloomRenderPass);
+    const bloomPass = new UnrealBloomPass(new THREE.Vector2(width, height), 0.22, 0.22, 0.1);
+    bloomComposer.addPass(bloomPass);
+
+    const mixPass = new ShaderPass(
+      new THREE.ShaderMaterial({
+        uniforms: {
+          baseTexture: { value: null },
+          bloomTexture: { value: bloomComposer.renderTarget2.texture },
+        },
+        vertexShader: /* glsl */ `
+          varying vec2 vUv;
+          void main() {
+            vUv = uv;
+            gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+          }
+        `,
+        fragmentShader: /* glsl */ `
+          uniform sampler2D baseTexture;
+          uniform sampler2D bloomTexture;
+          varying vec2 vUv;
+          void main() {
+            gl_FragColor = texture2D(baseTexture, vUv) + texture2D(bloomTexture, vUv);
+          }
+        `,
+      }),
+      "baseTexture"
+    );
+    mixPass.needsSwap = true;
+
+    const composer = new EffectComposer(renderer);
+    composer.addPass(new RenderPass(scene, camera));
+    composer.addPass(mixPass);
+    composer.addPass(new OutputPass());
 
     // A planet's night side would otherwise read as a pure black
     // silhouette whenever it happens to sit between the camera and
@@ -180,6 +254,7 @@ export default function SolarSystemBackground({ scrollContainerRef }) {
     const sunGeometry = new THREE.SphereGeometry(SUN_RADIUS, 32, 32);
     const sunMaterial = new THREE.MeshBasicMaterial({ color: "#fff2c8" });
     const sun = new THREE.Mesh(sunGeometry, sunMaterial);
+    sun.layers.enable(BLOOM_LAYER);
     scene.add(sun);
 
     const sunGlowTexture = new THREE.CanvasTexture(makeGlowSprite("#fff2c8"));
@@ -403,14 +478,25 @@ export default function SolarSystemBackground({ scrollContainerRef }) {
       camera.position.set(camXSmoothed, camYSmoothed, camZSmoothed);
       camera.lookAt(LOOK_TARGET_X, 0, 0);
 
-      renderer.render(scene, camera);
+      renderScene();
+    }
+
+    // Bloom-layer-only pass first (produces just the sun's glow, since
+    // everything else is invisible to a camera masked to BLOOM_LAYER),
+    // then the normal full-scene pass with that bloom texture added on
+    // top by mixPass.
+    function renderScene() {
+      camera.layers.set(BLOOM_LAYER);
+      bloomComposer.render();
+      camera.layers.set(0);
+      composer.render();
     }
 
     if (reduced) {
       camera.position.set(0, 11, 10);
       camera.lookAt(LOOK_TARGET_X, 0, 0);
       layoutPlanets(0);
-      renderer.render(scene, camera);
+      renderScene();
     } else {
       raf = requestAnimationFrame(renderFrame);
     }
@@ -422,6 +508,8 @@ export default function SolarSystemBackground({ scrollContainerRef }) {
       camera.aspect = width / height;
       camera.updateProjectionMatrix();
       renderer.setSize(width, height);
+      composer.setSize(width, height);
+      bloomComposer.setSize(width, height);
     }
     window.addEventListener("resize", onResize);
 
@@ -429,6 +517,8 @@ export default function SolarSystemBackground({ scrollContainerRef }) {
       cancelAnimationFrame(raf);
       window.removeEventListener("resize", onResize);
       window.removeEventListener("pointermove", onPointerMove);
+      composer.dispose();
+      bloomComposer.dispose();
       observer?.disconnect();
       sunGlowTexture.dispose();
       stars.geometry.dispose();
