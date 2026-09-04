@@ -3,60 +3,6 @@
 // component that needs it — hero dock, command palette, nav — reads
 // from the same list and can't drift out of sync.
 
-import emetArt from "../assets/cards/emet-art.webp";
-import datasemblyMark from "../assets/cards/datasembly-mark.png";
-import amazonMark from "../assets/cards/amazon-mark.webp";
-import projectsBanner from "../assets/cards/projects-banner.webp";
-import contactBook from "../assets/cards/contact-book.webp";
-
-export const NAV_SECTIONS = [
-  { id: "emet", label: "Emet", index: 0 },
-  { id: "source", label: "Current", index: 1 },
-  { id: "lineage", label: "Before", index: 2 },
-  { id: "build", label: "Projects", index: 3 },
-  { id: "commit", label: "Contact", index: 4 },
-];
-
-// The hero's card deck — one card per major destination on the page.
-// EMET scrolls to the terminal instead of expanding inline, same as
-// the other four, so all five behave identically: click a card, land
-// on the section it represents. Each card carries its own accent color
-// pulled from the site's existing palette — that color rides along
-// onto the card face and into the ambient background of the view it
-// opens, so a destination has one consistent identity everywhere it
-// shows up, not just inside the deck. "mark" names an icon drawn on
-// the card face (see three/cardTexture.js) rather than a bare index
-// number — a numeral doesn't say what a card is, an icon does, and
-// is also the fallback if "image" fails to load. "imageFit" picks how
-// the picture fills the card: "cover" crops full-bleed edge to edge
-// (right for a photo/art piece), "contain" zooms out to show the
-// whole image with room to breathe (right for a wordmark or a wide
-// banner, where a tight crop would slice through it). "imageInset"
-// trims a fraction off the top/bottom of the source before a "cover"
-// crop — EMET's art has thin black letterbox bars baked into the
-// file that a plain crop can't remove on its own. "title" is what
-// the floating hover label shows (see NavCardDeck) — EMET and
-// Contact stay short, the other three spell out "work exp[erience]"
-// since a bare "Current"/"Before" reads as unclear on its own.
-export const HERO_DECK = [
-  {
-    id: "emet",
-    go: "#emet",
-    kicker: "assistant",
-    title: "EMET",
-    tagline: "Ask the AI terminal",
-    accent: "#22d3ee",
-    mark: "terminal",
-    image: emetArt,
-    imageFit: "cover",
-    imageInset: { top: 0.045, bottom: 0.045 },
-  },
-  { id: "now", go: "#source", kicker: "current work experience", title: "Current Work Exp", tagline: "Solutions Engineer, Datasembly", accent: "#8e7dff", mark: "pulse", image: datasemblyMark, imageFit: "contain" },
-  { id: "before", go: "#lineage", kicker: "previous work experience", title: "Previous Work Exp", tagline: "Amazon · Spongelii · Datasembly", accent: "#fbbf24", mark: "clock", image: amazonMark, imageFit: "contain" },
-  { id: "work", go: "#build", kicker: "project work", title: "Project Work", tagline: "RepTrack + 9 more shipped", accent: "#34d399", mark: "rocket", image: projectsBanner, imageFit: "contain" },
-  { id: "contact", go: "#commit", kicker: "reach", title: "Contact", tagline: "Say hello", accent: "#fb7185", mark: "mail", image: contactBook, imageFit: "contain" },
-];
-
 // emet answers these itself, inline in the terminal, instead of just
 // linking off to the section — "go" is kept only as an optional
 // "see the full page" escape hatch shown once the answer's done
@@ -323,6 +269,7 @@ export const CONTACT = {
 };
 
 export const COMMAND_ITEMS = [
+  { label: "Emet — ask the AI terminal", go: "#emet", group: "Sections" },
   { label: "Current — what he does today", go: "#source", group: "Sections" },
   { label: "Before — where he's worked", go: "#lineage", group: "Sections" },
   { label: "Projects — what he's shipped", go: "#build", group: "Sections" },
