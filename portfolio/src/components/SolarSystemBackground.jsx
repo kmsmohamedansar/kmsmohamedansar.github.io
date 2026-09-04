@@ -1,0 +1,385 @@
+import { useEffect, useRef, useState } from "react";
+import * as THREE from "three";
+import { PLANETS, planetPosition, displayRadius, buildOrbitPoints } from "../three/orbitalMechanics";
+
+const SCALE = 1.6; // AU -> scene units, after the sqrt compression in orbitalMechanics.js
+const SUN_RADIUS = 1.5;
+// Page content (headings, stats, the card deck) is a centered column,
+// but camera.lookAt(0,0,0) would put the sun — sitting at the world
+// origin — dead center behind it every time. Aiming the camera at a
+// point offset from the origin instead pushes the sun and its orbits
+// toward screen-right, into the gutter the centered column leaves
+// open, without moving any of the actual scene geometry.
+const LOOK_TARGET_X = -8;
+// A fictional clock: this many simulated days pass per real second,
+// fast enough that Mercury visibly moves within seconds and Neptune
+// (60,182-day period) still completes recognizable motion across a
+// long visit, without either looking frozen or blurring past.
+const DAYS_PER_SECOND = 6;
+
+const SECTION_ACCENTS = {
+  hero: "#22d3ee",
+  source: "#8e7dff",
+  lineage: "#fbbf24",
+  build: "#34d399",
+  commit: "#fb7185",
+};
+
+function makeDotSprite() {
+  const size = 32;
+  const canvas = document.createElement("canvas");
+  canvas.width = size;
+  canvas.height = size;
+  const ctx = canvas.getContext("2d");
+  const grad = ctx.createRadialGradient(size / 2, size / 2, 0, size / 2, size / 2, size / 2);
+  grad.addColorStop(0, "rgba(255,255,255,1)");
+  grad.addColorStop(0.5, "rgba(255,255,255,0.55)");
+  grad.addColorStop(1, "rgba(255,255,255,0)");
+  ctx.fillStyle = grad;
+  ctx.fillRect(0, 0, size, size);
+  return canvas;
+}
+
+function makeGlowSprite(color) {
+  const size = 256;
+  const canvas = document.createElement("canvas");
+  canvas.width = size;
+  canvas.height = size;
+  const ctx = canvas.getContext("2d");
+  const grad = ctx.createRadialGradient(size / 2, size / 2, 0, size / 2, size / 2, size / 2);
+  grad.addColorStop(0, "rgba(255,255,255,1)");
+  grad.addColorStop(0.15, `${color}dd`);
+  grad.addColorStop(0.45, `${color}44`);
+  grad.addColorStop(1, "rgba(0,0,0,0)");
+  ctx.fillStyle = grad;
+  ctx.fillRect(0, 0, size, size);
+  return canvas;
+}
+
+function buildBackgroundStars(count, dotTexture) {
+  const positions = new Float32Array(count * 3);
+  for (let i = 0; i < count; i++) {
+    // Uniform-in-volume sphere sample (rejection method) well outside
+    // Neptune's orbit, so the solar system reads as sitting inside a
+    // real starfield rather than floating in front of a backdrop.
+    let x, y, z;
+    do {
+      x = Math.random() * 2 - 1;
+      y = Math.random() * 2 - 1;
+      z = Math.random() * 2 - 1;
+    } while (x * x + y * y + z * z > 1);
+    const r = 40 + Math.random() * 60;
+    positions[i * 3] = x * r;
+    positions[i * 3 + 1] = y * r;
+    positions[i * 3 + 2] = z * r;
+  }
+  const geometry = new THREE.BufferGeometry();
+  geometry.setAttribute("position", new THREE.BufferAttribute(positions, 3));
+  const material = new THREE.PointsMaterial({
+    map: dotTexture,
+    color: "#dbe8ff",
+    size: 1.4,
+    sizeAttenuation: true,
+    transparent: true,
+    opacity: 0.7,
+    depthWrite: false,
+  });
+  return new THREE.Points(geometry, material);
+}
+
+/**
+ * The persistent backdrop for the whole scrollable experience — a
+ * real solar system (see three/orbitalMechanics.js: actual JPL
+ * orbital elements, Kepler's equation solved per frame, not a
+ * simulated wobble) sitting inside a background starfield. The
+ * camera starts close among the inner planets at the hero and pulls
+ * back to frame the outer planets as you scroll, the way the
+ * previous galaxy backdrop morphed from a tight spiral to a
+ * dispersed field. EMET keeps its own matrix-rain takeover; this
+ * never renders there.
+ */
+export default function SolarSystemBackground({ scrollContainerRef }) {
+  const mountRef = useRef(null);
+  const [failed, setFailed] = useState(false);
+
+  useEffect(() => {
+    const container = mountRef.current;
+    if (!container) return;
+
+    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    let supportsWebGL = false;
+    try {
+      const test = document.createElement("canvas");
+      supportsWebGL = !!(test.getContext("webgl2") || test.getContext("webgl"));
+    } catch {
+      supportsWebGL = false;
+    }
+    if (!supportsWebGL) {
+      setFailed(true);
+      return;
+    }
+
+    let width = container.clientWidth;
+    let height = container.clientHeight;
+    const isNarrow = width < 700;
+
+    const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: false, powerPreference: "high-performance" });
+    const pixelRatio = Math.min(window.devicePixelRatio || 1, isNarrow ? 1.5 : 2);
+    renderer.setPixelRatio(pixelRatio);
+    renderer.setSize(width, height);
+    renderer.outputColorSpace = THREE.SRGBColorSpace;
+    renderer.setClearColor(new THREE.Color("#02050c"), 1);
+    container.appendChild(renderer.domElement);
+
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(50, width / height, 0.05, 500);
+
+    // A planet's night side would otherwise read as a pure black
+    // silhouette whenever it happens to sit between the camera and
+    // the sun — a soft hemisphere fill keeps it dimly visible instead.
+    scene.add(new THREE.HemisphereLight("#8fa4d8", "#0a0e1a", 1.1));
+    const sunLight = new THREE.PointLight("#fff6e0", 3.2, 0, 0.15);
+    scene.add(sunLight);
+
+    const dotTexture = new THREE.CanvasTexture(makeDotSprite());
+    const stars = buildBackgroundStars(isNarrow ? 1400 : 3200, dotTexture);
+    scene.add(stars);
+
+    const sunGeometry = new THREE.SphereGeometry(SUN_RADIUS, 32, 32);
+    const sunMaterial = new THREE.MeshBasicMaterial({ color: "#fff2c8" });
+    const sun = new THREE.Mesh(sunGeometry, sunMaterial);
+    scene.add(sun);
+
+    const sunGlowTexture = new THREE.CanvasTexture(makeGlowSprite("#fff2c8"));
+    const sunGlowMaterial = new THREE.SpriteMaterial({
+      map: sunGlowTexture,
+      transparent: true,
+      depthWrite: false,
+      blending: THREE.AdditiveBlending,
+      color: new THREE.Color(SECTION_ACCENTS.hero),
+    });
+    const sunGlow = new THREE.Sprite(sunGlowMaterial);
+    // Tuned against the camera's closest approach (~13 units, at the
+    // hero): a scale comparable to camera distance itself would read
+    // as a huge blob filling most of the frame rather than a corona.
+    sunGlow.scale.setScalar(SUN_RADIUS * 3);
+    scene.add(sunGlow);
+
+    const planetMeshes = PLANETS.map((planet) => {
+      const geometry = new THREE.SphereGeometry(planet.radius, 24, 24);
+      const material = new THREE.MeshStandardMaterial({
+        color: planet.color,
+        roughness: 0.85,
+        metalness: 0.05,
+      });
+      const mesh = new THREE.Mesh(geometry, material);
+      scene.add(mesh);
+
+      let ring = null;
+      if (planet.ring) {
+        const ringGeometry = new THREE.RingGeometry(planet.radius * 1.4, planet.radius * 2.3, 64);
+        // RingGeometry's UVs run radially, not angularly — remap so
+        // a single radial gradient (opacity fading toward the edges)
+        // reads as a ring instead of a bowtie.
+        const pos = ringGeometry.attributes.position;
+        const uv = ringGeometry.attributes.uv;
+        const v3 = new THREE.Vector3();
+        for (let i = 0; i < pos.count; i++) {
+          v3.fromBufferAttribute(pos, i);
+          const dist = v3.length() / (planet.radius * 2.3);
+          uv.setXY(i, dist, 0.5);
+        }
+        const ringCanvas = document.createElement("canvas");
+        ringCanvas.width = 64;
+        ringCanvas.height = 4;
+        const rctx = ringCanvas.getContext("2d");
+        const rgrad = rctx.createLinearGradient(0, 0, 64, 0);
+        rgrad.addColorStop(0, "rgba(212,189,131,0)");
+        rgrad.addColorStop(0.35, "rgba(212,189,131,0.65)");
+        rgrad.addColorStop(0.6, "rgba(212,189,131,0.25)");
+        rgrad.addColorStop(0.8, "rgba(212,189,131,0.55)");
+        rgrad.addColorStop(1, "rgba(212,189,131,0)");
+        rctx.fillStyle = rgrad;
+        rctx.fillRect(0, 0, 64, 4);
+        const ringTexture = new THREE.CanvasTexture(ringCanvas);
+        const ringMaterial = new THREE.MeshBasicMaterial({
+          map: ringTexture,
+          transparent: true,
+          side: THREE.DoubleSide,
+          depthWrite: false,
+        });
+        ring = new THREE.Mesh(ringGeometry, ringMaterial);
+        ring.rotation.x = Math.PI / 2.4;
+        scene.add(ring);
+      }
+
+      const orbitPoints = buildOrbitPoints(planet, SCALE);
+      const orbitGeometry = new THREE.BufferGeometry().setFromPoints(
+        orbitPoints.map(([x, y, z]) => new THREE.Vector3(x, y, z))
+      );
+      const orbitMaterial = new THREE.LineBasicMaterial({ color: "#6b7aa8", transparent: true, opacity: 0.28 });
+      const orbitLine = new THREE.LineLoop(orbitGeometry, orbitMaterial);
+      scene.add(orbitLine);
+
+      return { planet, mesh, ring, material };
+    });
+
+    // Pointer parallax — same restrained pattern as the deck and the
+    // previous starfield: a few pixels of drift, not a drag-to-orbit
+    // control (this sits behind interactive foreground content, so a
+    // real orbit control would fight page scrolling/clicks).
+    const pointerTarget = { x: 0, y: 0 };
+    function onPointerMove(e) {
+      pointerTarget.x = (e.clientX / window.innerWidth - 0.5) * 2;
+      pointerTarget.y = (e.clientY / window.innerHeight - 0.5) * 2;
+    }
+    if (!reduced) window.addEventListener("pointermove", onPointerMove, { passive: true });
+
+    // Section-accent tracking — identical mechanism to the previous
+    // starfield: whichever [data-star-accent] section is most visible
+    // slowly pulls the sun's glow toward that section's accent color.
+    const targetAccent = new THREE.Color(SECTION_ACCENTS.hero);
+    const currentAccent = new THREE.Color(SECTION_ACCENTS.hero);
+    let observer;
+    const scrollEl = scrollContainerRef?.current;
+    if (scrollEl && !reduced) {
+      const ratios = new Map();
+      observer = new IntersectionObserver(
+        (entries) => {
+          for (const entry of entries) ratios.set(entry.target, entry.intersectionRatio);
+          let bestKey = null;
+          let bestRatio = 0;
+          for (const [el, ratio] of ratios) {
+            if (ratio > bestRatio) {
+              bestRatio = ratio;
+              bestKey = el.dataset.starAccent;
+            }
+          }
+          if (bestKey && SECTION_ACCENTS[bestKey]) targetAccent.set(SECTION_ACCENTS[bestKey]);
+        },
+        { root: scrollEl, threshold: [0, 0.25, 0.5, 0.75, 1] }
+      );
+      scrollEl.querySelectorAll("[data-star-accent]").forEach((el) => observer.observe(el));
+    }
+
+    function scrollProgress() {
+      const el = scrollContainerRef?.current;
+      if (!el) return 0;
+      const max = el.scrollHeight - el.clientHeight;
+      if (max <= 0) return 0;
+      return Math.min(1, Math.max(0, el.scrollTop / max));
+    }
+
+    let raf;
+    const startTime = performance.now();
+    let progressSmoothed = 0;
+    let camXSmoothed = 0;
+    // A steep, elevated diagonal view throughout — not just for the
+    // classic "orbital diagram" look, but because it keeps outer
+    // planets from ever passing directly between the camera and the
+    // sun the way a near-edge-on view would let them. The distance
+    // floor matters more than the angle, though: even Neptune's own
+    // orbit (~14 scene units out) needs real clearance from the
+    // camera's closest approach to it, or its worst-case distance to
+    // the camera gets small enough for it to loom the way any body
+    // does at close range, lit side or not.
+    let camYSmoothed = 10;
+    let camZSmoothed = 9;
+    let simDaysAccum = 0;
+    let lastNow = startTime;
+
+    function layoutPlanets(simDays) {
+      for (const { planet, mesh, ring } of planetMeshes) {
+        const { x, y, z, r } = planetPosition(planet, simDays);
+        const dr = displayRadius(r, SCALE) / r;
+        mesh.position.set(x * dr, z * dr, -y * dr);
+        if (ring) ring.position.copy(mesh.position);
+      }
+    }
+    layoutPlanets(0);
+
+    function renderFrame(now) {
+      raf = requestAnimationFrame(renderFrame);
+      if (document.hidden) return;
+      const dt = Math.min(now - lastNow, 100);
+      lastNow = now;
+
+      if (!reduced) {
+        simDaysAccum += (dt / 1000) * DAYS_PER_SECOND;
+        layoutPlanets(simDaysAccum);
+        sun.rotation.y += dt * 0.00005;
+        stars.rotation.y += dt * 0.000004;
+      }
+
+      currentAccent.lerp(targetAccent, 0.02);
+      sunGlowMaterial.color.copy(currentAccent);
+
+      const targetProgress = scrollProgress();
+      progressSmoothed += (targetProgress - progressSmoothed) * 0.06;
+
+      // Camera pulls back from framing just the inner rocky planets
+      // (close) to the full system out past Neptune (far) as the
+      // visitor scrolls from the hero down to Contact.
+      const targetY = 10 + progressSmoothed * 22;
+      const targetZ = 9 + progressSmoothed * 20;
+      const targetX = pointerTarget.x * 0.6;
+      camXSmoothed += (targetX - camXSmoothed) * 0.03;
+      camYSmoothed += (targetY + pointerTarget.y * 0.4 - camYSmoothed) * 0.05;
+      camZSmoothed += (targetZ - camZSmoothed) * 0.05;
+      camera.position.set(camXSmoothed, camYSmoothed, camZSmoothed);
+      camera.lookAt(LOOK_TARGET_X, 0, 0);
+
+      renderer.render(scene, camera);
+    }
+
+    if (reduced) {
+      camera.position.set(0, 11, 10);
+      camera.lookAt(LOOK_TARGET_X, 0, 0);
+      layoutPlanets(0);
+      renderer.render(scene, camera);
+    } else {
+      raf = requestAnimationFrame(renderFrame);
+    }
+
+    function onResize() {
+      width = container.clientWidth;
+      height = container.clientHeight;
+      if (width === 0 || height === 0) return;
+      camera.aspect = width / height;
+      camera.updateProjectionMatrix();
+      renderer.setSize(width, height);
+    }
+    window.addEventListener("resize", onResize);
+
+    return () => {
+      cancelAnimationFrame(raf);
+      window.removeEventListener("resize", onResize);
+      window.removeEventListener("pointermove", onPointerMove);
+      observer?.disconnect();
+      dotTexture.dispose();
+      sunGlowTexture.dispose();
+      stars.geometry.dispose();
+      stars.material.dispose();
+      sunGeometry.dispose();
+      sunMaterial.dispose();
+      sunGlowMaterial.dispose();
+      for (const { mesh, ring, material } of planetMeshes) {
+        mesh.geometry.dispose();
+        material.dispose();
+        if (ring) {
+          ring.geometry.dispose();
+          ring.material.map?.dispose();
+          ring.material.dispose();
+        }
+      }
+      renderer.dispose();
+      if (container.contains(renderer.domElement)) container.removeChild(renderer.domElement);
+    };
+  }, [scrollContainerRef]);
+
+  return (
+    <div aria-hidden className="fixed inset-0 z-0 pointer-events-none overflow-hidden bg-[#02050c]">
+      {!failed && <div ref={mountRef} className="w-full h-full" />}
+    </div>
+  );
+}

@@ -11,7 +11,7 @@ import BootSequence from "./components/BootSequence";
 import CustomCursor from "./components/CustomCursor";
 import { EASE_OUT } from "./lib/motion";
 
-const StarfieldBackground = lazy(() => import("./components/StarfieldBackground"));
+const SolarSystemBackground = lazy(() => import("./components/SolarSystemBackground"));
 
 /* ============================================================
    ROUTER — two states only now: "emet" (a full takeover view,
@@ -35,7 +35,7 @@ function readRoute() {
 const RouteContext = createContext(null);
 export const useRoute = () => useContext(RouteContext);
 
-// Shared with StarfieldBackground so it can read scroll position off
+// Shared with SolarSystemBackground so it can read scroll position off
 // the same element Stage renders as <main> — set once, read every
 // frame via a plain ref rather than React state so scrolling never
 // triggers a re-render.
@@ -245,7 +245,7 @@ function Backdrop() {
   }
   return (
     <Suspense fallback={<div className="fixed inset-0 z-0 bg-[#050911]" aria-hidden="true" />}>
-      <StarfieldBackground scrollContainerRef={scrollContainerRef} />
+      <SolarSystemBackground scrollContainerRef={scrollContainerRef} />
     </Suspense>
   );
 }
