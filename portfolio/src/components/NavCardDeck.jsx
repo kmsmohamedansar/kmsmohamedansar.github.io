@@ -128,7 +128,6 @@ export default function NavCardDeck() {
 
       const cards = HERO_DECK.map((card, index) => {
         const texture = buildNavCardTexture(card, { accent: card.accent, image: images[index] });
-        const accent = new THREE.Color(card.accent);
 
         // Depth grading: 0 at the fan's center card, 1 at the outermost
         // — the further back a card sits in the stack, the more its
@@ -145,7 +144,6 @@ export default function NavCardDeck() {
             textureAspect: { value: new THREE.Vector2(512, 716) },
             hover: { value: 0 },
             depthFade: { value: depthFade },
-            accentColor: { value: accent },
           },
         });
         const backMat = new THREE.ShaderMaterial({
@@ -153,14 +151,13 @@ export default function NavCardDeck() {
           fragmentShader: cardBackFragmentShader,
           uniforms: {
             baseColor: { value: new THREE.Color("#eef1f6") },
-            accentColor: { value: accent },
             depthFade: { value: depthFade },
           },
         });
         const edgeMat = new THREE.ShaderMaterial({
           vertexShader: cardVertexShader,
           fragmentShader: cardEdgeFragmentShader,
-          uniforms: { accentColor: { value: accent }, hover: { value: 0 }, depthFade: { value: depthFade } },
+          uniforms: { hover: { value: 0 }, depthFade: { value: depthFade } },
         });
 
         const mesh = new THREE.Mesh(geometry, [frontMat, backMat, edgeMat]);

@@ -71,7 +71,7 @@ function buildStarGeometry(count) {
     // Brighter core stars are a touch larger, echoing a real galaxy's
     // concentrated light; scattered field stars stay modest and even.
     sizeScale[i] = (1 - t) * 2.2 + 0.9 + Math.random() * 0.6;
-    tint[i] = Math.random() < 0.14 ? 0.55 + Math.random() * 0.45 : 0;
+    tint[i] = Math.random() < 0.2 ? 0.55 + Math.random() * 0.45 : 0;
   }
 
   const geometry = new THREE.BufferGeometry();
@@ -131,7 +131,7 @@ export default function StarfieldBackground({ scrollContainerRef }) {
     camera.position.set(0, 0.6, 4.2);
     camera.lookAt(0, 0, 0);
 
-    const starCount = isNarrow ? 1800 : 5200;
+    const starCount = isNarrow ? 2800 : 9000;
     const geometry = buildStarGeometry(starCount);
     const material = new THREE.ShaderMaterial({
       vertexShader: starVertexShader,
@@ -213,7 +213,7 @@ export default function StarfieldBackground({ scrollContainerRef }) {
       currentAccent.lerp(targetAccent, 0.02);
       material.uniforms.uColorAccent.value.copy(currentAccent);
 
-      const targetZ = 4.2 + morphSmoothed * 9.5;
+      const targetZ = 4.2 + morphSmoothed * 6.5;
       camZSmoothed += (targetZ - camZSmoothed) * 0.05;
       const targetX = pointerTarget.x * 0.35;
       const targetY = 0.6 - pointerTarget.y * 0.22;
