@@ -1,6 +1,27 @@
 import { useEffect, useRef, useState } from "react";
 import * as THREE from "three";
 import { PLANETS, planetPosition, displayRadius, buildOrbitPoints } from "../three/orbitalMechanics";
+import { starVertexShader, starFragmentShader } from "../three/starShaders";
+import {
+  makeRockyTexture,
+  makeBumpTexture,
+  makeBandedTexture,
+  makeEarthTexture,
+  makeEarthCloudTexture,
+  makeRingTexture,
+} from "../three/planetTextures";
+
+// Per-planet surface recipe — which texture generator to use and the
+// palette to feed it. Kept out of orbitalMechanics.js (real physics
+// data) since this is purely cosmetic, unlike everything in that file.
+const SURFACE_RECIPES = {
+  Mercury: { kind: "rocky", base: "#9a9186", dark: "#6b645c", light: "#c2bbb1", craterCount: 260, patchCount: 6, poleShadow: 0.3 },
+  Venus: { kind: "banded", colors: ["#e8d19a", "#d9b876", "#e8d19a", "#c9a45f", "#e8d19a", "#d9b876"], spots: 1 },
+  Mars: { kind: "rocky", base: "#b4562f", dark: "#7a3418", light: "#d98a5c", craterCount: 160, patchCount: 8, poleShadow: 0.22 },
+  Jupiter: { kind: "banded", colors: ["#d8c3a0", "#b8977a", "#e2cdb0", "#a9835f", "#d8c3a0", "#c2a37e", "#b8977a", "#e2cdb0"], spots: 3 },
+  Uranus: { kind: "banded", colors: ["#a9dee6", "#8fc4d4", "#9fd6e0", "#8fc4d4"], spots: 0 },
+  Neptune: { kind: "banded", colors: ["#5470c9", "#4a5fb0", "#6280d8", "#4a5fb0"], spots: 1 },
+};
 
 const SCALE = 1.6; // AU -> scene units, after the sqrt compression in orbitalMechanics.js
 const SUN_RADIUS = 1.5;
@@ -25,21 +46,6 @@ const SECTION_ACCENTS = {
   commit: "#fb7185",
 };
 
-function makeDotSprite() {
-  const size = 32;
-  const canvas = document.createElement("canvas");
-  canvas.width = size;
-  canvas.height = size;
-  const ctx = canvas.getContext("2d");
-  const grad = ctx.createRadialGradient(size / 2, size / 2, 0, size / 2, size / 2, size / 2);
-  grad.addColorStop(0, "rgba(255,255,255,1)");
-  grad.addColorStop(0.5, "rgba(255,255,255,0.55)");
-  grad.addColorStop(1, "rgba(255,255,255,0)");
-  ctx.fillStyle = grad;
-  ctx.fillRect(0, 0, size, size);
-  return canvas;
-}
-
 function makeGlowSprite(color) {
   const size = 256;
   const canvas = document.createElement("canvas");
@@ -56,8 +62,12 @@ function makeGlowSprite(color) {
   return canvas;
 }
 
-function buildBackgroundStars(count, dotTexture) {
+function buildBackgroundStars(count, pixelRatio) {
   const positions = new Float32Array(count * 3);
+  const sizes = new Float32Array(count);
+  const phases = new Float32Array(count);
+  const speeds = new Float32Array(count);
+  const brightness = new Float32Array(count);
   for (let i = 0; i < count; i++) {
     // Uniform-in-volume sphere sample (rejection method) well outside
     // Neptune's orbit, so the solar system reads as sitting inside a
@@ -72,17 +82,40 @@ function buildBackgroundStars(count, dotTexture) {
     positions[i * 3] = x * r;
     positions[i * 3 + 1] = y * r;
     positions[i * 3 + 2] = z * r;
+
+    // Most stars stay small and dim; a minority read as brighter
+    // "named" stars with a larger point size — real skies aren't
+    // uniform, and that variety is most of what makes a starfield
+    // read as sharp rather than as a wash of identical dots.
+    const roll = Math.random();
+    if (roll > 0.985) {
+      sizes[i] = 5.5 + Math.random() * 2.5;
+      brightness[i] = 1;
+    } else if (roll > 0.9) {
+      sizes[i] = 3 + Math.random() * 1.5;
+      brightness[i] = 0.75 + Math.random() * 0.25;
+    } else {
+      sizes[i] = 1.4 + Math.random() * 1.4;
+      brightness[i] = 0.4 + Math.random() * 0.4;
+    }
+    phases[i] = Math.random() * Math.PI * 2;
+    speeds[i] = 0.4 + Math.random() * 1.4;
   }
   const geometry = new THREE.BufferGeometry();
   geometry.setAttribute("position", new THREE.BufferAttribute(positions, 3));
-  const material = new THREE.PointsMaterial({
-    map: dotTexture,
-    color: "#dbe8ff",
-    size: 1.4,
-    sizeAttenuation: true,
+  geometry.setAttribute("aSize", new THREE.BufferAttribute(sizes, 1));
+  geometry.setAttribute("aPhase", new THREE.BufferAttribute(phases, 1));
+  geometry.setAttribute("aSpeed", new THREE.BufferAttribute(speeds, 1));
+  geometry.setAttribute("aBrightness", new THREE.BufferAttribute(brightness, 1));
+  const material = new THREE.ShaderMaterial({
+    vertexShader: starVertexShader,
+    fragmentShader: starFragmentShader,
     transparent: true,
-    opacity: 0.7,
     depthWrite: false,
+    uniforms: {
+      uTime: { value: 0 },
+      uPixelRatio: { value: pixelRatio },
+    },
   });
   return new THREE.Points(geometry, material);
 }
@@ -141,8 +174,7 @@ export default function SolarSystemBackground({ scrollContainerRef }) {
     const sunLight = new THREE.PointLight("#fff6e0", 3.2, 0, 0.15);
     scene.add(sunLight);
 
-    const dotTexture = new THREE.CanvasTexture(makeDotSprite());
-    const stars = buildBackgroundStars(isNarrow ? 1400 : 3200, dotTexture);
+    const stars = buildBackgroundStars(isNarrow ? 1400 : 3200, pixelRatio);
     scene.add(stars);
 
     const sunGeometry = new THREE.SphereGeometry(SUN_RADIUS, 32, 32);
@@ -165,13 +197,60 @@ export default function SolarSystemBackground({ scrollContainerRef }) {
     sunGlow.scale.setScalar(SUN_RADIUS * 3);
     scene.add(sunGlow);
 
-    const planetMeshes = PLANETS.map((planet) => {
-      const geometry = new THREE.SphereGeometry(planet.radius, 24, 24);
-      const material = new THREE.MeshStandardMaterial({
-        color: planet.color,
-        roughness: 0.85,
-        metalness: 0.05,
-      });
+    // Higher segment count than a flat-color sphere would need — worth
+    // it now that surface textures and specular highlights actually
+    // have geometry detail to sit on; still cheap for 8 spheres.
+    const planetSegments = isNarrow ? 32 : 48;
+    const disposableTextures = [];
+
+    const planetMeshes = PLANETS.map((planet, planetIndex) => {
+      const geometry = new THREE.SphereGeometry(planet.radius, planetSegments, planetSegments);
+      const recipe = SURFACE_RECIPES[planet.name];
+      let material;
+      let cloudMesh = null;
+
+      if (planet.name === "Earth") {
+        const colorMap = new THREE.CanvasTexture(makeEarthTexture());
+        colorMap.colorSpace = THREE.SRGBColorSpace;
+        disposableTextures.push(colorMap);
+        material = new THREE.MeshStandardMaterial({ map: colorMap, roughness: 0.75, metalness: 0.05 });
+
+        const cloudTexture = new THREE.CanvasTexture(makeEarthCloudTexture());
+        disposableTextures.push(cloudTexture);
+        const cloudGeometry = new THREE.SphereGeometry(planet.radius * 1.025, planetSegments, planetSegments);
+        const cloudMaterial = new THREE.MeshStandardMaterial({
+          alphaMap: cloudTexture,
+          transparent: true,
+          depthWrite: false,
+          roughness: 1,
+        });
+        cloudMesh = new THREE.Mesh(cloudGeometry, cloudMaterial);
+        scene.add(cloudMesh);
+      } else if (recipe?.kind === "rocky") {
+        const colorMap = new THREE.CanvasTexture(
+          makeRockyTexture({ ...recipe, seed: planetIndex + 1 })
+        );
+        colorMap.colorSpace = THREE.SRGBColorSpace;
+        const bumpMap = new THREE.CanvasTexture(makeBumpTexture({ craterCount: recipe.craterCount, seed: planetIndex + 1 }));
+        disposableTextures.push(colorMap, bumpMap);
+        material = new THREE.MeshStandardMaterial({
+          map: colorMap,
+          bumpMap,
+          bumpScale: 0.01,
+          roughness: 0.9,
+          metalness: 0.05,
+        });
+      } else if (recipe?.kind === "banded") {
+        const colorMap = new THREE.CanvasTexture(makeBandedTexture({ ...recipe, seed: planetIndex + 1 }));
+        colorMap.colorSpace = THREE.SRGBColorSpace;
+        disposableTextures.push(colorMap);
+        // Gas/ice giants: no bump map — their "surface" is atmosphere,
+        // which scatters light softly with no hard terrain relief.
+        material = new THREE.MeshStandardMaterial({ map: colorMap, roughness: 0.7, metalness: 0 });
+      } else {
+        material = new THREE.MeshStandardMaterial({ color: planet.color, roughness: 0.85, metalness: 0.05 });
+      }
+
       const mesh = new THREE.Mesh(geometry, material);
       scene.add(mesh);
 
@@ -189,19 +268,8 @@ export default function SolarSystemBackground({ scrollContainerRef }) {
           const dist = v3.length() / (planet.radius * 2.3);
           uv.setXY(i, dist, 0.5);
         }
-        const ringCanvas = document.createElement("canvas");
-        ringCanvas.width = 64;
-        ringCanvas.height = 4;
-        const rctx = ringCanvas.getContext("2d");
-        const rgrad = rctx.createLinearGradient(0, 0, 64, 0);
-        rgrad.addColorStop(0, "rgba(212,189,131,0)");
-        rgrad.addColorStop(0.35, "rgba(212,189,131,0.65)");
-        rgrad.addColorStop(0.6, "rgba(212,189,131,0.25)");
-        rgrad.addColorStop(0.8, "rgba(212,189,131,0.55)");
-        rgrad.addColorStop(1, "rgba(212,189,131,0)");
-        rctx.fillStyle = rgrad;
-        rctx.fillRect(0, 0, 64, 4);
-        const ringTexture = new THREE.CanvasTexture(ringCanvas);
+        const ringTexture = new THREE.CanvasTexture(makeRingTexture());
+        disposableTextures.push(ringTexture);
         const ringMaterial = new THREE.MeshBasicMaterial({
           map: ringTexture,
           transparent: true,
@@ -221,7 +289,7 @@ export default function SolarSystemBackground({ scrollContainerRef }) {
       const orbitLine = new THREE.LineLoop(orbitGeometry, orbitMaterial);
       scene.add(orbitLine);
 
-      return { planet, mesh, ring, material };
+      return { planet, mesh, ring, material, cloudMesh };
     });
 
     // Pointer parallax — same restrained pattern as the deck and the
@@ -289,11 +357,12 @@ export default function SolarSystemBackground({ scrollContainerRef }) {
     let lastNow = startTime;
 
     function layoutPlanets(simDays) {
-      for (const { planet, mesh, ring } of planetMeshes) {
+      for (const { planet, mesh, ring, cloudMesh } of planetMeshes) {
         const { x, y, z, r } = planetPosition(planet, simDays);
         const dr = displayRadius(r, SCALE) / r;
         mesh.position.set(x * dr, z * dr, -y * dr);
         if (ring) ring.position.copy(mesh.position);
+        if (cloudMesh) cloudMesh.position.copy(mesh.position);
       }
     }
     layoutPlanets(0);
@@ -303,12 +372,17 @@ export default function SolarSystemBackground({ scrollContainerRef }) {
       if (document.hidden) return;
       const dt = Math.min(now - lastNow, 100);
       lastNow = now;
+      stars.material.uniforms.uTime.value = (now - startTime) * 0.001;
 
       if (!reduced) {
         simDaysAccum += (dt / 1000) * DAYS_PER_SECOND;
         layoutPlanets(simDaysAccum);
         sun.rotation.y += dt * 0.00005;
         stars.rotation.y += dt * 0.000004;
+        for (const { mesh, cloudMesh } of planetMeshes) {
+          mesh.rotation.y += dt * 0.00012;
+          if (cloudMesh) cloudMesh.rotation.y += dt * 0.00016;
+        }
       }
 
       currentAccent.lerp(targetAccent, 0.02);
@@ -356,20 +430,23 @@ export default function SolarSystemBackground({ scrollContainerRef }) {
       window.removeEventListener("resize", onResize);
       window.removeEventListener("pointermove", onPointerMove);
       observer?.disconnect();
-      dotTexture.dispose();
       sunGlowTexture.dispose();
       stars.geometry.dispose();
       stars.material.dispose();
       sunGeometry.dispose();
       sunMaterial.dispose();
       sunGlowMaterial.dispose();
-      for (const { mesh, ring, material } of planetMeshes) {
+      for (const texture of disposableTextures) texture.dispose();
+      for (const { mesh, ring, material, cloudMesh } of planetMeshes) {
         mesh.geometry.dispose();
         material.dispose();
         if (ring) {
           ring.geometry.dispose();
-          ring.material.map?.dispose();
           ring.material.dispose();
+        }
+        if (cloudMesh) {
+          cloudMesh.geometry.dispose();
+          cloudMesh.material.dispose();
         }
       }
       renderer.dispose();
