@@ -1,10 +1,16 @@
 // Custom vertex/fragment pairs for the three card materials (front,
-// back, edge). The front reads a project texture in "cover" mode and
-// overlays a Balatro-style reflective streak derived from the view
-// vector reflected across the surface normal — no static highlight
-// texture, it's computed per-pixel. The back renders a procedural
-// diagonal tile pattern (a nod to the roof tiles of home) instead of a
-// painted texture. The edge is a simple view-dependent gradient.
+// back, edge). The front reads a project texture in "cover" mode,
+// desaturated to monochrome so the cards read as graphite/chrome
+// objects matching the starfield rather than competing with it in
+// color, and overlays a Balatro-style reflective streak derived from
+// the view vector reflected across the surface normal — no static
+// highlight texture, it's computed per-pixel. The back renders a
+// procedural diagonal tile pattern (a nod to the roof tiles of home)
+// instead of a painted texture. The edge is a simple view-dependent
+// gradient. All three highlights use the same cool starlight-white
+// tint (a hint of blue, not flat white) instead of each card's own
+// accent color — that accent still lives on in text/glows elsewhere
+// on the site, just not on the card materials themselves.
 
 export const cardVertexShader = /* glsl */ `
   varying vec2 vUv;
@@ -37,7 +43,6 @@ export const cardFrontFragmentShader = /* glsl */ `
   uniform vec2 textureAspect;
   uniform float hover;
   uniform float depthFade;
-  uniform vec3 accentColor;
   varying vec2 vUv;
   varying vec3 vNormal;
   varying vec3 vViewDir;
@@ -53,14 +58,21 @@ export const cardFrontFragmentShader = /* glsl */ `
 
   void main() {
     vec2 uv = coverUv(vUv, cardAspect, textureAspect);
-    vec3 base = texture2D(map, clamp(uv, 0.0, 1.0)).rgb;
+    vec3 photo = texture2D(map, clamp(uv, 0.0, 1.0)).rgb;
+    // Perceptual luma, not a flat average — keeps the same tonal
+    // read (which parts are bright vs dark) the color photo had.
+    float luma = dot(photo, vec3(0.299, 0.587, 0.114));
+    // A faint cool (not neutral-gray) cast on the desaturated image
+    // ties it to the starlight around it rather than reading as an
+    // inert grayscale photocopy.
+    vec3 base = luma * vec3(0.96, 0.98, 1.03);
 
     float s = streak(vNormal, vViewDir, vUv, 0.0);
-    vec3 streakColor = mix(vec3(1.0), accentColor, 0.35);
-    vec3 color = base + streakColor * s * (0.35 + hover * 0.4);
+    vec3 starlight = vec3(0.88, 0.93, 1.0);
+    vec3 color = base + starlight * s * (0.35 + hover * 0.4);
 
     float rim = pow(1.0 - clamp(dot(vNormal, vViewDir), 0.0, 1.0), 3.0);
-    color += accentColor * rim * (0.2 + hover * 0.3);
+    color += starlight * rim * (0.2 + hover * 0.3);
 
     // Cards further back in the fan sit under a faint cool haze and
     // read a touch darker — real atmospheric falloff, not a flat
@@ -77,7 +89,6 @@ export const cardFrontFragmentShader = /* glsl */ `
 
 export const cardBackFragmentShader = /* glsl */ `
   uniform vec3 baseColor;
-  uniform vec3 accentColor;
   uniform float depthFade;
   varying vec2 vUv;
   varying vec3 vNormal;
@@ -103,7 +114,7 @@ export const cardBackFragmentShader = /* glsl */ `
     vec3 color = mix(baseColor * 0.7, baseColor * 1.15, relief);
 
     float s = streak(vNormal, vViewDir, vUv, 0.0);
-    color += accentColor * s * 0.2;
+    color += vec3(0.88, 0.93, 1.0) * s * 0.2;
     color *= 1.0 - depthFade * 0.16;
 
     gl_FragColor = vec4(color, 1.0);
@@ -111,7 +122,6 @@ export const cardBackFragmentShader = /* glsl */ `
 `;
 
 export const cardEdgeFragmentShader = /* glsl */ `
-  uniform vec3 accentColor;
   uniform float hover;
   uniform float depthFade;
   varying vec2 vUv;
@@ -122,7 +132,7 @@ export const cardEdgeFragmentShader = /* glsl */ `
     float facing = clamp(dot(vNormal, vViewDir), -1.0, 1.0);
     float glow = smoothstep(-0.2, 1.0, facing);
     vec3 base = mix(vec3(0.82, 0.85, 0.9), vec3(0.68, 0.72, 0.78), depthFade);
-    vec3 color = mix(base, accentColor, glow * (0.4 + hover * 0.35));
+    vec3 color = mix(base, vec3(0.92, 0.96, 1.0), glow * (0.4 + hover * 0.35));
     gl_FragColor = vec4(color, 1.0);
   }
 `;

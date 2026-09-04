@@ -38,14 +38,14 @@ export const starVertexShader = /* glsl */ `
     gl_Position = projectionMatrix * mvPosition;
 
     float dist = -mvPosition.z;
-    gl_PointSize = sizeScale * uPixelRatio * (5.0 / max(dist, 1.0));
+    gl_PointSize = sizeScale * uPixelRatio * (9.0 / max(dist, 1.0));
 
-    vTwinkle = 0.55 + 0.45 * sin(uTime * 0.6 + phase);
+    vTwinkle = 0.7 + 0.3 * sin(uTime * 0.6 + phase);
     vTint = tint;
     // Stars fade in very slightly as they scatter so the field never
     // reads as visually louder once dispersed than it did tight —
     // point count is constant, only spread changes.
-    vFade = mix(1.0, 0.82, uMorph);
+    vFade = mix(1.0, 0.9, uMorph);
   }
 `;
 
