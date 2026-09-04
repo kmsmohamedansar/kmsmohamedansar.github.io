@@ -1,31 +1,23 @@
 # kmsmohamedansar.github.io
 
-Full-stack engineer building native apps, data tools, and web experiences.
+Live portfolio for **Mohamed Ansar** — Solutions Engineer building data systems, pipelines, and shipped native apps.
 
-**Live portfolio:** [kmsmohamedansar.github.io](https://kmsmohamedansar.github.io)
+**Live site:** [kmsmohamedansar.github.io](https://kmsmohamedansar.github.io)
 
-## Highlights
+For the full project index, live demos, and how to reach out about private repos, see my [GitHub profile](https://github.com/kmsmohamedansar).
 
-- **RepTrack** — iOS workout tracker shipped to the App Store. SwiftUI + SwiftData for a smooth native experience.
-- **Cerebra** — native macOS canvas app for sketching and thinking. Built with SwiftUI, infinite board with shapes, connectors, and freehand strokes.
-- **Forex tools** — Python backtesting and sentiment analysis on real tick data with scheduled news events.
-- **F1 telemetry** — Python data pipeline pulling live F1 session and car telemetry from FastF1 and OpenF1 APIs.
-- **Portfolio site** — React + Vite + Tailwind personal site deployed to GitHub Pages.
-
-## Repository Structure
+## What's in this repo
 
 ```
-portfolio/           React + Vite site, deployed to GitHub Pages
+portfolio/            React + Vite + Tailwind site, deployed to GitHub Pages
 projects/
-  reptrack/          iOS app (App Store)
-  flowdesk/          macOS canvas app (Cerebra)
-  forex/             AUD/USD trading analysis
-  f1-telemetry/      Formula 1 data pulling
-.github/workflows/   CI/CD for portfolio deployment
+  forex/               AUD/USD trading analysis (Python)
+  f1-telemetry/         F1 session/car telemetry pipeline (Python)
+.github/workflows/     CI/CD for portfolio deployment
 ```
 
-Each project folder has its own README with setup and usage details.
+RepTrack and Cerebra now live in their own repositories — reach out if you'd like access.
 
-## How It's Built
+## How it's built
 
 The portfolio site auto-deploys to GitHub Pages on every push to `main` that touches `portfolio/**`, via `.github/workflows/deploy-portfolio.yml` using `npm run build`.
