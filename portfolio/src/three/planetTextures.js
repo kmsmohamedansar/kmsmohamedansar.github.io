@@ -9,6 +9,21 @@
 
 const TAU = Math.PI * 2;
 
+// Per-planet surface recipe — which texture generator below to use and
+// the palette to feed it. Kept out of orbitalMechanics.js (real physics
+// data) since this is purely cosmetic, unlike everything in that file.
+// Shared by both SolarSystemBackground (the scroll backdrop) and
+// SolarSystemExplorer (the interactive view) so their planets always
+// look identical.
+export const SURFACE_RECIPES = {
+  Mercury: { kind: "rocky", base: "#9a9186", dark: "#6b645c", light: "#c2bbb1", craterCount: 260, patchCount: 6, poleShadow: 0.3 },
+  Venus: { kind: "banded", colors: ["#e8d19a", "#d9b876", "#e8d19a", "#c9a45f", "#e8d19a", "#d9b876"], spots: 1 },
+  Mars: { kind: "rocky", base: "#b4562f", dark: "#7a3418", light: "#d98a5c", craterCount: 160, patchCount: 8, poleShadow: 0.22 },
+  Jupiter: { kind: "banded", colors: ["#d8c3a0", "#b8977a", "#e2cdb0", "#a9835f", "#d8c3a0", "#c2a37e", "#b8977a", "#e2cdb0"], spots: 3 },
+  Uranus: { kind: "banded", colors: ["#a9dee6", "#8fc4d4", "#9fd6e0", "#8fc4d4"], spots: 0 },
+  Neptune: { kind: "banded", colors: ["#5470c9", "#4a5fb0", "#6280d8", "#4a5fb0"], spots: 1 },
+};
+
 function makeCanvas(width, height) {
   const canvas = document.createElement("canvas");
   canvas.width = width;

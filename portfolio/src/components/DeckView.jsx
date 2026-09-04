@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { ArrowRight, Terminal } from "lucide-react";
+import { ArrowRight, Orbit, Terminal } from "lucide-react";
 import { CONTACT } from "../data/content";
 import { EASE_OUT } from "../lib/motion";
 
@@ -101,6 +101,12 @@ export default function DeckView({ ready = true }) {
             className="inline-flex items-center gap-2 px-5 py-3 rounded-lg border border-white/12 text-[color:var(--ink-200)] font-medium text-[.85rem] hover:border-cyan/40 hover:text-cyan transition-colors"
           >
             See what I've built
+          </a>
+          <a
+            href="#explore"
+            className="inline-flex items-center gap-2 px-5 py-3 rounded-lg border border-white/12 text-[color:var(--ink-200)] font-medium text-[.85rem] hover:border-cyan/40 hover:text-cyan transition-colors"
+          >
+            <Orbit size={15} /> Explore the solar system
           </a>
         </motion.div>
 

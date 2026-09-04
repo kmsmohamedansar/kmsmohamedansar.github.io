@@ -12,24 +12,24 @@ import CustomCursor from "./components/CustomCursor";
 import { EASE_OUT } from "./lib/motion";
 
 const SolarSystemBackground = lazy(() => import("./components/SolarSystemBackground"));
+const SolarSystemExplorer = lazy(() => import("./components/SolarSystemExplorer"));
 
 /* ============================================================
-   ROUTER — two states only now: "emet" (a full takeover view,
-   reached from its deck card, the nav, or the command palette) and
-   "main" (everything else). "main" is a single continuously-scrolled
-   document — the deck hero followed by Now/Before/Work/Story/Contact
-   — so a card or nav link pointing at one of those doesn't swap a
-   view anymore, it smooth-scrolls to that section's id within the
-   document. Hash-based so every existing <a href="#build"> (nav, the
-   deck cards, emet's shortcuts, the command palette) keeps working
-   completely unmodified — only the interpretation of a non-"emet"
-   hash changed, from "which view is active" to "which section to
-   scroll to."
+   ROUTER — three states: "emet" and "explore" are full takeover
+   views (reached from the nav or the command palette), "main" is
+   everything else — a single continuously-scrolled document, the
+   hero followed by Now/Before/Work/Story/Contact — so a nav link
+   pointing at one of those doesn't swap a view, it smooth-scrolls to
+   that section's id within the document. Hash-based so every existing
+   <a href="#build"> (nav, emet's shortcuts, the command palette) keeps
+   working completely unmodified — only the interpretation of a
+   non-takeover hash changed, from "which view is active" to "which
+   section to scroll to."
    ============================================================ */
 function readRoute() {
   if (typeof window === "undefined") return "main";
   const h = window.location.hash.replace(/^#/, "");
-  return h === "emet" ? "emet" : "main";
+  return h === "emet" || h === "explore" ? h : "main";
 }
 
 const RouteContext = createContext(null);
@@ -55,8 +55,9 @@ function RouteProvider({ children }) {
   useEffect(() => {
     function onHashChange() {
       const h = window.location.hash.replace(/^#/, "");
-      setRoute(h === "emet" ? "emet" : "main");
-      if (h && h !== "emet") scrollToSection(h);
+      const isTakeover = h === "emet" || h === "explore";
+      setRoute(isTakeover ? h : "main");
+      if (h && !isTakeover) scrollToSection(h);
     }
     window.addEventListener("hashchange", onHashChange);
     return () => window.removeEventListener("hashchange", onHashChange);
@@ -66,7 +67,7 @@ function RouteProvider({ children }) {
   // hashchange event fires for the hash already present at mount.
   useEffect(() => {
     const h = window.location.hash.replace(/^#/, "");
-    if (h && h !== "emet") scrollToSection(h);
+    if (h && h !== "emet" && h !== "explore") scrollToSection(h);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -151,7 +152,15 @@ function Nav() {
         </button>
 
         <div className="flex items-center gap-1">
-          {route !== "emet" && (
+          {route === "main" && (
+            <a
+              href="#explore"
+              className="mr-1 hidden sm:inline-flex items-center gap-1.5 px-3 py-2 rounded-lg border border-white/10 text-[color:var(--ink-300)] hover:text-cyan hover:border-cyan/40 transition-colors font-mono text-[.68rem] uppercase tracking-[.1em]"
+            >
+              Explore
+            </a>
+          )}
+          {route === "main" && (
             <a
               href="#emet"
               className="mr-1 hidden sm:inline-flex items-center gap-1.5 px-3 py-2 rounded-lg border border-white/10 text-[color:var(--ink-300)] hover:text-cyan hover:border-cyan/40 transition-colors font-mono text-[.68rem] uppercase tracking-[.1em]"
@@ -159,7 +168,7 @@ function Nav() {
               Ask EMET
             </a>
           )}
-          {route !== "emet" && (
+          {route === "main" && (
             <a
               href="#commit"
               className="mr-1 hidden sm:inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-white text-ink hover:bg-cyan transition-colors font-mono text-[.68rem] uppercase tracking-[.1em]"
@@ -167,7 +176,7 @@ function Nav() {
               Get in touch
             </a>
           )}
-          {route === "emet" && (
+          {route !== "main" && (
             <button
               onClick={() => navigate("deck")}
               className="flex items-center gap-1.5 px-3 py-2 rounded-lg border border-white/10 text-cyan hover:border-cyan/40 transition-colors font-mono text-[.68rem] uppercase tracking-[.1em]"
@@ -207,7 +216,7 @@ function Stage({ bootDone }) {
   const scrollContainerRef = useContext(ScrollContext);
 
   useEffect(() => {
-    if (route === "emet" && scrollContainerRef?.current) scrollContainerRef.current.scrollTop = 0;
+    if (route !== "main" && scrollContainerRef?.current) scrollContainerRef.current.scrollTop = 0;
   }, [route, scrollContainerRef]);
 
   return (
@@ -223,6 +232,19 @@ function Stage({ bootDone }) {
             className="h-full"
           >
             <EmetSection />
+          </motion.div>
+        ) : route === "explore" ? (
+          <motion.div
+            key="explore"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.28, ease: EASE_OUT }}
+            className="h-full"
+          >
+            <Suspense fallback={<div className="h-full bg-[#02050c]" aria-hidden="true" />}>
+              <SolarSystemExplorer />
+            </Suspense>
           </motion.div>
         ) : (
           <motion.div
@@ -241,6 +263,12 @@ function Stage({ bootDone }) {
   );
 }
 
+// The explorer is content (like EMET), not backdrop — it needs to
+// capture drag/scroll/pinch itself for orbit controls, which a fixed
+// z-0 layer sitting *behind* Stage's scrollable <main> can't reliably
+// do. So on that route the backdrop is just a plain matching fill;
+// SolarSystemExplorer renders its own full 3D scene inside Stage
+// instead.
 function Backdrop() {
   const { route } = useRoute();
   const scrollContainerRef = useContext(ScrollContext);
@@ -250,6 +278,9 @@ function Backdrop() {
         <MatrixBackground />
       </Suspense>
     );
+  }
+  if (route === "explore") {
+    return <div className="fixed inset-0 z-0 bg-[#02050c]" aria-hidden="true" />;
   }
   return (
     <Suspense fallback={<div className="fixed inset-0 z-0 bg-[#050911]" aria-hidden="true" />}>
