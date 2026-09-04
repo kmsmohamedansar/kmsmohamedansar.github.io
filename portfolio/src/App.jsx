@@ -11,7 +11,7 @@ import BootSequence from "./components/BootSequence";
 import CustomCursor from "./components/CustomCursor";
 import { EASE_OUT } from "./lib/motion";
 
-const AStarrySkyBackground = lazy(() => import("./components/AStarrySkyBackground"));
+const SolarSystemBackground = lazy(() => import("./components/SolarSystemBackground"));
 
 /* ============================================================
    ROUTER — two states only now: "emet" (a full takeover view,
@@ -243,6 +243,7 @@ function Stage({ bootDone }) {
 
 function Backdrop() {
   const { route } = useRoute();
+  const scrollContainerRef = useContext(ScrollContext);
   if (route === "emet") {
     return (
       <Suspense fallback={<div className="fixed inset-0 z-0 bg-[#04120a]" aria-hidden="true" />}>
@@ -251,8 +252,8 @@ function Backdrop() {
     );
   }
   return (
-    <Suspense fallback={<div className="fixed inset-0 z-0 bg-black" aria-hidden="true" />}>
-      <AStarrySkyBackground />
+    <Suspense fallback={<div className="fixed inset-0 z-0 bg-[#050911]" aria-hidden="true" />}>
+      <SolarSystemBackground scrollContainerRef={scrollContainerRef} />
     </Suspense>
   );
 }
