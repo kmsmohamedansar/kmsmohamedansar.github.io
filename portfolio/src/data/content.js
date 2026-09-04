@@ -3,44 +3,46 @@
 // component that needs it — hero dock, command palette, nav — reads
 // from the same list and can't drift out of sync.
 
-// emet answers these itself, inline in the terminal, instead of just
-// linking off to the section — "go" is kept only as an optional
+// emet speaks as me, answering right there in the terminal instead of
+// just linking off to the section — "go" is kept only as an optional
 // "see the full page" escape hatch shown once the answer's done
 // typing, not the primary way to get the information. "keywords"
 // lets freeform input match a topic (e.g. typing "amazon" or "sql")
-// without needing the exact numbered shortcut.
+// without needing the exact numbered shortcut. Labels are phrased as
+// something a visitor would type to me directly, since that's what
+// emet actually is — my own terminal, not a separate assistant.
 export const EMET_TOPICS = [
   {
     n: 1,
-    label: "What does he do now?",
+    label: "What do you do now?",
     go: "#source",
     keywords: ["now", "current", "today", "sql", "snowflake", "datasembly", "job", "role"],
     answer: [
-      { text: "Solutions Engineer at " },
+      { text: "I'm a Solutions Engineer at " },
       { text: "Datasembly", cls: "font-bold" },
       {
         text:
-          " since Jan 2026 — SQL and Snowflake at retail pricing scale, pre-sales solution design, and turning stakeholder questions into technical approaches they actually trust.",
+          " since Jan 2026. Mostly SQL and Snowflake at retail pricing scale, plus pre-sales work — turning what a stakeholder's actually asking into something technical that holds up.",
       },
     ],
   },
   {
     n: 2,
-    label: "Where has he worked?",
+    label: "Where have you worked?",
     go: "#lineage",
     keywords: ["before", "worked", "history", "amazon", "spongelii", "experience", "past"],
     answer: [
       { text: "Datasembly", cls: "font-bold" },
-      { text: " (Solutions Engineer, then Tech Support) · " },
+      { text: " (Solutions Engineer, then Tech Support), " },
       { text: "Spongelii", cls: "font-bold" },
-      { text: " (business analysis) · " },
+      { text: " (business analysis), and " },
       { text: "Amazon Prime Video", cls: "font-bold" },
-      { text: " (quality auditing, digital content) — progressively more technical ownership at each stop." },
+      { text: " (quality auditing, digital content) before that. A bit more technical ownership at each stop." },
     ],
   },
   {
     n: 3,
-    label: "What has he shipped?",
+    label: "What have you shipped?",
     go: "#build",
     keywords: ["shipped", "built", "projects", "ios", "app", "reptrack", "swift", "demo"],
     answer: [
@@ -50,21 +52,21 @@ export const EMET_TOPICS = [
       { text: "App Store", cls: "font-bold" },
       {
         text:
-          ", built and submitted solo. Plus a SQL playground, an ML pipeline with retries, a retention model, and a local semantic search assistant — most with live demos.",
+          ", built and submitted solo. Also a SQL playground, an ML pipeline with retries, a retention model, and a local semantic search assistant. Most of them have live demos.",
       },
     ],
   },
   {
     n: 4,
-    label: "How do I reach him?",
+    label: "How do I reach you?",
     go: "#commit",
     keywords: ["reach", "contact", "email", "linkedin", "hire", "talk", "hello", "hi"],
     answer: [
-      { text: "Fastest: " },
+      { text: "Fastest is " },
       { text: "mohamedansarkms@gmail.com", cls: "font-bold" },
-      { text: ". Also on LinkedIn — " },
+      { text: ". I'm also on LinkedIn — " },
       { text: "kmsmohamedansar", cls: "font-bold" },
-      { text: ". Say hello, he reads everything." },
+      { text: ". Say hi, I read everything." },
     ],
   },
 ];
@@ -91,15 +93,15 @@ export const STACK_TAGS = [
 export const PRINCIPLES = [
   {
     title: "Production analytics",
-    body: "Snowflake, SQL, validated pipelines. Outputs teams trust on a recurring cadence, with lineage you can explain.",
+    body: "Snowflake and SQL, pipelines I've actually validated. Numbers a team can run every week and trust, and I can walk you through exactly where they came from.",
   },
   {
     title: "Clarity first",
-    body: "Stakeholder language up front; engineering that still holds after launch. Business questions become technical approaches, not jargon.",
+    body: "I start in plain language and end with something that still works after launch. A stakeholder's question becomes a real technical approach, not more jargon.",
   },
   {
     title: "Native product",
-    body: "SwiftUI and SwiftData built for repeat daily use. Taken through Apple review and listing constraints, not slide screenshots.",
+    body: "SwiftUI and SwiftData, built for daily use, not a demo. Taken all the way through Apple review, not just slide screenshots.",
   },
 ];
 
@@ -271,9 +273,9 @@ export const CONTACT = {
 export const COMMAND_ITEMS = [
   { label: "Explore — the solar system, up close", go: "#explore", group: "Sections" },
   { label: "Emet — ask the AI terminal", go: "#emet", group: "Sections" },
-  { label: "Current — what he does today", go: "#source", group: "Sections" },
-  { label: "Before — where he's worked", go: "#lineage", group: "Sections" },
-  { label: "Projects — what he's shipped", go: "#build", group: "Sections" },
+  { label: "Current — what I do today", go: "#source", group: "Sections" },
+  { label: "Before — where I've worked", go: "#lineage", group: "Sections" },
+  { label: "Projects — what I've shipped", go: "#build", group: "Sections" },
   { label: "Why — the short version", go: "#story", group: "Sections" },
   { label: "Contact", go: "#commit", group: "Sections" },
   { label: "RepTrack on the App Store", href: "https://apps.apple.com/us/app/reptrack-workout-log/id6761032027", group: "Links" },

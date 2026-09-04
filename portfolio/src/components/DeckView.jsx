@@ -55,7 +55,7 @@ export default function DeckView({ ready = true }) {
           animate={ready ? fadeUp(0.08).animate : fadeUp(0.08).initial}
           className="font-display text-[clamp(2.6rem,6.4vw,5rem)] font-semibold leading-[1.02] text-[color:var(--ink-50)] max-w-3xl"
         >
-          Mohamed Ansar builds the data systems behind the decision.
+          I build the data systems behind the decision.
         </motion.h1>
 
         <motion.p
