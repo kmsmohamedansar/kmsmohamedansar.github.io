@@ -153,6 +153,14 @@ function Nav() {
         <div className="flex items-center gap-1">
           {route !== "emet" && (
             <a
+              href="#emet"
+              className="mr-1 hidden sm:inline-flex items-center gap-1.5 px-3 py-2 rounded-lg border border-white/10 text-[color:var(--ink-300)] hover:text-cyan hover:border-cyan/40 transition-colors font-mono text-[.68rem] uppercase tracking-[.1em]"
+            >
+              Ask EMET
+            </a>
+          )}
+          {route !== "emet" && (
+            <a
               href="#commit"
               className="mr-1 hidden sm:inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-white text-ink hover:bg-cyan transition-colors font-mono text-[.68rem] uppercase tracking-[.1em]"
             >
