@@ -20,8 +20,14 @@ export const starVertexShader = /* glsl */ `
     vec4 mvPosition = modelViewMatrix * vec4(position, 1.0);
     gl_Position = projectionMatrix * mvPosition;
     // Perspective-correct sizing so distant stars are smaller, the
-    // same 1/-z falloff a real point light source would have.
-    gl_PointSize = aSize * uPixelRatio * (140.0 / max(-mvPosition.z, 1.0));
+    // same 1/-z falloff a real point light source would have. Capped:
+    // stars are sampled no closer than 40 world units from the origin,
+    // but a camera that itself roams close to that inner shell (the
+    // explorer's free orbit, unlike the backdrop's fixed scroll path)
+    // can end up with a star nearly on the view axis at close to that
+    // minimum distance — without a ceiling here that reads as a huge
+    // out-of-place white disc instead of a point of light.
+    gl_PointSize = min(aSize * uPixelRatio * (140.0 / max(-mvPosition.z, 1.0)), 18.0 * uPixelRatio);
     vBrightness = aBrightness;
     vTwinkle = 0.55 + 0.45 * sin(uTime * aSpeed + aPhase);
   }

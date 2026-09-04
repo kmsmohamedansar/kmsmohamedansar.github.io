@@ -269,6 +269,7 @@ export const CONTACT = {
 };
 
 export const COMMAND_ITEMS = [
+  { label: "Explore — the solar system, up close", go: "#explore", group: "Sections" },
   { label: "Emet — ask the AI terminal", go: "#emet", group: "Sections" },
   { label: "Current — what he does today", go: "#source", group: "Sections" },
   { label: "Before — where he's worked", go: "#lineage", group: "Sections" },
