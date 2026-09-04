@@ -17,24 +17,21 @@ const EASE = EASE_OUT;
 const SCRIPT = [
   { text: "emet\n", cls: "text-glow-green font-bold", speed: 12 },
   { text: "──────────────────\n\n", cls: "opacity-40", speed: 5 },
-  { text: "Hi. I'm emet.\n\n", cls: "", speed: 20 },
-  { text: "I keep the record on ", cls: "", speed: 18 },
-  { text: "Mohamed Ansar", cls: "text-glow-green font-bold", speed: 18 },
-  { text: ".\n\n", cls: "", speed: 18 },
+  { text: "Hi, I'm Mohamed.\n\n", cls: "", speed: 20 },
   {
     text:
-      "He's a Solutions Engineer with 6 years building data systems, pipelines, and analytics at scale. One iOS app shipped to the App Store.\n\n",
+      "Solutions Engineer, six years into building data systems, pipelines, and analytics that actually hold up at scale. Also shipped one iOS app solo, start to finish.\n\n",
     cls: "",
     speed: 15,
   },
-  { text: "What would you like to know?\n", cls: "opacity-40", speed: 22 },
+  { text: "What do you want to know?\n", cls: "opacity-40", speed: 22 },
 ];
 
 const FALLBACK_ANSWER = [
-  { text: "Not sure about that one — try 1-4 below, or ask about " },
+  { text: "Not sure about that one — try 1-4 below, or ask me about " },
   { text: "SQL, Snowflake, iOS", cls: "font-bold" },
   { text: ", or how to " },
-  { text: "reach him", cls: "font-bold" },
+  { text: "reach me", cls: "font-bold" },
   { text: "." },
 ];
 
@@ -377,8 +374,8 @@ export default function EmetSection() {
             Ask <span className="italic text-green" style={{ fontFamily: "'Instrument Serif', serif" }}>emet</span>
           </h2>
           <p className="mt-5 max-w-md text-[1.02rem] leading-relaxed text-[color:var(--ink-400)]">
-            A small terminal that keeps the record straight — and answers right there, no page changes. Type a
-            number, or just ask about SQL, Snowflake, the App Store launch, or how to reach him.
+            A small terminal that answers right here, no page changes. Type a number, or just ask about
+            SQL, Snowflake, the App Store launch, or how to reach me.
           </p>
         </div>
 
