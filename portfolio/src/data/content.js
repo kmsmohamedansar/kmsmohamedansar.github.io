@@ -57,18 +57,6 @@ export const HERO_DECK = [
   { id: "contact", go: "#commit", kicker: "reach", title: "Contact", tagline: "Say hello", accent: "#fb7185", mark: "mail", image: contactBook, imageFit: "contain" },
 ];
 
-// Per-view ambient background theme — keyed by route (not card id,
-// since routes and card ids don't share a naming scheme). Only for
-// routes that use the general-purpose LightAmbientField backdrop —
-// the deck itself, and "story" (reachable only from the command
-// palette, not one of the five deck destinations). Each of the five
-// destinations has its own bespoke animated background instead (see
-// RouteBackgrounds.jsx), so it no longer needs an entry here.
-export const ROUTE_THEME = {
-  deck: { accent: "14,116,144", accent2: "180,83,9", mode: "stream" },
-  story: { accent: "109,40,217", accent2: "190,18,60", mode: "pulse" },
-};
-
 // emet answers these itself, inline in the terminal, instead of just
 // linking off to the section — "go" is kept only as an optional
 // "see the full page" escape hatch shown once the answer's done

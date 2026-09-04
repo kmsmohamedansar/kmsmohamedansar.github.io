@@ -113,7 +113,7 @@ export default function CommandPalette() {
             aria-modal="true"
             aria-label="Command palette"
           >
-            <div className="flex items-center gap-3 px-4 py-3 border-b border-slate-900/8">
+            <div className="flex items-center gap-3 px-4 py-3 border-b border-white/8">
               <Search size={16} className="text-cyan shrink-0" />
               <input
                 ref={inputRef}
@@ -121,14 +121,14 @@ export default function CommandPalette() {
                 onChange={(e) => setQuery(e.target.value)}
                 onKeyDown={onKeyDownList}
                 placeholder="Jump to a section or link…"
-                className="flex-1 bg-transparent outline-none text-sm font-mono text-[color:var(--ink-100)] placeholder:text-slate-500"
+                className="flex-1 bg-transparent outline-none text-sm font-mono text-[color:var(--ink-100)] placeholder:text-[color:var(--ink-400)]"
                 autoComplete="off"
                 spellCheck={false}
               />
               <button
                 onClick={() => setOpen(false)}
                 aria-label="Close command palette"
-                className="text-slate-500 hover:text-[color:var(--ink-200)] transition-colors"
+                className="text-[color:var(--ink-400)] hover:text-[color:var(--ink-200)] transition-colors"
               >
                 <X size={15} />
               </button>
@@ -136,13 +136,13 @@ export default function CommandPalette() {
 
             <div className="max-h-[50vh] overflow-y-auto mono-scroll py-2">
               {results.length === 0 && (
-                <p className="px-4 py-6 text-center text-sm text-slate-500 font-mono">No matches.</p>
+                <p className="px-4 py-6 text-center text-sm text-[color:var(--ink-400)] font-mono">No matches.</p>
               )}
               {Object.entries(grouped).map(([groupName, items]) => {
                 const GroupIcon = GROUP_ICONS[groupName];
                 return (
                   <div key={groupName} className="mb-1">
-                    <p className="flex items-center gap-1.5 px-4 pt-2 pb-1 text-[.62rem] tracking-[.14em] uppercase text-slate-500 font-mono">
+                    <p className="flex items-center gap-1.5 px-4 pt-2 pb-1 text-[.62rem] tracking-[.14em] uppercase text-[color:var(--ink-400)] font-mono">
                       {GroupIcon && <GroupIcon size={10} className="opacity-70" />}
                       {groupName}
                     </p>
@@ -154,7 +154,7 @@ export default function CommandPalette() {
                           onMouseEnter={() => setActiveIndex(item._index)}
                           onClick={() => runItem(item)}
                           className={`relative w-full flex items-center justify-between gap-3 pl-4 pr-4 py-2.5 text-left text-sm transition-colors ${
-                            active ? "bg-cyan/10 text-cyan" : "text-[color:var(--ink-300)] hover:bg-slate-900/5"
+                            active ? "bg-cyan/10 text-cyan" : "text-[color:var(--ink-300)] hover:bg-white/5"
                           }`}
                         >
                           <span
@@ -173,7 +173,7 @@ export default function CommandPalette() {
               })}
             </div>
 
-            <div className="flex items-center gap-4 px-4 py-2.5 border-t border-slate-900/8 text-[.62rem] font-mono text-slate-500">
+            <div className="flex items-center gap-4 px-4 py-2.5 border-t border-white/8 text-[.62rem] font-mono text-[color:var(--ink-400)]">
               <span className="flex items-center gap-1">
                 <ArrowUp size={11} />
                 <ArrowDown size={11} /> navigate
