@@ -1,8 +1,10 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { Search, CornerDownLeft, ArrowUp, ArrowDown, X } from "lucide-react";
+import { Search, CornerDownLeft, ArrowUp, ArrowDown, X, Hash, Link2, Terminal } from "lucide-react";
 import { COMMAND_ITEMS } from "../data/content";
 import { useSandbox } from "../App";
+
+const GROUP_ICONS = { Sections: Hash, Links: Link2, System: Terminal };
 
 /**
  * Global ⌘K / Ctrl+K command palette.
@@ -101,11 +103,11 @@ export default function CommandPalette() {
           onClick={() => setOpen(false)}
         >
           <motion.div
-            className="glass w-full max-w-xl rounded-2xl overflow-hidden shadow-2xl shadow-black/60"
-            initial={{ opacity: 0, y: -12, scale: 0.98 }}
+            className="glass w-full max-w-xl rounded-2xl overflow-hidden shadow-2xl shadow-black/60 ring-1 ring-cyan/10"
+            initial={{ opacity: 0, y: -16, scale: 0.96 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: -8, scale: 0.98 }}
-            transition={{ duration: 0.18, ease: [0.16, 1, 0.3, 1] }}
+            exit={{ opacity: 0, y: -10, scale: 0.97 }}
+            transition={{ duration: 0.22, ease: [0.16, 1, 0.3, 1] }}
             onClick={(e) => e.stopPropagation()}
             role="dialog"
             aria-modal="true"
@@ -136,28 +138,39 @@ export default function CommandPalette() {
               {results.length === 0 && (
                 <p className="px-4 py-6 text-center text-sm text-slate-500 font-mono">No matches.</p>
               )}
-              {Object.entries(grouped).map(([groupName, items]) => (
-                <div key={groupName} className="mb-1">
-                  <p className="px-4 pt-2 pb-1 text-[.62rem] tracking-[.14em] uppercase text-slate-500 font-mono">
-                    {groupName}
-                  </p>
-                  {items.map((item) => (
-                    <button
-                      key={item.label}
-                      onMouseEnter={() => setActiveIndex(item._index)}
-                      onClick={() => runItem(item)}
-                      className={`w-full flex items-center justify-between gap-3 px-4 py-2.5 text-left text-sm transition-colors ${
-                        item._index === activeIndex
-                          ? "bg-cyan/10 text-cyan"
-                          : "text-[color:var(--ink-300)] hover:bg-slate-900/5"
-                      }`}
-                    >
-                      <span className="font-mono">{item.label}</span>
-                      {item._index === activeIndex && <CornerDownLeft size={13} className="shrink-0" />}
-                    </button>
-                  ))}
-                </div>
-              ))}
+              {Object.entries(grouped).map(([groupName, items]) => {
+                const GroupIcon = GROUP_ICONS[groupName];
+                return (
+                  <div key={groupName} className="mb-1">
+                    <p className="flex items-center gap-1.5 px-4 pt-2 pb-1 text-[.62rem] tracking-[.14em] uppercase text-slate-500 font-mono">
+                      {GroupIcon && <GroupIcon size={10} className="opacity-70" />}
+                      {groupName}
+                    </p>
+                    {items.map((item) => {
+                      const active = item._index === activeIndex;
+                      return (
+                        <button
+                          key={item.label}
+                          onMouseEnter={() => setActiveIndex(item._index)}
+                          onClick={() => runItem(item)}
+                          className={`relative w-full flex items-center justify-between gap-3 pl-4 pr-4 py-2.5 text-left text-sm transition-colors ${
+                            active ? "bg-cyan/10 text-cyan" : "text-[color:var(--ink-300)] hover:bg-slate-900/5"
+                          }`}
+                        >
+                          <span
+                            className={`absolute left-0 top-1 bottom-1 w-[2.5px] rounded-full bg-cyan transition-opacity ${
+                              active ? "opacity-100" : "opacity-0"
+                            }`}
+                            aria-hidden="true"
+                          />
+                          <span className="font-mono">{item.label}</span>
+                          {active && <CornerDownLeft size={13} className="shrink-0" />}
+                        </button>
+                      );
+                    })}
+                  </div>
+                );
+              })}
             </div>
 
             <div className="flex items-center gap-4 px-4 py-2.5 border-t border-slate-900/8 text-[.62rem] font-mono text-slate-500">

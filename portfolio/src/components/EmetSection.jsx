@@ -252,22 +252,39 @@ function CrtChassis({ children, className = "" }) {
   );
 }
 
+// A power LED + signal-strength ladder instead of macOS window-chrome
+// dots — the CRT is meant to read as a piece of hardware you're
+// looking into, not a desktop window, so its own chrome shouldn't
+// borrow another OS's. The ladder bars breathe gently while booting,
+// then settle solid once ready — a cheap but legible "device is live"
+// tell that a static dot can't give.
 function MonitorBar({ title, status, statusTone = "cyan" }) {
+  const reduced = prefersReducedMotion();
   const tone =
     statusTone === "cyan"
-      ? "text-cyan border-cyan/30"
+      ? { text: "text-cyan", border: "border-cyan/30", bg: "bg-cyan", shadow: "rgba(34,211,238,0.65)" }
       : statusTone === "green"
-        ? "text-green border-green/30"
-        : "text-amber border-amber/30";
+        ? { text: "text-green", border: "border-green/30", bg: "bg-green", shadow: "rgba(52,211,153,0.65)" }
+        : { text: "text-amber", border: "border-amber/30", bg: "bg-amber", shadow: "rgba(251,191,36,0.65)" };
+  const booting = statusTone === "amber";
   return (
     <div className="flex items-center gap-3 px-4 py-2.5 border-b border-white/8 bg-black/20">
-      <span className="flex gap-1.5">
-        <i className="w-2 h-2 rounded-full bg-[#ff5f57]" />
-        <i className="w-2 h-2 rounded-full bg-[#febc2e]" />
-        <i className="w-2 h-2 rounded-full bg-[#28c840]" />
+      <span
+        className={`w-1.5 h-1.5 rounded-full ${tone.bg} ${!reduced && booting ? "animate-pulse" : ""}`}
+        style={{ boxShadow: `0 0 6px 1px ${tone.shadow}` }}
+        aria-hidden="true"
+      />
+      <span className="flex items-end gap-[2px] h-2.5" aria-hidden="true">
+        {[0.4, 0.65, 1].map((h, i) => (
+          <i
+            key={i}
+            className={`w-[3px] rounded-[1px] ${tone.bg} ${booting ? "opacity-40" : "opacity-90"}`}
+            style={{ height: `${h * 100}%` }}
+          />
+        ))}
       </span>
       <span className="flex-1 font-mono text-[.64rem] tracking-wide text-[color:var(--ink-400)]">{title}</span>
-      <span className={`font-mono text-[.56rem] uppercase tracking-[.12em] border rounded px-1.5 py-0.5 ${tone}`}>
+      <span className={`font-mono text-[.56rem] uppercase tracking-[.12em] border rounded px-1.5 py-0.5 ${tone.text} ${tone.border}`}>
         {status}
       </span>
     </div>

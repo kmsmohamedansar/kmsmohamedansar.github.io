@@ -36,6 +36,7 @@ export const cardFrontFragmentShader = /* glsl */ `
   uniform vec2 cardAspect;
   uniform vec2 textureAspect;
   uniform float hover;
+  uniform float depthFade;
   uniform vec3 accentColor;
   varying vec2 vUv;
   varying vec3 vNormal;
@@ -59,7 +60,16 @@ export const cardFrontFragmentShader = /* glsl */ `
     vec3 color = base + streakColor * s * (0.35 + hover * 0.4);
 
     float rim = pow(1.0 - clamp(dot(vNormal, vViewDir), 0.0, 1.0), 3.0);
-    color += accentColor * rim * 0.25;
+    color += accentColor * rim * (0.2 + hover * 0.3);
+
+    // Cards further back in the fan sit under a faint cool haze and
+    // read a touch darker — real atmospheric falloff, not a flat
+    // opacity fade, so depth reads even when a card isn't hovered.
+    // Hovering pulls a card visually forward by cancelling its own
+    // haze, independent of the raycast z-order.
+    float fade = depthFade * (1.0 - hover * 0.85);
+    color = mix(color, vec3(0.86, 0.9, 0.96), fade * 0.22);
+    color *= 1.0 - fade * 0.14;
 
     gl_FragColor = vec4(color, 1.0);
   }
@@ -68,6 +78,7 @@ export const cardFrontFragmentShader = /* glsl */ `
 export const cardBackFragmentShader = /* glsl */ `
   uniform vec3 baseColor;
   uniform vec3 accentColor;
+  uniform float depthFade;
   varying vec2 vUv;
   varying vec3 vNormal;
   varying vec3 vViewDir;
@@ -93,6 +104,7 @@ export const cardBackFragmentShader = /* glsl */ `
 
     float s = streak(vNormal, vViewDir, vUv, 0.0);
     color += accentColor * s * 0.2;
+    color *= 1.0 - depthFade * 0.16;
 
     gl_FragColor = vec4(color, 1.0);
   }
@@ -100,6 +112,8 @@ export const cardBackFragmentShader = /* glsl */ `
 
 export const cardEdgeFragmentShader = /* glsl */ `
   uniform vec3 accentColor;
+  uniform float hover;
+  uniform float depthFade;
   varying vec2 vUv;
   varying vec3 vNormal;
   varying vec3 vViewDir;
@@ -107,7 +121,8 @@ export const cardEdgeFragmentShader = /* glsl */ `
   void main() {
     float facing = clamp(dot(vNormal, vViewDir), -1.0, 1.0);
     float glow = smoothstep(-0.2, 1.0, facing);
-    vec3 color = mix(vec3(0.82, 0.85, 0.9), accentColor, glow * 0.55);
+    vec3 base = mix(vec3(0.82, 0.85, 0.9), vec3(0.68, 0.72, 0.78), depthFade);
+    vec3 color = mix(base, accentColor, glow * (0.4 + hover * 0.35));
     gl_FragColor = vec4(color, 1.0);
   }
 `;
