@@ -47,9 +47,9 @@ function drawWrapped(ctx, width, height, x, y, r, draw) {
  * larger tonal "continent" patches so the sphere doesn't read as a flat
  * tint even before lighting is applied.
  */
-export function makeRockyTexture({ base, dark, light, poleShadow = 0.35, craterCount = 220, patchCount = 5, seed = 1 }) {
-  const width = 1024;
-  const height = 512;
+export function makeRockyTexture({ base, dark, light, poleShadow = 0.35, craterCount = 220, patchCount = 5, seed = 1, scale = 1 }) {
+  const width = 1024 * scale;
+  const height = 512 * scale;
   const canvas = makeCanvas(width, height);
   const ctx = canvas.getContext("2d");
 
@@ -68,7 +68,7 @@ export function makeRockyTexture({ base, dark, light, poleShadow = 0.35, craterC
   for (let i = 0; i < patchCount; i++) {
     const x = rand() * width;
     const y = height * 0.15 + rand() * height * 0.7;
-    const r = 60 + rand() * 140;
+    const r = (60 + rand() * 140) * scale;
     drawWrapped(ctx, width, height, x, y, r, (c, px, py, pr) => {
       const g = c.createRadialGradient(px, py, 0, px, py, pr);
       const tone = rand() > 0.5 ? light : dark;
@@ -86,7 +86,7 @@ export function makeRockyTexture({ base, dark, light, poleShadow = 0.35, craterC
   for (let i = 0; i < craterCount; i++) {
     const x = rand() * width;
     const y = height * 0.08 + rand() * height * 0.84;
-    const r = 3 + rand() * 16;
+    const r = (3 + rand() * 16) * scale;
     drawWrapped(ctx, width, height, x, y, r, (c, px, py, pr) => {
       const g = c.createRadialGradient(px - pr * 0.3, py - pr * 0.3, 0, px, py, pr);
       g.addColorStop(0, light);
@@ -118,9 +118,9 @@ export function makeRockyTexture({ base, dark, light, poleShadow = 0.35, craterC
 // A grayscale height map from the same crater layout logic, used as a
 // bumpMap so the craters read as actual relief under the sun light
 // instead of only a flat color variation.
-export function makeBumpTexture({ craterCount = 220, seed = 1 }) {
-  const width = 512;
-  const height = 256;
+export function makeBumpTexture({ craterCount = 220, seed = 1, scale = 1 }) {
+  const width = 512 * scale;
+  const height = 256 * scale;
   const canvas = makeCanvas(width, height);
   const ctx = canvas.getContext("2d");
   ctx.fillStyle = "#808080";
@@ -135,7 +135,7 @@ export function makeBumpTexture({ craterCount = 220, seed = 1 }) {
   for (let i = 0; i < craterCount; i++) {
     const x = rand() * width;
     const y = height * 0.08 + rand() * height * 0.84;
-    const r = 2 + rand() * 9;
+    const r = (2 + rand() * 9) * scale;
     drawWrapped(ctx, width, height, x, y, r, (c, px, py, pr) => {
       const g = c.createRadialGradient(px, py, 0, px, py, pr);
       g.addColorStop(0, "#3a3a3a");
@@ -156,9 +156,9 @@ export function makeBumpTexture({ craterCount = 220, seed = 1 }) {
  * read as turbulent flow rather than ruled lines, plus a few soft
  * storm-spot blobs on the wider bands.
  */
-export function makeBandedTexture({ colors, spots = 2, seed = 1 }) {
-  const width = 1024;
-  const height = 512;
+export function makeBandedTexture({ colors, spots = 2, seed = 1, scale = 1 }) {
+  const width = 1024 * scale;
+  const height = 512 * scale;
   const canvas = makeCanvas(width, height);
   const ctx = canvas.getContext("2d");
 
@@ -172,7 +172,7 @@ export function makeBandedTexture({ colors, spots = 2, seed = 1 }) {
   const bandHeight = height / bandCount;
   for (let b = 0; b < bandCount; b++) {
     const yBase = b * bandHeight;
-    const wobbleAmp = 4 + rand() * 10;
+    const wobbleAmp = (4 + rand() * 10) * scale;
     const wobbleFreq = 1 + rand() * 3;
     const phase = rand() * TAU;
     ctx.fillStyle = colors[b];
@@ -191,12 +191,18 @@ export function makeBandedTexture({ colors, spots = 2, seed = 1 }) {
   for (let i = 0; i < spots; i++) {
     const x = rand() * width;
     const y = height * 0.2 + rand() * height * 0.6;
-    const rx = 30 + rand() * 60;
+    const rx = (30 + rand() * 60) * scale;
     const ry = rx * (0.55 + rand() * 0.25);
     drawWrapped(ctx, width, height, x, y, rx, (c, px) => {
       const g = c.createRadialGradient(px, y, 0, px, y, rx);
+      // A defined core over most of the radius with only a short
+      // feathered edge — the same "sharp core, short anti-aliased
+      // edge" fix already applied to the star sprites, instead of a
+      // gradient that fades across its entire radius and reads as a
+      // hazy smudge rather than a storm.
       const tone = colors[Math.floor(rand() * colors.length)];
       g.addColorStop(0, tone);
+      g.addColorStop(0.7, tone);
       g.addColorStop(1, "rgba(0,0,0,0)");
       c.globalAlpha = 0.5;
       c.fillStyle = g;
@@ -217,9 +223,9 @@ export function makeBandedTexture({ colors, spots = 2, seed = 1 }) {
  * The cloud layer is a separate alpha-only texture so it can sit on
  * its own slightly-larger sphere and rotate at a different rate.
  */
-export function makeEarthTexture(seed = 11) {
-  const width = 1024;
-  const height = 512;
+export function makeEarthTexture(seed = 11, scale = 1) {
+  const width = 1024 * scale;
+  const height = 512 * scale;
   const canvas = makeCanvas(width, height);
   const ctx = canvas.getContext("2d");
 
@@ -240,7 +246,7 @@ export function makeEarthTexture(seed = 11) {
   for (let i = 0; i < 16; i++) {
     const x = rand() * width;
     const y = height * 0.12 + rand() * height * 0.76;
-    const r = 40 + rand() * 130;
+    const r = (40 + rand() * 130) * scale;
     drawWrapped(ctx, width, height, x, y, r, (c, px, py, pr) => {
       c.fillStyle = continents[i % continents.length];
       c.globalAlpha = 0.85;
@@ -255,7 +261,7 @@ export function makeEarthTexture(seed = 11) {
   for (let i = 0; i < 5; i++) {
     const x = rand() * width;
     const y = height * 0.4 + rand() * height * 0.2;
-    const r = 40 + rand() * 70;
+    const r = (40 + rand() * 70) * scale;
     drawWrapped(ctx, width, height, x, y, r, (c, px, py, pr) => {
       const g = c.createRadialGradient(px, py, 0, px, py, pr);
       g.addColorStop(0, "#c9b26b");
@@ -281,9 +287,9 @@ export function makeEarthTexture(seed = 11) {
   return canvas;
 }
 
-export function makeEarthCloudTexture(seed = 21) {
-  const width = 1024;
-  const height = 512;
+export function makeEarthCloudTexture(seed = 21, scale = 1) {
+  const width = 1024 * scale;
+  const height = 512 * scale;
   const canvas = makeCanvas(width, height);
   const ctx = canvas.getContext("2d");
   ctx.clearRect(0, 0, width, height);
@@ -298,10 +304,15 @@ export function makeEarthCloudTexture(seed = 21) {
   for (let i = 0; i < 46; i++) {
     const x = rand() * width;
     const y = height * 0.1 + rand() * height * 0.8;
-    const r = 20 + rand() * 55;
+    const r = (20 + rand() * 55) * scale;
     drawWrapped(ctx, width, height, x, y, r, (c, px, py, pr) => {
       const g = c.createRadialGradient(px, py, 0, px, py, pr);
-      g.addColorStop(0, "rgba(255,255,255,0.85)");
+      // Same fix as the storm spots above: a solid-ish core over most
+      // of the radius instead of fading across the whole thing, so
+      // clouds read as distinct wisps rather than a uniform haze once
+      // the camera's close enough to make out individual shapes.
+      g.addColorStop(0, "rgba(255,255,255,0.92)");
+      g.addColorStop(0.6, "rgba(255,255,255,0.75)");
       g.addColorStop(1, "rgba(255,255,255,0)");
       c.fillStyle = g;
       c.beginPath();
