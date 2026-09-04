@@ -6,53 +6,77 @@ import EmetSection from "./components/EmetSection";
 import { NowSection, BeforeSection, WorkSection, StorySection, ContactSection } from "./components/ContentSections";
 import SandboxStubs from "./components/SandboxStubs";
 import CommandPalette from "./components/CommandPalette";
-import LightAmbientField from "./components/LightAmbientField";
-import {
-  MatrixBackground,
-  DataFlowBackground,
-  StudioBackground,
-  StatsBackground,
-  PingBackground,
-} from "./components/RouteBackgrounds";
+import { MatrixBackground } from "./components/RouteBackgrounds";
 import BootSequence from "./components/BootSequence";
 import CustomCursor from "./components/CustomCursor";
-import { ROUTE_THEME } from "./data/content";
 import { EASE_OUT } from "./lib/motion";
 
-const WaterBackground3D = lazy(() => import("./components/WaterBackground3D"));
+const StarfieldBackground = lazy(() => import("./components/StarfieldBackground"));
 
 /* ============================================================
-   ROUTER — the whole site is one screen at a time, swapped by
-   URL hash. No document scroll between "sections": click a card
-   or a nav link, the current view is replaced by the next one.
-   Hash-based so plain <a href="#build"> links everywhere (nav,
-   command palette, emet's shortcuts) keep working unmodified —
-   the browser's native hash change is all the trigger this needs.
+   ROUTER — two states only now: "emet" (a full takeover view,
+   reached from its deck card, the nav, or the command palette) and
+   "main" (everything else). "main" is a single continuously-scrolled
+   document — the deck hero followed by Now/Before/Work/Story/Contact
+   — so a card or nav link pointing at one of those doesn't swap a
+   view anymore, it smooth-scrolls to that section's id within the
+   document. Hash-based so every existing <a href="#build"> (nav, the
+   deck cards, emet's shortcuts, the command palette) keeps working
+   completely unmodified — only the interpretation of a non-"emet"
+   hash changed, from "which view is active" to "which section to
+   scroll to."
    ============================================================ */
-const VIEWS = { hero: "deck", "": "deck", emet: "emet", source: "source", lineage: "lineage", build: "build", story: "story", commit: "commit" };
-
 function readRoute() {
-  if (typeof window === "undefined") return "deck";
+  if (typeof window === "undefined") return "main";
   const h = window.location.hash.replace(/^#/, "");
-  return VIEWS[h] || "deck";
+  return h === "emet" ? "emet" : "main";
 }
 
 const RouteContext = createContext(null);
 export const useRoute = () => useContext(RouteContext);
 
+// Shared with StarfieldBackground so it can read scroll position off
+// the same element Stage renders as <main> — set once, read every
+// frame via a plain ref rather than React state so scrolling never
+// triggers a re-render.
+const ScrollContext = createContext(null);
+export const useScrollContainer = () => useContext(ScrollContext);
+
+function scrollToSection(id) {
+  requestAnimationFrame(() => {
+    document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" });
+  });
+}
+
 function RouteProvider({ children }) {
   const [route, setRoute] = useState(readRoute);
+  const scrollContainerRef = useContext(ScrollContext);
 
   useEffect(() => {
     function onHashChange() {
-      setRoute(readRoute());
+      const h = window.location.hash.replace(/^#/, "");
+      setRoute(h === "emet" ? "emet" : "main");
+      if (h && h !== "emet") scrollToSection(h);
     }
     window.addEventListener("hashchange", onHashChange);
     return () => window.removeEventListener("hashchange", onHashChange);
   }, []);
 
+  // Deep link on first load (e.g. a bookmark to #build) — no
+  // hashchange event fires for the hash already present at mount.
+  useEffect(() => {
+    const h = window.location.hash.replace(/^#/, "");
+    if (h && h !== "emet") scrollToSection(h);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   const navigate = (id) => {
-    window.location.hash = id === "deck" ? "" : id;
+    if (id === "deck") {
+      if (window.location.hash) window.location.hash = "";
+      scrollContainerRef?.current?.scrollTo({ top: 0, behavior: "smooth" });
+      return;
+    }
+    window.location.hash = id;
   };
 
   const value = useMemo(() => ({ route, navigate }), [route]);
@@ -60,20 +84,20 @@ function RouteProvider({ children }) {
 }
 
 /* ============================================================
-   THEME — one theme, light, always. Still a context (not a bare
-   constant) because the CSS variable system keyed off
-   document.documentElement.dataset.theme, and every component that
-   reads useTheme().theme, both assume it exists.
+   THEME — dark, always. A premium, space-lit backdrop is the whole
+   point of the restructure, so there's no light variant to switch
+   to; the context stays only because a few permanently-dark surfaces
+   (the CRT chassis) key off document.documentElement.dataset.theme.
    ============================================================ */
 const ThemeContext = createContext(null);
 export const useTheme = () => useContext(ThemeContext);
 
 function ThemeProvider({ children }) {
   useEffect(() => {
-    document.documentElement.dataset.theme = "light";
+    document.documentElement.dataset.theme = "dark";
   }, []);
 
-  const value = useMemo(() => ({ theme: "light" }), []);
+  const value = useMemo(() => ({ theme: "dark" }), []);
   return <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>;
 }
 
@@ -97,57 +121,55 @@ function SandboxProvider({ children }) {
 // Projects / Contact) and no Contact CTA — that row was a plain-text
 // shortcut around the deck's whole reason for existing: an actual
 // 3D scene you navigate by clicking a card, not a menu bar. The one
-// thing every view still needs is a way back, so the logo doubles as
-// a Home control, made explicit with a label once you're not already
-// on the deck. ⌘K stays as the accessibility/power-user fallback —
-// it's opt-in, not a visible competing menu.
+// thing every view still needs is a way back to the top, so the logo
+// doubles as a Home control once you've scrolled past the hero or
+// stepped into EMET. ⌘K stays as the accessibility/power-user
+// fallback — it's opt-in, not a visible competing menu.
 function Nav() {
   const { route, navigate } = useRoute();
-  const onDeck = route === "deck";
 
   function openPalette() {
     window.dispatchEvent(new KeyboardEvent("keydown", { key: "k", metaKey: true }));
   }
 
   return (
-    <nav
-      className={`fixed top-0 inset-x-0 z-[100] transition-colors ${
-        onDeck ? "border-b border-transparent" : "bg-slate-50/80 backdrop-blur-xl border-b border-slate-900/8"
-      }`}
-    >
+    <nav className="fixed top-0 inset-x-0 z-[100] transition-colors bg-ink/70 backdrop-blur-xl border-b border-white/8">
       <div className="mx-auto max-w-[1260px] flex items-center justify-between px-5 py-4">
-        <a href="#hero" className="flex items-center gap-3 font-mono text-[.85rem] font-semibold">
-          <span className="w-8 h-8 rounded-lg grid place-items-center bg-gradient-to-br from-cyan/20 to-violet/20 border border-slate-900/10 text-cyan text-[.68rem]">
+        <button
+          onClick={() => navigate("deck")}
+          className="flex items-center gap-3 font-mono text-[.85rem] font-semibold text-left"
+        >
+          <span className="w-8 h-8 rounded-lg grid place-items-center bg-gradient-to-br from-cyan/20 to-violet/20 border border-white/10 text-cyan text-[.68rem]">
             MA
           </span>
           <span>
             mohamed.ansar
-            <small className="block text-[.6rem] font-normal tracking-[.16em] uppercase text-slate-500">
+            <small className="block text-[.6rem] font-normal tracking-[.16em] uppercase text-[color:var(--ink-400)]">
               solutions engineer
             </small>
           </span>
-        </a>
+        </button>
 
         <div className="flex items-center gap-1">
-          {onDeck && (
+          {route !== "emet" && (
             <a
               href="#commit"
-              className="mr-1 hidden sm:inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-slate-900 text-white hover:bg-slate-700 transition-colors font-mono text-[.68rem] uppercase tracking-[.1em]"
+              className="mr-1 hidden sm:inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-white text-ink hover:bg-cyan transition-colors font-mono text-[.68rem] uppercase tracking-[.1em]"
             >
               Get in touch
             </a>
           )}
-          {!onDeck && (
+          {route === "emet" && (
             <button
               onClick={() => navigate("deck")}
-              className="flex items-center gap-1.5 px-3 py-2 rounded-lg border border-slate-900/10 text-cyan hover:border-cyan/40 transition-colors font-mono text-[.68rem] uppercase tracking-[.1em]"
+              className="flex items-center gap-1.5 px-3 py-2 rounded-lg border border-white/10 text-cyan hover:border-cyan/40 transition-colors font-mono text-[.68rem] uppercase tracking-[.1em]"
             >
               ← Home
             </button>
           )}
           <button
             onClick={openPalette}
-            className="ml-1 flex items-center gap-1 px-2.5 py-2 rounded-lg border border-slate-900/10 text-slate-500 hover:text-cyan hover:border-cyan/30 transition-colors font-mono text-[.65rem]"
+            className="ml-1 flex items-center gap-1 px-2.5 py-2 rounded-lg border border-white/10 text-[color:var(--ink-400)] hover:text-cyan hover:border-cyan/30 transition-colors font-mono text-[.65rem]"
             aria-label="Open command palette"
           >
             <Command size={11} /> K
@@ -158,95 +180,97 @@ function Nav() {
   );
 }
 
-const VIEW_COMPONENTS = {
-  deck: DeckView,
-  emet: EmetSection,
-  source: NowSection,
-  lineage: BeforeSection,
-  build: WorkSection,
-  story: StorySection,
-  commit: ContactSection,
-};
+function MainDocument({ bootDone }) {
+  return (
+    <>
+      <DeckView ready={bootDone} />
+      <NowSection />
+      <BeforeSection />
+      <WorkSection />
+      <StorySection />
+      <ContactSection />
+    </>
+  );
+}
 
 function Stage({ bootDone }) {
   const { route } = useRoute();
   const { devMode, toggleDevMode } = useSandbox();
-  const mainRef = useRef(null);
-  const ActiveView = VIEW_COMPONENTS[route];
+  const scrollContainerRef = useContext(ScrollContext);
 
-  // Every view swap starts scrolled to its own top — this is a fresh
-  // "page," not a continuation of wherever the last one left off.
   useEffect(() => {
-    if (mainRef.current) mainRef.current.scrollTop = 0;
-  }, [route]);
+    if (route === "emet" && scrollContainerRef?.current) scrollContainerRef.current.scrollTop = 0;
+  }, [route, scrollContainerRef]);
 
   return (
-    <main ref={mainRef} className="flex-1 min-h-0 overflow-y-auto mono-scroll">
+    <main ref={scrollContainerRef} className="flex-1 min-h-0 overflow-y-auto mono-scroll">
       <AnimatePresence mode="wait">
-        <motion.div
-          key={route}
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          transition={{ duration: 0.28, ease: EASE_OUT }}
-          className="h-full"
-        >
-          {route === "deck" ? <ActiveView ready={bootDone} /> : <ActiveView />}
-        </motion.div>
+        {route === "emet" ? (
+          <motion.div
+            key="emet"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.28, ease: EASE_OUT }}
+            className="h-full"
+          >
+            <EmetSection />
+          </motion.div>
+        ) : (
+          <motion.div
+            key="main"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.28, ease: EASE_OUT }}
+          >
+            <MainDocument bootDone={bootDone} />
+          </motion.div>
+        )}
       </AnimatePresence>
       {devMode && <SandboxStubs onClose={toggleDevMode} />}
     </main>
   );
 }
 
-// Each of the five deck destinations gets its own bespoke animated
-// backdrop instead of a shared particle field recolored per route —
-// emet's terminal rain, Current's data flow, Before's studio
-// spotlights, Projects' stats board, Contact's signal pings, and the
-// deck itself a bright water surface. Only "story" (reachable from
-// the command palette, not one of the five deck destinations) still
-// falls back to the general-purpose aurora.
-const ROUTE_BACKGROUNDS = {
-  deck: WaterBackground3D,
-  emet: MatrixBackground,
-  source: DataFlowBackground,
-  lineage: StudioBackground,
-  build: StatsBackground,
-  commit: PingBackground,
-};
-
 function Backdrop() {
   const { route } = useRoute();
-  const RouteBackground = ROUTE_BACKGROUNDS[route];
-  if (RouteBackground) {
+  const scrollContainerRef = useContext(ScrollContext);
+  if (route === "emet") {
     return (
-      <Suspense fallback={<div className="fixed inset-0 z-0 bg-white" aria-hidden="true" />}>
-        <RouteBackground key={route} />
+      <Suspense fallback={<div className="fixed inset-0 z-0 bg-[#04120a]" aria-hidden="true" />}>
+        <MatrixBackground />
       </Suspense>
     );
   }
-  const routeTheme = ROUTE_THEME[route] || ROUTE_THEME.deck;
-  return <LightAmbientField key={route} theme={routeTheme} />;
+  return (
+    <Suspense fallback={<div className="fixed inset-0 z-0 bg-[#050911]" aria-hidden="true" />}>
+      <StarfieldBackground scrollContainerRef={scrollContainerRef} />
+    </Suspense>
+  );
 }
 
 function AppShell({ bootDone }) {
+  const scrollContainerRef = useRef(null);
   return (
-    <RouteProvider>
-      <div className="relative bg-slate-50 text-slate-900 h-[100dvh] overflow-hidden">
-        <Backdrop />
-        <div className="relative z-10 h-full flex flex-col">
-          <Nav />
-          {/* No page-level `perspective` here on purpose: setting it on an
-              ancestor this high up turns it into the CSS containing block
-              for every `position: fixed` descendant (modals, overlays)
-              anywhere in the tree, breaking their viewport-relative
-              positioning. Each 3D component (deck cards, emet's chassis,
-              project cards) establishes its own local perspective instead. */}
-          <Stage bootDone={bootDone} />
-          <CommandPalette />
+    <ScrollContext.Provider value={scrollContainerRef}>
+      <RouteProvider>
+        <div className="relative bg-ink text-slate-100 h-[100dvh] overflow-hidden">
+          <Backdrop />
+          <div className="relative z-10 h-full flex flex-col">
+            <Nav />
+            {/* No page-level `perspective` here on purpose: setting it on an
+                ancestor this high up turns it into the CSS containing block
+                for every `position: fixed` descendant (modals, overlays)
+                anywhere in the tree, breaking their viewport-relative
+                positioning. Each 3D component (deck cards, emet's chassis,
+                project cards) establishes its own local perspective instead. */}
+            <Stage bootDone={bootDone} />
+            <CommandPalette />
+          </div>
         </div>
-      </div>
-    </RouteProvider>
+      </RouteProvider>
+    </ScrollContext.Provider>
   );
 }
 

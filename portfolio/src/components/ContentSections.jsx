@@ -87,7 +87,7 @@ function DashboardBar({ title, status = "ONLINE", pulse = false }) {
 export function NowSection() {
   const icons = [Database, Compass, Smartphone];
   return (
-    <section className="min-h-full flex flex-col items-center justify-center px-5 py-14">
+    <section id="source" data-star-accent="source" className="min-h-[100dvh] flex flex-col items-center justify-center px-5 py-14">
       <div className="w-full max-w-[1180px]">
         <SectionHead
           step="01"
@@ -129,7 +129,7 @@ export function NowSection() {
                   return (
                     <Reveal key={p.title} delay={0.1 + i * 0.08}>
                       <div className="glass rounded-xl p-5 flex gap-4">
-                        <span className="w-9 h-9 shrink-0 grid place-items-center rounded-lg border border-slate-900/10 text-cyan">
+                        <span className="w-9 h-9 shrink-0 grid place-items-center rounded-lg border border-white/10 text-cyan">
                           <Icon size={17} />
                         </span>
                         <div>
@@ -170,7 +170,7 @@ export function BeforeSection() {
   const expandedRole = expandedIdx !== null ? ROLES[expandedIdx] : null;
 
   return (
-    <section className="min-h-full flex flex-col items-center justify-center px-5 py-14">
+    <section id="lineage" data-star-accent="lineage" className="min-h-[100dvh] flex flex-col items-center justify-center px-5 py-14">
       <div className="w-full max-w-[1180px]">
         <SectionHead
           step="02"
@@ -182,7 +182,7 @@ export function BeforeSection() {
             signature motion here is career progression, left to
             right, one role settling into place after another. */}
         <motion.div
-          className="relative h-px bg-slate-900/10 mb-10 origin-left"
+          className="relative h-px bg-white/10 mb-10 origin-left"
           initial={{ scaleX: 0 }}
           whileInView={{ scaleX: 1 }}
           viewport={{ once: true }}
@@ -220,12 +220,12 @@ export function BeforeSection() {
                 >
                   <div>
                     <div className="flex items-start justify-between gap-3 mb-3">
-                      <span className={`w-2.5 h-2.5 rounded-full mt-1 shrink-0 ${role.current ? "bg-cyan" : "bg-slate-600"}`} />
+                      <span className={`w-2.5 h-2.5 rounded-full mt-1 shrink-0 ${role.current ? "bg-cyan" : "bg-white/25"}`} />
                       <ChevronRight size={14} className="text-[color:var(--ink-400)] shrink-0" />
                     </div>
                     <h3 className={`font-semibold text-[color:var(--ink-100)] ${big ? "text-lg" : ""}`}>{role.title}</h3>
-                    <p className="text-slate-500 text-[.8rem] mb-2">{role.company}</p>
-                    <p className="font-mono text-[.65rem] text-slate-500">{role.when}</p>
+                    <p className="text-[color:var(--ink-400)] text-[.8rem] mb-2">{role.company}</p>
+                    <p className="font-mono text-[.65rem] text-[color:var(--ink-400)]">{role.when}</p>
                   </div>
                   {big && (
                     <p className="text-[.85rem] text-[color:var(--ink-400)] leading-relaxed mt-4 line-clamp-3">
@@ -256,13 +256,13 @@ export function BeforeSection() {
               <div className="flex items-start justify-between gap-4 mb-4">
                 <div>
                   <h3 className="font-display text-xl font-semibold text-[color:var(--ink-100)]">{expandedRole.title}</h3>
-                  <p className="text-slate-500 text-[.85rem]">
+                  <p className="text-[color:var(--ink-400)] text-[.85rem]">
                     {expandedRole.company} · {expandedRole.when}
                   </p>
                 </div>
                 <button
                   onClick={() => setExpandedIdx(null)}
-                  className="w-8 h-8 grid place-items-center rounded-lg border border-slate-900/10 text-[color:var(--ink-400)] hover:text-cyan hover:border-cyan/40 transition-colors shrink-0"
+                  className="w-8 h-8 grid place-items-center rounded-lg border border-white/10 text-[color:var(--ink-400)] hover:text-cyan hover:border-cyan/40 transition-colors shrink-0"
                   aria-label="Close"
                 >
                   <X size={15} />
@@ -283,7 +283,7 @@ export function BeforeSection() {
                   {expandedRole.tags.map((t) => (
                     <span
                       key={t}
-                      className="font-mono text-[.62rem] tracking-wide uppercase px-2.5 py-1 rounded-full border border-slate-900/10 text-[color:var(--ink-400)]"
+                      className="font-mono text-[.62rem] tracking-wide uppercase px-2.5 py-1 rounded-full border border-white/10 text-[color:var(--ink-400)]"
                     >
                       {t}
                     </span>
@@ -356,9 +356,9 @@ function PhoneMockup() {
   return (
     <div className="mx-auto w-full max-w-[270px] rounded-[2.1rem] border border-white/10 bg-black p-2 shadow-2xl shadow-black/50">
       <div className="rounded-[1.6rem] overflow-hidden bg-gradient-to-b from-[#0e1730] to-black">
-        <div className="flex items-center justify-between px-5 pt-3.5 pb-2 font-mono text-[.58rem] text-slate-500">
+        <div className="flex items-center justify-between px-5 pt-3.5 pb-2 font-mono text-[.58rem] text-[color:var(--ink-400)]">
           <span>9:41</span>
-          <i className="w-4 h-2 rounded-[2px] bg-slate-600" />
+          <i className="w-4 h-2 rounded-[2px] bg-white/30" />
         </div>
         <div className="px-5 pb-7">
           <p className="font-display text-slate-100 text-[1.05rem] font-semibold mb-1">This week</p>
@@ -367,7 +367,7 @@ function PhoneMockup() {
             {rows.map(([name, meta]) => (
               <div key={name} className="flex items-center justify-between rounded-lg bg-white/[.05] px-3 py-2.5">
                 <span className="text-slate-200 text-[.74rem] font-medium">{name}</span>
-                <span className="font-mono text-[.58rem] text-slate-500">{meta}</span>
+                <span className="font-mono text-[.58rem] text-[color:var(--ink-400)]">{meta}</span>
               </div>
             ))}
           </div>
@@ -409,7 +409,7 @@ function RepTrackShowcase({ project }) {
             <p className="mt-5 text-[color:var(--ink-400)] leading-relaxed max-w-md">{project.body}</p>
             <div className="mt-6 flex flex-wrap gap-x-4 gap-y-1.5">
               {project.tags?.map((t) => (
-                <span key={t} className="font-mono text-[.64rem] uppercase tracking-wide text-slate-500">
+                <span key={t} className="font-mono text-[.64rem] uppercase tracking-wide text-[color:var(--ink-400)]">
                   {t}
                 </span>
               ))}
@@ -444,9 +444,9 @@ function ProjectRow({ project, index }) {
     <Reveal delay={index * 0.04}>
       <Wrapper
         {...linkProps}
-        className="group grid grid-cols-[2rem_1fr_auto] sm:grid-cols-[2.5rem_1fr_auto_1.5rem] items-center gap-4 sm:gap-6 py-5 border-b border-slate-900/8 hover:border-cyan/30 transition-colors"
+        className="group grid grid-cols-[2rem_1fr_auto] sm:grid-cols-[2.5rem_1fr_auto_1.5rem] items-center gap-4 sm:gap-6 py-5 border-b border-white/8 hover:border-cyan/30 transition-colors"
       >
-        <span className="font-mono text-[.7rem] text-slate-600">{String(index + 1).padStart(2, "0")}</span>
+        <span className="font-mono text-[.7rem] text-[color:var(--ink-400)]">{String(index + 1).padStart(2, "0")}</span>
         <div className="min-w-0">
           <h4 className="font-display font-semibold text-[color:var(--ink-100)] group-hover:text-cyan transition-colors truncate">
             {project.title}
@@ -455,7 +455,7 @@ function ProjectRow({ project, index }) {
         </div>
         <div className="hidden sm:flex gap-3 justify-end shrink-0">
           {project.tags?.slice(0, 3).map((t) => (
-            <span key={t} className="font-mono text-[.6rem] uppercase tracking-wide text-slate-500">
+            <span key={t} className="font-mono text-[.6rem] uppercase tracking-wide text-[color:var(--ink-400)]">
               {t}
             </span>
           ))}
@@ -463,7 +463,7 @@ function ProjectRow({ project, index }) {
         {link && (
           <ExternalLink
             size={15}
-            className="text-slate-500 group-hover:text-cyan group-hover:-translate-y-0.5 group-hover:translate-x-0.5 transition-all shrink-0"
+            className="text-[color:var(--ink-400)] group-hover:text-cyan group-hover:-translate-y-0.5 group-hover:translate-x-0.5 transition-all shrink-0"
           />
         )}
       </Wrapper>
@@ -495,7 +495,7 @@ function StatCounter({ value, label, delay = 0 }) {
         {display}
         <span className="text-green">+</span>
       </span>
-      <span className="block mt-1 font-mono text-[.66rem] uppercase tracking-[.1em] text-slate-500">{label}</span>
+      <span className="block mt-1 font-mono text-[.66rem] uppercase tracking-[.1em] text-[color:var(--ink-400)]">{label}</span>
     </div>
   );
 }
@@ -508,7 +508,7 @@ export function WorkSection() {
   const liveDemoCount = PROJECTS.filter((p) => p.kicker === "Live demo").length;
 
   return (
-    <section className="min-h-full flex flex-col items-center justify-center px-5 py-14">
+    <section id="build" data-star-accent="build" className="min-h-[100dvh] flex flex-col items-center justify-center px-5 py-14">
       <div className="w-full max-w-[1180px]">
         <SectionHead
           step="03"
@@ -547,7 +547,7 @@ export function WorkSection() {
             onClick={() => setExpanded((v) => !v)}
             whileHover={{ scale: 1.03 }}
             whileTap={{ scale: 0.97 }}
-            className="mt-8 w-full md:w-auto mx-auto flex items-center justify-center gap-2 px-6 py-3 rounded-lg border border-slate-900/10 font-mono text-[.7rem] uppercase tracking-[.14em] text-[color:var(--ink-400)] hover:text-cyan hover:border-cyan/40 transition-colors"
+            className="mt-8 w-full md:w-auto mx-auto flex items-center justify-center gap-2 px-6 py-3 rounded-lg border border-white/10 font-mono text-[.7rem] uppercase tracking-[.14em] text-[color:var(--ink-400)] hover:text-cyan hover:border-cyan/40 transition-colors"
           >
             {expanded ? "Show fewer projects" : `Show ${hidden.length} more projects`}
             <ChevronDown size={14} className={`transition-transform ${expanded ? "rotate-180" : ""}`} />
@@ -561,13 +561,13 @@ export function WorkSection() {
 /* ── WHY / STORY ─────────────────────────────────────────── */
 export function StorySection() {
   return (
-    <section className="min-h-full flex flex-col items-center justify-center px-5 py-14">
+    <section id="story" className="min-h-[100dvh] flex flex-col items-center justify-center px-5 py-14">
       <div className="w-full max-w-[1180px]">
         <SectionHead step="03b" kicker="the short version" title="Why I do this work" lede="Not a resume. The throughline behind it." />
-        <div className="grid md:grid-cols-2 gap-px rounded-2xl overflow-hidden border border-slate-900/8 max-w-3xl">
+        <div className="grid md:grid-cols-2 gap-px rounded-2xl overflow-hidden border border-white/8 max-w-3xl">
           {STORY_BEATS.map((beat, i) => (
             <Reveal key={beat.n} delay={i * 0.07} y={16}>
-              <div className="bg-slate-900/[.015] p-6 h-full hover:bg-cyan/[.03] transition-colors">
+              <div className="bg-white/[.02] p-6 h-full hover:bg-cyan/[.05] transition-colors">
                 <span className="font-mono text-[.65rem] text-cyan tracking-widest">{beat.n}</span>
                 <h4 className="font-semibold text-[color:var(--ink-100)] mt-2 mb-2">{beat.title}</h4>
                 <p className="text-[.85rem] text-[color:var(--ink-400)] leading-relaxed">{beat.body}</p>
@@ -588,11 +588,11 @@ export function StorySection() {
 /* ── CONTACT ─────────────────────────────────────────────── */
 export function ContactSection() {
   return (
-    <section className="min-h-full flex flex-col items-center justify-center px-5 py-14">
+    <section id="commit" data-star-accent="commit" className="min-h-[100dvh] flex flex-col items-center justify-center px-5 py-14">
       <div className="w-full max-w-[1180px]">
         <Reveal>
           <div className="glass rounded-3xl p-10 md:p-14 text-center max-w-3xl mx-auto">
-            <p className="font-mono text-[.7rem] md:text-[.8rem] text-slate-500 mb-6 break-words">
+            <p className="font-mono text-[.7rem] md:text-[.8rem] text-[color:var(--ink-400)] mb-6 break-words">
               <span className="text-rose">INSERT INTO</span> your_team (engineer){" "}
               <span className="text-rose">VALUES</span> (<span className="text-green">'mohamed_ansar'</span>);{" "}
               <span className="text-rose">COMMIT</span>;
@@ -620,12 +620,12 @@ export function ContactSection() {
                 rel="noopener noreferrer"
                 whileHover={{ scale: 1.045 }}
                 whileTap={{ scale: 0.97 }}
-                className="inline-flex items-center gap-2 px-6 py-3 rounded-lg border border-slate-900/12 text-[color:var(--ink-200)] font-medium text-[.85rem] hover:border-cyan/40 hover:text-cyan transition-colors"
+                className="inline-flex items-center gap-2 px-6 py-3 rounded-lg border border-white/12 text-[color:var(--ink-200)] font-medium text-[.85rem] hover:border-cyan/40 hover:text-cyan transition-colors"
               >
                 <Link2 size={15} /> LinkedIn
               </MagneticButton>
             </div>
-            <p className="font-mono text-[.75rem] text-slate-500">
+            <p className="font-mono text-[.75rem] text-[color:var(--ink-400)]">
               direct:{" "}
               <a href={`mailto:${CONTACT.email}`} className="text-cyan hover:underline">
                 {CONTACT.email}
@@ -633,7 +633,7 @@ export function ContactSection() {
             </p>
           </div>
         </Reveal>
-        <p className="mt-8 text-center font-mono text-[.64rem] text-slate-600">
+        <p className="mt-8 text-center font-mono text-[.64rem] text-[color:var(--ink-400)]/70">
           © {new Date().getFullYear()} Mohamed Ansar · Built with React · Vite · Tailwind · Framer Motion
         </p>
       </div>

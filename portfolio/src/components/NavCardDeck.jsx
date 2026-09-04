@@ -193,21 +193,27 @@ export default function NavCardDeck() {
         };
       });
 
-      // A single soft contact shadow ellipse beneath the whole row —
-      // grounds the fan as one physical object sitting on a surface
-      // instead of five cards floating with nothing under them.
+      // A single soft glow ellipse beneath the whole row — grounds the
+      // fan as one object with a presence in the scene, rather than
+      // five cards floating with nothing beneath them. A dark contact
+      // shadow reads against a light floor; against the starfield
+      // there's no floor to shadow onto, so this is a light pool
+      // instead — like the cards are lit from within.
       const shadowCanvas = document.createElement("canvas");
       shadowCanvas.width = 512;
       shadowCanvas.height = 256;
       const shadowCtx = shadowCanvas.getContext("2d");
       const shadowGrad = shadowCtx.createRadialGradient(256, 128, 0, 256, 128, 256);
-      shadowGrad.addColorStop(0, "rgba(15,23,42,0.32)");
-      shadowGrad.addColorStop(0.6, "rgba(15,23,42,0.14)");
-      shadowGrad.addColorStop(1, "rgba(15,23,42,0)");
+      shadowGrad.addColorStop(0, "rgba(224,238,255,0.16)");
+      shadowGrad.addColorStop(0.55, "rgba(224,238,255,0.05)");
+      shadowGrad.addColorStop(1, "rgba(224,238,255,0)");
       shadowCtx.fillStyle = shadowGrad;
       shadowCtx.fillRect(0, 0, 512, 256);
       const shadowTexture = new THREE.CanvasTexture(shadowCanvas);
       const shadowGeometry = new THREE.PlaneGeometry(spacing * (n - 1) + CARD_W * 2.4, CARD_H * 0.9);
+      // Alpha blending, not additive — additive against the near-black
+      // starfield has no upper bound, so at any real opacity it blows
+      // out into a flat white smear instead of a soft glow.
       const shadowMaterial = new THREE.MeshBasicMaterial({
         map: shadowTexture,
         transparent: true,
@@ -216,7 +222,7 @@ export default function NavCardDeck() {
       });
       const shadowMesh = new THREE.Mesh(shadowGeometry, shadowMaterial);
       shadowMesh.position.set(0, -CARD_H / 2 - 0.32, -1.1);
-      shadowMesh.rotation.x = -Math.PI / 2.6;
+      shadowMesh.rotation.x = -Math.PI / 3.6;
       scene.add(shadowMesh);
 
       const raycaster = new THREE.Raycaster();
@@ -272,7 +278,7 @@ export default function NavCardDeck() {
         camera.lookAt(0, 0, 0);
 
         const shadowProgress = Math.min(1, Math.max(0, (elapsed - (n - 1) * 90) / 700));
-        shadowMaterial.opacity += (easeOutCubic(shadowProgress) * 0.5 - shadowMaterial.opacity) * 0.1;
+        shadowMaterial.opacity += (easeOutCubic(shadowProgress) * 0.85 - shadowMaterial.opacity) * 0.1;
 
         // Hit-testing uses the raw pointer position, not the lerped one
         // below — pointerNDC is smoothed for the cosmetic camera
@@ -461,8 +467,8 @@ export default function NavCardDeck() {
             className="pointer-events-none absolute left-0 top-0 z-20 text-center whitespace-nowrap"
             style={{ opacity: 0 }}
           >
-            <p ref={labelTitleRef} className="font-display text-xl font-semibold text-slate-900" />
-            <p ref={labelTaglineRef} className="mt-0.5 font-mono text-[.68rem] text-slate-500" />
+            <p ref={labelTitleRef} className="font-display text-xl font-semibold text-white" />
+            <p ref={labelTaglineRef} className="mt-0.5 font-mono text-[.68rem] text-[color:var(--ink-400)]" />
           </div>
         </>
       )}
@@ -472,7 +478,7 @@ export default function NavCardDeck() {
             <a
               key={card.id}
               href={card.go}
-              className="group block rounded-xl border border-slate-900/10 hover:border-cyan/40 px-5 py-6 transition-colors"
+              className="group block rounded-xl border border-white/10 hover:border-cyan/40 px-5 py-6 transition-colors"
             >
               <span className="font-mono text-[.62rem] uppercase tracking-[.14em] text-cyan/70">{card.kicker}</span>
               <p className="mt-2 font-display text-xl font-semibold text-[color:var(--ink-50)] group-hover:text-cyan transition-colors">

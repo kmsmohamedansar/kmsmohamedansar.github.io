@@ -32,33 +32,14 @@
 }
 
 /* ============================================================
-   THEME-AWARE TEXT TOKENS
-   Near-white "ink" shades read fine on the always-dark ink
-   background, but go invisible on the light theme's plain white/
-   aurora background. These flip to dark shades under
-   [data-theme="light"] — EXCEPT inside permanently-dark surfaces
-   (the CRT chassis, the mobile nav dropdown) which re-declare them
-   back to their light-on-dark values, since those stay dark-tinted
-   in both themes by design. .glass itself flips its background too
-   (see below), so its text follows the page-level tokens instead of
-   being forced back to white.
+   TEXT TOKENS
+   The site is dark, always — near-white "ink" shades read fine on
+   the ink background everywhere, so there's no per-theme override
+   left to make. The tokens stay (instead of inlining the hex values)
+   because every component still reads them, and because .glass and
+   the CRT chassis lean on the same scale for consistency.
    ============================================================ */
 :root {
-  --ink-50: #f8fafc;
-  --ink-100: #f1f5f9;
-  --ink-200: #e2e8f0;
-  --ink-300: #cbd5e1;
-  --ink-400: #94a3b8;
-}
-:root[data-theme="light"] {
-  --ink-50: #0f172a;
-  --ink-100: #1e293b;
-  --ink-200: #334155;
-  --ink-300: #475569;
-  --ink-400: #64748b;
-}
-.crt-shell,
-.dark-surface {
   --ink-50: #f8fafc;
   --ink-100: #f1f5f9;
   --ink-200: #e2e8f0;
@@ -96,11 +77,6 @@
     background: rgba(2, 6, 16, 0.4);
     border: 1px solid rgba(255, 255, 255, 0.06);
   }
-  :root[data-theme="light"] .glass {
-    background: rgba(255, 255, 255, 0.62);
-    border: 1px solid rgba(15, 23, 42, 0.08);
-    box-shadow: 0 1px 3px rgba(15, 23, 42, 0.05);
-  }
   .text-glow-cyan {
     text-shadow: 0 0 6px rgba(34, 211, 238, 0.32);
   }
@@ -120,8 +96,7 @@
   overflow: hidden;
   border-radius: 1.4rem;
   isolation: isolate;
-  /* Always dark, in both themes — the retro CRT terminal look is the
-     point, unlike .glass cards which flip light in light theme. A
+  /* The retro CRT terminal look is the point. A
      thicker physical bezel: a hairline highlight where light would
      catch the rim, a dark inner well the screen sits inside, and a
      soft cast shadow lifting the whole chassis off the page — the
@@ -239,27 +214,6 @@
   }
 }
 
-@keyframes drift {
-  0%,
-  100% {
-    transform: translate(0, 0) scale(1);
-  }
-  33% {
-    transform: translate(-2.5%, 3%) scale(1.06);
-  }
-  66% {
-    transform: translate(2%, -2%) scale(1.03);
-  }
-}
-.ambient-drift {
-  animation: drift 11s ease-in-out infinite;
-}
-@media (prefers-reduced-motion: reduce) {
-  .ambient-drift {
-    animation: none;
-  }
-}
-
 @keyframes float-y {
   0%,
   100% {
@@ -287,84 +241,6 @@
 @media (prefers-reduced-motion: reduce) {
   .float-y,
   .glow-pulse {
-    animation: none;
-  }
-}
-
-/* ============================================================
-   LIGHT-THEME AURORA — soft morphing pastel blobs, distinct from
-   the dark theme's neon data mesh. Blurred + blended so they read
-   as diffuse daylight washes rather than hard shapes.
-   ============================================================ */
-.aurora-blob {
-  position: absolute;
-  border-radius: 50%;
-  filter: blur(60px);
-  mix-blend-mode: multiply;
-  opacity: 0.55;
-  will-change: transform;
-}
-.aurora-blob-1 {
-  width: 46vw;
-  height: 46vw;
-  top: -12%;
-  left: -8%;
-  background: radial-gradient(circle, rgba(34, 211, 238, 0.5), transparent 70%);
-  animation: aurora-drift-1 24s ease-in-out infinite;
-}
-.aurora-blob-2 {
-  width: 38vw;
-  height: 38vw;
-  top: 18%;
-  right: -10%;
-  background: radial-gradient(circle, rgba(251, 191, 36, 0.45), transparent 70%);
-  animation: aurora-drift-2 28s ease-in-out infinite;
-}
-.aurora-blob-3 {
-  width: 42vw;
-  height: 42vw;
-  bottom: -14%;
-  left: 12%;
-  background: radial-gradient(circle, rgba(142, 125, 255, 0.4), transparent 70%);
-  animation: aurora-drift-3 32s ease-in-out infinite;
-}
-.aurora-blob-4 {
-  width: 30vw;
-  height: 30vw;
-  bottom: 6%;
-  right: 14%;
-  background: radial-gradient(circle, rgba(52, 211, 153, 0.32), transparent 70%);
-  animation: aurora-drift-1 20s ease-in-out infinite reverse;
-}
-@keyframes aurora-drift-1 {
-  0%,
-  100% {
-    transform: translate(0, 0) scale(1);
-  }
-  50% {
-    transform: translate(6%, 8%) scale(1.12);
-  }
-}
-@keyframes aurora-drift-2 {
-  0%,
-  100% {
-    transform: translate(0, 0) scale(1);
-  }
-  50% {
-    transform: translate(-8%, 6%) scale(1.08);
-  }
-}
-@keyframes aurora-drift-3 {
-  0%,
-  100% {
-    transform: translate(0, 0) scale(1);
-  }
-  50% {
-    transform: translate(5%, -7%) scale(1.1);
-  }
-}
-@media (prefers-reduced-motion: reduce) {
-  .aurora-blob {
     animation: none;
   }
 }
