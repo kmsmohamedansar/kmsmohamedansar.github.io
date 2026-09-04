@@ -83,9 +83,59 @@ function DashboardBar({ title, status = "ONLINE", pulse = false }) {
   );
 }
 
+/* Shared "teaser, then expand" affordance — every scroll section
+   leads with a headline and a bare handful of facts; the full
+   write-up (paragraphs, bullet lists, secondary cards) only exists
+   for a visitor who asks for it here. This is the alternative to
+   parking all of that in the initial view: the deck up top is the
+   other on-ramp into these same sections, but the expand toggle
+   works for anyone who scrolled down directly too — it isn't gated
+   behind having clicked a card. */
+function DetailToggle({ expanded, onToggle, labelShow = "See full details", labelHide = "Hide details" }) {
+  return (
+    <motion.button
+      onClick={onToggle}
+      whileHover={{ scale: 1.03 }}
+      whileTap={{ scale: 0.97 }}
+      aria-expanded={expanded}
+      className="inline-flex items-center gap-2 px-4 py-2.5 rounded-lg border border-white/10 font-mono text-[.7rem] uppercase tracking-[.14em] text-[color:var(--ink-400)] hover:text-cyan hover:border-cyan/40 transition-colors"
+    >
+      {expanded ? labelHide : labelShow}
+      <ChevronDown size={14} className={`transition-transform ${expanded ? "rotate-180" : ""}`} />
+    </motion.button>
+  );
+}
+
+function ExpandablePanel({ expanded, children }) {
+  return (
+    <AnimatePresence initial={false}>
+      {expanded && (
+        <motion.div
+          initial={{ opacity: 0, height: 0 }}
+          animate={{ opacity: 1, height: "auto" }}
+          exit={{ opacity: 0, height: 0 }}
+          transition={{ duration: 0.4, ease: EASE }}
+          className="overflow-hidden"
+        >
+          {children}
+        </motion.div>
+      )}
+    </AnimatePresence>
+  );
+}
+
+function TagPill({ children }) {
+  return (
+    <span className="font-mono text-[.66rem] uppercase tracking-wide px-2.5 py-1 rounded-full border border-white/10 text-[color:var(--ink-300)]">
+      {children}
+    </span>
+  );
+}
+
 /* ── NOW ─────────────────────────────────────────────────── */
 export function NowSection() {
   const icons = [Database, Compass, Smartphone];
+  const [expanded, setExpanded] = useState(false);
   return (
     <section id="source" data-star-accent="source" className="min-h-[100dvh] flex flex-col items-center justify-center px-5 py-14">
       <div className="w-full max-w-[1180px]">
@@ -102,58 +152,63 @@ export function NowSection() {
           lede="Correct, explainable, operable. Whether the interface is SQL, a dashboard, or TestFlight."
         />
         <Reveal delay={0.02}>
-          <div className="glass rounded-2xl overflow-hidden">
+          <div className="flex flex-wrap items-center gap-2.5 mb-8">
+            <TagPill>Solutions Engineer · Datasembly</TagPill>
+            {PRINCIPLES.map((p) => (
+              <TagPill key={p.title}>{p.title}</TagPill>
+            ))}
+          </div>
+        </Reveal>
+        <Reveal delay={0.06}>
+          <DetailToggle expanded={expanded} onToggle={() => setExpanded((v) => !v)} />
+        </Reveal>
+        <ExpandablePanel expanded={expanded}>
+          <div className="glass rounded-2xl overflow-hidden mt-6">
             <DashboardBar title="now.dashboard · live" pulse />
             <div className="p-6 md:p-8 grid lg:grid-cols-[1.15fr_1fr] gap-8">
-              <Reveal delay={0.05}>
-                <div className="space-y-5 text-[1.02rem] text-[color:var(--ink-300)] leading-relaxed max-w-lg">
-                  <p>
-                    Most of my work sits where <b className="text-[color:var(--ink-100)]">data meets decision-making</b>:
-                    retail pricing-scale datasets, recurring pipelines, and analytics that teams run week
-                    after week. Not one-off charts.
-                  </p>
-                  <p>
-                    At <span className="text-cyan">Datasembly</span>, that translates to deep SQL and
-                    Snowflake work, careful validation, stakeholder-ready reporting, and clean handoffs when
-                    scope moves.
-                  </p>
-                  <p>
-                    I apply the same standard to <span className="text-amber">software and applied AI</span>:
-                    end-to-end ownership when the right answer is a product, not only a query.
-                  </p>
-                </div>
-              </Reveal>
+              <div className="space-y-5 text-[1.02rem] text-[color:var(--ink-300)] leading-relaxed max-w-lg">
+                <p>
+                  Most of my work sits where <b className="text-[color:var(--ink-100)]">data meets decision-making</b>:
+                  retail pricing-scale datasets, recurring pipelines, and analytics that teams run week
+                  after week. Not one-off charts.
+                </p>
+                <p>
+                  At <span className="text-cyan">Datasembly</span>, that translates to deep SQL and
+                  Snowflake work, careful validation, stakeholder-ready reporting, and clean handoffs when
+                  scope moves.
+                </p>
+                <p>
+                  I apply the same standard to <span className="text-amber">software and applied AI</span>:
+                  end-to-end ownership when the right answer is a product, not only a query.
+                </p>
+              </div>
               <div className="flex flex-col gap-4">
                 {PRINCIPLES.map((p, i) => {
                   const Icon = icons[i];
                   return (
-                    <Reveal key={p.title} delay={0.1 + i * 0.08}>
-                      <div className="glass rounded-xl p-5 flex gap-4">
-                        <span className="w-9 h-9 shrink-0 grid place-items-center rounded-lg border border-white/10 text-cyan">
-                          <Icon size={17} />
-                        </span>
-                        <div>
-                          <h4 className="font-semibold text-[color:var(--ink-100)] mb-1">{p.title}</h4>
-                          <p className="text-[.88rem] text-[color:var(--ink-400)] leading-relaxed">{p.body}</p>
-                        </div>
+                    <div key={p.title} className="glass rounded-xl p-5 flex gap-4">
+                      <span className="w-9 h-9 shrink-0 grid place-items-center rounded-lg border border-white/10 text-cyan">
+                        <Icon size={17} />
+                      </span>
+                      <div>
+                        <h4 className="font-semibold text-[color:var(--ink-100)] mb-1">{p.title}</h4>
+                        <p className="text-[.88rem] text-[color:var(--ink-400)] leading-relaxed">{p.body}</p>
                       </div>
-                    </Reveal>
+                    </div>
                   );
                 })}
-                <Reveal delay={0.1 + PRINCIPLES.length * 0.08}>
-                  <MagneticButton
-                    href="#build"
-                    whileHover={{ scale: 1.03 }}
-                    whileTap={{ scale: 0.97 }}
-                    className="mt-1 inline-flex items-center gap-1.5 self-start px-4 py-2.5 rounded-lg border border-cyan/25 text-cyan text-[.78rem] font-mono tracking-wide hover:border-cyan/50 hover:bg-cyan/5 transition-colors"
-                  >
-                    See what shipped <ArrowRight size={13} />
-                  </MagneticButton>
-                </Reveal>
+                <MagneticButton
+                  href="#build"
+                  whileHover={{ scale: 1.03 }}
+                  whileTap={{ scale: 0.97 }}
+                  className="mt-1 inline-flex items-center gap-1.5 self-start px-4 py-2.5 rounded-lg border border-cyan/25 text-cyan text-[.78rem] font-mono tracking-wide hover:border-cyan/50 hover:bg-cyan/5 transition-colors"
+                >
+                  See what shipped <ArrowRight size={13} />
+                </MagneticButton>
               </div>
             </div>
           </div>
-        </Reveal>
+        </ExpandablePanel>
       </div>
     </section>
   );
@@ -167,7 +222,9 @@ export function NowSection() {
    to fill the gap ("shifting adjacent modules out of the way"). */
 export function BeforeSection() {
   const [expandedIdx, setExpandedIdx] = useState(null);
+  const [sectionExpanded, setSectionExpanded] = useState(false);
   const expandedRole = expandedIdx !== null ? ROLES[expandedIdx] : null;
+  const companies = [...new Set(ROLES.map((r) => r.company))];
 
   return (
     <section id="lineage" data-star-accent="lineage" className="min-h-[100dvh] flex flex-col items-center justify-center px-5 py-14">
@@ -201,42 +258,51 @@ export function BeforeSection() {
             ))}
           </div>
         </motion.div>
-        <div className="grid sm:grid-cols-2 lg:grid-cols-4 grid-flow-row-dense gap-5 auto-rows-[minmax(160px,auto)]">
-          {ROLES.map((role, i) => {
-            if (expandedIdx === i) return null;
-            const big = i === 0;
-            return (
-              <Reveal
-                key={role.company + role.title}
-                delay={i * 0.05}
-                className={big ? "sm:col-span-2 lg:col-span-2 lg:row-span-2" : ""}
-              >
-                <motion.button
-                  layout
-                  layoutId={`role-tile-${i}`}
-                  onClick={() => setExpandedIdx(i)}
-                  whileHover={{ y: -3 }}
-                  className={`glass rounded-xl p-5 h-full w-full text-left flex flex-col ${big ? "justify-between" : ""}`}
-                >
-                  <div>
-                    <div className="flex items-start justify-between gap-3 mb-3">
-                      <span className={`w-2.5 h-2.5 rounded-full mt-1 shrink-0 ${role.current ? "bg-cyan" : "bg-white/25"}`} />
-                      <ChevronRight size={14} className="text-[color:var(--ink-400)] shrink-0" />
+        <Reveal delay={0.02}>
+          <div className="flex flex-wrap items-center gap-2.5 mb-8">
+            <TagPill>{ROLES.length} roles</TagPill>
+            {companies.map((c) => (
+              <TagPill key={c}>{c}</TagPill>
+            ))}
+          </div>
+        </Reveal>
+        <Reveal delay={0.06}>
+          <DetailToggle expanded={sectionExpanded} onToggle={() => setSectionExpanded((v) => !v)} />
+        </Reveal>
+        <ExpandablePanel expanded={sectionExpanded}>
+          <div className="grid sm:grid-cols-2 lg:grid-cols-4 grid-flow-row-dense gap-5 auto-rows-[minmax(160px,auto)] mt-6">
+            {ROLES.map((role, i) => {
+              if (expandedIdx === i) return null;
+              const big = i === 0;
+              return (
+                <div key={role.company + role.title} className={big ? "sm:col-span-2 lg:col-span-2 lg:row-span-2" : ""}>
+                  <motion.button
+                    layout
+                    layoutId={`role-tile-${i}`}
+                    onClick={() => setExpandedIdx(i)}
+                    whileHover={{ y: -3 }}
+                    className={`glass rounded-xl p-5 h-full w-full text-left flex flex-col ${big ? "justify-between" : ""}`}
+                  >
+                    <div>
+                      <div className="flex items-start justify-between gap-3 mb-3">
+                        <span className={`w-2.5 h-2.5 rounded-full mt-1 shrink-0 ${role.current ? "bg-cyan" : "bg-white/25"}`} />
+                        <ChevronRight size={14} className="text-[color:var(--ink-400)] shrink-0" />
+                      </div>
+                      <h3 className={`font-semibold text-[color:var(--ink-100)] ${big ? "text-lg" : ""}`}>{role.title}</h3>
+                      <p className="text-[color:var(--ink-400)] text-[.8rem] mb-2">{role.company}</p>
+                      <p className="font-mono text-[.65rem] text-[color:var(--ink-400)]">{role.when}</p>
                     </div>
-                    <h3 className={`font-semibold text-[color:var(--ink-100)] ${big ? "text-lg" : ""}`}>{role.title}</h3>
-                    <p className="text-[color:var(--ink-400)] text-[.8rem] mb-2">{role.company}</p>
-                    <p className="font-mono text-[.65rem] text-[color:var(--ink-400)]">{role.when}</p>
-                  </div>
-                  {big && (
-                    <p className="text-[.85rem] text-[color:var(--ink-400)] leading-relaxed mt-4 line-clamp-3">
-                      {role.bullets[0]}
-                    </p>
-                  )}
-                </motion.button>
-              </Reveal>
-            );
-          })}
-        </div>
+                    {big && (
+                      <p className="text-[.85rem] text-[color:var(--ink-400)] leading-relaxed mt-4 line-clamp-3">
+                        {role.bullets[0]}
+                      </p>
+                    )}
+                  </motion.button>
+                </div>
+              );
+            })}
+          </div>
+        </ExpandablePanel>
       </div>
 
       <AnimatePresence>
@@ -502,10 +568,12 @@ function StatCounter({ value, label, delay = 0 }) {
 
 export function WorkSection() {
   const [expanded, setExpanded] = useState(false);
+  const [sectionExpanded, setSectionExpanded] = useState(false);
   const featured = PROJECTS.find((p) => p.featured);
   const rest = PROJECTS.filter((p) => p !== featured && !p.collapsed);
   const hidden = PROJECTS.filter((p) => p.collapsed);
   const liveDemoCount = PROJECTS.filter((p) => p.kicker === "Live demo").length;
+  const topTags = [...new Set(PROJECTS.flatMap((p) => p.tags || []))].slice(0, 6);
 
   return (
     <section id="build" data-star-accent="build" className="min-h-[100dvh] flex flex-col items-center justify-center px-5 py-14">
@@ -516,43 +584,57 @@ export function WorkSection() {
           title="What I've built"
           lede="SQL tools, pipelines, ML, retrieval, automation, and one native iOS app shipped to the App Store. End to end, several with live demos."
         />
-        <div className="flex flex-wrap gap-x-12 gap-y-6 mb-14 -mt-4">
+        <div className="flex flex-wrap gap-x-12 gap-y-6 mb-8 -mt-4">
           <StatCounter value={PROJECTS.length} label="projects shipped" delay={0.05} />
           <StatCounter value={1} label="App Store launch" delay={0.2} />
           <StatCounter value={liveDemoCount} label="live demos" delay={0.35} />
         </div>
-        {featured && <div className="mb-20">{<RepTrackShowcase project={featured} />}</div>}
-        <div>
-          {rest.map((p, i) => (
-            <ProjectRow key={p.title} project={p} index={i} />
-          ))}
-          <AnimatePresence>
-            {expanded &&
-              hidden.map((p, i) => (
-                <motion.div
-                  key={p.title}
-                  initial={{ opacity: 0, height: 0 }}
-                  animate={{ opacity: 1, height: "auto" }}
-                  exit={{ opacity: 0, height: 0 }}
-                  transition={{ duration: 0.35, ease: EASE }}
-                  className="overflow-hidden"
-                >
-                  <ProjectRow project={p} index={rest.length + i} />
-                </motion.div>
+        <Reveal delay={0.4}>
+          <div className="flex flex-wrap items-center gap-2.5 mb-8">
+            {topTags.map((t) => (
+              <TagPill key={t}>{t}</TagPill>
+            ))}
+          </div>
+        </Reveal>
+        <Reveal delay={0.45}>
+          <DetailToggle expanded={sectionExpanded} onToggle={() => setSectionExpanded((v) => !v)} />
+        </Reveal>
+        <ExpandablePanel expanded={sectionExpanded}>
+          <div className="mt-6">
+            {featured && <div className="mb-20">{<RepTrackShowcase project={featured} />}</div>}
+            <div>
+              {rest.map((p, i) => (
+                <ProjectRow key={p.title} project={p} index={i} />
               ))}
-          </AnimatePresence>
-        </div>
-        {hidden.length > 0 && (
-          <motion.button
-            onClick={() => setExpanded((v) => !v)}
-            whileHover={{ scale: 1.03 }}
-            whileTap={{ scale: 0.97 }}
-            className="mt-8 w-full md:w-auto mx-auto flex items-center justify-center gap-2 px-6 py-3 rounded-lg border border-white/10 font-mono text-[.7rem] uppercase tracking-[.14em] text-[color:var(--ink-400)] hover:text-cyan hover:border-cyan/40 transition-colors"
-          >
-            {expanded ? "Show fewer projects" : `Show ${hidden.length} more projects`}
-            <ChevronDown size={14} className={`transition-transform ${expanded ? "rotate-180" : ""}`} />
-          </motion.button>
-        )}
+              <AnimatePresence>
+                {expanded &&
+                  hidden.map((p, i) => (
+                    <motion.div
+                      key={p.title}
+                      initial={{ opacity: 0, height: 0 }}
+                      animate={{ opacity: 1, height: "auto" }}
+                      exit={{ opacity: 0, height: 0 }}
+                      transition={{ duration: 0.35, ease: EASE }}
+                      className="overflow-hidden"
+                    >
+                      <ProjectRow project={p} index={rest.length + i} />
+                    </motion.div>
+                  ))}
+              </AnimatePresence>
+            </div>
+            {hidden.length > 0 && (
+              <motion.button
+                onClick={() => setExpanded((v) => !v)}
+                whileHover={{ scale: 1.03 }}
+                whileTap={{ scale: 0.97 }}
+                className="mt-8 w-full md:w-auto mx-auto flex items-center justify-center gap-2 px-6 py-3 rounded-lg border border-white/10 font-mono text-[.7rem] uppercase tracking-[.14em] text-[color:var(--ink-400)] hover:text-cyan hover:border-cyan/40 transition-colors"
+              >
+                {expanded ? "Show fewer projects" : `Show ${hidden.length} more projects`}
+                <ChevronDown size={14} className={`transition-transform ${expanded ? "rotate-180" : ""}`} />
+              </motion.button>
+            )}
+          </div>
+        </ExpandablePanel>
       </div>
     </section>
   );
