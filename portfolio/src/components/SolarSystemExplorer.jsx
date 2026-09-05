@@ -415,9 +415,22 @@ export default function SolarSystemExplorer() {
     scene.add(sunGlow);
 
     const planetSegments = isNarrow ? 32 : 48;
+    // A free-orbit camera can end up right on top of any planet here,
+    // far closer than the passive scroll backdrop ever gets — doubled
+    // on desktop so surface detail still holds up at that range; mobile
+    // keeps the original resolution/cost.
+    const textureScale = isNarrow ? 1 : 2;
+    const maxAnisotropy = renderer.capabilities.getMaxAnisotropy();
     const disposableTextures = [];
     const raycastTargets = [sun];
     sun.userData.factKey = "Sun";
+    function sharpTexture(canvas, { srgb = false } = {}) {
+      const texture = new THREE.CanvasTexture(canvas);
+      if (srgb) texture.colorSpace = THREE.SRGBColorSpace;
+      texture.anisotropy = maxAnisotropy;
+      disposableTextures.push(texture);
+      return texture;
+    }
 
     const planetMeshes = PLANETS.map((planet, planetIndex) => {
       const geometry = new THREE.SphereGeometry(planet.radius, planetSegments, planetSegments);
@@ -426,27 +439,20 @@ export default function SolarSystemExplorer() {
       let cloudMesh = null;
 
       if (planet.name === "Earth") {
-        const colorMap = new THREE.CanvasTexture(makeEarthTexture());
-        colorMap.colorSpace = THREE.SRGBColorSpace;
-        disposableTextures.push(colorMap);
+        const colorMap = sharpTexture(makeEarthTexture(11, textureScale), { srgb: true });
         material = new THREE.MeshStandardMaterial({ map: colorMap, roughness: 0.75, metalness: 0.05 });
 
-        const cloudTexture = new THREE.CanvasTexture(makeEarthCloudTexture());
-        disposableTextures.push(cloudTexture);
+        const cloudTexture = sharpTexture(makeEarthCloudTexture(21, textureScale));
         const cloudGeometry = new THREE.SphereGeometry(planet.radius * 1.025, planetSegments, planetSegments);
         const cloudMaterial = new THREE.MeshStandardMaterial({ alphaMap: cloudTexture, transparent: true, depthWrite: false, roughness: 1 });
         cloudMesh = new THREE.Mesh(cloudGeometry, cloudMaterial);
         scene.add(cloudMesh);
       } else if (recipe?.kind === "rocky") {
-        const colorMap = new THREE.CanvasTexture(makeRockyTexture({ ...recipe, seed: planetIndex + 1 }));
-        colorMap.colorSpace = THREE.SRGBColorSpace;
-        const bumpMap = new THREE.CanvasTexture(makeBumpTexture({ craterCount: recipe.craterCount, seed: planetIndex + 1 }));
-        disposableTextures.push(colorMap, bumpMap);
+        const colorMap = sharpTexture(makeRockyTexture({ ...recipe, seed: planetIndex + 1, scale: textureScale }), { srgb: true });
+        const bumpMap = sharpTexture(makeBumpTexture({ craterCount: recipe.craterCount, seed: planetIndex + 1, scale: textureScale }));
         material = new THREE.MeshStandardMaterial({ map: colorMap, bumpMap, bumpScale: 0.01, roughness: 0.9, metalness: 0.05 });
       } else if (recipe?.kind === "banded") {
-        const colorMap = new THREE.CanvasTexture(makeBandedTexture({ ...recipe, seed: planetIndex + 1 }));
-        colorMap.colorSpace = THREE.SRGBColorSpace;
-        disposableTextures.push(colorMap);
+        const colorMap = sharpTexture(makeBandedTexture({ ...recipe, seed: planetIndex + 1, scale: textureScale }), { srgb: true });
         material = new THREE.MeshStandardMaterial({ map: colorMap, roughness: 0.7, metalness: 0 });
       } else {
         material = new THREE.MeshStandardMaterial({ color: planet.color, roughness: 0.85, metalness: 0.05 });
@@ -503,9 +509,10 @@ export default function SolarSystemExplorer() {
     let moon = null;
     if (earthEntry) {
       const moonRadius = 0.05;
-      const moonTexture = new THREE.CanvasTexture(makeRockyTexture({ base: "#aaa6a0", dark: "#77726c", light: "#c9c5be", craterCount: 90, patchCount: 3, poleShadow: 0.15, seed: 99 }));
-      moonTexture.colorSpace = THREE.SRGBColorSpace;
-      disposableTextures.push(moonTexture);
+      const moonTexture = sharpTexture(
+        makeRockyTexture({ base: "#aaa6a0", dark: "#77726c", light: "#c9c5be", craterCount: 90, patchCount: 3, poleShadow: 0.15, seed: 99, scale: textureScale }),
+        { srgb: true }
+      );
       const moonMaterial = new THREE.MeshStandardMaterial({ map: moonTexture, roughness: 0.95 });
       const moonMesh = new THREE.Mesh(new THREE.SphereGeometry(moonRadius, 20, 20), moonMaterial);
       scene.add(moonMesh);
