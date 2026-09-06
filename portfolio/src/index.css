@@ -44,7 +44,7 @@
   --ink-100: #f1f5f9;
   --ink-200: #e2e8f0;
   --ink-300: #cbd5e1;
-  --ink-400: #94a3b8;
+  --ink-400: #a7b4c8;
 }
 /* emet is the one section this portfolio-wide font refresh skips —
    it already looked right, so it keeps the previous heading font
@@ -64,6 +64,11 @@
     font-family: var(--font-body);
     -webkit-font-smoothing: antialiased;
     overflow-x: hidden;
+    /* The starfield/planet backdrop is fixed behind every section, and its
+       bright stars, planet textures, and sun glow sit directly behind text
+       with no separation. A soft inherited dark halo keeps letters legible
+       wherever they land, without dimming the backdrop itself. */
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.85), 0 2px 18px rgba(0, 0, 0, 0.6);
   }
   ::selection {
     background: rgba(34, 211, 238, 0.25);
