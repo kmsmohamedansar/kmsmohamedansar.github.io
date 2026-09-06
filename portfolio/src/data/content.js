@@ -210,6 +210,13 @@ export const PROJECTS = [
     links: [{ label: "Open demo →", href: "https://huggingface.co/spaces/kmsmohamedansar/ai_knowledge_assistant", external: true }],
   },
   {
+    title: "Job Scout Agent: local AI job scouting",
+    kicker: "GitHub repo",
+    body: "A local agent built on OpenClaw, running a local model via Ollama, that discovers LinkedIn job postings through search-engine queries (no scraping) and scores them against a keyword rubric. Sandboxed with Docker; hit and fixed a real chain of tool-policy and sandboxing issues along the way.",
+    tags: ["OpenClaw", "Ollama", "Docker", "DuckDuckGo"],
+    links: [{ label: "View on GitHub ↗", href: "https://github.com/kmsmohamedansar/job-scout-agent", external: true }],
+  },
+  {
     title: "Amazon fine-food sentiment",
     collapsed: true,
     body: "Baseline-to-transformer sentiment analysis with stronger NLP performance and deployment exploration.",
