@@ -498,6 +498,63 @@ function RepTrackShowcase({ project }) {
   );
 }
 
+/* Generic featured showcase for projects with a real screenshot/diagram
+   instead of RepTrack's bespoke phone mockup. */
+function ImageShowcase({ project }) {
+  return (
+    <Reveal>
+      <TiltCard perspective={1800} strength={5} className="rounded-2xl">
+        <div className="grid lg:grid-cols-[1fr_1.15fr] gap-10 lg:gap-16 items-center py-2">
+          <div className="relative order-2 lg:order-1" style={{ transform: "translateZ(30px)" }}>
+            <img
+              src={project.image}
+              alt={`${project.title} screenshot`}
+              className="w-full rounded-xl border border-white/10 shadow-2xl shadow-black/40"
+              loading="lazy"
+            />
+            {project.badges?.map((b, i) => (
+              <div
+                key={b.label}
+                className={`glass absolute px-3 py-1.5 rounded-lg font-mono text-[.64rem] shadow-lg shadow-black/30 text-${b.color} ${
+                  i === 0 ? "top-2 right-2 lg:right-0" : "bottom-6 left-2 lg:left-0"
+                }`}
+                style={{ transform: "translateZ(70px)" }}
+              >
+                {b.label}
+              </div>
+            ))}
+          </div>
+          <div className="order-1 lg:order-2" style={{ transform: "translateZ(15px)" }}>
+            <span className="font-mono text-[.7rem] uppercase tracking-[.18em] text-cyan">{project.kicker}</span>
+            <h3 className="mt-3 font-display text-[clamp(1.9rem,3.6vw,2.9rem)] font-semibold leading-tight text-[color:var(--ink-50)]">
+              {project.title}
+            </h3>
+            <p className="mt-5 text-[color:var(--ink-400)] leading-relaxed max-w-md">{project.body}</p>
+            <div className="mt-6 flex flex-wrap gap-x-4 gap-y-1.5">
+              {project.tags?.map((t) => (
+                <span key={t} className="font-mono text-[.64rem] uppercase tracking-wide text-[color:var(--ink-400)]">
+                  {t}
+                </span>
+              ))}
+            </div>
+            {project.links?.map((link) => (
+              <a
+                key={link.href}
+                href={link.href}
+                target={link.external ? "_blank" : undefined}
+                rel={link.external ? "noopener noreferrer" : undefined}
+                className="mt-7 inline-flex items-center gap-1.5 text-cyan font-medium hover:gap-2.5 transition-all w-fit"
+              >
+                {link.label} <ExternalLink size={14} />
+              </a>
+            ))}
+          </div>
+        </div>
+      </TiltCard>
+    </Reveal>
+  );
+}
+
 /* Remaining projects as a quiet index list — an editorial line-up
    rather than a repeated grid of cards. */
 function ProjectRow({ project, index }) {
@@ -569,8 +626,8 @@ function StatCounter({ value, label, delay = 0 }) {
 export function WorkSection() {
   const [expanded, setExpanded] = useState(false);
   const [sectionExpanded, setSectionExpanded] = useState(false);
-  const featured = PROJECTS.find((p) => p.featured);
-  const rest = PROJECTS.filter((p) => p !== featured && !p.collapsed);
+  const featuredList = PROJECTS.filter((p) => p.featured);
+  const rest = PROJECTS.filter((p) => !p.featured && !p.collapsed);
   const hidden = PROJECTS.filter((p) => p.collapsed);
   const liveDemoCount = PROJECTS.filter((p) => p.kicker === "Live demo").length;
   const topTags = [...new Set(PROJECTS.flatMap((p) => p.tags || []))].slice(0, 6);
@@ -601,7 +658,11 @@ export function WorkSection() {
         </Reveal>
         <ExpandablePanel expanded={sectionExpanded}>
           <div className="mt-6">
-            {featured && <div className="mb-20">{<RepTrackShowcase project={featured} />}</div>}
+            {featuredList.map((p) => (
+              <div key={p.title} className="mb-20">
+                {p.title.startsWith("RepTrack") ? <RepTrackShowcase project={p} /> : <ImageShowcase project={p} />}
+              </div>
+            ))}
             <div>
               {rest.map((p, i) => (
                 <ProjectRow key={p.title} project={p} index={i} />
