@@ -212,7 +212,13 @@ export const PROJECTS = [
   {
     title: "Job Scout Agent: local AI job scouting",
     kicker: "GitHub repo",
-    body: "A local agent built on OpenClaw, running a local model via Ollama, that discovers LinkedIn job postings through search-engine queries (no scraping) and scores them against a keyword rubric. Sandboxed with Docker; hit and fixed a real chain of tool-policy and sandboxing issues along the way.",
+    featured: true,
+    image: "https://i.postimg.cc/NLNJ1srP/Screenshot-2026-09-06-at-2-23-03-PM.png",
+    badges: [
+      { label: "Local & sandboxed", color: "cyan" },
+      { label: "OpenClaw + Ollama", color: "amber" },
+    ],
+    body: "A local agent built on OpenClaw, running a local model via Ollama, that discovers LinkedIn job postings through search-engine queries (no scraping) and scores them against a keyword rubric. Cron-triggered daily, sandboxed with Docker, delivered to Telegram. Hit and fixed a real chain of tool-policy and sandboxing issues along the way — documented in the repo.",
     tags: ["OpenClaw", "Ollama", "Docker", "DuckDuckGo"],
     links: [{ label: "View on GitHub ↗", href: "https://github.com/kmsmohamedansar/job-scout-agent", external: true }],
   },
