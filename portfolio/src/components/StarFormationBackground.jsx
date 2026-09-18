@@ -366,29 +366,51 @@ const haloVertexShader = /* glsl */ `
 
     vec4 mvPosition = modelViewMatrix * vec4(finalPos, 1.0);
     gl_Position = projectionMatrix * mvPosition;
-    // 3.5x the core's own size, its own (much more generous) cap —
-    // this is meant to be a soft wash well past the core's edge, not
-    // a second sharp disc.
-    gl_PointSize = min(aSize * uPixelRatio * (140.0 / max(-mvPosition.z, 1.0)) * 3.5, 30.0 * uPixelRatio);
+    // 4.5x the core's own size (up from 3.5x), its own (much more
+    // generous) cap — this needs real canvas room for the diffraction
+    // spikes drawn in the fragment shader below to read as thin rays
+    // reaching well past the core, not a cramped smudge.
+    gl_PointSize = min(aSize * uPixelRatio * (140.0 / max(-mvPosition.z, 1.0)) * 4.5, 40.0 * uPixelRatio);
     vColor = aColor;
     vBrightness = aBrightness;
     vTwinkle = 0.55 + 0.45 * sin(uTime * aSpeed + aPhase);
   }
 `;
 
+// A round glow alone still reads as a soft dot, not a star — the cue
+// that actually says "star" to most people is the four-point
+// diffraction spike seen in real astrophotography (light bending
+// around a telescope's or camera's internal structure). This adds
+// that: two thin, bright blades through the point's exact center,
+// one horizontal and one vertical, each fading along its own length
+// and narrowing away from the centerline, layered on top of the same
+// soft round glow as before.
 const haloFragmentShader = /* glsl */ `
   varying vec3 vColor;
   varying float vBrightness;
   varying float vTwinkle;
 
   void main() {
-    float d = length(gl_PointCoord - vec2(0.5)) * 2.0;
+    vec2 uv = gl_PointCoord - vec2(0.5);
+    float d = length(uv) * 2.0;
     float glow = pow(max(0.0, 1.0 - d), 2.2);
-    if (glow <= 0.0) discard;
+
+    // Each blade: bright exactly on its centerline (uv.y == 0 for the
+    // horizontal one), narrowing sharply off-axis (the *40.0 term),
+    // and fading out with distance from the center along its own
+    // length (the *1.6 term) so it doesn't just extend to the sprite's
+    // hard edge.
+    float horizontal = exp(-abs(uv.y) * 40.0) * max(0.0, 1.0 - abs(uv.x) * 1.6);
+    float vertical = exp(-abs(uv.x) * 40.0) * max(0.0, 1.0 - abs(uv.y) * 1.6);
+    float spike = horizontal + vertical;
+
+    float shape = max(glow, spike);
+    if (shape <= 0.0) discard;
     // Capped low and multiplied by brightness^2 (not brightness) so
     // this only reads clearly around the rare, genuinely bright stars
-    // — common dim ones get a barely-there wash, not a matching halo.
-    float alpha = glow * vBrightness * vBrightness * vTwinkle * 0.28;
+    // — common dim ones get a barely-there wash and no visible spike,
+    // not a field of busy crosses.
+    float alpha = shape * vBrightness * vBrightness * vTwinkle * 0.3;
     gl_FragColor = vec4(vColor, alpha);
   }
 `;
