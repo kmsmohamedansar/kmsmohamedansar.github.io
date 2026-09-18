@@ -34,8 +34,8 @@ const BELT_OUTER_AU = 3.3;
 
 const SUN_FACT = {
   type: "Star (G-type main-sequence)",
-  moons: "—",
-  fact: "Contains 99.8% of the solar system's mass — everything else, all eight planets included, is the remaining 0.2%.",
+  moons: "0",
+  fact: "Contains 99.8% of the solar system's mass. Everything else, all eight planets included, is the remaining 0.2%.",
 };
 
 /* ---------- Asteroid belt: real Kepler-consistent angular speed per

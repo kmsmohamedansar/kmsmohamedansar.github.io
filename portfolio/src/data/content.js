@@ -22,7 +22,7 @@ export const EMET_TOPICS = [
       { text: "Datasembly", cls: "font-bold" },
       {
         text:
-          " since Jan 2026. Mostly SQL and Snowflake at retail pricing scale, plus pre-sales work — turning what a stakeholder's actually asking into something technical that holds up.",
+          " since Jan 2026. Mostly SQL and Snowflake at retail pricing scale, plus pre-sales work: turning what a stakeholder's actually asking into something technical that holds up.",
       },
     ],
   },
@@ -48,7 +48,7 @@ export const EMET_TOPICS = [
     answer: [
       { text: "10+ projects. " },
       { text: "RepTrack", cls: "font-bold" },
-      { text: " — a SwiftUI workout log — is live on the " },
+      { text: " (a SwiftUI workout log) is live on the " },
       { text: "App Store", cls: "font-bold" },
       {
         text:
@@ -64,7 +64,7 @@ export const EMET_TOPICS = [
     answer: [
       { text: "Fastest is " },
       { text: "mohamedansarkms@gmail.com", cls: "font-bold" },
-      { text: ". I'm also on LinkedIn — " },
+      { text: ". I'm also on LinkedIn: " },
       { text: "kmsmohamedansar", cls: "font-bold" },
       { text: ". Say hi, I read everything." },
     ],
@@ -112,7 +112,7 @@ export const ROLES = [
     when: "Jan 2026 to Present · Remote, Canada",
     current: true,
     bullets: [
-      "Build data solutions for retail pricing datasets — client needs, pre-sales analysis, one-off data requests, all of it.",
+      "Build data solutions for retail pricing datasets: client needs, pre-sales analysis, one-off data requests, all of it.",
       "Use SQL and Snowflake to dig into tricky data issues, check my own work, and hand off something people can actually rely on.",
       "Work with other teams to turn a business question into something technical that actually gets used.",
     ],
@@ -190,14 +190,14 @@ export const PROJECTS = [
   {
     title: "TaskMaster: small ML pipeline with retries",
     kicker: "Live demo",
-    body: "A small pipeline built like a real one — idempotent steps, retries, structured logs, a live UI. Not a notebook demo.",
+    body: "A small pipeline built like a real one: idempotent steps, retries, structured logs, a live UI. Not a notebook demo.",
     tags: ["ML", "Pipeline", "Retries"],
     links: [{ label: "Open demo →", href: "https://huggingface.co/spaces/kmsmohamedansar/TaskMaster-Job-Scheduler", external: true }],
   },
   {
     title: "High-value customer predictor",
     kicker: "Live demo",
-    body: "A retention model with real validation and explainability built in — not just a number nobody can explain.",
+    body: "A retention model with real validation and explainability built in, not just a number nobody can explain.",
     tags: ["ML", "Retention", "Explainability"],
     links: [{ label: "Open demo →", href: "https://huggingface.co/spaces/kmsmohamedansar/high-value-customer-predictor", external: true }],
   },
@@ -218,7 +218,7 @@ export const PROJECTS = [
       { label: "Local & sandboxed", color: "cyan" },
       { label: "OpenClaw + Ollama", color: "amber" },
     ],
-    body: "A local agent built on OpenClaw, running a local model via Ollama, that discovers LinkedIn job postings through search-engine queries (no scraping) and scores them against a keyword rubric. Cron-triggered daily, sandboxed with Docker, delivered to Telegram. Hit and fixed a real chain of tool-policy and sandboxing issues along the way — documented in the repo.",
+    body: "A local agent built on OpenClaw, running a local model via Ollama, that discovers LinkedIn job postings through search-engine queries (no scraping) and scores them against a keyword rubric. Cron-triggered daily, sandboxed with Docker, delivered to Telegram. Hit and fixed a real chain of tool-policy and sandboxing issues along the way, documented in the repo.",
     tags: ["OpenClaw", "Ollama", "Docker", "DuckDuckGo"],
     links: [{ label: "View on GitHub ↗", href: "https://github.com/kmsmohamedansar/job-scout-agent", external: true }],
   },
@@ -284,12 +284,12 @@ export const CONTACT = {
 };
 
 export const COMMAND_ITEMS = [
-  { label: "Explore — the solar system, up close", go: "#explore", group: "Sections" },
-  { label: "Emet — ask the AI terminal", go: "#emet", group: "Sections" },
-  { label: "Current — what I do today", go: "#source", group: "Sections" },
-  { label: "Before — where I've worked", go: "#lineage", group: "Sections" },
-  { label: "Projects — what I've shipped", go: "#build", group: "Sections" },
-  { label: "Why — the short version", go: "#story", group: "Sections" },
+  { label: "Explore · the solar system, up close", go: "#explore", group: "Sections" },
+  { label: "Emet · ask the AI terminal", go: "#emet", group: "Sections" },
+  { label: "Current · what I do today", go: "#source", group: "Sections" },
+  { label: "Before · where I've worked", go: "#lineage", group: "Sections" },
+  { label: "Projects · what I've shipped", go: "#build", group: "Sections" },
+  { label: "Why · the short version", go: "#story", group: "Sections" },
   { label: "Contact", go: "#commit", group: "Sections" },
   { label: "RepTrack on the App Store", href: "https://apps.apple.com/us/app/reptrack-workout-log/id6761032027", group: "Links" },
   { label: "LinkedIn · kmsmohamedansar", href: CONTACT.linkedin, group: "Links" },

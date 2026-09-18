@@ -339,7 +339,7 @@ class ErrorBoundary extends Component {
             </p>
             <h1 className="font-display text-2xl font-semibold mb-3">This page hit an error</h1>
             <p className="text-slate-400 text-sm mb-6">
-              Try reloading — if it keeps happening, the contact details still work.
+              Try reloading. If it keeps happening, the contact details still work.
             </p>
             <a
               href="mailto:mohamedansarkms@gmail.com"

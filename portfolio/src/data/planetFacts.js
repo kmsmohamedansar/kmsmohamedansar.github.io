@@ -8,7 +8,7 @@ export const PLANET_FACTS = {
   Mercury: {
     type: "Rocky planet",
     moons: "0",
-    fact: "A day on Mercury — sunrise to sunrise — lasts about 176 Earth days, longer than its own year.",
+    fact: "A day on Mercury, sunrise to sunrise, lasts about 176 Earth days, longer than its own year.",
   },
   Venus: {
     type: "Rocky planet",
@@ -18,12 +18,12 @@ export const PLANET_FACTS = {
   Earth: {
     type: "Rocky planet",
     moons: "1",
-    fact: "The only known planet with liquid water oceans on its surface — and life.",
+    fact: "The only known planet with liquid water oceans on its surface, and life.",
   },
   Mars: {
     type: "Rocky planet",
     moons: "2 (Phobos, Deimos)",
-    fact: "Home to Olympus Mons, the tallest known volcano in the solar system — about 2.5x the height of Everest.",
+    fact: "Home to Olympus Mons, the tallest known volcano in the solar system, about 2.5x the height of Everest.",
   },
   Jupiter: {
     type: "Gas giant",
@@ -33,7 +33,7 @@ export const PLANET_FACTS = {
   Saturn: {
     type: "Gas giant",
     moons: "140+",
-    fact: "Its rings are mostly ice and rock — some pieces smaller than a grain of sand, others the size of a mountain.",
+    fact: "Its rings are mostly ice and rock, some pieces smaller than a grain of sand, others the size of a mountain.",
   },
   Uranus: {
     type: "Ice giant",
@@ -43,6 +43,6 @@ export const PLANET_FACTS = {
   Neptune: {
     type: "Ice giant",
     moons: "14",
-    fact: "Has the fastest winds of any planet in the solar system — over 1,200 mph (2,000 km/h).",
+    fact: "Has the fastest winds of any planet in the solar system, over 1,200 mph (2,000 km/h).",
   },
 };
