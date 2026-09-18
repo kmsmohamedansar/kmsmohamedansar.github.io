@@ -12,13 +12,13 @@ const SECTION_ACCENTS = {
   commit: "#fb7185",
 };
 
-const PARTICLE_COUNT_DESKTOP = 2600;
-// The mobile formation's radius (shapeScale = 2, vs. 4.2 on desktop) is
-// less than a quarter of desktop's area, so the previous 1400 packed
-// roughly 2.4x as many particles into each unit of area — dense
-// enough for the core to merge into a blob no edge anti-aliasing fix
-// can undo. Scaled down to land at about the same density.
-const PARTICLE_COUNT_MOBILE = 850;
+// Both counts scaled up ~29% alongside the shapeScale increase below
+// (5.4/4.2 desktop, 2.6/2 mobile) — a curve's own density scales
+// linearly with its length, not with area, so matching that ratio
+// keeps the same spacing between stars along the loop at the larger
+// size instead of thinning it out.
+const PARTICLE_COUNT_DESKTOP = 3350;
+const PARTICLE_COUNT_MOBILE = 1100;
 const SHAPE_SHARE = 0.72; // ~72% recruited into the infinity loop, the rest ambient
 
 // Uniform-in-volume sphere sample (rejection method) — both the
@@ -396,21 +396,28 @@ const haloFragmentShader = /* glsl */ `
     float glow = pow(max(0.0, 1.0 - d), 2.2);
 
     // Each blade: bright exactly on its centerline (uv.y == 0 for the
-    // horizontal one), narrowing sharply off-axis (the *40.0 term),
+    // horizontal one), narrowing sharply off-axis (the *36.0 term),
     // and fading out with distance from the center along its own
-    // length (the *1.6 term) so it doesn't just extend to the sprite's
-    // hard edge.
-    float horizontal = exp(-abs(uv.y) * 40.0) * max(0.0, 1.0 - abs(uv.x) * 1.6);
-    float vertical = exp(-abs(uv.x) * 40.0) * max(0.0, 1.0 - abs(uv.y) * 1.6);
+    // length (the *1.3 term, longer reach than before) so it extends
+    // well past the core without just hitting the sprite's hard edge.
+    float horizontal = exp(-abs(uv.y) * 36.0) * max(0.0, 1.0 - abs(uv.x) * 1.3);
+    float vertical = exp(-abs(uv.x) * 36.0) * max(0.0, 1.0 - abs(uv.y) * 1.3);
     float spike = horizontal + vertical;
 
-    float shape = max(glow, spike);
-    if (shape <= 0.0) discard;
-    // Capped low and multiplied by brightness^2 (not brightness) so
-    // this only reads clearly around the rare, genuinely bright stars
-    // — common dim ones get a barely-there wash and no visible spike,
-    // not a field of busy crosses.
-    float alpha = shape * vBrightness * vBrightness * vTwinkle * 0.3;
+    // Glow stays gated the same way it always was (brightness^2, a low
+    // ceiling) — it's meant to be a near-universal soft wash. The spike
+    // is a separate, deliberately more exclusive design element: gated
+    // by a threshold starting partway up the brightness range rather
+    // than brightness^2, so it shows up clearly on every "uncommon" and
+    // "rare" star (not just the rarest sliver of them), each rendered
+    // at real visual weight instead of a barely-there hint — while
+    // "common" stars (below the threshold) stay plain circles, so the
+    // sparkle reads as a deliberate accent, not noise on every point.
+    float spikeGate = smoothstep(0.7, 0.95, vBrightness);
+    float glowAlpha = glow * vBrightness * vBrightness * 0.3;
+    float spikeAlpha = spike * spikeGate * 0.85;
+    float alpha = max(glowAlpha, spikeAlpha) * vTwinkle;
+    if (alpha <= 0.0) discard;
     gl_FragColor = vec4(vColor, alpha);
   }
 `;
@@ -540,14 +547,17 @@ export default function StarFormationBackground({ scrollContainerRef }) {
     // On a wide layout the infinity loop sits to the right, clear of the
     // left-aligned text column; on narrow layouts there's no
     // side-by-side gutter to dodge, so it's shrunk and dropped low
-    // instead, mostly below the headline/stats block.
-    const shapeOffsetX = isNarrow ? 0 : 4.6;
+    // instead, mostly below the headline/stats block. Scaled up from
+    // the previous 4.2/2 (~30% bigger) for a more commanding presence,
+    // with the offset trimmed slightly so the larger loop still clears
+    // the text column and stays inside the camera's view frustum.
+    const shapeOffsetX = isNarrow ? 0 : 4.4;
     const shapeOffsetY = isNarrow ? -2.5 : 0;
-    const shapeScale = isNarrow ? 2 : 4.2;
+    const shapeScale = isNarrow ? 2.6 : 5.4;
 
     const glow = buildGlowMesh(SECTION_ACCENTS.hero);
     glow.position.set(shapeOffsetX, shapeOffsetY, -8);
-    const glowSize = isNarrow ? 6.4 : 10;
+    const glowSize = isNarrow ? 7.6 : 12;
     glow.scale.set(glowSize, glowSize, 1);
     scene.add(glow);
 
