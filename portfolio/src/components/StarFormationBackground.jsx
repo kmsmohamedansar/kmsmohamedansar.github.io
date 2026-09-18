@@ -203,6 +203,11 @@ const particleVertexShader = /* glsl */ `
   varying vec3 vColor;
   varying float vBrightness;
   varying float vTwinkle;
+  // Carries the exact gl_PointSize this vertex resolved to (after
+  // perspective attenuation and the pixel-ratio scale) down to the
+  // fragment stage, so the edge anti-aliasing there can be sized as
+  // "exactly one physical pixel" for THIS point, not a guess.
+  varying float vComputedPointSize;
 
   void main() {
     vec3 basePos = mix(position, aTargetPosition, uScrollProgress);
@@ -224,33 +229,46 @@ const particleVertexShader = /* glsl */ `
     // ends up nearly on the camera's view axis can't balloon into an
     // out-of-place disc.
     gl_PointSize = min(aSize * uPixelRatio * (140.0 / max(-mvPosition.z, 1.0)), 18.0 * uPixelRatio);
+    vComputedPointSize = gl_PointSize;
     vColor = aColor;
     vBrightness = aBrightness;
     vTwinkle = 0.55 + 0.45 * sin(uTime * aSpeed + aPhase);
   }
 `;
 
-// No texture sample — the circle is pure math from gl_PointCoord. The
-// earlier version faded over a FIXED fraction of the point's radius
-// (e.g. its outer 30%), which scales with point size: an 18px point
-// got an edge band ~5px wide, which reads as a soft halo around every
-// star rather than a crisp disc, no matter how high the pixel density
-// is. fwidth() gives the actual on-screen derivative of the distance
-// field at this fragment, so the fade is always ~1 physical pixel
-// wide regardless of how big the point is — the same anti-aliasing a
-// crisp UI icon uses, not a proportional gradient.
+// No texture sample — the circle is pure math from gl_PointCoord.
+// Edge anti-aliasing is computed analytically from the point's own
+// resolved screen-space size (vComputedPointSize, passed in from the
+// vertex stage) rather than via fwidth()/dFdx()/dFdy(): derivative
+// functions are evaluated per 2x2-fragment quad by the rasterizer,
+// and for small, sparse primitives like point sprites those quads are
+// frequently only partially covered by the primitive, which makes the
+// derivative estimate at exactly the pixels that matter most — the
+// edge — inconsistent across GPUs and drivers (particularly software
+// rasterizers). Sizing the fade as "exactly one pixel" directly from
+// 1/vComputedPointSize sidesteps that dependency entirely: every star
+// gets the same crisp, ~1px-wide edge regardless of point size, pixel
+// ratio, or renderer.
 const particleFragmentShader = /* glsl */ `
   varying vec3 vColor;
   varying float vBrightness;
   varying float vTwinkle;
+  varying float vComputedPointSize;
 
   void main() {
-    vec2 uv = gl_PointCoord - 0.5;
-    float d = length(uv) * 2.0;
-    float aa = fwidth(d) * 1.5;
-    float core = 1.0 - smoothstep(1.0 - aa, 1.0 + aa, d);
-    if (core <= 0.0) discard;
-    float alpha = core * vBrightness * vTwinkle;
+    float distanceCalculated = length(gl_PointCoord - vec2(0.5));
+    // How wide one physical pixel is, expressed in this point's own
+    // normalized 0-0.5 radius units — a big point's edge fades over
+    // the same *physical* pixel as a small point's, not the same
+    // fraction of its own size.
+    float onePixelDelta = 1.0 / max(vComputedPointSize, 1.0);
+    float analyticalAlpha = smoothstep(0.5, 0.5 - onePixelDelta, distanceCalculated);
+    if (analyticalAlpha <= 0.0) discard;
+    // Brightness stays folded into alpha alongside the twinkle (not
+    // just the edge factor) — it's what gives dim/common stars vs.
+    // rare bright ones their distinct read, independent of the
+    // twinkle's own animation.
+    float alpha = analyticalAlpha * vBrightness * vTwinkle;
     gl_FragColor = vec4(vColor, alpha);
   }
 `;
@@ -539,10 +557,21 @@ export default function StarFormationBackground({ scrollContainerRef }) {
       if (width === 0 || height === 0) return;
       camera.aspect = width / height;
       camera.updateProjectionMatrix();
-      renderer.setSize(width, height);
-      particles.material.uniforms.uResolution.value.set(width, height);
+      // Re-read devicePixelRatio too, not just the CSS size — dragging
+      // the window to a display with a different pixel ratio fires a
+      // resize without changing width/height, and would otherwise
+      // leave the backbuffer at the old display's density.
+      const dpr = Math.min(window.devicePixelRatio || 1, 3);
+      renderer.setPixelRatio(dpr);
+      // updateStyle=false: this canvas's CSS size is already pinned
+      // to 100%/100% by its own inline style (see the returned JSX
+      // below), so there's nothing for three.js's own style-syncing
+      // to usefully do here — skipping it just avoids one redundant
+      // style write on every resize.
+      renderer.setSize(width, height, false);
+      particles.material.uniforms.uResolution.value.set(width * dpr, height * dpr);
     }
-    particles.material.uniforms.uResolution.value.set(width, height);
+    particles.material.uniforms.uResolution.value.set(width * pixelRatio, height * pixelRatio);
     window.addEventListener("resize", onResize);
 
     return () => {
@@ -583,6 +612,15 @@ export default function StarFormationBackground({ scrollContainerRef }) {
             pointerEvents: "none",
             opacity: 0,
             transition: "opacity 0.4s ease",
+            // The canvas's drawing buffer is already sized to exactly
+            // match its CSS box at the current device pixel ratio (see
+            // renderer.setPixelRatio/setSize above), so there's no
+            // browser-side scaling happening for these hints to affect
+            // in the normal case — they're here as a guard against the
+            // compositor ever having to rescale this element (e.g. a
+            // fractional zoom level) doing it with a smoothing filter
+            // that would blur the shader's own crisp, anti-aliased edges.
+            imageRendering: "crisp-edges",
           }}
         />
       ) : (
@@ -596,11 +634,19 @@ export default function StarFormationBackground({ scrollContainerRef }) {
           stacked mobile layout has no side gutter to lean on, so it
           darkens more evenly top-to-bottom instead. Sits just above
           the canvas (still well below the actual page content, which
-          stacks at z-10). */}
+          stacks at z-10). Promoted to its own compositor layer (the
+          translate3d/backface/will-change trio below) so this overlay
+          never shares a paint pass with the canvas underneath it. */}
       <div
         aria-hidden
         className="fixed inset-0 pointer-events-none bg-gradient-to-b from-black/50 via-black/20 to-black/45 sm:bg-gradient-to-r sm:from-black/65 sm:via-black/30 sm:via-45% sm:to-transparent sm:to-75%"
-        style={{ zIndex: 1 }}
+        style={{
+          zIndex: 1,
+          mixBlendMode: "normal",
+          backfaceVisibility: "hidden",
+          transform: "translate3d(0, 0, 0)",
+          willChange: "transform",
+        }}
       />
     </>
   );
