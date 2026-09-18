@@ -368,7 +368,11 @@ export default function StarFormationBackground({ scrollContainerRef }) {
     // this from costing anything while the page isn't even visible.
     const pixelRatio = Math.min(window.devicePixelRatio || 1, 3);
     renderer.setPixelRatio(pixelRatio);
-    renderer.setSize(width, height);
+    // updateStyle=false here too, matching the resize handler below —
+    // this canvas's CSS box is pinned to 100%/100% by its own inline
+    // style, so three.js doesn't need to also write explicit pixel
+    // dimensions into canvas.style on top of that.
+    renderer.setSize(width, height, false);
     renderer.outputColorSpace = THREE.SRGBColorSpace;
     // No filmic tone mapping here — ACES's photographic highlight
     // rolloff is built for HDR scenes with real overexposure, and on
@@ -615,12 +619,14 @@ export default function StarFormationBackground({ scrollContainerRef }) {
             // The canvas's drawing buffer is already sized to exactly
             // match its CSS box at the current device pixel ratio (see
             // renderer.setPixelRatio/setSize above), so there's no
-            // browser-side scaling happening for these hints to affect
-            // in the normal case — they're here as a guard against the
+            // browser-side scaling happening for this hint to affect in
+            // the normal case — it's here as a guard against the
             // compositor ever having to rescale this element (e.g. a
-            // fractional zoom level) doing it with a smoothing filter
-            // that would blur the shader's own crisp, anti-aliased edges.
-            imageRendering: "crisp-edges",
+            // fractional zoom level, or a fractional devicePixelRatio
+            // that doesn't divide evenly into physical pixels) doing it
+            // with a smoothing filter that would blur the shader's own
+            // crisp, analytically anti-aliased edges.
+            imageRendering: "pixelated",
           }}
         />
       ) : (
