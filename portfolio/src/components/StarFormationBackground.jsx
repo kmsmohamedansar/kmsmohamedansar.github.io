@@ -12,13 +12,13 @@ const SECTION_ACCENTS = {
   commit: "#fb7185",
 };
 
-// Both counts scaled up ~29% alongside the shapeScale increase below
-// (5.4/4.2 desktop, 2.6/2 mobile) — a curve's own density scales
-// linearly with its length, not with area, so matching that ratio
-// keeps the same spacing between stars along the loop at the larger
-// size instead of thinning it out.
-const PARTICLE_COUNT_DESKTOP = 3350;
-const PARTICLE_COUNT_MOBILE = 1100;
+// Both counts scaled to match the shapeScale increase below (6.5/5.4
+// desktop, 2.9/2.6 mobile) — a curve's own density scales linearly with
+// its length, not with area, so matching that ratio keeps the same
+// spacing between stars along the loop at the larger size instead of
+// thinning it out.
+const PARTICLE_COUNT_DESKTOP = 4050;
+const PARTICLE_COUNT_MOBILE = 1230;
 const SHAPE_SHARE = 0.72; // ~72% recruited into the infinity loop, the rest ambient
 
 // Uniform-in-volume sphere sample (rejection method) — both the
@@ -303,12 +303,12 @@ const particleFragmentShader = /* glsl */ `
     // Edge sits at 0.48, not 0.5 — pulling it in a hair keeps every
     // point a true, tight disc with no residual anti-aliased fringe
     // reading as extra softness at the boundary.
-    float thresholdEdge = 0.48;
+    float thresholdEdge = 0.46;
     // How wide one physical pixel is, expressed in this point's own
     // normalized 0-0.5 radius units — a big point's edge fades over
     // the same *physical* pixel as a small point's, not the same
     // fraction of its own size.
-    float sharpnessMargin = 1.0 / max(vComputedPointSize, 1.0);
+    float sharpnessMargin = 0.7 / max(vComputedPointSize, 1.0);
     float analyticalAlpha = smoothstep(thresholdEdge, thresholdEdge - sharpnessMargin, distanceCalculated);
     if (analyticalAlpha <= 0.0) discard;
     // Brightness stays folded into alpha alongside the twinkle (not
@@ -370,7 +370,7 @@ const haloVertexShader = /* glsl */ `
     // generous) cap — this needs real canvas room for the diffraction
     // spikes drawn in the fragment shader below to read as thin rays
     // reaching well past the core, not a cramped smudge.
-    gl_PointSize = min(aSize * uPixelRatio * (140.0 / max(-mvPosition.z, 1.0)) * 4.5, 40.0 * uPixelRatio);
+    gl_PointSize = min(aSize * uPixelRatio * (140.0 / max(-mvPosition.z, 1.0)) * 3.2, 26.0 * uPixelRatio);
     vColor = aColor;
     vBrightness = aBrightness;
     vTwinkle = 0.55 + 0.45 * sin(uTime * aSpeed + aPhase);
@@ -414,7 +414,7 @@ const haloFragmentShader = /* glsl */ `
     // "common" stars (below the threshold) stay plain circles, so the
     // sparkle reads as a deliberate accent, not noise on every point.
     float spikeGate = smoothstep(0.7, 0.95, vBrightness);
-    float glowAlpha = glow * vBrightness * vBrightness * 0.3;
+    float glowAlpha = glow * vBrightness * vBrightness * 0.2;
     float spikeAlpha = spike * spikeGate * 0.85;
     float alpha = max(glowAlpha, spikeAlpha) * vTwinkle;
     if (alpha <= 0.0) discard;
@@ -509,13 +509,13 @@ export default function StarFormationBackground({ scrollContainerRef }) {
     const isNarrow = width < 700;
 
     const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: false, powerPreference: "high-performance" });
-    // Capped at 3 — a real 4K/5K panel reports a devicePixelRatio of
-    // 2-3, and this is the one part of the page that's pure sparkle
-    // detail, so it's worth the extra fill-rate cost to render every
-    // point at native pixel density instead of leaving it at 2 and
-    // upscaling. GPU throttling when the tab is hidden (below) keeps
+    // Uncapped devicePixelRatio (no artificial ceiling) — this is the
+    // one part of the page that's pure sparkle detail, so every panel,
+    // including 4K/5K displays reporting a ratio above 3, renders at
+    // its own true native pixel density instead of being upscaled and
+    // reading soft. GPU throttling when the tab is hidden (below) keeps
     // this from costing anything while the page isn't even visible.
-    const pixelRatio = Math.min(window.devicePixelRatio || 1, 3);
+    const pixelRatio = window.devicePixelRatio || 1;
     renderer.setPixelRatio(pixelRatio);
     // updateStyle=false here too, matching the resize handler below —
     // this canvas's CSS box is pinned to 100%/100% by its own inline
@@ -547,17 +547,17 @@ export default function StarFormationBackground({ scrollContainerRef }) {
     // On a wide layout the infinity loop sits to the right, clear of the
     // left-aligned text column; on narrow layouts there's no
     // side-by-side gutter to dodge, so it's shrunk and dropped low
-    // instead, mostly below the headline/stats block. Scaled up from
-    // the previous 4.2/2 (~30% bigger) for a more commanding presence,
-    // with the offset trimmed slightly so the larger loop still clears
-    // the text column and stays inside the camera's view frustum.
-    const shapeOffsetX = isNarrow ? 0 : 4.4;
+    // instead, mostly below the headline/stats block. Scaled up again
+    // for an even more commanding presence, with the offset trimmed so
+    // the larger loop still clears the text column and stays inside the
+    // camera's view frustum (verified against the 50deg-FOV/z=15 math).
+    const shapeOffsetX = isNarrow ? 0 : 4.0;
     const shapeOffsetY = isNarrow ? -2.5 : 0;
-    const shapeScale = isNarrow ? 2.6 : 5.4;
+    const shapeScale = isNarrow ? 2.9 : 6.5;
 
     const glow = buildGlowMesh(SECTION_ACCENTS.hero);
     glow.position.set(shapeOffsetX, shapeOffsetY, -8);
-    const glowSize = isNarrow ? 7.6 : 12;
+    const glowSize = isNarrow ? 8.4 : 14;
     glow.scale.set(glowSize, glowSize, 1);
     scene.add(glow);
 
@@ -636,11 +636,27 @@ export default function StarFormationBackground({ scrollContainerRef }) {
       return Math.min(1, Math.max(0, el.scrollTop / span));
     }
 
+    // Once dispersed, the field used to just sit there for the rest of
+    // the page — this tracks scroll across the *entire* scrollable
+    // height (not just the first viewport used above) so the dispersed
+    // field keeps drifting along with the visitor the whole way down,
+    // and — since it's a direct function of scrollTop, not an
+    // accumulated/one-way value — glides back to exactly its resting
+    // position the moment they scroll back to the top, right as the
+    // loop itself reassembles.
+    function fullScrollFraction() {
+      const el = scrollContainerRef?.current;
+      if (!el) return 0;
+      const span = Math.max(el.scrollHeight - el.clientHeight, 1);
+      return Math.min(1, Math.max(0, el.scrollTop / span));
+    }
+
     let raf = null;
     const startTime = performance.now();
     let lastNow = startTime;
     let firstFrameRevealed = false;
     let scrollSmoothed = 0;
+    let driftSmoothed = 0;
     let camXSmoothed = 0;
     let camYSmoothed = 0;
 
@@ -679,6 +695,17 @@ export default function StarFormationBackground({ scrollContainerRef }) {
       // but enough to actually read as continuous motion rather than
       // motion you'd only notice by comparing two screenshots.
       particles.group.rotation.y += dt * 0.00003;
+
+      // The "travel with the scroll" drift: eases toward how far down
+      // the whole page is (not just the hero-height span used for
+      // disperse progress above), so the field keeps gliding upward
+      // past the visitor for as long as they keep scrolling, then
+      // eases back to a dead stop at (0, 0) the moment they're back at
+      // the top — exactly when uScrollProgress has also returned to 0
+      // and the loop has fully reassembled.
+      driftSmoothed += (fullScrollFraction() - driftSmoothed) * 0.08;
+      particles.group.position.y = driftSmoothed * 6.5;
+      particles.group.position.z = -driftSmoothed * 5.0;
 
       renderer.render(scene, camera);
 
@@ -732,7 +759,7 @@ export default function StarFormationBackground({ scrollContainerRef }) {
       // the window to a display with a different pixel ratio fires a
       // resize without changing width/height, and would otherwise
       // leave the backbuffer at the old display's density.
-      const dpr = Math.min(window.devicePixelRatio || 1, 3);
+      const dpr = window.devicePixelRatio || 1;
       renderer.setPixelRatio(dpr);
       // updateStyle=false: this canvas's CSS size is already pinned
       // to 100%/100% by its own inline style (see the returned JSX
