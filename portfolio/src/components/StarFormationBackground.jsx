@@ -125,14 +125,21 @@ function buildParticles(count, { shapeOffsetX, shapeOffsetY, shapeScale, pixelRa
     const coreSizeScale = i < shapeCount ? 0.45 + 0.55 * radiusFrac : 1;
     const roll = Math.random();
     let brightness;
+    // Halved from the previous 1.4-8 range: those sizes, run through
+    // the perspective/pixel-ratio scale-up below, were landing most
+    // points at or near the point-size cap — big enough that, even
+    // with a mathematically sharp edge, a field of large overlapping
+    // additively-blended circles reads as soft bokeh rather than
+    // small, distinct points of light. Smaller base sizes fix that at
+    // the source rather than fighting it in the fragment shader.
     if (roll > 0.985) {
-      aSize[i] = (5.5 + Math.random() * 2.5) * coreSizeScale;
+      aSize[i] = (2.5 + Math.random() * 1.0) * coreSizeScale;
       brightness = 1;
     } else if (roll > 0.9) {
-      aSize[i] = (3 + Math.random() * 1.5) * coreSizeScale;
+      aSize[i] = (1.5 + Math.random() * 0.7) * coreSizeScale;
       brightness = 0.75 + Math.random() * 0.25;
     } else {
-      aSize[i] = (1.4 + Math.random() * 1.4) * coreSizeScale;
+      aSize[i] = (0.7 + Math.random() * 0.7) * coreSizeScale;
       brightness = 0.4 + Math.random() * 0.4;
     }
     aPhase[i] = Math.random() * Math.PI * 2;
@@ -227,8 +234,11 @@ const particleVertexShader = /* glsl */ `
     gl_Position = projectionMatrix * mvPosition;
     // Perspective-correct size attenuation, capped so a particle that
     // ends up nearly on the camera's view axis can't balloon into an
-    // out-of-place disc.
-    gl_PointSize = min(aSize * uPixelRatio * (140.0 / max(-mvPosition.z, 1.0)), 18.0 * uPixelRatio);
+    // out-of-place disc. Cap halved (18 -> 9 CSS px) alongside the
+    // halved base sizes above — the old cap was routinely being hit,
+    // which is how a field of "stars" ended up reading as a field of
+    // largeish soft circles instead.
+    gl_PointSize = min(aSize * uPixelRatio * (140.0 / max(-mvPosition.z, 1.0)), 9.0 * uPixelRatio);
     vComputedPointSize = gl_PointSize;
     vColor = aColor;
     vBrightness = aBrightness;
@@ -256,13 +266,20 @@ const particleFragmentShader = /* glsl */ `
   varying float vComputedPointSize;
 
   void main() {
-    float distanceCalculated = length(gl_PointCoord - vec2(0.5));
+    // Transform coordinates from (0.0 -> 1.0) to centered space (-0.5 -> 0.5)
+    vec2 relativeCoordinates = gl_PointCoord - vec2(0.5);
+    float distanceCalculated = length(relativeCoordinates);
+
+    // Edge sits at 0.48, not 0.5 — pulling it in a hair keeps every
+    // point a true, tight disc with no residual anti-aliased fringe
+    // reading as extra softness at the boundary.
+    float thresholdEdge = 0.48;
     // How wide one physical pixel is, expressed in this point's own
     // normalized 0-0.5 radius units — a big point's edge fades over
     // the same *physical* pixel as a small point's, not the same
     // fraction of its own size.
-    float onePixelDelta = 1.0 / max(vComputedPointSize, 1.0);
-    float analyticalAlpha = smoothstep(0.5, 0.5 - onePixelDelta, distanceCalculated);
+    float sharpnessMargin = 1.0 / max(vComputedPointSize, 1.0);
+    float analyticalAlpha = smoothstep(thresholdEdge, thresholdEdge - sharpnessMargin, distanceCalculated);
     if (analyticalAlpha <= 0.0) discard;
     // Brightness stays folded into alpha alongside the twinkle (not
     // just the edge factor) — it's what gives dim/common stars vs.
