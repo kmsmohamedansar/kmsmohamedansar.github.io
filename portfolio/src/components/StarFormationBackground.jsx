@@ -228,7 +228,11 @@ const particleVertexShader = /* glsl */ `
 // No texture sample — the circle is pure math from gl_PointCoord, a
 // tight solid core with a short smoothstep-feathered edge so it reads
 // as a sharp point of light rather than a soft gradient blob, at any
-// pixel density.
+// pixel density. The feather band (0.7-1.0, tighter than the previous
+// 0.55-1.0) is deliberately narrow now that rendering runs at up to
+// 3x device pixel density: at that resolution a narrow band still
+// anti-aliases cleanly, and a wider one was softening every point's
+// visible edge more than the extra pixel density bought back.
 const particleFragmentShader = /* glsl */ `
   varying vec3 vColor;
   varying float vBrightness;
@@ -237,7 +241,7 @@ const particleFragmentShader = /* glsl */ `
   void main() {
     vec2 uv = gl_PointCoord - 0.5;
     float d = length(uv) * 2.0;
-    float core = 1.0 - smoothstep(0.55, 1.0, d);
+    float core = 1.0 - smoothstep(0.7, 1.0, d);
     if (core <= 0.0) discard;
     float alpha = core * vBrightness * vTwinkle;
     gl_FragColor = vec4(vColor, alpha);
@@ -327,9 +331,13 @@ export default function StarFormationBackground({ scrollContainerRef }) {
     const isNarrow = width < 700;
 
     const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: false, powerPreference: "high-performance" });
-    // Capped at 2 — crisp on Retina/4K without needlessly taxing the
-    // GPU on 5K+ displays where devicePixelRatio can run to 3 or more.
-    const pixelRatio = Math.min(window.devicePixelRatio || 1, 2);
+    // Capped at 3 — a real 4K/5K panel reports a devicePixelRatio of
+    // 2-3, and this is the one part of the page that's pure sparkle
+    // detail, so it's worth the extra fill-rate cost to render every
+    // point at native pixel density instead of leaving it at 2 and
+    // upscaling. GPU throttling when the tab is hidden (below) keeps
+    // this from costing anything while the page isn't even visible.
+    const pixelRatio = Math.min(window.devicePixelRatio || 1, 3);
     renderer.setPixelRatio(pixelRatio);
     renderer.setSize(width, height);
     renderer.outputColorSpace = THREE.SRGBColorSpace;
