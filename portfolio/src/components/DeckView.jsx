@@ -90,21 +90,26 @@ export default function DeckView({ ready = true }) {
           animate={ready ? fadeUp(0.32).animate : fadeUp(0.32).initial}
           className="mt-12 flex flex-wrap items-center gap-3"
         >
+          {/* Each button borrows one of the three colors from the hero's
+              infinity-shaped star field (cyan-white at its crossing,
+              violet through the loops, gold at the tips) so the three
+              destinations read as distinct at a glance, tying the CTAs
+              back to the backdrop right behind them. */}
           <a
             href="#emet"
-            className="inline-flex items-center gap-2 px-5 py-3 rounded-lg bg-gradient-to-r from-cyan to-[#9be9ff] text-ink font-bold text-[.85rem] hover:brightness-110 transition-[filter]"
+            className="inline-flex items-center gap-2 px-5 py-3 rounded-lg bg-gradient-to-r from-[#a8f8ff] to-cyan text-ink font-bold text-[.85rem] hover:brightness-110 transition-[filter]"
           >
             <Terminal size={15} /> Ask EMET <ArrowRight size={14} />
           </a>
           <a
             href="#build"
-            className="inline-flex items-center gap-2 px-5 py-3 rounded-lg border border-white/12 text-[color:var(--ink-200)] font-medium text-[.85rem] hover:border-cyan/40 hover:text-cyan transition-colors"
+            className="inline-flex items-center gap-2 px-5 py-3 rounded-lg border border-[#c77dff]/30 text-[color:var(--ink-200)] font-medium text-[.85rem] hover:border-[#c77dff]/70 hover:text-[#c77dff] transition-colors"
           >
             See what I've built
           </a>
           <a
             href="#explore"
-            className="inline-flex items-center gap-2 px-5 py-3 rounded-lg border border-white/12 text-[color:var(--ink-200)] font-medium text-[.85rem] hover:border-cyan/40 hover:text-cyan transition-colors"
+            className="inline-flex items-center gap-2 px-5 py-3 rounded-lg border border-[#ffb35c]/30 text-[color:var(--ink-200)] font-medium text-[.85rem] hover:border-[#ffb35c]/70 hover:text-[#ffb35c] transition-colors"
           >
             <Orbit size={15} /> Explore the solar system
           </a>
