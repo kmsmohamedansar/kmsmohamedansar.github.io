@@ -168,23 +168,46 @@ function buildParticles(count, { shapeOffsetX, shapeOffsetY, shapeScale, pixelRa
     geometry.setAttribute("aColor", new THREE.BufferAttribute(aColor, 3));
     geometry.setAttribute("aBrightness", new THREE.BufferAttribute(aBrightness, 1));
 
-    const material = new THREE.ShaderMaterial({
+    // One shared uniforms object, referenced by both materials below —
+    // updating uTime/uScrollProgress/etc. once per frame (in the
+    // component's render loop) keeps both layers in sync automatically,
+    // with no separate bookkeeping for the halo's copy of the same values.
+    const uniforms = {
+      uTime: { value: 0 },
+      uPixelRatio: { value: pixelRatio },
+      uResolution: { value: new THREE.Vector2(1, 1) },
+      uScrollProgress: { value: 0 },
+      uMouseWorld: { value: new THREE.Vector3(9999, 9999, 9999) },
+      uMouseActive: { value: 0 },
+    };
+
+    const coreMaterial = new THREE.ShaderMaterial({
       vertexShader: particleVertexShader,
       fragmentShader: particleFragmentShader,
       transparent: true,
       depthWrite: false,
       blending: THREE.AdditiveBlending,
-      uniforms: {
-        uTime: { value: 0 },
-        uPixelRatio: { value: pixelRatio },
-        uResolution: { value: new THREE.Vector2(1, 1) },
-        uScrollProgress: { value: 0 },
-        uMouseWorld: { value: new THREE.Vector3(9999, 9999, 9999) },
-        uMouseActive: { value: 0 },
-      },
+      uniforms,
+    });
+    const haloMaterial = new THREE.ShaderMaterial({
+      vertexShader: haloVertexShader,
+      fragmentShader: haloFragmentShader,
+      transparent: true,
+      depthWrite: false,
+      blending: THREE.AdditiveBlending,
+      uniforms,
     });
 
-    return new THREE.Points(geometry, material);
+    // Halo drawn first: with additive blending the sum is the same
+    // regardless of order, but drawing the soft, larger layer before
+    // the crisp, smaller one keeps the crisp cores from ever being the
+    // ones "underneath" in a renderer that doesn't sort perfectly.
+    const halo = new THREE.Points(geometry, haloMaterial);
+    const core = new THREE.Points(geometry, coreMaterial);
+    const group = new THREE.Group();
+    group.add(halo, core);
+
+    return { group, geometry, coreMaterial, haloMaterial, uniforms };
   }
 }
 
@@ -286,6 +309,69 @@ const particleFragmentShader = /* glsl */ `
     // rare bright ones their distinct read, independent of the
     // twinkle's own animation.
     float alpha = analyticalAlpha * vBrightness * vTwinkle;
+    gl_FragColor = vec4(vColor, alpha);
+  }
+`;
+
+// The halo layer: a second, much larger and much dimmer point drawn
+// at the exact same position as each star's crisp core (same geometry,
+// same attributes, same repel/twinkle math — only the size formula and
+// fragment falloff differ). This is what gives bright stars a soft
+// glint without reintroducing the "big soft blob" bug the core sizes
+// were shrunk to fix: unlike that bug, this halo is deliberately soft
+// (a smooth pow() falloff, not the core's sharp analytic edge) and
+// deliberately dim (a low fixed alpha ceiling below), so it reads as
+// a gentle bloom sitting *under* a still-crisp point of light, not as
+// the point itself getting blurrier.
+const haloVertexShader = /* glsl */ `
+  attribute vec3 aTargetPosition;
+  attribute float aSize;
+  attribute float aPhase;
+  attribute float aSpeed;
+  attribute vec3 aColor;
+  attribute float aBrightness;
+  uniform float uTime;
+  uniform float uPixelRatio;
+  uniform float uScrollProgress;
+  uniform vec3 uMouseWorld;
+  uniform float uMouseActive;
+  varying vec3 vColor;
+  varying float vBrightness;
+  varying float vTwinkle;
+
+  void main() {
+    vec3 basePos = mix(position, aTargetPosition, uScrollProgress);
+    vec3 toParticle = basePos - uMouseWorld;
+    float dist = length(toParticle);
+    float repel = smoothstep(2.6, 0.0, dist) * uMouseActive;
+    vec3 dir = dist > 0.0001 ? toParticle / dist : vec3(0.0, 1.0, 0.0);
+    vec3 finalPos = basePos + dir * repel * 1.6;
+
+    vec4 mvPosition = modelViewMatrix * vec4(finalPos, 1.0);
+    gl_Position = projectionMatrix * mvPosition;
+    // 3.5x the core's own size, its own (much more generous) cap —
+    // this is meant to be a soft wash well past the core's edge, not
+    // a second sharp disc.
+    gl_PointSize = min(aSize * uPixelRatio * (140.0 / max(-mvPosition.z, 1.0)) * 3.5, 30.0 * uPixelRatio);
+    vColor = aColor;
+    vBrightness = aBrightness;
+    vTwinkle = 0.55 + 0.45 * sin(uTime * aSpeed + aPhase);
+  }
+`;
+
+const haloFragmentShader = /* glsl */ `
+  varying vec3 vColor;
+  varying float vBrightness;
+  varying float vTwinkle;
+
+  void main() {
+    float d = length(gl_PointCoord - vec2(0.5)) * 2.0;
+    float glow = pow(max(0.0, 1.0 - d), 2.2);
+    if (glow <= 0.0) discard;
+    // Capped low and multiplied by brightness^2 (not brightness) so
+    // this only reads clearly around the rare, genuinely bright stars
+    // — common dim ones get a barely-there wash, not a matching halo.
+    float alpha = glow * vBrightness * vBrightness * vTwinkle * 0.22;
     gl_FragColor = vec4(vColor, alpha);
   }
 `;
@@ -428,7 +514,7 @@ export default function StarFormationBackground({ scrollContainerRef }) {
 
     const particleCount = isNarrow ? PARTICLE_COUNT_MOBILE : PARTICLE_COUNT_DESKTOP;
     const particles = buildParticles(particleCount, { shapeOffsetX, shapeOffsetY, shapeScale, pixelRatio });
-    scene.add(particles);
+    scene.add(particles.group);
 
     // Pointer parallax + the cursor-repel effect share one listener —
     // a few pixels of camera drift plus the world-space point the
@@ -514,7 +600,7 @@ export default function StarFormationBackground({ scrollContainerRef }) {
       const dt = Math.min(now - lastNow, 100);
       lastNow = now;
 
-      const uniforms = particles.material.uniforms;
+      const uniforms = particles.uniforms;
       uniforms.uTime.value = (now - startTime) * 0.001;
       scrollSmoothed += (scrollProgressTarget() - scrollSmoothed) * 0.06;
       uniforms.uScrollProgress.value = scrollSmoothed;
@@ -535,7 +621,7 @@ export default function StarFormationBackground({ scrollContainerRef }) {
       camera.position.set(camXSmoothed, camYSmoothed, 15);
       camera.lookAt(shapeOffsetX * (1 - scrollSmoothed) * 0.3, 0, 0);
 
-      particles.rotation.y += dt * 0.000015;
+      particles.group.rotation.y += dt * 0.000015;
 
       renderer.render(scene, camera);
 
@@ -554,7 +640,7 @@ export default function StarFormationBackground({ scrollContainerRef }) {
     if (reduced) {
       camera.position.set(0, 0, 15);
       camera.lookAt(0, 0, 0);
-      particles.material.uniforms.uScrollProgress.value = 0;
+      particles.uniforms.uScrollProgress.value = 0;
       renderer.render(scene, camera);
       requestAnimationFrame(() => {
         canvas.style.opacity = "1";
@@ -599,9 +685,9 @@ export default function StarFormationBackground({ scrollContainerRef }) {
       renderer.setSize(width, height, false);
       canvas.width = width * dpr;
       canvas.height = height * dpr;
-      particles.material.uniforms.uResolution.value.set(width * dpr, height * dpr);
+      particles.uniforms.uResolution.value.set(width * dpr, height * dpr);
     }
-    particles.material.uniforms.uResolution.value.set(width * pixelRatio, height * pixelRatio);
+    particles.uniforms.uResolution.value.set(width * pixelRatio, height * pixelRatio);
     window.addEventListener("resize", onResize);
 
     return () => {
@@ -614,7 +700,8 @@ export default function StarFormationBackground({ scrollContainerRef }) {
       glow.geometry.dispose();
       glow.material.dispose();
       particles.geometry.dispose();
-      particles.material.dispose();
+      particles.coreMaterial.dispose();
+      particles.haloMaterial.dispose();
       renderer.dispose();
     };
   }, [scrollContainerRef]);
