@@ -316,7 +316,17 @@ const particleFragmentShader = /* glsl */ `
     // rare bright ones their distinct read, independent of the
     // twinkle's own animation.
     float alpha = analyticalAlpha * vBrightness * vTwinkle;
-    gl_FragColor = vec4(vColor, alpha);
+
+    // A flat-filled disc reads as a colored bubble, not a star — real
+    // starlight is brightest dead center and falls off toward its own
+    // edge. Blending toward white as distanceCalculated shrinks gives
+    // each point a small hot core inside its own boundary, independent
+    // of the crisp edge computed above (that edge is still exactly
+    // where alpha above hits zero; this only changes the color inside
+    // it).
+    float hotCore = pow(1.0 - clamp(distanceCalculated / thresholdEdge, 0.0, 1.0), 2.0);
+    vec3 starColor = mix(vColor, vec3(1.0), hotCore * 0.85);
+    gl_FragColor = vec4(starColor, alpha);
   }
 `;
 
