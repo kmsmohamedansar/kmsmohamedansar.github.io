@@ -373,6 +373,13 @@ export default function StarFormationBackground({ scrollContainerRef }) {
     // style, so three.js doesn't need to also write explicit pixel
     // dimensions into canvas.style on top of that.
     renderer.setSize(width, height, false);
+    // setSize already sets these to the same values internally; set
+    // them again explicitly and directly on the element so the
+    // backbuffer's actual size is never implicit or left for the
+    // compositor to infer from layout — it's read right back off the
+    // canvas's own attributes.
+    canvas.width = width * pixelRatio;
+    canvas.height = height * pixelRatio;
     renderer.outputColorSpace = THREE.SRGBColorSpace;
     // No filmic tone mapping here — ACES's photographic highlight
     // rolloff is built for HDR scenes with real overexposure, and on
@@ -573,6 +580,8 @@ export default function StarFormationBackground({ scrollContainerRef }) {
       // to usefully do here — skipping it just avoids one redundant
       // style write on every resize.
       renderer.setSize(width, height, false);
+      canvas.width = width * dpr;
+      canvas.height = height * dpr;
       particles.material.uniforms.uResolution.value.set(width * dpr, height * dpr);
     }
     particles.material.uniforms.uResolution.value.set(width * pixelRatio, height * pixelRatio);
@@ -600,7 +609,15 @@ export default function StarFormationBackground({ scrollContainerRef }) {
           ref={canvasRef}
           aria-hidden="true"
           style={{
-            position: "fixed",
+            // Absolute, not fixed: this canvas's nearest positioned
+            // ancestor (AppShell's root wrapper) is itself pinned to
+            // the full viewport height and never scrolls on its own,
+            // so an absolutely-positioned full-bleed child of it lands
+            // in exactly the same place a fixed one would — while
+            // staying unambiguously anchored to that layout box rather
+            // than the viewport, so there's never a question of which
+            // box its backbuffer dimensions are meant to track.
+            position: "absolute",
             top: 0,
             left: 0,
             width: "100%",
