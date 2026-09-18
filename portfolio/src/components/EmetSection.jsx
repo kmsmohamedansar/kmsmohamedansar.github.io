@@ -28,7 +28,7 @@ const SCRIPT = [
 ];
 
 const FALLBACK_ANSWER = [
-  { text: "Not sure about that one — try 1-4 below, or ask me about " },
+  { text: "Not sure about that one, try 1-4 below, or ask me about " },
   { text: "SQL, Snowflake, iOS", cls: "font-bold" },
   { text: ", or how to " },
   { text: "reach me", cls: "font-bold" },

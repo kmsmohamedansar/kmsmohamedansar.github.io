@@ -156,7 +156,7 @@ const STUBS = [
     id: "rpg",
     title: "A day in the life of an SE",
     icon: Gamepad2,
-    body: "A tile-based office you'd walk through to fix a broken pricing feed before the 4pm standup. Built once in Phaser 3, currently dormant — the wireframe below is what's still live under the hood.",
+    body: "A tile-based office you'd walk through to fix a broken pricing feed before the 4pm standup. Built once in Phaser 3, currently dormant. The wireframe below is what's still live under the hood.",
     render: RpgPreview,
   },
   {

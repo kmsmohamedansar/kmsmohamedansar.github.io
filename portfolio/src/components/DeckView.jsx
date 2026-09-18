@@ -64,7 +64,7 @@ export default function DeckView({ ready = true }) {
           className="mt-6 max-w-xl text-[1.05rem] text-[color:var(--ink-400)] leading-relaxed"
         >
           <span className="text-cyan">SQL</span> + <span className="text-violet">Snowflake</span> in
-          production — one iOS app <span className="text-amber-deep">shipped solo</span>.
+          production, one iOS app <span className="text-amber-deep">shipped solo</span>.
         </motion.p>
 
         <motion.div

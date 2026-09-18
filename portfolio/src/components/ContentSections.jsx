@@ -172,7 +172,7 @@ export function NowSection() {
                 <p>
                   Most of what I do sits where <b className="text-[color:var(--ink-100)]">data turns into a decision</b>:
                   retail pricing data at scale, pipelines that run on their own, and dashboards a team
-                  actually opens every week — not a one-off chart nobody looks at again.
+                  actually opens every week, not a one-off chart nobody looks at again.
                 </p>
                 <p>
                   At <span className="text-cyan">Datasembly</span>, that's a lot of SQL and Snowflake,
@@ -237,7 +237,7 @@ export function BeforeSection() {
           step="02"
           kicker="previous work experience"
           title="Where I've been"
-          lede="Solutions engineering and analytics, mostly. Each stop handed me a bit more technical ownership — from content operations at Amazon to pre-sales solution design at Datasembly now."
+          lede="Solutions engineering and analytics, mostly. Each stop handed me a bit more technical ownership, from content operations at Amazon to pre-sales solution design at Datasembly now."
         />
         {/* A timeline drawing itself in, not another card — the
             signature motion here is career progression, left to
@@ -714,7 +714,7 @@ export function StorySection() {
   return (
     <section id="story" className="min-h-[100dvh] flex flex-col items-center justify-center px-5 py-14">
       <div className="w-full max-w-[1180px]">
-        <SectionHead step="03b" kicker="the short version" title="Why I do this work" lede="Not a resume — the reasoning behind it." />
+        <SectionHead step="03b" kicker="the short version" title="Why I do this work" lede="Not a resume, the reasoning behind it." />
         <div className="grid md:grid-cols-2 gap-px rounded-2xl overflow-hidden border border-white/8 max-w-3xl">
           {STORY_BEATS.map((beat, i) => (
             <Reveal key={beat.n} delay={i * 0.07} y={16}>
