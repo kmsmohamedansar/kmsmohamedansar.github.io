@@ -20,18 +20,24 @@ const ARM_TIGHTNESS = 1.55; // full rotations each arm makes out to maxRadius
 // structure a real spiral galaxy (and the reference site's own
 // formation) has: a dense, bright core thinning out along a couple of
 // arms winding outward. `t` biased toward 0 (via the caller) concentrates
-// more points near the core; a little jitter in both angle and radius
-// keeps each arm reading as a loose band of stars rather than a single
-// hairline curve.
+// more points near the core.
+//
+// Jitter is added as a flat 2D offset in cartesian space, not as an
+// angular wobble — an angular jitter's absolute displacement shrinks
+// toward zero as radius does (it's a fraction *of* the radius), so to
+// keep a constant-looking arm width near the center it has to be
+// divided by radius, which blows up as radius approaches zero and
+// scatters points almost uniformly in every direction right at the
+// core — exactly the dense, undifferentiated blob this was producing
+// instead of a bright, tight cluster of distinct stars.
 function spiralPoint(t, armIndex, maxRadius) {
   const angle = (armIndex * (Math.PI * 2)) / ARM_COUNT + t * ARM_TIGHTNESS * Math.PI * 2;
-  const radius = Math.pow(t, 0.55) * maxRadius;
-  const armWidth = 0.55 + radius * 0.16;
-  const jitterAngle = (Math.random() - 0.5) * (armWidth / Math.max(radius, 0.4));
-  const jitterRadius = (Math.random() - 0.5) * armWidth * 0.5;
-  const finalRadius = Math.max(0.05, radius + jitterRadius);
-  const finalAngle = angle + jitterAngle;
-  return [Math.cos(finalAngle) * finalRadius, Math.sin(finalAngle) * finalRadius];
+  const minRadius = maxRadius * 0.06;
+  const radius = minRadius + Math.pow(t, 0.6) * (maxRadius - minRadius);
+  const armWidth = 0.16 + radius * 0.1;
+  const x0 = Math.cos(angle) * radius + (Math.random() - 0.5) * armWidth;
+  const y0 = Math.sin(angle) * radius + (Math.random() - 0.5) * armWidth;
+  return [x0, y0];
 }
 
 // Uniform-in-volume sphere sample, same rejection method the old
@@ -57,7 +63,13 @@ function randomInSphere(radius) {
  * shader) pushes nearby particles outward.
  */
 function buildParticles(count, { shapeOffsetX, shapeOffsetY, shapeScale, pixelRatio }) {
-  const shapeShare = 0.72;
+  // Trimmed from 0.72 — the spiral's own radius mapping (t^0.6) already
+  // concentrates area-density toward the core on its own; stacking a
+  // strong extra bias on top of that (as this used to do) packed far
+  // too many points into a small area, and once additively blended
+  // they merged into one soft blob instead of a bright, distinct
+  // cluster of stars.
+  const shapeShare = 0.6;
   const shapeCount = Math.round(count * shapeShare);
 
   const formation = new Float32Array(count * 3);
@@ -75,11 +87,11 @@ function buildParticles(count, { shapeOffsetX, shapeOffsetY, shapeScale, pixelRa
     dispersed[i * 3 + 1] = dy * r;
     dispersed[i * 3 + 2] = dz * r - 6;
 
+    let t = 1;
     if (i < shapeCount) {
-      // Biased toward t=0 so most particles land near the core, the
-      // same brightness falloff a real galaxy (and the reference
-      // formation) has, rather than an even spread out to the rim.
-      const t = Math.pow(Math.random(), 1.6);
+      // Only a mild extra bias toward t=0 now — see the shapeShare
+      // comment above for why a strong one caused the core to blur.
+      t = Math.pow(Math.random(), 1.15);
       const armIndex = Math.floor(Math.random() * ARM_COUNT);
       const [sx, sy] = spiralPoint(t, armIndex, shapeScale);
       formation[i * 3] = sx + shapeOffsetX;
@@ -95,15 +107,21 @@ function buildParticles(count, { shapeOffsetX, shapeOffsetY, shapeScale, pixelRa
       formation[i * 3 + 2] = dispersed[i * 3 + 2] * 0.4 - 4;
     }
 
+    // Shape particles are also scaled down toward the core (small t):
+    // that's naturally the densest part of the spiral, so smaller
+    // points there keep individual stars distinct instead of visually
+    // merging, while the rim (where points are already well spaced)
+    // keeps its full size range.
+    const coreSizeScale = i < shapeCount ? 0.5 + 0.5 * t : 1;
     const roll = Math.random();
     if (roll > 0.985) {
-      sizes[i] = 5.5 + Math.random() * 2.5;
+      sizes[i] = (5.5 + Math.random() * 2.5) * coreSizeScale;
       brightness[i] = 1;
     } else if (roll > 0.9) {
-      sizes[i] = 3 + Math.random() * 1.5;
+      sizes[i] = (3 + Math.random() * 1.5) * coreSizeScale;
       brightness[i] = 0.75 + Math.random() * 0.25;
     } else {
-      sizes[i] = 1.4 + Math.random() * 1.4;
+      sizes[i] = (1.4 + Math.random() * 1.4) * coreSizeScale;
       brightness[i] = 0.4 + Math.random() * 0.4;
     }
     phases[i] = Math.random() * Math.PI * 2;
@@ -274,8 +292,8 @@ export default function StarFormationBackground({ scrollContainerRef }) {
     // it) — this is meant to read as a faint ambient wash the
     // section-accent color tints, not a bright blob that competes with
     // (and washes out) the sparkle pattern of the shape itself.
-    ambientGlow.position.set(shapeOffsetX, shapeOffsetY, -6);
-    ambientGlow.scale.setScalar(isNarrow ? 4.5 : 7);
+    ambientGlow.position.set(shapeOffsetX, shapeOffsetY, -8);
+    ambientGlow.scale.setScalar(isNarrow ? 3.2 : 5);
     scene.add(ambientGlow);
 
     const particleCount = isNarrow ? 1400 : 2600;
@@ -370,7 +388,7 @@ export default function StarFormationBackground({ scrollContainerRef }) {
 
       currentAccent.lerp(targetAccent, 0.02);
       ambientGlowMaterial.color.copy(currentAccent);
-      ambientGlowMaterial.opacity = 0.3 * (1 - morphSmoothed * 0.7);
+      ambientGlowMaterial.opacity = 0.2 * (1 - morphSmoothed * 0.7);
 
       camXSmoothed += (pointerTarget.x * 0.5 - camXSmoothed) * 0.04;
       camYSmoothed += (pointerTarget.y * 0.3 - camYSmoothed) * 0.04;
