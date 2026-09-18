@@ -1,9 +1,8 @@
 import * as THREE from "three";
 import { starVertexShader, starFragmentShader } from "./starShaders";
 
-// Shared between SolarSystemBackground (the scroll backdrop) and
-// SolarSystemExplorer (the interactive view) so the starfield always
-// looks identical regardless of which one is mounted.
+// Used by SolarSystemExplorer (the interactive #explore view) for its
+// background starfield.
 
 export function makeGlowSprite(color) {
   const size = 256;

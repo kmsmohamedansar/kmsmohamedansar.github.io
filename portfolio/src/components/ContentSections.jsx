@@ -135,7 +135,10 @@ function TagPill({ children }) {
 /* ── NOW ─────────────────────────────────────────────────── */
 export function NowSection() {
   const icons = [Database, Compass, Smartphone];
-  const [expanded, setExpanded] = useState(false);
+  // Open by default — current work is the thing a visitor most wants
+  // to see without an extra click; the toggle still lets anyone
+  // collapse it back down.
+  const [expanded, setExpanded] = useState(true);
   return (
     <section id="source" data-star-accent="source" className="min-h-[100dvh] flex flex-col items-center justify-center px-5 py-14">
       <div className="w-full max-w-[1180px]">
@@ -144,12 +147,11 @@ export function NowSection() {
           kicker="current work experience"
           title={
             <>
-              Technical builder at the intersection of{" "}
-              <span className="text-cyan">data systems</span> and{" "}
-              <span className="text-amber">delivery</span>
+              I build <span className="text-cyan">data systems</span> and ship the{" "}
+              <span className="text-amber">software</span> around them
             </>
           }
-          lede="Correct, explainable, operable. Whether the interface is SQL, a dashboard, or TestFlight."
+          lede="It has to work, and I need to be able to explain why it works. Same standard whether that's SQL, a dashboard, or an app in TestFlight."
         />
         <Reveal delay={0.02}>
           <div className="flex flex-wrap items-center gap-2.5 mb-8">
@@ -168,18 +170,18 @@ export function NowSection() {
             <div className="p-6 md:p-8 grid lg:grid-cols-[1.15fr_1fr] gap-8">
               <div className="space-y-5 text-[1.02rem] text-[color:var(--ink-300)] leading-relaxed max-w-lg">
                 <p>
-                  Most of my work sits where <b className="text-[color:var(--ink-100)]">data meets decision-making</b>:
-                  retail pricing-scale datasets, recurring pipelines, and analytics that teams run week
-                  after week. Not one-off charts.
+                  Most of what I do sits where <b className="text-[color:var(--ink-100)]">data turns into a decision</b>:
+                  retail pricing data at scale, pipelines that run on their own, and dashboards a team
+                  actually opens every week — not a one-off chart nobody looks at again.
                 </p>
                 <p>
-                  At <span className="text-cyan">Datasembly</span>, that translates to deep SQL and
-                  Snowflake work, careful validation, stakeholder-ready reporting, and clean handoffs when
-                  scope moves.
+                  At <span className="text-cyan">Datasembly</span>, that's a lot of SQL and Snowflake,
+                  double-checking my own numbers before anyone else has to, and handing off reports people
+                  can trust without re-checking them.
                 </p>
                 <p>
-                  I apply the same standard to <span className="text-amber">software and applied AI</span>:
-                  end-to-end ownership when the right answer is a product, not only a query.
+                  I hold the same bar for <span className="text-amber">software and applied AI</span>: if
+                  the real answer is a product instead of a query, I'll build the product.
                 </p>
               </div>
               <div className="flex flex-col gap-4">
@@ -222,7 +224,9 @@ export function NowSection() {
    to fill the gap ("shifting adjacent modules out of the way"). */
 export function BeforeSection() {
   const [expandedIdx, setExpandedIdx] = useState(null);
-  const [sectionExpanded, setSectionExpanded] = useState(false);
+  // Open by default — work history is exactly what a visitor scrolls
+  // here to see; the toggle still lets anyone collapse it back down.
+  const [sectionExpanded, setSectionExpanded] = useState(true);
   const expandedRole = expandedIdx !== null ? ROLES[expandedIdx] : null;
   const companies = [...new Set(ROLES.map((r) => r.company))];
 
@@ -233,7 +237,7 @@ export function BeforeSection() {
           step="02"
           kicker="previous work experience"
           title="Where I've been"
-          lede="Solutions engineering and analytics operations. Progressively more technical ownership, from content operations at Amazon through pre-sales solution design at Datasembly."
+          lede="Solutions engineering and analytics, mostly. Each stop handed me a bit more technical ownership — from content operations at Amazon to pre-sales solution design at Datasembly now."
         />
         {/* A timeline drawing itself in, not another card — the
             signature motion here is career progression, left to
@@ -625,7 +629,11 @@ function StatCounter({ value, label, delay = 0 }) {
 
 export function WorkSection() {
   const [expanded, setExpanded] = useState(false);
-  const [sectionExpanded, setSectionExpanded] = useState(false);
+  // Open by default — projects are the whole point of this section,
+  // and the least useful place to make someone click first. The
+  // secondary "show N more projects" tier stays collapsed on its own
+  // toggle above.
+  const [sectionExpanded, setSectionExpanded] = useState(true);
   const featuredList = PROJECTS.filter((p) => p.featured);
   const rest = PROJECTS.filter((p) => !p.featured && !p.collapsed);
   const hidden = PROJECTS.filter((p) => p.collapsed);
@@ -706,7 +714,7 @@ export function StorySection() {
   return (
     <section id="story" className="min-h-[100dvh] flex flex-col items-center justify-center px-5 py-14">
       <div className="w-full max-w-[1180px]">
-        <SectionHead step="03b" kicker="the short version" title="Why I do this work" lede="Not a resume. The throughline behind it." />
+        <SectionHead step="03b" kicker="the short version" title="Why I do this work" lede="Not a resume — the reasoning behind it." />
         <div className="grid md:grid-cols-2 gap-px rounded-2xl overflow-hidden border border-white/8 max-w-3xl">
           {STORY_BEATS.map((beat, i) => (
             <Reveal key={beat.n} delay={i * 0.07} y={16}>
