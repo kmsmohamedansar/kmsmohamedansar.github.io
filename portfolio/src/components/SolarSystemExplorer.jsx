@@ -269,13 +269,10 @@ function formatPeriod(days) {
 
 /**
  * A dedicated, fully interactive solar system view — drag to orbit,
- * scroll/pinch to zoom, click a planet to inspect it. Distinct from
- * SolarSystemBackground (the passive scroll backdrop): that one
- * deliberately ignores pointer input so it doesn't fight scrolling and
- * clicks on the actual page; this one IS the page, reached as its own
- * route (like EMET's takeover), so capturing the pointer is exactly
- * the point. Shares the real orbital mechanics, planet textures, and
- * starfield with the backdrop — same solar system, two ways to see it.
+ * scroll/pinch to zoom, click a planet to inspect it. Reached as its
+ * own route (like EMET's takeover), separate from the main scroll
+ * page's own backdrop, so capturing the pointer for orbit controls
+ * doesn't fight scrolling or clicks anywhere else on the site.
  */
 export default function SolarSystemExplorer() {
   const mountRef = useRef(null);
@@ -346,10 +343,10 @@ export default function SolarSystemExplorer() {
       followedName = null;
     });
 
-    // Bloom on the sun only — see SolarSystemBackground for why a
-    // brightness threshold can't isolate it (the star shader's
-    // brightest points are similarly bright); a dedicated render
-    // layer excludes everything else structurally instead.
+    // Bloom on the sun only — a plain brightness threshold can't
+    // isolate it, since the star shader's brightest points are
+    // similarly bright; a dedicated render layer excludes everything
+    // else structurally instead.
     const bloomComposer = new EffectComposer(renderer);
     bloomComposer.renderToScreen = false;
     const bloomRenderPass = new RenderPass(scene, camera);

@@ -12,9 +12,7 @@ const TAU = Math.PI * 2;
 // Per-planet surface recipe — which texture generator below to use and
 // the palette to feed it. Kept out of orbitalMechanics.js (real physics
 // data) since this is purely cosmetic, unlike everything in that file.
-// Shared by both SolarSystemBackground (the scroll backdrop) and
-// SolarSystemExplorer (the interactive view) so their planets always
-// look identical.
+// Used by SolarSystemExplorer (the interactive #explore view).
 export const SURFACE_RECIPES = {
   Mercury: { kind: "rocky", base: "#9a9186", dark: "#6b645c", light: "#c2bbb1", craterCount: 260, patchCount: 6, poleShadow: 0.3 },
   Venus: { kind: "banded", colors: ["#e8d19a", "#d9b876", "#e8d19a", "#c9a45f", "#e8d19a", "#d9b876"], spots: 1 },
