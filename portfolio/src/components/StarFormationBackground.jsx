@@ -13,7 +13,12 @@ const SECTION_ACCENTS = {
 };
 
 const PARTICLE_COUNT_DESKTOP = 2600;
-const PARTICLE_COUNT_MOBILE = 1400;
+// The mobile spiral's radius (shapeScale = 2, vs. 4.2 on desktop) is
+// less than a quarter of desktop's area, so the previous 1400 packed
+// roughly 2.4x as many particles into each unit of area — dense
+// enough for the core to merge into a blob no edge anti-aliasing fix
+// can undo. Scaled down to land at about the same density.
+const PARTICLE_COUNT_MOBILE = 850;
 const SHAPE_SHARE = 0.72; // ~72% recruited into the spiral, the rest ambient
 const ARM_COUNT = 2;
 const ARM_ROTATIONS = 1.5; // how many full turns each arm makes out to maxRadius
@@ -225,14 +230,15 @@ const particleVertexShader = /* glsl */ `
   }
 `;
 
-// No texture sample — the circle is pure math from gl_PointCoord, a
-// tight solid core with a short smoothstep-feathered edge so it reads
-// as a sharp point of light rather than a soft gradient blob, at any
-// pixel density. The feather band (0.7-1.0, tighter than the previous
-// 0.55-1.0) is deliberately narrow now that rendering runs at up to
-// 3x device pixel density: at that resolution a narrow band still
-// anti-aliases cleanly, and a wider one was softening every point's
-// visible edge more than the extra pixel density bought back.
+// No texture sample — the circle is pure math from gl_PointCoord. The
+// earlier version faded over a FIXED fraction of the point's radius
+// (e.g. its outer 30%), which scales with point size: an 18px point
+// got an edge band ~5px wide, which reads as a soft halo around every
+// star rather than a crisp disc, no matter how high the pixel density
+// is. fwidth() gives the actual on-screen derivative of the distance
+// field at this fragment, so the fade is always ~1 physical pixel
+// wide regardless of how big the point is — the same anti-aliasing a
+// crisp UI icon uses, not a proportional gradient.
 const particleFragmentShader = /* glsl */ `
   varying vec3 vColor;
   varying float vBrightness;
@@ -241,7 +247,8 @@ const particleFragmentShader = /* glsl */ `
   void main() {
     vec2 uv = gl_PointCoord - 0.5;
     float d = length(uv) * 2.0;
-    float core = 1.0 - smoothstep(0.7, 1.0, d);
+    float aa = fwidth(d) * 1.5;
+    float core = 1.0 - smoothstep(1.0 - aa, 1.0 + aa, d);
     if (core <= 0.0) discard;
     float alpha = core * vBrightness * vTwinkle;
     gl_FragColor = vec4(vColor, alpha);
@@ -267,7 +274,11 @@ const glowFragmentShader = /* glsl */ `
 
   void main() {
     float d = length(vUv - 0.5) * 2.0;
-    float falloff = pow(max(0.0, 1.0 - d), 2.4);
+    // Steeper falloff (4.0, up from 2.4) so this stays a tight tint
+    // right at the core instead of a wide soft wash sitting under the
+    // whole spiral — the latter read as extra haze on top of the
+    // per-point blur fixed elsewhere in this file.
+    float falloff = pow(max(0.0, 1.0 - d), 4.0);
     gl_FragColor = vec4(uGlowColor, falloff * uOpacity);
   }
 `;
@@ -341,8 +352,13 @@ export default function StarFormationBackground({ scrollContainerRef }) {
     renderer.setPixelRatio(pixelRatio);
     renderer.setSize(width, height);
     renderer.outputColorSpace = THREE.SRGBColorSpace;
-    renderer.toneMapping = THREE.ACESFilmicToneMapping;
-    renderer.toneMappingExposure = 1;
+    // No filmic tone mapping here — ACES's photographic highlight
+    // rolloff is built for HDR scenes with real overexposure, and on
+    // these small additively-blended points it just softened the
+    // transition from bright core to background, reading as haze on
+    // top of the per-point blur already fixed above. This is graphic
+    // sparkle, not a photograph, so it renders at face value instead.
+    renderer.toneMapping = THREE.NoToneMapping;
     renderer.setClearColor(new THREE.Color("#02050c"), 1);
 
     const scene = new THREE.Scene();
