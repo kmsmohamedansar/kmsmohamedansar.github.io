@@ -13,15 +13,13 @@ const SECTION_ACCENTS = {
 };
 
 const PARTICLE_COUNT_DESKTOP = 2600;
-// The mobile spiral's radius (shapeScale = 2, vs. 4.2 on desktop) is
+// The mobile formation's radius (shapeScale = 2, vs. 4.2 on desktop) is
 // less than a quarter of desktop's area, so the previous 1400 packed
 // roughly 2.4x as many particles into each unit of area — dense
 // enough for the core to merge into a blob no edge anti-aliasing fix
 // can undo. Scaled down to land at about the same density.
 const PARTICLE_COUNT_MOBILE = 850;
-const SHAPE_SHARE = 0.72; // ~72% recruited into the spiral, the rest ambient
-const ARM_COUNT = 2;
-const ARM_ROTATIONS = 1.5; // how many full turns each arm makes out to maxRadius
+const SHAPE_SHARE = 0.72; // ~72% recruited into the infinity loop, the rest ambient
 
 // Uniform-in-volume sphere sample (rejection method) — both the
 // "ambient" particles' resting spot and every particle's fully
@@ -36,54 +34,56 @@ function randomInSphere(radius) {
   return [x * radius, y * radius, z * radius];
 }
 
-// A point along a true logarithmic spiral, r = a * e^(b*theta), solved
-// so r goes from minRadius at theta=0 to maxRadius after ARM_ROTATIONS
-// full turns. `armIndex` (0 or 1) places half the particles on the
-// theta+PI arm, per a two-armed galaxy's usual symmetry.
+// A point on a Lemniscate of Bernoulli — a true figure-eight/infinity
+// curve, not an approximation stitched from two circles:
+//   x(theta) = scale * cos(theta) / (1 + sin(theta)^2)
+//   y(theta) = scale * sin(theta) * cos(theta) / (1 + sin(theta)^2)
+// theta in [0, 2*PI) traces both loops exactly once each, crossing
+// through the origin twice (theta = PI/2 and 3*PI/2). `scale` is the
+// distance from center to each loop's outer tip (theta = 0 and PI).
 //
-// Deliberately NOT biasing `t` toward 0 before calling this (the way
-// a first pass at this component — and, honestly, most naive spiral
-// implementations — do it, e.g. `t = Math.pow(Math.random(), 1.6)`).
-// A log spiral's own dr/dt is proportional to r itself, so it already
-// spends most of its arc length near the core; stacking an extra
-// concentration bias on top of a formula that concentrates on its own
-// double-counts it, and once that many points land within a small
-// screen-space radius, additive-blended point sprites stop reading as
-// individual stars and merge into one soft blob — a real bug this
-// component shipped with once already. `t` is sampled uniformly by
-// the caller; the log spiral's inherent geometry supplies the "bright
-// core, thinning arms" look on its own.
-function spiralPoint(t, armIndex, minRadius, maxRadius) {
-  const thetaMax = ARM_ROTATIONS * Math.PI * 2;
-  const b = Math.log(maxRadius / minRadius) / thetaMax;
-  const theta = t * thetaMax;
-  const radius = minRadius * Math.exp(b * theta);
-  const angle = (armIndex * Math.PI * 2) / ARM_COUNT + theta;
-  // Flat cartesian jitter, not an angular one divided by radius — a
-  // divide-by-radius jitter blows up as radius approaches zero and
-  // scatters points almost uniformly near the core instead of along
-  // the arm, which was the other half of the blob bug above.
-  const armWidth = 0.16 + radius * 0.1;
-  const x = Math.cos(angle) * radius + (Math.random() - 0.5) * armWidth;
-  const y = Math.sin(angle) * radius + (Math.random() - 0.5) * armWidth;
-  return [x, y, radius];
+// The curve's own geometry already puts more particles near the
+// center crossing than out at the tips — dx/dtheta and dy/dtheta both
+// shrink as theta approaches the crossing angles, so a uniformly
+// sampled `t` naturally spends more of its arc length there. That's
+// the same "let the curve's own math supply the density gradient"
+// approach the previous spiral formation used, for the same reason:
+// stacking an extra bias on top of a formula that already concentrates
+// on its own is how a "bright core" turns into an indistinct blob.
+function infinityPoint(t, scale) {
+  const theta = t * Math.PI * 2;
+  const s = Math.sin(theta);
+  const c = Math.cos(theta);
+  const denom = 1 + s * s;
+  const x = (scale * c) / denom;
+  const y = (scale * s * c) / denom;
+  const radius = Math.sqrt(x * x + y * y); // 0 at the crossing, `scale` at the tips
+  // Flat cartesian jitter (not one that divides by radius) for the
+  // same reason the spiral's arm jitter did: a divide-by-radius term
+  // blows up to scatter points almost randomly right at the crossing,
+  // exactly where this curve already spends the most arc length.
+  const bandWidth = scale * 0.05 + radius * 0.09;
+  const jx = (Math.random() - 0.5) * bandWidth;
+  const jy = (Math.random() - 0.5) * bandWidth;
+  return [x + jx, y + jy, radius];
 }
 
 /**
- * Builds the particle system: ~72% of particles are recruited into a
- * two-armed logarithmic spiral, the rest sit as ambient background
+ * Builds the particle system: ~72% of particles are recruited into an
+ * infinity-shaped (lemniscate) loop, the rest sit as ambient background
  * stars that barely move. Every particle also carries a fully
  * dispersed aTargetPosition (uniform-in-a-sphere) that
- * `uScrollProgress` morphs it toward. Per-particle aColor runs hot
- * cyan/blue near the core out to warm amber/gold at the rim — spec'd
- * as a fixed attribute (baked once here), not something recomputed
- * per frame.
+ * `uScrollProgress` morphs it toward. Per-particle aColor runs a
+ * three-stop gradient — bright cyan-white at the center crossing,
+ * through vivid violet at the loops' midpoints, out to warm gold at
+ * the two outer tips — spec'd as a fixed attribute (baked once here),
+ * not something recomputed per frame.
  */
 function buildParticles(count, { shapeOffsetX, shapeOffsetY, shapeScale, pixelRatio }) {
   const shapeCount = Math.round(count * SHAPE_SHARE);
-  const minRadius = shapeScale * 0.08;
-  const coreColor = new THREE.Color("#7fd9ff");
-  const rimColor = new THREE.Color("#ffcf8a");
+  const centerColor = new THREE.Color("#a8f8ff"); // hot cyan-white at the crossing
+  const midColor = new THREE.Color("#c77dff"); // vivid violet through the loops
+  const outerColor = new THREE.Color("#ffb35c"); // warm gold at the tips
   const white = new THREE.Color("#ffffff");
 
   const position = new Float32Array(count * 3); // required by BufferGeometry/Points; unused by the shader, which reads the two attributes below instead
@@ -101,19 +101,18 @@ function buildParticles(count, { shapeOffsetX, shapeOffsetY, shapeScale, pixelRa
     aTargetPosition[i * 3 + 1] = dy * r;
     aTargetPosition[i * 3 + 2] = dz * r - 6;
 
-    let radiusFrac = 1; // 0 = core, 1 = rim; ambient particles count as "rim" for color/size
+    let radiusFrac = 1; // 0 = center crossing, 1 = outer tips; ambient particles count as "tip" for color/size
     if (i < shapeCount) {
       const t = Math.random();
-      const armIndex = i % ARM_COUNT;
-      const [sx, sy, radius] = spiralPoint(t, armIndex, minRadius, shapeScale);
-      radiusFrac = Math.min(1, (radius - minRadius) / (shapeScale - minRadius));
+      const [sx, sy, radius] = infinityPoint(t, shapeScale);
+      radiusFrac = Math.min(1, radius / shapeScale);
       position[i * 3] = sx + shapeOffsetX;
       position[i * 3 + 1] = sy + shapeOffsetY;
       position[i * 3 + 2] = (Math.random() - 0.5) * (0.6 + radiusFrac * 1.4);
     } else {
       // Ambient stars, already scattered near their dispersed spot —
-      // present even while the spiral is fully assembled, so it never
-      // reads as an empty void around the shape.
+      // present even while the infinity loop is fully assembled, so it
+      // never reads as an empty void around the shape.
       position[i * 3] = aTargetPosition[i * 3] * 0.4;
       position[i * 3 + 1] = aTargetPosition[i * 3 + 1] * 0.4;
       position[i * 3 + 2] = aTargetPosition[i * 3 + 2] * 0.4 - 4;
@@ -145,8 +144,16 @@ function buildParticles(count, { shapeOffsetX, shapeOffsetY, shapeScale, pixelRa
     aPhase[i] = Math.random() * Math.PI * 2;
     aSpeed[i] = 0.4 + Math.random() * 1.4;
 
-    const colorT = i < shapeCount ? radiusFrac : 0.8 + Math.random() * 0.2;
-    const color = coreColor.clone().lerp(rimColor, colorT).lerp(white, brightness * 0.5);
+    const colorT = i < shapeCount ? radiusFrac : 0.75 + Math.random() * 0.25;
+    // Three-stop gradient: center -> mid across the first half of the
+    // range, mid -> outer across the second half, so the vivid violet
+    // shows up as a real midpoint band along each loop rather than
+    // just an average blur between two endpoint colors.
+    const color =
+      colorT < 0.5
+        ? centerColor.clone().lerp(midColor, colorT * 2)
+        : midColor.clone().lerp(outerColor, (colorT - 0.5) * 2);
+    color.lerp(white, brightness * 0.5);
     aColor[i * 3] = color.r;
     aColor[i * 3 + 1] = color.g;
     aColor[i * 3 + 2] = color.b;
@@ -249,9 +256,9 @@ const particleVertexShader = /* glsl */ `
     // progress shifts the base position out from under them.
     vec3 toParticle = basePos - uMouseWorld;
     float dist = length(toParticle);
-    float repel = smoothstep(2.6, 0.0, dist) * uMouseActive;
+    float repel = smoothstep(3.2, 0.0, dist) * uMouseActive;
     vec3 dir = dist > 0.0001 ? toParticle / dist : vec3(0.0, 1.0, 0.0);
-    vec3 finalPos = basePos + dir * repel * 1.6;
+    vec3 finalPos = basePos + dir * repel * 2.3;
 
     vec4 mvPosition = modelViewMatrix * vec4(finalPos, 1.0);
     gl_Position = projectionMatrix * mvPosition;
@@ -343,9 +350,9 @@ const haloVertexShader = /* glsl */ `
     vec3 basePos = mix(position, aTargetPosition, uScrollProgress);
     vec3 toParticle = basePos - uMouseWorld;
     float dist = length(toParticle);
-    float repel = smoothstep(2.6, 0.0, dist) * uMouseActive;
+    float repel = smoothstep(3.2, 0.0, dist) * uMouseActive;
     vec3 dir = dist > 0.0001 ? toParticle / dist : vec3(0.0, 1.0, 0.0);
-    vec3 finalPos = basePos + dir * repel * 1.6;
+    vec3 finalPos = basePos + dir * repel * 2.3;
 
     vec4 mvPosition = modelViewMatrix * vec4(finalPos, 1.0);
     gl_Position = projectionMatrix * mvPosition;
@@ -371,12 +378,12 @@ const haloFragmentShader = /* glsl */ `
     // Capped low and multiplied by brightness^2 (not brightness) so
     // this only reads clearly around the rare, genuinely bright stars
     // — common dim ones get a barely-there wash, not a matching halo.
-    float alpha = glow * vBrightness * vBrightness * vTwinkle * 0.22;
+    float alpha = glow * vBrightness * vBrightness * vTwinkle * 0.28;
     gl_FragColor = vec4(vColor, alpha);
   }
 `;
 
-// The glow mesh's own shader: a large plane behind the spiral's core,
+// The glow mesh's own shader: a large plane behind the infinity loop's
 // entirely procedural (no canvas texture) — a radial falloff from the
 // plane's own UV center, tinted by uGlowColor and faded by uOpacity
 // (both driven from the component below).
@@ -397,7 +404,7 @@ const glowFragmentShader = /* glsl */ `
     float d = length(vUv - 0.5) * 2.0;
     // Steeper falloff (4.0, up from 2.4) so this stays a tight tint
     // right at the core instead of a wide soft wash sitting under the
-    // whole spiral — the latter read as extra haze on top of the
+    // whole loop — the latter read as extra haze on top of the
     // per-point blur fixed elsewhere in this file.
     float falloff = pow(max(0.0, 1.0 - d), 4.0);
     gl_FragColor = vec4(uGlowColor, falloff * uOpacity);
@@ -422,8 +429,8 @@ function buildGlowMesh(initialColorHex) {
 
 /**
  * The persistent backdrop for the whole scrollable experience. Most
- * particles start recruited into a two-armed spiral at the hero; as
- * the visitor scrolls past it, the spiral blows apart into an ordinary
+ * particles start recruited into an infinity-shaped loop at the hero;
+ * as the visitor scrolls past it, the loop blows apart into an ordinary
  * scattered starfield that stays calm for the rest of the page. Bring
  * the cursor near any cluster and nearby particles glide out of the
  * way, springing back once it moves on. EMET keeps its own matrix-rain
@@ -498,7 +505,7 @@ export default function StarFormationBackground({ scrollContainerRef }) {
     camera.position.set(0, 0, 15);
     camera.lookAt(0, 0, 0);
 
-    // On a wide layout the spiral sits to the right, clear of the
+    // On a wide layout the infinity loop sits to the right, clear of the
     // left-aligned text column; on narrow layouts there's no
     // side-by-side gutter to dodge, so it's shrunk and dropped low
     // instead, mostly below the headline/stats block.
@@ -577,7 +584,7 @@ export default function StarFormationBackground({ scrollContainerRef }) {
       scrollEl.querySelectorAll("[data-star-accent]").forEach((el) => observer.observe(el));
     }
 
-    // The spiral blows apart over roughly one viewport's worth of
+    // The infinity loop blows apart over roughly one viewport's worth of
     // scroll — by the time the hero has scrolled out of view it's a
     // calm, ordinary starfield for the rest of the page.
     function scrollProgressTarget() {
@@ -602,7 +609,9 @@ export default function StarFormationBackground({ scrollContainerRef }) {
 
       const uniforms = particles.uniforms;
       uniforms.uTime.value = (now - startTime) * 0.001;
-      scrollSmoothed += (scrollProgressTarget() - scrollSmoothed) * 0.06;
+      // Faster catch-up (0.06 -> 0.1) so the dispersion visibly tracks
+      // scroll input instead of trailing noticeably behind it.
+      scrollSmoothed += (scrollProgressTarget() - scrollSmoothed) * 0.1;
       uniforms.uScrollProgress.value = scrollSmoothed;
       uniforms.uMouseWorld.value.copy(mouseWorld);
       uniforms.uMouseActive.value = mouseActive;
@@ -614,14 +623,20 @@ export default function StarFormationBackground({ scrollContainerRef }) {
       const colorLerp = 1 - Math.exp(-dt / 400);
       currentAccent.lerp(targetAccent, colorLerp);
       glow.material.uniforms.uGlowColor.value.copy(currentAccent);
-      glow.material.uniforms.uOpacity.value = 0.2 * (1 - scrollSmoothed * 0.7);
+      glow.material.uniforms.uOpacity.value = 0.26 * (1 - scrollSmoothed * 0.7);
 
-      camXSmoothed += (pointerTarget.x * 0.5 - camXSmoothed) * 0.04;
-      camYSmoothed += (pointerTarget.y * 0.3 - camYSmoothed) * 0.04;
+      // Parallax drift: wider range and quicker response (0.04 -> 0.07)
+      // so the camera visibly reacts to the cursor instead of a barely
+      // perceptible creep.
+      camXSmoothed += (pointerTarget.x * 0.7 - camXSmoothed) * 0.07;
+      camYSmoothed += (pointerTarget.y * 0.45 - camYSmoothed) * 0.07;
       camera.position.set(camXSmoothed, camYSmoothed, 15);
       camera.lookAt(shapeOffsetX * (1 - scrollSmoothed) * 0.3, 0, 0);
 
-      particles.group.rotation.y += dt * 0.000015;
+      // Doubled from the original rate — still a slow, ambient drift,
+      // but enough to actually read as continuous motion rather than
+      // motion you'd only notice by comparing two screenshots.
+      particles.group.rotation.y += dt * 0.00003;
 
       renderer.render(scene, camera);
 
@@ -756,7 +771,7 @@ export default function StarFormationBackground({ scrollContainerRef }) {
       {/* A scrim over the text column, not the whole backdrop — the
           particle field is genuinely bright and dense, and text-shadow
           / color tokens alone weren't guaranteeing contrast against
-          it. On the wide layout (text left, spiral right) this is a
+          it. On the wide layout (text left, loop right) this is a
           left-to-right fade so only the reading column darkens; the
           stacked mobile layout has no side gutter to lean on, so it
           darkens more evenly top-to-bottom instead. Sits just above
