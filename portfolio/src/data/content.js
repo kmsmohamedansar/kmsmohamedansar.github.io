@@ -188,6 +188,13 @@ export const PROJECTS = [
     links: [{ label: "Open playground →", href: "https://kmsmohamedansar.github.io/sql-playground", external: true }],
   },
   {
+    title: "Data Lineage & Impact Explorer",
+    kicker: "Live demo",
+    body: "Click any table, job, or dashboard in a pipeline graph and see the full downstream impact chain instantly — what breaks, goes stale, or needs a re-run. Built this for the kind of question I ask myself before touching a dataset at work: what's actually downstream of this. Runs on a synthetic sample dataset.",
+    tags: ["Data lineage", "SVG graph", "React"],
+    links: [{ label: "Open demo →", href: "#lineage-demo" }],
+  },
+  {
     title: "TaskMaster: small ML pipeline with retries",
     kicker: "Live demo",
     body: "A small pipeline built like a real one: idempotent steps, retries, structured logs, a live UI. Not a notebook demo.",
@@ -294,6 +301,7 @@ export const COMMAND_ITEMS = [
   { label: "RepTrack on the App Store", href: "https://apps.apple.com/us/app/reptrack-workout-log/id6761032027", group: "Links" },
   { label: "LinkedIn · kmsmohamedansar", href: CONTACT.linkedin, group: "Links" },
   { label: "SQL Playground · live demo", href: "https://kmsmohamedansar.github.io/sql-playground", group: "Links" },
+  { label: "Data Lineage Explorer · live demo", go: "#lineage-demo", group: "Links" },
   { label: "Email · " + CONTACT.email, href: "mailto:" + CONTACT.email, group: "Links" },
   { label: "Toggle dev_mode · sandbox stubs", action: "toggle-sandbox", group: "System" },
 ];

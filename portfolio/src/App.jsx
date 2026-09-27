@@ -13,6 +13,7 @@ import { EASE_OUT } from "./lib/motion";
 
 const StarFormationBackground = lazy(() => import("./components/StarFormationBackground"));
 const SolarSystemExplorer = lazy(() => import("./components/SolarSystemExplorer"));
+const DataLineageExplorer = lazy(() => import("./components/DataLineageExplorer"));
 
 /* ============================================================
    ROUTER — three states: "emet" and "explore" are full takeover
@@ -29,7 +30,7 @@ const SolarSystemExplorer = lazy(() => import("./components/SolarSystemExplorer"
 function readRoute() {
   if (typeof window === "undefined") return "main";
   const h = window.location.hash.replace(/^#/, "");
-  return h === "emet" || h === "explore" ? h : "main";
+  return h === "emet" || h === "explore" || h === "lineage-demo" ? h : "main";
 }
 
 const RouteContext = createContext(null);
@@ -55,7 +56,7 @@ function RouteProvider({ children }) {
   useEffect(() => {
     function onHashChange() {
       const h = window.location.hash.replace(/^#/, "");
-      const isTakeover = h === "emet" || h === "explore";
+      const isTakeover = h === "emet" || h === "explore" || h === "lineage-demo";
       setRoute(isTakeover ? h : "main");
       if (h && !isTakeover) scrollToSection(h);
     }
@@ -67,7 +68,7 @@ function RouteProvider({ children }) {
   // hashchange event fires for the hash already present at mount.
   useEffect(() => {
     const h = window.location.hash.replace(/^#/, "");
-    if (h && h !== "emet" && h !== "explore") scrollToSection(h);
+    if (h && h !== "emet" && h !== "explore" && h !== "lineage-demo") scrollToSection(h);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -246,6 +247,19 @@ function Stage({ bootDone }) {
               <SolarSystemExplorer />
             </Suspense>
           </motion.div>
+        ) : route === "lineage-demo" ? (
+          <motion.div
+            key="lineage-demo"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.28, ease: EASE_OUT }}
+            className="h-full"
+          >
+            <Suspense fallback={<div className="h-full bg-[#050911]" aria-hidden="true" />}>
+              <DataLineageExplorer />
+            </Suspense>
+          </motion.div>
         ) : (
           <motion.div
             key="main"
@@ -279,7 +293,7 @@ function Backdrop() {
       </Suspense>
     );
   }
-  if (route === "explore") {
+  if (route === "explore" || route === "lineage-demo") {
     return <div className="fixed inset-0 z-0 bg-[#02050c]" aria-hidden="true" />;
   }
   return (
