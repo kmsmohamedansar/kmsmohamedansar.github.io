@@ -37,20 +37,28 @@ function computeLayout(nodes, edges) {
     columns.get(d).push(n.id);
   });
 
-  const colWidth = 220;
-  const rowHeight = 64;
+  const colWidth = 190;
+  const rowHeight = 52;
   const positions = new Map();
   const maxRows = Math.max(...[...columns.values()].map((c) => c.length));
   columns.forEach((ids, col) => {
     const offsetY = ((maxRows - ids.length) * rowHeight) / 2;
     ids.forEach((id, row) => {
-      positions.set(id, { x: col * colWidth + 90, y: offsetY + row * rowHeight + 50 });
+      positions.set(id, { x: col * colWidth + 70, y: offsetY + row * rowHeight + 40 });
     });
   });
 
-  const width = (Math.max(...depth.values()) + 1) * colWidth + 90;
-  const height = maxRows * rowHeight + 100;
+  const width = (Math.max(...depth.values()) + 1) * colWidth + 160;
+  const height = maxRows * rowHeight + 80;
   return { positions, forward, width, height };
+}
+
+// Reverse adjacency, built once, so hover can reach a node's upstream
+// neighbors as easily as its downstream ones.
+function buildReverse(nodes, edges) {
+  const reverse = new Map(nodes.map((n) => [n.id, []]));
+  edges.forEach(([from, to]) => reverse.get(to).push(from));
+  return reverse;
 }
 
 function downstreamOf(startId, forward) {
@@ -70,85 +78,109 @@ function downstreamOf(startId, forward) {
   return { nodes: visited, edges: edgesHit };
 }
 
+// One hop in either direction — the quick "what does this touch"
+// preview used on hover, before a click pins the full chain.
+function neighborsOf(id, forward, reverse) {
+  const nodes = new Set([id]);
+  const edges = new Set();
+  (forward.get(id) || []).forEach((n) => {
+    nodes.add(n);
+    edges.add(`${id}->${n}`);
+  });
+  (reverse.get(id) || []).forEach((n) => {
+    nodes.add(n);
+    edges.add(`${n}->${id}`);
+  });
+  return { nodes, edges };
+}
+
 const TYPE_STYLES = {
-  source: { fill: "#0f2436", stroke: "#38bdf8", label: "Source" },
-  table: { fill: "#12261d", stroke: "#34d399", label: "Table" },
-  job: { fill: "#2a1f0f", stroke: "#fbbf24", label: "Job" },
-  dashboard: { fill: "#25142f", stroke: "#c084fc", label: "Consumer" },
+  source: { color: "#38bdf8", label: "Source", r: 6 },
+  table: { color: "#34d399", label: "Table", r: 5.5 },
+  job: { color: "#fbbf24", label: "Job", r: 5.5 },
+  dashboard: { color: "#c084fc", label: "Consumer", r: 6.5 },
 };
 
-function LineageNode({ node, pos, isSelected, isDownstream, isDimmed, onClick }) {
+function edgeLine(a, b, r) {
+  const dx = b.x - a.x;
+  const dy = b.y - a.y;
+  const dist = Math.hypot(dx, dy) || 1;
+  const ux = dx / dist;
+  const uy = dy / dist;
+  return {
+    x1: a.x + ux * r,
+    y1: a.y + uy * r,
+    x2: b.x - ux * r,
+    y2: b.y - uy * r,
+  };
+}
+
+function LineageNode({ node, pos, active, dimmed, onClick, onHoverStart, onHoverEnd }) {
   const style = TYPE_STYLES[node.type];
+  const radius = active ? style.r * 1.6 : style.r;
   return (
     <g
       transform={`translate(${pos.x}, ${pos.y})`}
       onClick={() => onClick(node.id)}
+      onMouseEnter={() => onHoverStart(node.id)}
+      onMouseLeave={onHoverEnd}
       className="cursor-pointer"
       role="button"
       aria-label={`${node.label} (${style.label})`}
     >
-      <rect
-        x={-85}
-        y={-20}
-        width={170}
-        height={40}
-        rx={8}
-        fill={style.fill}
-        stroke={isSelected ? "#fff" : style.stroke}
-        strokeWidth={isSelected ? 2.5 : isDownstream ? 2 : 1.2}
-        opacity={isDimmed ? 0.25 : 1}
+      {active && (
+        <circle r={style.r * 3} fill={style.color} opacity={0.16} className="transition-all duration-200" />
+      )}
+      <circle
+        r={radius}
+        fill={dimmed ? "#1e293b" : style.color}
+        stroke={active ? "#fff" : "transparent"}
+        strokeWidth={1.5}
+        opacity={dimmed ? 0.35 : 1}
+        style={{ filter: active ? `drop-shadow(0 0 6px ${style.color})` : "none" }}
+        className="transition-all duration-200"
       />
       <text
-        x={0}
-        y={-2}
-        textAnchor="middle"
+        x={style.r + 10}
+        y={4}
         className="font-mono select-none"
-        fontSize={11}
-        fontWeight={isSelected ? 700 : 500}
-        fill={isDimmed ? "#64748b" : "#e2e8f0"}
+        fontSize={10.5}
+        fontWeight={active ? 700 : 500}
+        fill={dimmed ? "#475569" : active ? "#fff" : "#cbd5e1"}
+        opacity={dimmed ? 0.5 : 1}
       >
         {node.label}
-      </text>
-      <text
-        x={0}
-        y={12}
-        textAnchor="middle"
-        className="font-mono select-none uppercase"
-        fontSize={7.5}
-        letterSpacing={1}
-        fill={isDimmed ? "#475569" : style.stroke}
-        opacity={isDimmed ? 0.5 : 0.85}
-      >
-        {style.label}
       </text>
     </g>
   );
 }
 
-function edgePath(a, b) {
-  const midX = (a.x + b.x) / 2;
-  return `M ${a.x + 85} ${a.y} C ${midX} ${a.y}, ${midX} ${b.y}, ${b.x - 85} ${b.y}`;
-}
-
 export default function DataLineageExplorer() {
   const { navigate } = useRoute();
   const [selected, setSelected] = useState(null);
+  const [hovered, setHovered] = useState(null);
 
   const { positions, forward, width, height } = useMemo(
     () => computeLayout(LINEAGE_NODES, LINEAGE_EDGES),
     []
   );
+  const reverse = useMemo(() => buildReverse(LINEAGE_NODES, LINEAGE_EDGES), []);
 
-  const impact = useMemo(() => {
-    if (!selected) return null;
-    return downstreamOf(selected, forward);
-  }, [selected, forward]);
+  // A click pins the full downstream impact chain (and drives the side
+  // panel); hovering with nothing pinned previews just the immediate
+  // connections, so the graph feels alive before you commit to a node.
+  const active = selected
+    ? { id: selected, ...downstreamOf(selected, forward) }
+    : hovered
+      ? { id: hovered, ...neighborsOf(hovered, forward, reverse) }
+      : null;
 
   const selectedNode = LINEAGE_NODES.find((n) => n.id === selected);
   const impactList = useMemo(() => {
-    if (!impact) return [];
+    if (!selected) return [];
+    const impact = downstreamOf(selected, forward);
     return LINEAGE_NODES.filter((n) => impact.nodes.has(n.id) && n.id !== selected);
-  }, [impact, selected]);
+  }, [selected, forward]);
 
   return (
     <div className="h-full overflow-y-auto mono-scroll bg-[#050911]">
@@ -163,8 +195,8 @@ export default function DataLineageExplorer() {
         <p className="font-mono text-[.68rem] uppercase tracking-[.14em] text-cyan mb-2">Live demo</p>
         <h1 className="font-display text-2xl sm:text-3xl font-semibold mb-3">Data Lineage &amp; Impact Explorer</h1>
         <p className="text-slate-400 text-sm max-w-2xl mb-2">
-          Click any table, job, or dashboard to see the full downstream impact chain — everything
-          that would break, go stale, or need a re-run if that node changed.
+          Hover a point to see what it connects to. Click one to pin the full downstream impact
+          chain — everything that would break, go stale, or need a re-run if that node changed.
         </p>
         <p className="font-mono text-[.65rem] text-slate-500 mb-8">
           Synthetic sample dataset — a made-up retail pricing pipeline, built to demo the pattern.
@@ -178,16 +210,21 @@ export default function DataLineageExplorer() {
                   const a = positions.get(from);
                   const b = positions.get(to);
                   const key = `${from}->${to}`;
-                  const isHot = impact?.edges.has(key);
-                  const isDimmed = selected && !isHot;
+                  const isHot = active?.edges.has(key);
+                  const isDimmed = active && !isHot;
+                  const line = edgeLine(a, b, 8);
                   return (
-                    <path
+                    <line
                       key={key}
-                      d={edgePath(a, b)}
-                      fill="none"
+                      x1={line.x1}
+                      y1={line.y1}
+                      x2={line.x2}
+                      y2={line.y2}
                       stroke={isHot ? "#38bdf8" : "#334155"}
-                      strokeWidth={isHot ? 2.2 : 1.2}
-                      opacity={isDimmed ? 0.15 : isHot ? 0.95 : 0.5}
+                      strokeWidth={isHot ? 1.8 : 1}
+                      opacity={isDimmed ? 0.12 : isHot ? 0.95 : 0.45}
+                      style={{ filter: isHot ? "drop-shadow(0 0 3px #38bdf8)" : "none" }}
+                      className="transition-all duration-200"
                     />
                   );
                 })}
@@ -195,18 +232,18 @@ export default function DataLineageExplorer() {
               <g>
                 {LINEAGE_NODES.map((node) => {
                   const pos = positions.get(node.id);
-                  const isSelected = node.id === selected;
-                  const isDownstream = impact?.nodes.has(node.id) && !isSelected;
-                  const isDimmed = selected && !impact.nodes.has(node.id);
+                  const isActive = active?.nodes.has(node.id);
+                  const isDimmed = active && !isActive;
                   return (
                     <LineageNode
                       key={node.id}
                       node={node}
                       pos={pos}
-                      isSelected={isSelected}
-                      isDownstream={isDownstream}
-                      isDimmed={isDimmed}
+                      active={isActive}
+                      dimmed={isDimmed}
                       onClick={(id) => setSelected((cur) => (cur === id ? null : id))}
+                      onHoverStart={setHovered}
+                      onHoverEnd={() => setHovered(null)}
                     />
                   );
                 })}
@@ -223,7 +260,7 @@ export default function DataLineageExplorer() {
           >
             {!selectedNode ? (
               <p className="text-slate-500 text-sm">
-                Select a node on the left to see what's downstream of it.
+                Hover a point to preview its connections. Click one to pin the full impact chain.
               </p>
             ) : (
               <>
@@ -244,7 +281,7 @@ export default function DataLineageExplorer() {
                       <li key={n.id} className="flex items-center gap-2 font-mono text-[.72rem]">
                         <span
                           className="w-1.5 h-1.5 rounded-full shrink-0"
-                          style={{ background: TYPE_STYLES[n.type].stroke }}
+                          style={{ background: TYPE_STYLES[n.type].color }}
                         />
                         <span className="text-slate-300">{n.label}</span>
                       </li>
