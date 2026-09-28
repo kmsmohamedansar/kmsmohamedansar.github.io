@@ -3,3 +3,8 @@ __pycache__/
 .venv/
 venv/
 .DS_Store
+
+# Local skill installs (e.g. `npx skills add`) - not part of the site
+.agents/
+.claude/
+skills-lock.json
