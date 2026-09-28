@@ -37,19 +37,19 @@ function computeLayout(nodes, edges) {
     columns.get(d).push(n.id);
   });
 
-  const colWidth = 190;
-  const rowHeight = 52;
+  const colWidth = 150;
+  const rowHeight = 46;
   const positions = new Map();
   const maxRows = Math.max(...[...columns.values()].map((c) => c.length));
   columns.forEach((ids, col) => {
     const offsetY = ((maxRows - ids.length) * rowHeight) / 2;
     ids.forEach((id, row) => {
-      positions.set(id, { x: col * colWidth + 70, y: offsetY + row * rowHeight + 40 });
+      positions.set(id, { x: col * colWidth + 50, y: offsetY + row * rowHeight + 36 });
     });
   });
 
-  const width = (Math.max(...depth.values()) + 1) * colWidth + 160;
-  const height = maxRows * rowHeight + 80;
+  const width = (Math.max(...depth.values()) + 1) * colWidth + 110;
+  const height = maxRows * rowHeight + 70;
   return { positions, forward, width, height };
 }
 
@@ -140,14 +140,18 @@ function LineageNode({ node, pos, active, dimmed, onClick, onHoverStart, onHover
         style={{ filter: active ? `drop-shadow(0 0 6px ${style.color})` : "none" }}
         className="transition-all duration-200"
       />
+      {/* Larger invisible ring so hover fires well before the cursor is
+          pixel-perfect on a 5-6px dot — the visible circle above stays
+          small, this just widens the hit area around it. */}
+      <circle r={16} fill="transparent" style={{ pointerEvents: "all" }} />
       <text
         x={style.r + 10}
         y={4}
-        className="font-mono select-none"
-        fontSize={10.5}
-        fontWeight={active ? 700 : 500}
-        fill={dimmed ? "#475569" : active ? "#fff" : "#cbd5e1"}
-        opacity={dimmed ? 0.5 : 1}
+        className="font-mono select-none pointer-events-none transition-opacity duration-150"
+        fontSize={11}
+        fontWeight={700}
+        fill="#fff"
+        opacity={active ? 1 : 0}
       >
         {node.label}
       </text>
@@ -203,8 +207,12 @@ export default function DataLineageExplorer() {
         </p>
 
         <div className="grid lg:grid-cols-[1fr_320px] gap-6">
-          <div className="rounded-2xl border border-white/10 bg-black/30 overflow-x-auto">
-            <svg width={width} height={height} className="block min-w-full">
+          <div className="rounded-2xl border border-white/10 bg-black/30 p-2 h-[420px] sm:h-[500px]">
+            <svg
+              viewBox={`0 0 ${width} ${height}`}
+              preserveAspectRatio="xMidYMid meet"
+              className="block w-full h-full"
+            >
               <g>
                 {LINEAGE_EDGES.map(([from, to]) => {
                   const a = positions.get(from);
