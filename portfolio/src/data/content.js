@@ -41,7 +41,7 @@ export const ABOUT = {
 
 export const ROLES = [
   {
-    company: "Datasembly",
+    company: "Retail pricing analytics company",
     title: "Solutions Engineer",
     when: "Jan 2026 to now · Remote, Canada",
     current: true,
@@ -55,7 +55,7 @@ export const ROLES = [
     tags: ["SQL", "Snowflake", "Pre-sales", "Data solutions"],
   },
   {
-    company: "Datasembly",
+    company: "Retail pricing analytics company",
     title: "Tech Support",
     when: "Aug 2024 to Dec 2025 · Remote, Canada",
     accent: "violet",
@@ -115,10 +115,10 @@ export const EMET_TOPICS = [
     n: 1,
     label: "What do you do now?",
     go: "#experience",
-    keywords: ["now", "current", "today", "sql", "snowflake", "datasembly", "job", "role"],
+    keywords: ["now", "current", "today", "sql", "snowflake", "job", "role"],
     answer: [
       { text: "I'm a solutions engineer at " },
-      { text: "Datasembly", cls: "font-bold" },
+      { text: "a retail pricing analytics company", cls: "font-bold" },
       {
         text:
           ", since January 2026. Lots of SQL and Snowflake on a big retail pricing dataset, plus some pre-sales work: working out what a stakeholder is really asking and building something that holds up.",
@@ -131,7 +131,7 @@ export const EMET_TOPICS = [
     go: "#experience",
     keywords: ["before", "worked", "history", "amazon", "spongelii", "experience", "past"],
     answer: [
-      { text: "Datasembly", cls: "font-bold" },
+      { text: "A retail pricing analytics company", cls: "font-bold" },
       { text: " (solutions engineer, and tech support before that), " },
       { text: "Spongelii", cls: "font-bold" },
       { text: " (business analysis), and " },

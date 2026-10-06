@@ -79,13 +79,13 @@ export const PROJECTS = [
     ],
     how: [
       "Each retailer is its own module, imported into one service worker. Changing one can't break the others.",
-      "The club retailer module prefers a tab you've already opened and passed any bot check in, because that's the most reliable way through.",
+      "The club retailer module works from a page you've already opened yourself, so it reads what's in front of you.",
       "Brand lists pasted over several lines are split with a longest-match pass over known brands, so multi word brands don't get cut in half.",
-      "Optional human-like pacing lowers the chance of getting blocked. It also makes runs slower, so it's a switch and not a default.",
+      "Runs can be stopped at any point and still hand back what they found so far.",
     ],
     learned: [
       "Reusing the active tab sounds trivial until the active tab is a browser settings page. I now check that a URL is actually navigable and fall back to opening a fresh tab.",
-      "Cursor was great for the big rename and refactor that merged the old folders. It couldn't get me past a retailer's bot check, though. That part is still a human clicking a box.",
+      "Cursor was great for the big rename and refactor that merged the old folders. It couldn't replace testing on real retailer pages, though, so every flow still got checked by hand.",
     ],
     flow: {
       caption: "One panel, many retailer modules (simplified).",
@@ -303,7 +303,7 @@ export const PROJECTS = [
     how: [
       "A thin adapter: the agent speaks MCP, the server speaks to the app's existing REST routes.",
       "A mandatory first tool confirms you're logged in, so auth problems announce themselves instead of returning silent empty answers.",
-      "Tools are grouped by domain: resolvers, insights, widgets, data quality, collections.",
+      "Tools are grouped by purpose, so an agent can tell a lookup from an analysis.",
       "The HTTP version is stateless, so it can run on several instances without sharing session state.",
     ],
     learned: [
