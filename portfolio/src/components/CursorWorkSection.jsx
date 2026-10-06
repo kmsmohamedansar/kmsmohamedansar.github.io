@@ -166,6 +166,12 @@ function CaseStudyCard({ study, open, onToggle }) {
           </div>
         </header>
         <p className="mt-4 text-[.98rem] leading-relaxed text-[color:var(--ink-300)]">{study.hook}</p>
+        {study.role && (
+          <p className="mt-3 text-[.86rem] leading-relaxed text-[color:var(--ink-400)]">
+            <span className="font-mono text-[.62rem] uppercase tracking-[.14em] text-amber mr-2">My role</span>
+            {study.role}
+          </p>
+        )}
         <div className="flex flex-wrap gap-2 mt-4">
           {study.tags.map((t) => (
             <TagPill key={t}>{t}</TagPill>
