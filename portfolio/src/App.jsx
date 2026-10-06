@@ -4,6 +4,7 @@ import { Command } from "lucide-react";
 import DeckView from "./components/DeckView";
 import EmetSection from "./components/EmetSection";
 import { NowSection, BeforeSection, WorkSection, StorySection, ContactSection } from "./components/ContentSections";
+import { CursorWorkSection } from "./components/CursorWorkSection";
 import SandboxStubs from "./components/SandboxStubs";
 import CommandPalette from "./components/CommandPalette";
 import { MatrixBackground } from "./components/RouteBackgrounds";
@@ -205,6 +206,7 @@ function MainDocument({ bootDone }) {
       <NowSection />
       <BeforeSection />
       <WorkSection />
+      <CursorWorkSection />
       <StorySection />
       <ContactSection />
     </>

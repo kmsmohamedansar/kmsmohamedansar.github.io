@@ -296,6 +296,7 @@ export const COMMAND_ITEMS = [
   { label: "Current · what I do today", go: "#source", group: "Sections" },
   { label: "Before · where I've worked", go: "#lineage", group: "Sections" },
   { label: "Projects · what I've shipped", go: "#build", group: "Sections" },
+  { label: "AI-native dev · Cursor & MCP case studies", go: "#cursor", group: "Sections" },
   { label: "Why · the short version", go: "#story", group: "Sections" },
   { label: "Contact", go: "#commit", group: "Sections" },
   { label: "RepTrack on the App Store", href: "https://apps.apple.com/us/app/reptrack-workout-log/id6761032027", group: "Links" },
