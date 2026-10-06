@@ -1,5 +1,5 @@
 // Descriptive facts for the solar system explorer's click-to-inspect
-// panel — real, commonly-cited astronomy facts (not fabricated), kept
+// panel, real, commonly-cited astronomy facts (not fabricated), kept
 // separate from three/orbitalMechanics.js since that file is real
 // physics data (JPL orbital elements) and this is just prose plus a
 // couple of numbers (moon counts) that get revised as new moons are

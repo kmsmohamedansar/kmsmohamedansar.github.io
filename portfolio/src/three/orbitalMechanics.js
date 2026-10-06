@@ -1,14 +1,14 @@
-// Real Keplerian orbital mechanics — not a simulated "feel." Each
+// Real Keplerian orbital mechanics, not a simulated "feel." Each
 // planet's shape and orientation come from JPL's published J2000
 // osculating elements (the standard reference set used for
 // approximate planet positions between 1800-2050 AD); position along
 // that fixed ellipse at any moment comes from actually solving
 // Kepler's equation, the same procedure any orbital mechanics
 // textbook uses. What's stylized is the clock (a fictional
-// accelerated time, not the real current date/time — a portfolio
+// accelerated time, not the real current date/time, a portfolio
 // backdrop that only visibly moved once a year would defeat the
 // point) and the display scale (radial distance and body size are
-// both compressed so Mercury and Neptune can share a frame — no
+// both compressed so Mercury and Neptune can share a frame, no
 // visualization anywhere shows the real solar system to one scale
 // and stays readable).
 //
@@ -18,7 +18,7 @@
 // ascending node (deg), period = orbital period (days).
 // Body radii are compressed too (a linear-to-real scale would make
 // Jupiter loom 6x wider than the sun once its true 11x-Earth radius
-// meets this scene's compressed orbital distances) — order and
+// meets this scene's compressed orbital distances), order and
 // relative "small rocky vs. big gas giant" impression are preserved,
 // true ratios are not. Kept well under SUN_RADIUS specifically so no
 // planet reads as bigger than the star it orbits.
@@ -52,7 +52,7 @@ function solveEccentricAnomaly(meanAnomalyRad, e) {
 /**
  * Heliocentric ecliptic position (AU) of a planet at simulated time
  * `days` (days elapsed from the J2000 epoch the elements are
- * defined at — a fictional, accelerated clock, not a real date).
+ * defined at, a fictional, accelerated clock, not a real date).
  * Returns { x, y, z } with z as the out-of-ecliptic axis, matching
  * this scene's Y-up convention once the caller swaps y/z.
  */
@@ -90,14 +90,14 @@ export function planetPosition(planet, days) {
 }
 
 // A compressed radial scale (sqrt, not linear) so Mercury and
-// Neptune can share a frame — the real ~77x spread between them
+// Neptune can share a frame, the real ~77x spread between them
 // would otherwise crowd every inner planet into a few pixels around
 // the sun or push the camera absurdly far back to fit Neptune.
 export function displayRadius(auDistance, scale) {
   return Math.sqrt(auDistance) * scale;
 }
 
-// Trace an orbit's full ellipse as a line — drawn once per planet at
+// Trace an orbit's full ellipse as a line, drawn once per planet at
 // scene-build time (the ellipse's shape is fixed; only the planet's
 // position along it moves), not recomputed per frame.
 export function buildOrbitPoints(planet, scale, segments = 128) {

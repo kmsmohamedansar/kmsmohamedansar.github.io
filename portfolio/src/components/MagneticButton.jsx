@@ -3,7 +3,7 @@ import { motion, useMotionValue, useSpring } from "framer-motion";
 import { MEDIUM_OBJECT } from "../lib/motion";
 
 /**
- * Wraps a CTA in a magnetic pull — the button drifts toward the
+ * Wraps a CTA in a magnetic pull, the button drifts toward the
  * cursor within its bounds and springs back on leave. `as` picks the
  * rendered element/motion-component so it still works as a link.
  */

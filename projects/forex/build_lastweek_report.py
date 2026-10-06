@@ -59,7 +59,7 @@ for _, ev in news.iterrows():
     d = ev["time"].tz_localize(None).normalize() if ev["time"].tzinfo else ev["time"].normalize()
     if daily["date"].min() <= d <= daily["date"].max() and ev["impact"] == "High":
         ax.axvline(d, color="#d62728", ls="--", lw=1, alpha=0.6)
-ax.set_title(f"AUD/USD daily close — {title_range}"
+ax.set_title(f"AUD/USD daily close, {title_range}"
              + (" (in progress)" if in_progress else "") + " (source: search-verified)")
 ax.set_ylabel("AUD/USD")
 ax.grid(alpha=0.3)
@@ -79,7 +79,7 @@ with open(html, "w") as f:
             "img{max-width:100%}.dn{color:#c0392b}.up{color:#1e8449}"
             ".note{background:#fff8e1;border-left:4px solid #f1c40f;padding:.6rem .9rem;margin:1rem 0}"
             "</style></head><body>")
-    f.write(f"<h1>AUD/USD — review ({title_range}"
+    f.write(f"<h1>AUD/USD, review ({title_range}"
             + (", in progress" if in_progress else "") + ")</h1>")
     cls = "dn" if week_move < 0 else "up"
     span = "week so far" if in_progress else "week"
@@ -107,9 +107,9 @@ with open(html, "w") as f:
     # data-driven read
     bits = [f"Over {title_range} AUD/USD moved <b>{week_move:+.0f} pips ({week_pct:+.2f}%)</b>."]
     if big_dn is not None and big_dn["chg_pips"] < 0:
-        bits.append(f"Biggest down day: {big_dn['date']:%a %d %b} ({big_dn['chg_pips']:+.0f} pips) — {big_dn['note']}.")
+        bits.append(f"Biggest down day: {big_dn['date']:%a %d %b} ({big_dn['chg_pips']:+.0f} pips), {big_dn['note']}.")
     if big_up is not None and big_up["chg_pips"] > 0:
-        bits.append(f"Biggest up day: {big_up['date']:%a %d %b} ({big_up['chg_pips']:+.0f} pips) — {big_up['note']}.")
+        bits.append(f"Biggest up day: {big_up['date']:%a %d %b} ({big_up['chg_pips']:+.0f} pips), {big_up['note']}.")
     if not hi_news.empty:
         upcoming = hi_news[hi_news["time"].dt.tz_localize(None) >= pd.Timestamp(dt.date.today())] \
             if hi_news["time"].dt.tz is not None else hi_news
@@ -118,7 +118,7 @@ with open(html, "w") as f:
     f.write("<div class='note'><b>Read.</b> " + " ".join(bits) + "</div>")
     if in_progress:
         f.write("<div class='note' style='border-color:#e67e22;background:#fdf1e5'>"
-                "<b>In progress.</b> This week is not finished — early-week intraday levels came "
+                "<b>In progress.</b> This week is not finished, early-week intraday levels came "
                 "from noisy live sources and are approximate. Values will firm up after the week closes."
                 "</div>")
     f.write("<p style='color:#888;font-size:12px'>Daily closes are search-verified. "

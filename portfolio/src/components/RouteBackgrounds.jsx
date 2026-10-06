@@ -1,7 +1,7 @@
 import { useAnimatedCanvas } from "../lib/useAnimatedCanvas";
 
 /* ============================================================
-   EMET — classic terminal rain: falling green glyph columns over
+   EMET, classic terminal rain: falling green glyph columns over
    near-black, the "first IBM computer" mood the CRT chassis already
    leans into. EMET is the one view that stays a full takeover
    outside the continuous-scroll experience, so it keeps its own

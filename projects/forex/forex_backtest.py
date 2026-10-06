@@ -102,7 +102,7 @@ def load_ticks(symbol, start, end):
     if not rows:
         raise RuntimeError(
             "No ticks returned. Either the date range has no data yet, or "
-            "outbound access to datafeed.dukascopy.com is blocked here — "
+            "outbound access to datafeed.dukascopy.com is blocked here, "
             "run this on a machine with open network access."
         )
     df = pd.DataFrame(rows, columns=["time", "ask", "bid"]).set_index("time")
@@ -169,7 +169,7 @@ def build_report(symbol, sec, news, impact, base):
             ax.axvline(ev["time"], color="#d62728", ls="--", lw=0.8, alpha=0.7)
             ax.text(ev["time"], sec["close"].max(), f" {ev['event']}",
                     rotation=90, va="top", fontsize=7, color="#d62728")
-    ax.set_title(f"{symbol} — per-second mid, {sec.index.min():%Y-%m-%d} to {sec.index.max():%Y-%m-%d} (UTC)")
+    ax.set_title(f"{symbol}, per-second mid, {sec.index.min():%Y-%m-%d} to {sec.index.max():%Y-%m-%d} (UTC)")
     ax.xaxis.set_major_formatter(mdates.DateFormatter("%m-%d %H:%M"))
     ax.grid(alpha=0.25)
     fig.autofmt_xdate()
@@ -187,7 +187,7 @@ def build_report(symbol, sec, news, impact, base):
                 "th,td{border:1px solid #ccc;padding:5px 9px;text-align:right;font-size:13px}"
                 "th{background:#eee}td:first-child,th:first-child{text-align:left}"
                 "img{max-width:100%}</style></head><body>")
-        f.write(f"<h1>{symbol} — per-second backtest with news overlay</h1>")
+        f.write(f"<h1>{symbol}, per-second backtest with news overlay</h1>")
         f.write(f"<p>{sec.index.min():%Y-%m-%d %H:%M} → {sec.index.max():%Y-%m-%d %H:%M} UTC · "
                 f"{len(sec):,} one-second bars from {int(sec['ticks'].sum()):,} ticks</p>")
         f.write(f"<img src='{os.path.basename(chart)}'>")

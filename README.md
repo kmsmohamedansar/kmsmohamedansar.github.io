@@ -1,6 +1,6 @@
 # kmsmohamedansar.github.io
 
-Live portfolio for **Mohamed Ansar** — Solutions Engineer building data systems, pipelines, and shipped native apps.
+Live portfolio for **Mohamed Ansar**, Solutions Engineer building data systems, pipelines, and shipped native apps.
 
 **Live site:** [kmsmohamedansar.github.io](https://kmsmohamedansar.github.io)
 
@@ -18,7 +18,7 @@ projects/
 .github/workflows/     CI/CD for portfolio deployment
 ```
 
-RepTrack and Cerebra now live in their own repositories — reach out if you'd like access.
+RepTrack and Cerebra now live in their own repositories, reach out if you'd like access.
 
 ## How it's built
 

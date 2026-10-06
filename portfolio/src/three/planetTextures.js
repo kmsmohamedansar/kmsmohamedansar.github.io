@@ -1,6 +1,6 @@
 // Procedural surface textures for the solar-system backdrop's planets.
 // There's no network access in this environment to fetch real NASA/USGS
-// texture maps, so "photoreal" isn't on the table — this is the other
+// texture maps, so "photoreal" isn't on the table, this is the other
 // lever: canvas-drawn color + bump maps per planet, generated once at
 // mount and applied through the same MeshStandardMaterial/bumpMap
 // pipeline real texture maps would use, so swapping in real images
@@ -9,7 +9,7 @@
 
 const TAU = Math.PI * 2;
 
-// Per-planet surface recipe — which texture generator below to use and
+// Per-planet surface recipe, which texture generator below to use and
 // the palette to feed it. Kept out of orbitalMechanics.js (real physics
 // data) since this is purely cosmetic, unlike everything in that file.
 // Used by SolarSystemExplorer (the interactive #explore view).
@@ -39,7 +39,7 @@ function drawWrapped(ctx, width, height, x, y, r, draw) {
 }
 
 /**
- * Rocky/cratered planets (Mercury, Mars — and Venus's cloud deck reuses
+ * Rocky/cratered planets (Mercury, Mars, and Venus's cloud deck reuses
  * the same blob machinery with different color logic). Base color with
  * latitude-darkened poles, scattered soft craters, and a handful of
  * larger tonal "continent" patches so the sphere doesn't read as a flat
@@ -55,7 +55,7 @@ export function makeRockyTexture({ base, dark, light, poleShadow = 0.35, craterC
   ctx.fillRect(0, 0, width, height);
 
   // A handful of large soft patches first (broad terrain variation),
-  // then many small craters on top (fine detail) — same "big shapes
+  // then many small craters on top (fine detail), same "big shapes
   // before detail" order a real terrain texture would use.
   let s = seed;
   const rand = () => {
@@ -99,7 +99,7 @@ export function makeRockyTexture({ base, dark, light, poleShadow = 0.35, craterC
     });
   }
 
-  // Pole darkening — a vertical gradient overlay, not baked into the
+  // Pole darkening, a vertical gradient overlay, not baked into the
   // craters above, so it reads consistently regardless of how the
   // random draws landed.
   const poleGrad = ctx.createLinearGradient(0, 0, 0, height);
@@ -194,7 +194,7 @@ export function makeBandedTexture({ colors, spots = 2, seed = 1, scale = 1 }) {
     drawWrapped(ctx, width, height, x, y, rx, (c, px) => {
       const g = c.createRadialGradient(px, y, 0, px, y, rx);
       // A defined core over most of the radius with only a short
-      // feathered edge — the same "sharp core, short anti-aliased
+      // feathered edge, the same "sharp core, short anti-aliased
       // edge" fix already applied to the star sprites, instead of a
       // gradient that fades across its entire radius and reads as a
       // hazy smudge rather than a storm.
@@ -216,7 +216,7 @@ export function makeBandedTexture({ colors, spots = 2, seed = 1, scale = 1 }) {
 
 /**
  * Earth's color map: ocean base, soft continent masses (not
- * geographically accurate — this is stylized, same spirit as the rest
+ * geographically accurate, this is stylized, same spirit as the rest
  * of the scene's compressed/fictional scale), and a faint desert tint.
  * The cloud layer is a separate alpha-only texture so it can sit on
  * its own slightly-larger sphere and rotate at a different rate.

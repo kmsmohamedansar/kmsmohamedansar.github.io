@@ -22,13 +22,13 @@ import { PLANET_FACTS } from "../data/planetFacts";
 
 const SCALE = 1.6; // Same AU -> scene-unit compression as the backdrop, so both views agree.
 // Kept well under Mercury's display radius (sqrt(0.387)*1.6 ~= 0.995) so
-// no planet's orbit sits inside the sun's own sphere here — unlike the
+// no planet's orbit sits inside the sun's own sphere here, unlike the
 // passive backdrop, this view's free camera and click-to-inspect raycasts
 // can get close enough for that overlap to matter.
 const SUN_RADIUS = 0.55;
 const BLOOM_LAYER = 1;
 // Real asteroid belt spans roughly 2.1-3.3 AU, between Mars (1.52 AU)
-// and Jupiter (5.2 AU) — not fabricated, the actual gap.
+// and Jupiter (5.2 AU), not fabricated, the actual gap.
 const BELT_INNER_AU = 2.1;
 const BELT_OUTER_AU = 3.3;
 
@@ -118,7 +118,7 @@ function updateShootingStars(stars, dtSeconds, elapsedSeconds) {
     if (s.state === "idle") {
       if (elapsedSeconds >= s.nextAt) {
         s.start.copy(randomSkyPoint(55 + Math.random() * 20));
-        // A short chord near the start point, not a full sky crossing —
+        // A short chord near the start point, not a full sky crossing,
         // reads as a quick streak, not a slow-moving object.
         const dir = new THREE.Vector3((Math.random() - 0.5), (Math.random() - 0.5), (Math.random() - 0.5)).normalize();
         s.end.copy(s.start).addScaledVector(dir, 8 + Math.random() * 6);
@@ -147,7 +147,7 @@ function updateShootingStars(stars, dtSeconds, elapsedSeconds) {
 
 /* ---------- Milky Way band: a soft diagonal glow band across the
    outer starfield, computed per-pixel from the angle to a fixed
-   "galactic plane" direction rather than painted onto a texture —
+   "galactic plane" direction rather than painted onto a texture,
    resolution-independent at any zoom. ---------- */
 const milkyWayVertexShader = /* glsl */ `
   varying vec3 vWorldDir;
@@ -160,7 +160,7 @@ const milkyWayFragmentShader = /* glsl */ `
   uniform vec3 uPlaneNormal;
   uniform vec3 uColor;
   varying vec3 vWorldDir;
-  // Smooth (interpolated) value noise, not a hard per-cell hash — a
+  // Smooth (interpolated) value noise, not a hard per-cell hash, a
   // floor()-based hash gave every cell a flat, uniform color with a
   // hard edge at its boundary, which read as an obvious checkerboard
   // once stretched across a giant sphere. This blends between lattice
@@ -213,7 +213,7 @@ function buildMilkyWayBand() {
 
 /* ---------- Atmosphere rim glow: a Fresnel-lit shell just outside a
    planet's surface, additive-blended so it only brightens (never
-   darkens) — the "sunlit haze" look real atmosphere renders have,
+   darkens), the "sunlit haze" look real atmosphere renders have,
    distinct from the sun's own bloom. ---------- */
 const atmosphereVertexShader = /* glsl */ `
   varying vec3 vNormal;
@@ -268,7 +268,7 @@ function formatPeriod(days) {
 }
 
 /**
- * A dedicated, fully interactive solar system view — drag to orbit,
+ * A dedicated, fully interactive solar system view, drag to orbit,
  * scroll/pinch to zoom, click a planet to inspect it. Reached as its
  * own route (like EMET's takeover), separate from the main scroll
  * page's own backdrop, so capturing the pointer for orbit controls
@@ -343,7 +343,7 @@ export default function SolarSystemExplorer() {
       followedName = null;
     });
 
-    // Bloom on the sun only — a plain brightness threshold can't
+    // Bloom on the sun only, a plain brightness threshold can't
     // isolate it, since the star shader's brightest points are
     // similarly bright; a dedicated render layer excludes everything
     // else structurally instead.
@@ -413,7 +413,7 @@ export default function SolarSystemExplorer() {
 
     const planetSegments = isNarrow ? 32 : 48;
     // A free-orbit camera can end up right on top of any planet here,
-    // far closer than the passive scroll backdrop ever gets — doubled
+    // far closer than the passive scroll backdrop ever gets, doubled
     // on desktop so surface detail still holds up at that range; mobile
     // keeps the original resolution/cost.
     const textureScale = isNarrow ? 1 : 2;
@@ -478,7 +478,7 @@ export default function SolarSystemExplorer() {
         ring = new THREE.Mesh(ringGeometry, ringMaterial);
         ring.rotation.x = Math.PI / 2.4;
         // Casts a real shadow onto Saturn's surface (see
-        // renderer.shadowMap above) — alphaTest on the ring material
+        // renderer.shadowMap above), alphaTest on the ring material
         // makes the depth pass respect the ring's gap/fade alpha, so
         // the shadow reads as a ring shape, not a solid disc.
         ring.castShadow = true;
@@ -552,7 +552,7 @@ export default function SolarSystemExplorer() {
 
     // Click vs. drag: OrbitControls needs the same pointer events, so
     // rather than fight it for capture, just measure movement between
-    // pointerdown and pointerup — a real click barely moves.
+    // pointerdown and pointerup, a real click barely moves.
     let downX = 0, downY = 0, downT = 0;
     function onPointerDown(e) {
       downX = e.clientX;

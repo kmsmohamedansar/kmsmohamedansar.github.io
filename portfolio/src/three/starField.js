@@ -42,7 +42,7 @@ export function buildBackgroundStars(count, pixelRatio) {
     positions[i * 3 + 2] = z * r;
 
     // Most stars stay small and dim; a minority read as brighter
-    // "named" stars with a larger point size — real skies aren't
+    // "named" stars with a larger point size, real skies aren't
     // uniform, and that variety is most of what makes a starfield
     // read as sharp rather than as a wash of identical dots.
     const roll = Math.random();

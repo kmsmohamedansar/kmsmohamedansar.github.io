@@ -1,31 +1,23 @@
 # Forex tools
 
-Small Python scripts for pulling AUD/USD price data and news, and stitching
-the results into a static HTML dashboard. No server — everything renders to
-files you open in a browser.
+A few small Python scripts for pulling AUD/USD prices and news, then stitching everything into one static dashboard. There's no server. It all ends up as files you open in a browser.
 
-## Scripts
+I wanted to see which news releases actually move a currency pair, so each script answers one part of that question.
 
-- `forex_backtest.py` — per-second AUD/USD backtest against real Dukascopy
-  tick data, with scheduled news events overlaid so you can see which
-  release moved price. Needs network access.
-- `build_lastweek_report.py` — coarser weekly review built from daily
-  closes + a news timeline. No network needed, so it works as a fallback
-  when the tick feed is blocked.
-- `news_sentiment.py` — forward-looking scheduled events (ForexFactory
-  calendar) and recent headlines (Google News RSS), each scored for a
-  directional lean on the pair.
-- `build_dashboard.py` — scans `forex_data/` for whatever the scripts above
-  have produced and stitches it into a single `dashboard.html`.
+## The scripts
 
-## Usage
+- **`forex_backtest.py`** runs a per second backtest on real Dukascopy tick data, with scheduled news events laid over the top so you can see which release moved the price. It needs network access.
+- **`build_lastweek_report.py`** is a coarser weekly review, built from daily closes and a news timeline. It needs no network, so it works as a fallback when the tick feed is blocked.
+- **`news_sentiment.py`** looks ahead. It reads upcoming scheduled events (from the ForexFactory calendar) and recent headlines (from Google News RSS), and scores each one for which way it leans on the pair.
+- **`build_dashboard.py`** scans the `forex_data/` folder for whatever the other scripts have produced, and puts it together into a single `dashboard.html`.
+
+## How to use them
 
 ```bash
-python3 build_lastweek_report.py     # daily backtest review, no network required
-python3 forex_backtest.py            # per-second backtest, needs network
-python3 news_sentiment.py            # forward news + sentiment, needs network
+python3 build_lastweek_report.py     # weekly review, no network needed
+python3 forex_backtest.py            # per second backtest, needs network
+python3 news_sentiment.py            # upcoming news and sentiment, needs network
 python3 build_dashboard.py           # combine everything into dashboard.html
 ```
 
-Generated CSVs, charts, and reports are gitignored — rerun the scripts to
-regenerate them.
+The generated CSVs, charts and reports are gitignored. Run the scripts again to regenerate them.

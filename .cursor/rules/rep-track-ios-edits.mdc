@@ -1,5 +1,5 @@
 ---
-description: RepTrack iOS app — edit the Xcode project in IOs projects, not the github.io repo
+description: RepTrack iOS app, edit the Xcode project in IOs projects, not the github.io repo
 globs: projects/reptrack/**/*.swift
 alwaysApply: true
 ---
@@ -10,7 +10,7 @@ alwaysApply: true
 
 - **Edit here (canonical):**
   `/Users/mohamedansar/Documents/IOs projects/RepTrack/`
-  (iCloud Drive → Documents → IOs projects → RepTrack — the one opened in Xcode.)
+  (iCloud Drive → Documents → IOs projects → RepTrack, the one opened in Xcode.)
 
 - **Do not edit:**
   The `projects/reptrack/` folder inside this workspace (`kmsmohamedansar.github.io/projects/reptrack`) for app code. That copy is not the one the user runs in the simulator.

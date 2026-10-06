@@ -5,7 +5,7 @@ import { Gamepad2, Boxes, Workflow, X } from "lucide-react";
 const EASE = [0.16, 1, 0.3, 1];
 
 /* Small tile-grid preview for the "day in the life" RPG concept.
-   Not a game loop — a wireframe you can click around, matching what's
+   Not a game loop, a wireframe you can click around, matching what's
    actually shipped: the real Phaser build is disabled, not deleted. */
 function RpgPreview() {
   const COLS = 10;
@@ -46,7 +46,7 @@ function RpgPreview() {
   );
 }
 
-/* Slow-rotating isometric block grid — a stand-in for the full 3D
+/* Slow-rotating isometric block grid, a stand-in for the full 3D
    voxel data-warehouse walkthrough. */
 function VoxelPreview() {
   const canvasRef = useRef(null);
@@ -121,7 +121,7 @@ function VoxelPreview() {
   return <canvas ref={canvasRef} className="w-full h-40 rounded-lg bg-black/30" />;
 }
 
-/* Small schema diagram — four channels feeding one standard, matching
+/* Small schema diagram, four channels feeding one standard, matching
    the site's own #source/#lineage/#build/#commit structure. */
 function SchemaPreview() {
   const nodes = [
@@ -176,7 +176,7 @@ const STUBS = [
 ];
 
 /**
- * Developer sandbox — off by default. Toggle with `dev_mode` from the
+ * Developer sandbox, off by default. Toggle with `dev_mode` from the
  * EMET terminal input or the command palette to reveal the dormant
  * experiments this portfolio was built around.
  */

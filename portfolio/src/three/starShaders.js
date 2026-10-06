@@ -1,6 +1,6 @@
 // Custom point-sprite shader for the background starfield. A plain
 // THREE.PointsMaterial can't vary per-star opacity over time, which is
-// what a twinkle needs — this pair adds a per-star phase/speed pair
+// what a twinkle needs, this pair adds a per-star phase/speed pair
 // (so each star twinkles on its own clock, not in lockstep) and draws
 // a sharp anti-aliased disc instead of a blurry gradient sprite, so
 // stars read as points of light rather than soft dots even at their
@@ -25,7 +25,7 @@ export const starVertexShader = /* glsl */ `
     // but a camera that itself roams close to that inner shell (the
     // explorer's free orbit, unlike the backdrop's fixed scroll path)
     // can end up with a star nearly on the view axis at close to that
-    // minimum distance — without a ceiling here that reads as a huge
+    // minimum distance, without a ceiling here that reads as a huge
     // out-of-place white disc instead of a point of light.
     gl_PointSize = min(aSize * uPixelRatio * (140.0 / max(-mvPosition.z, 1.0)), 18.0 * uPixelRatio);
     vBrightness = aBrightness;
@@ -41,7 +41,7 @@ export const starFragmentShader = /* glsl */ `
     vec2 uv = gl_PointCoord - 0.5;
     float d = length(uv) * 2.0;
     // A tight solid core with a short anti-aliased edge instead of a
-    // wide soft gradient — this is the fix for stars reading as fuzzy
+    // wide soft gradient, this is the fix for stars reading as fuzzy
     // "dots": most of the sprite's radius is now full opacity.
     float core = 1.0 - smoothstep(0.55, 1.0, d);
     if (core <= 0.0) discard;

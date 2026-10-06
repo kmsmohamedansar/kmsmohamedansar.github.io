@@ -18,7 +18,7 @@
   --color-green: #34d399;
 
   /* Outfit for headings everywhere except emet (see .dark-surface
-     override below) — a bold, geometric grotesk closer to the
+     override below), a bold, geometric grotesk closer to the
      typeface used on the portfolio site referenced as a style match,
      replacing Instrument Sans. */
   --font-display: "Outfit", sans-serif;
@@ -33,7 +33,7 @@
 
 /* ============================================================
    TEXT TOKENS
-   The site is dark, always — near-white "ink" shades read fine on
+   The site is dark, always, near-white "ink" shades read fine on
    the ink background everywhere, so there's no per-theme override
    left to make. The tokens stay (instead of inlining the hex values)
    because every component still reads them, and because .glass and
@@ -44,13 +44,13 @@
   --ink-100: #f1f5f9;
   --ink-200: #e2e8f0;
   --ink-300: #e2e8f0;
-  /* Brightened from #a7b4c8 — this is the color most body copy (ledes,
+  /* Brightened from #a7b4c8, this is the color most body copy (ledes,
      project/role descriptions, tags) actually renders in across the
      site, not just de-emphasized meta text, and it was reading too
      dim against a livelier background than the numbering implies. */
   --ink-400: #d5deee;
 }
-/* emet is the one section this portfolio-wide font refresh skips —
+/* emet is the one section this portfolio-wide font refresh skips,
    it already looked right, so it keeps the previous heading font
    exactly as it was rather than picking up the new display font. */
 .dark-surface .font-display {
@@ -125,7 +125,7 @@
 }
 
 /* ============================================================
-   CRT PHOSPHOR MONITOR — scanlines, vignette, flicker, glow
+   CRT PHOSPHOR MONITOR, scanlines, vignette, flicker, glow
    ============================================================ */
 .crt-shell {
   position: relative;
@@ -135,7 +135,7 @@
   /* The retro CRT terminal look is the point. A
      thicker physical bezel: a hairline highlight where light would
      catch the rim, a dark inner well the screen sits inside, and a
-     soft cast shadow lifting the whole chassis off the page — the
+     soft cast shadow lifting the whole chassis off the page, the
      same triad a real enclosure's edge reads by, not a flat panel. */
   backdrop-filter: blur(16px);
   background: rgba(2, 6, 16, 0.5);
@@ -294,7 +294,7 @@
 }
 
 /* ============================================================
-   CUSTOM CURSOR — a dot + trailing ring, desktop/fine-pointer only.
+   CUSTOM CURSOR, a dot + trailing ring, desktop/fine-pointer only.
    ============================================================ */
 .has-custom-cursor,
 .has-custom-cursor * {

@@ -1,5 +1,5 @@
 // Synthetic sample dataset for the Data Lineage Explorer demo.
-// Every table, job, and dashboard name here is made up — there's no
+// Every table, job, and dashboard name here is made up, there's no
 // real pipeline or company behind it. It's shaped like a retail
 // pricing pipeline (ingest -> staging -> facts -> marts -> dashboards)
 // because that's a familiar pattern, not because it's copied from

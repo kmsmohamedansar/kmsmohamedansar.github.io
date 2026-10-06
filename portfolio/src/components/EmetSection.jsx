@@ -49,7 +49,7 @@ function matchTopic(raw) {
 
 /* A single emet response: types its segments out once on mount (or
    renders instantly under reduced motion / once already-typed history
-   replays), then calls onDone — used to reveal the "open full page"
+   replays), then calls onDone, used to reveal the "open full page"
    link only after the answer has finished appearing, not alongside it. */
 function TypedAnswer({ segments, onDone, instant = false }) {
   const reduced = instant || prefersReducedMotion();
@@ -63,7 +63,7 @@ function TypedAnswer({ segments, onDone, instant = false }) {
       onDoneRef.current?.();
       return;
     }
-    // No "already started" guard here on purpose — React 18 StrictMode
+    // No "already started" guard here on purpose, React 18 StrictMode
     // double-invokes this effect once in dev (mount, cleanup, remount),
     // and a guard backed by a ref survives that cleanup, so the second
     // (real) invocation would see it already set and never schedule a
@@ -120,7 +120,7 @@ function TypedAnswer({ segments, onDone, instant = false }) {
   );
 }
 
-/* One emet response in the transcript — the answer types itself out,
+/* One emet response in the transcript, the answer types itself out,
    then (only once it's finished, so it never competes with the text
    for attention) an optional "open full page" link fades in for
    anyone who wants the fuller section instead of the terminal's
@@ -190,14 +190,14 @@ function useTypewriter(script, startDelay = 350) {
   return { segments, done };
 }
 
-/* Cursor-reactive spotlight + physics-dampened 3D tilt — this single
+/* Cursor-reactive spotlight + physics-dampened 3D tilt, this single
    panel pivots on rotateX/rotateY as the cursor glides near it
    (spring-smoothed, not raw 1:1 tracking), while a soft glow follows
    the pointer via CSS custom properties (no re-renders for that
    half). Tilt is skipped under reduced motion.
 
    The hit-test rect is measured on a STATIC outer wrapper, not on the
-   element being rotated — measuring on the rotating element itself
+   element being rotated, measuring on the rotating element itself
    creates a feedback loop (tilting shifts its own bounding rect,
    which can push the cursor "outside" mid-gesture and cancel the
    tilt), which is why the tilt and the mouse handlers live on
@@ -250,10 +250,10 @@ function CrtChassis({ children, className = "" }) {
 }
 
 // A power LED + signal-strength ladder instead of macOS window-chrome
-// dots — the CRT is meant to read as a piece of hardware you're
+// dots, the CRT is meant to read as a piece of hardware you're
 // looking into, not a desktop window, so its own chrome shouldn't
 // borrow another OS's. The ladder bars breathe gently while booting,
-// then settle solid once ready — a cheap but legible "device is live"
+// then settle solid once ready, a cheap but legible "device is live"
 // tell that a static dot can't give.
 function MonitorBar({ title, status, statusTone = "cyan" }) {
   const reduced = prefersReducedMotion();
@@ -289,7 +289,7 @@ function MonitorBar({ title, status, statusTone = "cyan" }) {
 }
 
 /**
- * emet's dedicated view — reached from the deck's EMET card, the top
+ * emet's dedicated view, reached from the deck's EMET card, the top
  * nav, or the command palette. A full view of its own rather than
  * something boxed into the landing deck.
  */
@@ -298,7 +298,7 @@ export default function EmetSection() {
   const { toggleDevMode } = useSandbox();
   const reduced = prefersReducedMotion();
 
-  // The Q&A transcript that grows below the boot script — emet answers
+  // The Q&A transcript that grows below the boot script, emet answers
   // inline here instead of navigating away, so asking a question never
   // interrupts whatever you were reading. "you" entries echo the
   // question instantly; "emet" entries carry the answer segments and
@@ -321,7 +321,7 @@ export default function EmetSection() {
     return () => clearTimeout(t);
   }, [history.length, done]);
 
-  // Autofocus once the boot script finishes — a visitor who's read the
+  // Autofocus once the boot script finishes, a visitor who's read the
   // intro is being invited to type, so the cursor should already be
   // waiting for them instead of requiring an extra click.
   useEffect(() => {
@@ -363,7 +363,7 @@ export default function EmetSection() {
   return (
     // dark-surface: emet stays a dark green terminal in every theme,
     // same "permanently dark" exception the CRT chassis already makes
-    // — it re-declares the shared --ink-* tokens back to their
+    // it re-declares the shared --ink-* tokens back to their
     // light-on-dark values, so the heading/paragraph below don't need
     // their own color overrides to stay readable over the matrix rain.
     <section className="dark-surface min-h-full flex items-center px-5 py-14">
@@ -387,7 +387,7 @@ export default function EmetSection() {
           className="relative"
         >
           {/* An old-monitor power-on beat before the terminal starts
-              typing — a bright flash that clears fast, then a single
+              typing, a bright flash that clears fast, then a single
               scanline sweeping down once the tube's caught up. This
               is emet's one signature entrance, not a color swap. */}
           {!reduced && (
@@ -413,7 +413,7 @@ export default function EmetSection() {
             <MonitorBar title="emet · portfolio assistant" status={done ? "READY" : "BOOTING"} statusTone={done ? "green" : "amber"} />
             <div className="p-5 flex flex-col font-mono text-[.8rem] leading-[1.8] text-green/85">
               {/* Fixed-height + scrolling instead of letting the panel
-                  grow with every question — a long back-and-forth would
+                  grow with every question, a long back-and-forth would
                   otherwise keep pushing the input (and the rest of the
                   page) further down. */}
               <div ref={scrollRef} className="min-h-[220px] max-h-[360px] overflow-y-auto mono-scroll pr-1 mb-3">
@@ -423,7 +423,7 @@ export default function EmetSection() {
                       {seg.text}
                     </span>
                   ))}
-                  {/* A fat block cursor, not a thin I-beam — closer to the
+                  {/* A fat block cursor, not a thin I-beam, closer to the
                       solid-block cursor on an early IBM terminal than to
                       a modern text-editor caret. */}
                   {!done && <span className="inline-block w-[10px] h-[1.15em] bg-green align-text-bottom blink-cursor ml-0.5" />}

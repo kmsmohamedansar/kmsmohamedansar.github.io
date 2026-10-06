@@ -2,7 +2,7 @@ import { useEffect, useRef } from "react";
 
 /**
  * A crosshair-style cursor that reads as an extension of the CRT/
- * terminal aesthetic — a dot with a trailing ring that snaps onto
+ * terminal aesthetic, a dot with a trailing ring that snaps onto
  * interactive elements. Desktop-only (hover + fine pointer); touch
  * devices keep their native cursor entirely. Positions are pushed via
  * refs on every pointermove, not React state, so this never re-renders.

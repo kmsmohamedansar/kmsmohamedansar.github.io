@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import * as THREE from "three";
 
-// Same per-section color cue the old backdrop used — whichever
+// Same per-section color cue the old backdrop used, whichever
 // [data-star-accent] section is most visible slowly pulls the glow
 // mesh behind the star field toward that section's color.
 const SECTION_ACCENTS = {
@@ -13,7 +13,7 @@ const SECTION_ACCENTS = {
 };
 
 // Both counts scaled to match the shapeScale increase below (6.5/5.4
-// desktop, 2.9/2.6 mobile) — a curve's own density scales linearly with
+// desktop, 2.9/2.6 mobile), a curve's own density scales linearly with
 // its length, not with area, so matching that ratio keeps the same
 // spacing between stars along the loop at the larger size instead of
 // thinning it out.
@@ -21,7 +21,7 @@ const PARTICLE_COUNT_DESKTOP = 4050;
 const PARTICLE_COUNT_MOBILE = 1230;
 const SHAPE_SHARE = 0.72; // ~72% recruited into the infinity loop, the rest ambient
 
-// Uniform-in-volume sphere sample (rejection method) — both the
+// Uniform-in-volume sphere sample (rejection method), both the
 // "ambient" particles' resting spot and every particle's fully
 // dispersed aTargetPosition come from this.
 function randomInSphere(radius) {
@@ -34,7 +34,7 @@ function randomInSphere(radius) {
   return [x * radius, y * radius, z * radius];
 }
 
-// A point on a Lemniscate of Bernoulli — a true figure-eight/infinity
+// A point on a Lemniscate of Bernoulli, a true figure-eight/infinity
 // curve, not an approximation stitched from two circles:
 //   x(theta) = scale * cos(theta) / (1 + sin(theta)^2)
 //   y(theta) = scale * sin(theta) * cos(theta) / (1 + sin(theta)^2)
@@ -43,7 +43,7 @@ function randomInSphere(radius) {
 // distance from center to each loop's outer tip (theta = 0 and PI).
 //
 // The curve's own geometry already puts more particles near the
-// center crossing than out at the tips — dx/dtheta and dy/dtheta both
+// center crossing than out at the tips, dx/dtheta and dy/dtheta both
 // shrink as theta approaches the crossing angles, so a uniformly
 // sampled `t` naturally spends more of its arc length there. That's
 // the same "let the curve's own math supply the density gradient"
@@ -74,9 +74,9 @@ function infinityPoint(t, scale) {
  * stars that barely move. Every particle also carries a fully
  * dispersed aTargetPosition (uniform-in-a-sphere) that
  * `uScrollProgress` morphs it toward. Per-particle aColor runs a
- * three-stop gradient — bright cyan-white at the center crossing,
+ * three-stop gradient, bright cyan-white at the center crossing,
  * through vivid violet at the loops' midpoints, out to warm gold at
- * the two outer tips — spec'd as a fixed attribute (baked once here),
+ * the two outer tips, spec'd as a fixed attribute (baked once here),
  * not something recomputed per frame.
  */
 function buildParticles(count, { shapeOffsetX, shapeOffsetY, shapeScale, pixelRatio }) {
@@ -110,7 +110,7 @@ function buildParticles(count, { shapeOffsetX, shapeOffsetY, shapeScale, pixelRa
       position[i * 3 + 1] = sy + shapeOffsetY;
       position[i * 3 + 2] = (Math.random() - 0.5) * (0.6 + radiusFrac * 1.4);
     } else {
-      // Ambient stars, already scattered near their dispersed spot —
+      // Ambient stars, already scattered near their dispersed spot,
       // present even while the infinity loop is fully assembled, so it
       // never reads as an empty void around the shape.
       position[i * 3] = aTargetPosition[i * 3] * 0.4;
@@ -126,7 +126,7 @@ function buildParticles(count, { shapeOffsetX, shapeOffsetY, shapeScale, pixelRa
     let brightness;
     // Halved from the previous 1.4-8 range: those sizes, run through
     // the perspective/pixel-ratio scale-up below, were landing most
-    // points at or near the point-size cap — big enough that, even
+    // points at or near the point-size cap, big enough that, even
     // with a mathematically sharp edge, a field of large overlapping
     // additively-blended circles reads as soft bokeh rather than
     // small, distinct points of light. Smaller base sizes fix that at
@@ -175,7 +175,7 @@ function buildParticles(count, { shapeOffsetX, shapeOffsetY, shapeScale, pixelRa
     geometry.setAttribute("aColor", new THREE.BufferAttribute(aColor, 3));
     geometry.setAttribute("aBrightness", new THREE.BufferAttribute(aBrightness, 1));
 
-    // One shared uniforms object, referenced by both materials below —
+    // One shared uniforms object, referenced by both materials below,
     // updating uTime/uScrollProgress/etc. once per frame (in the
     // component's render loop) keeps both layers in sync automatically,
     // with no separate bookkeeping for the halo's copy of the same values.
@@ -221,7 +221,7 @@ function buildParticles(count, { shapeOffsetX, shapeOffsetY, shapeScale, pixelRa
 // aTargetPosition: fully-dispersed resting spot every particle morphs
 // toward as uScrollProgress goes 0 -> 1 (mix() in the vertex shader).
 // uMouseWorld: the world-space point the cursor currently projects to
-// (computed once per pointermove on the CPU via a single raycast —
+// (computed once per pointermove on the CPU via a single raycast,
 // see the component below for why that's the right place for it, not
 // a per-vertex reconstruction in this shader). uMouseActive gates the
 // repel to zero when the pointer has left the window.
@@ -251,7 +251,7 @@ const particleVertexShader = /* glsl */ `
 
     // GPU-side repel: a pure function of the particle's current
     // (already-morphed) distance to uMouseWorld, with zero persisted
-    // velocity — particles drift back at whatever rate their distance
+    // velocity, particles drift back at whatever rate their distance
     // to the cursor changes, the instant it moves away or scroll
     // progress shifts the base position out from under them.
     vec3 toParticle = basePos - uMouseWorld;
@@ -265,7 +265,7 @@ const particleVertexShader = /* glsl */ `
     // Perspective-correct size attenuation, capped so a particle that
     // ends up nearly on the camera's view axis can't balloon into an
     // out-of-place disc. Cap halved (18 -> 9 CSS px) alongside the
-    // halved base sizes above — the old cap was routinely being hit,
+    // halved base sizes above, the old cap was routinely being hit,
     // which is how a field of "stars" ended up reading as a field of
     // largeish soft circles instead.
     gl_PointSize = min(aSize * uPixelRatio * (140.0 / max(-mvPosition.z, 1.0)), 9.0 * uPixelRatio);
@@ -276,15 +276,15 @@ const particleVertexShader = /* glsl */ `
   }
 `;
 
-// No texture sample — the circle is pure math from gl_PointCoord.
+// No texture sample, the circle is pure math from gl_PointCoord.
 // Edge anti-aliasing is computed analytically from the point's own
 // resolved screen-space size (vComputedPointSize, passed in from the
 // vertex stage) rather than via fwidth()/dFdx()/dFdy(): derivative
 // functions are evaluated per 2x2-fragment quad by the rasterizer,
 // and for small, sparse primitives like point sprites those quads are
 // frequently only partially covered by the primitive, which makes the
-// derivative estimate at exactly the pixels that matter most — the
-// edge — inconsistent across GPUs and drivers (particularly software
+// derivative estimate at exactly the pixels that matter most, the
+// edge, inconsistent across GPUs and drivers (particularly software
 // rasterizers). Sizing the fade as "exactly one pixel" directly from
 // 1/vComputedPointSize sidesteps that dependency entirely: every star
 // gets the same crisp, ~1px-wide edge regardless of point size, pixel
@@ -300,24 +300,24 @@ const particleFragmentShader = /* glsl */ `
     vec2 relativeCoordinates = gl_PointCoord - vec2(0.5);
     float distanceCalculated = length(relativeCoordinates);
 
-    // Edge sits at 0.48, not 0.5 — pulling it in a hair keeps every
+    // Edge sits at 0.48, not 0.5, pulling it in a hair keeps every
     // point a true, tight disc with no residual anti-aliased fringe
     // reading as extra softness at the boundary.
     float thresholdEdge = 0.46;
     // How wide one physical pixel is, expressed in this point's own
-    // normalized 0-0.5 radius units — a big point's edge fades over
+    // normalized 0-0.5 radius units, a big point's edge fades over
     // the same *physical* pixel as a small point's, not the same
     // fraction of its own size.
     float sharpnessMargin = 0.7 / max(vComputedPointSize, 1.0);
     float analyticalAlpha = smoothstep(thresholdEdge, thresholdEdge - sharpnessMargin, distanceCalculated);
     if (analyticalAlpha <= 0.0) discard;
     // Brightness stays folded into alpha alongside the twinkle (not
-    // just the edge factor) — it's what gives dim/common stars vs.
+    // just the edge factor), it's what gives dim/common stars vs.
     // rare bright ones their distinct read, independent of the
     // twinkle's own animation.
     float alpha = analyticalAlpha * vBrightness * vTwinkle;
 
-    // A flat-filled disc reads as a colored bubble, not a star — real
+    // A flat-filled disc reads as a colored bubble, not a star, real
     // starlight is brightest dead center and falls off toward its own
     // edge. Blending toward white as distanceCalculated shrinks gives
     // each point a small hot core inside its own boundary, independent
@@ -332,7 +332,7 @@ const particleFragmentShader = /* glsl */ `
 
 // The halo layer: a second, much larger and much dimmer point drawn
 // at the exact same position as each star's crisp core (same geometry,
-// same attributes, same repel/twinkle math — only the size formula and
+// same attributes, same repel/twinkle math, only the size formula and
 // fragment falloff differ). This is what gives bright stars a soft
 // glint without reintroducing the "big soft blob" bug the core sizes
 // were shrunk to fix: unlike that bug, this halo is deliberately soft
@@ -367,7 +367,7 @@ const haloVertexShader = /* glsl */ `
     vec4 mvPosition = modelViewMatrix * vec4(finalPos, 1.0);
     gl_Position = projectionMatrix * mvPosition;
     // 4.5x the core's own size (up from 3.5x), its own (much more
-    // generous) cap — this needs real canvas room for the diffraction
+    // generous) cap, this needs real canvas room for the diffraction
     // spikes drawn in the fragment shader below to read as thin rays
     // reaching well past the core, not a cramped smudge.
     gl_PointSize = min(aSize * uPixelRatio * (140.0 / max(-mvPosition.z, 1.0)) * 3.2, 26.0 * uPixelRatio);
@@ -377,7 +377,7 @@ const haloVertexShader = /* glsl */ `
   }
 `;
 
-// A round glow alone still reads as a soft dot, not a star — the cue
+// A round glow alone still reads as a soft dot, not a star, the cue
 // that actually says "star" to most people is the four-point
 // diffraction spike seen in real astrophotography (light bending
 // around a telescope's or camera's internal structure). This adds
@@ -405,12 +405,12 @@ const haloFragmentShader = /* glsl */ `
     float spike = horizontal + vertical;
 
     // Glow stays gated the same way it always was (brightness^2, a low
-    // ceiling) — it's meant to be a near-universal soft wash. The spike
+    // ceiling), it's meant to be a near-universal soft wash. The spike
     // is a separate, deliberately more exclusive design element: gated
     // by a threshold starting partway up the brightness range rather
     // than brightness^2, so it shows up clearly on every "uncommon" and
     // "rare" star (not just the rarest sliver of them), each rendered
-    // at real visual weight instead of a barely-there hint — while
+    // at real visual weight instead of a barely-there hint, while
     // "common" stars (below the threshold) stay plain circles, so the
     // sparkle reads as a deliberate accent, not noise on every point.
     float spikeGate = smoothstep(0.7, 0.95, vBrightness);
@@ -423,7 +423,7 @@ const haloFragmentShader = /* glsl */ `
 `;
 
 // The glow mesh's own shader: a large plane behind the infinity loop's
-// entirely procedural (no canvas texture) — a radial falloff from the
+// entirely procedural (no canvas texture), a radial falloff from the
 // plane's own UV center, tinted by uGlowColor and faded by uOpacity
 // (both driven from the component below).
 const glowVertexShader = /* glsl */ `
@@ -443,7 +443,7 @@ const glowFragmentShader = /* glsl */ `
     float d = length(vUv - 0.5) * 2.0;
     // Steeper falloff (4.0, up from 2.4) so this stays a tight tint
     // right at the core instead of a wide soft wash sitting under the
-    // whole loop — the latter read as extra haze on top of the
+    // whole loop, the latter read as extra haze on top of the
     // per-point blur fixed elsewhere in this file.
     float falloff = pow(max(0.0, 1.0 - d), 4.0);
     gl_FragColor = vec4(uGlowColor, falloff * uOpacity);
@@ -477,7 +477,7 @@ function buildGlowMesh(initialColorHex) {
  * never renders there.
  *
  * Renders a single fixed, full-viewport <canvas> (plus one lightweight
- * DOM scrim for text legibility — see the return statement) rather
+ * DOM scrim for text legibility, see the return statement) rather
  * than mounting Three.js into a wrapper div, and drives everything off
  * refs: no per-frame mouse position, scroll offset, or particle state
  * ever touches React state, so 60/120fps animation never fights a
@@ -509,7 +509,7 @@ export default function StarFormationBackground({ scrollContainerRef }) {
     const isNarrow = width < 700;
 
     const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: false, powerPreference: "high-performance" });
-    // Uncapped devicePixelRatio (no artificial ceiling) — this is the
+    // Uncapped devicePixelRatio (no artificial ceiling), this is the
     // one part of the page that's pure sparkle detail, so every panel,
     // including 4K/5K displays reporting a ratio above 3, renders at
     // its own true native pixel density instead of being upscaled and
@@ -517,7 +517,7 @@ export default function StarFormationBackground({ scrollContainerRef }) {
     // this from costing anything while the page isn't even visible.
     const pixelRatio = window.devicePixelRatio || 1;
     renderer.setPixelRatio(pixelRatio);
-    // updateStyle=false here too, matching the resize handler below —
+    // updateStyle=false here too, matching the resize handler below,
     // this canvas's CSS box is pinned to 100%/100% by its own inline
     // style, so three.js doesn't need to also write explicit pixel
     // dimensions into canvas.style on top of that.
@@ -525,12 +525,12 @@ export default function StarFormationBackground({ scrollContainerRef }) {
     // setSize already sets these to the same values internally; set
     // them again explicitly and directly on the element so the
     // backbuffer's actual size is never implicit or left for the
-    // compositor to infer from layout — it's read right back off the
+    // compositor to infer from layout, it's read right back off the
     // canvas's own attributes.
     canvas.width = width * pixelRatio;
     canvas.height = height * pixelRatio;
     renderer.outputColorSpace = THREE.SRGBColorSpace;
-    // No filmic tone mapping here — ACES's photographic highlight
+    // No filmic tone mapping here, ACES's photographic highlight
     // rolloff is built for HDR scenes with real overexposure, and on
     // these small additively-blended points it just softened the
     // transition from bright core to background, reading as haze on
@@ -565,17 +565,17 @@ export default function StarFormationBackground({ scrollContainerRef }) {
     const particles = buildParticles(particleCount, { shapeOffsetX, shapeOffsetY, shapeScale, pixelRatio });
     scene.add(particles.group);
 
-    // Pointer parallax + the cursor-repel effect share one listener —
+    // Pointer parallax + the cursor-repel effect share one listener,
     // a few pixels of camera drift plus the world-space point the
     // shader repels particles away from. The mouse's screen position
     // is projected into the scene's 3D space here, once per
-    // pointermove, via a single raycast against a fixed plane — doing
+    // pointermove, via a single raycast against a fixed plane, doing
     // that same ray/plane intersection redundantly inside the vertex
     // shader (recomputing an identical result for every one of ~2600
     // vertices, every frame) would cost far more than it's worth for
     // a value that's the same for all of them; the per-particle part
-    // that actually needs to run per-vertex — the distance check and
-    // outward push — already does, in particleVertexShader above.
+    // that actually needs to run per-vertex, the distance check and
+    // outward push, already does, in particleVertexShader above.
     const pointerTarget = { x: 0, y: 0 };
     const raycaster = new THREE.Raycaster();
     const repelPlane = new THREE.Plane(new THREE.Vector3(0, 0, 1), 2);
@@ -627,7 +627,7 @@ export default function StarFormationBackground({ scrollContainerRef }) {
     }
 
     // The infinity loop blows apart over roughly one viewport's worth of
-    // scroll — by the time the hero has scrolled out of view it's a
+    // scroll, by the time the hero has scrolled out of view it's a
     // calm, ordinary starfield for the rest of the page.
     function scrollProgressTarget() {
       const el = scrollContainerRef?.current;
@@ -637,11 +637,11 @@ export default function StarFormationBackground({ scrollContainerRef }) {
     }
 
     // Once dispersed, the field used to just sit there for the rest of
-    // the page — this tracks scroll across the *entire* scrollable
+    // the page, this tracks scroll across the *entire* scrollable
     // height (not just the first viewport used above) so the dispersed
     // field keeps drifting along with the visitor the whole way down,
-    // and — since it's a direct function of scrollTop, not an
-    // accumulated/one-way value — glides back to exactly its resting
+    // and, since it's a direct function of scrollTop, not an
+    // accumulated/one-way value, glides back to exactly its resting
     // position the moment they scroll back to the top, right as the
     // loop itself reassembles.
     function fullScrollFraction() {
@@ -691,7 +691,7 @@ export default function StarFormationBackground({ scrollContainerRef }) {
       camera.position.set(camXSmoothed, camYSmoothed, 15);
       camera.lookAt(shapeOffsetX * (1 - scrollSmoothed) * 0.3, 0, 0);
 
-      // Doubled from the original rate — still a slow, ambient drift,
+      // Doubled from the original rate, still a slow, ambient drift,
       // but enough to actually read as continuous motion rather than
       // motion you'd only notice by comparing two screenshots.
       particles.group.rotation.y += dt * 0.00003;
@@ -701,7 +701,7 @@ export default function StarFormationBackground({ scrollContainerRef }) {
       // disperse progress above), so the field keeps gliding upward
       // past the visitor for as long as they keep scrolling, then
       // eases back to a dead stop at (0, 0) the moment they're back at
-      // the top — exactly when uScrollProgress has also returned to 0
+      // the top, exactly when uScrollProgress has also returned to 0
       // and the loop has fully reassembled.
       driftSmoothed += (fullScrollFraction() - driftSmoothed) * 0.08;
       particles.group.position.y = driftSmoothed * 6.5;
@@ -736,7 +736,7 @@ export default function StarFormationBackground({ scrollContainerRef }) {
     // GPU power throttle: fully stop issuing new animation frames the
     // instant the tab is hidden (not just skip the render call, as a
     // hidden-check inside the loop would still do) and resume
-    // instantly when it's visible again — the point of the Page
+    // instantly when it's visible again, the point of the Page
     // Visibility API, used the way it's meant to be used.
     function onVisibilityChange() {
       if (document.hidden) {
@@ -755,7 +755,7 @@ export default function StarFormationBackground({ scrollContainerRef }) {
       if (width === 0 || height === 0) return;
       camera.aspect = width / height;
       camera.updateProjectionMatrix();
-      // Re-read devicePixelRatio too, not just the CSS size — dragging
+      // Re-read devicePixelRatio too, not just the CSS size, dragging
       // the window to a display with a different pixel ratio fires a
       // resize without changing width/height, and would otherwise
       // leave the backbuffer at the old display's density.
@@ -764,7 +764,7 @@ export default function StarFormationBackground({ scrollContainerRef }) {
       // updateStyle=false: this canvas's CSS size is already pinned
       // to 100%/100% by its own inline style (see the returned JSX
       // below), so there's nothing for three.js's own style-syncing
-      // to usefully do here — skipping it just avoids one redundant
+      // to usefully do here, skipping it just avoids one redundant
       // style write on every resize.
       renderer.setSize(width, height, false);
       canvas.width = width * dpr;
@@ -801,7 +801,7 @@ export default function StarFormationBackground({ scrollContainerRef }) {
             // ancestor (AppShell's root wrapper) is itself pinned to
             // the full viewport height and never scrolls on its own,
             // so an absolutely-positioned full-bleed child of it lands
-            // in exactly the same place a fixed one would — while
+            // in exactly the same place a fixed one would, while
             // staying unambiguously anchored to that layout box rather
             // than the viewport, so there's never a question of which
             // box its backbuffer dimensions are meant to track.
@@ -814,7 +814,7 @@ export default function StarFormationBackground({ scrollContainerRef }) {
             // nested under a negative z-index can fail to composite
             // into the final painted frame in some rendering paths
             // (headless/software-GPU Chromium in particular) even
-            // though the GL rendering itself is perfectly correct —
+            // though the GL rendering itself is perfectly correct,
             // it just never makes it into the shown frame. Zero still
             // sits behind the scrim (1) and the real content (z-10).
             zIndex: 0,
@@ -825,7 +825,7 @@ export default function StarFormationBackground({ scrollContainerRef }) {
             // match its CSS box at the current device pixel ratio (see
             // renderer.setPixelRatio/setSize above), so there's no
             // browser-side scaling happening for this hint to affect in
-            // the normal case — it's here as a guard against the
+            // the normal case, it's here as a guard against the
             // compositor ever having to rescale this element (e.g. a
             // fractional zoom level, or a fractional devicePixelRatio
             // that doesn't divide evenly into physical pixels) doing it
@@ -837,7 +837,7 @@ export default function StarFormationBackground({ scrollContainerRef }) {
       ) : (
         <div aria-hidden style={{ position: "fixed", inset: 0, zIndex: 0, background: "#02050c" }} />
       )}
-      {/* A scrim over the text column, not the whole backdrop — the
+      {/* A scrim over the text column, not the whole backdrop, the
           particle field is genuinely bright and dense, and text-shadow
           / color tokens alone weren't guaranteeing contrast against
           it. On the wide layout (text left, loop right) this is a

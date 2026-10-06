@@ -24,7 +24,7 @@ const DataLineageExplorer = lazy(() => import("./components/DataLineageExplorer"
    pointing at one of those doesn't swap a view, it smooth-scrolls to
    that section's id within the document. Hash-based so every existing
    <a href="#build"> (nav, emet's shortcuts, the command palette) keeps
-   working completely unmodified — only the interpretation of a
+   working completely unmodified, only the interpretation of a
    non-takeover hash changed, from "which view is active" to "which
    section to scroll to."
    ============================================================ */
@@ -43,7 +43,7 @@ const RouteContext = createContext(null);
 export const useRoute = () => useContext(RouteContext);
 
 // Shared with StarFormationBackground so it can read scroll position
-// off the same element Stage renders as <main> — set once, read every
+// off the same element Stage renders as <main>, set once, read every
 // frame via a plain ref rather than React state so scrolling never
 // triggers a re-render.
 const ScrollContext = createContext(null);
@@ -70,7 +70,7 @@ function RouteProvider({ children }) {
     return () => window.removeEventListener("hashchange", onHashChange);
   }, []);
 
-  // Deep link on first load (e.g. a bookmark to #build) — no
+  // Deep link on first load (e.g. a bookmark to #build), no
   // hashchange event fires for the hash already present at mount.
   useEffect(() => {
     const h = window.location.hash.replace(/^#/, "");
@@ -92,7 +92,7 @@ function RouteProvider({ children }) {
 }
 
 /* ============================================================
-   THEME — dark, always. A premium, space-lit backdrop is the whole
+   THEME, dark, always. A premium, space-lit backdrop is the whole
    point of the restructure, so there's no light variant to switch
    to; the context stays only because a few permanently-dark surfaces
    (the CRT chassis) key off document.documentElement.dataset.theme.
@@ -110,7 +110,7 @@ function ThemeProvider({ children }) {
 }
 
 /* ============================================================
-   SANDBOX STATE — dev_mode toggle, reachable from the EMET
+   SANDBOX STATE, dev_mode toggle, reachable from the EMET
    terminal input ("dev_mode") or the command palette.
    ============================================================ */
 const SandboxContext = createContext(null);
@@ -126,13 +126,13 @@ function SandboxProvider({ children }) {
 }
 
 // Deliberately no section links here (EMET / Current / Before /
-// Projects / Contact) and no Contact CTA — that row was a plain-text
+// Projects / Contact) and no Contact CTA, that row was a plain-text
 // shortcut around the deck's whole reason for existing: an actual
 // 3D scene you navigate by clicking a card, not a menu bar. The one
 // thing every view still needs is a way back to the top, so the logo
 // doubles as a Home control once you've scrolled past the hero or
 // stepped into EMET. ⌘K stays as the accessibility/power-user
-// fallback — it's opt-in, not a visible competing menu.
+// fallback, it's opt-in, not a visible competing menu.
 function Nav() {
   const { route, navigate } = useRoute();
 
@@ -279,7 +279,7 @@ function Stage({ bootDone }) {
   );
 }
 
-// The explorer is content (like EMET), not backdrop — it needs to
+// The explorer is content (like EMET), not backdrop, it needs to
 // capture drag/scroll/pinch itself for orbit controls, which a fixed
 // z-0 layer sitting *behind* Stage's scrollable <main> can't reliably
 // do. So on that route the backdrop is just a plain matching fill;
@@ -330,7 +330,7 @@ function AppShell({ bootDone }) {
 }
 
 /* ============================================================
-   ERROR BOUNDARY — a visible fallback instead of a blank screen if
+   ERROR BOUNDARY, a visible fallback instead of a blank screen if
    anything in the tree throws during render.
    ============================================================ */
 class ErrorBoundary extends Component {
@@ -373,7 +373,7 @@ class ErrorBoundary extends Component {
 
 export default function App() {
   // The hero's 3D entrance tilt waits for this instead of firing the
-  // instant it mounts — on a first visit it would otherwise animate
+  // instant it mounts, on a first visit it would otherwise animate
   // entirely behind the opaque boot sequence, unseen; on a repeat
   // visit it'd fire too fast (before the page has painted) to notice.
   const bootDone = true;

@@ -78,7 +78,7 @@ function downstreamOf(startId, forward) {
   return { nodes: visited, edges: edgesHit };
 }
 
-// One hop in either direction — the quick "what does this touch"
+// One hop in either direction, the quick "what does this touch"
 // preview used on hover, before a click pins the full chain.
 function neighborsOf(id, forward, reverse) {
   const nodes = new Set([id]);
@@ -141,7 +141,7 @@ function LineageNode({ node, pos, active, dimmed, onClick, onHoverStart, onHover
         className="transition-all duration-200"
       />
       {/* Larger invisible ring so hover fires well before the cursor is
-          pixel-perfect on a 5-6px dot — the visible circle above stays
+          pixel-perfect on a 5-6px dot, the visible circle above stays
           small, this just widens the hit area around it. */}
       <circle r={16} fill="transparent" style={{ pointerEvents: "all" }} />
       <text

@@ -8,9 +8,9 @@ export const prefersReducedMotion = () =>
  * Shared plumbing for a full-viewport 2D canvas background: dpr-aware
  * resize, a requestAnimationFrame loop, and a reduced-motion bailout
  * that still paints one frame instead of animating. Every route
- * background only supplies two pure functions — `setup(width, height)`
+ * background only supplies two pure functions, `setup(width, height)`
  * to build whatever state the animation needs, and
- * `render(ctx, width, height, t, state, reduced)` to draw one frame —
+ * `render(ctx, width, height, t, state, reduced)` to draw one frame,
  * so five very different animations don't each re-implement the same
  * resize/raf/cleanup bookkeeping.
  */

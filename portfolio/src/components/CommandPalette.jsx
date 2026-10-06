@@ -9,7 +9,7 @@ const GROUP_ICONS = { Sections: Hash, Projects: Hash, Fun: Terminal, Links: Link
 /**
  * Global ⌘K / Ctrl+K command palette.
  * Owns its own open/close + query state; the parent only needs to
- * mount it once — the keyboard listener is global for the app's life.
+ * mount it once, the keyboard listener is global for the app's life.
  */
 export default function CommandPalette() {
   const [open, setOpen] = useState(false);
@@ -26,7 +26,7 @@ export default function CommandPalette() {
     return items;
   }, [query]);
 
-  // Global shortcut listener — meta+k / ctrl+k toggles, Escape closes.
+  // Global shortcut listener, meta+k / ctrl+k toggles, Escape closes.
   useEffect(() => {
     function onKeyDown(e) {
       const isCmdK = (e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "k";

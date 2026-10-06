@@ -89,7 +89,7 @@ def subject_currency(text, base, quote):
     """Which leg of the pair is the headline mostly about? -> 'base'/'quote'/'pair'."""
     t = text.lower()
     # If the headline names the pair itself, the sentiment verb describes the
-    # pair directly (e.g. "AUD/USD slumps ...") — don't attribute it to a leg.
+    # pair directly (e.g. "AUD/USD slumps ..."), don't attribute it to a leg.
     if f"{base.lower()}/{quote.lower()}" in t or f"{base.lower()}{quote.lower()}" in t:
         return "pair"
     a = sum(term in t for term in AUD_TERMS) if base == "AUD" else 0
@@ -211,7 +211,7 @@ def build_report(pair, cal, news, lean_label, lean_sum, base_out):
                 "th{background:#eee}.up{color:#1e8449;font-weight:bold}.dn{color:#c0392b;font-weight:bold}"
                 ".nz{color:#7f8c8d}.gauge{font-size:1.4rem;padding:.6rem 1rem;border-radius:8px;"
                 "display:inline-block;color:#fff}</style></head><body>")
-        f.write(f"<h1>{pair} — news &amp; forward sentiment</h1>")
+        f.write(f"<h1>{pair}, news &amp; forward sentiment</h1>")
         f.write(f"<p>Generated {dt.datetime.now():%Y-%m-%d %H:%M}</p>")
         f.write(f"<p>Net lean from recent headlines: "
                 f"<span class='gauge' style='background:{color(lean_label)}'>"
