@@ -13,6 +13,8 @@ portfolio/            React + Vite + Tailwind site, deployed to GitHub Pages
 projects/
   forex/               AUD/USD trading analysis (Python)
   f1-telemetry/         F1 session/car telemetry pipeline (Python)
+  mcp-analytics-stub/   Minimal MCP server, synthetic data (TypeScript)
+  mv3-sidepanel-starter/ Chrome MV3 side-panel starter, synthetic data
 .github/workflows/     CI/CD for portfolio deployment
 ```
 

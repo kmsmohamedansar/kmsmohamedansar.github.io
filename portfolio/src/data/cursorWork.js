@@ -360,13 +360,13 @@ export const DEMO_REPOS = [
   {
     name: "mcp-analytics-stub",
     blurb: "A minimal TypeScript MCP server with fake resolver and insight tools returning synthetic JSON. Mirrors the shape of the real server, none of its content.",
-    href: "https://github.com/kmsmohamedansar/mcp-analytics-stub",
+    href: "https://github.com/kmsmohamedansar/kmsmohamedansar.github.io/tree/main/projects/mcp-analytics-stub",
     tags: ["MCP", "TypeScript"],
   },
   {
     name: "mv3-sidepanel-starter",
     blurb: "A tiny MV3 side panel: paste IDs, run mock rules, download a CSV. The patterns from the scope checker, with invented rules and no retailer branding.",
-    href: "https://github.com/kmsmohamedansar/mv3-sidepanel-starter",
+    href: "https://github.com/kmsmohamedansar/kmsmohamedansar.github.io/tree/main/projects/mv3-sidepanel-starter",
     tags: ["Chrome", "MV3"],
   },
 ];

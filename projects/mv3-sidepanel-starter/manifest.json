@@ -1,0 +1,10 @@
+{
+  "manifest_version": 3,
+  "name": "RetailerScope Demo",
+  "version": "0.1.0",
+  "description": "Starter MV3 side panel: paste IDs, apply mock rules, download a CSV. Synthetic data only.",
+  "permissions": ["sidePanel"],
+  "action": { "default_title": "Open RetailerScope Demo" },
+  "side_panel": { "default_path": "sidepanel.html" },
+  "background": { "service_worker": "background.js" }
+}
