@@ -131,6 +131,38 @@ export default function ProjectPage({ slug }) {
           </div>
         </Block>
 
+        {project.sample && (
+          <Block label="A look at the output" accent={project.accent}>
+            <div className="overflow-x-auto rounded-xl border border-white/12">
+              <table className="w-full text-left text-[.9rem]">
+                <caption className="text-left px-4 pt-3 pb-2 font-mono text-[.64rem] uppercase tracking-[.1em] text-[color:var(--ink-300)]">
+                  {project.sample.title}
+                </caption>
+                <thead>
+                  <tr className="border-b border-white/12 text-[color:var(--ink-300)] font-mono text-[.66rem] uppercase tracking-wide">
+                    {project.sample.headers.map((h) => (
+                      <th key={h} className="px-4 py-2 font-semibold">
+                        {h}
+                      </th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody>
+                  {project.sample.rows.map((r) => (
+                    <tr key={r[0]} className="border-b border-white/8 last:border-0">
+                      {r.map((c, i) => (
+                        <td key={i} className={`px-4 py-2.5 ${i === 2 ? (c.includes("review") ? "text-rose font-semibold" : "text-green font-semibold") : "text-[color:var(--ink-100)]"}`}>
+                          {c}
+                        </td>
+                      ))}
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </Block>
+        )}
+
         <Block label="How it works" accent={project.accent}>
           <FlowDiagram spec={project.flow} />
           <div className="mt-5">
