@@ -200,10 +200,10 @@ export default function DataLineageExplorer() {
         <h1 className="font-display text-2xl sm:text-3xl font-semibold mb-3">Data Lineage &amp; Impact Explorer</h1>
         <p className="text-slate-400 text-sm max-w-2xl mb-2">
           Hover a point to see what it connects to. Click one to pin the full downstream impact
-          chain — everything that would break, go stale, or need a re-run if that node changed.
+          chain: everything that would break, go stale or need a re-run if that node changed.
         </p>
         <p className="font-mono text-[.65rem] text-slate-500 mb-8">
-          Synthetic sample dataset — a made-up retail pricing pipeline, built to demo the pattern.
+          Sample data only. This is a made-up retail pricing pipeline, built to show the idea.
         </p>
 
         <div className="grid lg:grid-cols-[1fr_320px] gap-6">
@@ -282,7 +282,7 @@ export default function DataLineageExplorer() {
                   Downstream impact ({impactList.length})
                 </p>
                 {impactList.length === 0 ? (
-                  <p className="text-slate-500 text-[.8rem]">Nothing downstream — this is a terminal node.</p>
+                  <p className="text-slate-500 text-[.8rem]">Nothing downstream. This is an end point.</p>
                 ) : (
                   <ul className="space-y-1.5">
                     {impactList.map((n) => (

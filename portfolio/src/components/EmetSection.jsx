@@ -20,7 +20,7 @@ const SCRIPT = [
   { text: "Hi, I'm Mohamed.\n\n", cls: "", speed: 20 },
   {
     text:
-      "Solutions Engineer, six years into building data systems, pipelines, and analytics that actually hold up at scale. Also shipped one iOS app solo, start to finish.\n\n",
+      "I'm a solutions engineer. I work with retail data every day, and in my spare time I build apps and tools, including an iOS app that's on the App Store.\n\n",
     cls: "",
     speed: 15,
   },

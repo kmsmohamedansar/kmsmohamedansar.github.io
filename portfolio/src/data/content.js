@@ -1,119 +1,55 @@
-// Single source of truth for portfolio content.
-// Keeping copy here (instead of scattered across JSX) means every
-// component that needs it — hero dock, command palette, nav — reads
-// from the same list and can't drift out of sync.
+// Site-wide copy: the hero, experience, skills, EMET's answers, contact
+// details and command palette. Projects live in projects.js.
+//
+// House style: plain words, short sentences, first person, no em dashes.
 
-// emet speaks as me, answering right there in the terminal instead of
-// just linking off to the section — "go" is kept only as an optional
-// "see the full page" escape hatch shown once the answer's done
-// typing, not the primary way to get the information. "keywords"
-// lets freeform input match a topic (e.g. typing "amazon" or "sql")
-// without needing the exact numbered shortcut. Labels are phrased as
-// something a visitor would type to me directly, since that's what
-// emet actually is — my own terminal, not a separate assistant.
-export const EMET_TOPICS = [
-  {
-    n: 1,
-    label: "What do you do now?",
-    go: "#source",
-    keywords: ["now", "current", "today", "sql", "snowflake", "datasembly", "job", "role"],
-    answer: [
-      { text: "I'm a Solutions Engineer at " },
-      { text: "Datasembly", cls: "font-bold" },
-      {
-        text:
-          " since Jan 2026. Mostly SQL and Snowflake at retail pricing scale, plus pre-sales work: turning what a stakeholder's actually asking into something technical that holds up.",
-      },
-    ],
-  },
-  {
-    n: 2,
-    label: "Where have you worked?",
-    go: "#lineage",
-    keywords: ["before", "worked", "history", "amazon", "spongelii", "experience", "past"],
-    answer: [
-      { text: "Datasembly", cls: "font-bold" },
-      { text: " (Solutions Engineer, then Tech Support), " },
-      { text: "Spongelii", cls: "font-bold" },
-      { text: " (business analysis), and " },
-      { text: "Amazon Prime Video", cls: "font-bold" },
-      { text: " (quality auditing, digital content) before that. A bit more technical ownership at each stop." },
-    ],
-  },
-  {
-    n: 3,
-    label: "What have you shipped?",
-    go: "#build",
-    keywords: ["shipped", "built", "projects", "ios", "app", "reptrack", "swift", "demo"],
-    answer: [
-      { text: "10+ projects. " },
-      { text: "RepTrack", cls: "font-bold" },
-      { text: " (a SwiftUI workout log) is live on the " },
-      { text: "App Store", cls: "font-bold" },
-      {
-        text:
-          ", built and submitted solo. Also a SQL playground, an ML pipeline with retries, a retention model, and a local semantic search assistant. Most of them have live demos.",
-      },
-    ],
-  },
-  {
-    n: 4,
-    label: "How do I reach you?",
-    go: "#commit",
-    keywords: ["reach", "contact", "email", "linkedin", "hire", "talk", "hello", "hi"],
-    answer: [
-      { text: "Fastest is " },
-      { text: "mohamedansarkms@gmail.com", cls: "font-bold" },
-      { text: ". I'm also on LinkedIn: " },
-      { text: "kmsmohamedansar", cls: "font-bold" },
-      { text: ". Say hi, I read everything." },
-    ],
-  },
+export const HERO = {
+  eyebrow: "Solutions Engineer · Remote, Canada",
+  title: "Hi, I'm Mohamed. I work with retail data, and build the tools around it.",
+  lede: [
+    { text: "By day I write " },
+    { text: "SQL", cls: "text-cyan font-semibold" },
+    { text: " on a big retail pricing dataset and help teams get answers they can trust. The rest of the time I build things: an " },
+    { text: "iOS app", cls: "text-amber font-semibold" },
+    { text: " that's on the App Store, a few browser tools, and some experiments with " },
+    { text: "AI", cls: "text-[#b9a8ff] font-semibold" },
+    { text: "." },
+  ],
+};
+
+export const SECTION_LINKS = [
+  { id: "projects", label: "Projects" },
+  { id: "experience", label: "Experience" },
+  { id: "about", label: "About" },
+  { id: "contact", label: "Contact" },
 ];
 
-export const STACK_TAGS = [
-  "SQL",
-  "Snowflake",
-  "Python",
-  "SwiftUI",
-  "SwiftData",
-  "Airflow",
-  "BigQuery",
-  "Tableau",
-  "Power BI",
-  "pandas",
-  "FAISS",
-  "Transformers",
-  "DuckDB",
-  "Xcode",
-  "App Store Connect",
-  "ETL / ELT",
-];
-
-export const PRINCIPLES = [
-  {
-    title: "Production analytics",
-    body: "Snowflake and SQL, pipelines I've actually validated. Numbers a team can run every week and trust, and I can walk you through exactly where they came from.",
-  },
-  {
-    title: "Clarity first",
-    body: "I start in plain language and end with something that still works after launch. A stakeholder's question becomes a real technical approach, not more jargon.",
-  },
-  {
-    title: "Native product",
-    body: "SwiftUI and SwiftData, built for daily use, not a demo. Taken all the way through Apple review, not just slide screenshots.",
-  },
-];
+export const ABOUT = {
+  title: "What I do, and what I know",
+  story: [
+    "I started in content and quality operations at Amazon Prime Video, where I learned that bad data rarely shows up as an error. It shows up two teams later as a wrong decision. That stuck with me.",
+    "A business analysis internship pulled me towards SQL and Snowflake, and I wanted to be the person building the pipeline, not only reading what came out of it. Today, as a solutions engineer, I turn what a stakeholder is really asking into something technical that holds up, and I double-check my own numbers before anyone else has to.",
+    "Outside work I keep building. An iOS app on the App Store, a SQL playground, a few machine learning demos, and a growing pile of tools made with AI as a pair programmer. None of it was assigned. It's just how I learn.",
+  ],
+  groups: [
+    { title: "Data", accent: "cyan", items: ["SQL", "Snowflake", "BigQuery", "Python", "pandas", "DuckDB", "Airflow", "ETL and ELT"] },
+    { title: "Reporting", accent: "amber", items: ["Tableau", "Power BI", "Dashboards people open every week"] },
+    { title: "Building", accent: "green", items: ["SwiftUI", "SwiftData", "React", "Next.js", "TypeScript", "Chrome extensions (MV3)"] },
+    { title: "AI tooling", accent: "violet", items: ["Cursor", "MCP servers", "Local models with Ollama", "FAISS and embeddings", "Transformers"] },
+  ],
+};
 
 export const ROLES = [
   {
     company: "Datasembly",
     title: "Solutions Engineer",
-    when: "Jan 2026 to Present · Remote, Canada",
+    when: "Jan 2026 to now · Remote, Canada",
     current: true,
+    accent: "cyan",
+    summary: "Turning a client's question into data work that holds up, on a big retail pricing dataset.",
     bullets: [
-      "Build data solutions for retail pricing datasets: client needs, pre-sales analysis, one-off data requests, all of it.",
-      "Use SQL and Snowflake to dig into tricky data issues, check my own work, and hand off something people can actually rely on.",
+      "Build data solutions for retail pricing: client needs, pre-sales analysis, and one-off data requests.",
+      "Use SQL and Snowflake to dig into tricky data problems, then check my own work before handing it over.",
       "Work with other teams to turn a business question into something technical that actually gets used.",
     ],
     tags: ["SQL", "Snowflake", "Pre-sales", "Data solutions"],
@@ -122,165 +58,115 @@ export const ROLES = [
     company: "Datasembly",
     title: "Tech Support",
     when: "Aug 2024 to Dec 2025 · Remote, Canada",
-    current: false,
+    accent: "violet",
+    summary: "Where I got properly deep into SQL reporting and Snowflake, helping clients and internal teams.",
     bullets: [
-      "Built SQL-based reports for pricing analytics and cleaned up internal data workflows along the way.",
-      "Fixed recurring data issues for clients and internal teams using Snowflake and related tools.",
-      "Helped make dashboards and reports more reliable, and cleaned up workflows across the team.",
+      "Built SQL reports for pricing analytics and tidied up internal data workflows along the way.",
+      "Fixed recurring data issues for clients and internal teams, mostly in Snowflake.",
+      "Made dashboards and reports more reliable, and cleaned up how the team worked.",
     ],
-    tags: ["SQL", "Snowflake", "Reporting", "Workflow support"],
+    tags: ["SQL", "Snowflake", "Reporting"],
   },
   {
     company: "Spongelii",
-    title: "Business Development Intern · Business Analysis",
-    when: "Jan 2024 to Apr 2024 · Remote, Canada",
-    current: false,
+    title: "Business Development Intern, Business Analysis",
+    when: "Jan to Apr 2024 · Remote, Canada",
+    accent: "amber",
+    summary: "Where SQL and Snowflake went from something I used to something I wanted to do properly.",
     bullets: [
-      "Business analysis work tied to data workflows and reporting needs.",
+      "Business analysis tied to data workflows and reporting needs.",
       "SQL and Snowflake work behind the dashboards and reports.",
-      "Documented requirements, analysis logic, and how the workflows actually fit together.",
+      "Wrote down requirements, the logic behind the analysis, and how the pieces fit together.",
     ],
     tags: ["Business analysis", "SQL", "Snowflake", "Tableau"],
   },
   {
     company: "Amazon Prime Video",
-    title: "Business Analyst II · Quality Auditing",
+    title: "Business Analyst II, Quality Auditing",
     when: "Oct 2021 to Aug 2022 · Hybrid, India",
-    current: false,
+    accent: "rose",
+    summary: "Auditing how content operations worked, and fixing the gaps I found.",
     bullets: [
-      "Quality auditing and process improvement for Prime Video's content operations.",
-      "Reporting and analysis to catch workflow gaps and support operational decisions.",
-      "Updated SOPs and helped standardize audits across teams.",
+      "Quality auditing and process improvement for content operations.",
+      "Reporting and analysis to spot workflow gaps and support decisions.",
+      "Updated SOPs and helped make audits consistent across teams.",
     ],
-    tags: ["Quality auditing", "Process improvement", "Reporting", "Operations"],
+    tags: ["Quality auditing", "Process improvement", "Reporting"],
   },
   {
     company: "Amazon Prime Video",
-    title: "Business Analyst I · Digital Content",
+    title: "Business Analyst I, Digital Content",
     when: "Aug 2019 to Sep 2021 · Hybrid, India",
-    current: false,
+    accent: "green",
+    summary: "Keeping a large digital catalogue accurate and ready to publish.",
     bullets: [
-      "Quality control and day-to-day coordination for the digital content catalog.",
-      "Worked with stakeholders on defects, metadata accuracy, and getting content ready to publish.",
-      "Kept process quality steady across recurring ops and resolved issues as they came up.",
+      "Quality control and day-to-day coordination for the digital content catalogue.",
+      "Worked with stakeholders on defects, metadata accuracy and getting content ready to publish.",
+      "Kept quality steady across recurring operations and solved issues as they came up.",
     ],
-    tags: ["Digital content", "Quality control", "Stakeholders", "Operations"],
+    tags: ["Digital content", "Quality control", "Stakeholders"],
   },
 ];
 
-export const PROJECTS = [
+// EMET answers as me, right in the terminal. `keywords` lets free text
+// match a topic ("sql", "amazon"), and `go` is an optional "see more" link.
+export const EMET_TOPICS = [
   {
-    title: "RepTrack: workout log, shipped iOS",
-    kicker: "App Store",
-    warm: true,
-    featured: true,
-    body: "Log sets and reps fast; see last session without digging. SwiftUI + SwiftData, local-first, no account wall. Taken through Apple review and App Store Connect submission. End to end, nothing handed off.",
-    tags: ["SwiftUI", "SwiftData", "iOS 17+", "App Store"],
-    links: [
-      { label: "View on App Store ↗", href: "https://apps.apple.com/us/app/reptrack-workout-log/id6761032027", external: true, warm: true },
+    n: 1,
+    label: "What do you do now?",
+    go: "#experience",
+    keywords: ["now", "current", "today", "sql", "snowflake", "datasembly", "job", "role"],
+    answer: [
+      { text: "I'm a solutions engineer at " },
+      { text: "Datasembly", cls: "font-bold" },
+      {
+        text:
+          ", since January 2026. Lots of SQL and Snowflake on a big retail pricing dataset, plus some pre-sales work: working out what a stakeholder is really asking and building something that holds up.",
+      },
     ],
   },
   {
-    title: "SQL Playground: Snowflake style, in your browser",
-    kicker: "Live demo",
-    body: "A SQL practice sandbox that runs entirely in your browser (SQLite WASM under the hood) with a Snowflake-style translation layer, so it actually feels like the real thing.",
-    tags: ["SQL", "WASM", "Browser app"],
-    links: [{ label: "Open playground →", href: "https://kmsmohamedansar.github.io/sql-playground", external: true }],
-  },
-  {
-    title: "Data Lineage & Impact Explorer",
-    kicker: "Live demo",
-    body: "Click any table, job, or dashboard in a pipeline graph and see the full downstream impact chain instantly — what breaks, goes stale, or needs a re-run. Built this for the kind of question I ask myself before touching a dataset at work: what's actually downstream of this. Runs on a synthetic sample dataset.",
-    tags: ["Data lineage", "SVG graph", "React"],
-    links: [{ label: "Open demo →", href: "#lineage-demo" }],
-  },
-  {
-    title: "TaskMaster: small ML pipeline with retries",
-    kicker: "Live demo",
-    body: "A small pipeline built like a real one: idempotent steps, retries, structured logs, a live UI. Not a notebook demo.",
-    tags: ["ML", "Pipeline", "Retries"],
-    links: [{ label: "Open demo →", href: "https://huggingface.co/spaces/kmsmohamedansar/TaskMaster-Job-Scheduler", external: true }],
-  },
-  {
-    title: "High-value customer predictor",
-    kicker: "Live demo",
-    body: "A retention model with real validation and explainability built in, not just a number nobody can explain.",
-    tags: ["ML", "Retention", "Explainability"],
-    links: [{ label: "Open demo →", href: "https://huggingface.co/spaces/kmsmohamedansar/high-value-customer-predictor", external: true }],
-  },
-  {
-    title: "Grocery AI assistant: local semantic search",
-    kicker: "Live demo",
-    collapsed: true,
-    body: "Offline product search and grounded Q&A, running fully locally with embeddings, FAISS, and a small local model.",
-    tags: ["Search", "LLM", "Local-first"],
-    links: [{ label: "Open demo →", href: "https://huggingface.co/spaces/kmsmohamedansar/ai_knowledge_assistant", external: true }],
-  },
-  {
-    title: "Job Scout Agent: local AI job scouting",
-    kicker: "GitHub repo",
-    featured: true,
-    image: "https://i.postimg.cc/NLNJ1srP/Screenshot-2026-09-06-at-2-23-03-PM.png",
-    badges: [
-      { label: "Local & sandboxed", color: "cyan" },
-      { label: "OpenClaw + Ollama", color: "amber" },
+    n: 2,
+    label: "Where have you worked?",
+    go: "#experience",
+    keywords: ["before", "worked", "history", "amazon", "spongelii", "experience", "past"],
+    answer: [
+      { text: "Datasembly", cls: "font-bold" },
+      { text: " (solutions engineer, and tech support before that), " },
+      { text: "Spongelii", cls: "font-bold" },
+      { text: " (business analysis), and " },
+      { text: "Amazon Prime Video", cls: "font-bold" },
+      { text: " (quality auditing) before all of it. Each stop gave me a bit more technical ownership." },
     ],
-    body: "A local agent built on OpenClaw, running a local model via Ollama, that discovers LinkedIn job postings through search-engine queries (no scraping) and scores them against a keyword rubric. Cron-triggered daily, sandboxed with Docker, delivered to Telegram. Hit and fixed a real chain of tool-policy and sandboxing issues along the way, documented in the repo.",
-    tags: ["OpenClaw", "Ollama", "Docker", "DuckDuckGo"],
-    links: [{ label: "View on GitHub ↗", href: "https://github.com/kmsmohamedansar/job-scout-agent", external: true }],
   },
   {
-    title: "Amazon fine-food sentiment",
-    collapsed: true,
-    body: "Baseline-to-transformer sentiment analysis with stronger NLP performance and deployment exploration.",
-    tags: ["NLP", "Transformers", "Sentiment"],
+    n: 3,
+    label: "What have you built?",
+    go: "#projects",
+    keywords: ["shipped", "built", "projects", "ios", "app", "reptrack", "swift", "demo", "extension", "chrome"],
+    answer: [
+      { text: "The one I'm proudest of is " },
+      { text: "RepTrack", cls: "font-bold" },
+      { text: ", a workout log on the " },
+      { text: "App Store", cls: "font-bold" },
+      {
+        text:
+          ". I also build Chrome tools for retail data, a SQL playground that runs in the browser, and a few machine learning demos. Most have a live demo or a write-up.",
+      },
+    ],
   },
   {
-    title: "Yahoo Finance news scraper",
-    collapsed: true,
-    body: "Headless-browser scraper for JS-heavy news pages, normalized into a structured dataset for downstream NLP and research workflows.",
-    tags: ["Scraping", "Automation", "Python"],
-  },
-  {
-    title: "Smart product categorization: zero-shot",
-    collapsed: true,
-    body: "Category validation with BART-MNLI plus lightweight rules for low-label review queues.",
-    tags: ["Zero-shot", "LLM / NLI", "QA"],
-  },
-  {
-    title: "Spotify music trends: quick EDA",
-    collapsed: true,
-    body: "Audio features and popularity over time, focused on clean data storytelling and visualization.",
-    tags: ["EDA", "Python", "Visualization"],
-  },
-  {
-    title: "Canadian Premier League: Dream XI (2019)",
-    collapsed: true,
-    body: "Role-aware KPI model for player selection with a Power BI dashboard for storytelling.",
-    tags: ["Sports analytics", "Power BI", "Scoring logic"],
-  },
-];
-
-export const STORY_BEATS = [
-  {
-    n: "01",
-    title: "Operations first",
-    body: "I started in content and quality operations at Amazon Prime Video, auditing catalogs and chasing down why numbers didn't match. That is where I learned the real cost of bad data: it rarely shows up as an error. It shows up two teams downstream as a wrong decision.",
-  },
-  {
-    n: "02",
-    title: "The pull toward data",
-    body: "Business analysis work at Spongelii pulled me deeper into SQL and Snowflake. The questions got more interesting than the answers. I wanted to be the person building the pipeline, not just reading what came out of it.",
-  },
-  {
-    n: "03",
-    title: "Making it the job",
-    body: "At Datasembly, that became the actual work: SQL and Snowflake at retail pricing scale, pre-sales solution design, and being the person a stakeholder trusts to explain why a number is right, not just that it is.",
-  },
-  {
-    n: "04",
-    title: "Building outside the job too",
-    body: "RepTrack, shipped to the App Store. An in-browser SQL playground. A handful of ML pipelines. None of it was assigned. Working a real problem end to end, not just the data layer, is how I actually learn something.",
+    n: 4,
+    label: "How do I reach you?",
+    go: "#contact",
+    keywords: ["reach", "contact", "email", "linkedin", "hire", "talk", "hello", "hi"],
+    answer: [
+      { text: "Email is fastest: " },
+      { text: "mohamedansarkms@gmail.com", cls: "font-bold" },
+      { text: ". I'm also on LinkedIn as " },
+      { text: "kmsmohamedansar", cls: "font-bold" },
+      { text: ". Say hi, I read everything." },
+    ],
   },
 ];
 
@@ -291,18 +177,21 @@ export const CONTACT = {
 };
 
 export const COMMAND_ITEMS = [
-  { label: "Explore · the solar system, up close", go: "#explore", group: "Sections" },
-  { label: "Emet · ask the AI terminal", go: "#emet", group: "Sections" },
-  { label: "Current · what I do today", go: "#source", group: "Sections" },
-  { label: "Before · where I've worked", go: "#lineage", group: "Sections" },
-  { label: "Projects · what I've shipped", go: "#build", group: "Sections" },
-  { label: "AI-native dev · Cursor & MCP case studies", go: "#cursor", group: "Sections" },
-  { label: "Why · the short version", go: "#story", group: "Sections" },
-  { label: "Contact", go: "#commit", group: "Sections" },
+  { label: "Projects · what I've built", go: "#projects", group: "Sections" },
+  { label: "Experience · where I've worked", go: "#experience", group: "Sections" },
+  { label: "About · what I do and know", go: "#about", group: "Sections" },
+  { label: "Built with AI · experiments", go: "#ai", group: "Sections" },
+  { label: "Contact", go: "#contact", group: "Sections" },
+  { label: "RepTrack, project page", go: "#project/reptrack", group: "Projects" },
+  { label: "Undercut, project page", go: "#project/undercut", group: "Projects" },
+  { label: "SQL Playground, project page", go: "#project/sql-playground", group: "Projects" },
+  { label: "EMET · ask the terminal", go: "#emet", group: "Fun" },
+  { label: "Solar system explorer", go: "#explore", group: "Fun" },
+  { label: "Data lineage explorer, live demo", go: "#lineage-demo", group: "Fun" },
   { label: "RepTrack on the App Store", href: "https://apps.apple.com/us/app/reptrack-workout-log/id6761032027", group: "Links" },
-  { label: "LinkedIn · kmsmohamedansar", href: CONTACT.linkedin, group: "Links" },
-  { label: "SQL Playground · live demo", href: "https://kmsmohamedansar.github.io/sql-playground", group: "Links" },
-  { label: "Data Lineage Explorer · live demo", go: "#lineage-demo", group: "Links" },
+  { label: "SQL Playground, live", href: "https://kmsmohamedansar.github.io/sql-playground", group: "Links" },
+  { label: "GitHub", href: CONTACT.github, group: "Links" },
+  { label: "LinkedIn", href: CONTACT.linkedin, group: "Links" },
   { label: "Email · " + CONTACT.email, href: "mailto:" + CONTACT.email, group: "Links" },
   { label: "Toggle dev_mode · sandbox stubs", action: "toggle-sandbox", group: "System" },
 ];
