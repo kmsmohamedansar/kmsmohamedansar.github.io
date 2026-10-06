@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>RetailerScope Demo</title>
+    <style>
+      body { font: 13px system-ui, sans-serif; margin: 12px; }
+      textarea { width: 100%; height: 90px; box-sizing: border-box; }
+      button { margin-top: 8px; margin-right: 6px; }
+      #status { margin: 10px 0; color: #555; }
+      table { border-collapse: collapse; width: 100%; }
+      td, th { border-bottom: 1px solid #ddd; padding: 4px 6px; text-align: left; }
+    </style>
+  </head>
+  <body>
+    <h3>RetailerScope Demo</h3>
+    <p>Paste IDs (try <code>A-1001, A-1002, B-2001, X-9</code>).</p>
+    <textarea id="ids"></textarea>
+    <div>
+      <button id="run">Check</button>
+      <button id="download" disabled>Download CSV</button>
+    </div>
+    <div id="status">Idle</div>
+    <table id="results"></table>
+    <script type="module" src="sidepanel.js"></script>
+  </body>
+</html>

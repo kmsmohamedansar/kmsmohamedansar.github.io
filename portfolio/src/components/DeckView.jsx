@@ -14,6 +14,7 @@ const QUICK_LINKS = [
   { go: "#source", label: "Current work", detail: "Solutions Engineer, Datasembly" },
   { go: "#lineage", label: "Before", detail: "Amazon · Spongelii · Datasembly" },
   { go: "#build", label: "Projects", detail: "RepTrack + 9 more shipped" },
+  { go: "#cursor", label: "AI-native dev", detail: "Cursor, MCP servers, Chrome extensions" },
   { go: "#commit", label: "Contact", detail: "Say hello" },
 ];
 

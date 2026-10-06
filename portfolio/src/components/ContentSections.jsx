@@ -22,7 +22,7 @@ const prefersReducedMotion = () =>
   typeof window !== "undefined" &&
   window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-function Reveal({ children, className = "", delay = 0, y = 28 }) {
+export function Reveal({ children, className = "", delay = 0, y = 28 }) {
   return (
     <motion.div
       className={className}
@@ -36,7 +36,7 @@ function Reveal({ children, className = "", delay = 0, y = 28 }) {
   );
 }
 
-function SectionHead({ step, kicker, title, lede }) {
+export function SectionHead({ step, kicker, title, lede }) {
   return (
     <Reveal className="max-w-2xl mb-14">
       <span className="inline-flex items-center gap-2.5 font-mono text-[.72rem] font-semibold tracking-[.16em] uppercase text-[color:var(--ink-400)] mb-4">
@@ -59,7 +59,7 @@ function SectionHead({ step, kicker, title, lede }) {
    instead of just sitting there saying "ONLINE" — this is the one
    page about right-now, so its signature motion is a live status,
    not a scene transition. */
-function DashboardBar({ title, status = "ONLINE", pulse = false }) {
+export function DashboardBar({ title, status = "ONLINE", pulse = false }) {
   const reduced = prefersReducedMotion();
   return (
     <div className="flex items-center gap-3 px-5 py-3 border-b border-white/8 bg-black/10">
@@ -91,7 +91,7 @@ function DashboardBar({ title, status = "ONLINE", pulse = false }) {
    other on-ramp into these same sections, but the expand toggle
    works for anyone who scrolled down directly too — it isn't gated
    behind having clicked a card. */
-function DetailToggle({ expanded, onToggle, labelShow = "See full details", labelHide = "Hide details" }) {
+export function DetailToggle({ expanded, onToggle, labelShow = "See full details", labelHide = "Hide details" }) {
   return (
     <motion.button
       onClick={onToggle}
@@ -106,7 +106,7 @@ function DetailToggle({ expanded, onToggle, labelShow = "See full details", labe
   );
 }
 
-function ExpandablePanel({ expanded, children }) {
+export function ExpandablePanel({ expanded, children }) {
   return (
     <AnimatePresence initial={false}>
       {expanded && (
@@ -124,7 +124,7 @@ function ExpandablePanel({ expanded, children }) {
   );
 }
 
-function TagPill({ children }) {
+export function TagPill({ children }) {
   return (
     <span className="font-mono text-[.66rem] uppercase tracking-wide px-2.5 py-1 rounded-full border border-white/10 text-[color:var(--ink-300)]">
       {children}
