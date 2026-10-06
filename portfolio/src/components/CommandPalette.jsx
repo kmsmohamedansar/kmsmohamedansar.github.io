@@ -4,7 +4,7 @@ import { Search, CornerDownLeft, ArrowUp, ArrowDown, X, Hash, Link2, Terminal } 
 import { COMMAND_ITEMS } from "../data/content";
 import { useSandbox } from "../App";
 
-const GROUP_ICONS = { Sections: Hash, Links: Link2, System: Terminal };
+const GROUP_ICONS = { Sections: Hash, Projects: Hash, Fun: Terminal, Links: Link2, System: Terminal };
 
 /**
  * Global ⌘K / Ctrl+K command palette.

@@ -1,14 +1,13 @@
 import { Component, createContext, lazy, Suspense, useContext, useEffect, useMemo, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { Command } from "lucide-react";
-import DeckView from "./components/DeckView";
 import EmetSection from "./components/EmetSection";
-import { NowSection, BeforeSection, WorkSection, StorySection, ContactSection } from "./components/ContentSections";
-import { CursorWorkSection } from "./components/CursorWorkSection";
+import { Hero, ProjectsSection, ExperienceSection, AboutSection, ExperimentsSection, ContactSection } from "./components/Sections";
+import ProjectPage from "./components/ProjectPage";
+import { SECTION_LINKS } from "./data/content";
 import SandboxStubs from "./components/SandboxStubs";
 import CommandPalette from "./components/CommandPalette";
 import { MatrixBackground } from "./components/RouteBackgrounds";
-import BootSequence from "./components/BootSequence";
 import CustomCursor from "./components/CustomCursor";
 import { EASE_OUT } from "./lib/motion";
 
@@ -17,10 +16,11 @@ const SolarSystemExplorer = lazy(() => import("./components/SolarSystemExplorer"
 const DataLineageExplorer = lazy(() => import("./components/DataLineageExplorer"));
 
 /* ============================================================
-   ROUTER — three states: "emet" and "explore" are full takeover
-   views (reached from the nav or the command palette), "main" is
-   everything else — a single continuously-scrolled document, the
-   hero followed by Now/Before/Work/Story/Contact — so a nav link
+   ROUTER: "emet", "explore", "lineage-demo" and "project/<slug>" are
+   full takeover views (reached from cards, the nav or the command
+   palette). "main" is everything else: a single scrolled page, the
+   hero followed by Projects, Experience, About, Built with AI and
+   Contact, so a nav link
    pointing at one of those doesn't swap a view, it smooth-scrolls to
    that section's id within the document. Hash-based so every existing
    <a href="#build"> (nav, emet's shortcuts, the command palette) keeps
@@ -28,10 +28,15 @@ const DataLineageExplorer = lazy(() => import("./components/DataLineageExplorer"
    non-takeover hash changed, from "which view is active" to "which
    section to scroll to."
    ============================================================ */
+function parseRoute(h) {
+  if (h === "emet" || h === "explore" || h === "lineage-demo") return h;
+  if (h.startsWith("project/")) return h;
+  return "main";
+}
+
 function readRoute() {
   if (typeof window === "undefined") return "main";
-  const h = window.location.hash.replace(/^#/, "");
-  return h === "emet" || h === "explore" || h === "lineage-demo" ? h : "main";
+  return parseRoute(window.location.hash.replace(/^#/, ""));
 }
 
 const RouteContext = createContext(null);
@@ -57,9 +62,9 @@ function RouteProvider({ children }) {
   useEffect(() => {
     function onHashChange() {
       const h = window.location.hash.replace(/^#/, "");
-      const isTakeover = h === "emet" || h === "explore" || h === "lineage-demo";
-      setRoute(isTakeover ? h : "main");
-      if (h && !isTakeover) scrollToSection(h);
+      const next = parseRoute(h);
+      setRoute(next);
+      if (h && next === "main") scrollToSection(h);
     }
     window.addEventListener("hashchange", onHashChange);
     return () => window.removeEventListener("hashchange", onHashChange);
@@ -69,7 +74,7 @@ function RouteProvider({ children }) {
   // hashchange event fires for the hash already present at mount.
   useEffect(() => {
     const h = window.location.hash.replace(/^#/, "");
-    if (h && h !== "emet" && h !== "explore" && h !== "lineage-demo") scrollToSection(h);
+    if (h && parseRoute(h) === "main") scrollToSection(h);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -154,30 +159,16 @@ function Nav() {
         </button>
 
         <div className="flex items-center gap-1">
-          {route === "main" && (
-            <a
-              href="#explore"
-              className="mr-1 hidden sm:inline-flex items-center gap-1.5 px-3 py-2 rounded-lg border border-white/10 text-[color:var(--ink-300)] hover:text-cyan hover:border-cyan/40 transition-colors font-mono text-[.68rem] uppercase tracking-[.1em]"
-            >
-              Explore
-            </a>
-          )}
-          {route === "main" && (
-            <a
-              href="#emet"
-              className="mr-1 hidden sm:inline-flex items-center gap-1.5 px-3 py-2 rounded-lg border border-white/10 text-[color:var(--ink-300)] hover:text-cyan hover:border-cyan/40 transition-colors font-mono text-[.68rem] uppercase tracking-[.1em]"
-            >
-              Ask EMET
-            </a>
-          )}
-          {route === "main" && (
-            <a
-              href="#commit"
-              className="mr-1 hidden sm:inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-white text-ink hover:bg-cyan transition-colors font-mono text-[.68rem] uppercase tracking-[.1em]"
-            >
-              Get in touch
-            </a>
-          )}
+          {route === "main" &&
+            SECTION_LINKS.map((l) => (
+              <a
+                key={l.id}
+                href={`#${l.id}`}
+                className={`${l.id === "projects" || l.id === "contact" ? "inline-flex" : "hidden md:inline-flex"} items-center px-3 py-2 rounded-lg text-[color:var(--ink-100)] hover:text-cyan transition-colors font-mono text-[.7rem] uppercase tracking-[.1em]`}
+              >
+                {l.label}
+              </a>
+            ))}
           {route !== "main" && (
             <button
               onClick={() => navigate("deck")}
@@ -202,12 +193,11 @@ function Nav() {
 function MainDocument({ bootDone }) {
   return (
     <>
-      <DeckView ready={bootDone} />
-      <NowSection />
-      <BeforeSection />
-      <WorkSection />
-      <CursorWorkSection />
-      <StorySection />
+      <Hero ready={bootDone} />
+      <ProjectsSection />
+      <ExperienceSection />
+      <AboutSection />
+      <ExperimentsSection />
       <ContactSection />
     </>
   );
@@ -248,6 +238,16 @@ function Stage({ bootDone }) {
             <Suspense fallback={<div className="h-full bg-[#02050c]" aria-hidden="true" />}>
               <SolarSystemExplorer />
             </Suspense>
+          </motion.div>
+        ) : route.startsWith("project/") ? (
+          <motion.div
+            key={route}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.2, ease: EASE_OUT }}
+          >
+            <ProjectPage slug={route.slice("project/".length)} />
           </motion.div>
         ) : route === "lineage-demo" ? (
           <motion.div
@@ -376,11 +376,10 @@ export default function App() {
   // instant it mounts — on a first visit it would otherwise animate
   // entirely behind the opaque boot sequence, unseen; on a repeat
   // visit it'd fire too fast (before the page has painted) to notice.
-  const [bootDone, setBootDone] = useState(false);
+  const bootDone = true;
   return (
     <ErrorBoundary>
       <CustomCursor />
-      <BootSequence onDone={() => setBootDone(true)} />
       <ThemeProvider>
         <SandboxProvider>
           <AppShell bootDone={bootDone} />

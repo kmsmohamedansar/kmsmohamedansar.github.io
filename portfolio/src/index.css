@@ -43,12 +43,12 @@
   --ink-50: #f8fafc;
   --ink-100: #f1f5f9;
   --ink-200: #e2e8f0;
-  --ink-300: #cbd5e1;
+  --ink-300: #e2e8f0;
   /* Brightened from #a7b4c8 — this is the color most body copy (ledes,
      project/role descriptions, tags) actually renders in across the
      site, not just de-emphasized meta text, and it was reading too
      dim against a livelier background than the numbering implies. */
-  --ink-400: #c2cee2;
+  --ink-400: #d5deee;
 }
 /* emet is the one section this portfolio-wide font refresh skips —
    it already looked right, so it keeps the previous heading font
@@ -81,6 +81,33 @@
 }
 
 @layer utilities {
+  /* Content panel: a dark, mostly opaque card so body copy never has to
+     fight bright stars for contrast. Use for anything with paragraphs. */
+  .panel {
+    backdrop-filter: blur(14px);
+    background: rgba(5, 9, 17, 0.78);
+    border: 1px solid rgba(255, 255, 255, 0.09);
+    box-shadow: 0 18px 40px -22px rgba(0, 0, 0, 0.8);
+    /* The page-wide dark halo exists for text sitting directly on the
+       stars. Inside an opaque panel it only smears the letters. */
+    text-shadow: none;
+  }
+  /* A scrollbar you can actually see, for the horizontal rails. */
+  .rail-scroll {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(34, 211, 238, 0.6) rgba(255, 255, 255, 0.08);
+  }
+  .rail-scroll::-webkit-scrollbar {
+    height: 10px;
+  }
+  .rail-scroll::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.08);
+    border-radius: 999px;
+  }
+  .rail-scroll::-webkit-scrollbar-thumb {
+    background: rgba(34, 211, 238, 0.6);
+    border-radius: 999px;
+  }
   .glass {
     backdrop-filter: blur(16px);
     background: rgba(2, 6, 16, 0.4);
