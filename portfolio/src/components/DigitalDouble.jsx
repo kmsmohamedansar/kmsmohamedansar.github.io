@@ -34,7 +34,7 @@ export default function DigitalDouble() {
     const scene = new THREE.Scene();
     scene.background = new THREE.Color(0x050506);
     const camera = new THREE.PerspectiveCamera(22, mount.clientWidth / mount.clientHeight, 0.01, 10);
-    camera.position.set(0, 0, 0.85);
+    camera.position.set(0, 0, 0.95);
 
     scene.add(new THREE.HemisphereLight(0xdfe6ff, 0x1a120c, 0.6));
     const key = new THREE.DirectionalLight(0xfff1e0, 2.4);
@@ -58,7 +58,11 @@ export default function DigitalDouble() {
       (gltf) => {
         if (disposed) return;
         const model = gltf.scene;
-        model.position.sub(new THREE.Box3().setFromObject(model).getCenter(new THREE.Vector3()));
+        // Centre on the head, not the whole bust, so the shirt doesn't push the face off-screen.
+        const head = model.getObjectByName("Web_Head") || model;
+        const centre = new THREE.Box3().setFromObject(head).getCenter(new THREE.Vector3());
+        centre.y -= 0.03;
+        model.position.sub(centre);
         model.traverse((o) => {
           if (!o.isMesh) return;
           if (o.name.startsWith("Web_Hair")) {
