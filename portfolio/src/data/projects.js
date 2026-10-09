@@ -9,7 +9,8 @@
 // a specific shape, `links` lists pairs like "0.0>1.1" (column.box).
 //
 // Work projects are written generically on purpose: no employer, product,
-// customer or retailer names, and no numbers.
+// customer or retailer names, and no numbers. They get no screenshots either;
+// every image in public/shots/ comes from a public repo or this site.
 
 export const ACCENTS = {
   cyan: { text: "text-cyan", border: "border-cyan/50", soft: "bg-cyan/10", glow: "rgba(34,211,238,0.35)", hex: "#22d3ee" },
@@ -28,6 +29,7 @@ export const PROJECTS = [
     accent: "amber",
     featured: true,
     status: "Live on the App Store",
+    icon: "/shots/reptrack-icon.webp",
     hook: "A workout log for the gym floor. Log a set in a few taps, see what you did last time, move on.",
     role: "Built solo, from the first screen to App Store review.",
     tags: ["SwiftUI", "SwiftData", "iOS 17+", "App Store"],
@@ -104,6 +106,7 @@ export const PROJECTS = [
     kind: "Live demo",
     accent: "violet",
     status: "Live, open to everyone",
+    shots: ["/shots/sql-playground.webp"],
     hook: "A place to practise SQL that opens instantly, needs no login, and nudges you towards Snowflake style habits.",
     role: "Built it myself, front to back.",
     tags: ["SQL", "WebAssembly", "Browser app"],
@@ -391,6 +394,7 @@ export const PROJECTS = [
     kind: "Live demo",
     accent: "amber",
     status: "Live demo",
+    shots: ["/shots/customer-predictor.webp"],
     hook: "Is this customer high-value? A model gives an answer and, more importantly, shows why.",
     role: "Built it myself.",
     tags: ["ML", "Explainability", "Streamlit"],
@@ -504,6 +508,7 @@ export const PROJECTS = [
     kind: "NLP",
     accent: "cyan",
     status: "Archived experiment",
+    shots: ["/shots/fine-food-sentiment.webp"],
     hook: "Sentiment analysis on Amazon fine food reviews, starting from a simple baseline and moving up to a transformer.",
     role: "Built it myself.",
     tags: ["NLP", "Transformers", "Sentiment"],
@@ -585,6 +590,7 @@ export const PROJECTS = [
     kind: "Analysis",
     accent: "green",
     status: "Archived experiment",
+    shots: ["/shots/spotify-trends.webp"],
     hook: "A quick look at how audio features and popularity have moved over time.",
     role: "Built it myself.",
     tags: ["EDA", "Python", "Visualisation"],
@@ -601,6 +607,7 @@ export const PROJECTS = [
     kind: "Analysis",
     accent: "rose",
     status: "Archived experiment",
+    shots: ["/shots/cpl-dream-xi.webp"],
     hook: "Picking a best eleven from 2019 season data with a role-aware scoring model and a Power BI dashboard.",
     role: "Built it myself.",
     tags: ["Sports analytics", "Power BI", "Scoring"],
@@ -626,6 +633,7 @@ export const EXPERIMENTS = [
     hook: "A fake terminal on this site. Type a question, or press 1 to 4, and it answers the way I would.",
     body: "It matches what you type against a few topics, so it isn't a chatbot, and that's the point. Short, honest answers, typed out one letter at a time.",
     href: "#emet",
+    shot: "/shots/emet.webp",
     cta: "Open the terminal",
   },
   {
@@ -635,6 +643,7 @@ export const EXPERIMENTS = [
     hook: "A 3D solar system with real orbital mechanics and procedural planet textures, running in your browser.",
     body: "This one is pure curiosity. I wanted to see how far I could push three.js with an AI pair programmer, and it turned into several hundred lines of orbit maths and planet shaders.",
     href: "#explore",
+    shot: "/shots/solar-system.webp",
     cta: "Take a look around",
   },
   {

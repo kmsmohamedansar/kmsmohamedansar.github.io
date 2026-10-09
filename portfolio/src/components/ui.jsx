@@ -1,8 +1,11 @@
-import { useLayoutEffect, useMemo, useRef, useState } from "react";
-import { motion } from "framer-motion";
+import { Fragment, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
+import { motion, useReducedMotion, useScroll, useTransform } from "framer-motion";
 import { ArrowDown, ArrowUpRight } from "lucide-react";
 import { EASE_REVEAL } from "../lib/motion";
 import { ACCENTS } from "../data/projects";
+import { useScrollContainer } from "../App";
+
+const clamp01 = (v) => Math.min(1, Math.max(0, v));
 
 export function Reveal({ children, className = "", delay = 0, y = 24 }) {
   return (
@@ -31,12 +34,110 @@ export function Kicker({ children, accent = "cyan", className = "" }) {
   );
 }
 
+/* Text that rises into place word by word, each word sliding up out of
+   its own mask, the first time it scrolls into view. The words stay
+   real text in the DOM (screen readers and copy-paste see the sentence). */
+export function RiseText({ text, className = "", stagger = 0.045 }) {
+  const reduced = useReducedMotion();
+  if (reduced) return <span className={className}>{text}</span>;
+  const words = text.split(" ");
+  return (
+    <motion.span
+      className={className}
+      initial="hidden"
+      whileInView="shown"
+      viewport={{ once: true, amount: 0.4 }}
+      transition={{ staggerChildren: stagger }}
+    >
+      {words.map((w, i) => (
+        <Fragment key={i}>
+          <span className="inline-block overflow-hidden align-bottom pb-[.08em] -mb-[.08em]">
+            <motion.span
+              className="inline-block"
+              variants={{ hidden: { y: "105%", rotate: 4 }, shown: { y: "0%", rotate: 0 } }}
+              transition={{ duration: 0.95, ease: EASE_REVEAL }}
+            >
+              {w}
+            </motion.span>
+          </span>
+          {i < words.length - 1 && " "}
+        </Fragment>
+      ))}
+    </motion.span>
+  );
+}
+
+/* A browser-style frame around a project screenshot. The frame tilts
+   back and settles flat as it scrolls into view, and the screenshot
+   inside scrolls on its own as the page does, so a full-page capture
+   reads top to bottom on the way past. Reduced motion: flat, static. */
+export function ScrollShot({ src, label, onError, ratio = "aspect-[16/10]" }) {
+  const reduced = useReducedMotion();
+  const scrollContainerRef = useScrollContainer();
+  const wrapRef = useRef(null);
+  const viewRef = useRef(null);
+  const imgRef = useRef(null);
+  const travel = useRef(0); // px the image is taller than its window
+  const [short, setShort] = useState(false);
+  const { scrollYProgress } = useScroll({ container: scrollContainerRef, target: wrapRef, offset: ["start end", "end start"] });
+  // Function-form transforms: framer would otherwise hand these to the
+  // browser's ScrollTimeline, which tracks the document, not <main>.
+  const y = useTransform(scrollYProgress, (v) => -travel.current * clamp01((v - 0.2) / 0.6));
+  const rotateX = useTransform(scrollYProgress, (v) => 18 * (1 - clamp01(v / 0.38)));
+  const scale = useTransform(scrollYProgress, (v) => 0.92 + 0.08 * clamp01(v / 0.38));
+
+  useEffect(() => {
+    function measure() {
+      const img = imgRef.current;
+      const view = viewRef.current;
+      if (!img || !view || !img.naturalWidth) return;
+      const h = (img.naturalHeight / img.naturalWidth) * view.clientWidth;
+      travel.current = Math.max(0, h - view.clientHeight);
+      setShort(h < view.clientHeight);
+    }
+    const ro = new ResizeObserver(measure);
+    if (viewRef.current) ro.observe(viewRef.current);
+    imgRef.current?.addEventListener("load", measure);
+    measure();
+    return () => ro.disconnect();
+  }, []);
+
+  return (
+    <div ref={wrapRef} className="[perspective:1400px]">
+      <motion.div
+        style={reduced ? undefined : { rotateX, scale }}
+        className="origin-bottom overflow-hidden rounded-2xl border border-white/12 bg-[#0b1220] shadow-[0_40px_80px_-40px_rgba(0,0,0,.85)]"
+      >
+        <div className="flex items-center gap-1.5 border-b border-white/10 px-3.5 py-2.5" aria-hidden="true">
+          <span className="h-2.5 w-2.5 rounded-full bg-[#ff5f57]" />
+          <span className="h-2.5 w-2.5 rounded-full bg-[#febc2e]" />
+          <span className="h-2.5 w-2.5 rounded-full bg-[#28c840]" />
+          {label && <span className="ml-3 truncate font-mono text-micro text-[color:var(--ink-300)]">{label}</span>}
+        </div>
+        <div ref={viewRef} className={`relative overflow-hidden ${ratio}`}>
+          <motion.img
+            ref={imgRef}
+            src={src}
+            alt=""
+            loading="lazy"
+            onError={onError}
+            style={reduced || short ? undefined : { y }}
+            className={`block w-full ${short ? "h-full object-cover object-top" : ""}`}
+          />
+        </div>
+      </motion.div>
+    </div>
+  );
+}
+
 export function SectionHead({ kicker, title, lede, accent = "cyan", align = "left" }) {
   const center = align === "center";
   return (
-    <Reveal className={`max-w-3xl mb-10 sm:mb-14 ${center ? "mx-auto text-center" : ""}`}>
+    <Reveal className={`max-w-3xl mb-10 sm:mb-14 ${center ? "mx-auto text-center" : ""}`} y={0}>
       <Kicker accent={accent}>{kicker}</Kicker>
-      <h2 className="mt-4 font-condensed uppercase text-white leading-[.92] text-[clamp(2.6rem,7vw,5.6rem)]">{title}</h2>
+      <h2 className="mt-4 font-condensed uppercase text-white leading-[.92] text-[clamp(2.6rem,7vw,5.6rem)]">
+        <RiseText text={title} />
+      </h2>
       {lede && <p className={`mt-5 max-w-2xl text-base sm:text-lg leading-relaxed text-[color:var(--ink-200)] ${center ? "mx-auto" : ""}`}>{lede}</p>}
     </Reveal>
   );

@@ -375,7 +375,34 @@
   margin: -17px 0 0 -17px;
   border: 1px solid rgba(255, 255, 255, 0.6);
 }
-.ma-cursor-ring[data-active="1"] {
+.ma-cursor-ring[data-label]:not([data-label=""]) {
+  width: 84px;
+  height: 84px;
+  margin: -42px 0 0 -42px;
+  background: #fff;
+  border-color: #fff;
+}
+.ma-cursor-ring::after {
+  content: attr(data-label);
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  /* Black on the white bubble, which the difference blend flips to the
+     page's inverse; it stays legible on every block. */
+  color: #000;
+  opacity: 0;
+  transition: opacity 0.15s ease;
+}
+.ma-cursor-ring[data-label]:not([data-label=""])::after {
+  opacity: 1;
+}
+.ma-cursor-ring[data-active="1"]:not([data-label]:not([data-label=""])) {
   width: 52px;
   height: 52px;
   margin: -26px 0 0 -26px;
