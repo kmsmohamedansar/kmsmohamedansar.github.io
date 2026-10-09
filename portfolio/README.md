@@ -1,7 +1,7 @@
 # Mohamed Ansar, portfolio
 
 The source for [kmsmohamedansar.github.io](https://kmsmohamedansar.github.io).
-React 19, Vite, Tailwind v4, Framer Motion, and three.js for the backdrop.
+React 19, Vite, Tailwind v4, Framer Motion, and three.js for the hero's infinity loop.
 
 ## How the site is laid out
 
@@ -11,7 +11,7 @@ One scrolling page, then a detail page per project:
 2. **Projects**: three featured cards, then a sideways scroller with the rest.
 3. **Experience**: a sideways scroller of roles.
 4. **About**: the short story and what I know.
-5. **Built with AI**: experiments (the EMET terminal, the solar system, the star field).
+5. **Built with AI**: experiments (the EMET terminal, the solar system, the infinity loop).
 6. **Contact**.
 
 Clicking a project opens `#project/<slug>`: the story, a flow diagram, what I took from it, and links.
