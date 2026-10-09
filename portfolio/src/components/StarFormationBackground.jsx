@@ -466,13 +466,509 @@ function buildGlowMesh(initialColorHex) {
   return new THREE.Mesh(geometry, material);
 }
 
+// Shared by the atmosphere and the lineage layer: how strongly to pull
+// a fragment back toward plain base color based on its screen x, so the
+// reading column stays calmer than the space around the loop.
+// uCalm = (fade-start x, fade-end x, strength), all in 0-1 screen units;
+// a strength of 0 disables it (the stacked mobile layout).
+const calmGlsl = /* glsl */ `
+  float calmFactor(vec2 uv, vec3 calm) {
+    return 1.0 - calm.z * (1.0 - smoothstep(calm.x, calm.y, uv.x));
+  }
+`;
+
+// The atmosphere: one fullscreen quad, written straight to clip space
+// so it never depends on the camera, and drawn opaque before anything
+// else. It replaces the old flat near-black clear color with a deep
+// navy base, a slow domain-warped value-noise field in blue/slate, and
+// a soft lift centered on the infinity loop's projected position.
+//
+// Colors are sRGB constants on purpose: none of this file's custom
+// ShaderMaterials include three's colorspace_fragment chunk, so what a
+// shader writes is what lands on screen, and these hex values are the
+// art-directed targets. (uAccent comes in as a linear THREE.Color and
+// gets an approximate sqrt() encode for the same reason.)
+const atmosphereVertexShader = /* glsl */ `
+  void main() {
+    gl_Position = vec4(position.xy, 0.9999, 1.0);
+  }
+`;
+
+const atmosphereFragmentShader = /* glsl */ `
+  uniform float uTime;
+  uniform vec2 uResolution;
+  uniform float uScrollProgress;
+  uniform float uDrift;
+  uniform vec3 uAccent;
+  uniform vec2 uFocus;
+  uniform vec3 uCalm;
+  uniform float uStrength;
+
+  const vec3 BASE_DEEP = vec3(0.0431, 0.0784, 0.1490);  // #0B1426
+  const vec3 BASE_MID  = vec3(0.0510, 0.1059, 0.1882);  // #0D1B30
+  const vec3 ATMOS     = vec3(0.0706, 0.1333, 0.2275);  // #12223A
+  const vec3 SLATE     = vec3(0.0902, 0.1686, 0.2863);  // #172B49
+  const vec3 HIGHLIGHT = vec3(0.1490, 0.2353, 0.3765);  // #263C60
+  const vec3 CYAN      = vec3(0.3333, 0.7961, 0.9098);  // #55CBE8
+  const vec3 VIOLET    = vec3(0.6314, 0.5412, 1.0);     // #A18AFF
+
+  ${calmGlsl}
+
+  // Hash without sine (Dave Hoskins) — stable on mobile GPUs, where
+  // the classic fract(sin(dot())) hash loses precision and bands.
+  float hash12(vec2 p) {
+    vec3 p3 = fract(vec3(p.xyx) * 0.1031);
+    p3 += dot(p3, p3.yzx + 33.33);
+    return fract((p3.x + p3.y) * p3.z);
+  }
+
+  float valueNoise(vec2 p) {
+    vec2 i = floor(p);
+    vec2 f = fract(p);
+    vec2 u = f * f * (3.0 - 2.0 * f);
+    float a = hash12(i);
+    float b = hash12(i + vec2(1.0, 0.0));
+    float c = hash12(i + vec2(0.0, 1.0));
+    float d = hash12(i + vec2(1.0, 1.0));
+    return mix(mix(a, b, u.x), mix(c, d, u.x), u.y);
+  }
+
+  // OCTAVES comes in as a material define: 3 on desktop, 2 on narrow
+  // layouts, which also tend to be the highest-DPR screens.
+  float fbm(vec2 p) {
+    float v = 0.0;
+    float amp = 0.5;
+    for (int i = 0; i < OCTAVES; i++) {
+      v += amp * valueNoise(p);
+      p = mat2(1.6, 1.2, -1.2, 1.6) * p + 7.3;
+      amp *= 0.5;
+    }
+    return v / (1.0 - exp2(-float(OCTAVES)));
+  }
+
+  void main() {
+    vec2 uv = gl_FragCoord.xy / uResolution;
+    float aspect = uResolution.x / uResolution.y;
+    vec2 p = vec2((uv.x - 0.5) * aspect, uv.y - 0.5);
+    // ~0.024/s: individual features take roughly 40s to visibly re-form.
+    float t = uTime * 0.024;
+
+    vec3 base = mix(BASE_DEEP, BASE_MID, smoothstep(0.0, 1.0, uv.y));
+
+    // The field slides with page scroll at a fraction of the stars'
+    // own drift, so it reads as the far wall of the same space.
+    vec2 fp = p * 1.35 + vec2(0.0, uDrift * 0.35);
+    float warp = fbm(fp * 0.8 + vec2(t, -t * 0.6));
+    float n = fbm(fp + warp * 1.3 + vec2(-t * 0.5, t * 0.35));
+    float cloud = smoothstep(0.3, 0.78, n);
+
+    // Soft lift around the loop. Widens and fades as the loop
+    // disperses, so the light spreads out with the stars instead of
+    // staying pinned to a shape that no longer exists.
+    vec2 fd = vec2((uv.x - uFocus.x) * aspect, uv.y - uFocus.y);
+    float focusR = mix(0.55, 0.95, uScrollProgress);
+    float focus = exp(-dot(fd, fd) / (focusR * focusR)) * mix(1.0, 0.45, uScrollProgress);
+
+    vec3 col = mix(base, mix(ATMOS, SLATE, cloud), (0.35 + 0.65 * focus) * (0.55 + 0.45 * cloud));
+    col = mix(col, HIGHLIGHT, focus * cloud * 0.35);
+    col += CYAN * (focus * smoothstep(0.55, 0.9, n) * 0.05);
+    col += VIOLET * (smoothstep(0.5, 0.85, warp) * (0.25 + 0.75 * focus) * 0.035);
+    // Section accent: an environmental tint near the loop, clamped low
+    // so it shifts the lighting rather than recoloring the page.
+    col = mix(col, sqrt(max(uAccent, vec3(0.0))), focus * 0.06);
+
+    col = base + (col - base) * calmFactor(uv, uCalm) * uStrength;
+
+    // Gentle edge falloff keeps the frame from reading as a flat fill.
+    float vignette = smoothstep(1.25, 0.35, length(p * vec2(0.9, 1.15)));
+    col *= mix(0.82, 1.0, vignette);
+
+    // Static +-0.5 LSB dither: dark, slow gradients like this one band
+    // visibly on 8-bit panels without it.
+    col += (hash12(gl_FragCoord.xy) - 0.5) / 255.0;
+    gl_FragColor = vec4(col, 1.0);
+  }
+`;
+
+function buildAtmosphere(sharedUniforms, octaves) {
+  const geometry = new THREE.PlaneGeometry(2, 2);
+  const material = new THREE.ShaderMaterial({
+    vertexShader: atmosphereVertexShader,
+    fragmentShader: atmosphereFragmentShader,
+    defines: { OCTAVES: octaves },
+    depthTest: false,
+    depthWrite: false,
+    uniforms: sharedUniforms,
+  });
+  const mesh = new THREE.Mesh(geometry, material);
+  mesh.frustumCulled = false; // positioned in clip space, not world space
+  mesh.renderOrder = -10;
+  return mesh;
+}
+
+// Small deterministic PRNG so the lineage graph is laid out the same
+// way on every load instead of reshuffling with Math.random().
+function mulberry32(seed) {
+  return function next() {
+    seed = (seed + 0x6d2b79f5) | 0;
+    let t = Math.imul(seed ^ (seed >>> 15), 1 | seed);
+    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+}
+
+// World-space bounds for the lineage graph. z = -7 sits behind the loop
+// (z ~ 0) and in front of the glow plane (z = -8). Desktop spans the
+// right of the frame and runs well below the fold, so the lower part
+// rises into view as the page drift carries the group upward.
+const LINEAGE_LAYOUT = {
+  desktop: { x0: -6, x1: 15.5, y0: -13, y1: 8.5, z: -7, layers: 6, perLayer: [3, 5], signals: 8, segments: 24 },
+  mobile: { x0: -4.2, x1: 4.2, y0: -12, y1: 3, z: -7, layers: 4, perLayer: [2, 3], signals: 4, segments: 18 },
+};
+
+// One timing scheme shared by the trail (on the path) and the packet
+// (the moving point), so the two always agree: aSignal = (offset,
+// cycle, travel, isSignal). Progress along the edge is phase / travel;
+// anything past 1.0 is the idle gap before that edge fires again.
+const lineagePathVertexShader = /* glsl */ `
+  attribute float aT;
+  attribute float aBranch;
+  attribute vec4 aSignal;
+  varying float vT;
+  varying float vBranch;
+  varying vec4 vSignal;
+  void main() {
+    vT = aT;
+    vBranch = aBranch;
+    vSignal = aSignal;
+    gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+  }
+`;
+
+const lineagePathFragmentShader = /* glsl */ `
+  uniform vec2 uResolution;
+  uniform vec3 uCalm;
+  uniform float uLineageStrength;
+  varying float vT;
+  varying float vBranch;
+  const vec3 PATH = vec3(0.3569, 0.5529, 0.7216);    // #5B8DB8
+  const vec3 BRANCH = vec3(0.5529, 0.5451, 1.0);     // #8D8BFF
+  ${calmGlsl}
+  void main() {
+    vec2 uv = gl_FragCoord.xy / uResolution;
+    // Paths thin out where they meet a node, so edges read as flowing
+    // into it rather than as a wireframe.
+    float ends = mix(0.45, 1.0, smoothstep(0.0, 0.08, vT) * smoothstep(1.0, 0.92, vT));
+    float alpha = mix(0.06, 0.075, vBranch) * ends * calmFactor(uv, uCalm) * uLineageStrength;
+    gl_FragColor = vec4(mix(PATH, BRANCH, vBranch), alpha);
+  }
+`;
+
+const lineageTrailFragmentShader = /* glsl */ `
+  uniform float uTime;
+  uniform vec2 uResolution;
+  uniform vec3 uCalm;
+  uniform float uLineageStrength;
+  varying float vT;
+  varying vec4 vSignal;
+  const vec3 SIGNAL = vec3(0.5608, 0.9098, 0.9608);  // #8FE8F5
+  ${calmGlsl}
+  void main() {
+    if (vSignal.w < 0.5) discard;
+    float head = mod(uTime + vSignal.x, vSignal.y) / vSignal.z;
+    float behind = head - vT;
+    float trail = step(0.0, behind) * smoothstep(0.26, 0.0, behind);
+    vec2 uv = gl_FragCoord.xy / uResolution;
+    float alpha = trail * trail * 0.2 * calmFactor(uv, uCalm) * uLineageStrength;
+    if (alpha < 0.002) discard;
+    gl_FragColor = vec4(SIGNAL, alpha);
+  }
+`;
+
+// The packet: one point per signal edge, its position evaluated on the
+// edge's cubic bezier entirely in the vertex shader (no per-frame CPU
+// buffer updates). `position` holds the curve's first control point.
+const lineagePacketVertexShader = /* glsl */ `
+  attribute vec3 aP1;
+  attribute vec3 aP2;
+  attribute vec3 aP3;
+  attribute vec4 aSignal;
+  uniform float uTime;
+  uniform float uPixelRatio;
+  varying float vAlpha;
+  void main() {
+    float s = mod(uTime + aSignal.x, aSignal.y) / aSignal.z;
+    float live = step(s, 1.0);
+    s = clamp(s, 0.0, 1.0);
+    float u = 1.0 - s;
+    vec3 pos = u * u * u * position + 3.0 * u * u * s * aP1 + 3.0 * u * s * s * aP2 + s * s * s * aP3;
+    vec4 mvPosition = modelViewMatrix * vec4(pos, 1.0);
+    gl_Position = projectionMatrix * mvPosition;
+    gl_PointSize = live * min(4.0 * uPixelRatio * (22.0 / max(-mvPosition.z, 1.0)), 6.0 * uPixelRatio);
+    vAlpha = live * sqrt(sin(3.14159265 * s));
+  }
+`;
+
+const lineagePacketFragmentShader = /* glsl */ `
+  uniform vec2 uResolution;
+  uniform vec3 uCalm;
+  uniform float uLineageStrength;
+  varying float vAlpha;
+  const vec3 SIGNAL = vec3(0.5608, 0.9098, 0.9608);  // #8FE8F5
+  ${calmGlsl}
+  void main() {
+    float d = length(gl_PointCoord - vec2(0.5)) * 2.0;
+    float alpha = pow(max(0.0, 1.0 - d), 1.6) * vAlpha * 0.24;
+    alpha *= calmFactor(gl_FragCoord.xy / uResolution, uCalm) * uLineageStrength;
+    if (alpha < 0.002) discard;
+    gl_FragColor = vec4(SIGNAL, alpha);
+  }
+`;
+
+const lineageNodeVertexShader = /* glsl */ `
+  attribute float aSize;
+  attribute float aAlpha;
+  attribute float aRing;
+  uniform float uPixelRatio;
+  varying float vAlpha;
+  varying float vRing;
+  void main() {
+    vec4 mvPosition = modelViewMatrix * vec4(position, 1.0);
+    gl_Position = projectionMatrix * mvPosition;
+    gl_PointSize = aSize * uPixelRatio * (22.0 / max(-mvPosition.z, 1.0));
+    vAlpha = aAlpha;
+    vRing = aRing;
+  }
+`;
+
+// A node is a small dot, and some (the graph's sources and sinks) also
+// get a thin ring around it — the same visual vocabulary as a lineage
+// diagram, at a fraction of the weight.
+const lineageNodeFragmentShader = /* glsl */ `
+  uniform vec2 uResolution;
+  uniform vec3 uCalm;
+  uniform float uLineageStrength;
+  varying float vAlpha;
+  varying float vRing;
+  const vec3 NODE = vec3(0.4392, 0.8431, 0.9176);    // #70D7EA
+  ${calmGlsl}
+  void main() {
+    float d = length(gl_PointCoord - vec2(0.5)) * 2.0;
+    float core = smoothstep(0.4, 0.26, d);
+    float ring = smoothstep(0.12, 0.0, abs(d - 0.8)) * vRing;
+    float alpha = max(core, ring * 0.75) * vAlpha;
+    alpha *= calmFactor(gl_FragCoord.xy / uResolution, uCalm) * uLineageStrength;
+    if (alpha < 0.002) discard;
+    gl_FragColor = vec4(NODE, alpha);
+  }
+`;
+
+/**
+ * A sparse, layered DAG drawn the way lineage tools draw one: nodes in
+ * columns, joined by horizontal-tangent bezier curves flowing left to
+ * right, with the odd skip-a-layer branch. A handful of edges carry a
+ * "signal" — a small packet plus a short trail travelling the edge over
+ * 6-8s, then idling 4-14s before firing again, so only a couple are
+ * ever moving at once. Four draw calls total; nothing is rebuilt or
+ * re-uploaded after construction.
+ */
+function buildLineage(layout, sharedUniforms) {
+  const rand = mulberry32(0x1a6e);
+  const { x0, x1, y0, y1, z, layers, perLayer, signals, segments } = layout;
+
+  const columns = [];
+  const nodes = [];
+  const spacing = (x1 - x0) / (layers - 1);
+  for (let l = 0; l < layers; l++) {
+    const count = perLayer[0] + Math.floor(rand() * (perLayer[1] - perLayer[0] + 1));
+    const slot = (y1 - y0) / count;
+    const column = [];
+    for (let k = 0; k < count; k++) {
+      const node = {
+        x: x0 + l * spacing + (rand() - 0.5) * spacing * 0.24,
+        y: y0 + slot * (k + 0.5) + (rand() - 0.5) * slot * 0.6,
+        z: z + (rand() - 0.5) * 1.2,
+        layer: l,
+        degree: 0,
+      };
+      column.push(node);
+      nodes.push(node);
+    }
+    columns.push(column);
+  }
+
+  const edges = [];
+  const seen = new Set();
+  function connect(a, b, branch) {
+    const key = `${nodes.indexOf(a)}-${nodes.indexOf(b)}`;
+    if (seen.has(key)) return;
+    seen.add(key);
+    a.degree++;
+    b.degree++;
+    edges.push({ a, b, branch, signal: null });
+  }
+  const byDistance = (from, list) => [...list].sort((m, n) => Math.abs(m.y - from.y) - Math.abs(n.y - from.y));
+  for (let l = 0; l < layers - 1; l++) {
+    const next = columns[l + 1];
+    for (const a of columns[l]) {
+      const ranked = byDistance(a, next);
+      connect(a, ranked[0], false);
+      if (ranked[1] && rand() < 0.35) connect(a, ranked[1], false);
+      if (l < layers - 2 && rand() < 0.14) connect(a, byDistance(a, columns[l + 2])[0], true);
+    }
+    // Every downstream node gets at least one upstream parent.
+    for (const b of next) {
+      if (!edges.some((e) => e.b === b)) connect(byDistance(b, columns[l])[0], b, false);
+    }
+  }
+
+  // Pick distinct signal edges (deterministic, like the layout).
+  const pool = edges.filter((e) => !e.branch);
+  for (let i = 0; i < Math.min(signals, pool.length); i++) {
+    const [edge] = pool.splice(Math.floor(rand() * pool.length), 1);
+    const travel = 6 + rand() * 2;
+    const cycle = travel + 4 + rand() * 10;
+    edge.signal = [rand() * cycle, cycle, travel, 1];
+  }
+
+  const controls = (e) => {
+    const dx = e.b.x - e.a.x;
+    return [
+      [e.a.x, e.a.y, e.a.z],
+      [e.a.x + dx * 0.5, e.a.y, e.a.z],
+      [e.b.x - dx * 0.5, e.b.y, e.b.z],
+      [e.b.x, e.b.y, e.b.z],
+    ];
+  };
+  const bezier = (c, s) => {
+    const u = 1 - s;
+    const w = [u * u * u, 3 * u * u * s, 3 * u * s * s, s * s * s];
+    return [0, 1, 2].map((axis) => w[0] * c[0][axis] + w[1] * c[1][axis] + w[2] * c[2][axis] + w[3] * c[3][axis]);
+  };
+
+  // Paths: one LineSegments geometry for every edge.
+  const vertsPerEdge = segments * 2;
+  const pathPos = new Float32Array(edges.length * vertsPerEdge * 3);
+  const pathT = new Float32Array(edges.length * vertsPerEdge);
+  const pathBranch = new Float32Array(edges.length * vertsPerEdge);
+  const pathSignal = new Float32Array(edges.length * vertsPerEdge * 4);
+  edges.forEach((e, ei) => {
+    const c = controls(e);
+    for (let k = 0; k < segments; k++) {
+      for (let end = 0; end < 2; end++) {
+        const s = (k + end) / segments;
+        const v = ei * vertsPerEdge + k * 2 + end;
+        pathPos.set(bezier(c, s), v * 3);
+        pathT[v] = s;
+        pathBranch[v] = e.branch ? 1 : 0;
+        pathSignal.set(e.signal ?? [0, 1, 1, 0], v * 4);
+      }
+    }
+  });
+  const pathGeometry = new THREE.BufferGeometry();
+  pathGeometry.setAttribute("position", new THREE.BufferAttribute(pathPos, 3));
+  pathGeometry.setAttribute("aT", new THREE.BufferAttribute(pathT, 1));
+  pathGeometry.setAttribute("aBranch", new THREE.BufferAttribute(pathBranch, 1));
+  pathGeometry.setAttribute("aSignal", new THREE.BufferAttribute(pathSignal, 4));
+
+  // Packets: one point per signal edge.
+  const signalEdges = edges.filter((e) => e.signal);
+  const packetAttrs = { position: [], aP1: [], aP2: [], aP3: [], aSignal: [] };
+  for (const e of signalEdges) {
+    const c = controls(e);
+    packetAttrs.position.push(...c[0]);
+    packetAttrs.aP1.push(...c[1]);
+    packetAttrs.aP2.push(...c[2]);
+    packetAttrs.aP3.push(...c[3]);
+    packetAttrs.aSignal.push(...e.signal);
+  }
+  const packetGeometry = new THREE.BufferGeometry();
+  for (const [name, values] of Object.entries(packetAttrs)) {
+    packetGeometry.setAttribute(name, new THREE.BufferAttribute(new Float32Array(values), name === "aSignal" ? 4 : 3));
+  }
+
+  // Nodes: sources (no parent) and sinks (no child) get the ring.
+  const nodePos = new Float32Array(nodes.length * 3);
+  const nodeSize = new Float32Array(nodes.length);
+  const nodeAlpha = new Float32Array(nodes.length);
+  const nodeRing = new Float32Array(nodes.length);
+  nodes.forEach((n, i) => {
+    nodePos.set([n.x, n.y, n.z], i * 3);
+    const terminal = !edges.some((e) => e.b === n) || !edges.some((e) => e.a === n);
+    nodeRing[i] = terminal ? 1 : 0;
+    nodeSize[i] = terminal ? 9 : 5 + Math.min(n.degree, 4) * 0.5;
+    nodeAlpha[i] = 0.06 + Math.min(n.degree, 4) * 0.015;
+  });
+  const nodeGeometry = new THREE.BufferGeometry();
+  nodeGeometry.setAttribute("position", new THREE.BufferAttribute(nodePos, 3));
+  nodeGeometry.setAttribute("aSize", new THREE.BufferAttribute(nodeSize, 1));
+  nodeGeometry.setAttribute("aAlpha", new THREE.BufferAttribute(nodeAlpha, 1));
+  nodeGeometry.setAttribute("aRing", new THREE.BufferAttribute(nodeRing, 1));
+
+  // Paths and nodes alpha-blend (they should sit *in* the atmosphere,
+  // not light it up); only the moving signal is additive.
+  const common = { transparent: true, depthWrite: false, depthTest: false, uniforms: sharedUniforms };
+  const pathMaterial = new THREE.ShaderMaterial({
+    ...common,
+    vertexShader: lineagePathVertexShader,
+    fragmentShader: lineagePathFragmentShader,
+  });
+  const nodeMaterial = new THREE.ShaderMaterial({
+    ...common,
+    vertexShader: lineageNodeVertexShader,
+    fragmentShader: lineageNodeFragmentShader,
+  });
+  const trailMaterial = new THREE.ShaderMaterial({
+    ...common,
+    blending: THREE.AdditiveBlending,
+    vertexShader: lineagePathVertexShader,
+    fragmentShader: lineageTrailFragmentShader,
+  });
+  const packetMaterial = new THREE.ShaderMaterial({
+    ...common,
+    blending: THREE.AdditiveBlending,
+    vertexShader: lineagePacketVertexShader,
+    fragmentShader: lineagePacketFragmentShader,
+  });
+
+  const paths = new THREE.LineSegments(pathGeometry, pathMaterial);
+  const nodePoints = new THREE.Points(nodeGeometry, nodeMaterial);
+  const trails = new THREE.LineSegments(pathGeometry, trailMaterial);
+  const packets = new THREE.Points(packetGeometry, packetMaterial);
+  // Packets move in the vertex shader, so their CPU-side bounds are
+  // meaningless; the whole graph is small enough to never cull.
+  for (const obj of [paths, nodePoints, trails, packets]) {
+    obj.frustumCulled = false;
+    obj.renderOrder = -1; // after the glow plane (-2), before the particles (0)
+  }
+  const group = new THREE.Group();
+  group.add(paths, nodePoints, trails, packets);
+
+  return {
+    group,
+    signalLayers: [trails, packets],
+    dispose() {
+      pathGeometry.dispose();
+      packetGeometry.dispose();
+      nodeGeometry.dispose();
+      pathMaterial.dispose();
+      nodeMaterial.dispose();
+      trailMaterial.dispose();
+      packetMaterial.dispose();
+    },
+  };
+}
+
 /**
  * The persistent backdrop for the whole scrollable experience. Most
  * particles start recruited into an infinity-shaped loop at the hero;
  * as the visitor scrolls past it, the loop blows apart into an ordinary
  * scattered starfield that stays calm for the rest of the page. Bring
  * the cursor near any cluster and nearby particles glide out of the
- * way, springing back once it moves on. EMET keeps its own matrix-rain
+ * way, springing back once it moves on. Behind it all, a procedural
+ * deep-blue atmosphere (lit around the loop, calmer behind the text
+ * column) and a faint lineage graph with the occasional signal moving
+ * through it give the stars a space to sit in. EMET keeps its own matrix-rain
  * takeover and the solar-system explorer keeps its own scene; this
  * never renders there.
  *
@@ -537,7 +1033,10 @@ export default function StarFormationBackground({ scrollContainerRef }) {
     // top of the per-point blur already fixed above. This is graphic
     // sparkle, not a photograph, so it renders at face value instead.
     renderer.toneMapping = THREE.NoToneMapping;
-    renderer.setClearColor(new THREE.Color("#02050c"), 1);
+    // Never actually visible (the atmosphere quad covers every pixel),
+    // but matches its deep-navy base in case a frame is ever cleared
+    // without it.
+    renderer.setClearColor(new THREE.Color("#0b1426"), 1);
 
     const scene = new THREE.Scene();
     const camera = new THREE.PerspectiveCamera(50, width / height, 0.1, 200);
@@ -559,11 +1058,59 @@ export default function StarFormationBackground({ scrollContainerRef }) {
     glow.position.set(shapeOffsetX, shapeOffsetY, -8);
     const glowSize = isNarrow ? 8.4 : 14;
     glow.scale.set(glowSize, glowSize, 1);
+    glow.renderOrder = -2;
     scene.add(glow);
 
     const particleCount = isNarrow ? PARTICLE_COUNT_MOBILE : PARTICLE_COUNT_DESKTOP;
     const particles = buildParticles(particleCount, { shapeOffsetX, shapeOffsetY, shapeScale, pixelRatio });
     scene.add(particles.group);
+    // Set before anything renders: the reduced-motion path below draws
+    // its one static frame synchronously, and the atmosphere/lineage
+    // shaders divide gl_FragCoord by this.
+    const drawingBufferSize = new THREE.Vector2();
+    particles.uniforms.uResolution.value.copy(renderer.getDrawingBufferSize(drawingBufferSize));
+
+    // Desktop keeps the text column (left ~60% of the frame) calmer than
+    // the space around the loop; the stacked mobile layout has text over
+    // everything, so it gets no column mask but a lower overall level.
+    const calm = { value: isNarrow ? new THREE.Vector3(0, 0, 0) : new THREE.Vector3(0.08, 0.62, 0.55) };
+
+    // The atmosphere reuses the particles' clock, resolution and scroll
+    // uniforms and the glow mesh's eased accent color by reference (the
+    // same { value } objects), so nothing here is a second copy of
+    // state that has to be kept in sync.
+    const focusUv = new THREE.Vector2(0.5, 0.5);
+    const atmosphereUniforms = {
+      uTime: particles.uniforms.uTime,
+      uResolution: particles.uniforms.uResolution,
+      uScrollProgress: particles.uniforms.uScrollProgress,
+      uAccent: glow.material.uniforms.uGlowColor,
+      uDrift: { value: 0 },
+      uFocus: { value: focusUv },
+      uCalm: calm,
+      uStrength: { value: isNarrow ? 0.85 : 1 },
+    };
+    const atmosphere = buildAtmosphere(atmosphereUniforms, isNarrow ? 2 : 3);
+    scene.add(atmosphere);
+
+    const lineage = buildLineage(isNarrow ? LINEAGE_LAYOUT.mobile : LINEAGE_LAYOUT.desktop, {
+      uTime: particles.uniforms.uTime,
+      uResolution: particles.uniforms.uResolution,
+      uPixelRatio: particles.uniforms.uPixelRatio,
+      uCalm: calm,
+      uLineageStrength: { value: isNarrow ? 0.7 : 1 },
+    });
+    scene.add(lineage.group);
+    if (reduced) for (const layer of lineage.signalLayers) layer.visible = false;
+
+    // Where the loop's center lands on screen (0-1 uv), for the
+    // atmosphere's lift. One Vector3.project per frame, reused.
+    const focusWorld = new THREE.Vector3();
+    function updateFocus() {
+      focusWorld.set(shapeOffsetX, shapeOffsetY + particles.group.position.y, particles.group.position.z);
+      focusWorld.project(camera);
+      focusUv.set(focusWorld.x * 0.5 + 0.5, focusWorld.y * 0.5 + 0.5);
+    }
 
     // Pointer parallax + the cursor-repel effect share one listener —
     // a few pixels of camera drift plus the world-space point the
@@ -706,6 +1253,11 @@ export default function StarFormationBackground({ scrollContainerRef }) {
       driftSmoothed += (fullScrollFraction() - driftSmoothed) * 0.08;
       particles.group.position.y = driftSmoothed * 6.5;
       particles.group.position.z = -driftSmoothed * 5.0;
+      // The lineage graph sits further back, so it rises slower than the
+      // stars — a touch of depth parallax for free.
+      lineage.group.position.y = driftSmoothed * 4.2;
+      atmosphereUniforms.uDrift.value = driftSmoothed;
+      updateFocus();
 
       renderer.render(scene, camera);
 
@@ -725,6 +1277,7 @@ export default function StarFormationBackground({ scrollContainerRef }) {
       camera.position.set(0, 0, 15);
       camera.lookAt(0, 0, 0);
       particles.uniforms.uScrollProgress.value = 0;
+      updateFocus();
       renderer.render(scene, camera);
       requestAnimationFrame(() => {
         canvas.style.opacity = "1";
@@ -769,9 +1322,16 @@ export default function StarFormationBackground({ scrollContainerRef }) {
       renderer.setSize(width, height, false);
       canvas.width = width * dpr;
       canvas.height = height * dpr;
-      particles.uniforms.uResolution.value.set(width * dpr, height * dpr);
+      particles.uniforms.uResolution.value.copy(renderer.getDrawingBufferSize(drawingBufferSize));
+      // Point sizes (stars and lineage nodes) are expressed in CSS px
+      // times this, so it has to follow a display change too.
+      particles.uniforms.uPixelRatio.value = dpr;
+      // Reduced motion has no render loop to pick up the new size.
+      if (reduced) {
+        updateFocus();
+        renderer.render(scene, camera);
+      }
     }
-    particles.uniforms.uResolution.value.set(width * pixelRatio, height * pixelRatio);
     window.addEventListener("resize", onResize);
 
     return () => {
@@ -783,6 +1343,9 @@ export default function StarFormationBackground({ scrollContainerRef }) {
       observer?.disconnect();
       glow.geometry.dispose();
       glow.material.dispose();
+      atmosphere.geometry.dispose();
+      atmosphere.material.dispose();
+      lineage.dispose();
       particles.geometry.dispose();
       particles.coreMaterial.dispose();
       particles.haloMaterial.dispose();
@@ -835,7 +1398,7 @@ export default function StarFormationBackground({ scrollContainerRef }) {
           }}
         />
       ) : (
-        <div aria-hidden style={{ position: "fixed", inset: 0, zIndex: 0, background: "#02050c" }} />
+        <div aria-hidden className="atmosphere-fallback" style={{ position: "fixed", inset: 0, zIndex: 0 }} />
       )}
       {/* A scrim over the text column, not the whole backdrop — the
           particle field is genuinely bright and dense, and text-shadow
@@ -843,14 +1406,19 @@ export default function StarFormationBackground({ scrollContainerRef }) {
           it. On the wide layout (text left, loop right) this is a
           left-to-right fade so only the reading column darkens; the
           stacked mobile layout has no side gutter to lean on, so it
-          darkens more evenly top-to-bottom instead. Sits just above
-          the canvas (still well below the actual page content, which
-          stacks at z-10). Promoted to its own compositor layer (the
-          translate3d/backface/will-change trio below) so this overlay
-          never shares a paint pass with the canvas underneath it. */}
+          darkens more evenly top-to-bottom instead. Tinted with the
+          page's own ink rather than pure black, and lighter than it
+          used to be: the atmosphere shader already calms the text
+          column itself, so this only has to tame the stars, and a
+          heavy black wash was what made the whole page read as a void.
+          Sits just above the canvas (still well below the actual page
+          content, which stacks at z-10). Promoted to its own
+          compositor layer (the translate3d/backface/will-change trio
+          below) so this overlay never shares a paint pass with the
+          canvas underneath it. */}
       <div
         aria-hidden
-        className="fixed inset-0 pointer-events-none bg-gradient-to-b from-black/50 via-black/20 to-black/45 sm:bg-gradient-to-r sm:from-black/65 sm:via-black/30 sm:via-45% sm:to-transparent sm:to-75%"
+        className="fixed inset-0 pointer-events-none bg-gradient-to-b from-[#050911]/40 via-[#050911]/10 to-[#050911]/35 sm:bg-gradient-to-r sm:from-[#050911]/52 sm:via-[#050911]/22 sm:via-45% sm:to-transparent sm:to-80%"
         style={{
           zIndex: 1,
           mixBlendMode: "normal",
