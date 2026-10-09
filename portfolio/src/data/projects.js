@@ -1,7 +1,7 @@
 // Every project on the site, in one place.
 //
 // `featured: true` projects get the big cards at the top. Everything else
-// goes in the scrolling rail below them. Each project also gets its own
+// goes in the grid below them. Each project also gets its own
 // detail page at #project/<slug>, built from these same fields.
 //
 // Flow diagrams are written as columns of boxes. If `links` is left out,
@@ -639,9 +639,9 @@ export const EXPERIMENTS = [
   },
   {
     id: "stars",
-    title: "The star field behind this page",
+    title: "The infinity at the top of this page",
     accent: "violet",
-    hook: "The glowing infinity of stars behind everything you're reading is a WebGL shader.",
+    hook: "The glowing infinity of stars in the oval at the top of this page is a WebGL shader.",
     body: "Thousands of points that gather into a shape, scatter as you scroll, and drift back when you return to the top. It's the same kind of experiment: ask the AI, look at the result, push it further.",
     href: null,
     cta: null,

@@ -27,10 +27,21 @@ export default function CustomCursor() {
     let targetX = ringX;
     let targetY = ringY;
     let raf;
+    let placed = false;
 
     function onMove(e) {
       targetX = e.clientX;
       targetY = e.clientY;
+      // Both start hidden (CSS). On the first move, snap the ring straight
+      // to the pointer and show them, rather than flashing a ring at the
+      // center of the screen and easing it over.
+      if (!placed) {
+        placed = true;
+        ringX = targetX;
+        ringY = targetY;
+        dot.style.opacity = "1";
+        ring.style.opacity = "1";
+      }
       dot.style.transform = `translate(${targetX}px, ${targetY}px)`;
 
       const hit = e.target.closest("a, button, input, [role='button'], .magnetic");
@@ -49,6 +60,7 @@ export default function CustomCursor() {
       ring.style.opacity = "0";
     }
     function onEnter() {
+      if (!placed) return;
       dot.style.opacity = "1";
       ring.style.opacity = "1";
     }

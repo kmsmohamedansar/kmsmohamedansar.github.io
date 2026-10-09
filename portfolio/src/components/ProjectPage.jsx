@@ -1,14 +1,15 @@
 import { motion } from "framer-motion";
 import { ArrowLeft, ArrowRight, ArrowUpRight, Lock } from "lucide-react";
 import { ACCENTS, PROJECTS, getProject } from "../data/projects";
-import FlowDiagram, { TagPill } from "./ui";
-import { EASE_OUT } from "../lib/motion";
+import FlowDiagram, { FlourishTitle, Kicker, TagPill } from "./ui";
+import { EASE_REVEAL } from "../lib/motion";
 
 function Block({ label, accent, children }) {
-  const a = ACCENTS[accent];
   return (
-    <section className="mt-9">
-      <h2 className={`font-mono text-[.74rem] uppercase tracking-[.16em] font-semibold ${a.text} mb-3`}>{label}</h2>
+    <section className="mt-10 first:mt-0">
+      <h2 className="mb-4">
+        <Kicker accent={accent}>{label}</Kicker>
+      </h2>
       {children}
     </section>
   );
@@ -19,7 +20,7 @@ function Bullets({ items, accent }) {
   return (
     <ul className="space-y-2.5">
       {items.map((t) => (
-        <li key={t} className="flex gap-3 text-[1rem] leading-relaxed text-[color:var(--ink-100)]">
+        <li key={t} className="flex gap-3 text-base leading-relaxed text-[color:var(--ink-100)]">
           <span className="mt-2.5 w-1.5 h-1.5 rounded-full shrink-0" style={{ background: a.hex }} />
           <span>{t}</span>
         </li>
@@ -32,7 +33,7 @@ function LinkButton({ link, accent }) {
   const a = ACCENTS[accent];
   if (link.locked) {
     return (
-      <a href={link.href} className="inline-flex items-center gap-2 px-4 py-2.5 rounded-lg border border-white/20 text-[color:var(--ink-200)] text-[.88rem] hover:border-cyan hover:text-cyan transition-colors">
+      <a href={link.href} className="inline-flex min-h-11 items-center gap-2 px-4 py-2.5 rounded-full border border-white/20 text-[color:var(--ink-200)] text-sm transition-colors duration-200 hover:border-white/50 hover:text-white active:scale-[.97]">
         <Lock size={14} /> {link.label}
       </a>
     );
@@ -43,8 +44,8 @@ function LinkButton({ link, accent }) {
       {...(link.external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
       className={
         link.primary
-          ? "inline-flex items-center gap-2 px-5 py-3 rounded-lg font-bold text-[.9rem] text-[#050911] hover:brightness-110 transition-[filter]"
-          : "inline-flex items-center gap-2 px-4 py-2.5 rounded-lg border border-white/25 text-white text-[.88rem] hover:border-cyan hover:text-cyan transition-colors"
+          ? "inline-flex min-h-11 items-center gap-2 px-5 py-3 rounded-full font-bold text-sm text-[#050911] transition-[filter] duration-200 hover:brightness-110 active:scale-[.97]"
+          : "inline-flex min-h-11 items-center gap-2 px-4 py-2.5 rounded-full border border-white/25 text-white text-sm transition-colors duration-200 hover:border-white/60 hover:bg-white/10 active:scale-[.97]"
       }
       style={link.primary ? { background: a.hex } : undefined}
     >
@@ -62,7 +63,7 @@ export default function ProjectPage({ slug }) {
         <div className="panel rounded-2xl p-8">
           <h1 className="font-display text-2xl font-semibold text-white">I couldn't find that project</h1>
           <p className="mt-2 text-[color:var(--ink-200)]">It may have moved. The full list is on the home page.</p>
-          <a href="#projects" className="mt-5 inline-flex items-center gap-2 text-cyan font-mono text-[.8rem] uppercase tracking-[.12em]">
+          <a href="#projects" className="mt-5 inline-flex items-center gap-2 text-cyan font-mono text-xs uppercase tracking-[.12em]">
             <ArrowLeft size={14} /> All projects
           </a>
         </div>
@@ -78,22 +79,27 @@ export default function ProjectPage({ slug }) {
     <motion.article
       initial={{ opacity: 0, y: 14 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5, ease: EASE_OUT }}
+      transition={{ duration: 0.8, ease: EASE_REVEAL }}
       className="mx-auto w-full max-w-4xl px-5 pt-28 pb-24"
     >
-      <a href="#projects" className="inline-flex items-center gap-2 font-mono text-[.76rem] uppercase tracking-[.12em] text-[color:var(--ink-200)] hover:text-cyan transition-colors">
+      <a href="#projects" className="inline-flex items-center gap-2 font-mono text-xs uppercase tracking-[.12em] text-[color:var(--ink-200)] transition-colors duration-200 hover:text-white">
         <ArrowLeft size={14} /> All projects
       </a>
 
-      <header className="panel rounded-2xl p-6 sm:p-9 mt-5" style={{ borderTop: `4px solid ${a.hex}` }}>
-        <div className="flex flex-wrap items-center gap-x-4 gap-y-1">
-          <span className={`font-mono text-[.74rem] uppercase tracking-[.16em] font-semibold ${a.text}`}>{project.kind}</span>
-          <span className="font-mono text-[.68rem] uppercase tracking-wide text-[color:var(--ink-300)]">{project.status}</span>
+      <header
+        className="mt-5 rounded-3xl border p-6 sm:p-10"
+        style={{ background: `radial-gradient(130% 100% at 0% 0%, ${a.hex}30, transparent 62%), rgba(5, 9, 17, 0.5)`, borderColor: `${a.hex}40` }}
+      >
+        <div className="flex flex-wrap items-center gap-x-4 gap-y-1 font-mono text-xs uppercase tracking-[.16em]">
+          <span className={`font-semibold ${a.text}`}>{project.kind}</span>
+          <span className="text-[color:var(--ink-300)]">{project.status}</span>
         </div>
-        <h1 className="font-display text-[clamp(2rem,4.6vw,3.2rem)] font-semibold text-white leading-[1.08] mt-3">{project.title}</h1>
-        <p className="mt-4 text-[1.12rem] leading-relaxed text-[color:var(--ink-100)]">{project.hook}</p>
-        <p className="mt-3 text-[.92rem] text-[color:var(--ink-300)]">
-          <span className={`font-mono text-[.66rem] uppercase tracking-[.14em] mr-2 ${a.text}`}>My role</span>
+        <h1 aria-label={project.title} className="mt-4 text-white leading-[.92] text-[clamp(3rem,8vw,6.5rem)]">
+          <FlourishTitle text={project.title} accent={project.accent} />
+        </h1>
+        <p className="mt-5 text-lg leading-relaxed text-[color:var(--ink-100)]">{project.hook}</p>
+        <p className="mt-3 text-sm text-[color:var(--ink-300)]">
+          <span className={`font-mono text-micro uppercase tracking-[.14em] mr-2 ${a.text}`}>My role</span>
           {project.role}
         </p>
         <div className="mt-5 flex flex-wrap gap-2">
@@ -124,7 +130,7 @@ export default function ProjectPage({ slug }) {
         <Block label="The story" accent={project.accent}>
           <div className="space-y-4">
             {project.story.map((p) => (
-              <p key={p.slice(0, 24)} className="text-[1.04rem] leading-[1.75] text-[color:var(--ink-100)]">
+              <p key={p.slice(0, 24)} className="text-base sm:text-lg leading-[1.75] text-[color:var(--ink-100)]">
                 {p}
               </p>
             ))}
@@ -134,12 +140,12 @@ export default function ProjectPage({ slug }) {
         {project.sample && (
           <Block label="A look at the output" accent={project.accent}>
             <div className="overflow-x-auto rounded-xl border border-white/12">
-              <table className="w-full text-left text-[.9rem]">
-                <caption className="text-left px-4 pt-3 pb-2 font-mono text-[.64rem] uppercase tracking-[.1em] text-[color:var(--ink-300)]">
+              <table className="w-full text-left text-sm">
+                <caption className="text-left px-4 pt-3 pb-2 font-mono text-micro uppercase tracking-[.1em] text-[color:var(--ink-300)]">
                   {project.sample.title}
                 </caption>
                 <thead>
-                  <tr className="border-b border-white/12 text-[color:var(--ink-300)] font-mono text-[.66rem] uppercase tracking-wide">
+                  <tr className="border-b border-white/12 text-[color:var(--ink-300)] font-mono text-micro uppercase tracking-wide">
                     {project.sample.headers.map((h) => (
                       <th key={h} className="px-4 py-2 font-semibold">
                         {h}
@@ -185,13 +191,13 @@ export default function ProjectPage({ slug }) {
 
       <a
         href={`#project/${next.slug}`}
-        className="group panel mt-6 rounded-2xl p-5 flex items-center justify-between gap-4 hover:border-cyan/50 transition-colors"
+        className="group panel mt-6 rounded-2xl p-5 flex items-center justify-between gap-4 transition-[border-color,transform] duration-200 hover:border-white/30 active:scale-[.99]"
       >
         <span>
-          <span className="block font-mono text-[.66rem] uppercase tracking-[.14em] text-[color:var(--ink-300)]">Next project</span>
-          <span className="block font-display text-[1.2rem] font-semibold text-white mt-1">{next.title}</span>
+          <span className="block font-mono text-micro uppercase tracking-[.14em] text-[color:var(--ink-300)]">Next project</span>
+          <span className="block font-display text-xl font-semibold text-white mt-1">{next.title}</span>
         </span>
-        <ArrowRight className="text-cyan transition-transform group-hover:translate-x-1" />
+        <ArrowRight className={`${ACCENTS[next.accent].text} transition-transform duration-200 group-hover:translate-x-1`} />
       </a>
     </motion.article>
   );

@@ -11,7 +11,6 @@ import { MatrixBackground } from "./components/RouteBackgrounds";
 import CustomCursor from "./components/CustomCursor";
 import { EASE_OUT } from "./lib/motion";
 
-const StarFormationBackground = lazy(() => import("./components/StarFormationBackground"));
 const SolarSystemExplorer = lazy(() => import("./components/SolarSystemExplorer"));
 const DataLineageExplorer = lazy(() => import("./components/DataLineageExplorer"));
 
@@ -42,7 +41,7 @@ function readRoute() {
 const RouteContext = createContext(null);
 export const useRoute = () => useContext(RouteContext);
 
-// Shared with StarFormationBackground so it can read scroll position
+// Shared with the hero's InfinityLoop so it can read scroll position
 // off the same element Stage renders as <main> — set once, read every
 // frame via a plain ref rather than React state so scrolling never
 // triggers a re-render.
@@ -140,19 +139,38 @@ function Nav() {
     window.dispatchEvent(new KeyboardEvent("keydown", { key: "k", metaKey: true }));
   }
 
+  // On the main page the nav has no bar of its own: plain white type and
+  // hairlines with mix-blend-mode: difference, so it reads dark over the
+  // light hero and light over every dark block below without swapping
+  // styles per section. The full-takeover routes (EMET, the explorers,
+  // project pages) keep the original glass bar.
+  const editorial = route === "main";
+
   return (
-    <nav className="fixed top-0 inset-x-0 z-[100] transition-colors bg-ink/70 backdrop-blur-xl border-b border-white/8">
+    <nav
+      className={`fixed top-0 inset-x-0 z-[100] transition-colors ${
+        editorial ? "mix-blend-difference text-white" : "bg-ink/70 backdrop-blur-xl border-b border-white/8"
+      }`}
+    >
       <div className="mx-auto max-w-[1260px] flex items-center justify-between px-5 py-4">
         <button
           onClick={() => navigate("deck")}
           className="flex items-center gap-3 font-mono text-[.85rem] font-semibold text-left"
         >
-          <span className="w-8 h-8 rounded-lg grid place-items-center bg-gradient-to-br from-cyan/20 to-violet/20 border border-white/10 text-cyan text-[.68rem]">
+          <span
+            className={`w-8 h-8 grid place-items-center text-[.68rem] ${
+              editorial ? "rounded-full border border-white" : "rounded-lg bg-gradient-to-br from-cyan/20 to-violet/20 border border-white/10 text-cyan"
+            }`}
+          >
             MA
           </span>
           <span>
             mohamed.ansar
-            <small className="block text-[.6rem] font-normal tracking-[.16em] uppercase text-[color:var(--ink-400)]">
+            <small
+              className={`block text-[.6rem] font-normal tracking-[.16em] uppercase ${
+                editorial ? "text-white/75" : "text-[color:var(--ink-400)]"
+              }`}
+            >
               solutions engineer
             </small>
           </span>
@@ -164,7 +182,9 @@ function Nav() {
               <a
                 key={l.id}
                 href={`#${l.id}`}
-                className={`${l.id === "projects" || l.id === "contact" ? "inline-flex" : "hidden md:inline-flex"} items-center px-3 py-2 rounded-lg text-[color:var(--ink-100)] hover:text-cyan transition-colors font-mono text-[.7rem] uppercase tracking-[.1em]`}
+                className={`${l.id === "projects" || l.id === "contact" ? "inline-flex" : "hidden md:inline-flex"} items-center px-3 py-2 rounded-lg ${
+                  editorial ? "text-white hover:opacity-60 transition-opacity" : "text-[color:var(--ink-100)] hover:text-cyan transition-colors"
+                } font-mono text-[.7rem] uppercase tracking-[.1em]`}
               >
                 {l.label}
               </a>
@@ -179,7 +199,11 @@ function Nav() {
           )}
           <button
             onClick={openPalette}
-            className="ml-1 flex items-center gap-1 px-2.5 py-2 rounded-lg border border-white/10 text-[color:var(--ink-400)] hover:text-cyan hover:border-cyan/30 transition-colors font-mono text-[.65rem]"
+            className={`ml-1 flex items-center gap-1 px-2.5 py-2 rounded-lg font-mono text-[.65rem] ${
+              editorial
+                ? "border border-white/70 text-white hover:opacity-60 transition-opacity"
+                : "border border-white/10 text-[color:var(--ink-400)] hover:text-cyan hover:border-cyan/30 transition-colors"
+            }`}
             aria-label="Open command palette"
           >
             <Command size={11} /> K
@@ -191,12 +215,13 @@ function Nav() {
 }
 
 function MainDocument({ bootDone }) {
+  const scrollContainerRef = useContext(ScrollContext);
   return (
     <>
-      <Hero ready={bootDone} />
-      <ProjectsSection />
+      <Hero ready={bootDone} scrollContainerRef={scrollContainerRef} />
+      <ProjectsSection scrollContainerRef={scrollContainerRef} />
       <ExperienceSection />
-      <AboutSection />
+      <AboutSection scrollContainerRef={scrollContainerRef} />
       <ExperimentsSection />
       <ContactSection />
     </>
@@ -287,7 +312,6 @@ function Stage({ bootDone }) {
 // instead.
 function Backdrop() {
   const { route } = useRoute();
-  const scrollContainerRef = useContext(ScrollContext);
   if (route === "emet") {
     return (
       <Suspense fallback={<div className="fixed inset-0 z-0 bg-[#04120a]" aria-hidden="true" />}>
@@ -298,11 +322,9 @@ function Backdrop() {
   if (route === "explore" || route === "lineage-demo") {
     return <div className="fixed inset-0 z-0 bg-[#02050c]" aria-hidden="true" />;
   }
-  return (
-    <Suspense fallback={<div className="fixed inset-0 z-0 atmosphere-fallback" aria-hidden="true" />}>
-      <StarFormationBackground scrollContainerRef={scrollContainerRef} />
-    </Suspense>
-  );
+  // Everything else sits on flat ink: sections paint their own full-bleed
+  // color blocks, and the infinity loop lives in the hero's oval window.
+  return <div className="fixed inset-0 z-0 bg-ink" aria-hidden="true" />;
 }
 
 function AppShell({ bootDone }) {
