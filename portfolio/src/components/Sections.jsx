@@ -1,6 +1,6 @@
 import { Fragment, lazy, Suspense, useEffect, useRef, useState } from "react";
-import { cubicBezier, motion, useMotionValueEvent, useReducedMotion, useScroll, useSpring, useTransform, useVelocity } from "framer-motion";
-import { ArrowDown, ArrowRight, ArrowUp, ArrowUpRight, ExternalLink, Link2, Mail } from "lucide-react";
+import { animate, cubicBezier, motion, useMotionValue, useMotionValueEvent, useReducedMotion, useScroll, useSpring, useTransform, useVelocity } from "framer-motion";
+import { ArrowDown, ArrowRight, ArrowUp, ArrowUpRight, ChevronLeft, ChevronRight, ExternalLink, Link2, Lock, Mail } from "lucide-react";
 import { ABOUT, CONTACT, HERO, ROLES } from "../data/content";
 import { ACCENTS, EXPERIMENTS, FEATURED, MORE_PROJECTS } from "../data/projects";
 import { FlourishTitle, Reveal, ScrollShot, SectionHead, SpinBadge, TagPill } from "./ui";
@@ -114,6 +114,10 @@ const OVERLAY_SPOTS = [
 ];
 const HERO_PHRASES = HERO.lede.filter((s) => s.cls);
 const TITLE_WORDS = HERO.title.split(" ");
+// Where the headline is fully built (the last phrase's range ends here).
+const REVEAL_END = 0.8;
+// How long a visitor can pause mid-headline before it finishes itself.
+const IDLE_MS = 500;
 
 const revealEase = cubicBezier(...EASE_REVEAL);
 const eased = (v, from, to) => revealEase(Math.min(1, Math.max(0, (v - from) / (to - from))));
@@ -172,6 +176,27 @@ export function Hero({ ready = true, scrollContainerRef }) {
     target: heroRef,
     offset: ["start start", "end start"],
   });
+  // If the visitor stops scrolling partway through the headline, it
+  // finishes on its own after IDLE_MS: `auto` plays from where the scroll
+  // left it up to REVEAL_END, and the words read whichever is further
+  // along. Once that's happened it stays built (no un-revealing on the
+  // way back up); before that, scroll scrubs it both ways as usual.
+  const auto = useMotionValue(0);
+  const revealed = useTransform([scrollYProgress, auto], ([s, a]) => Math.max(s, a));
+  const finished = useRef(false);
+  const idle = useRef(null);
+  useMotionValueEvent(scrollYProgress, "change", (v) => {
+    clearTimeout(idle.current);
+    if (reduced || finished.current || v <= 0.001 || v >= REVEAL_END) return;
+    idle.current = setTimeout(() => {
+      finished.current = true;
+      const from = Math.max(auto.get(), scrollYProgress.get());
+      auto.set(from);
+      animate(auto, REVEAL_END, { duration: 0.5 + 1.4 * (1 - from / REVEAL_END), ease: "linear" });
+    }, IDLE_MS);
+  });
+  useEffect(() => () => clearTimeout(idle.current), []);
+
   const cardScale = useTransform(heroOut, (v) => 1 - 0.08 * v);
   const ovalScale = useTransform(heroOut, (v) => 1 + 0.4 * v);
   const chromeOpacity = useTransform(heroOut, (v) => 1 - Math.min(1, v * 2.2));
@@ -259,7 +284,7 @@ export function Hero({ ready = true, scrollContainerRef }) {
       </section>
 
       {/* 2. The headline, pinned while the lede's phrases write themselves in. */}
-      <section ref={pinRef} aria-labelledby="hero-title" className={`relative bg-ink ${reduced ? "" : "h-[260vh]"}`}>
+      <section ref={pinRef} aria-labelledby="hero-title" className={`relative bg-ink ${reduced ? "" : "h-[200vh]"}`}>
         <div className={`${reduced ? "py-24" : "sticky top-0 h-[100dvh]"} flex items-center justify-center overflow-hidden px-5`}>
           <div className="relative w-full max-w-[1200px]">
             <h1
@@ -268,13 +293,13 @@ export function Hero({ ready = true, scrollContainerRef }) {
             >
               {TITLE_WORDS.map((w, i) => (
                 <Fragment key={i}>
-                  <RiseWord word={w} index={i} progress={scrollYProgress} reduced={reduced} />
+                  <RiseWord word={w} index={i} progress={revealed} reduced={reduced} />
                   {i < TITLE_WORDS.length - 1 && " "}
                 </Fragment>
               ))}
             </h1>
             {HERO_PHRASES.map((phrase, i) => (
-              <HeroPhrase key={phrase.text} phrase={phrase} spot={OVERLAY_SPOTS[i % OVERLAY_SPOTS.length]} progress={scrollYProgress} reduced={reduced} />
+              <HeroPhrase key={phrase.text} phrase={phrase} spot={OVERLAY_SPOTS[i % OVERLAY_SPOTS.length]} progress={revealed} reduced={reduced} />
             ))}
           </div>
         </div>
@@ -351,29 +376,186 @@ function FeaturedRow({ project, index }) {
   );
 }
 
-function ProjectCard({ project }) {
+/* One project in the side-scrolling rail, with everything the old grid
+   card had and more: visual, kind and status, the full hook (no clamp),
+   my role, every tag, and its own primary link. The card's title is a
+   stretched link to the project page; the primary link sits above it so
+   both stay clickable (no nested <a>). */
+function RailCard({ project }) {
   const a = ACCENTS[project.accent];
+  const link = project.links?.find((l) => l.primary) || project.links?.[0];
   return (
-    <a
-      href={`#project/${project.slug}`}
-      data-cursor="View"
-      className="group flex h-full flex-col rounded-2xl border border-white/10 bg-white/[.03] p-4 sm:p-5 transition-[transform,border-color,background-color] duration-200 ease-out hover:-translate-y-1 hover:border-white/25 hover:bg-white/[.06] focus-visible:-translate-y-1 active:translate-y-0 active:scale-[.99]"
-    >
+    <article className="group relative flex h-full flex-col rounded-2xl border border-white/10 bg-white/[.03] p-4 sm:p-5 transition-[border-color,background-color] duration-200 hover:border-white/25 hover:bg-white/[.06]">
       <ProjectVisual project={project} />
-      <span className={`mt-4 font-mono text-micro font-semibold uppercase tracking-[.14em] ${a.text}`}>{project.kind}</span>
-      <h4 className="mt-1.5 font-display text-xl font-semibold leading-snug text-white">{project.title}</h4>
-      <p className="mt-2 text-sm leading-relaxed text-[color:var(--ink-200)] line-clamp-3">{project.hook}</p>
+      <div className="mt-4 flex flex-wrap items-center gap-x-3 gap-y-1 font-mono text-micro uppercase tracking-[.14em]">
+        <span className={`font-semibold ${a.text}`}>{project.kind}</span>
+        <span className="text-[color:var(--ink-300)]">{project.status}</span>
+      </div>
+      <h4 className="mt-2 font-display text-xl font-semibold leading-snug text-white">
+        <a
+          href={`#project/${project.slug}`}
+          data-cursor="View"
+          className="after:absolute after:inset-0 after:rounded-2xl after:content-[''] focus-visible:outline-none focus-visible:after:outline focus-visible:after:outline-2 focus-visible:after:outline-offset-[3px] focus-visible:after:outline-current"
+        >
+          {project.title}
+        </a>
+      </h4>
+      <p className="mt-2 text-sm leading-relaxed text-[color:var(--ink-200)]">{project.hook}</p>
+      <p className="mt-3 text-sm leading-relaxed text-[color:var(--ink-300)]">
+        <span className={`mr-2 font-mono text-micro uppercase tracking-[.14em] ${a.text}`}>My role</span>
+        {project.role}
+      </p>
       <div className="mt-4 flex flex-wrap gap-1.5">
-        {project.tags.slice(0, 3).map((t) => (
+        {project.tags.map((t) => (
           <TagPill key={t} accent={project.accent}>
             {t}
           </TagPill>
         ))}
       </div>
-      <span className={`mt-auto pt-5 inline-flex items-center gap-1 font-mono text-xs uppercase tracking-[.12em] ${a.text}`}>
-        Open <ArrowUpRight size={13} className="transition-transform duration-200 group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
-      </span>
-    </a>
+      <div className="mt-auto flex flex-wrap items-center justify-between gap-3 pt-5">
+        <span className={`inline-flex items-center gap-1 font-mono text-xs uppercase tracking-[.12em] ${a.text}`}>
+          Read the story <ArrowRight size={13} className="transition-transform duration-200 group-hover:translate-x-1" />
+        </span>
+        {link && (
+          <a
+            href={link.href}
+            {...(link.external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
+            className="relative z-10 inline-flex min-h-11 max-w-full items-center gap-1.5 rounded-full border border-white/20 px-3.5 py-2 text-left text-xs text-[color:var(--ink-200)] transition-colors duration-200 hover:border-white/50 hover:text-white active:scale-[.97]"
+          >
+            {link.locked ? <Lock size={12} className="shrink-0" /> : <ArrowUpRight size={13} className="shrink-0" />}
+            <span>{link.label}</span>
+          </a>
+        )}
+      </div>
+    </article>
+  );
+}
+
+/* The other projects in one horizontal rail: native scroll (swipe,
+   trackpad, shift-wheel, arrow keys once focused), snap points, arrow
+   buttons, a position counter and a progress bar, plus click-drag for
+   mouse users. Dragging suppresses the click that would otherwise
+   follow it, so letting go over a card doesn't open it. */
+function ProjectRail({ projects }) {
+  const reduced = useReducedMotion();
+  const ref = useRef(null);
+  const drag = useRef(null);
+  const [view, setView] = useState({ index: 0, progress: 0, visible: 1, atStart: true, atEnd: false });
+  const [dragging, setDragging] = useState(false);
+
+  function step() {
+    const el = ref.current;
+    const first = el?.firstElementChild;
+    if (!el || !first) return 1;
+    const gap = parseFloat(getComputedStyle(el).columnGap) || 0;
+    return first.getBoundingClientRect().width + gap;
+  }
+  function update() {
+    const el = ref.current;
+    if (!el) return;
+    const max = el.scrollWidth - el.clientWidth;
+    setView({
+      index: Math.min(projects.length - 1, Math.round(el.scrollLeft / step())),
+      progress: max > 0 ? el.scrollLeft / max : 0,
+      visible: el.scrollWidth > 0 ? el.clientWidth / el.scrollWidth : 1,
+      atStart: el.scrollLeft < 4,
+      atEnd: el.scrollLeft > max - 4,
+    });
+  }
+  useEffect(() => {
+    update();
+    const ro = new ResizeObserver(update);
+    ro.observe(ref.current);
+    return () => ro.disconnect();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  function nudge(dir) {
+    const el = ref.current;
+    const perPage = Math.max(1, Math.floor(el.clientWidth / step()));
+    el.scrollBy({ left: dir * perPage * step(), behavior: reduced ? "auto" : "smooth" });
+  }
+
+  function onPointerDown(e) {
+    if (e.pointerType !== "mouse" || e.button !== 0) return;
+    drag.current = { x: e.clientX, left: ref.current.scrollLeft, moved: false };
+  }
+  function onPointerMove(e) {
+    const d = drag.current;
+    if (!d) return;
+    const dx = e.clientX - d.x;
+    if (!d.moved && Math.abs(dx) > 6) {
+      d.moved = true;
+      setDragging(true);
+      ref.current.setPointerCapture(e.pointerId);
+    }
+    if (d.moved) ref.current.scrollLeft = d.left - dx;
+  }
+  function endDrag() {
+    if (drag.current?.moved) setDragging(false);
+    // Keep the flag for the click that fires right after pointerup.
+    setTimeout(() => {
+      drag.current = null;
+    }, 0);
+  }
+
+  const arrow =
+    "grid h-11 w-11 place-items-center rounded-full border border-white/25 text-white transition-[opacity,background-color,border-color] duration-200 hover:border-white/60 hover:bg-white/10 active:scale-95 disabled:pointer-events-none disabled:opacity-30";
+  return (
+    <div>
+      <div className="mb-5 flex items-end justify-between gap-4">
+        <div>
+          <p className="font-mono text-xs uppercase tracking-[.16em] text-[color:var(--ink-300)]">More projects</p>
+          <p className="mt-1 font-condensed text-3xl leading-none text-white tabular-nums" aria-live="polite">
+            {String(view.index + 1).padStart(2, "0")}
+            <span className="text-white/35"> / {String(projects.length).padStart(2, "0")}</span>
+          </p>
+        </div>
+        <div className="flex gap-2">
+          <button type="button" onClick={() => nudge(-1)} disabled={view.atStart} aria-label="Previous projects" className={arrow}>
+            <ChevronLeft size={18} />
+          </button>
+          <button type="button" onClick={() => nudge(1)} disabled={view.atEnd} aria-label="Next projects" className={arrow}>
+            <ChevronRight size={18} />
+          </button>
+        </div>
+      </div>
+      <div
+        ref={ref}
+        role="region"
+        aria-label={`More projects, ${projects.length} cards, scroll sideways`}
+        tabIndex={0}
+        onScroll={update}
+        onPointerDown={onPointerDown}
+        onPointerMove={onPointerMove}
+        onPointerUp={endDrag}
+        onPointerCancel={endDrag}
+        // Links and images are natively draggable; that HTML drag would
+        // cancel the pointer stream before click-drag scrolling starts.
+        onDragStart={(e) => e.preventDefault()}
+        onClickCapture={(e) => {
+          if (drag.current?.moved) {
+            e.preventDefault();
+            e.stopPropagation();
+          }
+        }}
+        className={`-mx-5 flex gap-5 overflow-x-auto scroll-px-5 px-5 pb-3 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden ${
+          dragging ? "cursor-grabbing select-none" : "snap-x snap-mandatory"
+        }`}
+      >
+        {projects.map((p) => (
+          <div key={p.slug} className="w-[min(84vw,380px)] shrink-0 snap-start">
+            <RailCard project={p} />
+          </div>
+        ))}
+      </div>
+      <div className="relative mt-4 h-px overflow-hidden bg-white/15" aria-hidden="true">
+        <div
+          className="absolute inset-y-0 left-0 bg-white"
+          style={{ width: `${view.visible * 100}%`, transform: `translateX(${(view.progress * (1 - view.visible)) / Math.max(view.visible, 0.0001) * 100}%)` }}
+        />
+      </div>
+    </div>
   );
 }
 
@@ -395,14 +577,7 @@ export function ProjectsSection({ scrollContainerRef }) {
           ))}
         </div>
         <div className="mt-20 sm:mt-28">
-          <p className="mb-5 font-mono text-xs uppercase tracking-[.16em] text-[color:var(--ink-300)]">More projects ({MORE_PROJECTS.length})</p>
-          <div className="grid gap-4 sm:gap-5 sm:grid-cols-2 lg:grid-cols-3">
-            {MORE_PROJECTS.map((p, i) => (
-              <Reveal key={p.slug} delay={(i % 3) * 0.06} className="h-full">
-                <ProjectCard project={p} />
-              </Reveal>
-            ))}
-          </div>
+          <ProjectRail projects={MORE_PROJECTS} />
         </div>
       </div>
     </section>
