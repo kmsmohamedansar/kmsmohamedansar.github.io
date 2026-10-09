@@ -10,3 +10,7 @@ export const LIGHT_OBJECT = { stiffness: 300, damping: 28, mass: 0.4 };
 export const CURSOR = { stiffness: 400, damping: 30, mass: 0.2 };
 
 export const EASE_OUT = [0.16, 1, 0.3, 1];
+// Heavier, longer-tailed ease for big structural reveals (pinned
+// headline, section-scale entrances), ~0.6-0.9s. EASE_OUT stays the
+// default for small UI: hovers, buttons, card lifts.
+export const EASE_REVEAL = [0.075, 0.82, 0.165, 1];

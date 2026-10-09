@@ -1,8 +1,10 @@
-import { motion } from "framer-motion";
-import { ArrowRight, ArrowUpRight, ExternalLink, Link2, Mail } from "lucide-react";
+import { lazy, Suspense, useRef } from "react";
+import { cubicBezier, motion, useReducedMotion, useScroll, useTransform } from "framer-motion";
+import { ArrowDown, ArrowRight, ArrowUpRight, ExternalLink, Link2, Mail } from "lucide-react";
 import { ABOUT, CONTACT, HERO, ROLES } from "../data/content";
 import { ACCENTS, EXPERIMENTS, FEATURED, MORE_PROJECTS } from "../data/projects";
 import { Rail, Reveal, SectionHead, TagPill } from "./ui";
+import { EASE_REVEAL } from "../lib/motion";
 
 const SECTION = "min-h-0 flex flex-col items-center px-5 py-14 scroll-mt-16";
 const INNER = "w-full max-w-[1180px]";
@@ -33,46 +35,166 @@ function Thumb({ project, className }) {
 }
 
 /* ── HERO ───────────────────────────────────────────────────── */
-export function Hero({ ready = true }) {
-  const up = (d) => ({
-    initial: { opacity: 0, y: 14 },
-    animate: ready ? { opacity: 1, y: 0 } : { opacity: 0, y: 14 },
-    transition: { duration: 0.6, delay: d },
-  });
+const InfinityLoop = lazy(() => import("./InfinityLoop"));
+
+const HERO_INK = "#0b1220";
+// The lede's highlighted phrases (SQL, iOS app, AI), reused as the
+// script overlays on the pinned headline, each in its own accent color
+// and position. Positions are % of the headline box.
+const OVERLAY_SPOTS = [
+  { top: "4%", left: "56%", rotate: -7, range: [0.1, 0.26] },
+  { top: "38%", left: "4%", rotate: -5, range: [0.3, 0.46] },
+  { top: "70%", left: "50%", rotate: -8, range: [0.5, 0.66] },
+];
+const HERO_PHRASES = HERO.lede.filter((s) => s.cls);
+
+const revealEase = cubicBezier(...EASE_REVEAL);
+
+function HeroPhrase({ phrase, spot, progress, reduced }) {
+  // Function-form transforms on purpose: framer hands a plain range-mapped
+  // opacity to the browser's native ScrollTimeline, which tracks the
+  // document scroller, not <main>, so the phrases faded on the wrong scroll.
+  const [from, to] = spot.range;
+  const opacity = useTransform(progress, (v) => revealEase(Math.min(1, Math.max(0, (v - from) / (to - from)))));
+  const y = useTransform(opacity, (k) => 28 * (1 - k));
   return (
-    <section id="hero" data-star-accent="hero" className="min-h-[72dvh] flex flex-col justify-center px-5 pt-28 pb-10">
-      <div className="mx-auto w-full max-w-[1180px]">
-        <div className="max-w-3xl rounded-2xl border border-white/10 bg-[#050911]/60 backdrop-blur-md p-6 sm:p-9">
-          <motion.p {...up(0)} className="font-mono text-[.72rem] uppercase tracking-[.2em] text-cyan mb-4">
+    <motion.span
+      aria-hidden="true"
+      style={reduced ? { top: spot.top, left: spot.left, rotate: spot.rotate } : { top: spot.top, left: spot.left, rotate: spot.rotate, opacity, y }}
+      className={`absolute whitespace-nowrap font-serif italic font-normal normal-case leading-none tracking-normal text-[clamp(2.2rem,5.6vw,5.4rem)] [text-shadow:0_0_2px_#050911,0_2px_18px_rgba(5,9,17,.85)] ${phrase.cls.replace("font-semibold", "")}`}
+    >
+      {phrase.text}
+    </motion.span>
+  );
+}
+
+export function Hero({ ready = true, scrollContainerRef }) {
+  const reduced = useReducedMotion();
+  const heroRef = useRef(null);
+  const pinRef = useRef(null);
+  const { scrollYProgress } = useScroll({
+    container: scrollContainerRef,
+    target: pinRef,
+    offset: ["start start", "end end"],
+  });
+  const enter = (d) => ({
+    initial: reduced ? false : { opacity: 0, y: 18 },
+    animate: ready ? { opacity: 1, y: 0 } : { opacity: 0, y: 18 },
+    transition: { duration: 0.9, delay: d, ease: EASE_REVEAL },
+  });
+  // Long enough to overflow wide screens; two identical halves make the
+  // ticker's -50% loop seamless.
+  const ticker = Array.from({ length: 6 }, () => `— ${HERO.eyebrow} `).join("");
+
+  function scrollPastHero() {
+    const main = scrollContainerRef?.current;
+    if (!main || !heroRef.current) return;
+    main.scrollTo({ top: heroRef.current.offsetHeight, behavior: reduced ? "auto" : "smooth" });
+  }
+
+  return (
+    <>
+      {/* 1. The light frame: a white card with the loop in an oval window. */}
+      <section
+        ref={heroRef}
+        id="hero"
+        data-star-accent="hero"
+        className="relative min-h-[100dvh] flex flex-col bg-[#eef6f7] px-3 sm:px-5 pt-[4.75rem] pb-4 sm:pb-5"
+        style={{ color: HERO_INK }}
+      >
+        <div className="relative flex-1 min-h-[440px] rounded-2xl bg-white border border-[#0b1220]/10 overflow-hidden">
+          {/* Hairline crosshair through the card's center. */}
+          <div aria-hidden="true" className="absolute inset-x-0 top-1/2 h-px bg-[#0b1220]/[.07]" />
+          <div aria-hidden="true" className="absolute inset-y-0 left-1/2 w-px bg-[#0b1220]/[.07]" />
+
+          {/* Inset from the card's edges, so the oval scales with the card
+              and keeps clear of the label (top) and button (bottom). */}
+          <div className="absolute inset-x-[5%] inset-y-[17%] sm:inset-x-[7%] sm:inset-y-[13%]">
+            <motion.div
+              {...enter(0.15)}
+              className="absolute inset-0 rounded-[50%] overflow-hidden bg-[#0b1426] shadow-[0_30px_60px_-30px_rgba(11,18,32,.45)] [isolation:isolate]"
+            >
+              <Suspense fallback={<div className="atmosphere-fallback absolute inset-0" aria-hidden="true" />}>
+                <InfinityLoop scrollContainerRef={scrollContainerRef} />
+              </Suspense>
+            </motion.div>
+          </div>
+
+          <motion.p
+            {...enter(0)}
+            className="absolute top-4 left-4 sm:top-6 sm:left-6 max-w-[calc(100%-2rem)] rounded-md border border-[#0b1220]/12 bg-white/85 px-3 py-2 font-mono text-[.68rem] font-medium uppercase tracking-[.16em]"
+          >
             {HERO.eyebrow}
           </motion.p>
-          <motion.h1 {...up(0.06)} className="font-display text-[clamp(1.9rem,4.4vw,3.3rem)] font-semibold leading-[1.1] text-white">
-            {HERO.title}
-          </motion.h1>
-          <motion.p {...up(0.12)} className="mt-5 text-[1.08rem] leading-relaxed text-[color:var(--ink-200)]">
-            {HERO.lede.map((s, i) => (
-              <span key={i} className={s.cls}>
-                {s.text}
-              </span>
-            ))}
-          </motion.p>
-          <motion.div {...up(0.2)} className="mt-7 flex flex-wrap gap-3">
-            <a
-              href="#projects"
-              className="inline-flex items-center gap-2 px-5 py-3 rounded-lg bg-gradient-to-r from-[#a8f8ff] to-cyan text-[#050911] font-bold text-[.88rem] [text-shadow:none] hover:brightness-110 transition-[filter]"
-            >
-              See my projects <ArrowRight size={15} />
-            </a>
-            <a
-              href="#contact"
-              className="inline-flex items-center gap-2 px-5 py-3 rounded-lg border border-white/25 text-white font-medium text-[.88rem] hover:border-cyan hover:text-cyan transition-colors"
-            >
-              Say hello
-            </a>
-          </motion.div>
+
+          <motion.button
+            {...enter(0.3)}
+            type="button"
+            onClick={scrollPastHero}
+            className="group absolute bottom-4 right-4 sm:bottom-6 sm:right-6 flex items-center gap-3 rounded-full border border-[#0b1220]/12 bg-white/85 py-1.5 pl-4 pr-1.5 font-mono text-[.64rem] font-medium uppercase tracking-[.16em]"
+          >
+            Scroll down to explore
+            <span className="grid h-9 w-9 place-items-center rounded-full bg-[#0b1220] text-white transition-transform duration-200 group-hover:translate-y-0.5">
+              <ArrowDown size={15} />
+            </span>
+          </motion.button>
         </div>
-      </div>
-    </section>
+
+        {/* Ticker: the eyebrow on a slow loop beneath the card. */}
+        <div aria-hidden="true" className="mt-3 overflow-hidden whitespace-nowrap font-mono text-[.68rem] font-medium uppercase tracking-[.22em] text-[#475569]">
+          <div className="marquee-track inline-flex">
+            <span className="pr-[.5em]">{ticker}</span>
+            <span className="pr-[.5em]">{ticker}</span>
+          </div>
+        </div>
+      </section>
+
+      {/* 2. The headline, pinned while the lede's phrases write themselves in. */}
+      <section ref={pinRef} aria-labelledby="hero-title" className={`relative bg-ink ${reduced ? "" : "h-[220vh]"}`}>
+        <div className={`${reduced ? "py-24" : "sticky top-0 h-[100dvh]"} flex items-center justify-center overflow-hidden px-5`}>
+          <div className="relative w-full max-w-[1200px]">
+            <h1
+              id="hero-title"
+              className="font-condensed uppercase text-white text-center leading-[.94] tracking-[.005em] text-[clamp(3rem,8.6vw,8.5rem)]"
+            >
+              {HERO.title}
+            </h1>
+            {HERO_PHRASES.map((phrase, i) => (
+              <HeroPhrase key={phrase.text} phrase={phrase} spot={OVERLAY_SPOTS[i % OVERLAY_SPOTS.length]} progress={scrollYProgress} reduced={reduced} />
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* 3. The lede in full, and the two ways forward. */}
+      <section className="bg-ink px-5 pb-20 pt-4 sm:pb-28">
+        <div className="mx-auto w-full max-w-[1180px]">
+          <Reveal className="max-w-3xl">
+            <p className="text-[1.15rem] sm:text-[1.3rem] leading-relaxed text-[color:var(--ink-200)]">
+              {HERO.lede.map((s, i) => (
+                <span key={i} className={s.cls}>
+                  {s.text}
+                </span>
+              ))}
+            </p>
+            <div className="mt-8 flex flex-wrap gap-3">
+              <a
+                href="#projects"
+                className="inline-flex items-center gap-2 px-5 py-3 rounded-full bg-white text-[#050911] font-bold text-[.88rem] transition-colors duration-200 hover:bg-[#a8f8ff]"
+              >
+                See my projects <ArrowRight size={15} />
+              </a>
+              <a
+                href="#contact"
+                className="inline-flex items-center gap-2 px-5 py-3 rounded-full border border-white/30 text-white font-medium text-[.88rem] transition-colors duration-200 hover:bg-white/10 hover:border-white/60"
+              >
+                Say hello
+              </a>
+            </div>
+          </Reveal>
+        </div>
+      </section>
+    </>
   );
 }
 
@@ -310,7 +432,7 @@ export function ContactSection() {
             <div className="mt-7 flex flex-wrap justify-center gap-3">
               <a
                 href={`mailto:${CONTACT.email}`}
-                className="inline-flex items-center gap-2 px-5 py-3 rounded-lg bg-gradient-to-r from-[#a8f8ff] to-cyan text-[#050911] font-bold text-[.88rem] [text-shadow:none] hover:brightness-110 transition-[filter]"
+                className="inline-flex items-center gap-2 px-5 py-3 rounded-lg bg-gradient-to-r from-[#a8f8ff] to-cyan text-[#050911] font-bold text-[.88rem] hover:brightness-110 transition-[filter]"
               >
                 <Mail size={15} /> Email me
               </a>
