@@ -118,10 +118,23 @@ export default function ProjectPage({ slug }) {
 
       {project.shots?.length > 0 && (
         <div className={`mt-6 grid gap-4 ${project.shots.length > 1 ? "sm:grid-cols-2" : ""}`}>
-          {project.shots.map((s) => (
-            <a key={s} href={s} target="_blank" rel="noopener noreferrer" className="block">
-              <img src={s} alt={`${project.title} screenshot`} loading="lazy" className="w-full rounded-xl border border-white/15" />
-            </a>
+          {project.shots.map((s, n) => (
+            <figure key={s} className="overflow-hidden rounded-2xl border border-white/12 bg-[#0b1220]">
+              <figcaption className="flex items-center gap-1.5 border-b border-white/10 px-3.5 py-2.5">
+                <span aria-hidden="true" className="h-2.5 w-2.5 rounded-full bg-[#ff5f57]" />
+                <span aria-hidden="true" className="h-2.5 w-2.5 rounded-full bg-[#febc2e]" />
+                <span aria-hidden="true" className="h-2.5 w-2.5 rounded-full bg-[#28c840]" />
+                <span className="ml-3 font-mono text-micro text-[color:var(--ink-300)]">
+                  {project.shots.length > 1 ? `Screenshot ${n + 1} of ${project.shots.length}` : "Screenshot"} · scroll inside to see it all
+                </span>
+              </figcaption>
+              {/* Tall captures (full pages, notebooks) scroll inside the
+                  frame; overscroll-contain keeps the page from moving
+                  when you reach the end. */}
+              <div tabIndex={0} aria-label={`${project.title} screenshot, scrollable`} className="max-h-[72vh] overflow-y-auto overscroll-contain">
+                <img src={s} alt={`${project.title} screenshot`} loading="lazy" className="block w-full" />
+              </div>
+            </figure>
           ))}
         </div>
       )}

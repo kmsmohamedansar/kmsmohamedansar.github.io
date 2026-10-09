@@ -1,9 +1,9 @@
-import { lazy, Suspense, useEffect, useRef, useState } from "react";
-import { cubicBezier, motion, useMotionValueEvent, useReducedMotion, useScroll, useTransform } from "framer-motion";
+import { Fragment, lazy, Suspense, useEffect, useRef, useState } from "react";
+import { cubicBezier, motion, useMotionValueEvent, useReducedMotion, useScroll, useSpring, useTransform, useVelocity } from "framer-motion";
 import { ArrowDown, ArrowRight, ArrowUp, ArrowUpRight, ExternalLink, Link2, Mail } from "lucide-react";
 import { ABOUT, CONTACT, HERO, ROLES } from "../data/content";
 import { ACCENTS, EXPERIMENTS, FEATURED, MORE_PROJECTS } from "../data/projects";
-import { FlourishTitle, Reveal, SectionHead, SpinBadge, TagPill } from "./ui";
+import { FlourishTitle, Reveal, ScrollShot, SectionHead, SpinBadge, TagPill } from "./ui";
 import { useRoute } from "../App";
 import { EASE_REVEAL } from "../lib/motion";
 
@@ -29,38 +29,49 @@ function FlowMini({ spec, accent }) {
   );
 }
 
-/* The project's first screenshot, or, when there isn't one (most
-   projects) or it fails to load, a typographic card in the project's
-   accent: its kind, its flow as chips, and a large initial. */
+/* Where a project's live link points, shown in the preview frame's
+   address bar; falls back to the project title. */
+function frameLabel(project) {
+  const live = project.links?.find((l) => l.external && l.primary);
+  try {
+    return live ? new URL(live.href).host + new URL(live.href).pathname.replace(/\/$/, "") : project.title;
+  } catch {
+    return project.title;
+  }
+}
+
+/* The project's visual, in order of preference: its first screenshot in
+   a scrolling browser frame; its app icon (RepTrack) floating over the
+   flow; or a typographic card (kind, flow chips, large initial). A
+   screenshot that fails to load falls back to the typographic card. */
 function ProjectVisual({ project, large = false }) {
   const a = ACCENTS[project.accent];
   const [broken, setBroken] = useState(false);
-  const ratio = large ? "aspect-[16/11]" : "aspect-[16/8]";
+  const ratio = large ? "aspect-[16/11]" : "aspect-[16/9]";
   if (project.shots?.[0] && !broken) {
-    return (
-      <div className={`overflow-hidden rounded-2xl border border-white/10 bg-black/20 ${ratio}`}>
-        <img
-          src={project.shots[0]}
-          alt=""
-          loading="lazy"
-          onError={() => setBroken(true)}
-          className="h-full w-full object-cover object-top transition-transform duration-500 ease-out group-hover:scale-[1.03]"
-        />
-      </div>
-    );
+    return <ScrollShot src={project.shots[0]} label={frameLabel(project)} onError={() => setBroken(true)} ratio={ratio} />;
   }
   return (
     <div
       className={`relative flex flex-col justify-between overflow-hidden rounded-2xl border p-5 ${large ? "sm:p-8" : ""} ${ratio}`}
       style={{ background: `radial-gradient(130% 100% at 0% 0%, ${a.hex}38, transparent 62%), rgba(5, 9, 17, 0.5)`, borderColor: `${a.hex}45` }}
     >
-      <span
-        aria-hidden="true"
-        className="pointer-events-none absolute -bottom-[.18em] right-[.06em] font-serif italic leading-none transition-transform duration-500 ease-out group-hover:-translate-y-2"
-        style={{ color: `${a.hex}2e`, fontSize: large ? "clamp(9rem,20vw,16rem)" : "8rem" }}
-      >
-        {project.title[0]}
-      </span>
+      {project.icon ? (
+        <img
+          src={project.icon}
+          alt=""
+          loading="lazy"
+          className="float-y pointer-events-none absolute left-1/2 top-[38%] w-[28%] max-w-[200px] -translate-x-1/2 -translate-y-1/2 rounded-[22%] shadow-[0_30px_60px_-20px_rgba(0,0,0,.7)] transition-transform duration-500 ease-out group-hover:scale-105"
+        />
+      ) : (
+        <span
+          aria-hidden="true"
+          className="pointer-events-none absolute -bottom-[.18em] right-[.06em] font-serif italic leading-none transition-transform duration-500 ease-out group-hover:-translate-y-2"
+          style={{ color: `${a.hex}2e`, fontSize: large ? "clamp(9rem,20vw,16rem)" : "8rem" }}
+        >
+          {project.title[0]}
+        </span>
+      )}
       <span className={`relative font-mono text-micro font-semibold uppercase tracking-[.16em] ${a.text}`}>{project.kind}</span>
       {project.flow && (
         <div className="relative">
@@ -97,20 +108,39 @@ const HERO_INK = "#0b1220";
 // script overlays on the pinned headline, each in its own accent color
 // and position. Positions are % of the headline box.
 const OVERLAY_SPOTS = [
-  { top: "4%", left: "56%", rotate: -7, range: [0.1, 0.26] },
-  { top: "38%", left: "4%", rotate: -5, range: [0.3, 0.46] },
-  { top: "70%", left: "50%", rotate: -8, range: [0.5, 0.66] },
+  { top: "4%", left: "56%", rotate: -7, range: [0.5, 0.6] },
+  { top: "38%", left: "4%", rotate: -5, range: [0.6, 0.7] },
+  { top: "70%", left: "50%", rotate: -8, range: [0.7, 0.8] },
 ];
 const HERO_PHRASES = HERO.lede.filter((s) => s.cls);
+const TITLE_WORDS = HERO.title.split(" ");
 
 const revealEase = cubicBezier(...EASE_REVEAL);
+const eased = (v, from, to) => revealEase(Math.min(1, Math.max(0, (v - from) / (to - from))));
+
+/* One word of the pinned headline: it rises out of its own mask (with a
+   slight tilt that straightens as it lands) over its own slice of the
+   scroll, so the sentence builds word by word as you scroll into it. */
+function RiseWord({ word, index, progress, reduced }) {
+  const from = 0.02 + index * 0.026;
+  const k = useTransform(progress, (v) => eased(v, from, from + 0.12));
+  const y = useTransform(k, (t) => `${(1 - t) * 108}%`);
+  const rotate = useTransform(k, (t) => (1 - t) * 7);
+  return (
+    <span className="inline-block overflow-hidden align-bottom pb-[.04em] -mb-[.04em]">
+      <motion.span className="inline-block origin-bottom-left" style={reduced ? undefined : { y, rotate }}>
+        {word}
+      </motion.span>
+    </span>
+  );
+}
 
 function HeroPhrase({ phrase, spot, progress, reduced }) {
   // Function-form transforms on purpose: framer hands a plain range-mapped
   // opacity to the browser's native ScrollTimeline, which tracks the
   // document scroller, not <main>, so the phrases faded on the wrong scroll.
   const [from, to] = spot.range;
-  const opacity = useTransform(progress, (v) => revealEase(Math.min(1, Math.max(0, (v - from) / (to - from)))));
+  const opacity = useTransform(progress, (v) => eased(v, from, to));
   const y = useTransform(opacity, (k) => 28 * (1 - k));
   return (
     <motion.span
@@ -127,15 +157,30 @@ export function Hero({ ready = true, scrollContainerRef }) {
   const reduced = useReducedMotion();
   const heroRef = useRef(null);
   const pinRef = useRef(null);
+  // Starts while the headline section is still rising into view (its top
+  // at 60% of the viewport), so the first words are already landing by
+  // the time it pins.
   const { scrollYProgress } = useScroll({
     container: scrollContainerRef,
     target: pinRef,
-    offset: ["start start", "end end"],
+    offset: ["start 0.6", "end end"],
   });
+  // Camera dolly: as the hero scrolls away the card pulls back while the
+  // oval pushes in toward the loop (which is dispersing at the same time).
+  const { scrollYProgress: heroOut } = useScroll({
+    container: scrollContainerRef,
+    target: heroRef,
+    offset: ["start start", "end start"],
+  });
+  const cardScale = useTransform(heroOut, (v) => 1 - 0.08 * v);
+  const ovalScale = useTransform(heroOut, (v) => 1 + 0.4 * v);
+  const chromeOpacity = useTransform(heroOut, (v) => 1 - Math.min(1, v * 2.2));
+  // Entrance for the card's label and button: a left-to-right wipe.
+  // (Opacity is left free for the scroll fade below.)
   const enter = (d) => ({
-    initial: reduced ? false : { opacity: 0, y: 18 },
-    animate: ready ? { opacity: 1, y: 0 } : { opacity: 0, y: 18 },
-    transition: { duration: 0.9, delay: d, ease: EASE_REVEAL },
+    initial: reduced ? false : { clipPath: "inset(0 100% 0 0)" },
+    animate: ready ? { clipPath: "inset(0 0% 0 0)" } : { clipPath: "inset(0 100% 0 0)" },
+    transition: { duration: 1.1, delay: d, ease: EASE_REVEAL },
   });
   // Long enough to overflow wide screens; two identical halves make the
   // ticker's -50% loop seamless.
@@ -156,33 +201,43 @@ export function Hero({ ready = true, scrollContainerRef }) {
         className="relative min-h-[100dvh] flex flex-col bg-[#eef6f7] px-3 sm:px-5 pt-[4.75rem] pb-4 sm:pb-5"
         style={{ color: HERO_INK }}
       >
-        <div className="relative flex-1 min-h-[440px] rounded-2xl bg-white border border-[#0b1220]/10 overflow-hidden">
+        <motion.div
+          style={reduced ? undefined : { scale: cardScale }}
+          className="relative flex-1 min-h-[440px] origin-top rounded-2xl bg-white border border-[#0b1220]/10 overflow-hidden"
+        >
           {/* Hairline crosshair through the card's center. */}
           <div aria-hidden="true" className="absolute inset-x-0 top-1/2 h-px bg-[#0b1220]/[.07]" />
           <div aria-hidden="true" className="absolute inset-y-0 left-1/2 w-px bg-[#0b1220]/[.07]" />
 
           {/* Inset from the card's edges, so the oval scales with the card
               and keeps clear of the label (top) and button (bottom). */}
-          <div className="absolute inset-x-[5%] inset-y-[17%] sm:inset-x-[7%] sm:inset-y-[13%]">
+          <motion.div
+            style={reduced ? undefined : { scale: ovalScale }}
+            className="absolute inset-x-[5%] inset-y-[17%] sm:inset-x-[7%] sm:inset-y-[13%]"
+          >
             <motion.div
-              {...enter(0.15)}
+              initial={reduced ? false : { opacity: 0, scale: 0.86, clipPath: "ellipse(10% 10% at 50% 50%)" }}
+              animate={ready ? { opacity: 1, scale: 1, clipPath: "ellipse(50% 50% at 50% 50%)" } : undefined}
+              transition={{ duration: 1.4, delay: 0.1, ease: EASE_REVEAL }}
               className="absolute inset-0 rounded-[50%] overflow-hidden bg-[#0b1426] shadow-[0_30px_60px_-30px_rgba(11,18,32,.45)] [isolation:isolate]"
             >
               <Suspense fallback={<div className="atmosphere-fallback absolute inset-0" aria-hidden="true" />}>
                 <InfinityLoop scrollContainerRef={scrollContainerRef} />
               </Suspense>
             </motion.div>
-          </div>
+          </motion.div>
 
           <motion.p
-            {...enter(0)}
+            {...enter(0.35)}
+            style={reduced ? undefined : { opacity: chromeOpacity }}
             className="absolute top-4 left-4 sm:top-6 sm:left-6 max-w-[calc(100%-2rem)] rounded-md border border-[#0b1220]/12 bg-white/85 px-3 py-2 font-mono text-xs font-medium uppercase tracking-[.16em]"
           >
             {HERO.eyebrow}
           </motion.p>
 
           <motion.button
-            {...enter(0.3)}
+            {...enter(0.55)}
+            style={reduced ? undefined : { opacity: chromeOpacity }}
             type="button"
             onClick={scrollPastHero}
             className="group absolute bottom-4 right-4 sm:bottom-6 sm:right-6 flex items-center gap-3 rounded-full border border-[#0b1220]/12 bg-white/85 py-1.5 pl-4 pr-1.5 font-mono text-micro font-medium uppercase tracking-[.16em] transition-transform duration-200 active:scale-[.97]"
@@ -192,7 +247,7 @@ export function Hero({ ready = true, scrollContainerRef }) {
               <ArrowDown size={15} />
             </span>
           </motion.button>
-        </div>
+        </motion.div>
 
         {/* Ticker: the eyebrow on a slow loop beneath the card. */}
         <div aria-hidden="true" className="mt-3 overflow-hidden whitespace-nowrap font-mono text-xs font-medium uppercase tracking-[.22em] text-[#475569]">
@@ -204,14 +259,19 @@ export function Hero({ ready = true, scrollContainerRef }) {
       </section>
 
       {/* 2. The headline, pinned while the lede's phrases write themselves in. */}
-      <section ref={pinRef} aria-labelledby="hero-title" className={`relative bg-ink ${reduced ? "" : "h-[220vh]"}`}>
+      <section ref={pinRef} aria-labelledby="hero-title" className={`relative bg-ink ${reduced ? "" : "h-[260vh]"}`}>
         <div className={`${reduced ? "py-24" : "sticky top-0 h-[100dvh]"} flex items-center justify-center overflow-hidden px-5`}>
           <div className="relative w-full max-w-[1200px]">
             <h1
               id="hero-title"
               className="font-condensed uppercase text-white text-center leading-[.94] tracking-[.005em] text-[clamp(3rem,8.6vw,8.5rem)]"
             >
-              {HERO.title}
+              {TITLE_WORDS.map((w, i) => (
+                <Fragment key={i}>
+                  <RiseWord word={w} index={i} progress={scrollYProgress} reduced={reduced} />
+                  {i < TITLE_WORDS.length - 1 && " "}
+                </Fragment>
+              ))}
             </h1>
             {HERO_PHRASES.map((phrase, i) => (
               <HeroPhrase key={phrase.text} phrase={phrase} spot={OVERLAY_SPOTS[i % OVERLAY_SPOTS.length]} progress={scrollYProgress} reduced={reduced} />
@@ -260,6 +320,7 @@ function FeaturedRow({ project, index }) {
     <Reveal>
       <a
         href={`#project/${project.slug}`}
+        data-cursor="View"
         className="group grid items-center gap-6 rounded-3xl lg:gap-14 lg:grid-cols-[1.1fr_1fr] active:scale-[.995] transition-transform duration-200"
       >
         <div className={flip ? "lg:order-2" : ""}>
@@ -295,6 +356,7 @@ function ProjectCard({ project }) {
   return (
     <a
       href={`#project/${project.slug}`}
+      data-cursor="View"
       className="group flex h-full flex-col rounded-2xl border border-white/10 bg-white/[.03] p-4 sm:p-5 transition-[transform,border-color,background-color] duration-200 ease-out hover:-translate-y-1 hover:border-white/25 hover:bg-white/[.06] focus-visible:-translate-y-1 active:translate-y-0 active:scale-[.99]"
     >
       <ProjectVisual project={project} />
@@ -344,6 +406,42 @@ export function ProjectsSection({ scrollContainerRef }) {
         </div>
       </div>
     </section>
+  );
+}
+
+/* ── SKILLS TICKER ──────────────────────────────────────────── */
+/* The About section's skills on a giant loop between sections. It runs
+   on its own, and scrolling bends it: the scroll velocity, smoothed by
+   a spring, skews the type and pushes it along faster, then lets it
+   settle back when you stop. Decorative; the skills are listed in About. */
+const SKILL_ITEMS = ABOUT.groups.flatMap((g) => g.items.map((item) => ({ item, accent: g.accent })));
+
+export function SkillsTicker({ scrollContainerRef }) {
+  const reduced = useReducedMotion();
+  const { scrollY } = useScroll({ container: scrollContainerRef });
+  const velocity = useVelocity(scrollY);
+  const smooth = useSpring(velocity, { damping: 40, stiffness: 300 });
+  const skewX = useTransform(smooth, (v) => Math.max(-12, Math.min(12, v / -120)));
+  const x = useTransform(smooth, (v) => `${Math.max(-6, Math.min(6, v / -600))}vw`);
+  const row = (
+    <span className="inline-flex items-center pr-[.4em]">
+      {SKILL_ITEMS.map(({ item, accent }, i) => (
+        <span key={item} className="inline-flex items-center">
+          <span className={i % 3 === 1 ? `font-serif italic normal-case ${ACCENTS[accent].text}` : "font-condensed uppercase text-white"}>{item}</span>
+          <span className="mx-[.45em] text-[.4em] text-white/40">✻</span>
+        </span>
+      ))}
+    </span>
+  );
+  return (
+    <div aria-hidden="true" className="relative overflow-hidden border-y border-white/10 bg-ink py-6 sm:py-8">
+      <motion.div style={reduced ? undefined : { skewX, x }} className="whitespace-nowrap text-[clamp(2.4rem,6.5vw,5.5rem)] leading-none">
+        <div className="marquee-track inline-flex [animation-duration:60s]">
+          {row}
+          {row}
+        </div>
+      </motion.div>
+    </div>
   );
 }
 
@@ -485,7 +583,7 @@ export function ExperimentsSection() {
             return (
               <Reveal key={x.id} delay={i * 0.07} className="h-full">
                 <Body
-                  {...(x.href ? { href: x.href } : {})}
+                  {...(x.href ? { href: x.href, "data-cursor": "Open" } : {})}
                   className={`flex h-full flex-col rounded-2xl border border-white/10 bg-white/[.03] p-5 sm:p-6 ${
                     x.href
                       ? "group transition-[transform,border-color,background-color] duration-200 ease-out hover:-translate-y-1 hover:border-white/25 hover:bg-white/[.06] focus-visible:-translate-y-1 active:translate-y-0 active:scale-[.99]"
@@ -493,6 +591,16 @@ export function ExperimentsSection() {
                   }`}
                   style={{ borderTop: `3px solid ${a.hex}` }}
                 >
+                  {x.shot && (
+                    <div className="-mx-5 -mt-5 mb-5 overflow-hidden rounded-t-[14px] border-b border-white/10 sm:-mx-6 sm:-mt-6 aspect-[16/9]">
+                      <img
+                        src={x.shot}
+                        alt=""
+                        loading="lazy"
+                        className="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.06]"
+                      />
+                    </div>
+                  )}
                   <h3 className="font-display text-xl font-semibold leading-snug text-white">{x.title}</h3>
                   <p className={`mt-2 text-sm leading-relaxed ${a.text}`}>{x.hook}</p>
                   <p className="mt-2 text-sm leading-relaxed text-[color:var(--ink-200)]">{x.body}</p>
@@ -536,6 +644,7 @@ export function ContactSection() {
       <a
         href={`mailto:${CONTACT.email}`}
         aria-label={`Email me at ${CONTACT.email}`}
+        data-cursor="Email"
         className="group block overflow-hidden whitespace-nowrap border-b border-white/12 pt-20 pb-8 sm:pt-28 sm:pb-10 text-[clamp(4rem,13vw,11rem)] leading-none"
       >
         <div aria-hidden="true" className="marquee-track inline-flex [animation-duration:22s] group-hover:[animation-play-state:paused]">

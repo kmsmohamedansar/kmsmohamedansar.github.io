@@ -1,14 +1,16 @@
-import { Component, createContext, lazy, Suspense, useContext, useEffect, useMemo, useRef, useState } from "react";
+import { Component, createContext, lazy, Suspense, useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { Command } from "lucide-react";
 import EmetSection from "./components/EmetSection";
-import { Hero, ProjectsSection, ExperienceSection, AboutSection, ExperimentsSection, ContactSection } from "./components/Sections";
+import { Hero, ProjectsSection, SkillsTicker, ExperienceSection, AboutSection, ExperimentsSection, ContactSection } from "./components/Sections";
 import ProjectPage from "./components/ProjectPage";
 import { SECTION_LINKS } from "./data/content";
 import SandboxStubs from "./components/SandboxStubs";
 import CommandPalette from "./components/CommandPalette";
 import { MatrixBackground } from "./components/RouteBackgrounds";
 import CustomCursor from "./components/CustomCursor";
+import IntroCurtain from "./components/IntroCurtain";
+import { shouldPlayIntro } from "./lib/intro";
 import { EASE_OUT } from "./lib/motion";
 
 const SolarSystemExplorer = lazy(() => import("./components/SolarSystemExplorer"));
@@ -220,6 +222,7 @@ function MainDocument({ bootDone }) {
     <>
       <Hero ready={bootDone} scrollContainerRef={scrollContainerRef} />
       <ProjectsSection scrollContainerRef={scrollContainerRef} />
+      <SkillsTicker scrollContainerRef={scrollContainerRef} />
       <ExperienceSection />
       <AboutSection scrollContainerRef={scrollContainerRef} />
       <ExperimentsSection />
@@ -394,13 +397,16 @@ class ErrorBoundary extends Component {
 }
 
 export default function App() {
-  // The hero's 3D entrance tilt waits for this instead of firing the
-  // instant it mounts — on a first visit it would otherwise animate
-  // entirely behind the opaque boot sequence, unseen; on a repeat
-  // visit it'd fire too fast (before the page has painted) to notice.
-  const bootDone = true;
+  // The hero's entrance (the oval opening, the label wiping in) waits for
+  // this, so on a first visit it plays as the intro curtain lifts rather
+  // than unseen underneath it.
+  const [intro, setIntro] = useState(shouldPlayIntro);
+  const [bootDone, setBootDone] = useState(() => !intro);
+  const reveal = useCallback(() => setBootDone(true), []);
+  const gone = useCallback(() => setIntro(false), []);
   return (
     <ErrorBoundary>
+      {intro && <IntroCurtain onReveal={reveal} onGone={gone} />}
       <CustomCursor />
       <ThemeProvider>
         <SandboxProvider>

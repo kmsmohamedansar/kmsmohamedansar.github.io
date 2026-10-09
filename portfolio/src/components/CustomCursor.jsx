@@ -46,6 +46,12 @@ export default function CustomCursor() {
 
       const hit = e.target.closest("a, button, input, [role='button'], .magnetic");
       ring.dataset.active = hit ? "1" : "0";
+      // Elements can name what clicking does (data-cursor="View"); the
+      // ring grows into a labelled bubble over them.
+      const label = e.target.closest("[data-cursor]")?.dataset.cursor || "";
+      ring.dataset.label = label;
+      // The dot would sit on the label's letters; the bubble is the cursor now.
+      dot.style.opacity = label ? "0" : "1";
     }
 
     function tick() {
