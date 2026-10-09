@@ -71,8 +71,10 @@
     /* The star-formation backdrop is fixed behind every section, and its
        bright, dense sparkle sits directly behind text with no separation.
        A soft inherited dark halo keeps letters legible wherever they land,
-       without dimming the backdrop itself. */
-    text-shadow: 0 1px 4px rgba(0, 0, 0, 0.9), 0 2px 22px rgba(0, 0, 0, 0.7);
+       without dimming the backdrop itself. Kept light and ink-tinted: the
+       old near-opaque black version read as haze around every letter and
+       smeared dark text on light buttons. */
+    text-shadow: 0 1px 2px rgba(2, 6, 16, 0.65), 0 0 16px rgba(2, 6, 16, 0.5);
   }
   ::selection {
     background: rgba(34, 211, 238, 0.25);
@@ -107,6 +109,15 @@
   .rail-scroll::-webkit-scrollbar-thumb {
     background: rgba(34, 211, 238, 0.6);
     border-radius: 999px;
+  }
+  /* Static stand-in for the star backdrop's atmosphere: shown while its
+     chunk loads and if WebGL is unavailable, so neither case falls back
+     to an empty black void. Same palette as the shader. */
+  .atmosphere-fallback {
+    background:
+      radial-gradient(ellipse 60% 55% at 72% 48%, rgba(38, 60, 96, 0.55), transparent 70%),
+      radial-gradient(ellipse 80% 60% at 30% 85%, rgba(23, 43, 73, 0.5), transparent 75%),
+      linear-gradient(to bottom, #0d1b30, #0b1426);
   }
   .glass {
     backdrop-filter: blur(16px);

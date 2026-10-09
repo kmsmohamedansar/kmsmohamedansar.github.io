@@ -59,7 +59,7 @@ export function Hero({ ready = true }) {
           <motion.div {...up(0.2)} className="mt-7 flex flex-wrap gap-3">
             <a
               href="#projects"
-              className="inline-flex items-center gap-2 px-5 py-3 rounded-lg bg-gradient-to-r from-[#a8f8ff] to-cyan text-[#050911] font-bold text-[.88rem] hover:brightness-110 transition-[filter]"
+              className="inline-flex items-center gap-2 px-5 py-3 rounded-lg bg-gradient-to-r from-[#a8f8ff] to-cyan text-[#050911] font-bold text-[.88rem] [text-shadow:none] hover:brightness-110 transition-[filter]"
             >
               See my projects <ArrowRight size={15} />
             </a>
@@ -310,7 +310,7 @@ export function ContactSection() {
             <div className="mt-7 flex flex-wrap justify-center gap-3">
               <a
                 href={`mailto:${CONTACT.email}`}
-                className="inline-flex items-center gap-2 px-5 py-3 rounded-lg bg-gradient-to-r from-[#a8f8ff] to-cyan text-[#050911] font-bold text-[.88rem] hover:brightness-110 transition-[filter]"
+                className="inline-flex items-center gap-2 px-5 py-3 rounded-lg bg-gradient-to-r from-[#a8f8ff] to-cyan text-[#050911] font-bold text-[.88rem] [text-shadow:none] hover:brightness-110 transition-[filter]"
               >
                 <Mail size={15} /> Email me
               </a>

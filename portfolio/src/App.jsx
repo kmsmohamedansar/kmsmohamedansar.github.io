@@ -299,7 +299,7 @@ function Backdrop() {
     return <div className="fixed inset-0 z-0 bg-[#02050c]" aria-hidden="true" />;
   }
   return (
-    <Suspense fallback={<div className="fixed inset-0 z-0 bg-[#050911]" aria-hidden="true" />}>
+    <Suspense fallback={<div className="fixed inset-0 z-0 atmosphere-fallback" aria-hidden="true" />}>
       <StarFormationBackground scrollContainerRef={scrollContainerRef} />
     </Suspense>
   );
