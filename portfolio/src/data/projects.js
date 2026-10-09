@@ -60,7 +60,7 @@ export const PROJECTS = [
     },
     links: [
       { label: "View on the App Store", href: "https://apps.apple.com/us/app/reptrack-workout-log/id6761032027", external: true, primary: true },
-      { label: "GitHub repo", href: "https://github.com/kmsmohamedansar/reptrack", external: true },
+      { label: "Source is private. Walkthrough on request.", href: "#contact", locked: true },
     ],
   },
   {
@@ -251,7 +251,7 @@ export const PROJECTS = [
         { label: "Deliver", nodes: ["Shortlist to Telegram"] },
       ],
     },
-    links: [{ label: "GitHub repo and write-up", href: "https://github.com/kmsmohamedansar/job-scout-agent", external: true, primary: true }],
+    links: [{ label: "Source is private. Walkthrough on request.", href: "#contact", locked: true }],
   },
   {
     slug: "health-dashboard",
