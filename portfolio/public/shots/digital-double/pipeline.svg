@@ -1,0 +1,102 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 600" width="1000" height="600" font-family="-apple-system, Segoe UI, Helvetica, Arial, sans-serif">
+  <defs>
+    <marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#8b949e"/>
+    </marker>
+    <style>
+      .box{fill:#161b22;stroke:#30363d;stroke-width:1.5}
+      .hi{fill:#1f1420;stroke:#fb7185;stroke-width:1.8}
+      .t{fill:#e6edf3;font-size:15px;font-weight:600}
+      .s{fill:#9aa4ae;font-size:12px}
+      .k{fill:#fb7185;font-size:11px;font-weight:700;letter-spacing:.08em}
+      .ln{stroke:#8b949e;stroke-width:1.6;fill:none;marker-end:url(#a)}
+      .dash{stroke:#fb7185;stroke-width:1.6;fill:none;stroke-dasharray:5 5;marker-end:url(#a)}
+    </style>
+  </defs>
+  <rect width="1000" height="600" rx="16" fill="#0d1117"/>
+  <text x="32" y="44" class="t" font-size="20">How the digital double was built</text>
+  <text x="32" y="66" class="s">Claude Code drives every tool below. I review, the agent fixes, repeat.</text>
+
+  <!-- column labels -->
+  <text x="40" y="104" class="k">1 · CAPTURE</text>
+  <text x="290" y="104" class="k">2 · RECONSTRUCT</text>
+  <text x="560" y="104" class="k">3 · BUILD IN BLENDER</text>
+  <text x="820" y="104" class="k">4 · SHIP</text>
+
+  <!-- capture -->
+  <rect x="32" y="118" width="200" height="86" rx="10" class="box"/>
+  <text x="48" y="146" class="t">iPhone photos</text>
+  <text x="48" y="166" class="s">front + profiles,</text>
+  <text x="48" y="182" class="s">56 handheld stills</text>
+  <rect x="32" y="222" width="200" height="86" rx="10" class="box"/>
+  <text x="48" y="250" class="t">13 s video</text>
+  <text x="48" y="270" class="s">one slow orbit,</text>
+  <text x="48" y="286" class="s">4K, phone camera</text>
+  <rect x="32" y="326" width="200" height="86" rx="10" class="box"/>
+  <text x="48" y="354" class="t">Swift tools</text>
+  <text x="48" y="374" class="s">frame extractor, camera</text>
+  <text x="48" y="390" class="s">pose export (written by AI)</text>
+
+  <!-- reconstruct -->
+  <rect x="282" y="118" width="220" height="86" rx="10" class="box"/>
+  <text x="298" y="146" class="t">KeenTools FaceBuilder</text>
+  <text x="298" y="166" class="s">face fitted to 8 views,</text>
+  <text x="298" y="182" class="s">clean animatable mesh</text>
+  <rect x="282" y="222" width="220" height="86" rx="10" class="box"/>
+  <text x="298" y="250" class="t">Apple Object Capture</text>
+  <text x="298" y="270" class="s">on-device photogrammetry,</text>
+  <text x="298" y="286" class="s">measures hair volume</text>
+  <rect x="282" y="326" width="220" height="86" rx="10" class="box"/>
+  <text x="298" y="354" class="t">Brush (Gaussian splat)</text>
+  <text x="298" y="374" class="s">trained on the M4 GPU,</text>
+  <text x="298" y="390" class="s">likeness reference</text>
+
+  <!-- build -->
+  <rect x="552" y="118" width="230" height="294" rx="12" class="hi"/>
+  <text x="568" y="146" class="t">Blender 5.2 via MCP</text>
+  <text x="568" y="166" class="s">driven by Claude Code</text>
+  <text x="568" y="200" class="s">• real eyeballs, gaze target</text>
+  <text x="568" y="222" class="s">• eyelid openings cut to size</text>
+  <text x="568" y="244" class="s">• 160k hair strands, ear-aware</text>
+  <text x="568" y="266" class="s">• soft temple hairline</text>
+  <text x="568" y="288" class="s">• texture repair by ray-casting</text>
+  <text x="568" y="310" class="s">• skin pores + subsurface</text>
+  <text x="568" y="332" class="s">• Cycles renders</text>
+  <text x="568" y="354" class="s">• bake → hair cards → GLB</text>
+  <text x="568" y="390" class="s">dozens of Python scripts, run live</text>
+
+  <!-- ship -->
+  <rect x="812" y="118" width="160" height="86" rx="10" class="box"/>
+  <text x="828" y="146" class="t">8 MB GLB</text>
+  <text x="828" y="166" class="s">head, eyes,</text>
+  <text x="828" y="182" class="s">hair cards</text>
+  <rect x="812" y="222" width="160" height="86" rx="10" class="box"/>
+  <text x="828" y="250" class="t">three.js page</text>
+  <text x="828" y="270" class="s">eyes follow</text>
+  <text x="828" y="286" class="s">the cursor</text>
+  <rect x="812" y="326" width="160" height="86" rx="10" class="box"/>
+  <text x="828" y="354" class="t">This write-up</text>
+  <text x="828" y="374" class="s">every attempt,</text>
+  <text x="828" y="390" class="s">incl. failures</text>
+
+  <!-- arrows -->
+  <path class="ln" d="M232 161 H280"/>
+  <path class="ln" d="M232 265 H280"/>
+  <path class="ln" d="M232 369 H280"/>
+  <path class="ln" d="M232 265 C256 265 256 161 280 161"/>
+  <path class="ln" d="M502 161 H550"/>
+  <path class="ln" d="M502 265 H550"/>
+  <path class="ln" d="M502 369 H550"/>
+  <path class="ln" d="M782 161 H810"/>
+  <path class="ln" d="M892 204 V220"/>
+  <path class="ln" d="M892 308 V324"/>
+
+  <!-- review loop -->
+  <path class="dash" d="M667 412 V470 H140 V412"/>
+  <path class="dash" d="M667 470 V430"/>
+  <rect x="300" y="452" width="250" height="36" rx="18" fill="#0d1117" stroke="#fb7185" stroke-width="1.4"/>
+  <text x="425" y="475" class="s" text-anchor="middle" fill="#fb7185">human review → agent fixes (×4)</text>
+
+  <text x="32" y="540" class="s">12 stages · about 6 hours · $0 in tools · Apple M4 laptop, 16 GB</text>
+  <text x="32" y="562" class="s">Dead ends kept on purpose: code-only mesh, particle hair, photo-set capture, splat-as-final.</text>
+</svg>

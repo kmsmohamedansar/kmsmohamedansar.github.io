@@ -188,6 +188,7 @@ export const COMMAND_ITEMS = [
   { label: "EMET · ask the terminal", go: "#emet", group: "Fun" },
   { label: "Solar system explorer", go: "#explore", group: "Fun" },
   { label: "Data lineage explorer, live demo", go: "#lineage-demo", group: "Fun" },
+  { label: "A 3D model of me, made with AI", go: "#digital-double", group: "Fun" },
   { label: "RepTrack on the App Store", href: "https://apps.apple.com/us/app/reptrack-workout-log/id6761032027", group: "Links" },
   { label: "SQL Playground, live", href: "https://kmsmohamedansar.github.io/sql-playground", group: "Links" },
   { label: "GitHub", href: CONTACT.github, group: "Links" },
