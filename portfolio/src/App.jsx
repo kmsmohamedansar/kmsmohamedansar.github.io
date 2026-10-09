@@ -15,9 +15,10 @@ import { EASE_OUT } from "./lib/motion";
 
 const SolarSystemExplorer = lazy(() => import("./components/SolarSystemExplorer"));
 const DataLineageExplorer = lazy(() => import("./components/DataLineageExplorer"));
+const DigitalDouble = lazy(() => import("./components/DigitalDouble"));
 
 /* ============================================================
-   ROUTER: "emet", "explore", "lineage-demo" and "project/<slug>" are
+   ROUTER: "emet", "explore", "lineage-demo", "digital-double" and "project/<slug>" are
    full takeover views (reached from cards, the nav or the command
    palette). "main" is everything else: a single scrolled page, the
    hero followed by Projects, Experience, About, Built with AI and
@@ -30,7 +31,7 @@ const DataLineageExplorer = lazy(() => import("./components/DataLineageExplorer"
    section to scroll to."
    ============================================================ */
 function parseRoute(h) {
-  if (h === "emet" || h === "explore" || h === "lineage-demo") return h;
+  if (h === "emet" || h === "explore" || h === "lineage-demo" || h === "digital-double") return h;
   if (h.startsWith("project/")) return h;
   return "main";
 }
@@ -290,6 +291,19 @@ function Stage({ bootDone }) {
               <DataLineageExplorer />
             </Suspense>
           </motion.div>
+        ) : route === "digital-double" ? (
+          <motion.div
+            key="digital-double"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.28, ease: EASE_OUT }}
+            className="h-full"
+          >
+            <Suspense fallback={<div className="h-full bg-[#050506]" aria-hidden="true" />}>
+              <DigitalDouble />
+            </Suspense>
+          </motion.div>
         ) : (
           <motion.div
             key="main"
@@ -324,6 +338,9 @@ function Backdrop() {
   }
   if (route === "explore" || route === "lineage-demo") {
     return <div className="fixed inset-0 z-0 bg-[#02050c]" aria-hidden="true" />;
+  }
+  if (route === "digital-double") {
+    return <div className="fixed inset-0 z-0 bg-[#050506]" aria-hidden="true" />;
   }
   // Everything else sits on flat ink: sections paint their own full-bleed
   // color blocks, and the infinity loop lives in the hero's oval window.

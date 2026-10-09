@@ -627,6 +627,16 @@ export const getProject = (slug) => PROJECTS.find((p) => p.slug === slug);
 /* Things I built with AI as a sparring partner, mostly to see how far it goes. */
 export const EXPERIMENTS = [
   {
+    id: "digital-double",
+    title: "A 3D model of me that looks back",
+    accent: "rose",
+    hook: "I directed Claude Code to build a 3D model of my head in Blender, from phone photos and a short video. Move your cursor and its eyes follow you.",
+    body: "Ten approaches, most of which failed in instructive ways: code-built meshes, a face-fitting add-on, on-device photogrammetry, a Gaussian splat trained on my laptop. All free tools. The full write-up has every step and screenshot.",
+    href: "#digital-double",
+    shot: "/shots/digital-double.jpg",
+    cta: "Meet the model",
+  },
+  {
     id: "emet",
     title: "EMET, a terminal that answers as me",
     accent: "green",
