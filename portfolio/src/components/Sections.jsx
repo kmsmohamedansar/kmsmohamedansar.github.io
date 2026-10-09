@@ -1,13 +1,15 @@
-import { lazy, Suspense, useRef } from "react";
-import { cubicBezier, motion, useReducedMotion, useScroll, useTransform } from "framer-motion";
-import { ArrowDown, ArrowRight, ArrowUpRight, ExternalLink, Link2, Mail } from "lucide-react";
+import { lazy, Suspense, useEffect, useRef, useState } from "react";
+import { cubicBezier, motion, useMotionValueEvent, useReducedMotion, useScroll, useTransform } from "framer-motion";
+import { ArrowDown, ArrowRight, ArrowUp, ArrowUpRight, ExternalLink, Link2, Mail } from "lucide-react";
 import { ABOUT, CONTACT, HERO, ROLES } from "../data/content";
 import { ACCENTS, EXPERIMENTS, FEATURED, MORE_PROJECTS } from "../data/projects";
-import { Rail, Reveal, SectionHead, TagPill } from "./ui";
+import { FlourishTitle, Reveal, SectionHead, SpinBadge, TagPill } from "./ui";
+import { useRoute } from "../App";
 import { EASE_REVEAL } from "../lib/motion";
 
-const SECTION = "min-h-0 flex flex-col items-center px-5 py-14 scroll-mt-16";
-const INNER = "w-full max-w-[1180px]";
+// Every section below the hero is a full-bleed color block of its own.
+const BLOCK = "relative overflow-hidden scroll-mt-16 px-5 py-20 sm:py-28";
+const INNER = "relative mx-auto w-full max-w-[1180px]";
 
 /* A one-line flowchart preview: the column labels as coloured chips
    joined by arrows. The full diagram lives on the project page. */
@@ -17,7 +19,7 @@ function FlowMini({ spec, accent }) {
     <div className="flex flex-wrap items-center gap-x-1.5 gap-y-2" aria-hidden="true">
       {spec.columns.map((c, i) => (
         <span key={c.label} className="flex items-center gap-1.5">
-          <span className={`font-mono text-[.62rem] uppercase tracking-wide px-2 py-1 rounded-md border ${a.border} ${a.text} ${a.soft}`}>
+          <span className={`font-mono text-micro uppercase tracking-wide px-2 py-1 rounded-md border ${a.border} ${a.text} ${a.soft}`}>
             {c.label}
           </span>
           {i < spec.columns.length - 1 && <ArrowRight size={12} className="text-[color:var(--ink-300)]" />}
@@ -27,11 +29,64 @@ function FlowMini({ spec, accent }) {
   );
 }
 
-function Thumb({ project, className }) {
-  if (project.shots?.[0]) {
-    return <img src={project.shots[0]} alt="" loading="lazy" className={`w-full object-cover object-top rounded-lg border border-white/10 ${className}`} />;
+/* The project's first screenshot, or, when there isn't one (most
+   projects) or it fails to load, a typographic card in the project's
+   accent: its kind, its flow as chips, and a large initial. */
+function ProjectVisual({ project, large = false }) {
+  const a = ACCENTS[project.accent];
+  const [broken, setBroken] = useState(false);
+  const ratio = large ? "aspect-[16/11]" : "aspect-[16/8]";
+  if (project.shots?.[0] && !broken) {
+    return (
+      <div className={`overflow-hidden rounded-2xl border border-white/10 bg-black/20 ${ratio}`}>
+        <img
+          src={project.shots[0]}
+          alt=""
+          loading="lazy"
+          onError={() => setBroken(true)}
+          className="h-full w-full object-cover object-top transition-transform duration-500 ease-out group-hover:scale-[1.03]"
+        />
+      </div>
+    );
   }
-  return null;
+  return (
+    <div
+      className={`relative flex flex-col justify-between overflow-hidden rounded-2xl border p-5 ${large ? "sm:p-8" : ""} ${ratio}`}
+      style={{ background: `radial-gradient(130% 100% at 0% 0%, ${a.hex}38, transparent 62%), rgba(5, 9, 17, 0.5)`, borderColor: `${a.hex}45` }}
+    >
+      <span
+        aria-hidden="true"
+        className="pointer-events-none absolute -bottom-[.18em] right-[.06em] font-serif italic leading-none transition-transform duration-500 ease-out group-hover:-translate-y-2"
+        style={{ color: `${a.hex}2e`, fontSize: large ? "clamp(9rem,20vw,16rem)" : "8rem" }}
+      >
+        {project.title[0]}
+      </span>
+      <span className={`relative font-mono text-micro font-semibold uppercase tracking-[.16em] ${a.text}`}>{project.kind}</span>
+      {project.flow && (
+        <div className="relative">
+          <FlowMini spec={project.flow} accent={project.accent} />
+        </div>
+      )}
+    </div>
+  );
+}
+
+/* Oversized, faint section word behind the content, drifting slower than
+   the page scrolls. Decorative only. */
+function Watermark({ text, targetRef, scrollContainerRef }) {
+  const reduced = useReducedMotion();
+  const { scrollYProgress } = useScroll({ container: scrollContainerRef, target: targetRef, offset: ["start end", "end start"] });
+  // Function form, for the same ScrollTimeline reason as HeroPhrase.
+  const y = useTransform(scrollYProgress, (v) => `${(v - 0.5) * 60}vh`);
+  return (
+    <motion.div
+      aria-hidden="true"
+      style={reduced ? undefined : { y }}
+      className="pointer-events-none absolute inset-x-0 top-[12vh] select-none text-center font-condensed uppercase leading-none tracking-[.12em] text-white/[.045] text-[clamp(6rem,24vw,22rem)]"
+    >
+      {text}
+    </motion.div>
+  );
 }
 
 /* ── HERO ───────────────────────────────────────────────────── */
@@ -98,7 +153,6 @@ export function Hero({ ready = true, scrollContainerRef }) {
       <section
         ref={heroRef}
         id="hero"
-        data-star-accent="hero"
         className="relative min-h-[100dvh] flex flex-col bg-[#eef6f7] px-3 sm:px-5 pt-[4.75rem] pb-4 sm:pb-5"
         style={{ color: HERO_INK }}
       >
@@ -122,7 +176,7 @@ export function Hero({ ready = true, scrollContainerRef }) {
 
           <motion.p
             {...enter(0)}
-            className="absolute top-4 left-4 sm:top-6 sm:left-6 max-w-[calc(100%-2rem)] rounded-md border border-[#0b1220]/12 bg-white/85 px-3 py-2 font-mono text-[.68rem] font-medium uppercase tracking-[.16em]"
+            className="absolute top-4 left-4 sm:top-6 sm:left-6 max-w-[calc(100%-2rem)] rounded-md border border-[#0b1220]/12 bg-white/85 px-3 py-2 font-mono text-xs font-medium uppercase tracking-[.16em]"
           >
             {HERO.eyebrow}
           </motion.p>
@@ -131,7 +185,7 @@ export function Hero({ ready = true, scrollContainerRef }) {
             {...enter(0.3)}
             type="button"
             onClick={scrollPastHero}
-            className="group absolute bottom-4 right-4 sm:bottom-6 sm:right-6 flex items-center gap-3 rounded-full border border-[#0b1220]/12 bg-white/85 py-1.5 pl-4 pr-1.5 font-mono text-[.64rem] font-medium uppercase tracking-[.16em]"
+            className="group absolute bottom-4 right-4 sm:bottom-6 sm:right-6 flex items-center gap-3 rounded-full border border-[#0b1220]/12 bg-white/85 py-1.5 pl-4 pr-1.5 font-mono text-micro font-medium uppercase tracking-[.16em] transition-transform duration-200 active:scale-[.97]"
           >
             Scroll down to explore
             <span className="grid h-9 w-9 place-items-center rounded-full bg-[#0b1220] text-white transition-transform duration-200 group-hover:translate-y-0.5">
@@ -141,7 +195,7 @@ export function Hero({ ready = true, scrollContainerRef }) {
         </div>
 
         {/* Ticker: the eyebrow on a slow loop beneath the card. */}
-        <div aria-hidden="true" className="mt-3 overflow-hidden whitespace-nowrap font-mono text-[.68rem] font-medium uppercase tracking-[.22em] text-[#475569]">
+        <div aria-hidden="true" className="mt-3 overflow-hidden whitespace-nowrap font-mono text-xs font-medium uppercase tracking-[.22em] text-[#475569]">
           <div className="marquee-track inline-flex">
             <span className="pr-[.5em]">{ticker}</span>
             <span className="pr-[.5em]">{ticker}</span>
@@ -170,7 +224,7 @@ export function Hero({ ready = true, scrollContainerRef }) {
       <section className="bg-ink px-5 pb-20 pt-4 sm:pb-28">
         <div className="mx-auto w-full max-w-[1180px]">
           <Reveal className="max-w-3xl">
-            <p className="text-[1.15rem] sm:text-[1.3rem] leading-relaxed text-[color:var(--ink-200)]">
+            <p className="text-lg sm:text-xl leading-relaxed text-[color:var(--ink-200)]">
               {HERO.lede.map((s, i) => (
                 <span key={i} className={s.cls}>
                   {s.text}
@@ -180,13 +234,13 @@ export function Hero({ ready = true, scrollContainerRef }) {
             <div className="mt-8 flex flex-wrap gap-3">
               <a
                 href="#projects"
-                className="inline-flex items-center gap-2 px-5 py-3 rounded-full bg-white text-[#050911] font-bold text-[.88rem] transition-colors duration-200 hover:bg-[#a8f8ff]"
+                className="inline-flex min-h-11 items-center gap-2 px-5 py-3 rounded-full bg-white text-[#050911] font-bold text-sm transition-colors duration-200 hover:bg-[#a8f8ff] active:scale-[.97]"
               >
                 See my projects <ArrowRight size={15} />
               </a>
               <a
                 href="#contact"
-                className="inline-flex items-center gap-2 px-5 py-3 rounded-full border border-white/30 text-white font-medium text-[.88rem] transition-colors duration-200 hover:bg-white/10 hover:border-white/60"
+                className="inline-flex min-h-11 items-center gap-2 px-5 py-3 rounded-full border border-white/30 text-white font-medium text-sm transition-colors duration-200 hover:bg-white/10 hover:border-white/60 active:scale-[.97]"
               >
                 Say hello
               </a>
@@ -199,69 +253,73 @@ export function Hero({ ready = true, scrollContainerRef }) {
 }
 
 /* ── PROJECTS ───────────────────────────────────────────────── */
-function FeaturedCard({ project, index }) {
+function FeaturedRow({ project, index }) {
   const a = ACCENTS[project.accent];
+  const flip = index % 2 === 1;
   return (
-    <Reveal delay={index * 0.08} className="h-full">
+    <Reveal>
       <a
         href={`#project/${project.slug}`}
-        className="group panel h-full rounded-2xl p-6 flex flex-col transition-all hover:-translate-y-1"
-        style={{ boxShadow: `0 0 0 1px ${a.hex}33, 0 22px 44px -24px ${a.glow}` }}
+        className="group grid items-center gap-6 rounded-3xl lg:gap-14 lg:grid-cols-[1.1fr_1fr] active:scale-[.995] transition-transform duration-200"
       >
-        <div className="flex items-center justify-between gap-3">
-          <span className={`font-mono text-[.68rem] uppercase tracking-[.14em] font-semibold ${a.text}`}>{project.kind}</span>
-          <span className="font-mono text-[.62rem] uppercase tracking-wide text-[color:var(--ink-300)]">{project.status}</span>
+        <div className={flip ? "lg:order-2" : ""}>
+          <ProjectVisual project={project} large />
         </div>
-        <h3 className="font-display text-[1.7rem] font-semibold text-white mt-3 leading-tight group-hover:underline decoration-2 underline-offset-4" style={{ textDecorationColor: a.hex }}>
-          {project.title}
-        </h3>
-        <p className="mt-3 text-[.98rem] leading-relaxed text-[color:var(--ink-200)]">{project.hook}</p>
-        <div className="mt-5">
-          <Thumb project={project} className="h-36" />
-          {!project.shots?.[0] && <FlowMini spec={project.flow} accent={project.accent} />}
+        <div>
+          <div className="flex flex-wrap items-center gap-x-4 gap-y-1 font-mono text-xs uppercase tracking-[.16em]">
+            <span className={`font-semibold ${a.text}`}>{project.kind}</span>
+            <span className="text-[color:var(--ink-300)]">{project.status}</span>
+          </div>
+          <h3 aria-label={project.title} className="mt-3 text-white leading-[.95] text-[clamp(2.6rem,6vw,4.8rem)]">
+            <FlourishTitle text={project.title} accent={project.accent} />
+          </h3>
+          <p className="mt-4 max-w-xl text-base sm:text-lg leading-relaxed text-[color:var(--ink-200)]">{project.hook}</p>
+          <div className="mt-5 flex flex-wrap gap-2">
+            {project.tags.slice(0, 3).map((t) => (
+              <TagPill key={t} accent={project.accent}>
+                {t}
+              </TagPill>
+            ))}
+          </div>
+          <div className="mt-7">
+            <SpinBadge label="Read the story" accent={project.accent} />
+          </div>
         </div>
-        <div className="mt-5 flex flex-wrap gap-2">
-          {project.tags.slice(0, 3).map((t) => (
-            <TagPill key={t} accent={project.accent}>
-              {t}
-            </TagPill>
-          ))}
-        </div>
-        <span className={`mt-auto pt-6 inline-flex items-center gap-1.5 font-mono text-[.76rem] uppercase tracking-[.12em] font-semibold ${a.text}`}>
-          Read the story <ArrowRight size={14} className="transition-transform group-hover:translate-x-1" />
-        </span>
       </a>
     </Reveal>
   );
 }
 
-function MiniCard({ project }) {
+function ProjectCard({ project }) {
   const a = ACCENTS[project.accent];
   return (
     <a
       href={`#project/${project.slug}`}
-      className="group panel snap-start shrink-0 w-[280px] sm:w-[310px] rounded-xl p-5 flex flex-col hover:-translate-y-0.5 transition-transform"
-      style={{ borderTop: `3px solid ${a.hex}` }}
+      className="group flex h-full flex-col rounded-2xl border border-white/10 bg-white/[.03] p-4 sm:p-5 transition-[transform,border-color,background-color] duration-200 ease-out hover:-translate-y-1 hover:border-white/25 hover:bg-white/[.06] focus-visible:-translate-y-1 active:translate-y-0 active:scale-[.99]"
     >
-      <span className={`font-mono text-[.64rem] uppercase tracking-[.14em] font-semibold ${a.text}`}>{project.kind}</span>
-      <h4 className="font-display text-[1.15rem] font-semibold text-white mt-1.5 leading-snug group-hover:underline underline-offset-4" style={{ textDecorationColor: a.hex }}>
-        {project.title}
-      </h4>
-      <p className="mt-2 text-[.86rem] leading-relaxed text-[color:var(--ink-200)] line-clamp-3">{project.hook}</p>
-      <div className="mt-4">
-        <Thumb project={project} className="h-24" />
-        {!project.shots?.[0] && <FlowMini spec={project.flow} accent={project.accent} />}
+      <ProjectVisual project={project} />
+      <span className={`mt-4 font-mono text-micro font-semibold uppercase tracking-[.14em] ${a.text}`}>{project.kind}</span>
+      <h4 className="mt-1.5 font-display text-xl font-semibold leading-snug text-white">{project.title}</h4>
+      <p className="mt-2 text-sm leading-relaxed text-[color:var(--ink-200)] line-clamp-3">{project.hook}</p>
+      <div className="mt-4 flex flex-wrap gap-1.5">
+        {project.tags.slice(0, 3).map((t) => (
+          <TagPill key={t} accent={project.accent}>
+            {t}
+          </TagPill>
+        ))}
       </div>
-      <span className={`mt-auto pt-4 inline-flex items-center gap-1 font-mono text-[.68rem] uppercase tracking-[.12em] ${a.text}`}>
-        Open <ArrowUpRight size={13} />
+      <span className={`mt-auto pt-5 inline-flex items-center gap-1 font-mono text-xs uppercase tracking-[.12em] ${a.text}`}>
+        Open <ArrowUpRight size={13} className="transition-transform duration-200 group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
       </span>
     </a>
   );
 }
 
-export function ProjectsSection() {
+export function ProjectsSection({ scrollContainerRef }) {
+  const ref = useRef(null);
   return (
-    <section id="projects" data-star-accent="build" className={SECTION}>
+    <section ref={ref} id="projects" className={`${BLOCK} bg-block-green`}>
+      <Watermark text="Projects" targetRef={ref} scrollContainerRef={scrollContainerRef} />
       <div className={INNER}>
         <SectionHead
           accent="green"
@@ -269,17 +327,20 @@ export function ProjectsSection() {
           title="Things I've built"
           lede="Three I'd start with, then the rest. Click any card for the story, a diagram of how it works, and a link to try it or read the code."
         />
-        <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3 items-stretch">
+        <div className="space-y-16 sm:space-y-24">
           {FEATURED.map((p, i) => (
-            <FeaturedCard key={p.slug} project={p} index={i} />
+            <FeaturedRow key={p.slug} project={p} index={i} />
           ))}
         </div>
-        <div className="mt-10">
-          <Rail label={`More projects (${MORE_PROJECTS.length}), scroll sideways`}>
-            {MORE_PROJECTS.map((p) => (
-              <MiniCard key={p.slug} project={p} />
+        <div className="mt-20 sm:mt-28">
+          <p className="mb-5 font-mono text-xs uppercase tracking-[.16em] text-[color:var(--ink-300)]">More projects ({MORE_PROJECTS.length})</p>
+          <div className="grid gap-4 sm:gap-5 sm:grid-cols-2 lg:grid-cols-3">
+            {MORE_PROJECTS.map((p, i) => (
+              <Reveal key={p.slug} delay={(i % 3) * 0.06} className="h-full">
+                <ProjectCard project={p} />
+              </Reveal>
             ))}
-          </Rail>
+          </div>
         </div>
       </div>
     </section>
@@ -287,41 +348,47 @@ export function ProjectsSection() {
 }
 
 /* ── EXPERIENCE ─────────────────────────────────────────────── */
-function RoleCard({ role }) {
+function RoleRow({ role }) {
   const a = ACCENTS[role.accent];
   return (
-    <div className="panel snap-start shrink-0 w-[min(86vw,360px)] rounded-xl p-6 flex flex-col" style={{ borderTop: `3px solid ${a.hex}` }}>
-      <div className="flex items-center justify-between gap-2">
-        <span className={`font-mono text-[.68rem] uppercase tracking-[.12em] font-semibold ${a.text}`}>{role.company}</span>
-        {role.current && (
-          <span className="font-mono text-[.58rem] uppercase tracking-wide px-2 py-0.5 rounded-full border border-green/50 text-green bg-green/10">Now</span>
-        )}
-      </div>
-      <h4 className="font-display text-[1.25rem] font-semibold text-white mt-2 leading-snug">{role.title}</h4>
-      <p className="font-mono text-[.66rem] text-[color:var(--ink-300)] mt-1">{role.when}</p>
-      <p className="mt-3 text-[.92rem] leading-relaxed text-[color:var(--ink-100)] italic">{role.summary}</p>
-      <ul className="mt-3 space-y-2 text-[.86rem] leading-relaxed text-[color:var(--ink-200)]">
-        {role.bullets.map((b) => (
-          <li key={b} className="flex gap-2.5">
-            <span className="mt-2 w-1 h-1 rounded-full shrink-0" style={{ background: a.hex }} />
-            <span>{b}</span>
-          </li>
-        ))}
-      </ul>
-      <div className="mt-auto pt-4 flex flex-wrap gap-1.5">
-        {role.tags.map((t) => (
-          <TagPill key={t} accent={role.accent}>
-            {t}
-          </TagPill>
-        ))}
-      </div>
-    </div>
+    <Reveal>
+      <article className="grid gap-4 border-t border-white/15 py-8 sm:py-10 md:grid-cols-[minmax(0,15rem)_1fr] md:gap-10">
+        <div>
+          <div className="flex flex-wrap items-center gap-2">
+            <span className={`font-mono text-xs font-semibold uppercase tracking-[.14em] ${a.text}`}>{role.company}</span>
+            {role.current && (
+              <span className="rounded-full border border-green/50 bg-green/10 px-2 py-0.5 font-mono text-micro uppercase tracking-wide text-green">Now</span>
+            )}
+          </div>
+          <p className="mt-2 font-mono text-micro text-[color:var(--ink-300)]">{role.when}</p>
+        </div>
+        <div>
+          <h3 className="font-display text-2xl sm:text-3xl font-semibold leading-tight text-white">{role.title}</h3>
+          <p className="mt-3 font-serif italic text-xl sm:text-2xl leading-snug text-[color:var(--ink-100)]">{role.summary}</p>
+          <ul className="mt-4 space-y-2 text-base leading-relaxed text-[color:var(--ink-200)]">
+            {role.bullets.map((b) => (
+              <li key={b} className="flex gap-3">
+                <span className="mt-[.7em] h-1 w-1 shrink-0 rounded-full" style={{ background: a.hex }} />
+                <span>{b}</span>
+              </li>
+            ))}
+          </ul>
+          <div className="mt-5 flex flex-wrap gap-1.5">
+            {role.tags.map((t) => (
+              <TagPill key={t} accent={role.accent}>
+                {t}
+              </TagPill>
+            ))}
+          </div>
+        </div>
+      </article>
+    </Reveal>
   );
 }
 
 export function ExperienceSection() {
   return (
-    <section id="experience" data-star-accent="lineage" className={SECTION}>
+    <section id="experience" className={`${BLOCK} bg-block-amber`}>
       <div className={INNER}>
         <SectionHead
           accent="amber"
@@ -329,47 +396,71 @@ export function ExperienceSection() {
           title="Where I've worked"
           lede="From auditing content catalogues to writing SQL on retail pricing data. Each stop gave me a bit more technical ownership."
         />
-        <Rail label="Newest first, scroll sideways">
+        <p className="mb-2 font-mono text-xs uppercase tracking-[.16em] text-[color:var(--ink-300)]">Newest first</p>
+        <div className="border-b border-white/15">
           {ROLES.map((r) => (
-            <RoleCard key={r.company + r.title} role={r} />
+            <RoleRow key={r.company + r.title} role={r} />
           ))}
-        </Rail>
+        </div>
       </div>
     </section>
   );
 }
 
 /* ── ABOUT ──────────────────────────────────────────────────── */
-export function AboutSection() {
+export function AboutSection({ scrollContainerRef }) {
+  const reduced = useReducedMotion();
+  const storyRef = useRef(null);
+  // Word-by-word reveal off a single scroll value: the container carries
+  // --p (0-1 progress) and --n (word count), each word its own --i, and
+  // CSS (.word-reveal) turns that into an opacity. One style write per
+  // scroll frame, no per-word observers or motion values.
+  const { scrollYProgress } = useScroll({ container: scrollContainerRef, target: storyRef, offset: ["start 0.85", "end 0.55"] });
+  useMotionValueEvent(scrollYProgress, "change", (v) => {
+    if (!reduced) storyRef.current?.style.setProperty("--p", v.toFixed(4));
+  });
+  useEffect(() => {
+    storyRef.current?.style.setProperty("--p", reduced ? "1" : scrollYProgress.get().toFixed(4));
+  }, [reduced, scrollYProgress]);
+
+  let wordIndex = 0;
+  const paragraphs = ABOUT.story.map((para) => para.split(" ").map((w) => ({ w, i: wordIndex++ })));
+
   return (
-    <section id="about" data-star-accent="source" className={SECTION}>
+    <section id="about" className={`${BLOCK} bg-block-violet`}>
       <div className={INNER}>
-        <SectionHead accent="violet" kicker="About" title={ABOUT.title} />
-        <Reveal>
-          <div className="panel rounded-2xl p-6 md:p-9 grid lg:grid-cols-[1.2fr_1fr] gap-8">
-            <div className="space-y-4 text-[1.02rem] leading-relaxed text-[color:var(--ink-100)]">
-              {ABOUT.story.map((p) => (
-                <p key={p.slice(0, 20)}>{p}</p>
+        <SectionHead accent="violet" kicker="About" title={ABOUT.title} align="center" />
+        <div
+          ref={storyRef}
+          style={{ "--n": wordIndex, "--p": reduced ? 1 : 0 }}
+          className="mx-auto max-w-3xl space-y-7 font-serif italic text-[clamp(1.35rem,2.4vw,2rem)] leading-[1.38] text-white"
+        >
+          {paragraphs.map((words) => (
+            <p key={words[0].i}>
+              {words.map(({ w, i }) => (
+                <span key={i} className="word-reveal" style={{ "--i": i }}>
+                  {w}{" "}
+                </span>
               ))}
-            </div>
-            <div className="space-y-5">
-              {ABOUT.groups.map((g) => {
-                const a = ACCENTS[g.accent];
-                return (
-                  <div key={g.title}>
-                    <h4 className={`font-mono text-[.7rem] uppercase tracking-[.14em] font-semibold mb-2 ${a.text}`}>{g.title}</h4>
-                    <div className="flex flex-wrap gap-2">
-                      {g.items.map((it) => (
-                        <TagPill key={it} accent={g.accent}>
-                          {it}
-                        </TagPill>
-                      ))}
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-          </div>
+            </p>
+          ))}
+        </div>
+        <Reveal className="mx-auto mt-16 grid max-w-3xl gap-8 sm:grid-cols-2">
+          {ABOUT.groups.map((g) => {
+            const a = ACCENTS[g.accent];
+            return (
+              <div key={g.title}>
+                <h3 className={`mb-3 font-mono text-xs font-semibold uppercase tracking-[.16em] ${a.text}`}>{g.title}</h3>
+                <div className="flex flex-wrap gap-2">
+                  {g.items.map((it) => (
+                    <TagPill key={it} accent={g.accent}>
+                      {it}
+                    </TagPill>
+                  ))}
+                </div>
+              </div>
+            );
+          })}
         </Reveal>
       </div>
     </section>
@@ -379,7 +470,7 @@ export function AboutSection() {
 /* ── BUILT WITH AI ──────────────────────────────────────────── */
 export function ExperimentsSection() {
   return (
-    <section id="ai" data-star-accent="source" className={SECTION}>
+    <section id="ai" className={`${BLOCK} bg-ink`}>
       <div className={INNER}>
         <SectionHead
           accent="rose"
@@ -387,7 +478,7 @@ export function ExperimentsSection() {
           title="Experiments with an AI pair programmer"
           lede="These aren't my day job. They're what happens when I ask an AI for help, look at the result, and keep pushing. Some of this very page is one of them."
         />
-        <div className="grid gap-4 md:grid-cols-3">
+        <div className="grid gap-4 sm:gap-5 md:grid-cols-3">
           {EXPERIMENTS.map((x, i) => {
             const a = ACCENTS[x.accent];
             const Body = x.href ? "a" : "div";
@@ -395,15 +486,19 @@ export function ExperimentsSection() {
               <Reveal key={x.id} delay={i * 0.07} className="h-full">
                 <Body
                   {...(x.href ? { href: x.href } : {})}
-                  className={`panel h-full rounded-xl p-5 flex flex-col ${x.href ? "group hover:-translate-y-0.5 transition-transform" : ""}`}
+                  className={`flex h-full flex-col rounded-2xl border border-white/10 bg-white/[.03] p-5 sm:p-6 ${
+                    x.href
+                      ? "group transition-[transform,border-color,background-color] duration-200 ease-out hover:-translate-y-1 hover:border-white/25 hover:bg-white/[.06] focus-visible:-translate-y-1 active:translate-y-0 active:scale-[.99]"
+                      : ""
+                  }`}
                   style={{ borderTop: `3px solid ${a.hex}` }}
                 >
-                  <h4 className="font-display text-[1.15rem] font-semibold text-white leading-snug">{x.title}</h4>
-                  <p className={`mt-2 text-[.9rem] leading-relaxed ${a.text}`}>{x.hook}</p>
-                  <p className="mt-2 text-[.86rem] leading-relaxed text-[color:var(--ink-200)]">{x.body}</p>
+                  <h3 className="font-display text-xl font-semibold leading-snug text-white">{x.title}</h3>
+                  <p className={`mt-2 text-sm leading-relaxed ${a.text}`}>{x.hook}</p>
+                  <p className="mt-2 text-sm leading-relaxed text-[color:var(--ink-200)]">{x.body}</p>
                   {x.cta && (
-                    <span className={`mt-auto pt-4 inline-flex items-center gap-1.5 font-mono text-[.72rem] uppercase tracking-[.12em] font-semibold ${a.text}`}>
-                      {x.cta} <ArrowRight size={13} className="transition-transform group-hover:translate-x-1" />
+                    <span className={`mt-auto pt-5 inline-flex items-center gap-1.5 font-mono text-xs font-semibold uppercase tracking-[.12em] ${a.text}`}>
+                      {x.cta} <ArrowRight size={13} className="transition-transform duration-200 group-hover:translate-x-1" />
                     </span>
                   )}
                 </Body>
@@ -417,50 +512,93 @@ export function ExperimentsSection() {
 }
 
 /* ── CONTACT ────────────────────────────────────────────────── */
-export function ContactSection() {
+function MarqueeUnit() {
   return (
-    <section id="contact" data-star-accent="commit" className={`${SECTION} pb-24`}>
-      <div className={INNER}>
-        <Reveal>
-          <div className="panel rounded-2xl p-8 md:p-12 text-center max-w-3xl mx-auto">
-            <h2 className="font-display text-[clamp(1.8rem,3.6vw,2.6rem)] font-semibold text-white leading-tight">
-              If something here caught your eye, <span className="text-cyan">let's talk</span>.
-            </h2>
-            <p className="mt-4 text-[1.02rem] leading-relaxed text-[color:var(--ink-200)] max-w-xl mx-auto">
-              A data problem that needs untangling, a pipeline that has to hold, or a tool that needs building. I read every message.
-            </p>
-            <div className="mt-7 flex flex-wrap justify-center gap-3">
-              <a
-                href={`mailto:${CONTACT.email}`}
-                className="inline-flex items-center gap-2 px-5 py-3 rounded-lg bg-gradient-to-r from-[#a8f8ff] to-cyan text-[#050911] font-bold text-[.88rem] hover:brightness-110 transition-[filter]"
-              >
-                <Mail size={15} /> Email me
-              </a>
-              <a
-                href={CONTACT.linkedin}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 px-5 py-3 rounded-lg border border-white/25 text-white font-medium text-[.88rem] hover:border-cyan hover:text-cyan transition-colors"
-              >
-                <Link2 size={15} /> LinkedIn
-              </a>
-              <a
-                href={CONTACT.github}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 px-5 py-3 rounded-lg border border-white/25 text-white font-medium text-[.88rem] hover:border-cyan hover:text-cyan transition-colors"
-              >
-                <ExternalLink size={15} /> GitHub
-              </a>
-            </div>
-            <p className="mt-5 font-mono text-[.74rem] text-[color:var(--ink-300)]">{CONTACT.email}</p>
-          </div>
-        </Reveal>
-        <p className="mt-8 text-center font-mono text-[.64rem] text-[color:var(--ink-300)]">
-          © {new Date().getFullYear()} Mohamed Ansar · Built with React, Vite and Tailwind
-        </p>
-      </div>
-    </section>
+    <span className="inline-flex items-center">
+      <span className="relative inline-block">
+        <span className="font-condensed uppercase text-white">Say hello</span>
+        <span className="absolute left-[22%] top-[34%] -rotate-6 whitespace-nowrap font-serif italic normal-case text-rose text-[.42em] [text-shadow:0_0_2px_#23091a,0_2px_16px_rgba(35,9,26,.9)]">
+          let's talk
+        </span>
+      </span>
+      <span className="mx-[.3em] grid h-[.72em] w-[.72em] place-items-center rounded-full bg-rose text-[#23091a]">
+        <Mail className="h-[.32em] w-[.32em]" />
+      </span>
+    </span>
   );
 }
 
+export function ContactSection() {
+  const { navigate } = useRoute();
+  return (
+    <section id="contact" className="relative overflow-hidden scroll-mt-16 bg-block-rose">
+      {/* The whole strip is the email link; the moving text is decoration. */}
+      <a
+        href={`mailto:${CONTACT.email}`}
+        aria-label={`Email me at ${CONTACT.email}`}
+        className="group block overflow-hidden whitespace-nowrap border-b border-white/12 pt-20 pb-8 sm:pt-28 sm:pb-10 text-[clamp(4rem,13vw,11rem)] leading-none"
+      >
+        <div aria-hidden="true" className="marquee-track inline-flex [animation-duration:22s] group-hover:[animation-play-state:paused]">
+          {[0, 1, 2, 3, 4, 5].map((k) => (
+            <MarqueeUnit key={k} />
+          ))}
+        </div>
+      </a>
+
+      <div className="px-5 py-16 sm:py-20">
+        <Reveal className="mx-auto max-w-3xl text-center">
+          <h2 className="font-display text-[clamp(1.9rem,4vw,3rem)] font-semibold leading-tight text-white">
+            If something here caught your eye, <span className="font-serif italic font-normal text-rose">let's talk</span>.
+          </h2>
+          <p className="mx-auto mt-4 max-w-xl text-base sm:text-lg leading-relaxed text-[color:var(--ink-200)]">
+            A data problem that needs untangling, a pipeline that has to hold, or a tool that needs building. I read every message.
+          </p>
+          <div className="mt-8 flex flex-wrap justify-center gap-3">
+            <a
+              href={`mailto:${CONTACT.email}`}
+              className="inline-flex min-h-11 items-center gap-2 rounded-full bg-white px-5 py-3 text-sm font-bold text-[#23091a] transition-colors duration-200 hover:bg-[#ffd3dc] active:scale-[.97]"
+            >
+              <Mail size={15} /> Email me
+            </a>
+            <a
+              href={CONTACT.linkedin}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex min-h-11 items-center gap-2 rounded-full border border-white/30 px-5 py-3 text-sm font-medium text-white transition-colors duration-200 hover:border-white/60 hover:bg-white/10 active:scale-[.97]"
+            >
+              <Link2 size={15} /> LinkedIn
+            </a>
+            <a
+              href={CONTACT.github}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex min-h-11 items-center gap-2 rounded-full border border-white/30 px-5 py-3 text-sm font-medium text-white transition-colors duration-200 hover:border-white/60 hover:bg-white/10 active:scale-[.97]"
+            >
+              <ExternalLink size={15} /> GitHub
+            </a>
+          </div>
+          <p className="mt-6 font-mono text-xs text-[color:var(--ink-300)]">{CONTACT.email}</p>
+        </Reveal>
+      </div>
+
+      <footer className="border-t border-white/12 px-5 py-6">
+        <div className="mx-auto flex max-w-[1180px] items-center justify-between gap-4">
+          <div className="font-mono text-micro uppercase tracking-[.12em] text-[color:var(--ink-300)]">
+            <p>
+              Designed and built by Mohamed Ansar · © {new Date().getFullYear()}
+            </p>
+            <p className="mt-1">Built with React, Vite and Tailwind</p>
+          </div>
+          <button
+            type="button"
+            onClick={() => navigate("deck")}
+            aria-label="Back to top"
+            className="grid h-11 w-11 shrink-0 place-items-center rounded-full bg-white text-[#23091a] transition-transform duration-200 hover:-translate-y-0.5 active:scale-95"
+          >
+            <ArrowUp size={18} />
+          </button>
+        </div>
+      </footer>
+    </section>
+  );
+}

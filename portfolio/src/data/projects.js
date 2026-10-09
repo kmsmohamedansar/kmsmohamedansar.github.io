@@ -1,7 +1,7 @@
 // Every project on the site, in one place.
 //
 // `featured: true` projects get the big cards at the top. Everything else
-// goes in the scrolling rail below them. Each project also gets its own
+// goes in the grid below them. Each project also gets its own
 // detail page at #project/<slug>, built from these same fields.
 //
 // Flow diagrams are written as columns of boxes. If `links` is left out,

@@ -17,6 +17,18 @@
   --color-rose: #fb7185;
   --color-green: #34d399;
 
+  /* Full-bleed section blocks: each section's accent, sunk to near-ink so
+     body copy keeps its contrast. The hero is the one light block. */
+  --color-hero: #eef6f7;
+  --color-block-green: #06231a;
+  --color-block-amber: #231806;
+  --color-block-violet: #140f2e;
+  --color-block-rose: #23091a;
+
+  /* Below text-xs, for tags and meta lines (11.5px at the 18px root). */
+  --text-micro: 0.64rem;
+  --text-micro--line-height: 1.45;
+
   /* Outfit for headings everywhere except emet (see .dark-surface
      override below) — a bold, geometric grotesk closer to the
      typeface used on the portfolio site referenced as a style match,
@@ -61,6 +73,12 @@
 }
 
 @layer base {
+  /* One focus style for everything interactive: a ring in the element's
+     own text color, so it reads on the light hero and every dark block. */
+  :where(a, button, [role="button"], [tabindex]):focus-visible {
+    outline: 2px solid currentColor;
+    outline-offset: 3px;
+  }
   html {
     scroll-behavior: smooth;
     font-size: 18px;
@@ -86,22 +104,6 @@
     background: rgba(5, 9, 17, 0.78);
     border: 1px solid rgba(255, 255, 255, 0.09);
     box-shadow: 0 18px 40px -22px rgba(0, 0, 0, 0.8);
-  }
-  /* A scrollbar you can actually see, for the horizontal rails. */
-  .rail-scroll {
-    scrollbar-width: thin;
-    scrollbar-color: rgba(34, 211, 238, 0.6) rgba(255, 255, 255, 0.08);
-  }
-  .rail-scroll::-webkit-scrollbar {
-    height: 10px;
-  }
-  .rail-scroll::-webkit-scrollbar-track {
-    background: rgba(255, 255, 255, 0.08);
-    border-radius: 999px;
-  }
-  .rail-scroll::-webkit-scrollbar-thumb {
-    background: rgba(34, 211, 238, 0.6);
-    border-radius: 999px;
   }
   /* Static stand-in for the hero loop's atmosphere: shown while its
      chunk loads and if WebGL is unavailable. Same palette as the shader. */
@@ -240,6 +242,33 @@
   }
 }
 
+/* About: each word's opacity follows the paragraph's scroll progress
+   (--p, 0-1) against its own index (--i) out of the word count (--n). */
+.word-reveal {
+  opacity: calc(0.26 + 0.74 * clamp(0, var(--p, 1) * var(--n, 1) - var(--i, 0), 1));
+  transition: opacity 0.18s linear;
+}
+
+/* SpinBadge: rotates only while its card is hovered or focused. */
+@keyframes badge-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+.badge-spin {
+  transform-origin: 50% 50%;
+}
+.group:hover .badge-spin,
+.group:focus-visible .badge-spin {
+  animation: badge-spin 9s linear infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .group:hover .badge-spin,
+  .group:focus-visible .badge-spin {
+    animation: none;
+  }
+}
+
 /* Continuous ticker: the track holds two identical halves, so sliding it
    by exactly -50% lands on a frame identical to the start. */
 @keyframes marquee {
@@ -327,24 +356,29 @@
   pointer-events: none;
   z-index: 9999;
   border-radius: 50%;
+  /* White, difference-blended: dark over the light hero, light over every
+     dark block, with no per-section color swapping. */
+  mix-blend-mode: difference;
+  /* Hidden until the first pointermove places it (CustomCursor.jsx). */
+  opacity: 0;
   transition: opacity 0.2s ease, width 0.18s ease, height 0.18s ease, background 0.18s ease;
 }
 .ma-cursor-dot {
   width: 6px;
   height: 6px;
   margin: -3px 0 0 -3px;
-  background: var(--color-cyan);
+  background: #fff;
 }
 .ma-cursor-ring {
   width: 34px;
   height: 34px;
   margin: -17px 0 0 -17px;
-  border: 1px solid rgba(34, 211, 238, 0.4);
+  border: 1px solid rgba(255, 255, 255, 0.6);
 }
 .ma-cursor-ring[data-active="1"] {
   width: 52px;
   height: 52px;
   margin: -26px 0 0 -26px;
-  border-color: rgba(34, 211, 238, 0.75);
-  background: rgba(34, 211, 238, 0.08);
+  border-color: #fff;
+  background: rgba(255, 255, 255, 0.12);
 }

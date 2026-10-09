@@ -219,9 +219,9 @@ function MainDocument({ bootDone }) {
   return (
     <>
       <Hero ready={bootDone} scrollContainerRef={scrollContainerRef} />
-      <ProjectsSection />
+      <ProjectsSection scrollContainerRef={scrollContainerRef} />
       <ExperienceSection />
-      <AboutSection />
+      <AboutSection scrollContainerRef={scrollContainerRef} />
       <ExperimentsSection />
       <ContactSection />
     </>

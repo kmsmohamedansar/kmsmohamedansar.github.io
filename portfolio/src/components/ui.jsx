@@ -1,7 +1,7 @@
 import { useLayoutEffect, useMemo, useRef, useState } from "react";
 import { motion } from "framer-motion";
-import { ArrowDown, ChevronLeft, ChevronRight } from "lucide-react";
-import { EASE_OUT } from "../lib/motion";
+import { ArrowDown, ArrowUpRight } from "lucide-react";
+import { EASE_REVEAL } from "../lib/motion";
 import { ACCENTS } from "../data/projects";
 
 export function Reveal({ children, className = "", delay = 0, y = 24 }) {
@@ -11,21 +11,47 @@ export function Reveal({ children, className = "", delay = 0, y = 24 }) {
       initial={{ opacity: 0, y }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, amount: 0.15 }}
-      transition={{ duration: 0.6, delay, ease: EASE_OUT }}
+      transition={{ duration: 0.8, delay, ease: EASE_REVEAL }}
     >
       {children}
     </motion.div>
   );
 }
 
-export function SectionHead({ kicker, title, lede, accent = "cyan" }) {
+/* The small "‹ LABEL ›" tag that opens every section. One size
+   everywhere. */
+export function Kicker({ children, accent = "cyan", className = "" }) {
   const a = ACCENTS[accent];
   return (
-    <Reveal className="max-w-2xl mb-8">
-      <span className={`font-mono text-[.72rem] font-semibold tracking-[.16em] uppercase ${a.text}`}>{kicker}</span>
-      <h2 className="font-display text-[clamp(1.9rem,4vw,2.9rem)] font-semibold leading-[1.08] text-white mt-2">{title}</h2>
-      {lede && <p className="mt-3 text-[1.02rem] leading-relaxed text-[color:var(--ink-300)]">{lede}</p>}
+    <span className={`inline-flex items-center gap-2 font-mono text-xs font-semibold uppercase tracking-[.18em] ${a.text} ${className}`}>
+      <span aria-hidden="true">‹</span>
+      {children}
+      <span aria-hidden="true">›</span>
+    </span>
+  );
+}
+
+export function SectionHead({ kicker, title, lede, accent = "cyan", align = "left" }) {
+  const center = align === "center";
+  return (
+    <Reveal className={`max-w-3xl mb-10 sm:mb-14 ${center ? "mx-auto text-center" : ""}`}>
+      <Kicker accent={accent}>{kicker}</Kicker>
+      <h2 className="mt-4 font-condensed uppercase text-white leading-[.92] text-[clamp(2.6rem,7vw,5.6rem)]">{title}</h2>
+      {lede && <p className={`mt-5 max-w-2xl text-base sm:text-lg leading-relaxed text-[color:var(--ink-200)] ${center ? "mx-auto" : ""}`}>{lede}</p>}
     </Reveal>
+  );
+}
+
+/* A project name set the editorial way: the first letter in the italic
+   serif, in the project's accent, the rest in condensed caps. The
+   heading that wraps it should carry aria-label={text}. */
+export function FlourishTitle({ text, accent }) {
+  const a = ACCENTS[accent];
+  return (
+    <span aria-hidden="true">
+      <span className={`font-serif italic font-normal normal-case text-[1.12em] leading-none pr-[.04em] ${a.text}`}>{text[0]}</span>
+      <span className="font-condensed uppercase">{text.slice(1)}</span>
+    </span>
   );
 }
 
@@ -33,7 +59,7 @@ export function TagPill({ children, accent }) {
   const a = accent ? ACCENTS[accent] : null;
   return (
     <span
-      className={`font-mono text-[.66rem] uppercase tracking-wide px-2.5 py-1 rounded-full border ${
+      className={`font-mono text-micro uppercase tracking-wide px-2.5 py-1 rounded-full border ${
         a ? `${a.border} ${a.text} ${a.soft}` : "border-white/15 text-[color:var(--ink-200)] bg-white/[.04]"
       }`}
     >
@@ -42,47 +68,27 @@ export function TagPill({ children, accent }) {
   );
 }
 
-/* Horizontal scroller with a visible scrollbar, arrow buttons and
-   snap points. The scrollbar is deliberately chunky: the whole point
-   is that a visitor can see there's more, and drag through it. */
-export function Rail({ children, label }) {
-  const ref = useRef(null);
-  function nudge(dir) {
-    const el = ref.current;
-    if (!el) return;
-    el.scrollBy({ left: dir * Math.max(280, el.clientWidth * 0.8), behavior: "smooth" });
-  }
+/* A circular badge with its label set around the rim; spins slowly while
+   its parent .group is hovered or focused (paused for reduced motion). */
+export function SpinBadge({ label, accent }) {
+  const a = ACCENTS[accent];
+  const id = `badge-${label.replace(/\W+/g, "-").toLowerCase()}-${accent}`;
+  const ring = `${label} · ${label} · `.toUpperCase();
   return (
-    <div>
-      <div className="flex items-center justify-between mb-3">
-        <span className="font-mono text-[.68rem] uppercase tracking-[.14em] text-[color:var(--ink-300)]">{label}</span>
-        <div className="flex gap-2">
-          <button
-            onClick={() => nudge(-1)}
-            aria-label="Scroll left"
-            className="w-9 h-9 grid place-items-center rounded-full border border-white/20 bg-black/40 text-white hover:border-cyan hover:text-cyan transition-colors"
-          >
-            <ChevronLeft size={18} />
-          </button>
-          <button
-            onClick={() => nudge(1)}
-            aria-label="Scroll right"
-            className="w-9 h-9 grid place-items-center rounded-full border border-white/20 bg-black/40 text-white hover:border-cyan hover:text-cyan transition-colors"
-          >
-            <ChevronRight size={18} />
-          </button>
-        </div>
-      </div>
-      <div
-        ref={ref}
-        role="region"
-        aria-label={label}
-        tabIndex={0}
-        className="rail-scroll flex gap-4 overflow-x-auto snap-x snap-mandatory pb-4 -mx-1 px-1"
-      >
-        {children}
-      </div>
-    </div>
+    <span className={`relative grid h-24 w-24 shrink-0 place-items-center ${a.text}`} aria-hidden="true">
+      <svg viewBox="0 0 100 100" className="badge-spin absolute inset-0 h-full w-full">
+        <defs>
+          <path id={id} d="M50,50 m-38,0 a38,38 0 1,1 76,0 a38,38 0 1,1 -76,0" />
+        </defs>
+        <circle cx="50" cy="50" r="49" fill="none" stroke="currentColor" strokeOpacity=".35" />
+        <text className="font-mono" fontSize="8.6" letterSpacing="2.2" fill="currentColor">
+          <textPath href={`#${id}`}>{ring}</textPath>
+        </text>
+      </svg>
+      <span className="grid h-10 w-10 place-items-center rounded-full bg-current transition-transform duration-200 ease-out group-hover:scale-110 group-focus-visible:scale-110">
+        <ArrowUpRight size={18} className="text-[#050911]" />
+      </span>
+    </span>
   );
 }
 
