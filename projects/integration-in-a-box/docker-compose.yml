@@ -1,0 +1,52 @@
+# Start everything:  docker compose up --build
+# Then open http://localhost:4000 for the control room.
+name: integration-in-a-box
+
+services:
+  harbourline:
+    build: .
+    image: integration-in-a-box:local
+    command: ["node", "--no-warnings", "--import", "tsx", "src/harbourline/main.ts"]
+    environment:
+      PORT: "4001"
+      DB_PATH: /data/harbourline.db
+    volumes: [harbourline-data:/data]
+    ports: ["4001:4001"]
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost:4001/v1/health"]
+      interval: 3s
+      retries: 20
+
+  maple:
+    build: .
+    image: integration-in-a-box:local
+    command: ["node", "--no-warnings", "--import", "tsx", "src/maple/main.ts"]
+    environment:
+      PORT: "4002"
+      DB_PATH: /data/maple.db
+    volumes: [maple-data:/data]
+    ports: ["4002:4002"]
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost:4002/api/health"]
+      interval: 3s
+      retries: 20
+
+  connector:
+    build: .
+    image: integration-in-a-box:local
+    command: ["node", "--no-warnings", "--import", "tsx", "src/connector/main.ts"]
+    environment:
+      PORT: "4000"
+      HARBOURLINE_URL: http://harbourline:4001
+      MAPLE_URL: http://maple:4002
+      SYNC_INTERVAL_MS: "4000"
+      PAGE_SIZE: "5"
+      START_DELAY_MS: ${START_DELAY_MS:-500}
+    ports: ["4000:4000"]
+    depends_on:
+      harbourline: { condition: service_healthy }
+      maple: { condition: service_healthy }
+
+volumes:
+  harbourline-data:
+  maple-data:

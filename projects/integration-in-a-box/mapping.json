@@ -1,0 +1,12 @@
+{
+  "_comment": "How Harbourline's fields map to Maple & Main's. Change this file, not the code, when a field is renamed.",
+  "product_to_item": {
+    "sku": "item_code",
+    "name": "description",
+    "stock_level": "qty"
+  },
+  "order_line_to_harbourline": {
+    "item_code": "sku",
+    "qty": "quantity"
+  }
+}
