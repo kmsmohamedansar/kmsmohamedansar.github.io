@@ -1,6 +1,7 @@
-import { Fragment, lazy, Suspense, useEffect, useRef, useState } from "react";
-import { animate, cubicBezier, motion, useMotionValue, useMotionValueEvent, useReducedMotion, useScroll, useSpring, useTransform, useVelocity } from "framer-motion";
-import { ArrowDown, ArrowRight, ArrowUp, ArrowUpRight, ChevronLeft, ChevronRight, ExternalLink, Link2, Lock, Mail } from "lucide-react";
+import { Fragment, useCallback, useEffect, useRef, useState } from "react";
+import NameParticles from "./NameParticles";
+import { animate, AnimatePresence, cubicBezier, motion, useMotionValue, useMotionValueEvent, useReducedMotion, useScroll, useSpring, useTransform, useVelocity } from "framer-motion";
+import { ArrowRight, ArrowUp, ArrowUpRight, ChevronLeft, ChevronRight, ExternalLink, Link2, Lock, Mail } from "lucide-react";
 import { ABOUT, CONTACT, HERO, ROLES } from "../data/content";
 import { ACCENTS, EARLIER_PROJECTS, EXPERIMENTS, FEATURED, MORE_PROJECTS } from "../data/projects";
 import { FlourishTitle, Reveal, ScrollShot, SectionHead, SpinBadge, TagPill } from "./ui";
@@ -101,27 +102,77 @@ function Watermark({ text, targetRef, scrollContainerRef }) {
 }
 
 /* ── HERO ───────────────────────────────────────────────────── */
-const InfinityLoop = lazy(() => import("./InfinityLoop"));
+// What I build, and with what. Each pair is true: that project was built
+// with that tool. Words cycle in turn, each in its own type and colour.
+const BUILT = [
+  ["RepTrack", "Swift", "an iOS app"],
+  ["Haloscript", "SwiftUI", "a writing app"],
+  ["Sitescout", "TypeScript", "a Chrome extension"],
+  ["Integration-in-a-box", "Keycloak", "a working integration"],
+  ["SQL Playground", "WebAssembly", "a SQL sandbox"],
+  ["my digital double", "Claude Code", "a 3D head"],
+  ["a grocery AI assistant", "FAISS", "a search-by-meaning demo"],
+  ["a lineage explorer", "React", "a pipeline map"],
+];
+const STYLE_CYCLE = [
+  "font-serif italic text-[1.35rem] text-[#0e7490]",
+  "font-condensed uppercase tracking-[.04em] text-[1.15rem] text-[#6d28d9]",
+  "font-mono text-[.95rem] font-semibold text-[#b45309]",
+  "font-display font-bold text-[1.2rem] text-[#be185d]",
+  "font-serif italic text-[1.35rem] text-[#15803d]",
+];
+const PROJECT_STYLES = [
+  "font-serif italic text-[#0e7490]",
+  "font-condensed uppercase tracking-[.02em] text-[#6d28d9]",
+  "font-display font-bold text-[#be185d]",
+  "font-serif italic text-[#15803d]",
+];
+const TOOL_STYLES = [
+  "font-mono font-semibold text-[#b45309]",
+  "font-condensed uppercase tracking-[.03em] text-[#0e7490]",
+  "font-mono font-semibold text-[#6d28d9]",
+];
+const TICKER = BUILT.flatMap(([p, t]) => [p, t]);
 
-// three.js is ~560 KB. Start fetching it only once the browser is idle, so the
-// hero text and layout paint first, especially on phones.
-function useIdle(timeout = 1500) {
-  const [idle, setIdle] = useState(false);
+/* "I built RepTrack with Swift." The project and tool swap every few
+   seconds, each rising in from below in a new font and colour. */
+function BuiltLine({ run }) {
+  const reduced = useReducedMotion();
+  const [i, setI] = useState(0);
   useEffect(() => {
-    if ("requestIdleCallback" in window) {
-      const id = window.requestIdleCallback(() => setIdle(true), { timeout });
-      return () => window.cancelIdleCallback(id);
-    }
-    const id = setTimeout(() => setIdle(true), 300);
-    return () => clearTimeout(id);
-  }, [timeout]);
-  return idle;
-}
-
-function DeferredInfinityLoop(props) {
-  const idle = useIdle();
-  if (!idle) return <div className="atmosphere-fallback absolute inset-0" aria-hidden="true" />;
-  return <InfinityLoop {...props} />;
+    if (!run || reduced) return;
+    const id = setInterval(() => setI((n) => (n + 1) % BUILT.length), 2600);
+    return () => clearInterval(id);
+  }, [run, reduced]);
+  const [project, tool, what] = BUILT[i];
+  const word = (text, cls, key) => (
+    <span className="relative inline-grid overflow-hidden align-bottom px-1 -mx-1 pb-[.12em] -mb-[.12em]">
+      <AnimatePresence mode="popLayout" initial={false}>
+        <motion.span
+          key={key}
+          initial={reduced ? false : { y: "110%", opacity: 0 }}
+          animate={{ y: "0%", opacity: 1 }}
+          exit={reduced ? undefined : { y: "-110%", opacity: 0 }}
+          transition={{ duration: 0.55, ease: EASE_REVEAL }}
+          className={`inline-block whitespace-nowrap ${cls}`}
+        >
+          {text}
+        </motion.span>
+      </AnimatePresence>
+    </span>
+  );
+  return (
+    <div>
+      <p className="font-display text-[clamp(1.25rem,3.2vw,2.1rem)] leading-snug text-[#334155]">
+        I built {word(project, PROJECT_STYLES[i % PROJECT_STYLES.length], "p" + i)} with{" "}
+        {word(tool, TOOL_STYLES[i % TOOL_STYLES.length], "t" + i)}
+      </p>
+      <p className="mt-2 font-mono text-xs uppercase tracking-[.18em] text-[#64748b]">
+        <span className="sr-only">That's </span>
+        {what} · {i + 1} of {BUILT.length}
+      </p>
+    </div>
+  );
 }
 
 const HERO_INK = "#0b1220";
@@ -219,87 +270,52 @@ export function Hero({ ready = true, scrollContainerRef }) {
   useEffect(() => () => clearTimeout(idle.current), []);
 
   const cardScale = useTransform(heroOut, (v) => 1 - 0.08 * v);
-  const ovalScale = useTransform(heroOut, (v) => 1 + 0.4 * v);
+  const [settled, setSettled] = useState(false);
+  const onSettled = useCallback(() => setSettled(true), []);
   const chromeOpacity = useTransform(heroOut, (v) => 1 - Math.min(1, v * 2.2));
-  // Entrance for the card's label and button: a left-to-right wipe.
-  // (Opacity is left free for the scroll fade below.)
-  const enter = (d) => ({
-    initial: reduced ? false : { clipPath: "inset(0 100% 0 0)" },
-    animate: ready ? { clipPath: "inset(0 0% 0 0)" } : { clipPath: "inset(0 100% 0 0)" },
-    transition: { duration: 1.1, delay: d, ease: EASE_REVEAL },
-  });
-  // Long enough to overflow wide screens; two identical halves make the
-  // ticker's -50% loop seamless.
-  const ticker = Array.from({ length: 6 }, () => `— ${HERO.eyebrow} `).join("");
-
-  function scrollPastHero() {
-    const main = scrollContainerRef?.current;
-    if (!main || !heroRef.current) return;
-    main.scrollTo({ top: heroRef.current.offsetHeight, behavior: reduced ? "auto" : "smooth" });
-  }
-
   return (
     <>
-      {/* 1. The light frame: a white card with the loop in an oval window. */}
+      {/* 1. The opening: dots trace the infinity loop, then gather into my
+          name. Under it, what I build and with what, each in its own type. */}
       <section
         ref={heroRef}
         id="hero"
+        aria-labelledby="hero-name"
         className="relative min-h-[100dvh] flex flex-col bg-[#eef6f7] px-3 sm:px-5 pt-[4.75rem] pb-4 sm:pb-5"
         style={{ color: HERO_INK }}
       >
+        <h1 id="hero-name" className="sr-only">Hi, I'm Mohamed Ansar</h1>
         <motion.div
           style={reduced ? undefined : { scale: cardScale }}
-          className="relative flex-1 min-h-[440px] origin-top rounded-2xl bg-white border border-[#0b1220]/10 overflow-hidden"
+          className="relative flex-1 min-h-[440px] flex flex-col origin-top rounded-2xl bg-white border border-[#0b1220]/10 overflow-hidden"
         >
-          {/* Hairline crosshair through the card's center. */}
-          <div aria-hidden="true" className="absolute inset-x-0 top-1/2 h-px bg-[#0b1220]/[.07]" />
-          <div aria-hidden="true" className="absolute inset-y-0 left-1/2 w-px bg-[#0b1220]/[.07]" />
-
-          {/* Inset from the card's edges, so the oval scales with the card
-              and keeps clear of the label (top) and button (bottom). */}
-          <motion.div
-            style={reduced ? undefined : { scale: ovalScale }}
-            className="absolute inset-x-[5%] inset-y-[17%] sm:inset-x-[7%] sm:inset-y-[13%]"
-          >
-            <motion.div
-              initial={reduced ? false : { opacity: 0, scale: 0.86, clipPath: "ellipse(10% 10% at 50% 50%)" }}
-              animate={ready ? { opacity: 1, scale: 1, clipPath: "ellipse(50% 50% at 50% 50%)" } : undefined}
-              transition={{ duration: 1.4, delay: 0.1, ease: EASE_REVEAL }}
-              className="absolute inset-0 rounded-[50%] overflow-hidden bg-[#0b1426] shadow-[0_30px_60px_-30px_rgba(11,18,32,.45)] [isolation:isolate]"
-            >
-              <Suspense fallback={<div className="atmosphere-fallback absolute inset-0" aria-hidden="true" />}>
-                <DeferredInfinityLoop scrollContainerRef={scrollContainerRef} />
-              </Suspense>
-            </motion.div>
+          <motion.div style={reduced ? undefined : { opacity: chromeOpacity }} className="relative flex-1 min-h-[260px]">
+            <NameParticles ready={ready} onSettled={onSettled} />
           </motion.div>
-
-          <motion.p
-            {...enter(0.35)}
+          <motion.div
+            initial={reduced ? false : { opacity: 0, y: 16 }}
+            animate={settled || reduced ? { opacity: 1, y: 0 } : { opacity: 0, y: 16 }}
+            transition={{ duration: 0.8, ease: EASE_REVEAL }}
             style={reduced ? undefined : { opacity: chromeOpacity }}
-            className="absolute top-4 left-4 sm:top-6 sm:left-6 max-w-[calc(100%-2rem)] rounded-md border border-[#0b1220]/12 bg-white/85 px-3 py-2 font-mono text-xs font-medium uppercase tracking-[.16em]"
+            className="relative px-5 pb-8 sm:pb-12 text-center"
           >
-            {HERO.eyebrow}
-          </motion.p>
-
-          <motion.button
-            {...enter(0.55)}
-            style={reduced ? undefined : { opacity: chromeOpacity }}
-            type="button"
-            onClick={scrollPastHero}
-            className="group absolute bottom-4 right-4 sm:bottom-6 sm:right-6 flex items-center gap-3 rounded-full border border-[#0b1220]/12 bg-white/85 py-1.5 pl-4 pr-1.5 font-mono text-micro font-medium uppercase tracking-[.16em] transition-transform duration-200 active:scale-[.97]"
-          >
-            Scroll down to explore
-            <span className="grid h-9 w-9 place-items-center rounded-full bg-[#0b1220] text-white transition-transform duration-200 group-hover:translate-y-0.5">
-              <ArrowDown size={15} />
-            </span>
-          </motion.button>
+            <BuiltLine run={settled || reduced} />
+          </motion.div>
         </motion.div>
 
-        {/* Ticker: the eyebrow on a slow loop beneath the card. */}
-        <div aria-hidden="true" className="mt-3 overflow-hidden whitespace-nowrap font-mono text-xs font-medium uppercase tracking-[.22em] text-[#475569]">
-          <div className="marquee-track inline-flex">
-            <span className="pr-[.5em]">{ticker}</span>
-            <span className="pr-[.5em]">{ticker}</span>
+        {/* Ticker: tools and projects, each in its own type and colour. */}
+        <div aria-hidden="true" className="mt-3 overflow-hidden whitespace-nowrap">
+          <div className="marquee-track inline-flex items-center">
+            {[0, 1].map((half) => (
+              <span key={half} className="inline-flex items-center">
+                {TICKER.map((t, i) => (
+                  <span key={i} className="inline-flex items-center">
+                    <span className={`${STYLE_CYCLE[i % STYLE_CYCLE.length]} px-3`}>{t}</span>
+                    <span className="text-[#94a3b8]">✦</span>
+                  </span>
+                ))}
+              </span>
+            ))}
           </div>
         </div>
       </section>
@@ -308,7 +324,7 @@ export function Hero({ ready = true, scrollContainerRef }) {
       <section ref={pinRef} aria-labelledby="hero-title" className={`relative bg-ink ${reduced ? "" : "h-[200vh]"}`}>
         <div className={`${reduced ? "py-24" : "sticky top-0 h-[100dvh]"} flex items-center justify-center overflow-hidden px-5`}>
           <div className="relative w-full max-w-[1200px]">
-            <h1
+            <h2
               id="hero-title"
               className="font-condensed uppercase text-white text-center leading-[.94] tracking-[.005em] text-[clamp(3rem,8.6vw,8.5rem)]"
             >
@@ -318,7 +334,7 @@ export function Hero({ ready = true, scrollContainerRef }) {
                   {i < TITLE_WORDS.length - 1 && " "}
                 </Fragment>
               ))}
-            </h1>
+            </h2>
             {HERO_PHRASES.map((phrase, i) => (
               <HeroPhrase key={phrase.text} phrase={phrase} spot={OVERLAY_SPOTS[i % OVERLAY_SPOTS.length]} progress={revealed} reduced={reduced} />
             ))}
