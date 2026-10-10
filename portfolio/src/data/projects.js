@@ -1055,11 +1055,12 @@ export const EXPERIMENTS = [
   },
   {
     id: "stars",
-    title: "The infinity at the top of this page",
+    title: "An infinity made of stars",
     accent: "violet",
-    hook: "The glowing infinity of stars in the oval at the top of this page is a WebGL shader.",
-    body: "Thousands of points that gather into a shape, scatter as you scroll, and drift back when you return to the top. It's the same kind of experiment: ask the AI, look at the result, push it further.",
-    href: null,
-    cta: null,
+    hook: "A glowing infinity loop of stars that swirls when your pointer moves over it. It's a WebGL shader, and it used to open this site.",
+    body: "Thousands of points drawn on the graphics card and held in a loop shape. It's the same kind of experiment: ask the AI, look at the result, push it further. Its dots now gather into my name at the top of the page.",
+    href: "#infinity",
+    shot: "/shots/infinity.webp",
+    cta: "See the infinity",
   },
 ];
