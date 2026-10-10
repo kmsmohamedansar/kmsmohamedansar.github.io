@@ -1,0 +1,78 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 560" width="1000" height="560" font-family="-apple-system, Segoe UI, Helvetica, Arial, sans-serif">
+  <defs>
+    <marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#8b949e"/>
+    </marker>
+    <style>
+      .box{fill:#161b22;stroke:#30363d;stroke-width:1.5}
+      .hi{fill:#1a1726;stroke:#b9a8ff;stroke-width:1.8}
+      .t{fill:#e6edf3;font-size:15px;font-weight:600}
+      .s{fill:#9aa4ae;font-size:12px}
+      .k{fill:#b9a8ff;font-size:11px;font-weight:700;letter-spacing:.08em}
+      .ln{stroke:#8b949e;stroke-width:1.6;fill:none;marker-end:url(#a)}
+      .both{stroke:#b9a8ff;stroke-width:1.6;fill:none;marker-end:url(#a);marker-start:url(#a)}
+    </style>
+  </defs>
+  <rect width="1000" height="560" rx="16" fill="#0d1117"/>
+  <text x="32" y="44" class="t" font-size="20">How Haloscript is built</text>
+  <text x="32" y="66" class="s">One SwiftUI codebase, one data model, three devices. Sync goes through the writer's own iCloud: no server of mine in the loop.</text>
+
+  <text x="32" y="106" class="k">SCREENS</text>
+  <rect x="32" y="118" width="190" height="64" rx="10" class="box"/><text x="48" y="146" class="t">Mac</text><text x="48" y="166" class="s">keyboard, ⌘ shortcuts</text>
+  <rect x="32" y="194" width="190" height="64" rx="10" class="box"/><text x="48" y="222" class="t">iPad</text><text x="48" y="242" class="s">Apple Pencil Pro, squeeze</text>
+  <rect x="32" y="270" width="190" height="64" rx="10" class="box"/><text x="48" y="298" class="t">iPhone</text><text x="48" y="318" class="s">write, review, light edits</text>
+
+  <text x="262" y="106" class="k">ONE SWIFTUI APP</text>
+  <rect x="262" y="118" width="240" height="216" rx="12" class="hi"/>
+  <text x="278" y="146" class="t">Novel</text>
+  <text x="278" y="166" class="s">binder · scene editor · corkboard</text>
+  <text x="278" y="184" class="s">outline · Story Bible · plot board</text>
+  <text x="278" y="220" class="t">Whiteboard</text>
+  <text x="278" y="240" class="s">infinite canvas · notes · shapes</text>
+  <text x="278" y="258" class="s">connectors · charts · Pencil ink</text>
+  <text x="278" y="294" class="s">one adaptive layout rule for</text>
+  <text x="278" y="312" class="s">every screen size</text>
+
+  <text x="542" y="106" class="k">DATA</text>
+  <rect x="542" y="118" width="200" height="216" rx="12" class="box"/>
+  <text x="558" y="146" class="t">SwiftData models</text>
+  <text x="558" y="170" class="s">parts, chapters, scenes</text>
+  <text x="558" y="188" class="s">Story Bible entries</text>
+  <text x="558" y="206" class="s">one record per board element</text>
+  <text x="558" y="224" class="s">daily word counts</text>
+  <text x="558" y="260" class="s">schema rules: add-only,</text>
+  <text x="558" y="278" class="s">every field has a default,</text>
+  <text x="558" y="296" class="s">soft delete for 30 days</text>
+
+  <text x="782" y="106" class="k">SYNC</text>
+  <rect x="782" y="118" width="186" height="216" rx="12" class="box"/>
+  <text x="798" y="146" class="t">Private iCloud</text>
+  <text x="798" y="166" class="s">CloudKit, writer's account</text>
+  <text x="798" y="202" class="s">no accounts of mine</text>
+  <text x="798" y="220" class="s">no backend to pay for</text>
+  <text x="798" y="238" class="s">no ads, no analytics</text>
+  <text x="798" y="274" class="s">works offline; syncs</text>
+  <text x="798" y="292" class="s">when the device is back</text>
+
+  <path class="ln" d="M222 150 H260"/><path class="ln" d="M222 226 H260"/><path class="ln" d="M222 302 H260"/>
+  <path class="both" d="M504 226 H540"/>
+  <path class="both" d="M744 226 H780"/>
+
+  <text x="32" y="384" class="k">WHEN TWO DEVICES EDIT AT ONCE</text>
+  <rect x="32" y="396" width="300" height="120" rx="10" class="box"/>
+  <text x="48" y="424" class="t">Whiteboard</text>
+  <text x="48" y="446" class="s">Each stroke, note and shape is its own record.</text>
+  <text x="48" y="464" class="s">Newest edit wins per element, deletes leave a</text>
+  <text x="48" y="482" class="s">marker, and unsaved local edits are never</text>
+  <text x="48" y="500" class="s">overwritten.</text>
+  <rect x="350" y="396" width="300" height="120" rx="10" class="box"/>
+  <text x="366" y="424" class="t">Scene text</text>
+  <text x="366" y="446" class="s">Last writer wins per scene. If both sides</text>
+  <text x="366" y="464" class="s">changed it, the other version is saved as a</text>
+  <text x="366" y="482" class="s">snapshot, so no words are ever lost.</text>
+  <rect x="668" y="396" width="300" height="120" rx="10" class="box"/>
+  <text x="684" y="424" class="t">Order and counts</text>
+  <text x="684" y="446" class="s">Chapter and scene order is repaired after</text>
+  <text x="684" y="464" class="s">sync; duplicate daily word counts are merged</text>
+  <text x="684" y="482" class="s">by summing, so streaks stay right.</text>
+</svg>

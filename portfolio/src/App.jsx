@@ -16,6 +16,7 @@ import { EASE_OUT } from "./lib/motion";
 const SolarSystemExplorer = lazy(() => import("./components/SolarSystemExplorer"));
 const DataLineageExplorer = lazy(() => import("./components/DataLineageExplorer"));
 const DigitalDouble = lazy(() => import("./components/DigitalDouble"));
+const HaloscriptPage = lazy(() => import("./components/HaloscriptPage"));
 
 /* ============================================================
    ROUTER: "emet", "explore", "lineage-demo", "digital-double" and "project/<slug>" are
@@ -276,7 +277,13 @@ function Stage({ bootDone }) {
             exit={{ opacity: 0 }}
             transition={{ duration: 0.2, ease: EASE_OUT }}
           >
-            <ProjectPage slug={route.slice("project/".length)} />
+            {route === "project/haloscript" ? (
+              <Suspense fallback={<div className="h-full bg-[#07070b]" aria-hidden="true" />}>
+                <HaloscriptPage />
+              </Suspense>
+            ) : (
+              <ProjectPage slug={route.slice("project/".length)} />
+            )}
           </motion.div>
         ) : route === "lineage-demo" ? (
           <motion.div
