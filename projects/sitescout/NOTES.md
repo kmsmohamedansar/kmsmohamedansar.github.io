@@ -32,3 +32,5 @@ Dated log of what was built, what was run, and what happened. Only results from 
 - Wrote CASE_STUDY.md (two chapters; Chapter 1 drafted from the portfolio site's Undercut text, with placeholders for the owner).
 - Added four Mermaid diagrams in `docs/diagrams` with SVG copies (`node scripts/render-diagrams.mjs`). First SVG render was invalid XML (Mermaid wrote `<br>`); fixed by rewriting to `<br/>` and checked with xmllint.
 - Added `scripts/chart.mjs`, which charts "numbers found per page" from any exported CSV. Demo chart made from `docs/demo-export.csv.txt`: EXMP 16/17, DEMO 16/17.
+- Chapter 1 filled in from the owner's own account: the name comes from the Formula One undercut; Undercut gives on-demand product data instead of waiting for the scheduled weekly collection run; it runs in the development environment only and any internal engineer can install it. Kept generic: no team, company or site names.
+- Owner chose not to record a live run for now. The case study says so and claims no live numbers.

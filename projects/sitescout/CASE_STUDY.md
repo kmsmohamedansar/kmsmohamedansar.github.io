@@ -1,6 +1,6 @@
 # Sitescout: case study
 
-> **Short version.** At work I led **Undercut**, a Chrome extension that gathers product and store information from several retailer websites into one spreadsheet, so a first look at a retailer takes minutes instead of a long manual process. That tool is private. **Sitescout** is my public re-creation of the same ideas, pointed at a different subject (stock prices instead of retail), so anyone can see how it looks, how it works, and how it behaves when things go wrong.
+> **Short version.** At work, product information is collected by a scheduled process that runs about once a week. Running it off-schedule is a big deal. I built **Undercut**, a Chrome extension that lets someone get product information **on demand**, whenever they need it, straight into one spreadsheet. That tool is private. **Sitescout** is my public re-creation of the same ideas, pointed at a different subject (stock prices instead of retail), so anyone can see how it looks, how it works, and how it behaves when things go wrong.
 
 This page is written so that someone who has never written code can follow it. Technical words are explained the first time they appear, and there is a [glossary](#glossary) at the end.
 
@@ -31,47 +31,57 @@ This page is written so that someone who has never written code can follow it. T
 
 ## Chapter 1. At work: Undercut
 
-> **Note for Mohamed.** Everything in this chapter is drafted from what your portfolio site already says about Undercut. Fill in or correct the parts marked **[TO FILL]**, and keep it generic: no company, client or retailer names, and no numbers you can't stand behind.
-
 ### The problem
 
-When someone at work is looking into a retailer, they often want a quick first look: what's in a category, or which stores carry a certain brand. The full, formal process for collecting that information is the wrong tool for a first look. It is too slow for the question being asked.
+At work, product information from websites is gathered by a **scheduled collection process** that a dedicated team looks after. It runs on a fixed timetable, about once a week, for a selected set of sites.
 
-Before Undercut, there were several small, separate browser tools, one per retailer, each with its own quirks. Using them meant knowing which tool to open, how that one behaved, and what its output looked like.
+That works for routine reporting. It doesn't work when someone needs an answer **now**: what's in a category today, or which stores carry a certain brand this week. Running the scheduled process outside its timetable is a big deal. It takes coordination, and an off-schedule run can break things that the weekly run depends on. So people either waited for the next scheduled run, or did it by hand.
+
+There were also several small, separate browser tools, one per site, each with its own quirks. Using them meant knowing which tool to open, how that one behaved, and what its output looked like.
+
+**The question I asked:** what if anyone who needed product details could just get them, on demand, without touching the scheduled process at all?
 
 ### What I built
 
-I folded those separate tools into **one Chrome side panel** (a panel that opens on the right of the browser, next to the page you are on). A dropdown at the top picks the retailer, and the panel shows the steps built for that retailer: a category or list of brands for one, postal codes plus a brand for another, a store finder for a third.
+I built Undercut as an **on-demand** alternative that sits completely outside the scheduled process, and folded those separate tools into it: **one Chrome side panel** (a panel that opens on the right of the browser, next to the page you are on). A dropdown at the top picks the retailer, and the panel shows the steps built for that retailer: a category or list of brands for one, postal codes plus a brand for another, a store finder for a third.
 
-Every path ends the same way: **one spreadsheet file (a CSV) with a small, consistent set of columns**, whichever retailer you picked.
+Every path ends the same way: **one spreadsheet file (a CSV) with a small, consistent set of columns**, whichever site you picked.
+
+Behind each option, I worked out how that site actually serves its product data, so the tool reads it reliably instead of copying what's drawn on screen. It covers the highest-priority sites the business cares about.
+
+It runs in the **development environment only**, not production: it's an internal engineering tool, and anyone on an internal engineering team can install the extension and use it. That was a deliberate choice. It gives people answers on demand without any risk to the production systems or to the scheduled weekly run.
 
 ### My role
 
-Lead. I merged the earlier single-retailer tools into this one extension and made the design decisions below. **[TO FILL: anything else you owned, for example who used it and how you rolled it out.]**
+Lead. I came up with the idea, built it as an on-demand alternative to the scheduled process, merged the earlier single-site tools into this one extension, worked out how each site serves its data, and made the design decisions below.
 
 ### Why it's called Undercut
 
-**[TO FILL: in your own words, where the name came from.]**
+The name comes from Formula One.
+
+In a race, every car has to stop in the pit lane for fresh tyres. The **undercut** is a strategy for the car in second place: instead of waiting to pit at the same time as the leader, it pits **earlier**. On fresh tyres it can set much faster laps while the leader is still on worn ones. By the time the leader makes their own stop, the chasing car has gained enough time to come out of the pits **ahead**.
+
+The tool does the same thing with data. The scheduled weekly run is the leader's planned pit stop. Undercut doesn't wait for it: it goes early, on demand, and gets you the answer first.
 
 ### Key decisions
 
 | Decision | Why it mattered |
 |---|---|
-| **Each retailer is its own module** (a self-contained piece of code) | Changing one retailer can't break the others. |
+| **Run on demand, completely separate from the scheduled process** | People get answers when they need them, and the weekly run is never put at risk. |
+| **Development environment only, installable by any internal engineer** | Easy to share across engineering teams without touching production systems. |
+| **Each site is its own module** (a self-contained piece of code) | Changing one site can't break the others. |
 | **Stopping early still hands back what was found** | Long runs get interrupted. Throwing away half a run's work is worse than handing over a partial file. This turned out to matter more than I expected. |
-| **One panel and one CSV layout for every retailer** | People learn the tool once. The output drops into the same spreadsheet every time. |
+| **One panel and one CSV layout for every site** | People learn the tool once. The output drops into the same spreadsheet every time. |
 | **Brand lists are split by matching against known brands** | When someone pastes brands over several lines, multi-word brand names don't get cut in half. |
-
-**[TO FILL: the one decision you are proudest of, in your own words.]**
 
 ### What I learned
 
 - **"Use the current tab" is harder than it sounds.** If the current tab is a browser settings page, the tool can't navigate it. I now check that a page can actually be visited and fall back to opening a fresh tab.
-- **AI coding tools help, but don't replace testing.** I used Cursor (an AI-assisted code editor) for the big rename and refactor that merged the old folders. It couldn't replace testing on the real retailer pages, so every path was still checked by hand.
+- **AI coding tools help, but don't replace testing.** I used Cursor (an AI-assisted code editor) for the big rename and refactor that merged the old folders. It couldn't replace testing on the real sites, so every path was still checked by hand.
 
 ### Outcome
 
-**[TO FILL: what changed for the people using it. Only numbers you can back up; a plain sentence like "a first look went from a formal request to something one person could do on their own" is fine if no numbers can be shared.]**
+Getting product details stopped being something you waited a week for, or asked another team to run specially. Anyone on an internal engineering team can install the extension and get a spreadsheet themselves, when they need it, while the scheduled weekly process carries on untouched.
 
 ### Why there's a public rebuild
 
@@ -81,6 +91,7 @@ Undercut is a private work tool. I can't show its code, its screens, or the site
 
 | Lesson from Undercut | How it shows up in Sitescout |
 |---|---|
+| Get answers on demand instead of waiting for a scheduled run | Paste tickers, press Scout, get the numbers now. |
 | One module per retailer became hard to maintain | **One "recipe" per kind of page.** A recipe is a short list of what to grab and where it lives. A new kind of page needs a new recipe, not new code. |
 | Stopping early should keep what was found | The **Stop** button keeps every finished card and marks the rest "not run". |
 | One panel, one output layout | Every ticker gets the same card, and the CSV has the same columns every time. |
@@ -115,7 +126,7 @@ The same pattern fits plenty of other people:
 - **A student** pulling numbers for a finance assignment.
 - **A small business** keeping an eye on listed competitors.
 
-The deeper point, and the reason this is a proof of concept for Undercut's ideas: **any job of the form "visit a list of similar pages and copy the same handful of facts from each" can be done this way.** Swap the recipe and the same engine reads a different kind of page.
+The deeper point, and the reason this is a proof of concept for Undercut's ideas: **on demand beats waiting for the next scheduled run.** And **any job of the form "visit a list of similar pages and copy the same handful of facts from each" can be done this way.** Swap the recipe and the same engine reads a different kind of page.
 
 ### A walk through the screens
 
@@ -295,7 +306,7 @@ Why practice pages? The computer I built this on can't reach Yahoo at all (its n
 
 The practice pages are in `test/fixtures/`. They are **hand-written** to look like Yahoo's page structure, use a made-up company and made-up numbers, and say so at the top of the file.
 
-**3. Live run on Yahoo Finance.** I loaded the extension in my own Chrome and ran it against real Yahoo Finance pages. See [Results](#results).
+**3. In my own Chrome.** I loaded the built extension in Chrome on my Mac and confirmed it works on Yahoo Finance. A recorded live run with exported results isn't in the repo yet (see [Results](#results)).
 
 ### Results
 
@@ -317,13 +328,7 @@ The one number not found on EXMP and DEMO is the 1-year price target, which the 
 
 #### Live run (Yahoo Finance)
 
-> **[TO FILL: live results.]** Run Sitescout on 10 or so real tickers, export the CSV, save it as `docs/live-run-YYYY-MM-DD.csv.txt`, and take a screenshot of the panel. Then run
-> `node scripts/chart.mjs docs/live-run-YYYY-MM-DD.csv.txt docs/charts/live-fields-found.svg "Live run on Yahoo Finance: numbers found"`
-> to make the chart, and fill in this table from the CSV. Only numbers from that run go here.
-
-| Date | Tickers tried | Done | Failed | Notes |
-|---|---|---|---|---|
-| [TO FILL] | | | | |
+Not recorded yet. All the numbers on this page come from the demo run above, so none are claimed for the live site. To add a live run later: export a CSV from Sitescout, save it as `docs/live-run-YYYY-MM-DD.csv.txt`, and run `node scripts/chart.mjs docs/live-run-YYYY-MM-DD.csv.txt docs/charts/live-fields-found.svg "Live run on Yahoo Finance: numbers found"`.
 
 ### What went wrong while building it
 
@@ -393,8 +398,8 @@ To re-make the screenshots and demo CSV: `npm run demo`. To re-make the diagram 
 | Practice pages are synthetic | comments at the top of `test/fixtures/*.html` |
 | Respects "reduce motion" | `MotionConfig reducedMotion="user"` in `src/panel/main.tsx`; `prefers-reduced-motion` in `styles.css` |
 | Doesn't use Selenium or Playwright at runtime | `package.json`: Playwright is a dev dependency only; runtime uses `chrome.tabs` and `chrome.scripting` in `runner.ts` |
-| Live run results | **[TO FILL]** `docs/live-run-*.csv.txt` |
-| Undercut facts in Chapter 1 | Mohamed's own description; private tool, not in this repo |
+| Works in a real Chrome on Yahoo Finance | Checked by hand by Mohamed on macOS, 2026-10-10 (NOTES.md); no recorded results yet |
+| Undercut facts in Chapter 1 | Mohamed's own account; private work tool, not in this repo |
 
 ---
 
