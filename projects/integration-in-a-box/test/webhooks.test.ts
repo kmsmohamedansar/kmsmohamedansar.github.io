@@ -38,7 +38,7 @@ describe("webhooks end to end, with logins on", () => {
     await stack.json(`${stack.hbUrl}/v1/products/HB-1010/stock`, { method: "POST", headers: { authorization: `Bearer ${token}` }, body: JSON.stringify({ change: 10, reason: "delivery" }) });
     await until(async () => (await stack.json(`${stack.mmUrl}/api/inventory`)).body.find((i: { item_code: string }) => i.item_code === "HB-1010").qty === 17);
     expect(stack.connector.stats.webhooksReceived).toBe(1);
-    expect(stack.log.recent().some((e) => e.kind === "webhook" && e.title === "Olive oil 500ml: 7 → 17")).toBe(true);
+    expect(stack.log.recent().some((e) => e.kind === "webhook" && e.title === "Olive oil 500ml: 7 → 17" && e.detail === "HB-1010, pushed by webhook")).toBe(true);
   });
 
   it("ignores the same event delivered twice", async () => {

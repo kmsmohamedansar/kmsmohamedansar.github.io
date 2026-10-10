@@ -52,9 +52,11 @@ export function emit(db: DatabaseSync, type: string, data: unknown) {
 }
 
 /** Send what's due. Called on a short timer. */
-export async function dispatchDue(db: DatabaseSync, opts: { timeoutMs?: number; baseDelayMs?: number } = {}) {
+export async function dispatchDue(db: DatabaseSync, opts: { timeoutMs?: number; baseDelayMs?: number; newestFirst?: boolean } = {}) {
   const due = db.prepare(`SELECT d.*, s.url, s.secret FROM webhook_deliveries d JOIN webhook_subscriptions s ON s.id = d.subscription_id
-    WHERE d.status = 'pending' AND d.next_attempt_at <= ? ORDER BY d.created_at LIMIT 20`).all(now()) as unknown as (Delivery & { url: string; secret: string })[];
+    WHERE d.status = 'pending' AND d.next_attempt_at <= ? ORDER BY d.created_at ${opts.newestFirst ? "DESC" : "ASC"} LIMIT 20`).all(now()) as unknown as (Delivery & { url: string; secret: string })[];
+  // Out-of-order break: hold a lone first attempt for up to 3s so a second event can overtake it.
+  if (opts.newestFirst && due.length === 1 && due[0].attempts === 0 && Date.now() - Date.parse(due[0].created_at) < 3000) return;
   for (const d of due) {
     const attempts = d.attempts + 1;
     let code: number | null = null;

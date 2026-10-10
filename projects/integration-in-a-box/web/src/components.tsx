@@ -1,6 +1,6 @@
 import { AnimatePresence, animate, motion, useMotionValue, useTransform } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
-import type { ConnectorEvent, HbDelivery, MmOrder } from "./types";
+import type { BreakInfo, ConnectorEvent, HbDelivery, MmOrder } from "./types";
 
 /** A number that counts to its new value and flashes when it changes. */
 export function LiveNumber({ value }: { value: number }) {
@@ -123,7 +123,52 @@ export function Orders({ orders }: { orders: MmOrder[] | null }) {
   );
 }
 
-const KIND_ICON: Record<ConnectorEvent["kind"], string> = { sync: "⟳", stock: "▲", order: "◆", error: "!", demo: "•", auth: "⚿", webhook: "⚡" };
+const KIND_ICON: Record<ConnectorEvent["kind"], string> = { sync: "⟳", stock: "▲", order: "◆", error: "!", demo: "•", auth: "⚿", webhook: "⚡", break: "✕" };
+
+/** Ten real failures to cause and recover from. Each matches an entry in docs/RUNBOOK.md. */
+export function BreakPanel({ breaks, onToggle, onFixAll, busy }: { breaks: BreakInfo[]; onToggle: (b: BreakInfo) => void; onFixAll: () => void; busy: string | null }) {
+  const anyActive = breaks.some((b) => b.active);
+  return (
+    <section className="breaks">
+      <header className="breaks-head">
+        <div>
+          <h2>Break it</h2>
+          <p>Ten things that really go wrong in integrations. Cause one, watch the log and the health badge, then fix it. Each has a runbook entry with the same number.</p>
+        </div>
+        <motion.button className="btn btn-ghost" disabled={!anyActive || !!busy} onClick={onFixAll} whileTap={{ scale: 0.96 }}>
+          Fix everything
+        </motion.button>
+      </header>
+      <div className="break-grid">
+        {breaks.map((b, i) => (
+          <motion.article
+            key={b.id}
+            layout
+            className={`break-card ${b.active ? "active" : ""}`}
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: i * 0.03 }}
+          >
+            <div className="break-top">
+              <span className="break-n">{b.n}</span>
+              <span className="break-where">{b.where}</span>
+            </div>
+            <h3>{b.title}</h3>
+            <p>{b.expect}</p>
+            <motion.button
+              className={`btn ${b.active ? "btn-fix" : "btn-break"}`}
+              disabled={!!busy}
+              whileTap={{ scale: 0.95 }}
+              onClick={() => onToggle(b)}
+            >
+              {busy === b.id ? "…" : b.kind === "once" ? "Trigger" : b.active ? "Fix it" : "Break it"}
+            </motion.button>
+          </motion.article>
+        ))}
+      </div>
+    </section>
+  );
+}
 
 const DELIVERY_TEXT: Record<HbDelivery["status"], string> = { pending: "retrying", delivered: "delivered", failed: "failed" };
 

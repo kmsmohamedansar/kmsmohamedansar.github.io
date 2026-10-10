@@ -26,6 +26,7 @@ const { app, connector, log, subscribeToWebhooks } = createConnectorApp({
       }
     : undefined,
   webhookUrl: env.WEBHOOK_URL,
+  chaosKey: env.CHAOS_KEY,
 });
 
 const interval = Number(process.env.SYNC_INTERVAL_MS ?? 4000);

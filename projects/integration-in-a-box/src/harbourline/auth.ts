@@ -16,7 +16,7 @@ export interface AuthConfig {
   keys?: JWTVerifyGetKey;
 }
 
-export function makeRequireScope(cfg: AuthConfig) {
+export function makeRequireScope(cfg: AuthConfig, revokedScope: () => string | null = () => null) {
   const keys = cfg.keys ?? createRemoteJWKSet(new URL(cfg.jwksUrl));
 
   return (scope: string) => async (req: FastifyRequest, reply: FastifyReply) => {
@@ -27,7 +27,8 @@ export function makeRequireScope(cfg: AuthConfig) {
     }
     try {
       const { payload } = await jwtVerify(header.slice(7), keys, { issuer: cfg.issuer, audience: cfg.audience });
-      const scopes = String(payload.scope ?? "").split(" ");
+      // revokedScope simulates an admin removing a permission (the "Break it" panel).
+      const scopes = String(payload.scope ?? "").split(" ").filter((x) => x && x !== revokedScope());
       if (!scopes.includes(scope)) {
         reply.header("www-authenticate", `Bearer error="insufficient_scope", scope="${scope}"`);
         return reply.code(403).send(errorBody("insufficient_scope", `This call needs the "${scope}" scope. The token has: ${scopes.join(", ") || "none"}`));

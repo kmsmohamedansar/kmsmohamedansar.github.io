@@ -7,6 +7,9 @@ export interface State {
   harbourline: HbProduct[] | null; maple: MmItem[] | null; orders: MmOrder[] | null; deliveries: HbDelivery[] | null; connector: Stats;
   auth: { tokenExpiresInSec: number | null; tokensFetched: number } | null;
   webhooks: { subscribed: boolean } | null;
+  pausedForSec?: number;
+  breaksEnabled?: boolean;
 }
+export interface BreakInfo { id: string; n: number; title: string; kind: "toggle" | "once"; where: string; expect: string; active: boolean }
 export interface Me { user: { name: string; email: string } | null; sso?: boolean }
-export interface ConnectorEvent { id: number; at: string; kind: "sync" | "stock" | "order" | "error" | "demo" | "auth" | "webhook"; direction: "h2m" | "m2h" | null; title: string; detail?: string }
+export interface ConnectorEvent { id: number; at: string; kind: "sync" | "stock" | "order" | "error" | "demo" | "auth" | "webhook" | "break"; direction: "h2m" | "m2h" | null; title: string; detail?: string }

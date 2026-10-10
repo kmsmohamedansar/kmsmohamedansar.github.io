@@ -24,6 +24,18 @@ export class TokenManager {
     return this.token ? Math.max(0, Math.round((this.expiresAt - Date.now()) / 1000)) : null;
   }
 
+  /** "Break it": damage the cached token, as if it had been revoked. */
+  corrupt() {
+    if (this.token) this.token = this.token.slice(0, -6) + "broken";
+  }
+
+  /** "Break it": use a wrong client secret (as if it was rotated without telling us). null restores it. */
+  overrideSecret(secret: string | null) {
+    this.secretOverride = secret;
+    this.invalidate();
+  }
+  private secretOverride: string | null = null;
+
   /** Forget the cached token, e.g. after the API said it was rejected. */
   invalidate() {
     this.token = null;
@@ -44,7 +56,7 @@ export class TokenManager {
       res = await fetch(this.cfg.tokenUrl, {
         method: "POST",
         headers: { "content-type": "application/x-www-form-urlencoded" },
-        body: new URLSearchParams({ grant_type: "client_credentials", client_id: this.cfg.clientId, client_secret: this.cfg.clientSecret }),
+        body: new URLSearchParams({ grant_type: "client_credentials", client_id: this.cfg.clientId, client_secret: this.secretOverride ?? this.cfg.clientSecret }),
         signal: AbortSignal.timeout(5000),
       });
     } catch (e) {

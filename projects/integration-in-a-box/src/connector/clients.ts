@@ -2,8 +2,17 @@
 // carry the status and the API's own error code so the log can say what broke.
 
 export class ApiError extends Error {
-  constructor(readonly system: string, readonly status: number, readonly code: string, message: string) {
+  constructor(readonly system: string, readonly status: number, readonly code: string, message: string, readonly retryAfterSec?: number) {
     super(message);
+  }
+
+  /**
+   * Will trying again later help? Network trouble, timeouts, outages, rate limits and
+   * login/permission problems are temporary or fixable by an admin, so the work waits.
+   * Anything else (bad data, not enough stock) won't change by retrying.
+   */
+  get retryable(): boolean {
+    return this.status === 0 || this.status >= 500 || [401, 403, 408, 429].includes(this.status);
   }
 }
 
@@ -23,9 +32,15 @@ async function call<T>(system: string, base: string, path: string, init: Request
     throw new ApiError(system, 0, timedOut ? "timeout" : "unreachable", timedOut ? `${system} did not answer in time` : `${system} could not be reached (${err.message})`);
   }
   const text = await res.text();
-  const body = text ? JSON.parse(text) : null;
+  let body: any = null;
+  try {
+    body = text ? JSON.parse(text) : null;
+  } catch {
+    body = null;
+  }
   if (!res.ok) {
-    throw new ApiError(system, res.status, body?.error?.code ?? "http_error", body?.error?.message ?? `HTTP ${res.status}`);
+    const ra = Number(res.headers.get("retry-after"));
+    throw new ApiError(system, res.status, body?.error?.code ?? "http_error", body?.error?.message ?? `HTTP ${res.status}`, Number.isFinite(ra) && ra > 0 ? ra : undefined);
   }
   return { status: res.status, body: body as T };
 }
@@ -38,7 +53,7 @@ export interface MmOrder { id: string; lines: { item_code: string; qty: number }
 export interface HbDelivery { id: string; event_id: string; event_type: string; attempts: number; status: "pending" | "delivered" | "failed"; last_status_code: number | null; last_error: string | null; created_at: string; delivered_at: string | null }
 
 export class HarbourlineClient {
-  constructor(readonly base: string, private tokens?: TokenManager) {}
+  constructor(readonly base: string, private tokens?: TokenManager, private onTokenRejected?: (e: ApiError) => void) {}
 
   /** Call Harbourline with a token. If it's rejected as expired or invalid, get a fresh one and try once more. */
   private async authed<T>(path: string, init: RequestInit = {}): Promise<{ status: number; body: T }> {
@@ -47,6 +62,7 @@ export class HarbourlineClient {
       return await call<T>("Harbourline", this.base, path, { ...init, token: await this.tokens.get() });
     } catch (e) {
       if (e instanceof ApiError && e.status === 401) {
+        this.onTokenRejected?.(e);
         this.tokens.invalidate();
         return call<T>("Harbourline", this.base, path, { ...init, token: await this.tokens.get() });
       }

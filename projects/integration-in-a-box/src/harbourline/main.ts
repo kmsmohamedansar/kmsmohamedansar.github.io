@@ -8,5 +8,6 @@ const app = createHarbourline({
   auth: env.AUTH_ISSUER
     ? { issuer: env.AUTH_ISSUER, jwksUrl: env.AUTH_JWKS_URL ?? `${env.AUTH_ISSUER}/protocol/openid-connect/certs`, audience: env.AUTH_AUDIENCE ?? "harbourline-api" }
     : undefined,
+  chaos: { enabled: !!env.CHAOS_KEY, key: env.CHAOS_KEY },
 });
 await app.listen({ port, host: "0.0.0.0" });

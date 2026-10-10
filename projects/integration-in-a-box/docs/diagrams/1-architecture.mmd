@@ -1,0 +1,18 @@
+flowchart LR
+  subgraph B["Your browser"]
+    UI["Control room<br/>React + Framer Motion"]
+  end
+  subgraph D["Docker Compose"]
+    C["Connector<br/>sync, webhooks,<br/>sign-in, breaks"]
+    H["Harbourline API<br/>products, stock, orders<br/>SQLite"]
+    M["Maple & Main API<br/>inventory, orders<br/>SQLite"]
+    K[("Keycloak<br/>realm: harbourline<br/>realm: maple-and-main")]
+  end
+  UI -- "session cookie only" --> C
+  UI -. "sign in (redirect)" .-> K
+  C -- "client credentials" --> K
+  C -- "Bearer token<br/>orders, stock reads" --> H
+  H -- "signed webhook<br/>stock.changed" --> C
+  H -. "checks token keys" .-> K
+  C -- "write stock<br/>read orders" --> M
+  C -. "swap sign-in code<br/>for tokens" .-> K

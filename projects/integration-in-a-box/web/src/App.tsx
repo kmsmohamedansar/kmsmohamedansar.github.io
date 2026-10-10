@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
 import { useCallback, useEffect, useState } from "react";
-import { Deliveries, EventFeed, Orders, Pipe, SignIn, SystemPanel } from "./components";
-import type { ConnectorEvent, Me, State } from "./types";
+import { BreakPanel, Deliveries, EventFeed, Orders, Pipe, SignIn, SystemPanel } from "./components";
+import type { BreakInfo, ConnectorEvent, Me, State } from "./types";
 
 const ago = (iso: string | null) => {
   if (!iso) return "never";
@@ -26,6 +26,31 @@ function ControlRoom({ me }: { me: Me }) {
   const [events, setEvents] = useState<ConnectorEvent[]>([]);
   const [packets, setPackets] = useState<{ id: number; direction: "h2m" | "m2h"; kind: string }[]>([]);
   const [busy, setBusy] = useState<string | null>(null);
+  const [breaks, setBreaks] = useState<BreakInfo[]>([]);
+  const loadBreaks = useCallback(async () => {
+    const r = await fetch("/api/breaks");
+    if (r.ok) setBreaks(await r.json());
+  }, []);
+  useEffect(() => { loadBreaks(); }, [loadBreaks]);
+  const toggleBreak = async (b: BreakInfo) => {
+    setBusy(b.id);
+    try {
+      await fetch(`/api/breaks/${b.id}`, { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ on: b.kind === "once" ? true : !b.active }) });
+      await loadBreaks();
+      await refresh();
+    } finally {
+      setBusy(null);
+    }
+  };
+  const fixAll = async () => {
+    setBusy("all");
+    try {
+      await fetch("/api/breaks", { method: "DELETE" });
+      await loadBreaks();
+    } finally {
+      setBusy(null);
+    }
+  };
   const [connected, setConnected] = useState(false);
   const [, tick] = useState(0);
 
@@ -123,6 +148,7 @@ function ControlRoom({ me }: { me: Me }) {
               {state?.webhooks && <div><dt>Webhooks in</dt><dd>{c?.webhooksReceived ?? 0}</dd></div>}
               {state?.webhooks && <div><dt>Bad signatures</dt><dd className={c?.webhooksRejected ? "bad" : ""}>{c?.webhooksRejected ?? 0}</dd></div>}
             </dl>
+            {!!state?.pausedForSec && <p className="paused">Paused by rate limit · {state.pausedForSec}s</p>}
             {state?.auth && (
               <div className="token" title="OAuth 2.0 client credentials: the connector's pass for calling Harbourline">
                 <span className="token-label">⚿ Access token</span>
@@ -156,6 +182,8 @@ function ControlRoom({ me }: { me: Me }) {
           <Orders orders={state?.orders ?? null} />
         </SystemPanel>
       </div>
+
+      {breaks.length > 0 && <BreakPanel breaks={breaks} onToggle={toggleBreak} onFixAll={fixAll} busy={busy} />}
 
       <EventFeed events={events} />
     </div>

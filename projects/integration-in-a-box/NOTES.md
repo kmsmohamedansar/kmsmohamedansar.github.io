@@ -48,3 +48,24 @@ Dated log of what was built, what was run, and what happened. Only results from 
 - My first token-retry test assumed rotating the signing key would make old tokens fail at once. It doesn't: Harbourline caches the old key for a while, which is correct. Rewrote the test around a real cause of a rejected token: clock skew, where the login server hands out a token that's already expired.
 - Found a bug while planning the outage demo: re-subscribing to webhooks deleted the old subscription, which would leave deliveries waiting to retry pointing at nothing, stuck forever. Wrote a failing test first, then changed re-subscribing to keep the subscription and only rotate its secret. The outage test above passed because of this fix.
 - A delivered webhook used to forget the errors before it succeeded. It now keeps the last error, so the panel can say "recovered from: unreachable".
+
+**Milestones 3 and 4, same day**
+
+*Built*
+- Harbourline fault switches (outage, slow responses, tight rate limit, renamed field, removed scope, newest-first webhooks), only registered when `CHAOS_KEY` is set. A normal rate limit is always on.
+- Connector: retry rules (network, timeout, 5xx, 401, 403, 429 wait; other 4xx park), pause on `Retry-After`, switches for a corrupted token, a wrong secret, a lost reply and a forged webhook.
+- Break it panel in the control room. Runbook with ten entries plus two setup problems. Six diagrams. Case study. Customer integration planning guide.
+
+*Ran*
+- `npm test`: 8 files, 49 tests, all passing, including one per break.
+- `scripts/run-breaks.mjs` against the full Docker stack: signed in through Keycloak, triggered all ten breaks, recorded the connector's log during each and after each fix (`docs/breaks-evidence.md`), took five screenshots and a 3 minute 38 second video. Every toggle break went back to green after its fix.
+
+*Went wrong, then fixed*
+- The break 2 test failed: when the login server refused the connector, the log said only "Error: Invalid client credentials", with no source or code. Now: "Login server: unauthorized_client. Invalid client or Invalid client credentials".
+- Reading the first live run: break 1 recovered so quietly the 401 never appeared in the log. Now logged before the retry.
+- Also from the first live run: webhook events logged "62 → 62" as if something changed, and break 5 didn't show the out-of-order event. Each webhook now logs what it claimed next to what was read fresh ("webhook said 65, but Harbourline has 62 now (an older event); used 62"), and unchanged items say "already up to date".
+- The diagram renderer copied from Sitescout turned `<br/>` into real line breaks, which breaks Mermaid sequence diagrams. Now only done for flowcharts.
+- On the owner's Mac: `docker compose` wasn't found (Docker installed without the Compose plugin). Fixed with Homebrew. Then "localhost refused to connect", most likely because the connector was still starting. Added both to the README and runbook.
+
+*Not yet verified*
+- A full sign-in and click-through on the owner's Mac.

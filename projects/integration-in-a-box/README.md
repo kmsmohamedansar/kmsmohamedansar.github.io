@@ -9,6 +9,8 @@ Two made-up companies, and the engineer who connects them.
 
 Everything is synthetic. Both companies and all their data are fictional.
 
+**Read the [case study](CASE_STUDY.md)** for the full story, diagrams and results, or [watch the 3½ minute walkthrough](docs/control-room-walkthrough.mp4). On call? Go straight to the [runbook](docs/RUNBOOK.md).
+
 ![The control room after a sale at Maple & Main has synced to Harbourline](docs/screenshots/05-order-synced.png)
 
 ## Run it
@@ -40,6 +42,16 @@ Every password and secret in this project is a made-up, dev-only value for a loc
 
 Stop with `Ctrl+C`. Add `-v` to `docker compose down -v` to wipe the data and start fresh.
 
+**If http://localhost:4000 refuses to connect:** the connector starts last, after Keycloak (about 30 seconds the first time) and the two APIs. Run `docker compose ps` to see which containers are up, and `docker compose logs connector` to see whether it started. If `docker compose` itself isn't found, install the Compose plugin (it comes with Docker Desktop; with Homebrew, `brew install docker-compose`).
+
+## Break it (milestone 3)
+
+![The Break it panel during an outage](docs/screenshots/29-break-10-outage.png)
+
+Ten real failures, each caused for real from the control room and each with a [runbook](docs/RUNBOOK.md) entry: token rejected, client secret rotated, permission removed, lost reply, out-of-order webhooks, rate limit, renamed field, timeouts, forged webhook, outage. [test/breaks.test.ts](test/breaks.test.ts) proves each one is detected and recovers, and [docs/breaks-evidence.md](docs/breaks-evidence.md) has the connector's log from a live run of all ten.
+
+The switches only exist when `CHAOS_KEY` is set, which the demo's `docker-compose.yml` does and a real deployment never would.
+
 ## Logins and webhooks (milestone 2)
 
 ![Signed in through Maple & Main single sign-on, with the connector's access token counting down](docs/screenshots/11-signed-in.png)
@@ -67,16 +79,19 @@ Stop with `Ctrl+C`. Add `-v` to `docker compose down -v` to wipe the data and st
 | **Two kinds of failure** | A rejected order (for example, not enough stock) is parked with its reason, and the connector stays healthy. A connection failure keeps the order waiting and retries, and the health badge turns red. |
 | **Control room** | Both systems side by side, numbers that flash as they change, an animated pipe between them, and a live log of everything the connector does. |
 
-## Coming next
+## Documents
 
-- **Milestone 3:** ten deliberate breaks with a "Break it" panel, plus a runbook entry for each: what you see, the cause, the fix, and how to prevent it.
-- **Milestone 4:** diagrams, a recording, and the case study.
+- [CASE_STUDY.md](CASE_STUDY.md): the two-chapter write-up, for any reader
+- [docs/RUNBOOK.md](docs/RUNBOOK.md): what to do when each thing breaks
+- [docs/PLANNING-A-CUSTOMER-INTEGRATION.md](docs/PLANNING-A-CUSTOMER-INTEGRATION.md): discovery questions, timeline, testing plan, go-live checklist
+- [docs/diagrams/](docs/diagrams/): architecture, client credentials, single sign-on, webhook retries, wait-or-park (Mermaid source and SVG)
+- [docs/api/harbourline.openapi.yaml](docs/api/harbourline.openapi.yaml): Harbourline's API spec
 
 ## Tests
 
 ```bash
 npm install
-npm test          # 38 tests: API rules, tokens, webhooks, mapping, and full end-to-end syncs
+npm test          # 49 tests: API rules, tokens, webhooks, mapping, end-to-end syncs, and all ten breaks
 npm run typecheck
 ```
 

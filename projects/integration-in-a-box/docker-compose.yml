@@ -39,6 +39,8 @@ services:
       AUTH_ISSUER: http://localhost:8080/realms/harbourline
       AUTH_JWKS_URL: http://keycloak:8080/realms/harbourline/protocol/openid-connect/certs
       AUTH_AUDIENCE: harbourline-api
+      # Turns on the "Break it" switches. Demo only: a real deployment never sets this.
+      CHAOS_KEY: dev-only-chaos-key
     volumes: [harbourline-data:/data]
     ports: ["4001:4001"]
     depends_on:
@@ -84,6 +86,7 @@ services:
       SSO_CLIENT_SECRET: dev-only-control-room-secret-change-me
       # Where Harbourline should send webhooks (its view of the connector).
       WEBHOOK_URL: http://connector:4000/webhooks/harbourline
+      CHAOS_KEY: dev-only-chaos-key
     ports: ["4000:4000"]
     depends_on:
       harbourline: { condition: service_healthy }

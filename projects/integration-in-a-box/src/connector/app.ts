@@ -8,6 +8,7 @@ import { Connector } from "./sync.ts";
 import { registerSso, type SsoConfig } from "./sso.ts";
 import { TokenManager, type ClientCredentialsConfig } from "./token.ts";
 import { registerWebhookReceiver } from "./webhook-receiver.ts";
+import { registerBreaks } from "./breaks.ts";
 
 // The connector's own small server. The control room in the browser only ever
 // talks to this, never to Harbourline or Maple & Main directly.
@@ -25,16 +26,22 @@ export function createConnectorApp(opts: {
   sso?: SsoConfig;
   /** Where Harbourline should send webhooks, as Harbourline can reach it. */
   webhookUrl?: string;
+  /** Turns on the "Break it" panel. Must match Harbourline's chaos key. */
+  chaosKey?: string;
 }) {
   const log = new EventLog();
   const tokens = opts.oauth ? new TokenManager(opts.oauth, log) : undefined;
-  const hb = new HarbourlineClient(opts.harbourlineUrl, tokens);
+  const hb = new HarbourlineClient(opts.harbourlineUrl, tokens, (e) =>
+    log.push("auth", "Harbourline rejected the access token, getting a new one and retrying", { detail: `${e.code} (401) ${e.message}` }),
+  );
   const mm = new MapleClient(opts.mapleUrl);
   const connector = new Connector(hb, mm, opts.mapping, log, { pageSize: opts.pageSize ?? 5 });
   const app: FastifyInstance = Fastify({ logger: opts.logger ?? false });
 
   if (opts.sso) registerSso(app, opts.sso, log);
   else app.get("/auth/me", async () => ({ user: null, sso: false }));
+
+  registerBreaks(app, { connector, log, hb, mm, tokens, harbourlineUrl: opts.harbourlineUrl, chaosKey: opts.chaosKey });
 
   let webhookSecret: string | null = null;
   let webhookUrl = opts.webhookUrl;
@@ -76,6 +83,8 @@ export function createConnectorApp(opts: {
       connector: connector.stats,
       auth: tokens ? { tokenExpiresInSec: tokens.expiresInSec, tokensFetched: tokens.fetched } : null,
       webhooks: webhookUrl ? { subscribed: webhookSecret !== null } : null,
+      pausedForSec: connector.pausedUntil > Date.now() ? Math.ceil((connector.pausedUntil - Date.now()) / 1000) : 0,
+      breaksEnabled: !!opts.chaosKey,
     };
   });
 

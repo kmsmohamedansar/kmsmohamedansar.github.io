@@ -1,6 +1,7 @@
 import { ApiError, type HarbourlineClient, type MapleClient } from "./clients.ts";
 import type { EventLog } from "./events.ts";
 import { applyMap, MappingError, type Mapping } from "./mapping.ts";
+import { TokenError } from "./token.ts";
 
 export interface ConnectorStats {
   webhooksReceived: number;
@@ -23,6 +24,10 @@ export interface ConnectorStats {
 export class Connector {
   readonly stats: ConnectorStats = { lastRunAt: null, lastOk: null, highWaterMark: null, cycles: 0, itemsUpdated: 0, ordersSent: 0, ordersFailed: 0, webhooksReceived: 0, webhooksRejected: 0 };
   private busy = false;
+  /** Set when Harbourline says "too many requests": no calls until this time. */
+  pausedUntil = 0;
+  /** "Break it": pretend the next order's response was lost on the way back. */
+  dropNextOrderResponse = false;
   private timer: NodeJS.Timeout | null = null;
 
   constructor(
@@ -47,6 +52,7 @@ export class Connector {
 
   async cycle(): Promise<void> {
     if (this.busy) return;
+    if (Date.now() < this.pausedUntil) return;
     this.busy = true;
     let ok = true;
     try {
@@ -74,6 +80,11 @@ export class Connector {
         const lines = order.lines.map((l) => applyMap(l, this.mapping.order_line_to_harbourline) as { sku: string; quantity: number });
         // The Maple & Main order id is the idempotency key, so a retry can never create a second order.
         const res = await this.hb.createOrder(`maple-${order.id}`, { external_ref: order.id, lines });
+        if (this.dropNextOrderResponse) {
+          // Harbourline accepted the order, but we act as if the reply never arrived.
+          this.dropNextOrderResponse = false;
+          throw new ApiError("Harbourline", 0, "timeout", "Harbourline did not answer in time (the reply was lost)");
+        }
         await this.mm.updateOrder(order.id, { status: "synced", harbourline_order_id: res.body.id });
         this.stats.ordersSent++;
         const summary = lines.map((l) => `${l.quantity} x ${l.sku}`).join(", ");
@@ -82,16 +93,18 @@ export class Connector {
           detail: `${summary} → ${res.body.id}`,
         });
       } catch (e) {
-        if (e instanceof ApiError && e.status >= 400 && e.status < 500) {
+        if (e instanceof ApiError && !e.retryable) {
           // Harbourline said no for a reason that a retry won't fix. Park it, loudly.
           await this.mm.updateOrder(order.id, { status: "failed", error: `${e.code}: ${e.message}` }).catch(() => {});
           this.stats.ordersFailed++;
           this.log.push("error", `Order ${order.id} rejected by Harbourline`, { direction: "m2h", detail: `${e.code}: ${e.message}` });
           // Handled: the order is parked with its reason. The connector itself is still healthy.
         } else {
-          // Network trouble or a 5xx: leave it waiting and try again next cycle.
+          // Temporary or fixable (network, outage, rate limit, login, permission): leave it waiting.
           this.fail(`Order ${order.id} not sent yet, will retry`, e);
+          this.maybePause(e);
           ok = false;
+          if (e instanceof ApiError && e.status === 429) break;
         }
       }
     }
@@ -130,25 +143,45 @@ export class Connector {
       return true;
     } catch (e) {
       this.fail("Stock sync failed, will retry", e);
+      this.maybePause(e);
       return false;
     }
   }
 
-  /** A webhook said one product changed: fetch it fresh and update just that item. */
-  async applyProductChange(sku: string): Promise<void> {
+  /**
+   * A webhook said one product changed. Treat it as a hint, not the truth: read the
+   * product fresh from Harbourline and write that. So a late or out-of-order webhook
+   * can never put an old number back.
+   */
+  async applyProductChange(sku: string, claimed?: number): Promise<void> {
     const p = await this.hb.getProduct(sku);
     const item = applyMap(p as unknown as Record<string, unknown>, this.mapping.product_to_item) as { item_code: string; description: string; qty: number };
     const before = (await this.mm.inventory()).find((i) => i.item_code === item.item_code);
+    const note = claimed !== undefined && claimed !== item.qty ? `webhook said ${claimed}, but Harbourline has ${item.qty} now (an older event); used ${item.qty}` : `${item.item_code}, pushed by webhook`;
+    if (before && before.qty === item.qty && before.description === item.description) {
+      this.log.push("webhook", `${item.description}: already up to date (${item.qty})`, { detail: note });
+      return;
+    }
     await this.mm.upsertItem(item.item_code, { description: item.description, qty: item.qty });
     this.stats.itemsUpdated++;
-    this.log.push("webhook", before ? `${item.description}: ${before.qty} → ${item.qty}` : `${item.description} added (${item.qty})`, {
-      direction: "h2m",
-      detail: `${item.item_code}, pushed by webhook`,
-    });
+    this.log.push("webhook", before ? `${item.description}: ${before.qty} → ${item.qty}` : `${item.description} added (${item.qty})`, { direction: "h2m", detail: note });
+  }
+
+  /** Honour Retry-After on a 429: stop calling until the time Harbourline asked for. */
+  private maybePause(e: unknown) {
+    if (e instanceof ApiError && e.status === 429) {
+      const sec = e.retryAfterSec ?? 5;
+      this.pausedUntil = Date.now() + sec * 1000;
+      this.log.push("sync", `Rate limited by Harbourline, pausing for ${sec}s`, { detail: "Honouring the Retry-After header instead of retrying straight away" });
+    }
   }
 
   private fail(title: string, e: unknown) {
-    const detail = e instanceof ApiError ? `${e.system}: ${e.code} (${e.status || "no response"}) ${e.message}` : e instanceof MappingError ? `Mapping: ${e.message}` : String(e);
+    const detail =
+      e instanceof ApiError ? `${e.system}: ${e.code} (${e.status || "no response"}) ${e.message}`
+      : e instanceof TokenError ? `Login server: ${e.code}. ${e.message}`
+      : e instanceof MappingError ? `Mapping: ${e.message}`
+      : String(e);
     this.log.push("error", title, { detail });
   }
 }

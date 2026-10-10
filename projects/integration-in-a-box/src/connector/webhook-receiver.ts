@@ -29,7 +29,7 @@ export function registerWebhookReceiver(app: FastifyInstance, deps: { connector:
         return reply.code(401).send({ error: { code: `signature_${check.reason}`, message: "Signature check failed" } });
       }
 
-      const event = JSON.parse(raw) as { id: string; type: string; data: { sku: string } };
+      const event = JSON.parse(raw) as { id: string; type: string; data: { sku: string; stock_level?: number } };
       if (seen.has(event.id)) {
         deps.log.push("webhook", "Duplicate webhook ignored", { detail: event.id });
         return reply.code(200).send({ ok: true, duplicate: true });
@@ -39,7 +39,7 @@ export function registerWebhookReceiver(app: FastifyInstance, deps: { connector:
 
       // Answer straight away so Harbourline doesn't time out, then do the work.
       if (event.type === "stock.changed") {
-        setImmediate(() => deps.connector.applyProductChange(event.data.sku).catch((e) => deps.log.push("error", "Webhook follow-up failed, the regular sync will catch it", { detail: String(e.message ?? e) })));
+        setImmediate(() => deps.connector.applyProductChange(event.data.sku, event.data.stock_level).catch((e) => deps.log.push("error", "Webhook follow-up failed, the regular sync will catch it", { detail: String(e.message ?? e) })));
       }
       return reply.code(200).send({ ok: true });
     });

@@ -1,0 +1,17 @@
+flowchart LR
+  subgraph W["At work: health-review dashboard (v1)"]
+    W1["Server-side layer over a<br/>work-tracker API"]
+    W2["Token stays on the server"]
+    W3["Cache, stale and mock<br/>fallbacks when the API fails"]
+    W4["Browser tools calling<br/>undocumented third-party APIs"]
+  end
+  subgraph P["Public: Integration-in-a-box"]
+    P1["Connector between two<br/>companies' APIs"]
+    P2["Browser gets a session cookie,<br/>tokens stay in the connector"]
+    P3["Retries, idempotency keys,<br/>waiting vs parked work"]
+    P4["Mapping file and loud failures<br/>when the other side changes"]
+  end
+  W1 --> P1
+  W2 --> P2
+  W3 --> P3
+  W4 --> P4

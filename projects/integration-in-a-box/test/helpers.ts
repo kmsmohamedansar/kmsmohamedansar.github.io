@@ -21,6 +21,7 @@ export async function startStack(pageSize = 5, opts: { secure?: boolean } = {}) 
     dbPath: ":memory:",
     auth: idp ? { issuer: idp.issuer, jwksUrl: idp.jwksUrl, audience: "harbourline-api" } : undefined,
     webhooks: { dispatchEveryMs: 50, baseDelayMs: 50 },
+    chaos: { enabled: true, key: "test-chaos" },
   });
   const mm = createMaple({ dbPath: ":memory:" });
   const hbUrl = await listen(hb);
@@ -28,6 +29,7 @@ export async function startStack(pageSize = 5, opts: { secure?: boolean } = {}) 
   const c = createConnectorApp({
     harbourlineUrl: hbUrl, mapleUrl: mmUrl, mapping: realMapping(), pageSize,
     oauth: idp ? { tokenUrl: idp.tokenUrl, clientId: "maple-connector", clientSecret: "test-secret" } : undefined,
+    chaosKey: "test-chaos",
   });
   const cUrl = await listen(c.app);
   const json = async (url: string, init?: RequestInit) => {

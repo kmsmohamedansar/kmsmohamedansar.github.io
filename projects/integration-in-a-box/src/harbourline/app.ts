@@ -4,6 +4,7 @@ import { errorBody, now, openDb } from "../shared/db.ts";
 import { SEED_PRODUCTS } from "../shared/seed.ts";
 import { makeRequireScope, type AuthConfig } from "./auth.ts";
 import { dispatchDue, emit, setupWebhookTables, subscribe } from "./webhooks.ts";
+import { NORMAL, registerChaos, type HarbourlineChaos } from "./chaos.ts";
 
 // Harbourline: a made-up inventory software company. This is its public API,
 // built to match docs/api/harbourline.openapi.yaml.
@@ -13,6 +14,12 @@ interface OrderRow { id: string; external_ref: string | null; idem_key: string; 
 
 const encodeCursor = (sku: string) => Buffer.from(sku).toString("base64url");
 const decodeCursor = (c: string) => Buffer.from(c, "base64url").toString();
+/** How a product looks on the wire. Normally the stored row; during the "renamed field" break, one field changes name. */
+const present = (p: ProductRow, renamed: boolean) => {
+  if (!renamed) return p;
+  const { stock_level, ...rest } = p;
+  return { ...rest, stock_on_hand: stock_level };
+};
 const toOrder = (r: OrderRow) => ({ id: r.id, external_ref: r.external_ref, status: "accepted", lines: JSON.parse(r.lines), created_at: r.created_at });
 
 export function createHarbourline(opts: {
@@ -21,6 +28,7 @@ export function createHarbourline(opts: {
   /** Leave out to run without logins (milestone 1 behaviour). */
   auth?: AuthConfig;
   webhooks?: { dispatchEveryMs?: number; baseDelayMs?: number; timeoutMs?: number };
+  chaos?: { enabled: boolean; key?: string };
 }): FastifyInstance {
   const db = openDb(opts.dbPath);
   db.exec(`
@@ -41,9 +49,11 @@ export function createHarbourline(opts: {
 
   const getProduct = db.prepare("SELECT * FROM products WHERE sku = ?");
   const app = Fastify({ logger: opts.logger ?? false });
+  const chaos: HarbourlineChaos = { ...NORMAL };
+  registerChaos(app, chaos, opts.chaos ?? { enabled: false });
 
   // Each route names the permission it needs. Without auth configured, every check passes.
-  const requireScope = opts.auth ? makeRequireScope(opts.auth) : () => async () => {};
+  const requireScope = opts.auth ? makeRequireScope(opts.auth, () => chaos.revokedScope) : () => async () => {};
   const read = { preHandler: requireScope("inventory:read") };
   const writeOrders = { preHandler: requireScope("orders:write") };
   const manageHooks = { preHandler: requireScope("webhooks:manage") };
@@ -58,7 +68,7 @@ export function createHarbourline(opts: {
   const timer = setInterval(async () => {
     if (dispatching) return;
     dispatching = true;
-    try { await dispatchDue(db, opts.webhooks); } finally { dispatching = false; }
+    try { await dispatchDue(db, { ...opts.webhooks, newestFirst: chaos.reverseWebhooks }); } finally { dispatching = false; }
   }, opts.webhooks?.dispatchEveryMs ?? 500);
   app.addHook("onClose", async () => clearInterval(timer));
 
@@ -76,12 +86,12 @@ export function createHarbourline(opts: {
       .prepare("SELECT * FROM products WHERE sku > ? AND updated_at > ? ORDER BY sku LIMIT ?")
       .all(after, since, limit + 1) as unknown as ProductRow[];
     const page = rows.slice(0, limit);
-    return { data: page, next_cursor: rows.length > limit ? encodeCursor(page[page.length - 1].sku) : null };
+    return { data: page.map((p) => present(p, chaos.renameStockField)), next_cursor: rows.length > limit ? encodeCursor(page[page.length - 1].sku) : null };
   });
 
   app.get<{ Params: { sku: string } }>("/v1/products/:sku", read, async (req, reply) => {
-    const p = getProduct.get(req.params.sku);
-    return p ?? reply.code(404).send(errorBody("not_found", `No product with sku ${req.params.sku}`));
+    const p = getProduct.get(req.params.sku) as ProductRow | undefined;
+    return p ? present(p, chaos.renameStockField) : reply.code(404).send(errorBody("not_found", `No product with sku ${req.params.sku}`));
   });
 
   app.post<{ Params: { sku: string }; Body: { change?: number; reason?: string } }>("/v1/products/:sku/stock", writeOrders, async (req, reply) => {

@@ -1,6 +1,6 @@
 // A small in-memory event log. The control room streams it live.
 
-export type EventKind = "sync" | "stock" | "order" | "error" | "demo" | "auth" | "webhook";
+export type EventKind = "sync" | "stock" | "order" | "error" | "demo" | "auth" | "webhook" | "break";
 export type Direction = "h2m" | "m2h" | null;
 
 export interface ConnectorEvent {
