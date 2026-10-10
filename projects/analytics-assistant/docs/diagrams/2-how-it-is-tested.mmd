@@ -1,0 +1,8 @@
+flowchart LR
+  S["Seeded data with<br/>5 planted surprises"] --> K["Answer key<br/>worked out with the<br/>same metric definitions"]
+  Q["30 test questions"] --> A["Brain A"] & B["Brain B"]
+  A --> SC["Scorer<br/>names + numbers found?"]
+  B --> SC
+  K --> SC
+  SC --> V["correct / partly / wrong<br/>+ time per question"]
+  H["10 held-out questions<br/>written after the fixes"] --> A
