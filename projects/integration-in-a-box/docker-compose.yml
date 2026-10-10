@@ -1,0 +1,97 @@
+# Start everything:  docker compose up --build
+# Then open http://localhost:4000 for the control room and sign in as sam / maple-demo.
+#
+# Every secret in this file is a made-up, dev-only value for a local demo.
+# A real deployment would load them from a secret store, never from a file in git.
+name: integration-in-a-box
+
+services:
+  keycloak:
+    # The login server. Two realms (separate identity systems) are loaded from ./keycloak:
+    #   harbourline     issues access tokens to programs (OAuth client credentials)
+    #   maple-and-main  signs in Maple & Main staff (OpenID Connect single sign-on)
+    image: keycloak/keycloak:26.0
+    command: ["start-dev", "--import-realm"]
+    environment:
+      KC_BOOTSTRAP_ADMIN_USERNAME: admin
+      KC_BOOTSTRAP_ADMIN_PASSWORD: admin
+      # Browsers reach Keycloak at localhost:8080, so tokens always name that as their issuer...
+      KC_HOSTNAME: http://localhost:8080
+      # ...while the other containers may call it at keycloak:8080 for tokens and keys.
+      KC_HOSTNAME_BACKCHANNEL_DYNAMIC: "true"
+      KC_HTTP_ENABLED: "true"
+      KC_HEALTH_ENABLED: "true"
+    volumes: ["./keycloak:/opt/keycloak/data/import:ro"]
+    ports: ["8080:8080"]
+    healthcheck:
+      test: ["CMD-SHELL", "exec 3<>/dev/tcp/127.0.0.1/9000 && printf 'GET /health/ready HTTP/1.1\\r\\nHost: localhost\\r\\nConnection: close\\r\\n\\r\\n' >&3 && grep -q UP <&3"]
+      interval: 5s
+      retries: 40
+
+  harbourline:
+    build: .
+    image: integration-in-a-box:local
+    command: ["node", "--no-warnings", "--import", "tsx", "src/harbourline/main.ts"]
+    environment:
+      PORT: "4001"
+      DB_PATH: /data/harbourline.db
+      # Only accept tokens issued by this login server, for this API.
+      AUTH_ISSUER: http://localhost:8080/realms/harbourline
+      AUTH_JWKS_URL: http://keycloak:8080/realms/harbourline/protocol/openid-connect/certs
+      AUTH_AUDIENCE: harbourline-api
+      # Turns on the "Break it" switches. Demo only: a real deployment never sets this.
+      CHAOS_KEY: dev-only-chaos-key
+    volumes: [harbourline-data:/data]
+    ports: ["4001:4001"]
+    depends_on:
+      keycloak: { condition: service_healthy }
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost:4001/v1/health"]
+      interval: 3s
+      retries: 20
+
+  maple:
+    build: .
+    image: integration-in-a-box:local
+    command: ["node", "--no-warnings", "--import", "tsx", "src/maple/main.ts"]
+    environment:
+      PORT: "4002"
+      DB_PATH: /data/maple.db
+    volumes: [maple-data:/data]
+    ports: ["4002:4002"]
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost:4002/api/health"]
+      interval: 3s
+      retries: 20
+
+  connector:
+    build: .
+    image: integration-in-a-box:local
+    command: ["node", "--no-warnings", "--import", "tsx", "src/connector/main.ts"]
+    environment:
+      PORT: "4000"
+      HARBOURLINE_URL: http://harbourline:4001
+      MAPLE_URL: http://maple:4002
+      SYNC_INTERVAL_MS: "4000"
+      PAGE_SIZE: "5"
+      START_DELAY_MS: ${START_DELAY_MS:-500}
+      # OAuth client credentials for calling Harbourline (dev-only secret).
+      OAUTH_TOKEN_URL: http://keycloak:8080/realms/harbourline/protocol/openid-connect/token
+      OAUTH_CLIENT_ID: maple-connector
+      OAUTH_CLIENT_SECRET: dev-only-connector-secret-change-me
+      # Single sign-on for the control room (dev-only secret).
+      SSO_PUBLIC_ISSUER: http://localhost:8080/realms/maple-and-main
+      SSO_INTERNAL_ISSUER: http://keycloak:8080/realms/maple-and-main
+      SSO_CLIENT_ID: control-room
+      SSO_CLIENT_SECRET: dev-only-control-room-secret-change-me
+      # Where Harbourline should send webhooks (its view of the connector).
+      WEBHOOK_URL: http://connector:4000/webhooks/harbourline
+      CHAOS_KEY: dev-only-chaos-key
+    ports: ["4000:4000"]
+    depends_on:
+      harbourline: { condition: service_healthy }
+      maple: { condition: service_healthy }
+
+volumes:
+  harbourline-data:
+  maple-data:

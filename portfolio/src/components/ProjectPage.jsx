@@ -1,6 +1,8 @@
-import { motion } from "framer-motion";
-import { ArrowLeft, ArrowRight, ArrowUpRight, Lock } from "lucide-react";
+import { AnimatePresence, motion } from "framer-motion";
+import { useRef, useState } from "react";
+import { ArrowLeft, ArrowRight, ArrowUpRight, Info, Lock } from "lucide-react";
 import { ACCENTS, PROJECTS, getProject } from "../data/projects";
+import { TOOL_INFO } from "../data/tools";
 import FlowDiagram, { FlourishTitle, Kicker, TagPill } from "./ui";
 import { EASE_REVEAL } from "../lib/motion";
 
@@ -26,6 +28,96 @@ function Bullets({ items, accent }) {
         </li>
       ))}
     </ul>
+  );
+}
+
+/* The tools a project uses. Hover, focus or tap one to see what it is and,
+   where the project says, how it's used here. The explainer opens under the
+   row rather than as a floating tooltip, so it never runs off a phone screen. */
+function ToolList({ tools, usage = {}, accent }) {
+  const [active, setActive] = useState(null);
+  // A tap focuses the button and then clicks it. Remember when focus opened it,
+  // so that same tap's click doesn't immediately close it again.
+  const openedAt = useRef(0);
+  const open = (t) => {
+    openedAt.current = Date.now();
+    setActive(t);
+  };
+  const a = ACCENTS[accent];
+  const what = active ? TOOL_INFO[active] : null;
+  const here = active ? usage[active] : null;
+  const explained = (t) => Boolean(TOOL_INFO[t] || usage[t]);
+  const anyExplained = tools.some(explained);
+
+  return (
+    // Hover only counts for a real mouse: phones fire a fake hover on tap, which would open then instantly close it.
+    <div onPointerLeave={(e) => e.pointerType === "mouse" && setActive(null)}>
+      <ul className="flex flex-wrap gap-2" aria-label="Tools used">
+        {tools.map((t) => {
+          if (!explained(t)) {
+            return (
+              <li key={t}>
+                <TagPill>{t}</TagPill>
+              </li>
+            );
+          }
+          const on = active === t;
+          return (
+            <li key={t}>
+              <button
+                type="button"
+                onPointerEnter={(e) => e.pointerType === "mouse" && open(t)}
+                onFocus={() => open(t)}
+                onClick={() => (on && Date.now() - openedAt.current > 400 ? setActive(null) : open(t))}
+                aria-expanded={on}
+                aria-controls="tool-explainer"
+                className={`inline-flex items-center gap-1.5 font-mono text-micro uppercase tracking-wide px-2.5 py-1 rounded-full border transition-colors duration-200 ${
+                  on ? `${a.border} ${a.text} ${a.soft}` : "border-white/15 text-[color:var(--ink-200)] bg-white/[.04] hover:border-white/40"
+                }`}
+              >
+                {t}
+                <Info size={12} aria-hidden="true" className="opacity-70" />
+              </button>
+            </li>
+          );
+        })}
+      </ul>
+      <div id="tool-explainer" aria-live="polite" className="mt-3 min-h-[1.5rem]">
+        <AnimatePresence mode="wait">
+          {active ? (
+            <motion.div
+              key={active}
+              initial={{ opacity: 0, y: -6 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -4 }}
+              transition={{ duration: 0.18 }}
+              className="rounded-xl border border-white/12 bg-white/[.04] p-4"
+              style={{ borderLeft: `3px solid ${a.hex}` }}
+            >
+              <p className={`font-mono text-micro uppercase tracking-[.14em] ${a.text}`}>{active}</p>
+              {what && (
+                <p className="mt-2 text-sm leading-relaxed text-[color:var(--ink-100)]">
+                  <span className="font-semibold text-white">What it is: </span>
+                  {what}
+                </p>
+              )}
+              {here && (
+                <p className="mt-2 text-sm leading-relaxed text-[color:var(--ink-100)]">
+                  <span className="font-semibold text-white">In this project: </span>
+                  {here}
+                </p>
+              )}
+            </motion.div>
+          ) : (
+            anyExplained && (
+              <motion.p key="hint" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="text-sm text-[color:var(--ink-300)]">
+                Hover or tap a tool with the <Info size={12} className="inline -mt-0.5" aria-label="info" /> icon to see what it is and how it's used here.
+              </motion.p>
+            )
+          )}
+        </AnimatePresence>
+      </div>
+    </div>
   );
 }
 
@@ -248,11 +340,7 @@ export default function ProjectPage({ slug }) {
         </Block>
 
         <Block label="Built with" accent={project.accent}>
-          <div className="flex flex-wrap gap-2">
-            {project.stack.map((s) => (
-              <TagPill key={s}>{s}</TagPill>
-            ))}
-          </div>
+          <ToolList tools={project.stack} usage={project.stackUsage} accent={project.accent} />
         </Block>
       </div>
 

@@ -1,0 +1,11 @@
+flowchart TD
+  A["A call to Harbourline fails"] --> B{"What came back?"}
+  B -- "no answer, timeout" --> W
+  B -- "5xx (Harbourline broken)" --> W
+  B -- "401 or 403<br/>(login or permission)" --> W
+  B -- "429 (too many requests)" --> P["Pause for Retry-After seconds"]
+  P --> W
+  B -- "other 4xx<br/>(bad data, not enough stock)" --> R["Park the order as failed,<br/>with Harbourline's reason"]
+  W["Keep the order waiting.<br/>Health turns red. Retry next cycle."]
+  W --> X["Retried with the same<br/>idempotency key, so never doubled"]
+  R --> Y["Health stays green:<br/>the connector did its job"]

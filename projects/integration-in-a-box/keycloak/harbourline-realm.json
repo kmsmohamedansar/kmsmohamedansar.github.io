@@ -1,0 +1,52 @@
+{
+  "realm": "harbourline",
+  "displayName": "Harbourline",
+  "enabled": true,
+  "accessTokenLifespan": 300,
+  "clientScopes": [
+    {
+      "name": "inventory:read",
+      "protocol": "openid-connect",
+      "attributes": { "include.in.token.scope": "true" }
+    },
+    {
+      "name": "orders:write",
+      "protocol": "openid-connect",
+      "attributes": { "include.in.token.scope": "true" }
+    },
+    {
+      "name": "webhooks:manage",
+      "protocol": "openid-connect",
+      "attributes": { "include.in.token.scope": "true" }
+    },
+    {
+      "name": "harbourline-api-audience",
+      "protocol": "openid-connect",
+      "attributes": { "include.in.token.scope": "false" },
+      "protocolMappers": [
+        {
+          "name": "audience",
+          "protocol": "openid-connect",
+          "protocolMapper": "oidc-audience-mapper",
+          "config": { "included.custom.audience": "harbourline-api", "access.token.claim": "true", "id.token.claim": "false" }
+        }
+      ]
+    }
+  ],
+  "clients": [
+    {
+      "clientId": "maple-connector",
+      "name": "Maple & Main connector",
+      "description": "The integration. Machine-to-machine only (client credentials).",
+      "enabled": true,
+      "publicClient": false,
+      "clientAuthenticatorType": "client-secret",
+      "secret": "dev-only-connector-secret-change-me",
+      "standardFlowEnabled": false,
+      "directAccessGrantsEnabled": false,
+      "serviceAccountsEnabled": true,
+      "defaultClientScopes": ["harbourline-api-audience", "inventory:read", "orders:write", "webhooks:manage"],
+      "optionalClientScopes": []
+    }
+  ]
+}

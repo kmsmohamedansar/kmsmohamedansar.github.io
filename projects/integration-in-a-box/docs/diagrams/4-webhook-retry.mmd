@@ -1,0 +1,19 @@
+sequenceDiagram
+  autonumber
+  participant H as Harbourline
+  participant C as Connector
+  participant M as Maple & Main
+  Note over H: Stock changes. Queue a stock.changed event<br/>and record a delivery.
+  H->>C: POST /webhooks/harbourline (signed)
+  C--xH: (connector down) unreachable
+  Note over H: Attempt 1 failed. Try again in 1s
+  H->>C: attempt 2
+  C--xH: unreachable
+  Note over H: Wait 2s, then 4s, then 8s...<br/>Gives up after 6 attempts and marks it failed
+  H->>C: attempt 5
+  Note over C: Back up. Check the signature, the timestamp<br/>and whether this event was seen already
+  C-->>H: 200 OK (straight away)
+  H->>H: Mark delivered after 5 attempts
+  C->>H: GET /v1/products/{sku} (read it fresh)
+  H-->>C: current product
+  C->>M: PUT inventory item

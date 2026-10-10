@@ -1,0 +1,23 @@
+sequenceDiagram
+  autonumber
+  actor S as Sam (Maple & Main staff)
+  participant B as Browser
+  participant C as Connector (control room server)
+  participant K as Keycloak (maple-and-main realm)
+  S->>B: Open the control room
+  B->>C: GET /api/state
+  C-->>B: 401 login_required
+  B-->>S: "Sign in with Maple & Main"
+  S->>B: Click
+  B->>C: GET /auth/login
+  Note over C: Make state, nonce and a PKCE verifier.<br/>Keep them server-side.
+  C-->>B: Redirect to Keycloak with code_challenge
+  B->>K: Login page
+  S->>K: Username and password
+  K-->>B: Redirect to /auth/callback?code=...&state=...
+  B->>C: GET /auth/callback
+  C->>K: Swap code + verifier + client secret for tokens
+  K-->>C: ID token
+  Note over C: Check the ID token's signature,<br/>issuer, audience and nonce
+  C-->>B: Set an HttpOnly session cookie, redirect to /
+  Note over B: The browser never holds a token
