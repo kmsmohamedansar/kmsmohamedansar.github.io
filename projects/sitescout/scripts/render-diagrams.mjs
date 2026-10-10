@@ -23,7 +23,13 @@ for (const file of readdirSync(dir).filter((f) => f.endsWith(".mmd"))) {
   const id = "d" + file.replace(/\W/g, "");
   const svg = await page.evaluate(async ([id, src]) => (await window.mermaid.render(id, src)).svg, [id, src]);
   // Mermaid can emit HTML-style <br>, which is not valid in a standalone SVG.
-  writeFileSync(resolve(dir, file.replace(/\.mmd$/, ".svg")), svg.replace(/<br\s*>/g, "<br/>"));
+  // Give the SVG a real size from its viewBox, so it renders inside <img>.
+  const [, , w, h] = svg.match(/viewBox="([^"]+)"/)[1].split(/\s+/).map(Number);
+  const sized = svg
+    .replace(/<br\s*>/g, "<br/>")
+    .replace(/^<svg([^>]*?) width="100%"/, `<svg$1 width="${Math.ceil(w)}" height="${Math.ceil(h)}"`)
+    .replace(/^(<svg[^>]*?) style="max-width:[^"]*"/, "$1");
+  writeFileSync(resolve(dir, file.replace(/\.mmd$/, ".svg")), sized);
   console.log("rendered", file);
 }
 await browser.close();
