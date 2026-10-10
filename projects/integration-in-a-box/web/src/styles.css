@@ -141,3 +141,29 @@ button:disabled { cursor: progress; opacity: 0.6; }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation: none !important; }
 }
+
+/* Milestone 2: sign-in, signed-in user, token, webhooks */
+.top-right { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.who { display: flex; align-items: center; gap: 10px; padding: 6px 8px 6px 6px; border-radius: 999px; background: var(--card); border: 1px solid var(--border); font-weight: 600; }
+.who small { display: block; font-weight: 400; color: var(--muted); font-size: 11px; }
+.avatar { width: 30px; height: 30px; border-radius: 50%; display: grid; place-items: center; font-size: 12px; background: color-mix(in srgb, var(--mm) 30%, transparent); color: var(--mm); }
+.signout { color: var(--muted); font-size: 12px; text-decoration: none; padding: 4px 10px; border-left: 1px solid var(--border); }
+.signout:hover { color: var(--text); }
+.token { margin-top: 10px; display: grid; grid-template-columns: 1fr auto; align-items: baseline; gap: 2px 8px; padding: 8px 10px; border-radius: 10px; text-align: left;
+  background: color-mix(in srgb, var(--con) 12%, var(--bg-2)); border: 1px dashed color-mix(in srgb, var(--con) 45%, transparent); }
+.token-label { font-size: 12px; color: var(--con); font-weight: 700; }
+.token-time { font: 700 16px ui-monospace, Menlo, monospace; }
+.token-time.soon { color: var(--warn); }
+.token small { grid-column: span 2; color: var(--muted); font-size: 11px; }
+.packet-webhook { background: #facc15; box-shadow: 0 0 16px #facc15; }
+.ev-auth .ev-icon { color: var(--con); }
+.ev-webhook .ev-icon { color: #facc15; }
+.deliveries h3 { margin-top: 0; }
+.signin { min-height: 100vh; display: grid; place-items: center; padding: 20px;
+  background: radial-gradient(600px 400px at 30% 20%, color-mix(in srgb, var(--mm) 18%, transparent), transparent 70%), radial-gradient(600px 400px at 70% 80%, color-mix(in srgb, var(--con) 16%, transparent), transparent 70%), var(--bg); }
+.signin-card { max-width: 440px; width: 100%; background: var(--card); border: 1px solid var(--border); border-radius: 22px; padding: 30px; backdrop-filter: blur(14px); box-shadow: 0 30px 80px -40px var(--mm); }
+.signin-card h1 { margin: 6px 0 8px; font-size: 30px; letter-spacing: -0.03em; }
+.btn-signin { display: block; text-align: center; margin: 22px 0 12px; padding: 13px; border-radius: 12px; text-decoration: none; font-weight: 700; color: #1c0d02;
+  background: linear-gradient(110deg, var(--mm), #fdba74, var(--mm)); background-size: 200% 100%; animation: sheen 3.5s ease-in-out infinite; }
+@keyframes sheen { 0%, 100% { background-position: 0% 0; } 50% { background-position: 100% 0; } }
+.fineprint { margin: 0; color: var(--muted); font-size: 12px; }

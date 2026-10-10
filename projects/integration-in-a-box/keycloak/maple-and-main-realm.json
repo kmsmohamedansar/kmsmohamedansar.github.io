@@ -1,0 +1,34 @@
+{
+  "realm": "maple-and-main",
+  "displayName": "Maple & Main staff login",
+  "enabled": true,
+  "loginWithEmailAllowed": true,
+  "ssoSessionIdleTimeout": 3600,
+  "clients": [
+    {
+      "clientId": "control-room",
+      "name": "Integration control room",
+      "enabled": true,
+      "publicClient": false,
+      "clientAuthenticatorType": "client-secret",
+      "secret": "dev-only-control-room-secret-change-me",
+      "standardFlowEnabled": true,
+      "directAccessGrantsEnabled": false,
+      "serviceAccountsEnabled": false,
+      "redirectUris": ["http://localhost:4000/auth/callback"],
+      "webOrigins": ["http://localhost:4000"],
+      "attributes": { "pkce.code.challenge.method": "S256", "post.logout.redirect.uris": "http://localhost:4000/*" }
+    }
+  ],
+  "users": [
+    {
+      "username": "sam",
+      "email": "sam@maple-and-main.example",
+      "emailVerified": true,
+      "firstName": "Sam",
+      "lastName": "Rivera",
+      "enabled": true,
+      "credentials": [{ "type": "password", "value": "maple-demo", "temporary": false }]
+    }
+  ]
+}

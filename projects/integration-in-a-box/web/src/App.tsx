@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
 import { useCallback, useEffect, useState } from "react";
-import { EventFeed, Orders, Pipe, SystemPanel } from "./components";
-import type { ConnectorEvent, State } from "./types";
+import { Deliveries, EventFeed, Orders, Pipe, SignIn, SystemPanel } from "./components";
+import type { ConnectorEvent, Me, State } from "./types";
 
 const ago = (iso: string | null) => {
   if (!iso) return "never";
@@ -9,7 +9,19 @@ const ago = (iso: string | null) => {
   return s < 2 ? "just now" : `${s}s ago`;
 };
 
+const mmss = (s: number | null | undefined) => (s == null ? "none yet" : `${Math.floor(s / 60)}:${String(s % 60).padStart(2, "0")}`);
+
 export default function App() {
+  const [me, setMe] = useState<Me | "loading" | "signed-out">("loading");
+  useEffect(() => {
+    fetch("/auth/me").then(async (r) => setMe(r.ok ? await r.json() : "signed-out")).catch(() => setMe("signed-out"));
+  }, []);
+  if (me === "loading") return null;
+  if (me === "signed-out") return <SignIn />;
+  return <ControlRoom me={me} />;
+}
+
+function ControlRoom({ me }: { me: Me }) {
   const [state, setState] = useState<State | null>(null);
   const [events, setEvents] = useState<ConnectorEvent[]>([]);
   const [packets, setPackets] = useState<{ id: number; direction: "h2m" | "m2h"; kind: string }[]>([]);
@@ -67,10 +79,22 @@ export default function App() {
           <h1>Control room</h1>
           <p className="sub">Two made-up companies, one connector in the middle. Everything here is synthetic.</p>
         </div>
-        <div className={`health health-${health}`}>
-          <span className="health-dot" />
-          {health === "ok" ? "Healthy" : health === "bad" ? "Problem, retrying" : "Starting"}
-          <small>{connected ? "live" : "reconnecting"}</small>
+        <div className="top-right">
+          {me.user && (
+            <div className="who">
+              <span className="avatar">{me.user.name.split(" ").map((p) => p[0]).join("").slice(0, 2)}</span>
+              <span>
+                {me.user.name}
+                <small>signed in with Maple &amp; Main SSO</small>
+              </span>
+              <a href="/auth/logout" className="signout">Sign out</a>
+            </div>
+          )}
+          <div className={`health health-${health}`}>
+            <span className="health-dot" />
+            {health === "ok" ? "Healthy" : health === "bad" ? "Problem, retrying" : "Starting"}
+            <small>{connected ? "live" : "reconnecting"}</small>
+          </div>
         </div>
       </header>
 
@@ -82,7 +106,9 @@ export default function App() {
           fieldNames={["sku", "name", "stock_level"]}
           empty="No products"
           rows={state?.harbourline?.map((p) => ({ key: p.sku, label: p.name, sub: p.sku, qty: p.stock_level })) ?? (state ? null : [])}
-        />
+        >
+          <Deliveries deliveries={state?.deliveries ?? null} />
+        </SystemPanel>
 
         <section className="middle">
           <motion.div className="connector-card" animate={busy === "sync" ? { scale: [1, 1.03, 1] } : {}} transition={{ repeat: Infinity, duration: 0.8 }}>
@@ -94,7 +120,16 @@ export default function App() {
               <div><dt>Items updated</dt><dd>{c?.itemsUpdated ?? 0}</dd></div>
               <div><dt>Orders sent</dt><dd>{c?.ordersSent ?? 0}</dd></div>
               <div><dt>Orders rejected</dt><dd className={c?.ordersFailed ? "bad" : ""}>{c?.ordersFailed ?? 0}</dd></div>
+              {state?.webhooks && <div><dt>Webhooks in</dt><dd>{c?.webhooksReceived ?? 0}</dd></div>}
+              {state?.webhooks && <div><dt>Bad signatures</dt><dd className={c?.webhooksRejected ? "bad" : ""}>{c?.webhooksRejected ?? 0}</dd></div>}
             </dl>
+            {state?.auth && (
+              <div className="token" title="OAuth 2.0 client credentials: the connector's pass for calling Harbourline">
+                <span className="token-label">⚿ Access token</span>
+                <span className={`token-time ${(state.auth.tokenExpiresInSec ?? 99) < 40 ? "soon" : ""}`}>{mmss(state.auth.tokenExpiresInSec)}</span>
+                <small>{state.auth.tokensFetched} issued so far</small>
+              </div>
+            )}
           </motion.div>
           <Pipe packets={packets} />
           <div className="controls">

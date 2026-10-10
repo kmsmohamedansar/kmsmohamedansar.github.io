@@ -1,6 +1,6 @@
 import { AnimatePresence, animate, motion, useMotionValue, useTransform } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
-import type { ConnectorEvent, MmOrder } from "./types";
+import type { ConnectorEvent, HbDelivery, MmOrder } from "./types";
 
 /** A number that counts to its new value and flashes when it changes. */
 export function LiveNumber({ value }: { value: number }) {
@@ -123,7 +123,53 @@ export function Orders({ orders }: { orders: MmOrder[] | null }) {
   );
 }
 
-const KIND_ICON: Record<ConnectorEvent["kind"], string> = { sync: "⟳", stock: "▲", order: "◆", error: "!", demo: "•" };
+const KIND_ICON: Record<ConnectorEvent["kind"], string> = { sync: "⟳", stock: "▲", order: "◆", error: "!", demo: "•", auth: "⚿", webhook: "⚡" };
+
+const DELIVERY_TEXT: Record<HbDelivery["status"], string> = { pending: "retrying", delivered: "delivered", failed: "failed" };
+
+/** Harbourline's own record of every webhook it tried to send. */
+export function Deliveries({ deliveries }: { deliveries: HbDelivery[] | null }) {
+  if (!deliveries || deliveries.length === 0) return null;
+  return (
+    <div className="orders deliveries">
+      <h3>Webhook deliveries</h3>
+      <ul>
+        <AnimatePresence initial={false}>
+          {deliveries.slice(0, 5).map((d) => (
+            <motion.li key={d.id} layout initial={{ opacity: 0, y: -8 }} animate={{ opacity: 1, y: 0 }}>
+              <code>{d.event_id.slice(0, 12)}</code>
+              <span className="order-lines">
+                {d.event_type} · {d.attempts} {d.attempts === 1 ? "try" : "tries"}
+                {d.last_error ? (d.status === "delivered" ? ` · recovered from: ${d.last_error}` : ` · ${d.last_error}`) : ""}
+              </span>
+              <motion.span layout className={`pill pill-${d.status === "delivered" ? "synced" : d.status === "failed" ? "failed" : "pending_sync"}`}>
+                {d.status === "pending" && <span className="pulse" />}
+                {DELIVERY_TEXT[d.status]}
+              </motion.span>
+            </motion.li>
+          ))}
+        </AnimatePresence>
+      </ul>
+    </div>
+  );
+}
+
+/** Shown when single sign-on is on and nobody has signed in. */
+export function SignIn() {
+  return (
+    <div className="signin">
+      <motion.div className="signin-card" initial={{ opacity: 0, y: 20, scale: 0.97 }} animate={{ opacity: 1, y: 0, scale: 1 }} transition={{ type: "spring", stiffness: 200, damping: 22 }}>
+        <p className="kicker">Integration-in-a-box</p>
+        <h1>Control room</h1>
+        <p className="sub">This screen shows Maple &amp; Main's live integration, so it's for Maple &amp; Main staff only. Sign in with your Maple &amp; Main account.</p>
+        <motion.a href="/auth/login" className="btn btn-signin" whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.97 }}>
+          Sign in with Maple &amp; Main
+        </motion.a>
+        <p className="fineprint">Single sign-on through the company's own login server (Keycloak). The control room never sees your password.</p>
+      </motion.div>
+    </div>
+  );
+}
 
 export function EventFeed({ events }: { events: ConnectorEvent[] }) {
   return (

@@ -27,3 +27,24 @@ Dated log of what was built, what was run, and what happened. Only results from 
 
 **Not yet verified**
 - The stack hasn't been run on the owner's Mac yet.
+
+**Milestone 2, same day**
+
+*Built*
+- Keycloak in Docker Compose with two realms loaded from files: `harbourline` (client credentials for the connector, with an audience mapper and three scopes) and `maple-and-main` (a staff user and the control-room client).
+- Harbourline: token checks on every route (signature, issuer, expiry, audience, scope); webhook subscriptions, a delivery log, and a dispatcher with retries.
+- Connector: token manager (cache, renew early, one retry on 401); webhook receiver (signature check on the raw body, timestamp check, duplicate check); single sign-on with PKCE and a server-side session.
+- Control room: sign-in screen, signed-in user, token countdown, webhook delivery panel.
+
+*Ran*
+- `npm test`: 7 files, 38 tests, all passing.
+- Keycloak issued a token with `aud: harbourline-api` and scopes `inventory:read orders:write webhooks:manage`, valid for 300s.
+- With the stack up: Harbourline without a token returned 401 `unauthorized`; the control room API without a session returned 401; `/auth/login` redirected to Keycloak with a PKCE challenge.
+- Playwright signed in as `sam` through the real Keycloak login page, captured the control room, triggered a delivery (webhook delivered on the first try), then signed out.
+- Outage test: stopped the connector, changed stock twice. Both deliveries reached 4 attempts with `unreachable: fetch failed`. Restarted the connector: both delivered on attempt 5. Output in `docs/outage-deliveries-*.txt`.
+
+*Went wrong, then fixed*
+- The test login server added routes after it started listening, which Fastify refuses. Reordered.
+- My first token-retry test assumed rotating the signing key would make old tokens fail at once. It doesn't: Harbourline caches the old key for a while, which is correct. Rewrote the test around a real cause of a rejected token: clock skew, where the login server hands out a token that's already expired.
+- Found a bug while planning the outage demo: re-subscribing to webhooks deleted the old subscription, which would leave deliveries waiting to retry pointing at nothing, stuck forever. Wrote a failing test first, then changed re-subscribing to keep the subscription and only rotate its secret. The outage test above passed because of this fix.
+- A delivered webhook used to forget the errors before it succeeded. It now keeps the last error, so the panel can say "recovered from: unreachable".

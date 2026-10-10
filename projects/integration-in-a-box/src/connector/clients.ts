@@ -7,12 +7,14 @@ export class ApiError extends Error {
   }
 }
 
-async function call<T>(system: string, base: string, path: string, init: RequestInit & { timeoutMs?: number } = {}): Promise<{ status: number; body: T }> {
+import type { TokenManager } from "./token.ts";
+
+async function call<T>(system: string, base: string, path: string, init: RequestInit & { timeoutMs?: number; token?: string } = {}): Promise<{ status: number; body: T }> {
   let res: Response;
   try {
     res = await fetch(base + path, {
       ...init,
-      headers: { "content-type": "application/json", ...(init.headers ?? {}) },
+      headers: { "content-type": "application/json", ...(init.token ? { authorization: `Bearer ${init.token}` } : {}), ...(init.headers ?? {}) },
       signal: AbortSignal.timeout(init.timeoutMs ?? 5000),
     });
   } catch (e) {
@@ -33,20 +35,46 @@ export interface HbOrder { id: string; external_ref: string | null; status: stri
 export interface MmItem { item_code: string; description: string; qty: number; last_synced_at: string }
 export interface MmOrder { id: string; lines: { item_code: string; qty: number }[]; status: string; harbourline_order_id: string | null; error: string | null; created_at: string }
 
+export interface HbDelivery { id: string; event_id: string; event_type: string; attempts: number; status: "pending" | "delivered" | "failed"; last_status_code: number | null; last_error: string | null; created_at: string; delivered_at: string | null }
+
 export class HarbourlineClient {
-  constructor(readonly base: string) {}
+  constructor(readonly base: string, private tokens?: TokenManager) {}
+
+  /** Call Harbourline with a token. If it's rejected as expired or invalid, get a fresh one and try once more. */
+  private async authed<T>(path: string, init: RequestInit = {}): Promise<{ status: number; body: T }> {
+    if (!this.tokens) return call<T>("Harbourline", this.base, path, init);
+    try {
+      return await call<T>("Harbourline", this.base, path, { ...init, token: await this.tokens.get() });
+    } catch (e) {
+      if (e instanceof ApiError && e.status === 401) {
+        this.tokens.invalidate();
+        return call<T>("Harbourline", this.base, path, { ...init, token: await this.tokens.get() });
+      }
+      throw e;
+    }
+  }
+
+  getProduct(sku: string) {
+    return this.authed<HbProduct>(`/v1/products/${encodeURIComponent(sku)}`).then((r) => r.body);
+  }
+  subscribe(url: string, events: string[]) {
+    return this.authed<{ id: string; secret: string }>("/v1/webhook-subscriptions", { method: "POST", body: JSON.stringify({ url, events }) }).then((r) => r.body);
+  }
+  deliveries(limit = 8) {
+    return this.authed<{ data: HbDelivery[] }>(`/v1/webhook-deliveries?limit=${limit}`).then((r) => r.body.data);
+  }
   listProducts(q: { limit?: number; cursor?: string | null; updated_since?: string | null }) {
     const p = new URLSearchParams();
     if (q.limit) p.set("limit", String(q.limit));
     if (q.cursor) p.set("cursor", q.cursor);
     if (q.updated_since) p.set("updated_since", q.updated_since);
-    return call<{ data: HbProduct[]; next_cursor: string | null }>("Harbourline", this.base, `/v1/products?${p}`).then((r) => r.body);
+    return this.authed<{ data: HbProduct[]; next_cursor: string | null }>(`/v1/products?${p}`).then((r) => r.body);
   }
   adjustStock(sku: string, change: number, reason: string) {
-    return call<HbProduct>("Harbourline", this.base, `/v1/products/${encodeURIComponent(sku)}/stock`, { method: "POST", body: JSON.stringify({ change, reason }) }).then((r) => r.body);
+    return this.authed<HbProduct>(`/v1/products/${encodeURIComponent(sku)}/stock`, { method: "POST", body: JSON.stringify({ change, reason }) }).then((r) => r.body);
   }
   createOrder(idempotencyKey: string, body: { external_ref: string; lines: { sku: string; quantity: number }[] }) {
-    return call<HbOrder>("Harbourline", this.base, "/v1/orders", { method: "POST", headers: { "idempotency-key": idempotencyKey }, body: JSON.stringify(body) });
+    return this.authed<HbOrder>("/v1/orders", { method: "POST", headers: { "idempotency-key": idempotencyKey }, body: JSON.stringify(body) });
   }
 }
 

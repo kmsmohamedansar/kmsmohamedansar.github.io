@@ -3,6 +3,8 @@ import type { EventLog } from "./events.ts";
 import { applyMap, MappingError, type Mapping } from "./mapping.ts";
 
 export interface ConnectorStats {
+  webhooksReceived: number;
+  webhooksRejected: number;
   lastRunAt: string | null;
   lastOk: boolean | null;
   highWaterMark: string | null;
@@ -19,7 +21,7 @@ export interface ConnectorStats {
  *     translate them with mapping.json, and write them into Maple & Main.
  */
 export class Connector {
-  readonly stats: ConnectorStats = { lastRunAt: null, lastOk: null, highWaterMark: null, cycles: 0, itemsUpdated: 0, ordersSent: 0, ordersFailed: 0 };
+  readonly stats: ConnectorStats = { lastRunAt: null, lastOk: null, highWaterMark: null, cycles: 0, itemsUpdated: 0, ordersSent: 0, ordersFailed: 0, webhooksReceived: 0, webhooksRejected: 0 };
   private busy = false;
   private timer: NodeJS.Timeout | null = null;
 
@@ -130,6 +132,19 @@ export class Connector {
       this.fail("Stock sync failed, will retry", e);
       return false;
     }
+  }
+
+  /** A webhook said one product changed: fetch it fresh and update just that item. */
+  async applyProductChange(sku: string): Promise<void> {
+    const p = await this.hb.getProduct(sku);
+    const item = applyMap(p as unknown as Record<string, unknown>, this.mapping.product_to_item) as { item_code: string; description: string; qty: number };
+    const before = (await this.mm.inventory()).find((i) => i.item_code === item.item_code);
+    await this.mm.upsertItem(item.item_code, { description: item.description, qty: item.qty });
+    this.stats.itemsUpdated++;
+    this.log.push("webhook", before ? `${item.description}: ${before.qty} → ${item.qty}` : `${item.description} added (${item.qty})`, {
+      direction: "h2m",
+      detail: `${item.item_code}, pushed by webhook`,
+    });
   }
 
   private fail(title: string, e: unknown) {

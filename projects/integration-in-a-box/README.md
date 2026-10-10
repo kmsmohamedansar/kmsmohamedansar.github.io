@@ -19,16 +19,43 @@ You need [Docker Desktop](https://www.docker.com/products/docker-desktop/).
 docker compose up --build
 ```
 
-Open **http://localhost:4000** for the control room. Press the buttons in the middle to make a shopper buy something or a delivery arrive, and watch the connector move the data.
+Open **http://localhost:4000** for the control room and sign in as **sam / maple-demo** (a made-up Maple & Main staff account). Press the buttons in the middle to make a shopper buy something or a delivery arrive, and watch the connector move the data.
 
-The two companies' APIs are also open for poking at directly:
+Other addresses:
 
-- Harbourline: http://localhost:4001/v1/products
-- Maple & Main: http://localhost:4002/api/inventory
+- Harbourline API: http://localhost:4001/v1/products (needs an access token, see below)
+- Maple & Main API: http://localhost:4002/api/inventory
+- Keycloak, the login server: http://localhost:8080 (admin / admin)
+
+Get an access token the way the connector does, then call Harbourline with it:
+
+```bash
+TOKEN=$(curl -s -X POST localhost:8080/realms/harbourline/protocol/openid-connect/token \
+  -d grant_type=client_credentials -d client_id=maple-connector \
+  -d client_secret=dev-only-connector-secret-change-me | jq -r .access_token)
+curl -s localhost:4001/v1/products -H "Authorization: Bearer $TOKEN"
+```
+
+Every password and secret in this project is a made-up, dev-only value for a local demo.
 
 Stop with `Ctrl+C`. Add `-v` to `docker compose down -v` to wipe the data and start fresh.
 
-## What it does today (milestone 1)
+## Logins and webhooks (milestone 2)
+
+![Signed in through Maple & Main single sign-on, with the connector's access token counting down](docs/screenshots/11-signed-in.png)
+
+| Piece | What it shows |
+|---|---|
+| **Keycloak, two realms** | One login server, two separate identity systems: Harbourline's (for programs) and Maple & Main's (for staff). Set up from files in [keycloak/](keycloak/). |
+| **OAuth 2.0 client credentials** | The connector proves who it is and gets a 5-minute access token, reuses it, and renews it before it expires. If Harbourline rejects it anyway, it gets a new one and retries once. |
+| **Harbourline checks every token** | Signature, issuer, expiry, audience, and the permission (scope) each route needs. Each failure has its own error code: `token_expired`, `invalid_audience`, `invalid_issuer`, `insufficient_scope` (403, not 401). |
+| **Single sign-on for people** | The control room is locked. "Sign in with Maple & Main" goes to Maple & Main's own login page (OpenID Connect, authorization code flow with PKCE). The browser only ever gets a session cookie, never a token. Signing out ends the session at the login server too. |
+| **Signed webhooks** | Harbourline calls the connector the moment stock changes. Each message is signed (HMAC-SHA256 over a timestamp and the exact body), so the connector can prove it's genuine and refuse replays. Duplicates are ignored. |
+| **Retries with growing gaps** | If the connector is down, Harbourline retries after 1, 2, 4, 8 and 16 seconds, logs every attempt, and marks a delivery failed after 6 tries. The regular sync still runs as a safety net. |
+
+**Tested for real:** with the stack running, I stopped the connector and changed stock twice at Harbourline. Harbourline tried each webhook 4 times ("unreachable"). When the connector came back and re-subscribed, both were delivered on the 5th try ([before](docs/outage-deliveries-while-down.txt), [after](docs/outage-deliveries-after.txt)).
+
+## What it did first (milestone 1)
 
 | Piece | What it shows |
 |---|---|
@@ -42,7 +69,6 @@ Stop with `Ctrl+C`. Add `-v` to `docker compose down -v` to wipe the data and st
 
 ## Coming next
 
-- **Milestone 2:** logins. OAuth 2.0 client credentials for program-to-program calls, single sign-on for people through Keycloak, and signed webhooks with retries.
 - **Milestone 3:** ten deliberate breaks with a "Break it" panel, plus a runbook entry for each: what you see, the cause, the fix, and how to prevent it.
 - **Milestone 4:** diagrams, a recording, and the case study.
 
@@ -50,15 +76,15 @@ Stop with `Ctrl+C`. Add `-v` to `docker compose down -v` to wipe the data and st
 
 ```bash
 npm install
-npm test          # 16 tests: API rules, mapping, and full end-to-end syncs
+npm test          # 38 tests: API rules, tokens, webhooks, mapping, and full end-to-end syncs
 npm run typecheck
 ```
 
-The end-to-end tests start all three services for real on random ports with fresh databases.
+The end-to-end tests start all three services for real on random ports with fresh databases. Tests don't need Keycloak: a small stand-in login server ([test/fake-idp.ts](test/fake-idp.ts)) signs real tokens the same way.
 
 ## Stack
 
-TypeScript, Node.js, Fastify, SQLite (built into Node, no database server), React, Framer Motion, Vite, Docker Compose, Vitest, Playwright (screenshots only).
+TypeScript, Node.js, Fastify, Keycloak, jose (token checks), SQLite (built into Node, no database server), React, Framer Motion, Vite, Docker Compose, Vitest, Playwright (screenshots only).
 
 ## License
 
