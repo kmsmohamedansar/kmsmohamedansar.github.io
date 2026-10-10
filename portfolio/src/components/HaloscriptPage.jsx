@@ -59,8 +59,9 @@ const ROAD = [
   ["done", "Novel and whiteboard core, built and verified on the Mac, iPad and iPhone simulators"],
   ["done", "iCloud sync wired up, with the conflict rules below"],
   ["done", "Writer templates, import, and save-on-background"],
+  ["done", "CloudKit schema deployed to production; iOS, iPadOS and macOS builds uploaded to TestFlight"],
+  ["done", "App Store listing, privacy policy and screenshots for all three platforms"],
   ["next", "Two-device sync test on real hardware"],
-  ["next", "CloudKit schema to production, then TestFlight"],
   ["next", "App Store review and launch, free"],
 ];
 
@@ -93,7 +94,7 @@ export default function HaloscriptPage() {
           <div>
             <h1 className="font-display text-4xl font-semibold text-white sm:text-5xl">Haloscript</h1>
             <p className="mt-1 font-mono text-xs uppercase tracking-[.12em]" style={{ color: VIOLET }}>
-              Mac · iPad · iPhone · In testing, App Store soon
+              Mac · iPad · iPhone · In TestFlight, App Store soon
             </p>
           </div>
         </div>
