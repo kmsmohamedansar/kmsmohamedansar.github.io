@@ -189,6 +189,60 @@ export default function ProjectPage({ slug }) {
           </div>
         </Block>
 
+        {project.figures?.length > 0 && (
+          <Block label="Diagrams" accent={project.accent}>
+            <div className="space-y-6">
+              {project.figures.map((f) => (
+                <figure key={f.src}>
+                  {/* Diagrams are drawn on white, so they sit on a light card. */}
+                  <div
+                    tabIndex={f.tall ? 0 : undefined}
+                    aria-label={f.tall ? `${f.caption} Scrollable.` : undefined}
+                    className={`overflow-x-auto rounded-xl bg-white p-3 sm:p-5 ${f.tall ? "max-h-[75vh] overflow-y-auto overscroll-contain" : ""}`}
+                  >
+                    <img src={f.src} alt={f.alt ?? f.caption} loading="lazy" className={`mx-auto block w-full ${f.narrow ? "max-w-sm" : ""} ${f.wide ? "min-w-[860px]" : ""}`} />
+                  </div>
+                  <figcaption className="mt-2 text-sm text-[color:var(--ink-300)]">
+                    {f.caption}
+                    {f.tall && " Scroll inside to see it all."}
+                  </figcaption>
+                </figure>
+              ))}
+            </div>
+          </Block>
+        )}
+
+        {project.results && (
+          <Block label="Results" accent={project.accent}>
+            {project.results.intro && <p className="mb-4 text-base leading-relaxed text-[color:var(--ink-100)]">{project.results.intro}</p>}
+            <div className="overflow-x-auto rounded-xl border border-white/12">
+              <table className="w-full text-left text-sm">
+                <thead>
+                  <tr className="border-b border-white/12 text-[color:var(--ink-300)] font-mono text-micro uppercase tracking-wide">
+                    {project.results.headers.map((h) => (
+                      <th key={h} className="px-4 py-2 font-semibold">
+                        {h}
+                      </th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody>
+                  {project.results.rows.map((r) => (
+                    <tr key={r[0]} className="border-b border-white/8 last:border-0">
+                      {r.map((c, i) => (
+                        <td key={i} className="px-4 py-2.5 text-[color:var(--ink-100)]">
+                          {c}
+                        </td>
+                      ))}
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+            {project.results.note && <p className="mt-3 text-sm text-[color:var(--ink-300)]">{project.results.note}</p>}
+          </Block>
+        )}
+
         <Block label="What I took from it" accent={project.accent}>
           <Bullets items={project.learned} accent={project.accent} />
         </Block>

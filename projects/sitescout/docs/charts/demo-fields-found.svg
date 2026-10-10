@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 162" width="640" height="162" font-family="Helvetica, Arial, sans-serif">
+  <style>
+    .title { font-size: 16px; font-weight: 700; fill: #111a2e; }
+    .sub { font-size: 12px; fill: #5d6885; }
+    .label { font-size: 13px; font-weight: 700; fill: #111a2e; }
+    .value { font-size: 12px; fill: #5d6885; }
+    .track { fill: #e8edf8; }
+    .bar { fill: #7c3aed; }
+    .bar-full { fill: #0891b2; }
+  </style>
+  <rect width="100%" height="100%" fill="#ffffff"/>
+  <text x="16" y="26" class="title">Demo run on synthetic pages: numbers found</text>
+  <text x="16" y="44" class="sub">Each bar: how many of the 17 numbers in the recipe were found on that page</text>
+  
+  <text x="80" y="74" text-anchor="end" class="label">EXMP</text>
+  <rect x="90" y="56" width="480" height="26" rx="4" class="track"/>
+  <rect x="90" y="56" width="451.7647058823529" height="26" rx="4" class="bar"/>
+  <text x="578" y="74" class="value">16 of 17</text>
+  <text x="80" y="112" text-anchor="end" class="label">DEMO</text>
+  <rect x="90" y="94" width="480" height="26" rx="4" class="track"/>
+  <rect x="90" y="94" width="451.7647058823529" height="26" rx="4" class="bar"/>
+  <text x="578" y="112" class="value">16 of 17</text>
+</svg>

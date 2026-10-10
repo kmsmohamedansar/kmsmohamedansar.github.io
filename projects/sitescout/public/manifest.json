@@ -1,0 +1,11 @@
+{
+  "manifest_version": 3,
+  "name": "Sitescout",
+  "version": "0.1.0",
+  "description": "Paste a Yahoo Finance link or a ticker and get the key numbers as cards and a CSV. Personal demo, not affiliated with Yahoo.",
+  "permissions": ["sidePanel", "scripting", "tabs"],
+  "host_permissions": ["https://finance.yahoo.com/*"],
+  "action": { "default_title": "Open Sitescout" },
+  "side_panel": { "default_path": "sidepanel.html" },
+  "background": { "service_worker": "background.js", "type": "module" }
+}

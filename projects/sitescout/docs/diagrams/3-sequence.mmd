@@ -1,0 +1,23 @@
+sequenceDiagram
+  autonumber
+  actor You
+  participant Panel as Side panel
+  participant Runner
+  participant Tab as Background tab
+  participant Reader as Reader (inside page)
+  You->>Panel: Paste "AAPL, MSFT" and press Scout
+  Panel->>Runner: Start a run with 2 pages
+  loop For each page
+    Runner->>Tab: Open finance.yahoo.com/quote/AAPL/ (hidden)
+    Tab-->>Runner: Page finished loading
+    loop Every 0.5 s, up to 15 s
+      Runner->>Tab: Is the price on the page yet?
+    end
+    Runner->>Reader: Here is the recipe, read the page
+    Reader-->>Runner: 17 fields, each with value and where it was found
+    Runner->>Tab: Close
+    Runner->>Panel: Update the card (Done or Failed)
+    Runner->>Runner: Wait 1.5 s before the next page
+  end
+  You->>Panel: Export CSV
+  Panel-->>You: sitescout-2026-....csv
