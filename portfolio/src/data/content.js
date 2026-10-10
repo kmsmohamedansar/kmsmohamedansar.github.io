@@ -42,6 +42,7 @@ export const ABOUT = {
 export const ROLES = [
   {
     company: "Datasembly",
+    logo: "/logos/datasembly.png",
     title: "Solutions Engineer",
     when: "Jan 2026 to now · Remote, Canada",
     current: true,
@@ -56,6 +57,7 @@ export const ROLES = [
   },
   {
     company: "Datasembly",
+    logo: "/logos/datasembly.png",
     title: "Tech Support",
     when: "Aug 2024 to Dec 2025 · Remote, Canada",
     accent: "violet",
@@ -82,6 +84,7 @@ export const ROLES = [
   },
   {
     company: "Amazon Prime Video",
+    logo: "/logos/prime-video.svg",
     title: "Business Analyst II, Quality Auditing",
     when: "Oct 2021 to Aug 2022 · Hybrid, India",
     accent: "rose",
@@ -95,6 +98,7 @@ export const ROLES = [
   },
   {
     company: "Amazon Prime Video",
+    logo: "/logos/prime-video.svg",
     title: "Business Analyst I, Digital Content",
     when: "Aug 2019 to Sep 2021 · Hybrid, India",
     accent: "green",
