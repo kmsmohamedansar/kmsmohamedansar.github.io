@@ -661,8 +661,9 @@ function RoleRow({ role }) {
       <article className="grid gap-4 border-t border-white/15 py-8 sm:py-10 md:grid-cols-[minmax(0,15rem)_1fr] md:gap-10">
         <div>
           {role.logo ? (
-            <img src={role.logo} alt={`${role.company} logo`} loading="lazy"
-              className="mb-3 h-11 w-11 rounded-xl bg-white object-contain p-1 shadow-[0_8px_24px_-12px_rgba(0,0,0,.6)]" />
+            <div className="mb-4 flex h-16 w-full max-w-[14rem] items-center justify-center rounded-xl bg-[#f8f9f9] px-4 py-3 shadow-[0_10px_30px_-16px_rgba(0,0,0,.7)]">
+              <img src={role.logo} alt={`${role.company} logo`} loading="lazy" className="max-h-full max-w-full object-contain" />
+            </div>
           ) : (
             <span aria-hidden="true"
               className="mb-3 grid h-11 w-11 place-items-center rounded-xl border border-white/20 bg-white/10 font-display text-lg font-semibold text-white">
