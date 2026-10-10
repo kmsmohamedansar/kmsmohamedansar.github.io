@@ -34,8 +34,8 @@ export const ABOUT = {
   groups: [
     { title: "Data", accent: "cyan", items: ["SQL", "Snowflake", "BigQuery", "Python", "pandas", "DuckDB", "Airflow", "ETL and ELT"] },
     { title: "Reporting", accent: "amber", items: ["Tableau", "Power BI", "Dashboards people open every week"] },
-    { title: "Building", accent: "green", items: ["SwiftUI", "SwiftData", "React", "Next.js", "TypeScript", "Chrome extensions (MV3)"] },
-    { title: "AI tooling", accent: "violet", items: ["Cursor", "MCP servers", "Local models with Ollama", "FAISS and embeddings", "Transformers"] },
+    { title: "Building", accent: "green", items: ["Swift", "SwiftUI", "SwiftData", "React", "Next.js", "TypeScript", "three.js", "Docker", "Chrome extensions (MV3)"] },
+    { title: "AI tooling", accent: "violet", items: ["Claude Code", "Cursor", "MCP servers", "Local models with Ollama", "Hugging Face Transformers", "FAISS and embeddings", "Blender"] },
   ],
 };
 

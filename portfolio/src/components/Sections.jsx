@@ -622,6 +622,14 @@ export function ProjectsSection({ scrollContainerRef }) {
    on its own, and scrolling bends it: the scroll velocity, smoothed by
    a spring, skews the type and pushes it along faster, then lets it
    settle back when you stop. Decorative; the skills are listed in About. */
+// Official brand icons from Simple Icons (CC0). Tools without an official icon there show as text only.
+const SKILL_ICONS = {
+  Snowflake: "snowflake", BigQuery: "googlebigquery", Python: "python", pandas: "pandas", DuckDB: "duckdb",
+  Airflow: "apacheairflow", Tableau: "tableau", Swift: "swift", SwiftUI: "swift", SwiftData: "swift",
+  React: "react", "Next.js": "nextdotjs", TypeScript: "typescript", "three.js": "threedotjs", Docker: "docker",
+  "Chrome extensions (MV3)": "googlechrome", "Claude Code": "claude", "Local models with Ollama": "ollama",
+  "Hugging Face Transformers": "huggingface", Blender: "blender",
+};
 const SKILL_ITEMS = ABOUT.groups.flatMap((g) => g.items.map((item) => ({ item, accent: g.accent })));
 
 export function SkillsTicker({ scrollContainerRef }) {
@@ -769,9 +777,12 @@ export function AboutSection({ scrollContainerRef }) {
                 <h3 className={`mb-3 font-mono text-xs font-semibold uppercase tracking-[.16em] ${a.text}`}>{g.title}</h3>
                 <div className="flex flex-wrap gap-2">
                   {g.items.map((it) => (
-                    <TagPill key={it} accent={g.accent}>
+                    <span key={it} className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/[.04] px-3 py-1.5 text-sm text-[color:var(--ink-100)]">
+                      {SKILL_ICONS[it] && (
+                        <img src={`${import.meta.env.BASE_URL}icons/${SKILL_ICONS[it]}.svg`} alt="" aria-hidden="true" loading="lazy" className="h-4 w-4 invert" />
+                      )}
                       {it}
-                    </TagPill>
+                    </span>
                   ))}
                 </div>
               </div>
