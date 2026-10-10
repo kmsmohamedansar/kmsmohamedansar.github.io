@@ -1,0 +1,17 @@
+flowchart LR
+  subgraph W["At work: Undercut"]
+    W1["Many retailers,<br/>one module each"]
+    W2["Stop early,<br/>keep what was found"]
+    W3["One panel,<br/>one CSV layout"]
+    W4["Active tab might be<br/>a settings page"]
+  end
+  subgraph S["Public: Sitescout"]
+    S1["One recipe per kind of page,<br/>no new code per site"]
+    S2["Stop button keeps finished rows,<br/>marks the rest 'not run'"]
+    S3["Same card and CSV layout<br/>for every ticker"]
+    S4["Always opens its own<br/>background tab"]
+  end
+  W1 --> S1
+  W2 --> S2
+  W3 --> S3
+  W4 --> S4

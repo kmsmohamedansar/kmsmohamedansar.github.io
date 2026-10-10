@@ -2,7 +2,7 @@
 
 Dated log of what was built, what was run, and what happened. Only results from real runs go here.
 
-## 2026-10-11
+## 2026-10-10
 
 **Decided**
 - Domain: stock quote pages on Yahoo Finance, so this stays clear of retail, which is what Undercut covers at work.
@@ -26,3 +26,9 @@ Dated log of what was built, what was run, and what happened. Only results from 
 
 **Not yet verified**
 - Live Yahoo Finance pages. This build environment can't reach Yahoo, so the selectors in `src/recipes/yahooFinanceQuote.ts` are written from Yahoo's public markup but untested against the live site. First live run is the next step, on the owner's machine.
+
+**Later the same day**
+- Owner loaded the extension in their own Chrome on macOS and confirmed it works. Live results not yet recorded in the repo.
+- Wrote CASE_STUDY.md (two chapters; Chapter 1 drafted from the portfolio site's Undercut text, with placeholders for the owner).
+- Added four Mermaid diagrams in `docs/diagrams` with SVG copies (`node scripts/render-diagrams.mjs`). First SVG render was invalid XML (Mermaid wrote `<br>`); fixed by rewriting to `<br/>` and checked with xmllint.
+- Added `scripts/chart.mjs`, which charts "numbers found per page" from any exported CSV. Demo chart made from `docs/demo-export.csv.txt`: EXMP 16/17, DEMO 16/17.

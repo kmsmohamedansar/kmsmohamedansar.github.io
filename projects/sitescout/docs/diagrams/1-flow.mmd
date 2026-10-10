@@ -1,0 +1,14 @@
+flowchart TD
+  A["You paste tickers or links<br/>AAPL, MSFT, a Yahoo link"] --> B["Sitescout tidies the list<br/>removes repeats, flags junk"]
+  B --> C["Open the next page<br/>in a hidden background tab"]
+  C --> D{"Did the price show up<br/>within 15 seconds?"}
+  D -- "No" --> F["Card turns red<br/>and says what went wrong"]
+  D -- "Yes" --> E["Read the page using<br/>the recipe checklist"]
+  E --> G{"Were the must-have<br/>numbers found?"}
+  G -- "No" --> F
+  G -- "Yes" --> H["Card shows the numbers"]
+  H --> I["Close the tab, short pause"]
+  F --> I
+  I --> J{"More pages, and<br/>Stop not pressed?"}
+  J -- "Yes" --> C
+  J -- "No" --> K["Download everything<br/>as one CSV file"]

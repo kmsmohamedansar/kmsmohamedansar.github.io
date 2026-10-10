@@ -1,0 +1,19 @@
+flowchart LR
+  subgraph Chrome["Your Chrome browser"]
+    direction LR
+    P["Side panel<br/>React + Framer Motion<br/>what you see and click"]
+    R["Runner<br/>opens tabs, waits,<br/>handles Stop"]
+    X["Reader<br/>extractWithRecipe<br/>runs inside the page"]
+    Rc[("Recipe<br/>list of what to grab<br/>and where it lives")]
+    T["Background tab<br/>finance.yahoo.com/quote/..."]
+    BG["Service worker<br/>opens the panel<br/>when you click the icon"]
+  end
+  P -- "start / stop" --> R
+  R -- "chrome.tabs" --> T
+  R -- "chrome.scripting<br/>sends reader + recipe" --> X
+  Rc --> X
+  X -. "lives inside" .-> T
+  X -- "numbers + how each was found" --> R
+  R -- "card updates" --> P
+  P -- "Blob download" --> CSV[["sitescout-....csv"]]
+  BG -.-> P

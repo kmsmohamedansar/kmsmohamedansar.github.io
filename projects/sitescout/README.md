@@ -4,6 +4,8 @@ A Chrome side panel that reads stock pages for you. Paste Yahoo Finance quote li
 
 Personal demo. Not affiliated with Yahoo. It reads public pages, one at a time, in your own browser.
 
+**Full write-up, with diagrams and the story behind it: [CASE_STUDY.md](CASE_STUDY.md).**
+
 ![Sitescout reading three pages](docs/screenshots/04-results.png)
 
 ## What it does
