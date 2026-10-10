@@ -397,14 +397,15 @@ export const PROJECTS = [
     title: "Collection health dashboard",
     kind: "Next.js app",
     accent: "cyan",
-    status: "MVP scaffold",
-    hook: "One screen for a recurring health meeting: the summary on one side, the priority queue on the other.",
-    role: "I built the scaffold. It is an MVP.",
+    status: "Internal tool, in use",
+    hook: "One screen for a weekly health review: this week's priority work from the project tracker, and the customer accounts each issue affects.",
+    role: "Lead. I built v1 while on the support team, which still uses it. I've since moved to solutions engineering and still help with some of their work.",
     tags: ["Next.js", "TypeScript", "Internal tools", "Cursor"],
     stack: ["Next.js (App Router)", "React", "TypeScript", "Tailwind CSS", "Vitest"],
     story: [
       "A recurring meeting about the health of our collections needed two things on one page: the headline numbers, with highlights and risks, and the list of work that matters most right now. People were juggling exported files and the work tracker side by side.",
-      "So I built both halves. The summary reads versioned snapshot files, and a selector lets you reopen any past meeting. The queue is a sortable, filterable table, and each row links to its work item.",
+      "So I built both halves. The queue pulls work items from the project tracker's API, filtered by week and priority, and keeps the high-priority ones front and centre in a sortable, filterable table, each row linking to its work item. Each issue is also linked to the customer accounts it affects, using data from our warehouse, so the meeting can see who is impacted, not just what is broken. The summary reads versioned snapshot files, and a selector lets you reopen any past meeting.",
+      "I built the first version for the support team I was part of. They still use it in their weekly reviews, and they've carried it on from there.",
       "I kept all the credentials on the server. The browser only talks to the app's own API routes, and a mock mode lets the whole thing run locally with no keys at all.",
     ],
     how: [
@@ -414,14 +415,15 @@ export const PROJECTS = [
     ],
     learned: [
       "Mock first is a gift: demos and tests don't depend on anybody's token.",
-      "Still open: proper search pagination, rate limits and auth hardening. It's an MVP, and I'd say so out loud.",
+      "Building for the team you sit in is the best feedback loop there is. Every rough edge got reported the same week.",
+      "Left open in v1: proper search pagination, rate limits and auth hardening. I'd say so out loud.",
     ],
     flow: {
       caption: "Where the data goes (fake names only).",
       columns: [
-        { label: "Sources", nodes: ["Versioned snapshot files", "Work tracker API"] },
+        { label: "Sources", nodes: ["Versioned snapshot files", "Work tracker API", "Warehouse: affected accounts"] },
         { label: "Server", nodes: ["API routes with cache and mock fallback"] },
-        { label: "Screen", nodes: ["Summary panel", "Priority queue table"] },
+        { label: "Screen", nodes: ["Summary panel", "Priority queue with affected accounts"] },
       ],
     },
     links: [{ label: "Private work tool. Mock-data demo on request.", href: "#contact", locked: true }],
