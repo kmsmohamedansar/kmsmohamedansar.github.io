@@ -101,6 +101,35 @@ export const PROJECTS = [
     ],
   },
   {
+    slug: "digital-double",
+    title: "AI Digital Double",
+    kind: "AI + 3D",
+    accent: "rose",
+    featured: true,
+    status: "Live demo · full write-up",
+    shots: ["/shots/digital-double.jpg"],
+    hook: "A 3D model of my own head that looks back at you. I directed Claude Code to build it in Blender from phone photos and a 13-second video.",
+    role: "Directed the AI, reviewed every render, made the calls.",
+    tags: ["Claude Code", "Blender", "MCP", "three.js"],
+    stack: ["Claude Code", "Blender", "KeenTools FaceBuilder", "Apple Object Capture", "Brush", "three.js"],
+    story: ["Twelve stages, most of which failed in instructive ways, from a code-built mesh to a Gaussian splat trained on my laptop. The final model has real eyeballs that follow your cursor."],
+    how: ["Claude Code drove Blender live through MCP, writing and running Python for every fix."],
+    learned: ["AI is a fast operator. Judging whether it looked like me stayed my job."],
+    flow: {
+      caption: "From phone to browser.",
+      columns: [
+        { label: "Capture", nodes: ["Photos", "13 s video"] },
+        { label: "Reconstruct", nodes: ["FaceBuilder", "Photogrammetry"] },
+        { label: "Build", nodes: ["Blender via Claude Code"] },
+        { label: "Ship", nodes: ["GLB in three.js"] },
+      ],
+    },
+    links: [
+      { label: "Meet the model", href: "#digital-double", primary: true },
+      { label: "Full write-up", href: "https://github.com/kmsmohamedansar/ai-digital-double", external: true },
+    ],
+  },
+  {
     slug: "undercut",
     title: "Undercut",
     kind: "Chrome extension",
@@ -250,42 +279,37 @@ export const PROJECTS = [
     ],
   },
   {
-    slug: "job-scout-agent",
-    title: "Job Scout Agent",
+    slug: "local-agent",
+    title: "Local agent pipeline",
     kind: "AI agent",
     accent: "rose",
     status: "Working, with known limits",
-    hook: "A local AI agent that hunts for job postings every morning and sends me a scored shortlist. No cloud model, no scraping.",
+    hook: "A scheduled AI agent that runs entirely on my laptop: it searches the open web, scores what it finds against a rubric, and sends a short report. No cloud model.",
     role: "Built it myself, including the debugging.",
-    tags: ["Agents", "Ollama", "Docker", "Local-first"],
+    tags: ["Agents", "OpenClaw", "Ollama", "Local-first"],
     stack: ["OpenClaw", "Ollama (4B local model)", "Docker via Colima", "DuckDuckGo search", "Telegram"],
-    shots: [
-      "https://i.postimg.cc/NLNJ1srP/Screenshot-2026-09-06-at-2-23-03-PM.png",
-      "https://i.postimg.cc/14WCpmN2/Screenshot-2026-09-06-at-2-20-30-PM.png",
-      "https://i.postimg.cc/NLGC99L3/Screenshot-2026-09-06-at-2-39-25-PM.png",
-    ],
     story: [
-      "Searching for the same few roles on LinkedIn every day gets old quickly, and it's easy to fall behind. I wanted an agent to do the legwork and rank what it finds.",
-      "The rule I set: it never logs in to LinkedIn and never scrapes it. Instead it searches the open web for public job links, checks how fresh they are, and scores them against a fixed rubric. At 8 each morning it wakes up, runs, and sends the shortlist to Telegram. If Telegram isn't configured, it stops rather than dropping the output somewhere else.",
-      "Getting there was a chain of small problems. The search tool wasn't set up. A security review flagged that a small model with web tools shouldn't run straight on my laptop, so I put it in a Docker sandbox. The small 4B model couldn't find its tools through an indirect lookup, so I exposed them directly. Two separate permission lists turned out not to inherit from each other. I wrote every one of these down in the repo.",
-      "It also has an honest ceiling. LinkedIn builds job descriptions in the browser, so a plain fetch can't read them. The agent says so, and refuses to invent a score it can't back up.",
+      "I wanted to see how far a small local model could go as a real agent: no cloud API, no paid tokens, running on a schedule and doing useful work on its own.",
+      "Every morning it wakes up, searches the open web through a sandboxed tool, checks how fresh each result is, scores it against a fixed rubric, and sends a short ranked report to Telegram. If Telegram isn't configured, it stops rather than dropping the output somewhere else.",
+      "Getting there was a chain of small problems. The search tool wasn't set up. A security review flagged that a small model with web tools shouldn't run straight on my laptop, so I put it in a Docker sandbox. The 4B model couldn't find its tools through an indirect lookup, so I exposed them directly. Two separate permission lists turned out not to inherit from each other. I wrote every one of these down as I went.",
+      "It also has an honest ceiling. Some sites build their content in the browser, so a plain fetch can't read them. The agent says so, and refuses to invent a score it can't back up.",
     ],
     how: [
       "The whole flow lives in one prompt: search, filter by freshness, score, report.",
-      "Scoring is deterministic: a base score, plus keyword matches, plus a location bonus, minus penalties for hard mismatches.",
+      "Scoring is deterministic: a base score, plus keyword matches, plus bonuses, minus penalties for hard mismatches.",
       "Anything it can't verify gets dropped, not guessed.",
     ],
     learned: [
       "Small local models are private and free, and they are much less forgiving about how tools are exposed to them.",
-      "Writing the failures down as I went made the repo more useful than the working version alone.",
+      "Sandbox anything that can browse. A security review caught that before I did.",
     ],
     flow: {
-      caption: "The daily run (simplified from the repo).",
+      caption: "The daily run.",
       columns: [
-        { label: "Trigger", nodes: ["8:00 daily, or manual"] },
-        { label: "In the sandbox", nodes: ["Search public job links", "Fetch what the page shows", "Drop anything unverifiable"] },
+        { label: "Trigger", nodes: ["Scheduled, or manual"] },
+        { label: "In the sandbox", nodes: ["Search the open web", "Fetch what the page shows", "Drop anything unverifiable"] },
         { label: "Score", nodes: ["Rubric, out of 100"] },
-        { label: "Deliver", nodes: ["Shortlist to Telegram"] },
+        { label: "Deliver", nodes: ["Report to Telegram"] },
       ],
     },
     links: [{ label: "Source is private. Walkthrough on request.", href: "#contact", locked: true }],
@@ -577,7 +601,6 @@ export const PROJECTS = [
     title: "Smart product categorization",
     kind: "NLP project",
     accent: "violet",
-    featured: true,
     status: "Personal project, public data",
     hook: "Which products are sitting in the wrong category? A language model reads the product name and the category, and scores how well they fit.",
     role: "Built it myself, start to finish.",
@@ -658,7 +681,10 @@ export const PROJECTS = [
 ];
 
 export const FEATURED = PROJECTS.filter((p) => p.featured);
-export const MORE_PROJECTS = PROJECTS.filter((p) => !p.featured);
+// Archived course-era work is listed compactly under "Earlier work" instead of in the rail.
+const isEarlier = (p) => p.status === "Archived experiment";
+export const MORE_PROJECTS = PROJECTS.filter((p) => !p.featured && !isEarlier(p));
+export const EARLIER_PROJECTS = PROJECTS.filter((p) => !p.featured && isEarlier(p));
 export const getProject = (slug) => PROJECTS.find((p) => p.slug === slug);
 
 /* Things I built with AI as a sparring partner, mostly to see how far it goes. */
@@ -668,7 +694,7 @@ export const EXPERIMENTS = [
     title: "A 3D model of me that looks back",
     accent: "rose",
     hook: "I directed Claude Code to build a 3D model of my head in Blender, from phone photos and a short video. Move your cursor and its eyes follow you.",
-    body: "Ten approaches, most of which failed in instructive ways: code-built meshes, a face-fitting add-on, on-device photogrammetry, a Gaussian splat trained on my laptop. All free tools. The full write-up has every step and screenshot.",
+    body: "Twelve stages, most of which failed in instructive ways: code-built meshes, a face-fitting add-on, on-device photogrammetry, a Gaussian splat trained on my laptop. All free tools. The full write-up has every step and screenshot.",
     href: "#digital-double",
     shot: "/shots/digital-double.jpg",
     cta: "Meet the model",

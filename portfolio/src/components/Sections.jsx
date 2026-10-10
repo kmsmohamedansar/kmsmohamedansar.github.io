@@ -2,7 +2,7 @@ import { Fragment, lazy, Suspense, useEffect, useRef, useState } from "react";
 import { animate, cubicBezier, motion, useMotionValue, useMotionValueEvent, useReducedMotion, useScroll, useSpring, useTransform, useVelocity } from "framer-motion";
 import { ArrowDown, ArrowRight, ArrowUp, ArrowUpRight, ChevronLeft, ChevronRight, ExternalLink, Link2, Lock, Mail } from "lucide-react";
 import { ABOUT, CONTACT, HERO, ROLES } from "../data/content";
-import { ACCENTS, EXPERIMENTS, FEATURED, MORE_PROJECTS } from "../data/projects";
+import { ACCENTS, EARLIER_PROJECTS, EXPERIMENTS, FEATURED, MORE_PROJECTS } from "../data/projects";
 import { FlourishTitle, Reveal, ScrollShot, SectionHead, SpinBadge, TagPill } from "./ui";
 import { useRoute } from "../App";
 import { EASE_REVEAL } from "../lib/motion";
@@ -102,6 +102,27 @@ function Watermark({ text, targetRef, scrollContainerRef }) {
 
 /* ── HERO ───────────────────────────────────────────────────── */
 const InfinityLoop = lazy(() => import("./InfinityLoop"));
+
+// three.js is ~560 KB. Start fetching it only once the browser is idle, so the
+// hero text and layout paint first, especially on phones.
+function useIdle(timeout = 1500) {
+  const [idle, setIdle] = useState(false);
+  useEffect(() => {
+    if ("requestIdleCallback" in window) {
+      const id = window.requestIdleCallback(() => setIdle(true), { timeout });
+      return () => window.cancelIdleCallback(id);
+    }
+    const id = setTimeout(() => setIdle(true), 300);
+    return () => clearTimeout(id);
+  }, [timeout]);
+  return idle;
+}
+
+function DeferredInfinityLoop(props) {
+  const idle = useIdle();
+  if (!idle) return <div className="atmosphere-fallback absolute inset-0" aria-hidden="true" />;
+  return <InfinityLoop {...props} />;
+}
 
 const HERO_INK = "#0b1220";
 // The lede's highlighted phrases (SQL, iOS app, AI), reused as the
@@ -247,7 +268,7 @@ export function Hero({ ready = true, scrollContainerRef }) {
               className="absolute inset-0 rounded-[50%] overflow-hidden bg-[#0b1426] shadow-[0_30px_60px_-30px_rgba(11,18,32,.45)] [isolation:isolate]"
             >
               <Suspense fallback={<div className="atmosphere-fallback absolute inset-0" aria-hidden="true" />}>
-                <InfinityLoop scrollContainerRef={scrollContainerRef} />
+                <DeferredInfinityLoop scrollContainerRef={scrollContainerRef} />
               </Suspense>
             </motion.div>
           </motion.div>
@@ -569,7 +590,7 @@ export function ProjectsSection({ scrollContainerRef }) {
           accent="green"
           kicker="Projects"
           title="Things I've built"
-          lede="Three I'd start with, then the rest. Click any card for the story, a diagram of how it works, and a link to try it or read the code."
+          lede="Four I'd start with, then the rest. Click any card for the story, a diagram of how it works, and a link to try it or read the code."
         />
         <div className="space-y-16 sm:space-y-24">
           {FEATURED.map((p, i) => (
@@ -578,6 +599,18 @@ export function ProjectsSection({ scrollContainerRef }) {
         </div>
         <div className="mt-20 sm:mt-28">
           <ProjectRail projects={MORE_PROJECTS} />
+        </div>
+        <div className="mt-14">
+          <p className="font-mono text-xs font-semibold uppercase tracking-[.14em] text-[color:var(--ink-200)]">Earlier work</p>
+          <ul className="mt-4 flex flex-wrap gap-3">
+            {EARLIER_PROJECTS.map((p) => (
+              <li key={p.slug}>
+                <a href={`#project/${p.slug}`} className="inline-flex min-h-10 items-center rounded-full border border-white/15 px-4 py-2 text-sm text-[color:var(--ink-100)] transition-colors hover:border-white/50 hover:text-white">
+                  {p.title}
+                </a>
+              </li>
+            ))}
+          </ul>
         </div>
       </div>
     </section>
@@ -627,6 +660,15 @@ function RoleRow({ role }) {
     <Reveal>
       <article className="grid gap-4 border-t border-white/15 py-8 sm:py-10 md:grid-cols-[minmax(0,15rem)_1fr] md:gap-10">
         <div>
+          {role.logo ? (
+            <img src={role.logo} alt={`${role.company} logo`} loading="lazy"
+              className="mb-3 h-11 w-11 rounded-xl bg-white object-contain p-1 shadow-[0_8px_24px_-12px_rgba(0,0,0,.6)]" />
+          ) : (
+            <span aria-hidden="true"
+              className="mb-3 grid h-11 w-11 place-items-center rounded-xl border border-white/20 bg-white/10 font-display text-lg font-semibold text-white">
+              {role.company[0]}
+            </span>
+          )}
           <div className="flex flex-wrap items-center gap-2">
             <span className={`font-mono text-xs font-semibold uppercase tracking-[.14em] ${a.text}`}>{role.company}</span>
             {role.current && (

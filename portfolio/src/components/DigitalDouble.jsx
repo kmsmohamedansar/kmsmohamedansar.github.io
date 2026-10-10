@@ -80,8 +80,6 @@ export default function DigitalDouble() {
     const scene = new THREE.Scene();
     scene.background = new THREE.Color(0x050506);
     const camera = new THREE.PerspectiveCamera(22, mount.clientWidth / mount.clientHeight, 0.01, 10);
-    camera.position.set(0, 0, 0.95);
-
     scene.add(new THREE.HemisphereLight(0xdfe6ff, 0x1a120c, 0.6));
     const key = new THREE.DirectionalLight(0xfff1e0, 2.4);
     key.position.set(-0.6, 0.5, 0.8);
@@ -124,20 +122,35 @@ export default function DigitalDouble() {
       () => setFailed(true),
     );
 
+    let lastInput = -1e9;
     const onMove = (e) => {
+      lastInput = performance.now();
       const r = mount.getBoundingClientRect();
       pointer.set(((e.clientX - r.left) / r.width) * 2 - 1, -((e.clientY - r.top) / r.height) * 2 + 1);
     };
-    const onResize = () => {
-      camera.aspect = mount.clientWidth / mount.clientHeight;
+    // On tall phone screens, pull the camera back and raise the head so the caption doesn't cover the face.
+    const frame = () => {
+      const aspect = mount.clientWidth / mount.clientHeight;
+      camera.aspect = aspect;
+      const tall = aspect < 0.8;
+      camera.position.set(0, tall ? -0.07 : 0, tall ? 1.25 : 0.95);
       camera.updateProjectionMatrix();
+    };
+    frame();
+    const onResize = () => {
+      frame();
       renderer.setSize(mount.clientWidth, mount.clientHeight);
     };
     window.addEventListener("pointermove", onMove);
+    window.addEventListener("pointerdown", onMove);
     window.addEventListener("resize", onResize);
 
-    renderer.setAnimationLoop(() => {
-      smooth.lerp(pointer, reduceMotion ? 1 : 0.12);
+    renderer.setAnimationLoop((t) => {
+      // With no input for a few seconds (always the case on a phone at rest), let the gaze wander slowly.
+      if (!reduceMotion && t - lastInput > 3000) {
+        pointer.set(Math.sin(t * 0.00035) * 0.6, Math.sin(t * 0.00023) * 0.3);
+      }
+      smooth.lerp(pointer, reduceMotion ? 1 : 0.06);
       rig.rotation.y = smooth.x * 0.25;
       rig.rotation.x = -smooth.y * 0.12;
       gaze.set(smooth.x * GAZE_X, smooth.y * GAZE_Y, GAZE_Z);
@@ -149,6 +162,7 @@ export default function DigitalDouble() {
       disposed = true;
       renderer.setAnimationLoop(null);
       window.removeEventListener("pointermove", onMove);
+      window.removeEventListener("pointerdown", onMove);
       window.removeEventListener("resize", onResize);
       scene.traverse((o) => {
         if (!o.isMesh) return;
@@ -166,7 +180,7 @@ export default function DigitalDouble() {
   return (
     <div className="bg-[#050506]">
       <section className="relative h-[100svh]">
-        <div ref={mountRef} className="absolute inset-0" />
+        <div ref={mountRef} className="absolute inset-0" style={{ touchAction: "pan-y" }} />
         {!loaded && !failed && (
           <div className="absolute inset-0 grid place-items-center font-mono text-xs text-[color:var(--ink-200)]">
             Loading the model…
@@ -184,7 +198,7 @@ export default function DigitalDouble() {
             </a>
             <h1 className="mt-3 font-display text-2xl font-semibold text-white">A 3D model of me, made with AI</h1>
             <p className="mt-2 text-sm leading-relaxed text-[color:var(--ink-200)]">
-              Move your cursor and it looks back at you. I directed Claude Code to build this in Blender from phone photos and a
+              Move your cursor, or drag on a phone, and it looks back at you. I directed Claude Code to build this in Blender from phone photos and a
               13-second video, with only free tools.
             </p>
             <a href="#dd-how" onClick={(e) => { e.preventDefault(); document.getElementById("dd-how")?.scrollIntoView({ behavior: "smooth" }); }}
