@@ -1,0 +1,10 @@
+node_modules/
+dist/
+*.zip
+.env
+.env.*
+*.key
+*.pem
+# Scraped output stays local
+data/
+*.csv

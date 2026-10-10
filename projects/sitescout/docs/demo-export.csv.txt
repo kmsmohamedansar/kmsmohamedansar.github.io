@@ -1,0 +1,3 @@
+symbol,name,price,change,changePct,prevClose,open,dayRange,yearRange,volume,avgVolume,marketCap,beta,pe,eps,earningsDate,dividend,target,status,url
+EXMP,EXMP Demo Inc (EXMP),1234.56,-12.34,-0.99,1246.9,1240,"1,220.10 - 1,250.00","900.00 - 1,400.00",5432100,6100000,2345000000000,1.12,31.5,39.19,"Jan 28, 2027",4.00 (0.32%),,ok,https://finance.yahoo.com/quote/EXMP/
+DEMO,DEMO Demo Inc (DEMO),1234.56,-12.34,-0.99,1246.9,1240,"1,220.10 - 1,250.00","900.00 - 1,400.00",5432100,6100000,2345000000000,1.12,31.5,39.19,"Jan 28, 2027",4.00 (0.32%),,ok,https://finance.yahoo.com/quote/DEMO/
