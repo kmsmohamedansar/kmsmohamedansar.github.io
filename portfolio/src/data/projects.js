@@ -64,6 +64,43 @@ export const PROJECTS = [
     ],
   },
   {
+    slug: "haloscript",
+    title: "Haloscript",
+    kind: "Mac, iPad and iPhone app",
+    accent: "violet",
+    featured: true,
+    status: "In testing · App Store soon",
+    icon: "/shots/haloscript/icon.png",
+    shots: ["/shots/haloscript/write_mac.jpg"],
+    hook: "A novel-writing app with an infinite whiteboard beside the manuscript. Plan on a corkboard, keep a Story Bible, sketch with Apple Pencil, write in a focused editor.",
+    role: "Built solo: one SwiftUI codebase for Mac, iPad and iPhone.",
+    tags: ["SwiftUI", "SwiftData", "CloudKit", "Apple Pencil"],
+    stack: ["Swift", "SwiftUI", "SwiftData", "CloudKit", "PencilKit", "Xcode"],
+    story: [
+      "Writers I know juggle a word processor, a corkboard app, a notes app and a pile of screenshots. Haloscript puts the manuscript and a whiteboard in one place, synced through the writer's own iCloud.",
+    ],
+    how: [
+      "One SwiftUI target for macOS, iPadOS and iOS, with one adaptive layout rule.",
+      "SwiftData models synced privately with CloudKit: no accounts, no backend, no analytics.",
+      "Per-element whiteboard records and a tested merge, so two devices never overwrite each other.",
+    ],
+    learned: ["CloudKit schemas can only grow, so the data model has to be designed for the long run on day one."],
+    flow: {
+      caption: "Where a word goes after you type it.",
+      columns: [
+        { label: "You", nodes: ["Write on Mac, iPad or iPhone"] },
+        { label: "Saved", nodes: ["SwiftData, on the device"] },
+        { label: "Synced", nodes: ["Your private iCloud"] },
+        { label: "Everywhere", nodes: ["Your other devices"] },
+      ],
+    },
+    links: [
+      { label: "See the full tour", href: "#project/haloscript", primary: true },
+      { label: "Support and privacy", href: "https://kmsmohamedansar.github.io/haloscript-site/", external: true },
+      { label: "Source is private. Walkthrough on request.", href: "#contact", locked: true },
+    ],
+  },
+  {
     slug: "undercut",
     title: "Undercut",
     kind: "Chrome extension",
