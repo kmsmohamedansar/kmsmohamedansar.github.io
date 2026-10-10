@@ -101,6 +101,35 @@ export const PROJECTS = [
     ],
   },
   {
+    slug: "digital-double",
+    title: "AI Digital Double",
+    kind: "AI + 3D",
+    accent: "rose",
+    featured: true,
+    status: "Live demo · full write-up",
+    shots: ["/shots/digital-double.jpg"],
+    hook: "A 3D model of my own head that looks back at you. I directed Claude Code to build it in Blender from phone photos and a 13-second video.",
+    role: "Directed the AI, reviewed every render, made the calls.",
+    tags: ["Claude Code", "Blender", "MCP", "three.js"],
+    stack: ["Claude Code", "Blender", "KeenTools FaceBuilder", "Apple Object Capture", "Brush", "three.js"],
+    story: ["Twelve stages, most of which failed in instructive ways, from a code-built mesh to a Gaussian splat trained on my laptop. The final model has real eyeballs that follow your cursor."],
+    how: ["Claude Code drove Blender live through MCP, writing and running Python for every fix."],
+    learned: ["AI is a fast operator. Judging whether it looked like me stayed my job."],
+    flow: {
+      caption: "From phone to browser.",
+      columns: [
+        { label: "Capture", nodes: ["Photos", "13 s video"] },
+        { label: "Reconstruct", nodes: ["FaceBuilder", "Photogrammetry"] },
+        { label: "Build", nodes: ["Blender via Claude Code"] },
+        { label: "Ship", nodes: ["GLB in three.js"] },
+      ],
+    },
+    links: [
+      { label: "Meet the model", href: "#digital-double", primary: true },
+      { label: "Full write-up", href: "https://github.com/kmsmohamedansar/ai-digital-double", external: true },
+    ],
+  },
+  {
     slug: "undercut",
     title: "Undercut",
     kind: "Chrome extension",
@@ -577,7 +606,6 @@ export const PROJECTS = [
     title: "Smart product categorization",
     kind: "NLP project",
     accent: "violet",
-    featured: true,
     status: "Personal project, public data",
     hook: "Which products are sitting in the wrong category? A language model reads the product name and the category, and scores how well they fit.",
     role: "Built it myself, start to finish.",
@@ -658,7 +686,10 @@ export const PROJECTS = [
 ];
 
 export const FEATURED = PROJECTS.filter((p) => p.featured);
-export const MORE_PROJECTS = PROJECTS.filter((p) => !p.featured);
+// Archived course-era work is listed compactly under "Earlier work" instead of in the rail.
+const isEarlier = (p) => p.status === "Archived experiment";
+export const MORE_PROJECTS = PROJECTS.filter((p) => !p.featured && !isEarlier(p));
+export const EARLIER_PROJECTS = PROJECTS.filter((p) => !p.featured && isEarlier(p));
 export const getProject = (slug) => PROJECTS.find((p) => p.slug === slug);
 
 /* Things I built with AI as a sparring partner, mostly to see how far it goes. */
@@ -668,7 +699,7 @@ export const EXPERIMENTS = [
     title: "A 3D model of me that looks back",
     accent: "rose",
     hook: "I directed Claude Code to build a 3D model of my head in Blender, from phone photos and a short video. Move your cursor and its eyes follow you.",
-    body: "Ten approaches, most of which failed in instructive ways: code-built meshes, a face-fitting add-on, on-device photogrammetry, a Gaussian splat trained on my laptop. All free tools. The full write-up has every step and screenshot.",
+    body: "Twelve stages, most of which failed in instructive ways: code-built meshes, a face-fitting add-on, on-device photogrammetry, a Gaussian splat trained on my laptop. All free tools. The full write-up has every step and screenshot.",
     href: "#digital-double",
     shot: "/shots/digital-double.jpg",
     cta: "Meet the model",

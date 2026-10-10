@@ -171,7 +171,7 @@ function Nav() {
           <span>
             mohamed.ansar
             <small
-              className={`block text-[.6rem] font-normal tracking-[.16em] uppercase ${
+              className={`hidden sm:block text-[.6rem] font-normal tracking-[.16em] uppercase ${
                 editorial ? "text-white/75" : "text-[color:var(--ink-400)]"
               }`}
             >
@@ -186,7 +186,7 @@ function Nav() {
               <a
                 key={l.id}
                 href={`#${l.id}`}
-                className={`${l.id === "projects" || l.id === "contact" ? "inline-flex" : "hidden md:inline-flex"} items-center px-3 py-2 rounded-lg ${
+                className={`${l.id === "projects" || l.id === "contact" ? "inline-flex" : "hidden md:inline-flex"} items-center px-2 sm:px-3 py-2 rounded-lg ${
                   editorial ? "text-white hover:opacity-60 transition-opacity" : "text-[color:var(--ink-100)] hover:text-cyan transition-colors"
                 } font-mono text-[.7rem] uppercase tracking-[.1em]`}
               >
@@ -203,7 +203,7 @@ function Nav() {
           )}
           <button
             onClick={openPalette}
-            className={`ml-1 flex items-center gap-1 px-2.5 py-2 rounded-lg font-mono text-[.65rem] ${
+            className={`ml-1 hidden sm:flex items-center gap-1 px-2.5 py-2 rounded-lg font-mono text-[.65rem] ${
               editorial
                 ? "border border-white/70 text-white hover:opacity-60 transition-opacity"
                 : "border border-white/10 text-[color:var(--ink-400)] hover:text-cyan hover:border-cyan/30 transition-colors"
@@ -277,7 +277,11 @@ function Stage({ bootDone }) {
             exit={{ opacity: 0 }}
             transition={{ duration: 0.2, ease: EASE_OUT }}
           >
-            {route === "project/haloscript" ? (
+            {route === "project/digital-double" ? (
+              <Suspense fallback={<div className="h-full bg-[#050506]" aria-hidden="true" />}>
+                <DigitalDouble />
+              </Suspense>
+            ) : route === "project/haloscript" ? (
               <Suspense fallback={<div className="h-full bg-[#07070b]" aria-hidden="true" />}>
                 <HaloscriptPage />
               </Suspense>
