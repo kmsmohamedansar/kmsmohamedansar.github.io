@@ -1,8 +1,10 @@
 import { ArrowLeft, ArrowUpRight, Lock } from "lucide-react";
+import { DEPTH } from "../data/depth";
 
 const IMG = (name) => `${import.meta.env.BASE_URL}shots/haloscript/${name}`;
 const SITE_URL = "https://ansarbuilds.dev/haloscript-site/";
 const VIOLET = "#b9a8ff";
+const D = DEPTH.haloscript;
 
 const STATS = [
   ["3", "devices, one SwiftUI codebase: Mac, iPad, iPhone"],
@@ -202,6 +204,24 @@ export default function HaloscriptPage() {
             </li>
           ))}
         </ol>
+
+        <h2 className="mt-20 font-display text-2xl font-semibold text-white">How I found the problem</h2>
+        <p className="mt-4 text-lg leading-relaxed">{D.found}</p>
+
+        <h2 className="mt-16 font-display text-2xl font-semibold text-white">Trade-offs I made</h2>
+        <ul className="mt-6 space-y-3">
+          {D.tradeoffs.map((t) => (
+            <li key={t.chose} className="rounded-2xl border border-white/10 bg-white/[.03] p-5 leading-relaxed">
+              <span className="font-semibold" style={{ color: VIOLET }}>{t.chose}</span>
+              <span className="text-white/60"> over </span>
+              <span className="font-semibold text-white">{t.over}</span>
+              <span className="mt-1.5 block text-sm">Because {t.because}</span>
+            </li>
+          ))}
+        </ul>
+
+        <h2 className="mt-16 font-display text-2xl font-semibold text-white">{D.ai.label}</h2>
+        <p className="mt-4 text-lg leading-relaxed">{D.ai.text}</p>
 
         <h2 className="mt-20 font-display text-2xl font-semibold text-white">What I learned</h2>
         <ul className="mt-6 grid gap-5 sm:grid-cols-2">
