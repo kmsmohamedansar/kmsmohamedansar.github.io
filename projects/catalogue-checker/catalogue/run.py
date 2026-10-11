@@ -25,6 +25,7 @@ from .categories import NAMES
 from .keyset import build_answer_key, handcheck_sheet
 
 RAW = Path("data/raw/products.csv")
+TOP_K = 50
 KEY = Path("data/answer_key.csv")
 HAND = Path("data/handcheck.csv")
 
@@ -82,7 +83,8 @@ def cmd_key(_args) -> None:
     products = pd.read_csv(RAW, dtype=str).fillna("")
     key = build_answer_key(products)
     KEY.parent.mkdir(parents=True, exist_ok=True)
-    key.to_csv(KEY, index=False)
+    # Brand isn't used by any checker, and some are shop own-brands, so it isn't saved.
+    key.drop(columns=["brand"], errors="ignore").to_csv(KEY, index=False)
     handcheck_sheet(key).to_csv(HAND, index=False)
     print(f"{len(products)} products in {products['category'].nunique()} categories.")
     print(f"Answer key: {len(key)} rows, {int(key['planted'].sum())} planted errors -> {KEY}")
@@ -104,12 +106,15 @@ def cmd_eval(args) -> None:
              "per_minute": round(r.per_minute(len(names))), "slow_model_calls": r.model_calls if r.name.startswith(("Zero", "Team")) else 0}
         summary.append(s)
         slug = r.name.split(":")[0].split()[0].lower()
-        rows[f"{slug}_flagged"], rows[f"{slug}_best"], rows[f"{slug}_rank"] = r.flagged, r.best, r.rank
-        print(f"{r.name:32} caught {s['caught']:2}/{sum(planted)}  false alarms {s['false_alarms']:3}  "
+        rows[f"{slug}_flagged"], rows[f"{slug}_best"], rows[f"{slug}_rank"], rows[f"{slug}_suspicion"] = r.flagged, r.best, r.rank, r.suspicion
+        # A person reads the most suspicious first. How many of the top 50 are real errors?
+        top = np.argsort(-np.array(r.suspicion, float), kind="stable")[:TOP_K]
+        s["top50_real_errors"] = int(np.array(planted)[top].sum())
+        print(f"{r.name:32} top 50: {s['top50_real_errors']:2} real  caught {s['caught']:2}/{sum(planted)}  false alarms {s['false_alarms']:3}  "
               f"precision {s['precision']:.2f}  recall {s['recall']:.2f}  {s['per_minute']:>8} products/min")
     d = out_dir(args.fake)
     (d / "eval.json").write_text(json.dumps({**meta(args.fake), "products": len(names), "planted": int(sum(planted)), "checkers": summary}, indent=2))
-    rows.to_csv(d / "eval_rows.csv", index=False)
+    rows.drop(columns=["brand"], errors="ignore").to_csv(d / "eval_rows.csv", index=False)
     print(f"Saved {d / 'eval.json'}")
 
 
@@ -132,7 +137,7 @@ def cmd_scale(args) -> None:
     review = sample[sample["flagged"]].sort_values("suspicion", ascending=False)
     review = review.assign(reason=[reason(n, f, b) for n, f, b in zip(review["name"], review["category"], review["best"])])
     d = out_dir(args.fake)
-    review[["code", "name", "brand", "category", "best", "suspicion", "reason"]].to_csv(d / "review_list.csv", index=False)
+    review[["code", "name", "category", "best", "suspicion", "reason"]].to_csv(d / "review_list.csv", index=False)
     info = {**meta(args.fake), "products": len(names), "seconds_total": round(total, 1), "meaning_seconds": round(m.seconds, 1),
             "zero_shot_calls": t.model_calls, "flagged": int(sum(t.flagged)), "minutes": round(total / 60, 2)}
     (d / "scale.json").write_text(json.dumps(info, indent=2))

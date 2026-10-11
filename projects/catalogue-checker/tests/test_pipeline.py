@@ -104,5 +104,7 @@ def test_end_to_end_with_stand_in_models(tmp_path, monkeypatch):
     assert ev["fake_models"] is True and len(ev["checkers"]) == 4
     assert not (tmp_path / "results/eval.json").exists()  # fake runs never land in the real results
     review = pd.read_csv(tmp_path / "results/fake/review_list.csv")
-    assert list(review.columns) == ["code", "name", "brand", "category", "best", "suspicion", "reason"]
+    assert list(review.columns) == ["code", "name", "category", "best", "suspicion", "reason"]
+    assert all("top50_real_errors" in c for c in ev["checkers"])
+    assert "brand" not in pd.read_csv(tmp_path / "data/answer_key.csv").columns
     assert (tmp_path / "results/fake/speed-vs-catch.png").exists()

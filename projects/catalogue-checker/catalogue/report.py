@@ -59,9 +59,9 @@ def build(d: Path) -> None:
     speed_vs_catch(ev, charts / "speed-vs-catch.png")
     lines = [f"# Results ({'FAKE stand-in models, not real' if ev['fake_models'] else ev['machine']}, {ev['ran_at']})", "",
              f"{ev['products']} products, {ev['planted']} with a planted wrong category.", "",
-             "| Checker | Caught | False alarms | Precision | Recall | Products per minute |", "|---|---|---|---|---|---|"]
+             "| Checker | Real errors in its top 50 | Caught | False alarms | Precision | Recall | Products per minute |", "|---|---|---|---|---|---|---|"]
     for c in ev["checkers"]:
-        lines.append(f"| {c['checker']} | {c['caught']} of {ev['planted']} | {c['false_alarms']} | {c['precision']:.2f} | {c['recall']:.2f} | {c['per_minute']:,} |")
+        lines.append(f"| {c['checker']} | {c.get('top50_real_errors', 'n/a')} of 50 | {c['caught']} of {ev['planted']} | {c['false_alarms']} | {c['precision']:.2f} | {c['recall']:.2f} | {c['per_minute']:,} |")
     sc = d / "scale.json"
     if sc.exists():
         s = json.loads(sc.read_text())
