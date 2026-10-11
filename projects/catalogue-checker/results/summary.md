@@ -10,3 +10,5 @@
 | Team: meaning, then zero-shot | 27 of 50 | 49 of 50 | 76 | 0.39 | 0.98 | 3,337 |
 
 **At scale:** 5,000 products checked by the team in 1.45 minutes; 664 went to the slow model; 1,366 flagged for review.
+
+**Hand check:** of 40 products whose category was not changed, a person judged 7 to be filed wrongly in the source data.
