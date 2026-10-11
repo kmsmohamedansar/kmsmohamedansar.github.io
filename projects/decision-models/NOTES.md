@@ -96,3 +96,4 @@ MacBook Air M4, 16 GB. Line-up updated in `docs/models.md`: Kev-4B/9B and Clef s
 - Per team: billing 20/26, account-access 18/23, technical-support 24/30, integrations-api 7/23, security-privacy 17/26, sales 17/23, how-to 10/24, feedback 7/25.
 - Picks: technical-support 65, billing 41, account-access 25, sales 20, security-privacy 17, how-to 15, integrations-api 9, feedback 8. Every team gets picked; no pile-up.
 - Headline so far: on team, matches a 7B general model (0.60 vs 0.61) at 25x the speed, with far more honest confidence (ECE 0.07 vs 0.26). Weak on frustration: nearly flat probabilities, confidence often 0.
+- Strands Decider rejected null option descriptions (Kev accepted them). Choice criteria now send each option's own name as its description, for every server. Kev re-run with this exact shape so all decision models get identical requests; the earlier Kev numbers are replaced.

@@ -33,8 +33,9 @@ def to_wire(request):
     Found against Kev's server and README (2026-10-11), which follow
     TypeSafe's API: the question text stays in "instructions", and the
     allowed answers go in "criteria":
-    - choice: {option: description or null}; we send null, since each
-      option's description is already in the instructions;
+    - choice: {option: description}; we send the option's own name, since
+      each option's description is already in the instructions (Kev accepts
+      null here, Strands Decider requires a string, so a string for everyone);
     - score: a list of level descriptions, lowest first; we send the level
       numbers ("1" .. "5"), since the rubric is already in the instructions;
     - noul: criteria is optional; not sent.
@@ -44,7 +45,7 @@ def to_wire(request):
     for qid, q in request["questions"].items():
         w = {"type": q["type"], "instructions": q["instructions"]}
         if q["type"] == "choice":
-            w["criteria"] = {o: None for o in q["options"]}
+            w["criteria"] = {o: o for o in q["options"]}
         elif q["type"] == "score":
             w["criteria"] = [str(v) for v in score_levels(q)]
         questions[qid] = w
