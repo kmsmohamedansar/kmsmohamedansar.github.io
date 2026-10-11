@@ -1,0 +1,13 @@
+flowchart LR
+  A["Three pharmacies<br/>send weekly files<br/>(CSV, semicolons, JSON lines)"] --> B["Settings file<br/>per customer<br/>names, columns, dates"]
+  B --> C["Loader<br/>check header, map columns,<br/>read dates and numbers"]
+  C -->|file missing| W["Wait and retry<br/>(Dagster)"]
+  C -->|wrong shape| X["Reject, with the reason"]
+  C --> D[("DuckDB<br/>raw.sales")]
+  D --> E["dbt<br/>clean, remove resent rows"]
+  E --> F{"dbt tests<br/>no blanks, one row per line,<br/>dates in the week, row count"}
+  F -->|all pass| G["Deliver<br/>weekly_sales.csv"]
+  F -->|any fail| H["Block everything<br/>alert: customer, check,<br/>what to look at first"]
+  G --> I["Delivery board"]
+  H --> I
+  X --> I

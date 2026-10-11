@@ -1,0 +1,44 @@
+{
+  "week": "2026-W38",
+  "status": "blocked",
+  "at": "2026-10-11T04:07:57+00:00",
+  "seconds": 7.2,
+  "loads": [
+    {
+      "customer": "harbour",
+      "week": "2026-W38",
+      "status": "loaded",
+      "rows": 570,
+      "detail": "570 rows",
+      "file": "HARBOUR-2026-W38.txt",
+      "problems": []
+    },
+    {
+      "customer": "northside",
+      "week": "2026-W38",
+      "status": "rejected",
+      "rows": 0,
+      "detail": "Header doesn't match the settings file. Unexpected: PromoFlag.",
+      "file": "northside_sales_2026-W38.csv",
+      "problems": []
+    },
+    {
+      "customer": "valley",
+      "week": "2026-W38",
+      "status": "loaded",
+      "rows": 445,
+      "detail": "445 rows",
+      "file": "sales.jsonl",
+      "problems": []
+    }
+  ],
+  "rows_by_customer": {},
+  "alerts": [
+    {
+      "customer": "Northside Pharmacy",
+      "check": "rejected",
+      "detail": "Header doesn't match the settings file. Unexpected: PromoFlag.",
+      "check_first": "The file's columns don't match the settings file. Compare its header with customers/northside.yaml and ask the customer whether their export changed."
+    }
+  ]
+}

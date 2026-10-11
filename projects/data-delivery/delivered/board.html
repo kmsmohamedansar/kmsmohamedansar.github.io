@@ -1,0 +1,24 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Delivery board</title>
+<link href="https://fonts.googleapis.com/css2?family=Chivo+Mono:wght@400;700&family=Chivo:wght@700;900&display=swap" rel="stylesheet">
+<style>
+:root { --bg:#0b0b0a; --row:#151513; --amber:#ffc23d; --ink:#f3ecd9; --dim:#8b8471; --green:#7ee08a; --red:#ff6b5b; }
+* { box-sizing:border-box }
+body { margin:0; background:var(--bg); color:var(--ink); font:14px/1.4 "Chivo Mono",ui-monospace,monospace }
+main { max-width:960px; margin:0 auto; padding:28px 16px 56px }
+h1 { font:900 clamp(1.8rem,5vw,3rem)/1 "Chivo",sans-serif; color:var(--amber); letter-spacing:.02em; text-transform:uppercase; margin:0 }
+.sub { color:var(--dim); margin:8px 0 22px; text-transform:uppercase; letter-spacing:.12em; font-size:12px }
+.scroll { overflow-x:auto }
+table { width:100%; border-collapse:separate; border-spacing:0 4px }
+th { text-align:left; color:var(--dim); font-weight:400; font-size:11px; letter-spacing:.14em; text-transform:uppercase; padding:0 12px 6px }
+td { background:var(--row); padding:10px 12px; white-space:nowrap }
+td:first-child { border-radius:4px 0 0 4px; color:var(--amber) }
+td:last-child { border-radius:0 4px 4px 0; color:var(--dim); white-space:normal }
+.flap { display:inline-block; min-width:9.5ch; text-align:center; font-weight:700; letter-spacing:.08em; padding:3px 6px; border-radius:3px;
+  background:linear-gradient(#222 0 49%,#1a1a1a 51%); box-shadow:inset 0 -1px 0 #000 }
+tr.delivered .flap { color:var(--green) } tr.stopped .flap { color:var(--red) } tr.waiting .flap { color:var(--amber) } tr.held .flap { color:var(--dim) }
+</style></head><body><main>
+<h1>Monday deliveries</h1>
+<p class="sub">Weekly pharmacy sales · one clean table per week · nothing goes out unless every check passes</p>
+<div class="scroll"><table><tr><th>Week</th><th>Customer</th><th>Status</th><th>Note</th></tr><tr class="held"><td>2026-W41</td><td>Harbour Chemists</td><td><span class="flap">HELD</span></td><td>clean, held with the rest of the week</td></tr><tr class="stopped"><td>2026-W41</td><td>Northside Pharmacy</td><td><span class="flap">STOPPED</span></td><td>row count in normal range</td></tr><tr class="held"><td>2026-W41</td><td>Valley Drug Co</td><td><span class="flap">HELD</span></td><td>clean, held with the rest of the week</td></tr><tr class="stopped"><td>2026-W40</td><td>Harbour Chemists</td><td><span class="flap">STOPPED</span></td><td>one row per order line</td></tr><tr class="held"><td>2026-W40</td><td>Northside Pharmacy</td><td><span class="flap">HELD</span></td><td>clean, held with the rest of the week</td></tr><tr class="stopped"><td>2026-W40</td><td>Valley Drug Co</td><td><span class="flap">STOPPED</span></td><td>dates inside the week</td></tr><tr class="delivered"><td>2026-W39</td><td>Harbour Chemists</td><td><span class="flap">DELIVERED</span></td><td>656 rows (37 resent rows removed)</td></tr><tr class="delivered"><td>2026-W39</td><td>Northside Pharmacy</td><td><span class="flap">DELIVERED</span></td><td>946 rows</td></tr><tr class="delivered"><td>2026-W39</td><td>Valley Drug Co</td><td><span class="flap">DELIVERED</span></td><td>428 rows</td></tr><tr class="held"><td>2026-W38</td><td>Harbour Chemists</td><td><span class="flap">HELD</span></td><td>clean, held with the rest of the week</td></tr><tr class="stopped"><td>2026-W38</td><td>Northside Pharmacy</td><td><span class="flap">STOPPED</span></td><td>file&#x27;s columns changed</td></tr><tr class="held"><td>2026-W38</td><td>Valley Drug Co</td><td><span class="flap">HELD</span></td><td>clean, held with the rest of the week</td></tr><tr class="delivered"><td>2026-W37</td><td>Harbour Chemists</td><td><span class="flap">DELIVERED</span></td><td>599 rows</td></tr><tr class="delivered"><td>2026-W37</td><td>Northside Pharmacy</td><td><span class="flap">DELIVERED</span></td><td>1,011 rows</td></tr><tr class="delivered"><td>2026-W37</td><td>Valley Drug Co</td><td><span class="flap">DELIVERED</span></td><td>424 rows</td></tr><tr class="delivered"><td>2026-W36</td><td>Harbour Chemists</td><td><span class="flap">DELIVERED</span></td><td>578 rows</td></tr><tr class="delivered"><td>2026-W36</td><td>Northside Pharmacy</td><td><span class="flap">DELIVERED</span></td><td>1,000 rows</td></tr><tr class="delivered"><td>2026-W36</td><td>Valley Drug Co</td><td><span class="flap">DELIVERED</span></td><td>360 rows</td></tr></table></div>
+</main></body></html>

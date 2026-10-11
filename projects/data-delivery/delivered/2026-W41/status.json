@@ -1,0 +1,44 @@
+{
+  "week": "2026-W41",
+  "status": "blocked",
+  "at": "2026-10-11T04:09:26+00:00",
+  "seconds": 7.9,
+  "loads": [
+    {
+      "customer": "harbour",
+      "week": "2026-W41",
+      "status": "loaded",
+      "rows": 588,
+      "detail": "588 rows",
+      "file": "HARBOUR-2026-W41.txt",
+      "problems": []
+    },
+    {
+      "customer": "northside",
+      "week": "2026-W41",
+      "status": "loaded",
+      "rows": 90,
+      "detail": "90 rows",
+      "file": "northside_sales_2026-W41.csv",
+      "problems": []
+    },
+    {
+      "customer": "valley",
+      "week": "2026-W41",
+      "status": "loaded",
+      "rows": 402,
+      "detail": "402 rows",
+      "file": "sales.jsonl",
+      "problems": []
+    }
+  ],
+  "rows_by_customer": {},
+  "alerts": [
+    {
+      "customer": "Northside Pharmacy",
+      "check": "row_count_in_normal_range",
+      "detail": "1 failing rows (e.g. 90)",
+      "check_first": "The file is much smaller or bigger than usual. Small usually means a file cut short; ask for a resend."
+    }
+  ]
+}

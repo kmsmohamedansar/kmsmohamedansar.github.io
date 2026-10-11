@@ -1,0 +1,50 @@
+{
+  "week": "2026-W40",
+  "status": "blocked",
+  "at": "2026-10-11T04:09:12+00:00",
+  "seconds": 9.1,
+  "loads": [
+    {
+      "customer": "harbour",
+      "week": "2026-W40",
+      "status": "loaded",
+      "rows": 632,
+      "detail": "632 rows",
+      "file": "HARBOUR-2026-W40.txt",
+      "problems": []
+    },
+    {
+      "customer": "northside",
+      "week": "2026-W40",
+      "status": "loaded",
+      "rows": 1030,
+      "detail": "1030 rows",
+      "file": "northside_sales_2026-W40.csv",
+      "problems": []
+    },
+    {
+      "customer": "valley",
+      "week": "2026-W40",
+      "status": "loaded",
+      "rows": 418,
+      "detail": "418 rows",
+      "file": "sales.jsonl",
+      "problems": []
+    }
+  ],
+  "rows_by_customer": {},
+  "alerts": [
+    {
+      "customer": "Valley Drug Co",
+      "check": "dates_inside_the_week",
+      "detail": "6 failing rows (e.g. VA4000143, VA4000404, VA4000181, VA4000356, VA4000248)",
+      "check_first": "Some sales are dated outside the week. A wrong year usually means a typo or a date-format change at the source."
+    },
+    {
+      "customer": "Harbour Chemists",
+      "check": "one_row_per_order_line",
+      "detail": "12 failing rows (e.g. HA4000340, HA4000233, HA4000583, HA4000327, HA4000256)",
+      "check_first": "The same order line was sent twice with different values. Send the customer the line IDs below and ask which is right."
+    }
+  ]
+}

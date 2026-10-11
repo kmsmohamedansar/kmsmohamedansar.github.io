@@ -1,0 +1,16 @@
+version: 2
+models:
+  - name: stg_sales
+    description: This week's rows, typed, exact duplicates removed.
+  - name: weekly_sales
+    description: The delivered table. One row per order line, every customer, one shape.
+    columns:
+      - name: line_id
+        data_tests: [not_null]
+      - name: sale_date
+        description: Empty when the customer's date couldn't be read.
+        data_tests: [not_null]
+      - name: units
+        data_tests: [not_null]
+      - name: revenue
+        data_tests: [not_null]

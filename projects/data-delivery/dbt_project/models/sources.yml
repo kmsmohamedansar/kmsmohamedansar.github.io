@@ -1,0 +1,9 @@
+version: 2
+sources:
+  - name: raw
+    schema: raw
+    tables:
+      - name: sales
+        description: Every customer's rows for each week, as loaded, mapped to our column names.
+      - name: expectations
+        description: Each customer's normal weekly row count, from their settings file.

@@ -1,0 +1,14 @@
+name: pharmacy_delivery
+version: "1.0.0"
+profile: pharmacy_delivery
+model-paths: ["models"]
+test-paths: ["tests"]
+vars:
+  week: "2026-W36"
+models:
+  pharmacy_delivery:
+    staging: { +materialized: view, +schema: staging }
+    marts: { +materialized: table, +schema: delivery }
+data_tests:
+  +store_failures: true
+  +schema: test_failures

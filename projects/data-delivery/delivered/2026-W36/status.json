@@ -1,0 +1,41 @@
+{
+  "week": "2026-W36",
+  "status": "delivered",
+  "at": "2026-10-11T04:07:42+00:00",
+  "seconds": 8.4,
+  "loads": [
+    {
+      "customer": "harbour",
+      "week": "2026-W36",
+      "status": "loaded",
+      "rows": 578,
+      "detail": "578 rows",
+      "file": "HARBOUR-2026-W36.txt",
+      "problems": []
+    },
+    {
+      "customer": "northside",
+      "week": "2026-W36",
+      "status": "loaded",
+      "rows": 1000,
+      "detail": "1000 rows",
+      "file": "northside_sales_2026-W36.csv",
+      "problems": []
+    },
+    {
+      "customer": "valley",
+      "week": "2026-W36",
+      "status": "loaded",
+      "rows": 360,
+      "detail": "360 rows",
+      "file": "sales.jsonl",
+      "problems": []
+    }
+  ],
+  "rows_by_customer": {
+    "harbour": 578,
+    "northside": 1000,
+    "valley": 360
+  },
+  "alerts": []
+}
