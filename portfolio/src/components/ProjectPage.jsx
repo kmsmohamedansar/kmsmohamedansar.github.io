@@ -1,7 +1,7 @@
 import { AnimatePresence, motion } from "framer-motion";
 import { useRef, useState } from "react";
 import { ArrowLeft, ArrowRight, ArrowUpRight, Info, Lock } from "lucide-react";
-import { ACCENTS, PROJECTS, getProject } from "../data/projects";
+import { ACCENTS, LISTED_PROJECTS, PROJECTS, getProject } from "../data/projects";
 import { DEPTH } from "../data/depth";
 import { TOOL_INFO } from "../data/tools";
 import FlowDiagram, { FlourishTitle, Kicker, TagPill } from "./ui";
@@ -194,7 +194,9 @@ export default function ProjectPage({ slug }) {
 
   const a = ACCENTS[project.accent];
   const i = PROJECTS.findIndex((p) => p.slug === slug);
-  const next = PROJECTS[(i + 1) % PROJECTS.length];
+  // Next project among the listed ones, so hidden pages never come up.
+  const li = LISTED_PROJECTS.findIndex((p) => p.slug === slug);
+  const next = LISTED_PROJECTS[(li + 1) % LISTED_PROJECTS.length];
   const theme = pageTheme(project, i);
   const depth = DEPTH[slug];
 

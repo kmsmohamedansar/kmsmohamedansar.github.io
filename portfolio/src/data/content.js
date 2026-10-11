@@ -29,7 +29,7 @@ export const ABOUT = {
   story: [
     "I started in content and quality operations at Amazon Prime Video, where I learned that bad data rarely shows up as an error. It shows up two teams later as a wrong decision. That stuck with me.",
     "A business analysis internship pulled me towards SQL and Snowflake, and I wanted to be the person building the pipeline, not only reading what came out of it. Today, as a solutions engineer, I turn what a stakeholder is really asking into something technical that holds up, and I double-check my own numbers before anyone else has to.",
-    "Outside work I keep building. An iOS app on the App Store, a SQL playground, a few machine learning demos, and a growing pile of tools made with AI as a pair programmer. None of it was assigned. It's just how I learn.",
+    "Outside work I keep building. Two native apps, an independent study of the new AI decision models, data tools with honest tests, and a growing pile of things made with AI as a pair programmer. None of it was assigned. It's just how I learn.",
   ],
   groups: [
     { title: "Data", accent: "cyan", items: ["SQL", "Snowflake", "BigQuery", "Python", "pandas", "DuckDB", "Airflow", "ETL and ELT"] },
@@ -156,7 +156,7 @@ export const EMET_TOPICS = [
       { text: "App Store", cls: "font-bold" },
       {
         text:
-          ". I also build Chrome tools for retail data, a SQL playground that runs in the browser, and a few machine learning demos. Most have a live demo or a write-up.",
+          ". I also ran an independent study of open AI decision models, with a full technical report, and I build data tools that test themselves. Most have a live demo or a write-up.",
       },
     ],
   },
@@ -188,14 +188,13 @@ export const COMMAND_ITEMS = [
   { label: "Built with AI · experiments", go: "#ai", group: "Sections" },
   { label: "Contact", go: "#contact", group: "Sections" },
   { label: "RepTrack, project page", go: "#project/reptrack", group: "Projects" },
-  { label: "Undercut, project page", go: "#project/undercut", group: "Projects" },
-  { label: "SQL Playground, project page", go: "#project/sql-playground", group: "Projects" },
+  { label: "Decision Bench, project page", go: "#project/decision-models", group: "Projects" },
+  { label: "Haloscript, project page", go: "#project/haloscript", group: "Projects" },
   { label: "EMET · ask the terminal", go: "#emet", group: "Fun" },
   { label: "Solar system explorer", go: "#explore", group: "Fun" },
-  { label: "Data lineage explorer, live demo", go: "#lineage-demo", group: "Fun" },
   { label: "A 3D model of me, made with AI", go: "#digital-double", group: "Fun" },
   { label: "RepTrack on the App Store", href: "https://apps.apple.com/us/app/reptrack-workout-log/id6761032027", group: "Links" },
-  { label: "SQL Playground, live", href: "https://ansarbuilds.dev/sql-playground", group: "Links" },
+  { label: "Decision Bench, technical report", href: "/p/decision-models/report.html", group: "Links" },
   { label: "GitHub", href: CONTACT.github, group: "Links" },
   { label: "LinkedIn", href: CONTACT.linkedin, group: "Links" },
   { label: "Email · " + CONTACT.email, href: "mailto:" + CONTACT.email, group: "Links" },
