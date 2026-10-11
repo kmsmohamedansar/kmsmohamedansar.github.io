@@ -1,0 +1,37 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Catalogue checker report</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Space+Grotesk:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root { --paper:#fdfdfb; --grid:#e8eee6; --ink:#141613; --muted:#5d645b; --mark:#d7f75b; --line:#141613; }
+* { box-sizing:border-box }
+body { margin:0; color:var(--ink); font:15px/1.55 "Space Grotesk",system-ui,sans-serif;
+  background:var(--paper) repeating-linear-gradient(0deg,transparent 0 23px,var(--grid) 23px 24px),
+             repeating-linear-gradient(90deg,transparent 0 23px,var(--grid) 23px 24px); }
+main { max-width:880px; margin:0 auto; padding:32px 16px 64px }
+header { border:2px solid var(--line); background:var(--paper); padding:18px 20px; display:grid; gap:4px }
+.id { font:700 12px "Space Mono",monospace; letter-spacing:.12em; text-transform:uppercase; color:var(--muted) }
+h1 { margin:0; font-size:clamp(1.8rem,5vw,2.8rem); line-height:1.05; letter-spacing:-.02em }
+section { margin-top:22px; border:2px solid var(--line); background:var(--paper); padding:18px 20px }
+h2 { margin:0 0 10px; font:700 13px "Space Mono",monospace; text-transform:uppercase; letter-spacing:.1em }
+h2 b { background:var(--ink); color:var(--paper); padding:1px 6px; margin-right:8px }
+.finding { font-size:1.25rem; font-weight:600; line-height:1.35; margin:0 }
+mark { background:var(--mark); padding:0 3px }
+table { width:100%; border-collapse:collapse; font:13px "Space Mono",monospace }
+th,td { text-align:left; padding:7px 8px; border-bottom:1px solid #c9d1c6; vertical-align:top }
+th { border-bottom:2px solid var(--line); font-weight:700; font-size:11px; text-transform:uppercase }
+tr.best td { background:var(--mark) }
+img { width:100%; height:auto; border:1px solid #c9d1c6 }
+.note { color:var(--muted); font-size:13px; margin:10px 0 0 }
+.scroll { overflow-x:auto }
+</style></head><body><main>
+<header><span class="id">Catalogue checker · results report · 2026-10-11 · Darwin arm64</span>
+<h1>Which products are filed in the wrong category?</h1>
+<span class="id">350 products · 50 planted errors · data: Open Food Facts (ODbL)</span></header>
+<section><h2><b>01</b>Finding</h2><p class="finding"><mark>Meaning match</mark> ranked best: 33 real errors among its 50 most suspicious products, at 29,353 products a minute.</p>
+<p class=note>At scale: 5,000 products in 1.45 minutes; 664 sent to the slow model; 1,366 flagged.</p></section>
+<section><h2><b>02</b>Checkers compared</h2><div class="scroll"><table><tr><th>Checker</th><th>Real in top 50</th><th>Caught</th><th>False alarms</th><th>Precision</th><th>Per minute</th></tr><tr><td>Keyword match</td><td>24</td><td>50/50</td><td>164</td><td>0.23</td><td>6,701,681</td></tr><tr class=best><td>Meaning match</td><td>33</td><td>49/50</td><td>87</td><td>0.36</td><td>29,353</td></tr><tr><td>Zero-shot model</td><td>30</td><td>50/50</td><td>83</td><td>0.38</td><td>452</td></tr><tr><td>Team: meaning, then zero-shot</td><td>27</td><td>49/50</td><td>76</td><td>0.39</td><td>3,337</td></tr></table></div>
+<p class="note">Caught: planted errors flagged anywhere. Precision: share of flags that were planted errors. Flag rules were fixed before the run.</p></section>
+<section><h2><b>03</b>Speed against usefulness</h2><img src="../docs/charts/speed-vs-catch.png" alt="Chart of products per minute against real errors in the top 50, one dot per checker"></section>
+<section><h2><b>04</b>Hand check</h2><p>Of 40 unchanged products, a person could not confirm the category from the name alone for 7.</p></section>
+<section><h2><b>05</b>Top of the review list (5,000 products)</h2><div class="scroll"><table><tr><th>#</th><th>Product</th><th>Filed under</th><th>Reads like</th></tr><tr><td>1</td><td>Cheez-It Grooves Sharp White Cheddar</td><td>Biscuits</td><td>Cheeses</td></tr><tr><td>2</td><td>Chocolate wafer</td><td>Biscuits</td><td>Chocolates</td></tr><tr><td>3</td><td>Chocolate wafer</td><td>Biscuits</td><td>Chocolates</td></tr><tr><td>4</td><td>Java Monster Coffee + Energy</td><td>Sodas</td><td>Coffees</td></tr><tr><td>5</td><td>Vanilla Chocolate Balls</td><td>Yogurts</td><td>Chocolates</td></tr><tr><td>6</td><td>Love Crunch Dark Chocolate &amp; Red Berries</td><td>Breakfast cereals</td><td>Chocolates</td></tr><tr><td>7</td><td>Tortelloni Four Cheese</td><td>Pasta</td><td>Cheeses</td></tr><tr><td>8</td><td>Dark Chocolate Wafers</td><td>Biscuits</td><td>Chocolates</td></tr><tr><td>9</td><td>Dark Chocolate Peanut &amp; Almond Chewy Granola Bar</td><td>Biscuits</td><td>Chocolates</td></tr><tr><td>10</td><td>kiwi strawberry flavored juice drink</td><td>Sodas</td><td>Fruit juices</td></tr><tr><td>11</td><td>Banana Bread</td><td>Biscuits</td><td>Breads</td></tr><tr><td>12</td><td>mac &amp; cheese</td><td>Pasta</td><td>Cheeses</td></tr><tr><td>13</td><td>Chocolate Filled Wafers</td><td>Biscuits</td><td>Chocolates</td></tr><tr><td>14</td><td>Chocolate Wafers</td><td>Biscuits</td><td>Chocolates</td></tr><tr><td>15</td><td>Mac &amp; Cheese</td><td>Pasta</td><td>Cheeses</td></tr><tr><td>16</td><td>Ramen Noodle Soup Chicken Flavor</td><td>Pasta</td><td>Soups</td></tr><tr><td>17</td><td>dark chocolate covered mini pretzels</td><td>Biscuits</td><td>Chocolates</td></tr><tr><td>18</td><td>Kong sour plum soup</td><td>Teas</td><td>Soups</td></tr><tr><td>19</td><td>Choc Chips</td><td>Biscuits</td><td>Chocolates</td></tr><tr><td>20</td><td>4 CHEESE RAVIOLI</td><td>Pasta</td><td>Cheeses</td></tr></table></div></section>
+</main></body></html>

@@ -205,6 +205,7 @@ export const PROJECTS = [
   },
   {
     slug: "sitescout",
+    theme: { bg: "#120f1f", title: "condensed" },
     title: "Sitescout",
     kind: "Chrome extension",
     accent: "violet",
@@ -285,6 +286,7 @@ export const PROJECTS = [
   },
   {
     slug: "integration",
+    theme: { bg: "#080a09", title: "mono" },
     title: "Integration-in-a-box",
     kind: "Integration demo",
     accent: "green",
@@ -375,6 +377,7 @@ export const PROJECTS = [
   },
   {
     slug: "analytics-assistant",
+    theme: { bg: "#1c150c", title: "serif" },
     title: "Analytics assistant: rules vs AI",
     kind: "AI + data tools",
     accent: "violet",
@@ -992,12 +995,14 @@ export const PROJECTS = [
   },
   {
     slug: "catalogue-checker",
+    theme: { bg: "#0f1418", title: "display" },
     title: "Catalogue checker",
     kind: "AI + data quality",
     accent: "green",
     status: "Open source, measured",
     hook: "Which grocery products are filed in the wrong category? Three checkers, from a keyword match to a large AI model, tested on real open data with 50 planted errors.",
     role: "Built it myself: the scaled-up, measured version of my product categorization notebook.",
+    shots: ["/shots/catalogue/report.webp"],
     tags: ["Python", "Embeddings", "Zero-shot", "Evaluation"],
     stack: ["Python", "pandas", "sentence-transformers", "Hugging Face Transformers", "facebook/bart-large-mnli", "Open Food Facts", "matplotlib", "pytest"],
     stackUsage: {

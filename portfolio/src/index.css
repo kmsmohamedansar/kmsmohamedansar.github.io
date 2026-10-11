@@ -99,6 +99,9 @@
 @layer utilities {
   /* Content panel: a dark, mostly opaque card so body copy never has to
      fight bright stars for contrast. Use for anything with paragraphs. */
+  .project-panel {
+    background: rgba(0, 0, 0, 0.28) !important;
+  }
   .panel {
     backdrop-filter: blur(14px);
     background: rgba(5, 9, 17, 0.78);
