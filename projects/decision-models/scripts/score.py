@@ -72,7 +72,9 @@ def score_run(path, key):
     repairs = next((l["repairs"] for l in lines if "repairs" in l), None)
     runs = [l for l in lines if "id" in l]
     if len(runs) != meta["rows"]:
-        raise SystemExit(f"{path}: {len(runs)} answers for {meta['rows']} rows")
+        print(f"skipped {path.name}: incomplete run ({len(runs)} answers for {meta['rows']} rows)",
+              file=sys.stderr)
+        return None
 
     per_q = defaultdict(list)
     urgent_ok, team_ok, team_by = 0, 0, defaultdict(lambda: [0, 0])
@@ -211,6 +213,8 @@ def main():
     results = []
     for path in raw:
         r = score_run(path, key)
+        if r is None:
+            continue
         (out_dir / f"{path.stem}.json").write_text(json.dumps(r, indent=2) + "\n")
         results.append(r)
     (out_dir / "summary.md").write_text(summary_md(results, split))

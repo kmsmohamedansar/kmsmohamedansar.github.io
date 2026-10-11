@@ -2,7 +2,7 @@
   "adapter": "rules",
   "split": "dev",
   "machine": "Claude cloud container (Linux x86_64)",
-  "started": "2026-10-11T15:40:00+00:00",
+  "started": "2026-10-11T18:22:00+00:00",
   "n": 200,
   "urgent_accuracy": 0.825,
   "team_accuracy": 0.73,
@@ -43,7 +43,7 @@
   "frustration_mean_distance": 0.896,
   "frustration_exact": 0.34,
   "seconds_median": 0.0001,
-  "seconds_p90": 0.0001,
+  "seconds_p90": 0.0002,
   "tokens": {
     "input": 0,
     "output": 0

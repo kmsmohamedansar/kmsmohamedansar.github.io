@@ -71,7 +71,9 @@ def main():
     meta = {"adapter": adapter.name, "split": split, "machine": args.machine,
             "started": datetime.now(timezone.utc).isoformat(timespec="seconds"),
             "rows": len(rows)}
-    with out.open("w") as f:
+    # Write to a temporary file; only a finished run takes the real name.
+    tmp = out.with_suffix(".partial")
+    with tmp.open("w") as f:
         f.write(json.dumps({"meta": meta}) + "\n")
         for i, row in enumerate(rows, 1):
             start = time.perf_counter()
@@ -84,6 +86,7 @@ def main():
         repairs = getattr(adapter, "repairs", None)
         if repairs is not None:
             f.write(json.dumps({"repairs": repairs}) + "\n")
+    tmp.replace(out)
     print(out.relative_to(ROOT))
 
 
