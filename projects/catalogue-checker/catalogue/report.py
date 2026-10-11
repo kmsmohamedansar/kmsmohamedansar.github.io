@@ -19,7 +19,9 @@ def _style(ax):
 
 
 def speed_vs_catch(ev: dict, path: Path) -> None:
-    """One dot per checker: how fast (across) against how many planted errors it caught (up)."""
+    """One dot per checker: how fast (across) against how many of its 50 most
+    suspicious products are real errors (up). Every checker catches nearly all
+    planted errors somewhere in its flags, so the top 50 is what separates them."""
     import matplotlib
 
     matplotlib.use("Agg")
@@ -27,15 +29,20 @@ def speed_vs_catch(ev: dict, path: Path) -> None:
 
     fig, ax = plt.subplots(figsize=(7.5, 4.2), dpi=160)
     _style(ax)
-    for c in ev["checkers"]:
-        ax.scatter(c["per_minute"], c["recall"] * 100, s=70, color=HUE, edgecolor="white", linewidth=2, zorder=3)
-        ax.annotate(f"{c['checker']}\n{c['recall'] * 100:.0f}% caught, {c['precision'] * 100:.0f}% of flags right",
-                    (c["per_minute"], c["recall"] * 100), textcoords="offset points", xytext=(9, -4), fontsize=8.5, color=INK, va="top")
+    pts = sorted(ev["checkers"], key=lambda c: c["per_minute"])
+    for i, c in enumerate(pts):
+        y = c.get("top50_real_errors", c["caught"])
+        ax.scatter(c["per_minute"], y, s=70, color=HUE, edgecolor="white", linewidth=2, zorder=3)
+        below = i % 2 == 1
+        ax.annotate(f"{c['checker']}\n{y} of 50 real, {c['per_minute']:,}/min", (c["per_minute"], y),
+                    textcoords="offset points", xytext=(0, -12 if below else 10), ha="center",
+                    va="top" if below else "bottom", fontsize=8, color=INK)
     ax.set_xscale("log")
+    ax.set_xlim(min(c["per_minute"] for c in pts) / 4, max(c["per_minute"] for c in pts) * 4)
+    ax.set_ylim(0, 50)
     ax.set_xlabel("Products checked per minute (log scale)", color=MUTED, fontsize=9)
-    ax.set_ylabel("Planted errors caught (%)", color=MUTED, fontsize=9)
-    ax.set_ylim(0, 105)
-    ax.set_title(f"Speed against catch rate, {ev['products']} products, {ev['planted']} planted errors", loc="left", color=INK, fontsize=11)
+    ax.set_ylabel("Real errors among its 50 most suspicious", color=MUTED, fontsize=9)
+    ax.set_title(f"Speed against usefulness, {ev['products']} products, {ev['planted']} planted errors", loc="left", color=INK, fontsize=11)
     fig.tight_layout()
     fig.savefig(path)
     plt.close(fig)

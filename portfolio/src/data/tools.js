@@ -33,6 +33,8 @@ export const TOOL_INFO = {
   SwiftData: "Apple's built-in way for apps to save data on the device.",
 
   // Data
+  "Open Food Facts": "A free, open database of food products from around the world, built by volunteers, with names, ingredients and categories.",
+  pytest: "Python's most popular tool for automated tests.",
   matplotlib: "Python's standard library for drawing charts.",
   seaborn: "A Python library on top of matplotlib that makes statistical charts quicker and cleaner.",
   Jupyter: "A notebook: code, charts and notes in one document, run a cell at a time.",
