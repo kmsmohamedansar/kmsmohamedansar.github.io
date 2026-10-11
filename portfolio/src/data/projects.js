@@ -92,7 +92,7 @@ export const PROJECTS = [
       Xcode: "Where it's built, and where builds go out to TestFlight testers.",
     },
     story: [
-      "Writers I know juggle a word processor, a corkboard app, a notes app and a pile of screenshots. Haloscript puts the manuscript and a whiteboard in one place, synced through the writer's own iCloud.",
+      "I write novels as a hobby, and writers juggle a word processor, a corkboard app, a notes app and a pile of screenshots. Haloscript puts the manuscript and a whiteboard in one place, synced through the writer's own iCloud.",
     ],
     how: [
       "One SwiftUI target for macOS, iPadOS and iOS, with one adaptive layout rule.",

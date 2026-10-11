@@ -2,6 +2,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { useRef, useState } from "react";
 import { ArrowLeft, ArrowRight, ArrowUpRight, Info, Lock } from "lucide-react";
 import { ACCENTS, PROJECTS, getProject } from "../data/projects";
+import { DEPTH } from "../data/depth";
 import { TOOL_INFO } from "../data/tools";
 import FlowDiagram, { FlourishTitle, Kicker, TagPill } from "./ui";
 import { EASE_REVEAL } from "../lib/motion";
@@ -195,6 +196,7 @@ export default function ProjectPage({ slug }) {
   const i = PROJECTS.findIndex((p) => p.slug === slug);
   const next = PROJECTS[(i + 1) % PROJECTS.length];
   const theme = pageTheme(project, i);
+  const depth = DEPTH[slug];
 
   return (
     <div style={{ background: `radial-gradient(120% 60% at 50% 0%, ${a.hex}14, transparent 70%), ${theme.bg}` }} className="min-h-full">
@@ -262,6 +264,12 @@ export default function ProjectPage({ slug }) {
       )}
 
       <div className="panel project-panel rounded-2xl p-6 sm:p-9 mt-6">
+        {depth && (
+          <Block label="How I found the problem" accent={project.accent}>
+            <p className="text-base sm:text-lg leading-[1.75] text-[color:var(--ink-100)]">{depth.found}</p>
+          </Block>
+        )}
+
         <Block label="The story" accent={project.accent}>
           <div className="space-y-4">
             {project.story.map((p) => (
@@ -362,6 +370,27 @@ export default function ProjectPage({ slug }) {
               </table>
             </div>
             {project.results.note && <p className="mt-3 text-sm text-[color:var(--ink-300)]">{project.results.note}</p>}
+          </Block>
+        )}
+
+        {depth && (
+          <Block label="Trade-offs I made" accent={project.accent}>
+            <ul className="space-y-3">
+              {depth.tradeoffs.map((t) => (
+                <li key={t.chose} className="rounded-xl border border-white/12 p-4 text-[color:var(--ink-100)] leading-relaxed">
+                  <span className={`font-semibold ${a.text}`}>{t.chose}</span>
+                  <span className="text-[color:var(--ink-300)]"> over </span>
+                  <span className="font-semibold text-white">{t.over}</span>
+                  <span className="block mt-1.5 text-[color:var(--ink-200)]">Because {t.because}</span>
+                </li>
+              ))}
+            </ul>
+          </Block>
+        )}
+
+        {depth?.ai && (
+          <Block label={depth.ai.label} accent={project.accent}>
+            <p className="text-base sm:text-lg leading-[1.75] text-[color:var(--ink-100)]">{depth.ai.text}</p>
           </Block>
         )}
 
