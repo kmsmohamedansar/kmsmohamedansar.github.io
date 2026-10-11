@@ -71,8 +71,12 @@ class Contract:
 def fake_ollama(url, body):
     """Stands in for an Ollama server: sloppy but parseable probabilities."""
     schema = body["format"]["properties"]
-    content = {qid: {k: float(i + 1) for i, k in enumerate(spec["required"])}
-               for qid, spec in schema.items()}  # don't add up to 1 on purpose
+    if "answer" in next(iter(schema.values()))["properties"]:  # v2 shape
+        content = {qid: {"answer": spec["properties"]["answer"]["enum"][-1], "confidence": 0.7}
+                   for qid, spec in schema.items()}
+    else:  # v1: sloppy numbers that don't add up to 1, on purpose
+        content = {qid: {k: float(i + 1) for i, k in enumerate(spec["required"])}
+                   for qid, spec in schema.items()}
     return {"model": body["model"], "message": {"content": json.dumps(content)},
             "prompt_eval_count": 300, "eval_count": 60}
 
@@ -91,9 +95,10 @@ FACTORIES = {
     "ollama": (Ollama if os.environ.get("OLLAMA_LIVE") == "1"
                else lambda: Ollama(post=fake_ollama)),
     "systemone-http": lambda: SystemOneHTTP("kev-4b", post=fake_systemone),
+    "ollama-v2": lambda: Ollama(post=fake_ollama, prompt="v2"),
     "jev": lambda: Jev(post=fake_systemone, key="test", enabled=True),
 }
-assert set(FACTORIES) == set(ADAPTERS), "every adapter needs a contract factory"
+assert set(ADAPTERS) <= set(FACTORIES), "every adapter needs a contract factory"
 
 # One test class per adapter, e.g. Contract_rules.
 for _name, _make in FACTORIES.items():

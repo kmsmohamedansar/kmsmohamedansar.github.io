@@ -60,3 +60,41 @@ class OllamaRepairs(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class OllamaV2(unittest.TestCase):
+    def test_answer_and_confidence_become_probabilities(self):
+        content = json.dumps({"is_urgent": {"answer": "false", "confidence": 0.8},
+                              "team": {"answer": "how-to", "confidence": 0.65},
+                              "frustration": {"answer": "2", "confidence": 0.6}})
+        o = Ollama(post=reply(content), prompt="v2")
+        a = o.decide(build_request("hi"))["answers"]
+        self.assertAlmostEqual(a["is_urgent"]["noul"], 0.2)
+        self.assertEqual(a["team"]["choice"], "how-to")
+        self.assertAlmostEqual(a["team"]["confidence"], 0.65)
+        # 0.4 left over goes to levels 1 and 3 only: score stays at 2
+        self.assertAlmostEqual(a["frustration"]["score"], 2.0)
+        self.assertEqual(a["frustration"]["probabilities"]["5"], 0.0)
+        self.assertEqual(o.name, "ollama-v2:qwen2.5:7b")
+
+    def test_answer_outside_options_gets_even_odds(self):
+        content = json.dumps({"is_urgent": {"answer": "maybe", "confidence": 0.9},
+                              "team": {"answer": "legal", "confidence": 0.9},
+                              "frustration": {"answer": "2", "confidence": 3}})
+        o = Ollama(post=reply(content), prompt="v2")
+        a = o.decide(build_request("hi"))["answers"]
+        self.assertEqual(a["is_urgent"]["noul"], 0.5)
+        self.assertEqual(o.repairs["no_probabilities"], 2)
+        self.assertEqual(o.repairs["missing_option"], 1)
+
+
+class OllamaV2LowConfidence(unittest.TestCase):
+    def test_answer_stays_most_likely(self):
+        content = json.dumps({"is_urgent": {"answer": "true", "confidence": 0.1},
+                              "team": {"answer": "sales", "confidence": 0.05},
+                              "frustration": {"answer": "1", "confidence": 0.2}})
+        o = Ollama(post=reply(content), prompt="v2")
+        a = o.decide(build_request("hi"))["answers"]  # would raise if not
+        self.assertEqual(a["team"]["choice"], "sales")
+        self.assertEqual(a["is_urgent"]["noul"], 0.5)
+        self.assertEqual(o.repairs["rescaled"], 3)

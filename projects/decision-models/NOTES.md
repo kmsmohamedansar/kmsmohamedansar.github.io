@@ -68,3 +68,10 @@ MacBook Air M4, 16 GB. Line-up updated in `docs/models.md`: Kev-4B/9B and Clef s
 - Licences: Apache-2.0 for Strands Decider 2B, Kev-0.8B and Laya, relayed from a Gemini summary of the HF cards. Two checkpoint-name gaps listed in docs/models.md to close on the Mac.
 - Jev spec: owner checked docs.typesafe.ai/api, no differences.
 - Licence follow-up: the exact checkpoints we run (Strands qwen3.5-v1-2610, laya-typed-decisions, kev-0.8b, Ollama qwen2.5:7b) all Apache-2.0, links in docs/models.md.
+
+### Ollama qwen2.5:7b, dev, prompt v1 (MacBook Air M4 16GB, owner's run)
+
+- 200/200 answered, median 12.2 s per request (first five: 13.1, 8.8, 8.5, 8.8, 9.0 s), cost 0 (local). Repairs on the 5-row smoke test: 2 rescaled, nothing missing.
+- Urgent 0.84 (ECE 0.06); team 0.43 (ECE 0.35); frustration distance 0.94, exact 0.41 (ECE 0.19).
+- **Failure, recorded:** team answers piled onto the first options listed. Picks: technical-support 96, billing 54, account-access 24, feedback 9, security-privacy 9, sales 3, integrations-api 3, how-to 2. Per team: billing 26/26, account-access 20/23, technical-support 25/30, but integrations-api 1/23, how-to 1/24. Asking a small model for a probability on every option, in a fixed order, measured the prompt as much as the model.
+- Fix on dev (allowed; held-out untouched): prompt v2 asks for one allowed answer plus a confidence. v1 stays in the results as the honest first attempt.
