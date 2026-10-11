@@ -111,7 +111,7 @@ export const PROJECTS = [
     },
     links: [
       { label: "See the full tour", href: "#project/haloscript", primary: true },
-      { label: "Support and privacy", href: "https://kmsmohamedansar.github.io/haloscript-site/", external: true },
+      { label: "Support and privacy", href: "https://ansarbuilds.dev/haloscript-site/", external: true },
       { label: "Source is private. Walkthrough on request.", href: "#contact", locked: true },
     ],
   },
@@ -495,7 +495,7 @@ export const PROJECTS = [
       ],
     },
     links: [
-      { label: "Open the playground", href: "https://kmsmohamedansar.github.io/sql-playground", external: true, primary: true },
+      { label: "Open the playground", href: "https://ansarbuilds.dev/sql-playground", external: true, primary: true },
       { label: "GitHub repo", href: "https://github.com/kmsmohamedansar/sql-playground", external: true },
     ],
   },
