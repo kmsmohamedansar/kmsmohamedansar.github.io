@@ -1,8 +1,8 @@
 {
   "week": "2026-W41",
   "status": "blocked",
-  "at": "2026-10-11T04:09:26+00:00",
-  "seconds": 7.9,
+  "at": "2026-10-11T04:22:53+00:00",
+  "seconds": 7.6,
   "loads": [
     {
       "customer": "harbour",
@@ -11,6 +11,15 @@
       "rows": 588,
       "detail": "588 rows",
       "file": "HARBOUR-2026-W41.txt",
+      "problems": []
+    },
+    {
+      "customer": "lakeshore",
+      "week": "2026-W41",
+      "status": "loaded",
+      "rows": 295,
+      "detail": "295 rows",
+      "file": "LKS_2026_W41.tsv",
       "problems": []
     },
     {

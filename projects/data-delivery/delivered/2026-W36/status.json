@@ -1,8 +1,8 @@
 {
   "week": "2026-W36",
   "status": "delivered",
-  "at": "2026-10-11T04:07:42+00:00",
-  "seconds": 8.4,
+  "at": "2026-10-11T04:22:11+00:00",
+  "seconds": 9.7,
   "loads": [
     {
       "customer": "harbour",
@@ -11,6 +11,15 @@
       "rows": 578,
       "detail": "578 rows",
       "file": "HARBOUR-2026-W36.txt",
+      "problems": []
+    },
+    {
+      "customer": "lakeshore",
+      "week": "2026-W36",
+      "status": "loaded",
+      "rows": 327,
+      "detail": "327 rows",
+      "file": "LKS_2026_W36.tsv",
       "problems": []
     },
     {
@@ -34,6 +43,7 @@
   ],
   "rows_by_customer": {
     "harbour": 578,
+    "lakeshore": 327,
     "northside": 1000,
     "valley": 360
   },

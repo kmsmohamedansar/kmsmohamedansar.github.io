@@ -20,3 +20,7 @@ Dated log of what was done, what broke and what was measured. Numbers here come 
 **Tests.** 11 passing: settings validation, number and date formats, week boundaries, reruns never doubling, each planted problem blocking with the right reason, and resent rows being cleaned rather than blocked.
 
 **First onboarding attempt (owner).** The owner opened the blank settings template and couldn't tell what to type: it asks for things like `%d.%m.%Y` without showing how to find them. That's a real onboarding problem, not a user problem. Added `delivery/onboard.py`, which reads one of the new customer's files and drafts the settings file (delimiter, decimal mark, date format, which column is which, file naming, a normal row count), with a note on every guess. On the three existing customers' files it drafts the same column mapping that was written by hand (tested). It first set Northside's normal range from its smallest to largest file, which included the 90-row partial file and would have let a partial file through; it now uses a typical file and warns about odd ones (tested). The onboarding time will be measured with this helper.
+
+**Onboarding, timed (owner, on a Mac).** Drafted by `delivery.onboard` at 00:20:02 EDT, delivered at 00:20:39: 37 seconds, first try, no changes to the draft. Before the helper existed, the owner opened the blank template at about 00:15 and couldn't fill it in.
+
+**Full rerun with Lakeshore as the fourth customer.** Same outcome for every week as the first run (Lakeshore's six weeks all clean). 15 tests pass.

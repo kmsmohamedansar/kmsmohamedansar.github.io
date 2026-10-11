@@ -1,8 +1,8 @@
 {
   "week": "2026-W37",
   "status": "delivered",
-  "at": "2026-10-11T04:17:57+00:00",
-  "seconds": 6.6,
+  "at": "2026-10-11T04:22:20+00:00",
+  "seconds": 9.2,
   "loads": [
     {
       "customer": "harbour",
@@ -11,6 +11,15 @@
       "rows": 599,
       "detail": "599 rows",
       "file": "HARBOUR-2026-W37.txt",
+      "problems": []
+    },
+    {
+      "customer": "lakeshore",
+      "week": "2026-W37",
+      "status": "loaded",
+      "rows": 279,
+      "detail": "279 rows",
+      "file": "LKS_2026_W37.tsv",
       "problems": []
     },
     {
