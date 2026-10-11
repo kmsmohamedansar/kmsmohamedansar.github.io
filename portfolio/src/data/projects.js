@@ -1197,7 +1197,7 @@ export const PROJECTS = [
     links: [
       { label: "Read the technical report", href: "/p/decision-models/report.html", external: true, primary: true },
       { label: "Download the PDF", href: "/p/decision-models/report.pdf", external: true },
-      { label: "Code, data and every run", href: "https://github.com/kmsmohamedansar/kmsmohamedansar.github.io/tree/main/projects/decision-models", external: true },
+      { label: "Code, data and every run", href: "https://github.com/kmsmohamedansar/decision-models", external: true },
       { label: "The fast-then-slow idea it grew from", href: "#project/catalogue-checker" },
     ],
   },
