@@ -1017,7 +1017,7 @@ export const PROJECTS = [
     ],
     how: [
       "Only products that belong to exactly one of the 15 categories are kept, so the label is unambiguous.",
-      "50 planted errors give a known truth; a hand-check sheet is set up to measure how often the source data itself is wrong.",
+      "50 planted errors give a known truth. I also hand-checked 40 unchanged products, marking any I couldn't place from the name alone.",
       "Each checker ranks every product by how suspicious its category looks, and flags it by a fixed rule.",
       "Three measures: planted errors caught, how many flags were right, and how many of its 50 most suspicious are real errors.",
       "The team sends only the doubtful products to the slow model, so 5,000 products take 1.45 minutes, not hours.",
@@ -1040,7 +1040,7 @@ export const PROJECTS = [
       "Catching errors is easy; not crying wolf is hard. Every checker caught nearly all planted errors, and also flagged about a quarter of the correct products.",
       "The small fast model ranked best. Bigger wasn't better here.",
       "My team idea gave the shortest flag list but a worse ranking, because it mixed two kinds of score. Reported as it is, with the fix written down.",
-      "Half the false alarms were names that don't say what the product is, like \"Twiglets\" or \"Goldfish\". Reading only the name has a ceiling.",
+      "Half the false alarms were names that don't say what the product is, like \"Twiglets\" or \"Goldfish\". In my hand check I couldn't place 7 of 40 names either, and the small model had flagged 6 of those 7. Reading only the name has a ceiling, for people and models alike.",
     ],
     flow: {
       caption: "From an open database to a review list.",

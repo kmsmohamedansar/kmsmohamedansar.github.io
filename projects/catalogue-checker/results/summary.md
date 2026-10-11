@@ -11,4 +11,4 @@
 
 **At scale:** 5,000 products checked by the team in 1.45 minutes; 664 went to the slow model; 1,366 flagged for review.
 
-**Hand check:** of 40 products whose category was not changed, a person judged 7 to be filed wrongly in the source data.
+**Hand check:** of 40 products whose category was not changed, a person could not confirm the category from the name alone for 7 (marked N).

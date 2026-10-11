@@ -40,7 +40,7 @@ Open Food Facts was often busy (it answered "503" a lot), so the download retrie
 
 ### The answer key
 
-350 products, spread evenly over the 15 categories: 300 with their own category and 50 moved to a random wrong one. We know exactly which 50 a checker should catch. Treating the database's own category as right is an assumption; a hand check of 50 products is set up to measure how often it's wrong (not yet filled in).
+350 products, spread evenly over the 15 categories: 300 with their own category and 50 moved to a random wrong one. We know exactly which 50 a checker should catch. Treating the database's own category as right is an assumption. A person then hand-checked 40 of the 300 unchanged products (see below).
 
 ### The checkers
 
@@ -70,6 +70,12 @@ For most products the team's score is a meaning-match distance; for the doubtful
 
 From the run's own output: "Whole wheat fusilli" filed under Pasta was flagged as a breakfast cereal; "Twiglets" (crisps) looked like yogurt to the model; "Confiture d'abricot" (jam, in French) looked like a soda. 95 of the 300 correctly filed products have one- or two-word names; they make up 47% of meaning match's false alarms and 49% of the team's.
 
+### The hand check
+
+I went through 40 of the unchanged products and marked any whose category I couldn't confirm from the name alone. That was 7 of 40: names like "Farfalle", "Boisson gazeuse" (French for fizzy drink), "GINGER" and "Brazillian Green". Most are probably filed correctly; the name just doesn't say so.
+
+Then I compared with the checkers. Meaning match flagged 6 of those 7, and only 7 of the 33 I could confirm. **The model's false alarms land mostly on the same names a person can't place either.** That's good news for the method (it's flagging genuinely unclear products, not random ones) and a clear limit: from the name alone, neither a person nor a model can do better. This check measured "confirmable from the name", not "filed wrongly", so it doesn't give an error rate for the source data.
+
 ### The review list
 
 `results/review_list.csv` lists the 1,366 flagged products from the 5,000, most suspicious first, each with a reason ("Filed under Biscuits, but "Chocolate wafer" reads more like Chocolates"). Near the top it surfaces genuinely ambiguous products: chocolate-covered biscuits, cheese crackers, coffee energy drinks. Those aren't wrong so much as products that belong in two places, which is a real catalogue question in its own right.
@@ -78,7 +84,7 @@ From the run's own output: "Whole wheat fusilli" filed under Pasta was flagged a
 
 - Rescore the team on one scale, and re-measure its top 50.
 - Give the checkers the ingredients list as well as the name, for products whose names say nothing.
-- Fill in the hand check, to measure how often the source data itself is wrong.
+- A proper hand check of whether products are filed wrongly (looking up each product, not just reading its name), to measure the source data's own error rate.
 - Plant harder errors (a near category, such as biscuits filed as chocolates), since random wrong categories are easy.
 
 ## Claims ledger
@@ -91,6 +97,7 @@ From the run's own output: "Whole wheat fusilli" filed under Pasta was flagged a
 | Caught 50 / 49 / 50 / 49, false alarms 164 / 87 / 83 / 76 | `results/eval.json` (identical in both runs) |
 | Speeds 6.7 million / 29,353 / 452 / 3,337 per minute | `results/eval.json`; first-run speeds in NOTES.md |
 | 5,000 products in 1.45 minutes, 664 to the slow model, 1,366 flagged | `results/scale.json` |
+| Hand check: 7 of 40 not confirmable from the name; meaning match flagged 6 of those 7 and 7 of the other 33 | `data/handcheck.csv` matched to `results/eval_rows.csv`, method in NOTES.md |
 | Short names: 95 of 300 correct products, 47% / 49% of false alarms | Counted from `results/eval_rows.csv`, method in NOTES.md |
 | Old notebook: about twelve minutes for five products | The old notebook's own notes |
 | Chapter 1 (work) | My own account. No work data, code or numbers are used. |

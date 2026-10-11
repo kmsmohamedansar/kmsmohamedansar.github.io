@@ -76,7 +76,7 @@ def build(d: Path) -> None:
                   f"{s['zero_shot_calls']:,} went to the slow model; {s['flagged']:,} flagged for review."]
     n = handcheck_noise()
     if n:
-        lines += ["", f"**Hand check:** of {n['checked']} products whose category was not changed, a person judged {n['wrong']} to be filed wrongly in the source data."]
+        lines += ["", f"**Hand check:** of {n['checked']} products whose category was not changed, a person could not confirm the category from the name alone for {n['wrong']} (marked N)."]
     (d / "summary.md").write_text("\n".join(lines) + "\n")
     print("\n".join(lines))
     print(f"\nChart: {charts / 'speed-vs-catch.png'}")
