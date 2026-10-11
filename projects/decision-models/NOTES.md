@@ -136,3 +136,9 @@ Models on MacBook Air M4 16GB (owner's runs); rules in this cloud container. All
 - Fast then slow: planned (Strands -> qwen, threshold 0) handed nothing over, team 0.80. Exploratory (Kev -> Strands on team confidence, 0.70) handed over 42 of 50, team 0.78.
 - With n = 50, one request = 2 points; Strands (40) and rules (39) tie on team accuracy. The rules' strength is most likely shared vocabulary between the author's requests and keywords; noted in the report as a limit.
 - 2026-10-11: owner reviewed and approved section 7 (Discussion) of paper/report.md as written.
+
+### Step 7: portfolio (owner approved going ahead, 2026-10-11)
+
+- Report page and PDF: `portfolio/public/p/decision-models/report.html` and `report.pdf`, built by `scripts/build_paper.py` from `paper/report.md` (markdown via `npx marked@14.1.4`, PDF printed with headless Chromium).
+- Project entry `decision-models` in `portfolio/src/data/projects.js` (after catalogue-checker, not featured) and its trade-offs in `src/data/depth.js`. Figures in `portfolio/public/shots/decision-models/`.
+- Checked in the built site (vite preview): desktop and phone, no sideways scroll, no console errors, PDF served.

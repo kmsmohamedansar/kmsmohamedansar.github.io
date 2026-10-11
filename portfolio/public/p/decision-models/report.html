@@ -1,0 +1,942 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Is the confidence honest? · Mohamed Ansar</title>
+<meta name="description" content="An independent test of open System One decision models on support routing: accuracy, speed and whether their confidence can be trusted.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@400;600;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,700&display=swap" rel="stylesheet">
+<style>
+:root { --ink:#1b1a17; --muted:#5f5a51; --rule:#d8d2c4; --paper:#fbf9f4; --accent:#9a3412; --tint:#f4ece0; }
+* { box-sizing:border-box }
+html { background:var(--paper) }
+body { margin:0; color:var(--ink); background:var(--paper);
+  font:17px/1.65 "Source Serif 4", Georgia, serif; }
+main { max-width:760px; margin:0 auto; padding:40px 16px 80px }
+.top { display:flex; justify-content:space-between; gap:12px; flex-wrap:wrap;
+  font:600 12px/1.4 "IBM Plex Mono", ui-monospace, monospace; letter-spacing:.06em;
+  text-transform:uppercase; color:var(--muted); border-bottom:1px solid var(--rule);
+  padding-bottom:10px; margin-bottom:28px }
+.top a { color:var(--accent); text-decoration:none }
+h1 { font:700 clamp(2rem,6vw,2.8rem)/1.1 "Source Serif 4", Georgia, serif; letter-spacing:-.01em; margin:0 0 6px }
+h1 + h2 { font:400 1.25rem/1.35 "Source Serif 4", Georgia, serif; color:var(--muted); margin:0 0 18px; border:0; padding:0 }
+h2 { font:700 1.35rem/1.3 "IBM Plex Sans", system-ui, sans-serif; margin:48px 0 12px;
+  padding-top:14px; border-top:1px solid var(--rule) }
+h3 { font:600 1.05rem/1.35 "IBM Plex Sans", system-ui, sans-serif; margin:30px 0 8px }
+p, li { hyphens:auto }
+a { color:var(--accent) }
+hr { display:none }
+blockquote { margin:0; padding-left:14px; border-left:3px solid var(--rule); color:var(--muted) }
+code { font:0.86em "IBM Plex Mono", ui-monospace, monospace; background:var(--tint); padding:1px 4px; border-radius:3px }
+pre { background:#f1ece2; padding:14px; overflow-x:auto; border-radius:4px; font-size:13px; line-height:1.5 }
+pre code { background:none; padding:0 }
+.table { overflow-x:auto; margin:16px 0 }
+table { border-collapse:collapse; width:100%; font:13.5px/1.45 "IBM Plex Sans", system-ui, sans-serif }
+th, td { text-align:left; padding:7px 8px; border-bottom:1px solid var(--rule); vertical-align:top }
+th { font-weight:600; border-bottom:2px solid var(--ink) }
+img { display:block; max-width:100%; height:auto; margin:18px auto; background:#fff; border:1px solid var(--rule); border-radius:4px }
+.pdf { display:inline-block; margin:0 0 6px; padding:8px 14px; border:1px solid var(--accent); border-radius:4px;
+  font:600 13px "IBM Plex Sans", system-ui, sans-serif; text-decoration:none }
+@media print {
+  body { font-size:11pt; background:#fff } html { background:#fff }
+  main { max-width:none; padding:0 }
+  .top a, .pdf { display:none }
+  h2 { break-after:avoid } table, img, pre { break-inside:avoid }
+  @page { size:A4; margin:18mm 16mm }
+}
+</style>
+</head>
+<body><main>
+<div class="top"><span>Technical report · October 2026</span><a href="/#project/decision-models">Back to the project</a></div>
+<a class="pdf" href="report.pdf">Download PDF</a>
+<h1>Is the confidence honest?</h1>
+<h2>Testing open System One decision models on support routing</h2>
+<p><strong>Mohamed Ansar</strong> · Technical report · 11 October 2026</p>
+<p><em>Independent work, not peer reviewed. Every number in this report comes from runs in the accompanying repository, on the machine named next to it.</em></p>
+<hr>
+<h2>Abstract</h2>
+<p>On 50 held-out support requests, an open 2-billion-parameter decision model (Strands Decider 2B) picked the right team 80% of the time, against 64% for a general 7-billion-parameter model, at one fifth of the time per request on a laptop, and its stated confidence was the most honest of any contender (calibration error 0.05 for urgency, 0.06 for frustration). The general model was overconfident: on the development set it claimed near-certainty on 89 team answers and was right on 68% of them. The surprise was the cheapest contender: keyword rules written by the same author as the requests came within one request of the best model on team (78%), a warning about how much a test set&#39;s vocabulary can flatter a simple method, and a reason this report leans on calibration, not accuracy alone.</p>
+<p>In 2026 a new kind of model appeared: the <em>decision model</em>, sometimes called a <em>System One</em> model, which does not write text but answers typed questions (yes or no, pick one, rate on a scale) with a probability for each answer. Within weeks of the first hosted one (TypeSafe&#39;s Jev), several open-weight alternatives were released, almost all of them evaluated only by their makers. This report tests the pattern independently on one realistic task, routing support requests, using 250 hand-labelled requests, one shared interface for every contender, and a held-out set scored once. It asks two questions: can a small, cheap model make these routine decisions as well as a bigger general model, and when it says it is 90% sure, is it right 90% of the time?</p>
+<hr>
+<h2>1. Why this question</h2>
+<p>I&#39;ve worked close to support operations where a single language&#39;s queue could hold thousands of tickets. Every one of them gets the same few decisions before a person reads it, and every wrong decision sends a ticket to the wrong queue, where it waits. Multiply that by every language a company supports and it stops being a small problem. That is where this question comes from.</p>
+<p>Most of what a support desk does before a person reads a message is a handful of small decisions. Is this urgent? Which team should see it? How upset is this person? Each decision is cheap on its own, but there are thousands a day, and each wrong one costs something: an urgent request waits in the wrong queue, a furious customer gets a template reply.</p>
+<p>Large language models can make these decisions, but they are a heavy tool for a light job. They are slow (seconds per request on a laptop), they are often paid per token, and they answer in free text that has to be parsed. Most importantly for this report, they don&#39;t naturally say <em>how sure</em> they are, and when asked, the number they give is not always meaningful.</p>
+<p>Confidence matters more than it first appears. A model that is right 85% of the time is hard to use on its own: which 15% are wrong? But a model that is right 85% of the time <em>and knows which answers it is unsure of</em> can be deployed safely. Let it handle the sure cases, and send the rest to a bigger model or a person. That only works if the confidence is honest. A model that says &quot;95% sure&quot; and is right 70% of the time is worse than one that says nothing, because it invites trust it hasn&#39;t earned.</p>
+<p>So the two questions of this report are:</p>
+<ol>
+<li><strong>Accuracy and cost.</strong> Can a small decision model match a bigger general model on routine support decisions, and at what speed and cost?</li>
+<li><strong>Calibration.</strong> When a model states a confidence, how often is it actually right? (A model is <em>well calibrated</em> when, among all the answers it gives with 80% confidence, about 80% are right.)</li>
+</ol>
+<p>And one practical follow-up:</p>
+<ol start="3">
+<li><strong>Fast then slow.</strong> If the fast model answers everything and hands over only what it is unsure of, how much of the bigger model&#39;s work can be skipped without losing accuracy?</li>
+</ol>
+<p>This is a personal project. It builds on two earlier ones of mine: an evaluation harness that scores an analytics assistant against an answer key, and a &quot;team&quot; of a fast and a slow checker for misfiled products, where the fast checker&#39;s doubts decided what the slow one looked at.</p>
+<hr>
+<h2>2. Background: System One models</h2>
+<h3>2.1 The pattern</h3>
+<p>The name borrows from psychology&#39;s &quot;System 1&quot; (fast, automatic judgement) and &quot;System 2&quot; (slow, deliberate reasoning). A System One model is meant to be the fast part: it takes a piece of <em>state</em> (a message, a ticket, a chat log) and a set of typed <em>questions</em>, and returns, in one pass, a probability for every allowed answer.</p>
+<p>The interface, as published for Jev, has three question types:</p>
+<div class="table"><table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Asks</th>
+<th>Answer</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>noul</code></td>
+<td>Is this statement true?</td>
+<td>One probability from 0 to 1</td>
+</tr>
+<tr>
+<td><code>choice</code></td>
+<td>Which of these options? (up to 255)</td>
+<td>A probability per option, the chosen option, and a confidence</td>
+</tr>
+<tr>
+<td><code>score</code></td>
+<td>Where on this scale? (2 to 10 levels)</td>
+<td>A probability per level; the score is the probability-weighted level; and a confidence</td>
+</tr>
+</tbody></table></div>
+<p>A request to such a model looks like this (shortened):</p>
+<pre><code class="language-json">{
+  &quot;model&quot;: &quot;...&quot;,
+  &quot;state&quot;: &quot;I have been trying to connect our payment tool for 3 days and it keeps failing. I am losing sales.&quot;,
+  &quot;questions&quot;: {
+    &quot;is_urgent&quot;:  {&quot;type&quot;: &quot;noul&quot;,   &quot;instructions&quot;: &quot;This request needs a person today.&quot;},
+    &quot;team&quot;:       {&quot;type&quot;: &quot;choice&quot;, &quot;options&quot;: [&quot;billing&quot;, &quot;technical-support&quot;, &quot;sales&quot;], &quot;instructions&quot;: &quot;...&quot;},
+    &quot;frustration&quot;:{&quot;type&quot;: &quot;score&quot;,  &quot;min&quot;: 1, &quot;max&quot;: 5, &quot;instructions&quot;: &quot;1 calm to 5 furious&quot;}
+  }
+}
+</code></pre>
+<p>The key design choice is that the answer is never free text. It is always one of the allowed answers, with numbers attached. That makes the output safe to act on in code and makes calibration directly measurable.</p>
+<h3>2.2 The models</h3>
+<p>TypeSafe&#39;s <strong>Jev</strong> is hosted and paid. Its public documentation describes the interface above; how it works inside is not public, and this report makes no claim about it. Jev was not run for this report (it is paid and access is by waitlist); the code to run it exists and is switched off.</p>
+<p>Within weeks, open-weight alternatives appeared. The ones checked for this report:</p>
+<div class="table"><table>
+<thead>
+<tr>
+<th>Model</th>
+<th>Released by</th>
+<th>Size</th>
+<th>Licence</th>
+<th>Runs on a 16 GB Mac?</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Kev (0.8B, 4B, 9B, 27B)</td>
+<td>Jared Palmer</td>
+<td>Adapter and decision head on a Qwen3.5 base</td>
+<td>Apache-2.0</td>
+<td>0.8B only</td>
+</tr>
+<tr>
+<td>Strands Decider 2B</td>
+<td>AWS Strands Labs</td>
+<td>1.9B, Qwen3.5 base</td>
+<td>Apache-2.0</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td>Laya (421M; typed-decisions variant)</td>
+<td>Convai Innovations</td>
+<td>421M, ModernBERT-large encoder</td>
+<td>Apache-2.0</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td>Clef, Clef-flash</td>
+<td>Cloudflare</td>
+<td>27B, 9B</td>
+<td>Apache-2.0 (reported)</td>
+<td>No (41 GB+)</td>
+</tr>
+</tbody></table></div>
+<p>Three things stood out when reading their own documentation, and they shaped how this test was designed:</p>
+<ul>
+<li><strong>Every benchmark number is self-reported.</strong> None of the projects&#39; figures are used here.</li>
+<li><strong>&quot;Confidence&quot; means something different in each.</strong> Kev applies a fitted temperature per checkpoint and states that its confidences &quot;are not measured accuracy rates&quot;. Laya says it ships over-confident and that users should refit temperatures on their own data. Strands reports a calibration error on its own benchmark. The only fair comparison is to measure every model&#39;s stated confidence against what actually happens, on the same requests.</li>
+<li><strong>Not every model is a drop-in.</strong> Laya&#39;s own documentation says its base checkpoints score below &quot;always pick the most common answer&quot; without fine-tuning; only its typed-decisions variant (fine-tuned on someone else&#39;s data, not ours) is tested here, labelled as such.</li>
+</ul>
+<p>All three local models ship a server that speaks the same interface as Jev, which made a like-for-like test possible.</p>
+<hr>
+<h2>3. Method</h2>
+<p>The rule throughout: decide how something will be measured <em>before</em> measuring it, write the decision down with a date, and never look at the held-out data while building.</p>
+<p><img src="1-how-it-fits.svg" alt="How the test fits together"></p>
+<h3>3.1 The task and the made-up company</h3>
+<p>The requests are written to a fictional company, <strong>Quillstack</strong>, which sells a web and mobile app for staff scheduling, timesheets and invoicing to small businesses. It has three plans, a public API, webhooks and connections to accounting, payment and calendar tools. Support requests to such a company are varied enough to be realistic (billing, logins, bugs, integrations, privacy, sales, how-to questions, feedback) without coming from any real support queue.</p>
+<h3>3.2 Labelling rules, written first</h3>
+<p>Before a single request was written, the rules for labelling them were written down (<code>docs/labelling-rules.md</code>). Each request gets three labels:</p>
+<p><strong>Urgent?</strong> True only if at least one of these holds: the customer can&#39;t do core work in the product right now; money was taken wrongly or a failed charge is about to cut them off; there is a possible security problem; data was lost and is needed back; or there is a real deadline within about a day with a stated cost. Explicitly <em>not</em> urgent: angry tone or &quot;ASAP&quot; on their own, how-to questions, feature requests, sales questions.</p>
+<p><strong>Which team?</strong> One of eight: billing, account-access, technical-support, integrations-api, security-privacy, sales, how-to, feedback, each defined in a table. When a message contains two problems, the team is the one whose problem most blocks the customer, with a fixed tie-break order. Edge rules are written down (a bug inside a connection goes to integrations, not technical support; &quot;cancel my account&quot; is billing, &quot;delete my data&quot; is security-privacy).</p>
+<p><strong>How frustrated?</strong> 1 (calm or positive) to 5 (furious, insults or legal threats), with a sentence per level. Sarcastic praise is judged by what it means, so &quot;great job charging me twice&quot; is frustration, not calm. Grammar is never read as emotion.</p>
+<h3>3.3 The test set</h3>
+<p>250 requests were written by hand following those rules. 88 of them (35%) are deliberately hard, tagged as:</p>
+<div class="table"><table>
+<thead>
+<tr>
+<th>Hard case</th>
+<th>Count</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Two problems in one message</td>
+<td>15</td>
+<td>&quot;We were double charged AND now nobody on my team can log in. Payroll runs tomorrow.&quot;</td>
+</tr>
+<tr>
+<td>Sarcasm</td>
+<td>22</td>
+<td>&quot;Oh wonderful, another surprise charge. I just love paying for 14 users when we have 9.&quot;</td>
+</tr>
+<tr>
+<td>Very short</td>
+<td>29</td>
+<td>&quot;Locked out. Again.&quot;</td>
+</tr>
+<tr>
+<td>Non-native English</td>
+<td>23</td>
+<td>&quot;Sir please my company pay two time this month, the bank show it.&quot;</td>
+</tr>
+</tbody></table></div>
+<p>The labels are spread across all eight teams (29 to 37 each), 61 requests are urgent, and frustration runs from 111 at level 1 down to 9 at level 5.</p>
+<p>A script splits the set with a fixed seed into <strong>200 for development</strong> and <strong>50 held out</strong>, spread evenly across teams, with at least three of each kind of hard case in the held-out set. The development set is where prompts and rules may be built and adjusted. The held-out set is scored <strong>once</strong>, at the end; the scripts refuse a second held-out run for the same contender.</p>
+<h3>3.4 One interface for everyone</h3>
+<p>Every contender sits behind the same small Python interface (<code>systemone/</code>). It receives a request in the System One shape and must return an answer in that shape. Before any answer is scored, a checker rejects it if anything is off: a missing answer, a probability outside 0 to 1, probabilities that don&#39;t add up to 1, a chosen option that isn&#39;t the most likely one, or a score that isn&#39;t the probability-weighted level. A broken contender fails loudly instead of being scored on malformed output.</p>
+<p>The same set of contract tests runs against every contender: a sample of development requests covering every hard case, unfamiliar question types (to catch a contender that only knows our three questions), a single question, a structured rather than plain-text state, and a deliberately bad request. The full test suite has 58 tests.</p>
+<p>Every contender gets exactly the same three questions, worded from the labelling rules (<code>systemone/questions.py</code>).</p>
+<h3>3.5 The contenders</h3>
+<div class="table"><table>
+<thead>
+<tr>
+<th>Contender</th>
+<th>What it is</th>
+<th>Why it&#39;s here</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Even odds</td>
+<td>Equal probability on everything</td>
+<td>The floor: any real contender must beat it</td>
+</tr>
+<tr>
+<td>Rules</td>
+<td>Keyword lists with weights, turned into probabilities</td>
+<td>The cheap baseline every model has to justify itself against</td>
+</tr>
+<tr>
+<td><code>qwen2.5:7b</code> via Ollama</td>
+<td>A general 7-billion-parameter language model, prompted to answer in the System One shape</td>
+<td>The &quot;bigger model&quot;: what most people would reach for</td>
+</tr>
+<tr>
+<td>Kev-0.8B</td>
+<td>Open decision model, 0.8B (adapter on a Qwen3.5 base)</td>
+<td>The smallest and fastest decision model that fits a 16 GB laptop</td>
+</tr>
+<tr>
+<td>Strands Decider 2B</td>
+<td>Open decision model, 1.9B (Qwen3.5 base)</td>
+<td>A mid-size decision model with its own published calibration claims</td>
+</tr>
+<tr>
+<td>Laya-typed-decisions</td>
+<td>Open decision model, 421M encoder, fine-tuned on another benchmark</td>
+<td>A different architecture (encoder, not a language model), tested as shipped</td>
+</tr>
+</tbody></table></div>
+<p>The rules were written while looking at the development set, so their development scores are optimistic by construction. The held-out set is their fair test.</p>
+<h3>3.6 What is measured</h3>
+<p>For each contender and each question:</p>
+<ul>
+<li><strong>Accuracy.</strong> Urgent: is the probability on the right side of 0.5? Team: is the chosen team right? Frustration: is the most likely level exactly right?</li>
+<li><strong>Per-team accuracy</strong>, to show where a contender fails, not just how often.</li>
+<li><strong>Frustration distance:</strong> the average gap between the stated score and the right level.</li>
+<li><strong>Speed:</strong> median and 90th-percentile seconds per request (all three questions together), on the named machine.</li>
+<li><strong>Cost per 1,000 requests:</strong> zero for local runs, stated plainly as excluding hardware and electricity. Paid APIs would be priced from a real bill only.</li>
+<li><strong>Calibration.</strong> Answers are grouped into ten bands by stated confidence (0 to 0.1, 0.1 to 0.2, and so on). For each band: the average stated confidence and the share actually right. On a chart, a perfectly honest model sits on the diagonal. The <strong>expected calibration error (ECE)</strong> summarises the chart in one number: the average gap between stated confidence and actual accuracy, weighted by how many answers fall in each band. Zero is perfect.</li>
+</ul>
+<p>For a yes or no answer, &quot;confidence&quot; is the distance from a coin flip: a 0.9 or a 0.1 both mean 90% sure.</p>
+<h3>3.7 Fast then slow</h3>
+<p><img src="2-fast-then-slow.svg" alt="Fast then slow"></p>
+<p>The fast contender answers every request. A request&#39;s confidence is the <em>lowest</em> of its three answers&#39; confidences. Below a threshold, the whole request goes to the slow contender. This is worked out from the saved runs, so both contenders saw exactly the same requests.</p>
+<p>The rule for choosing the threshold was written down before any model ran: try thresholds from 0 to 1 in steps of 0.05, and fix the <strong>lowest</strong> one at which urgent and team accuracy are both within 0.02 of the slow contender on its own. Lowest means fewest requests handed over. If no threshold qualifies, the report says so: the fast model didn&#39;t help. The threshold is fixed on the development set and used, unchanged, on the held-out set.</p>
+<hr>
+<h2>4. A finding along the way: the question shaped the answer</h2>
+<p>The first full run of the general model (<code>qwen2.5:7b</code>, prompt version 1) produced a result that looked like a model problem and turned out to be a measurement problem.</p>
+<p>Prompt v1 asked the model, for each question, to give a probability for every allowed answer, in a JSON object whose keys were listed in a fixed order. For urgency (two answers) this worked well: 84% accuracy with a calibration error of 0.06, the best-calibrated answer of any contender so far. For team (eight answers) it collapsed to 43%.</p>
+<p>The per-team breakdown showed why:</p>
+<div class="table"><table>
+<thead>
+<tr>
+<th>Team (in the order listed)</th>
+<th>Right</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>billing</td>
+<td>26 of 26</td>
+</tr>
+<tr>
+<td>account-access</td>
+<td>20 of 23</td>
+</tr>
+<tr>
+<td>technical-support</td>
+<td>25 of 30</td>
+</tr>
+<tr>
+<td>integrations-api</td>
+<td>1 of 23</td>
+</tr>
+<tr>
+<td>security-privacy</td>
+<td>8 of 26</td>
+</tr>
+<tr>
+<td>sales</td>
+<td>3 of 23</td>
+</tr>
+<tr>
+<td>how-to</td>
+<td>1 of 24</td>
+</tr>
+<tr>
+<td>feedback</td>
+<td>3 of 25</td>
+</tr>
+</tbody></table></div>
+<p>And the model&#39;s picks: technical-support 96 times, billing 54, account-access 24, and the remaining five teams 26 times between them. <strong>174 of 200 answers landed on the first three options in the list.</strong></p>
+<p>The model was not failing to understand the requests. It was filling in a long form from the top, putting most of its probability on the first keys it wrote. Asking a small model for a full probability table, in a fixed order, measured the <em>shape of the prompt</em> as much as the model.</p>
+<p>This matters beyond this project. A common way to get &quot;probabilities&quot; out of a general language model is exactly this: ask for a number per option. The result here suggests those numbers can be shaped by position, and that an evaluation built on them can blame the model for a flaw in the question.</p>
+<p>Prompt v2 asks instead for <strong>one answer, which must be one of the allowed options, plus a confidence from 0 to 1</strong>. The named answer gets the stated confidence; the rest is shared among the other options (on the frustration scale, among the neighbouring levels only, so the score is not pulled toward the middle). Both versions are kept in the results. Adjusting the prompt on the development set is what the development set is for; the held-out set was not touched.</p>
+<p>With v2, on the same 200 requests and the same machine:</p>
+<div class="table"><table>
+<thead>
+<tr>
+<th></th>
+<th>Prompt v1 (probability per option)</th>
+<th>Prompt v2 (one answer plus confidence)</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Team accuracy</td>
+<td>0.43</td>
+<td><strong>0.61</strong></td>
+</tr>
+<tr>
+<td>Answers in the first three options</td>
+<td>174 of 200</td>
+<td>142 of 200</td>
+</tr>
+<tr>
+<td>Urgent accuracy</td>
+<td>0.84</td>
+<td>0.80</td>
+</tr>
+<tr>
+<td>Frustration off by</td>
+<td>0.94</td>
+<td><strong>0.79</strong></td>
+</tr>
+<tr>
+<td>Calibration error, urgent</td>
+<td><strong>0.06</strong></td>
+<td>0.15</td>
+</tr>
+<tr>
+<td>Calibration error, team</td>
+<td>0.35</td>
+<td><strong>0.26</strong></td>
+</tr>
+<tr>
+<td>Calibration error, frustration</td>
+<td><strong>0.19</strong></td>
+<td>0.43</td>
+</tr>
+<tr>
+<td>Median seconds per request</td>
+<td>12.2</td>
+<td><strong>7.8</strong></td>
+</tr>
+</tbody></table></div>
+<p>v2 fixed most of the accuracy problem: integrations went from 1 to 10 of 23, sales from 3 to 11, feedback from 3 to 17. It was also faster, because the answer it writes is much shorter. The pile-up shrank but did not disappear, and one team, how-to, is still almost never chosen (2 picks in 200).</p>
+<p>But the fix had a price that accuracy alone would hide: <strong>the confidence got less honest.</strong> When the model writes its own confidence as a number, it is overconfident. Calibration error on frustration more than doubled, from 0.19 to 0.43, and on urgency went from 0.06 to 0.15. The v1 probability table, where position bias didn&#39;t bite (urgent has only two options), was the better-calibrated of the two.</p>
+<p>So the two ways of asking a general model for probabilities fail in different directions: a full table is distorted by the order of options, and a self-reported confidence is inflated. Neither gives what a System One model promises by design: a calibrated probability for every answer, in one pass. That is the gap the open decision models claim to fill, and section 5 tests whether they do.</p>
+<p>The open decision models avoid this problem by design: they score every allowed answer in one pass rather than writing a list, so the order of options in the prompt should not matter. Whether that holds in practice is part of what section 5 measures.</p>
+<hr>
+<h2>5. Results</h2>
+<h3>5.1 Development set</h3>
+<p>Machine: MacBook Air M4, 16 GB (models); a Linux cloud container (rules and even odds, which need no model).</p>
+<div class="table"><table>
+<thead>
+<tr>
+<th>Contender</th>
+<th>Urgent</th>
+<th>Team</th>
+<th>Frustration off by</th>
+<th>Calibration error (urgent / team / frustration)</th>
+<th>Median seconds</th>
+<th>Cost per 1,000</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Even odds</td>
+<td>0.26</td>
+<td>0.13</td>
+<td>1.29</td>
+<td>0.24 / 0.01 / 0.24</td>
+<td>0.0000</td>
+<td>0</td>
+</tr>
+<tr>
+<td>Rules</td>
+<td>0.82</td>
+<td>0.73</td>
+<td>0.90</td>
+<td>0.04 / 0.34 / 0.34</td>
+<td>0.0001</td>
+<td>0</td>
+</tr>
+<tr>
+<td><code>qwen2.5:7b</code>, prompt v1</td>
+<td>0.84</td>
+<td>0.43</td>
+<td>0.94</td>
+<td>0.06 / 0.35 / 0.19</td>
+<td>12.2</td>
+<td>0</td>
+</tr>
+<tr>
+<td><code>qwen2.5:7b</code>, prompt v2</td>
+<td>0.80</td>
+<td>0.61</td>
+<td>0.79</td>
+<td>0.15 / 0.26 / 0.43</td>
+<td>7.8</td>
+<td>0</td>
+</tr>
+<tr>
+<td>Kev-0.8B</td>
+<td>0.77</td>
+<td>0.60</td>
+<td>1.08</td>
+<td>0.15 / <strong>0.14</strong> / 0.40</td>
+<td><strong>0.34</strong></td>
+<td>0</td>
+</tr>
+<tr>
+<td>Strands Decider 2B</td>
+<td>0.80</td>
+<td><strong>0.85</strong></td>
+<td>1.10</td>
+<td>0.08 / 0.21 / <strong>0.02</strong></td>
+<td>1.64</td>
+<td>0</td>
+</tr>
+<tr>
+<td>Laya-typed-decisions</td>
+<td>0.80</td>
+<td>0.46</td>
+<td>1.17</td>
+<td>0.18 / 0.20 / 0.11</td>
+<td>0.32</td>
+<td>0</td>
+</tr>
+</tbody></table></div>
+<p>Remember that the rules&#39; development numbers are optimistic: the keywords were chosen while reading these requests.</p>
+<h3>5.2 The first decision model: Kev-0.8B</h3>
+<p>Kev-0.8B is less than an eighth the size of <code>qwen2.5:7b</code> and was tested exactly as shipped (its own default calibration setting, a temperature of 2.35). On picking the team, the question with the most options:</p>
+<div class="table"><table>
+<thead>
+<tr>
+<th></th>
+<th>Kev-0.8B</th>
+<th><code>qwen2.5:7b</code>, prompt v2</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Team accuracy</td>
+<td>0.60</td>
+<td>0.61</td>
+</tr>
+<tr>
+<td>Calibration error, team</td>
+<td><strong>0.14</strong></td>
+<td>0.26</td>
+</tr>
+<tr>
+<td>Median seconds per request</td>
+<td><strong>0.34</strong></td>
+<td>7.8</td>
+</tr>
+</tbody></table></div>
+<p>It matches the general model&#39;s accuracy, more than 20 times faster, and its confidence on the team is more honest (calibration error 0.14 against 0.26).</p>
+<p>One detail shows how sensitive these numbers are. Kev was first run with no description for each option (its server accepts that); Strands Decider requires one, so every decision model was then re-run with each option&#39;s own name as its description. Kev&#39;s accuracy did not change at all, but its team calibration error doubled, from 0.07 to 0.14. The words around an option change how sure the model is, even when they don&#39;t change what it picks. The table uses the re-run, so every decision model saw identical requests.</p>
+<p>It also fails differently. It handles sales (17 of 23) and how-to (10 of 24), which the general model almost never chose, and is weak on integrations (7 of 23) and feedback (7 of 25). It picks every team; there is no pile-up on the first options.</p>
+<p>Its weak spot is frustration: answers are off by 1.08 levels on average, and its probabilities across the five levels are often nearly flat, with a stated confidence of 0. Kev&#39;s documentation says its confidence values are &quot;not measured accuracy rates&quot;, and on this question it effectively says &quot;I don&#39;t know&quot;, which is at least honest.</p>
+<h3>5.3 The second decision model: Strands Decider 2B</h3>
+<p>Strands Decider 2B was the strongest contender on the development set:</p>
+<div class="table"><table>
+<thead>
+<tr>
+<th></th>
+<th>Strands Decider 2B</th>
+<th>Kev-0.8B</th>
+<th><code>qwen2.5:7b</code>, prompt v2</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Team accuracy</td>
+<td><strong>0.85</strong></td>
+<td>0.60</td>
+<td>0.61</td>
+</tr>
+<tr>
+<td>Urgent accuracy</td>
+<td>0.80</td>
+<td>0.77</td>
+<td>0.80</td>
+</tr>
+<tr>
+<td>Frustration off by</td>
+<td>1.10</td>
+<td>1.08</td>
+<td><strong>0.79</strong></td>
+</tr>
+<tr>
+<td>Calibration error (urgent / team / frustration)</td>
+<td><strong>0.08</strong> / 0.21 / <strong>0.02</strong></td>
+<td>0.15 / <strong>0.14</strong> / 0.40</td>
+<td>0.15 / 0.26 / 0.43</td>
+</tr>
+<tr>
+<td>Median seconds per request</td>
+<td>1.64</td>
+<td><strong>0.34</strong></td>
+<td>7.8</td>
+</tr>
+</tbody></table></div>
+<p>It picks the right team 85% of the time, 24 points above the general model, in about a fifth of the time. Unlike every other contender it is strong on every team: integrations 20 of 23, how-to 19 of 24, feedback 19 of 25, the teams the general model could barely see.</p>
+<p>Its frustration scores are no better than anyone&#39;s (off by 1.10 levels), but its stated confidence on them is almost perfectly honest (calibration error 0.02): it is unsure, and it says so. That is exactly the property that makes fast-then-slow possible.</p>
+<h3>5.4 The third decision model: Laya-typed-decisions</h3>
+<p>Laya was the weakest decision model here: team 0.46, and the exact frustration level right only 17% of the time. This is what its own documentation predicts. The variant tested was fine-tuned on a different benchmark, never on support routing, and its authors describe Laya as &quot;a fast base to specialise&quot;. It was tested as shipped, as agreed before running it. Its speed (0.32 seconds) puts it with Kev, and its frustration confidence is fairly honest (calibration error 0.11), but without fine-tuning on this kind of task it is not a contender for routing.</p>
+<p>Laya also defines confidence differently from the others: one minus the normalised entropy of its probabilities, a measure of how spread out they are, rather than Jev&#39;s definition. Every project in this test uses &quot;confidence&quot; to mean something slightly different, which is why it is measured here rather than trusted.</p>
+<h3>5.5 Calibration</h3>
+<p><img src="calibration.svg" alt="Calibration on the development set: Strands Decider, qwen2.5:7b and Kev"></p>
+<p>Each dot is a group of answers with similar stated confidence; on the dashed line, a contender that says 80% is right 80% of the time.</p>
+<p>Two readings stand out.</p>
+<p><strong>The general model is overconfident on the question that matters most.</strong> With prompt v2, <code>qwen2.5:7b</code> gave a team confidence of about 1.0 on 89 of 200 development requests and was right on 61 of them (68%). Another 96 answers came with a confidence of about 0.8 and were right 58% of the time. Its stated confidence is a number it writes, and the number is inflated.</p>
+<p><strong>Strands Decider is honest, slightly modest even.</strong> Its team answers given with about 0.85 confidence were right 97% of the time on development (37 answers) and 100% on held-out (13). Its frustration answers, the weakest part of every model, come with a calibration error of 0.02 on development and 0.06 on held-out: it is often unsure about frustration, and it says so.</p>
+<p>The keyword rules are the opposite of overconfident: their probabilities come from counting keywords, so they say 30% when they are right 80% of the time (team calibration error 0.34 on development, 0.44 on held-out). Accurate, but their confidence carries no useful signal.</p>
+<p>Already visible with two contenders: the keyword rules are <em>more modest than they need to be</em> on team (when they say 50%, they are right about 80% of the time) and <em>overconfident</em> on frustration. A model&#39;s raw accuracy says nothing about which of these it is.</p>
+<h3>5.6 Hard cases</h3>
+<p>Team accuracy on the development set (200 requests; the held-out set has only 3 to 8 of each kind, too few to read):</p>
+<div class="table"><table>
+<thead>
+<tr>
+<th>Contender</th>
+<th>Plain (133)</th>
+<th>Two problems (12)</th>
+<th>Sarcasm (17)</th>
+<th>Very short (21)</th>
+<th>Non-native (17)</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Strands Decider 2B</td>
+<td><strong>0.85</strong></td>
+<td><strong>0.67</strong></td>
+<td><strong>0.88</strong></td>
+<td><strong>0.95</strong></td>
+<td><strong>0.82</strong></td>
+</tr>
+<tr>
+<td>Rules</td>
+<td>0.73</td>
+<td>0.50</td>
+<td>0.71</td>
+<td>0.90</td>
+<td>0.71</td>
+</tr>
+<tr>
+<td><code>qwen2.5:7b</code> v2</td>
+<td>0.61</td>
+<td>0.33</td>
+<td>0.65</td>
+<td>0.71</td>
+<td>0.65</td>
+</tr>
+<tr>
+<td>Kev-0.8B</td>
+<td>0.60</td>
+<td>0.33</td>
+<td>0.82</td>
+<td>0.62</td>
+<td>0.53</td>
+</tr>
+</tbody></table></div>
+<ul>
+<li><strong>Two problems in one message is the hardest case for everyone.</strong> Choosing which problem &quot;most blocks the customer&quot; is a judgement the labelling rules make and the models mostly don&#39;t.</li>
+<li><strong>Sarcasm fools urgency, for everyone.</strong> Every model scored exactly 0.59 on urgency for sarcastic requests: sarcastic messages about real problems (&quot;love paying twice&quot;) were read as not urgent.</li>
+<li><strong>Tone is where the general model still leads.</strong> On sarcastic requests, <code>qwen2.5:7b</code> was closest on frustration (off by 0.53 levels against 0.98 for Strands). Reading the emotion behind the words is the one place a bigger language model clearly helped.</li>
+</ul>
+<p>Full tables: <code>results/dev/hard_cases.md</code>.</p>
+<h3>5.7 Fast then slow</h3>
+<p><strong>The planned version found nothing to hand over.</strong> The rule written before any model ran paired each decision model with the general model as the &quot;slow&quot; side. But the best decision model, Strands Decider 2B, is already more accurate than the general model (team 0.85 against 0.61), so the rule chose a threshold of 0: never hand over. The bigger, slower model added nothing.</p>
+<p><strong>The rule also had a flaw, which the data exposed.</strong> A request&#39;s confidence was defined as the lowest of its three answers&#39; confidences. Kev and Laya are almost never confident about frustration, so frustration dragged nearly every request under the threshold: Kev handed over 186 of 200 requests, Laya 197. A sensible-looking rule broke because one question is almost always uncertain.</p>
+<p><strong>An exploratory version, labelled as such.</strong> After seeing the development results, and before any held-out run, one variant was added and fixed: hand over on the team answer&#39;s confidence only, from the fastest decision model (Kev, 0.34 s) to the most accurate (Strands, 1.64 s). The same &quot;within 0.02 of the slow side&quot; rule chose a threshold of 0.70:</p>
+<div class="table"><table>
+<thead>
+<tr>
+<th>On the development set</th>
+<th>Handed over</th>
+<th>Team</th>
+<th>Urgent</th>
+<th>Total time for 200</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Kev alone</td>
+<td>0</td>
+<td>0.60</td>
+<td>0.77</td>
+<td>69 s</td>
+</tr>
+<tr>
+<td>Kev, then Strands below 0.70 team confidence</td>
+<td>151 (76%)</td>
+<td>0.84</td>
+<td>0.80</td>
+<td>324 s</td>
+</tr>
+<tr>
+<td>Strands alone</td>
+<td>200</td>
+<td>0.85</td>
+<td>0.80</td>
+<td>406 s</td>
+</tr>
+</tbody></table></div>
+<p>It keeps almost all of Strands&#39; accuracy for about 20% less time. That is a modest saving, because Strands is already cheap. The pattern is sound; at these speeds, the case for it is weak.</p>
+<p>On the held-out set, with thresholds fixed beforehand:</p>
+<div class="table"><table>
+<thead>
+<tr>
+<th>On the held-out set (50)</th>
+<th>Handed over</th>
+<th>Team</th>
+<th>Urgent</th>
+<th>Total time</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Planned: Strands, then <code>qwen2.5:7b</code> below 0.00</td>
+<td>0</td>
+<td>0.80</td>
+<td>0.82</td>
+<td>74 s</td>
+</tr>
+<tr>
+<td>Exploratory: Kev, then Strands below 0.70</td>
+<td>42 (84%)</td>
+<td>0.78</td>
+<td>0.82</td>
+<td>78 s</td>
+</tr>
+<tr>
+<td>Strands alone</td>
+<td>50</td>
+<td>0.80</td>
+<td>0.82</td>
+<td>74 s*</td>
+</tr>
+</tbody></table></div>
+<p>*Strands alone took 74 seconds for the 50 requests in its own run; in the exploratory pair it took 91 seconds when combined with Kev for all 50.</p>
+<p>The exploratory pair held up: one request behind Strands alone, having handed over 84%. At these speeds the saving is small. The bigger lesson is that fast-then-slow needs a slow side that is actually better, and a confidence signal that isn&#39;t dominated by one always-uncertain question.</p>
+<h3>5.8 Held-out set</h3>
+<p>Each contender answered the 50 held-out requests once, after every prompt, rule and threshold was fixed.</p>
+<div class="table"><table>
+<thead>
+<tr>
+<th>Contender</th>
+<th>Urgent</th>
+<th>Team</th>
+<th>Frustration off by</th>
+<th>Calibration error (urgent / team / frustration)</th>
+<th>Median seconds</th>
+<th>Machine</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Strands Decider 2B</strong></td>
+<td>0.82</td>
+<td><strong>0.80</strong></td>
+<td>1.15</td>
+<td><strong>0.05</strong> / <strong>0.17</strong> / <strong>0.06</strong></td>
+<td>1.45</td>
+<td>MacBook Air M4 16 GB</td>
+</tr>
+<tr>
+<td>Rules</td>
+<td><strong>0.84</strong></td>
+<td>0.78</td>
+<td>0.95</td>
+<td>0.07 / 0.44 / 0.37</td>
+<td>0.0001</td>
+<td>Cloud container</td>
+</tr>
+<tr>
+<td><code>qwen2.5:7b</code>, prompt v2</td>
+<td>0.82</td>
+<td>0.64</td>
+<td><strong>0.85</strong></td>
+<td>0.13 / 0.22 / 0.43</td>
+<td>7.72</td>
+<td>MacBook Air M4 16 GB</td>
+</tr>
+<tr>
+<td>Kev-0.8B</td>
+<td>0.80</td>
+<td>0.60</td>
+<td>1.08</td>
+<td>0.16 / 0.12 / 0.50</td>
+<td>0.34</td>
+<td>MacBook Air M4 16 GB</td>
+</tr>
+<tr>
+<td>Laya-typed-decisions</td>
+<td><strong>0.88</strong></td>
+<td>0.48</td>
+<td>1.26</td>
+<td>0.25 / 0.29 / 0.18</td>
+<td>0.32</td>
+<td>MacBook Air M4 16 GB</td>
+</tr>
+</tbody></table></div>
+<p>Every contender held its development-set level within a few points, so nothing was tuned too closely to the development set. The rules even did slightly better (team 0.73 on development, 0.78 here); see below for why that is not reassuring. With 50 requests, one request is two percentage points: Strands (40 right) and the rules (39) are a tie in accuracy. Laya&#39;s 0.88 on urgency is four requests better than the next, not a real lead.</p>
+<p><strong>The rules&#39; result needs explaining, not celebrating.</strong> The keyword lists were written by the same person who wrote the requests, from the same labelling rules, so they share a vocabulary: &quot;invoice&quot; means billing, &quot;webhook&quot; means integrations. Real customers don&#39;t write to match the routing team&#39;s keyword list. The rules&#39; near-tie on accuracy is most likely a property of this test set, and their confidence is the worst of any contender (team calibration error 0.44), so even here they could not tell their right answers from their wrong ones.</p>
+<hr>
+<h2>6. What this means at scale</h2>
+<p>The test set has 250 requests. A real support operation has far more. This section turns the measured numbers into what they would mean at volume. <strong>The volume is an illustration, not a measurement:</strong> a desk receiving 1,000 tickets a day in each of 10 languages, so 10,000 tickets a day. Everything else comes from the runs in section 5. The arithmetic is simple on purpose, so anyone can redo it with their own volume.</p>
+<h3>6.1 The formulas</h3>
+<p>For a daily volume <em>V</em>:</p>
+<ul>
+<li><strong>Machine time per day</strong> = <em>V</em> × median seconds per request. Divided by 86,400 seconds, this is the number of machines (of the kind measured) needed to keep up, running all day.</li>
+<li><strong>Misrouted tickets per day</strong> = <em>V</em> × (1 − team accuracy).</li>
+<li><strong>Missed urgent tickets per day</strong> = <em>V</em> × share of tickets that are urgent × (1 − accuracy on urgent tickets).</li>
+<li><strong>Fast then slow:</strong> the slow model sees only <em>V</em> × share handed over. Machine time = <em>V</em> × fast seconds + <em>V</em> × share handed over × slow seconds.</li>
+</ul>
+<h3>6.2 Worked example with the numbers so far</h3>
+<p>At 10,000 tickets a day, using development-set numbers (held-out numbers will replace them):</p>
+<div class="table"><table>
+<thead>
+<tr>
+<th>Contender</th>
+<th>Machine time per day</th>
+<th>Laptops needed to keep up</th>
+<th>Misrouted per day</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Rules</td>
+<td>about 1 second</td>
+<td>a fraction of one</td>
+<td>about 2,700</td>
+</tr>
+<tr>
+<td><code>qwen2.5:7b</code>, prompt v1 (12.2 s per request)</td>
+<td>about 34 hours</td>
+<td>about 1.4, running all day</td>
+<td>about 5,700</td>
+</tr>
+<tr>
+<td><code>qwen2.5:7b</code>, prompt v2 (7.8 s per request)</td>
+<td>about 22 hours</td>
+<td>about 0.9, running all day</td>
+<td>about 3,900</td>
+</tr>
+<tr>
+<td>Kev-0.8B (0.34 s per request)</td>
+<td>about 57 minutes</td>
+<td>a small fraction of one</td>
+<td>about 4,000</td>
+</tr>
+<tr>
+<td>Strands Decider 2B (1.64 s per request)</td>
+<td>about 4.5 hours</td>
+<td>about 0.2</td>
+<td>about 1,500</td>
+</tr>
+<tr>
+<td>Laya-typed-decisions (0.32 s per request)</td>
+<td>about 53 minutes</td>
+<td>a small fraction of one</td>
+<td>about 5,400</td>
+</tr>
+<tr>
+<td>Kev, then Strands below 0.70 (exploratory)</td>
+<td>about 4.5 hours (324 s per 200)</td>
+<td>about 0.2</td>
+<td>about 1,600</td>
+</tr>
+</tbody></table></div>
+<p>Two things are already clear. A general 7-billion-parameter model on a laptop is too slow to be the first step for a busy desk on its own: it needs more than one machine running around the clock just to keep up with an illustrative volume. And the cheapest option, keyword rules, is fast enough for any volume but sends thousands of tickets a day to the wrong place.</p>
+<h3>6.3 Why honest confidence matters more at scale</h3>
+<p>At 250 requests, a wrong answer is a row in a table. At 10,000 a day, the question is <em>which</em> answers are wrong, and whether anyone finds out.</p>
+<p>A well-calibrated model&#39;s mistakes cluster in its low-confidence answers, so a fast-then-slow setup catches most of them: they are exactly the ones handed over. An overconfident model&#39;s mistakes look like its correct answers. They are not handed over; they go to the wrong queue, quietly, every day. Two models with the same accuracy can therefore produce very different outcomes at scale, and the difference is calibration, which is why this report measures it as carefully as accuracy.</p>
+<p>With held-out numbers, at 10,000 tickets a day:</p>
+<div class="table"><table>
+<thead>
+<tr>
+<th>Contender (held-out)</th>
+<th>Machine time per day</th>
+<th>Misrouted per day</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Strands Decider 2B (1.45 s)</td>
+<td>about 4 hours</td>
+<td>about 2,000</td>
+</tr>
+<tr>
+<td><code>qwen2.5:7b</code> v2 (7.72 s)</td>
+<td>about 21 hours</td>
+<td>about 3,600</td>
+</tr>
+<tr>
+<td>Kev-0.8B (0.34 s)</td>
+<td>about 57 minutes</td>
+<td>about 4,000</td>
+</tr>
+</tbody></table></div>
+<p>The difference that matters at scale is not only the 1,600 fewer misrouted tickets a day. It is that Strands&#39; mistakes come with honest low confidence, so a desk could send its least sure answers to a person; the general model&#39;s mistakes come with confidence close to 1.0 and would sail through.</p>
+<hr>
+<h2>7. Discussion</h2>
+<p><strong>Can a small decision model match a bigger general model?</strong> On picking the team, yes and more: Strands Decider 2B beat <code>qwen2.5:7b</code> by 16 points on held-out, in a fifth of the time, on a laptop with no per-request cost. Not every decision model did: Kev matched the general model&#39;s accuracy at 20 times the speed, and Laya, fine-tuned for a different benchmark, did worse. &quot;Decision model&quot; is a category, not a guarantee; each one has to be measured on the task.</p>
+<p><strong>Is the confidence honest?</strong> For the best decision model, largely yes, and that is the result I&#39;d lead with. Strands&#39; calibration errors on held-out were 0.05, 0.17 and 0.06; the general model&#39;s were 0.13, 0.22 and 0.43, and its errors were concentrated where it was most sure. A model whose confidence means something can be deployed with a safety net; one whose confidence is inflated can&#39;t.</p>
+<p><strong>How a general model is asked changes what it seems to know.</strong> Prompt v1 made the general model look far worse than it is (team 0.43) because of the order of options; prompt v2 fixed accuracy but inflated confidence. Neither way of asking a general model for probabilities gave what the decision models give by design. Any comparison built on &quot;ask the LLM for a probability&quot; should report how it asked.</p>
+<p><strong>Fast then slow needs the right ingredients.</strong> The planned version found nothing to do, because the &quot;slow&quot; model was worse; and a rule built on the lowest of three confidences broke on the one question every model was unsure about. The exploratory version, a fast decision model handing over to a better one on team confidence, worked as designed but saved little, because the better model was already cheap.</p>
+<p><strong>What I&#39;d tell a support team.</strong> Measure a decision model on your own tickets before trusting its benchmark. Check its calibration, not just its accuracy. And don&#39;t assume a bigger general model is the safe fallback: here it was both slower and less honest.</p>
+<h3>Where this goes next</h3>
+<ul>
+<li><strong>Other languages.</strong> This test includes 23 requests in non-native English but none written in another language. Support queues are often split by language, and Laya ships a multilingual variant. Repeating the test in two or three other languages is the natural next step.</li>
+<li><strong>Real labels.</strong> A second person labelling the same requests would show how often humans disagree, which sets a ceiling on how well any model can do.</li>
+<li><strong>Bigger machines.</strong> The larger Kev and Clef models did not fit on a 16 GB laptop.</li>
+</ul>
+<hr>
+<h2>8. Limits</h2>
+<ul>
+<li><strong>One author, synthetic data.</strong> Every request was written and labelled by one person in one day. A real queue is messier, more repetitive, and labelled by people who disagree. The labels follow written rules, but nobody else has checked them.</li>
+<li><strong>Small numbers.</strong> 50 held-out requests means each one moves accuracy by two percentage points, and only 9 requests in the whole set are at frustration level 5. Differences of a few points between contenders should not be read as real.</li>
+<li><strong>One laptop.</strong> Speeds are for a fanless MacBook Air M4 with 16 GB; it may slow down as it heats up during a long run. Larger models in each family did not fit and were not tested.</li>
+<li><strong>The rules saw the development set.</strong> Their development scores are optimistic by construction.</li>
+<li><strong>Laya was not trained for this task.</strong> The variant tested was fine-tuned on another benchmark; it is labelled as such and not fine-tuned on ours.</li>
+<li><strong>Jev was not run.</strong> Nothing in this report describes how Jev performs or works inside. The interface specification was checked against its public documentation.</li>
+<li><strong>Prompt sensitivity.</strong> Section 4 shows that the general model&#39;s results depend heavily on how it is asked. The v2 prompt is one reasonable way, not the best possible one.</li>
+</ul>
+<hr>
+<h2>9. Reproducing this report</h2>
+<p>Everything runs from <code>projects/decision-models/</code>, with Python 3 and no third-party packages for the harness.</p>
+<pre><code>python3 scripts/build_testset.py       # rebuilds and checks the test set
+python3 -m unittest                    # 58 tests
+python3 scripts/run.py rules           # any contender, development set
+python3 scripts/run.py ollama --model qwen2.5:7b --prompt v2 --machine &quot;...&quot;
+python3 scripts/score.py               # tables and calibration chart
+python3 scripts/cascade.py pick --fast &lt;run&gt; --slow &lt;run&gt;
+python3 scripts/report.py              # results page
+</code></pre>
+<p>The decision models each need their own server, started from their own repositories (see <code>docs/models.md</code>).</p>
+<hr>
+<h2>Appendix A. Claims ledger</h2>
+<p>Every claim in this report, and where its evidence is.</p>
+<div class="table"><table>
+<thead>
+<tr>
+<th>Claim</th>
+<th>Evidence</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>250 requests, 200 / 50 split, 35% hard cases</td>
+<td><code>scripts/build_testset.py</code> output; <code>data/</code></td>
+</tr>
+<tr>
+<td>Labelling rules written before labelling</td>
+<td><code>docs/labelling-rules.md</code>; commit history</td>
+</tr>
+<tr>
+<td>Every answer checked against the System One shape</td>
+<td><code>systemone/schema.py</code>; <code>tests/</code></td>
+</tr>
+<tr>
+<td>Fast-then-slow thresholds fixed before any held-out run (0.00 planned; 0.70 exploratory)</td>
+<td><code>results/cascade.json</code>, <code>results/cascade-team.json</code></td>
+</tr>
+<tr>
+<td>Threshold rule fixed before any model run</td>
+<td><code>scripts/cascade.py</code>; <code>NOTES.md</code>, 11 October 2026</td>
+</tr>
+<tr>
+<td>Scale figures in section 6 (volume illustrative, rates measured)</td>
+<td>Formulas in section 6.1; rates from <code>results/dev/*.json</code></td>
+</tr>
+<tr>
+<td>Prompt v2: team 0.61, 142 of 200 in first three, frustration ECE 0.43</td>
+<td><code>NOTES.md</code>; owner&#39;s run on MacBook Air M4 16 GB</td>
+</tr>
+<tr>
+<td>Strands Decider 2B on dev: team 0.85, frustration ECE 0.02, 1.64 s</td>
+<td><code>NOTES.md</code>; owner&#39;s run on MacBook Air M4 16 GB</td>
+</tr>
+<tr>
+<td>Kev-0.8B on dev: team 0.60 (ECE 0.14; 0.07 before the shared request shape), 0.34 s</td>
+<td><code>NOTES.md</code>; owner&#39;s run on MacBook Air M4 16 GB</td>
+</tr>
+<tr>
+<td>Prompt v1: 174 of 200 team answers in the first three options</td>
+<td><code>NOTES.md</code>; owner&#39;s run on MacBook Air M4 16 GB</td>
+</tr>
+<tr>
+<td>Development results in section 5.1</td>
+<td><code>results/dev/*.json</code>, machine named in each</td>
+</tr>
+<tr>
+<td>Licences of every model tested</td>
+<td><code>docs/models.md</code></td>
+</tr>
+<tr>
+<td>Held-out results in section 5.8 (scored once)</td>
+<td><code>results/heldout/*.json</code>, <code>results/raw/heldout/*.jsonl</code></td>
+</tr>
+<tr>
+<td>Fast-then-slow on held-out</td>
+<td><code>results/heldout/cascade.json</code>, <code>results/heldout/cascade-team.json</code></td>
+</tr>
+<tr>
+<td>Hard-case tables</td>
+<td><code>results/dev/hard_cases.md</code>, <code>scripts/hard_cases.py</code></td>
+</tr>
+<tr>
+<td>General model near-certain on 89 team answers, right on 61</td>
+<td><code>results/dev/ollama-v2_qwen2.5_7b.json</code>, calibration bins</td>
+</tr>
+</tbody></table></div>
+<h2>Appendix B. Sources</h2>
+<ul>
+<li>Kev: <a href="https://github.com/jaredpalmer/kev">github.com/jaredpalmer/kev</a></li>
+<li>Strands Decider: <a href="https://github.com/strands-labs/strands-decider">github.com/strands-labs/strands-decider</a></li>
+<li>Laya: <a href="https://github.com/NandhaKishorM/laya">github.com/NandhaKishorM/laya</a></li>
+<li>Clef: <a href="https://www.theregister.com/a/5300649">The Register</a></li>
+<li>Jev interface: docs.typesafe.ai/api (checked by the author, 11 October 2026)</li>
+</ul>
+
+</main></body>
+</html>

@@ -2,7 +2,7 @@
 
 ## Testing open System One decision models on support routing
 
-**Mohamed Ansar** · Technical report · Draft of 11 October 2026
+**Mohamed Ansar** · Technical report · 11 October 2026
 
 *Independent work, not peer reviewed. Every number in this report comes from runs in the accompanying repository, on the machine named next to it.*
 
