@@ -26,7 +26,7 @@ def load_dir(d):
     if not d.exists():
         return []
     return [json.loads(p.read_text()) for p in sorted(d.glob("*.json"))
-            if p.name != "cascade.json"]
+            if not p.name.startswith("cascade")]
 
 
 def e(x):
