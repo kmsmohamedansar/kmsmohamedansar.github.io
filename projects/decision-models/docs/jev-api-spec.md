@@ -40,9 +40,14 @@ Request: state *"I have been trying to connect Stripe for 3 days and the integra
 
 Response: `is_urgent` 0.97; `department` technical-support (0.82), confidence 0.89; `frustration_score` 4.62, confidence 0.91; usage 312 input and 64 output tokens.
 
-## Difference found in practice (2026-10-11)
+## Differences found in practice (2026-10-11)
 
-Kev's server, which says it implements TypeSafe's shape and works with TypeSafe's own SDK, rejected questions with `instructions` and required **`criteria`** instead (HTTP 422, "Field required: criteria"). So the question text field is most likely `criteria` in the real API, not `instructions` as this second-hand copy says. Our harness keeps `instructions` internally; `systemone/adapters/http.py` renames it to `criteria` when sending to any server, so every contender still gets identical wording.
+Against Kev's server and README, which follow TypeSafe's API and work with TypeSafe's own SDK, this second-hand copy was wrong or incomplete:
+
+- **`criteria` holds the allowed answers.** Choice: `{option: description or null}` (no `options` list). Score: a list of level descriptions, lowest first (no `min`/`max`). Noul: optional descriptions for true and false. `instructions` is the question text and is optional.
+- **Score answers are indexed from 0.** `probabilities` keys are "0", "1", ...; `score` is the mean level index from 0; a `legend` maps indexes to the descriptions.
+
+Our harness keeps its own shape internally; `systemone/adapters/http.py` translates on the way out (`to_wire`) and back (`from_wire`), so every contender still gets identical wording and is scored on the same scale.
 
 ## Open questions to check against the official docs
 - How `confidence` differs from the top probability (the example has 0.89 confidence where the top probability is 0.82).

@@ -82,12 +82,24 @@ def fake_ollama(url, body):
 
 
 def fake_systemone(url, body, headers):
-    """Stands in for a /v1/systemone server: spec shape plus an extra field."""
+    """Stands in for a /v1/systemone server speaking Kev's real wire shape."""
     assert url.endswith("/v1/systemone")
-    for q in body["questions"].values():  # sent the way real servers want it
-        assert "criteria" in q and "instructions" not in q, q
-        q["instructions"] = q.pop("criteria")
-    return {**Uniform().answer(body), "model": body["model"] + "-fake", "latency_ms": 12}
+    answers = {}
+    for qid, q in body["questions"].items():
+        assert "instructions" in q and "options" not in q and "min" not in q, q
+        if q["type"] == "noul":
+            answers[qid] = {"type": "noul", "noul": 0.3}
+        elif q["type"] == "choice":
+            opts = list(q["criteria"])
+            p = {o: 1 / len(opts) for o in opts}
+            answers[qid] = {"type": "choice", "choice": opts[0], "probabilities": p, "confidence": 0.2}
+        else:
+            n = len(q["criteria"])  # levels, indexed from 0 on the wire
+            p = {str(i): (1.0 if i == n - 1 else 0.0) for i in range(n)}
+            answers[qid] = {"type": "score", "score": float(n - 1), "probabilities": p,
+                            "confidence": 0.9, "legend": {str(i): c for i, c in enumerate(q["criteria"])}}
+    return {"model": body["model"] + "-fake", "answers": answers,
+            "usage": {"input_tokens": 10, "output_tokens": 0}, "latency_ms": 12}
 
 
 # How to build each adapter for the contract. Ollama talks to a real server

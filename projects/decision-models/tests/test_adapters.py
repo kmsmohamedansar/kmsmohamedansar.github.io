@@ -98,3 +98,13 @@ class OllamaV2LowConfidence(unittest.TestCase):
         self.assertEqual(a["team"]["choice"], "sales")
         self.assertEqual(a["is_urgent"]["noul"], 0.5)
         self.assertEqual(o.repairs["rescaled"], 3)
+
+
+class SystemOneWire(unittest.TestCase):
+    def test_score_comes_back_on_our_scale(self):
+        from systemone.adapters import SystemOneHTTP
+        from tests.test_contract import fake_systemone
+        a = SystemOneHTTP("kev-latest", post=fake_systemone).decide(build_request("hi"))["answers"]
+        self.assertEqual(a["frustration"]["score"], 5.0)          # index 4 -> level 5
+        self.assertEqual(a["frustration"]["probabilities"]["5"], 1.0)
+        self.assertEqual(a["team"]["choice"], "billing")

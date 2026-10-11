@@ -13,6 +13,7 @@ import urllib.error
 import urllib.request
 
 from ..base import SystemOne
+from ..schema import score_levels
 
 
 def _post(url, body, headers=None, timeout=60):
@@ -26,40 +27,66 @@ def _post(url, body, headers=None, timeout=60):
         raise RuntimeError(f"{url} said {e.code}: {e.read().decode(errors='replace')[:2000]}") from None
 
 
-def to_wire(request, field):
-    """Our questions say "instructions"; real servers may call it "criteria".
+def to_wire(request):
+    """Translate our questions into the shape real System One servers accept.
 
-    Kev's server (2026-10-11) rejected "instructions" and required "criteria".
-    Only the field name changes; the wording sent is identical.
+    Found against Kev's server and README (2026-10-11), which follow
+    TypeSafe's API: the question text stays in "instructions", and the
+    allowed answers go in "criteria":
+    - choice: {option: description or null}; we send null, since each
+      option's description is already in the instructions;
+    - score: a list of level descriptions, lowest first; we send the level
+      numbers ("1" .. "5"), since the rubric is already in the instructions;
+    - noul: criteria is optional; not sent.
+    The wording every contender sees is identical.
     """
-    if field == "instructions":
-        return request
     questions = {}
     for qid, q in request["questions"].items():
-        q = dict(q)
-        q[field] = q.pop("instructions")
-        questions[qid] = q
+        w = {"type": q["type"], "instructions": q["instructions"]}
+        if q["type"] == "choice":
+            w["criteria"] = {o: None for o in q["options"]}
+        elif q["type"] == "score":
+            w["criteria"] = [str(v) for v in score_levels(q)]
+        questions[qid] = w
     return {**request, "questions": questions}
 
 
+def from_wire(request, answers):
+    """Score levels come back indexed from 0; map them to our min..max."""
+    if not isinstance(answers, dict):
+        return answers
+    out = {}
+    for qid, a in answers.items():
+        q = request["questions"].get(qid)
+        if q and q["type"] == "score" and isinstance(a, dict):
+            levels = score_levels(q)
+            probs = a.get("probabilities") or {}
+            a = {
+                "type": "score",
+                "score": q["min"] + a["score"] if isinstance(a.get("score"), (int, float)) else a.get("score"),
+                "probabilities": {str(levels[int(k)]): v for k, v in probs.items()
+                                  if str(k).isdigit() and int(k) < len(levels)},
+                "confidence": a.get("confidence"),
+            }
+        out[qid] = a
+    return out
+
+
 class SystemOneHTTP(SystemOne):
-    def __init__(self, model, url="http://localhost:8000", name=None, post=_post, headers=None,
-                 field="criteria"):
+    def __init__(self, model, url="http://localhost:8000", name=None, post=_post, headers=None):
         self.model = model
         self.url = url.rstrip("/") + "/v1/systemone"
         self.name = name or f"http:{model}"
         self._post, self._headers = post, headers or {}
-        self.field = field
 
     def answer(self, request):
-        wire = to_wire({**request, "model": self.model}, self.field)
-        reply = self._post(self.url, wire, self._headers)
+        reply = self._post(self.url, to_wire({**request, "model": self.model}), self._headers)
         if not isinstance(reply, dict):
             return reply  # decide() will reject it
         usage = reply.get("usage") or {}
         return {
             "model": reply.get("model", self.model),
-            "answers": reply.get("answers"),
+            "answers": from_wire(request, reply.get("answers")),
             "usage": {"input_tokens": usage.get("input_tokens", 0),
                       "output_tokens": usage.get("output_tokens", 0)},
         }
