@@ -45,3 +45,9 @@ Project set up. Interface spec saved from the owner (second-hand, to verify agai
   - The rules' frustration distance here (0.90) differs from the step 3 sanity look (0.86) because that one rounded the score first; this one uses the score as given.
 - Calibration chart already says something: the rules under-state confidence on team (right more often than they claim) and over-state it on frustration. Screenshot: `docs/screenshots/2026-10-11-step4-calibration-dev.png`.
 - 45 tests pass.
+
+### Step 5: fast then slow (code done; threshold not fixed yet)
+
+- `scripts/cascade.py` works from saved runs, so both contenders see the same requests and no extra model calls are needed. A request's confidence is the lowest of its three answers' confidences; below the threshold, the whole request goes to the slow contender.
+- Threshold rule, written down now before any model run: try 0.00 to 1.00 in steps of 0.05; fix the lowest threshold where urgent and team accuracy are both within 0.02 of the slow contender alone. If none, report that the fast model didn't help. `pick` writes `results/cascade.json` and refuses to change it once held-out results exist; `heldout` uses it once.
+- Dry run (rules fast, uniform "slow", not saved, not a result) checked the mechanics only. 49 tests pass.

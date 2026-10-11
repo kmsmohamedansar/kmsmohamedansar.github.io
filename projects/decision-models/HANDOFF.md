@@ -21,7 +21,7 @@ Can a small, cheap "fast decision" model make routine decisions (route a request
    - Jev: adapter written to the spec, never run unless the owner supplies a key.
    - **[owner]** model runs that need the Mac happen there, as with 1B and 1C.
 4. **Measure, per contender and per question type.** (Code done 2026-10-11; Mac runs pending.) Accuracy; for `choice`, accuracy on each team; for `score`, average distance from the right level; speed per decision; cost per 1,000 decisions (local = 0, and say so); **calibration**: group answers by stated confidence and check how often each group is right, shown as a chart.
-5. **Fast then slow.** Fast model first, hand anything under a fixed confidence threshold to the bigger model. Report accuracy, how many were handed over, and time saved. Fix the threshold before scoring the held-out set.
+5. **Fast then slow.** (Code and threshold rule done 2026-10-11; needs Mac runs.) Fast model first, hand anything under a fixed confidence threshold to the bigger model. Report accuracy, how many were handed over, and time saved. Fix the threshold before scoring the held-out set.
 6. **Results page and case study.** Its own look, like the other projects. Two chapters (Chapter 1: a personal project, said plainly), claims ledger, diagrams.
 7. **[owner]** Approve before anything touches the portfolio site.
 
