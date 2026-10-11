@@ -7,6 +7,64 @@ import { TOOL_INFO } from "../data/tools";
 import FlowDiagram, { FlourishTitle, Kicker, TagPill } from "./ui";
 import { EASE_REVEAL } from "../lib/motion";
 
+/* Big headline numbers under a project's hook. */
+function StatTiles({ stats, accent }) {
+  const a = ACCENTS[accent];
+  return (
+    <dl className="mt-6 grid grid-cols-2 gap-3 lg:grid-cols-4">
+      {stats.map((s) => (
+        <div key={s.label} className="rounded-2xl border p-4" style={{ borderColor: `${a.hex}40`, background: `${a.hex}12` }}>
+          <dt className="sr-only">{s.label}</dt>
+          <dd className={`font-condensed text-[clamp(2rem,5vw,3rem)] leading-none ${a.text}`}>{s.value}</dd>
+          <dd className="mt-2 text-sm leading-snug text-[color:var(--ink-200)]">{s.label}</dd>
+        </div>
+      ))}
+    </dl>
+  );
+}
+
+/* Sample tables mark right and wrong answers with a leading ✓ or ✗ when
+   `marks` is set; older samples keep their score-column colouring. */
+function sampleCellClass(sample, c, i) {
+  if (sample.marks) {
+    if (c.startsWith("✓")) return "text-green font-semibold";
+    if (c.startsWith("✗")) return "text-rose font-semibold";
+    return "text-[color:var(--ink-100)]";
+  }
+  if (i === 2) return c.includes("review") ? "text-rose font-semibold" : "text-green font-semibold";
+  return "text-[color:var(--ink-100)]";
+}
+
+/* A prominent call to read a long-form write-up, with its links. */
+function ReportCta({ cta, accent }) {
+  const a = ACCENTS[accent];
+  return (
+    <section
+      className="mt-6 rounded-3xl border p-6 sm:p-10"
+      style={{ background: `radial-gradient(120% 120% at 100% 0%, ${a.hex}35, transparent 60%), rgba(0, 0, 0, 0.3)`, borderColor: `${a.hex}55` }}
+    >
+      <p className={`font-mono text-xs uppercase tracking-[.16em] ${a.text}`}>{cta.kicker}</p>
+      <h2 className="mt-3 font-display text-[clamp(1.8rem,4vw,2.8rem)] font-semibold leading-tight text-white">{cta.title}</h2>
+      <p className="mt-3 max-w-2xl text-base sm:text-lg leading-relaxed text-[color:var(--ink-100)]">{cta.text}</p>
+      {cta.contents && (
+        <ol className="mt-5 grid gap-x-8 gap-y-1.5 text-sm text-[color:var(--ink-200)] sm:grid-cols-2">
+          {cta.contents.map((c, n) => (
+            <li key={c}>
+              <span className={`mr-2 font-mono ${a.text}`}>{String(n + 1).padStart(2, "0")}</span>
+              {c}
+            </li>
+          ))}
+        </ol>
+      )}
+      <div className="mt-7 flex flex-wrap gap-3">
+        {cta.links.map((l) => (
+          <LinkButton key={l.label} link={l} accent={accent} />
+        ))}
+      </div>
+    </section>
+  );
+}
+
 /* Each project page gets its own look: a deep background tone and a title
    typeface. Assigned by position, so neighbouring pages always differ; a
    project can pin its own with `theme: { bg, title }` in projects.js. */
@@ -224,6 +282,7 @@ export default function ProjectPage({ slug }) {
           <PageTitle project={project} style={theme.title} />
         </h1>
         <p className="mt-5 text-lg leading-relaxed text-[color:var(--ink-100)]">{project.hook}</p>
+        {project.stats && <StatTiles stats={project.stats} accent={project.accent} />}
         <p className="mt-3 text-sm text-[color:var(--ink-300)]">
           <span className={`font-mono text-micro uppercase tracking-[.14em] mr-2 ${a.text}`}>My role</span>
           {project.role}
@@ -283,7 +342,7 @@ export default function ProjectPage({ slug }) {
         </Block>
 
         {project.sample && (
-          <Block label="A look at the output" accent={project.accent}>
+          <Block label={project.sample.label || "A look at the output"} accent={project.accent}>
             <div className="overflow-x-auto rounded-xl border border-white/12">
               <table className="w-full text-left text-sm">
                 <caption className="text-left px-4 pt-3 pb-2 font-mono text-micro uppercase tracking-[.1em] text-[color:var(--ink-300)]">
@@ -302,7 +361,7 @@ export default function ProjectPage({ slug }) {
                   {project.sample.rows.map((r) => (
                     <tr key={r[0]} className="border-b border-white/8 last:border-0">
                       {r.map((c, i) => (
-                        <td key={i} className={`px-4 py-2.5 ${i === 2 ? (c.includes("review") ? "text-rose font-semibold" : "text-green font-semibold") : "text-[color:var(--ink-100)]"}`}>
+                        <td key={i} className={`px-4 py-2.5 align-top ${sampleCellClass(project.sample, c, i)}`}>
                           {c}
                         </td>
                       ))}
@@ -374,6 +433,8 @@ export default function ProjectPage({ slug }) {
             {project.results.note && <p className="mt-3 text-sm text-[color:var(--ink-300)]">{project.results.note}</p>}
           </Block>
         )}
+
+        {project.reportCta && <ReportCta cta={project.reportCta} accent={project.accent} />}
 
         {depth && (
           <Block label="Trade-offs I made" accent={project.accent}>
