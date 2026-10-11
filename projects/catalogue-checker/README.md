@@ -54,7 +54,8 @@ Tests (no models or internet needed): `pip install -r requirements.txt && python
 | `results/eval.json` | Each checker's catches, false alarms, precision, recall and speed |
 | `results/review_list.csv` | The products most worth a person's time, most suspicious first, with a reason |
 | `results/scale.json` | How long 5,000 products took, and how many went to the slow model |
-| `docs/charts/speed-vs-catch.png` | Speed against catch rate, one dot per checker |
+| `docs/charts/speed-vs-catch.png` | Speed against usefulness, one dot per checker |
+| `results/report.html` | A one-page results report (lab-report style) |
 | `data/answer_key.csv` | The 350-product answer key (data from Open Food Facts, ODbL) |
 
 All rights reserved for the code. See [LICENSE](LICENSE). Product data: Open Food Facts contributors, ODbL.

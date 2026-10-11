@@ -6,6 +6,34 @@ import { TOOL_INFO } from "../data/tools";
 import FlowDiagram, { FlourishTitle, Kicker, TagPill } from "./ui";
 import { EASE_REVEAL } from "../lib/motion";
 
+/* Each project page gets its own look: a deep background tone and a title
+   typeface. Assigned by position, so neighbouring pages always differ; a
+   project can pin its own with `theme: { bg, title }` in projects.js. */
+const PAGE_TONES = ["#0b1a14", "#1a0f12", "#0d1326", "#17121f", "#171410", "#0a1718", "#14161a", "#1b1408"];
+const TITLE_STYLES = ["condensed", "serif", "mono", "display"];
+
+function pageTheme(project, index) {
+  return {
+    bg: project.theme?.bg ?? PAGE_TONES[index % PAGE_TONES.length],
+    title: project.theme?.title ?? TITLE_STYLES[index % TITLE_STYLES.length],
+  };
+}
+
+function PageTitle({ project, style }) {
+  const a = ACCENTS[project.accent];
+  if (style === "condensed") return <FlourishTitle text={project.title} accent={project.accent} />;
+  if (style === "serif")
+    return <span aria-hidden="true" className="font-serif font-normal normal-case italic tracking-[-.01em]">{project.title}</span>;
+  if (style === "mono")
+    return (
+      <span aria-hidden="true" className="font-mono font-bold uppercase tracking-[-.04em] text-[.62em] leading-[1.05]">
+        <span className={a.text}>&gt; </span>
+        {project.title}
+      </span>
+    );
+  return <span aria-hidden="true" className="font-display font-bold normal-case tracking-[-.035em] text-[.8em]">{project.title}<span className={a.text}>.</span></span>;
+}
+
 function Block({ label, accent, children }) {
   return (
     <section className="mt-10 first:mt-0">
@@ -152,7 +180,7 @@ export default function ProjectPage({ slug }) {
   if (!project) {
     return (
       <div className="mx-auto max-w-3xl px-5 pt-32 pb-24">
-        <div className="panel rounded-2xl p-8">
+        <div className="panel project-panel rounded-2xl p-8">
           <h1 className="font-display text-2xl font-semibold text-white">I couldn't find that project</h1>
           <p className="mt-2 text-[color:var(--ink-200)]">It may have moved. The full list is on the home page.</p>
           <a href="#projects" className="mt-5 inline-flex items-center gap-2 text-cyan font-mono text-xs uppercase tracking-[.12em]">
@@ -166,8 +194,10 @@ export default function ProjectPage({ slug }) {
   const a = ACCENTS[project.accent];
   const i = PROJECTS.findIndex((p) => p.slug === slug);
   const next = PROJECTS[(i + 1) % PROJECTS.length];
+  const theme = pageTheme(project, i);
 
   return (
+    <div style={{ background: `radial-gradient(120% 60% at 50% 0%, ${a.hex}14, transparent 70%), ${theme.bg}` }} className="min-h-full">
     <motion.article
       initial={{ opacity: 0, y: 14 }}
       animate={{ opacity: 1, y: 0 }}
@@ -180,14 +210,14 @@ export default function ProjectPage({ slug }) {
 
       <header
         className="mt-5 rounded-3xl border p-6 sm:p-10"
-        style={{ background: `radial-gradient(130% 100% at 0% 0%, ${a.hex}30, transparent 62%), rgba(5, 9, 17, 0.5)`, borderColor: `${a.hex}40` }}
+        style={{ background: `radial-gradient(130% 100% at 0% 0%, ${a.hex}30, transparent 62%), rgba(0, 0, 0, 0.25)`, borderColor: `${a.hex}40` }}
       >
         <div className="flex flex-wrap items-center gap-x-4 gap-y-1 font-mono text-xs uppercase tracking-[.16em]">
           <span className={`font-semibold ${a.text}`}>{project.kind}</span>
           <span className="text-[color:var(--ink-300)]">{project.status}</span>
         </div>
         <h1 aria-label={project.title} className="mt-4 text-white leading-[.92] text-[clamp(3rem,8vw,6.5rem)]">
-          <FlourishTitle text={project.title} accent={project.accent} />
+          <PageTitle project={project} style={theme.title} />
         </h1>
         <p className="mt-5 text-lg leading-relaxed text-[color:var(--ink-100)]">{project.hook}</p>
         <p className="mt-3 text-sm text-[color:var(--ink-300)]">
@@ -231,7 +261,7 @@ export default function ProjectPage({ slug }) {
         </div>
       )}
 
-      <div className="panel rounded-2xl p-6 sm:p-9 mt-6">
+      <div className="panel project-panel rounded-2xl p-6 sm:p-9 mt-6">
         <Block label="The story" accent={project.accent}>
           <div className="space-y-4">
             {project.story.map((p) => (
@@ -355,5 +385,6 @@ export default function ProjectPage({ slug }) {
         <ArrowRight className={`${ACCENTS[next.accent].text} transition-transform duration-200 group-hover:translate-x-1`} />
       </a>
     </motion.article>
+    </div>
   );
 }
