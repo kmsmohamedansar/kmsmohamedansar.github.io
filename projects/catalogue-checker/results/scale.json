@@ -1,0 +1,14 @@
+{
+  "ran_at": "2026-10-11T02:53:07+00:00",
+  "fake_models": false,
+  "machine": "Darwin arm64",
+  "python": "3.12.15",
+  "embed_model": "sentence-transformers/all-MiniLM-L6-v2",
+  "zero_shot_model": "facebook/bart-large-mnli",
+  "products": 5000,
+  "seconds_total": 87.3,
+  "meaning_seconds": 2.3,
+  "zero_shot_calls": 664,
+  "flagged": 1366,
+  "minutes": 1.45
+}

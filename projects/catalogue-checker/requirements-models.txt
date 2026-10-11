@@ -1,0 +1,5 @@
+# The two AI checkers. Free, run locally. Models download on first run (about 1.7 GB).
+-r requirements.txt
+torch>=2.3
+sentence-transformers>=3.0
+transformers>=4.44
