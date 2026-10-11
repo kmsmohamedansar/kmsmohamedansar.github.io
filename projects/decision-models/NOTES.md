@@ -135,3 +135,4 @@ Models on MacBook Air M4 16GB (owner's runs); rules in this cloud container. All
 - Laya-typed-decisions: urgent 0.88, team 0.48, frustration 1.26; ECE 0.25 / 0.29 / 0.18; 0.32 s.
 - Fast then slow: planned (Strands -> qwen, threshold 0) handed nothing over, team 0.80. Exploratory (Kev -> Strands on team confidence, 0.70) handed over 42 of 50, team 0.78.
 - With n = 50, one request = 2 points; Strands (40) and rules (39) tie on team accuracy. The rules' strength is most likely shared vocabulary between the author's requests and keywords; noted in the report as a limit.
+- 2026-10-11: owner reviewed and approved section 7 (Discussion) of paper/report.md as written.
