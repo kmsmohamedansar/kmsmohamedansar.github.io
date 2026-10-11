@@ -17,18 +17,25 @@ export const HERO = {
   ],
 };
 
+// Quick proof, right under the intro, before anyone reads a paragraph.
+export const RECEIPTS = [
+  { value: "2", label: "native apps built, one live on the App Store", accent: "amber" },
+  { value: "1", label: "independent AI study, with a full technical report", accent: "rose" },
+  { value: "PROJECTS", label: "projects with code, write-ups or live demos", accent: "green" },
+  { value: "2019", label: "working with data since, from content ops to Snowflake", accent: "cyan" },
+];
+
 export const SECTION_LINKS = [
   { id: "projects", label: "Projects" },
-  { id: "experience", label: "Experience" },
   { id: "about", label: "About" },
+  { id: "experience", label: "Experience" },
   { id: "contact", label: "Contact" },
 ];
 
 export const ABOUT = {
   title: "What I do, and what I know",
   story: [
-    "I started in content and quality operations at Amazon Prime Video, where I learned that bad data rarely shows up as an error. It shows up two teams later as a wrong decision. That stuck with me.",
-    "A business analysis internship pulled me towards SQL and Snowflake, and I wanted to be the person building the pipeline, not only reading what came out of it. Today, as a solutions engineer, I turn what a stakeholder is really asking into something technical that holds up, and I double-check my own numbers before anyone else has to.",
+    "At Amazon Prime Video I learned that bad data rarely shows up as an error. It shows up two teams later as a wrong decision. Since then I've wanted to be the one building the pipeline, not just reading what comes out of it, and I check my own numbers before anyone else has to.",
     "Outside work I keep building. Two native apps, an independent study of the new AI decision models, data tools with honest tests, and a growing pile of things made with AI as a pair programmer. None of it was assigned. It's just how I learn.",
   ],
   groups: [
@@ -71,6 +78,7 @@ export const ROLES = [
   },
   {
     company: "Spongelii",
+    compact: true,
     logo: "/logos/spongelii.png",
     title: "Business Development Intern, Business Analysis",
     when: "Jan to Apr 2024 · Remote, Canada",
@@ -87,6 +95,7 @@ export const ROLES = [
     company: "Amazon Prime Video",
     logo: "/logos/prime-video-wordmark.svg",
     title: "Business Analyst II, Quality Auditing",
+    compact: true,
     when: "Oct 2021 to Aug 2022 · Hybrid, India",
     accent: "rose",
     summary: "Auditing how content operations worked, and fixing the gaps I found.",
@@ -101,6 +110,7 @@ export const ROLES = [
     company: "Amazon Prime Video",
     logo: "/logos/prime-video-wordmark.svg",
     title: "Business Analyst I, Digital Content",
+    compact: true,
     when: "Aug 2019 to Sep 2021 · Hybrid, India",
     accent: "green",
     summary: "Keeping a large digital catalogue accurate and ready to publish.",

@@ -1,9 +1,10 @@
 import { Fragment, useCallback, useEffect, useRef, useState } from "react";
 import NameParticles from "./NameParticles";
 import { animate, AnimatePresence, cubicBezier, motion, useMotionValue, useMotionValueEvent, useReducedMotion, useScroll, useSpring, useTransform, useVelocity } from "framer-motion";
-import { ArrowRight, ArrowUp, ArrowUpRight, ChevronLeft, ChevronRight, ExternalLink, Link2, Lock, Mail } from "lucide-react";
-import { ABOUT, CONTACT, HERO, ROLES } from "../data/content";
-import { ACCENTS, EARLIER_PROJECTS, EXPERIMENTS, FEATURED, MORE_PROJECTS } from "../data/projects";
+import { ArrowRight, ArrowUp, ArrowUpRight, ChevronLeft, ChevronRight, ExternalLink, Info, Link2, Lock, Mail } from "lucide-react";
+import { TOOL_INFO } from "../data/tools";
+import { ABOUT, CONTACT, HERO, RECEIPTS, ROLES } from "../data/content";
+import { ACCENTS, EARLIER_PROJECTS, EXPERIMENTS, FEATURED, FEATURED_GRID, LISTED_PROJECTS, MORE_PROJECTS } from "../data/projects";
 import { FlourishTitle, Reveal, ScrollShot, SectionHead, SpinBadge, TagPill } from "./ui";
 import { useRoute } from "../App";
 import { EASE_REVEAL } from "../lib/motion";
@@ -49,8 +50,9 @@ function ProjectVisual({ project, large = false }) {
   const a = ACCENTS[project.accent];
   const [broken, setBroken] = useState(false);
   const ratio = large ? "aspect-[16/11]" : "aspect-[16/9]";
-  if (project.shots?.[0] && !broken) {
-    return <ScrollShot src={project.shots[0]} label={frameLabel(project)} onError={() => setBroken(true)} ratio={ratio} />;
+  const cardShot = project.cardShot || (!project.preferIcon && project.shots?.[0]);
+  if (cardShot && !broken) {
+    return <ScrollShot src={cardShot} label={frameLabel(project)} onError={() => setBroken(true)} ratio={ratio} />;
   }
   return (
     <div
@@ -190,7 +192,7 @@ const TITLE_WORDS = HERO.title.split(" ");
 // Where the headline is fully built (the last phrase's range ends here).
 const REVEAL_END = 0.8;
 // How long a visitor can pause mid-headline before it finishes itself.
-const IDLE_MS = 500;
+const IDLE_MS = 250;
 
 const revealEase = cubicBezier(...EASE_REVEAL);
 const eased = (v, from, to) => revealEase(Math.min(1, Math.max(0, (v - from) / (to - from))));
@@ -227,6 +229,27 @@ function HeroPhrase({ phrase, spot, progress, reduced }) {
     >
       {phrase.text}
     </motion.span>
+  );
+}
+
+/* Quick proof under the intro: four numbers before anyone reads a paragraph. */
+function Receipts() {
+  return (
+    <Reveal>
+      <dl className="mt-14 grid grid-cols-2 gap-x-6 gap-y-8 border-t border-white/12 pt-10 lg:grid-cols-4">
+        {RECEIPTS.map((r) => {
+          const a = ACCENTS[r.accent];
+          const value = r.value === "PROJECTS" ? `${LISTED_PROJECTS.length}+` : r.value;
+          return (
+            <div key={r.label}>
+              <dt className="sr-only">{r.label}</dt>
+              <dd className={`font-condensed text-[clamp(3rem,7vw,5rem)] leading-none ${a.text}`}>{value}</dd>
+              <dd className="mt-2 max-w-[16rem] text-sm leading-snug text-[color:var(--ink-200)]">{r.label}</dd>
+            </div>
+          );
+        })}
+      </dl>
+    </Reveal>
   );
 }
 
@@ -322,7 +345,7 @@ export function Hero({ ready = true, scrollContainerRef }) {
       </section>
 
       {/* 2. The headline, pinned while the lede's phrases write themselves in. */}
-      <section ref={pinRef} aria-labelledby="hero-title" className={`relative bg-ink ${reduced ? "" : "h-[200vh]"}`}>
+      <section ref={pinRef} aria-labelledby="hero-title" className={`relative bg-ink ${reduced ? "" : "h-[125vh]"}`}>
         <div className={`${reduced ? "py-24" : "sticky top-0 h-[100dvh]"} flex items-center justify-center overflow-hidden px-5`}>
           <div className="relative w-full max-w-[1200px]">
             <h2
@@ -369,6 +392,7 @@ export function Hero({ ready = true, scrollContainerRef }) {
               </a>
             </div>
           </Reveal>
+          <Receipts />
         </div>
       </section>
     </>
@@ -419,6 +443,54 @@ function FeaturedRow({ project, index }) {
           <div className="mt-7">
             <SpinBadge label="Read the story" accent={project.accent} />
           </div>
+        </div>
+      </a>
+    </Reveal>
+  );
+}
+
+/* The second tier of the spotlight: two projects side by side, each with
+   its visual, numbers and hook, at roughly half the height of a big row. */
+function GridCard({ project }) {
+  const a = ACCENTS[project.accent];
+  return (
+    <Reveal className="h-full min-w-0">
+      <a
+        href={`#project/${project.slug}`}
+        data-cursor="View"
+        className="group flex h-full min-w-0 flex-col rounded-3xl border border-white/10 bg-white/[.03] p-4 sm:p-5 transition-[border-color,background-color,transform] duration-200 hover:-translate-y-1 hover:border-white/25 hover:bg-white/[.06] active:translate-y-0"
+      >
+        <ProjectVisual project={project} />
+        <div className="mt-5 flex flex-wrap items-center gap-x-3 gap-y-1 font-mono text-micro uppercase tracking-[.14em]">
+          <span className={`font-semibold ${a.text}`}>{project.kind}</span>
+          <span className="text-[color:var(--ink-300)]">{project.status}</span>
+        </div>
+        <h3 aria-label={project.title} className="mt-2 text-white leading-[.95] text-[clamp(2rem,3.4vw,2.9rem)]">
+          <FlourishTitle text={project.title} accent={project.accent} />
+        </h3>
+        <p className="mt-3 text-base leading-relaxed text-[color:var(--ink-200)]">{project.hook}</p>
+        {project.stats && (
+          <dl className="mt-4 grid grid-cols-2 gap-x-5 gap-y-2.5 sm:grid-cols-4">
+            {project.stats.map((s) => (
+              <div key={s.label}>
+                <dt className="sr-only">{s.label}</dt>
+                <dd className={`font-condensed text-2xl leading-none ${a.text}`}>{s.value}</dd>
+                <dd className="mt-1 text-xs leading-snug text-[color:var(--ink-300)]">{s.short || s.label}</dd>
+              </div>
+            ))}
+          </dl>
+        )}
+        <div className="mt-auto flex flex-wrap items-center justify-between gap-3 pt-5">
+          <div className="flex flex-wrap gap-1.5">
+            {project.tags.slice(0, 3).map((t) => (
+              <TagPill key={t} accent={project.accent}>
+                {t}
+              </TagPill>
+            ))}
+          </div>
+          <span className={`inline-flex items-center gap-1 font-mono text-xs uppercase tracking-[.12em] ${a.text}`}>
+            Read the story <ArrowRight size={13} className="transition-transform duration-200 group-hover:translate-x-1" />
+          </span>
         </div>
       </a>
     </Reveal>
@@ -618,13 +690,20 @@ export function ProjectsSection({ scrollContainerRef }) {
           accent="green"
           kicker="Projects"
           title="Things I've built"
-          lede="The ones I'd start with, then the rest. Click any card for the story, a diagram of how it works, and a link to try it or read the code."
+          lede="Three I'd start with, four more worth your time, then the rest. Click any card for the story, a diagram of how it works, and a link to try it or read the code."
         />
         <div className="space-y-16 sm:space-y-24">
           {FEATURED.map((p, i) => (
             <FeaturedRow key={p.slug} project={p} index={i} />
           ))}
         </div>
+        {FEATURED_GRID.length > 0 && (
+          <div className="mt-16 grid grid-cols-1 gap-5 sm:mt-24 md:grid-cols-2">
+            {FEATURED_GRID.map((p) => (
+              <GridCard key={p.slug} project={p} />
+            ))}
+          </div>
+        )}
         <div className="mt-20 sm:mt-28">
           <ProjectRail projects={MORE_PROJECTS} />
         </div>
@@ -690,51 +769,40 @@ export function SkillsTicker({ scrollContainerRef }) {
 }
 
 /* ── EXPERIENCE ─────────────────────────────────────────────── */
-function RoleRow({ role }) {
+/* A current role as a card, so two sit side by side. */
+function RoleCard({ role }) {
   const a = ACCENTS[role.accent];
   return (
-    <Reveal>
-      <article className="grid gap-4 border-t border-white/15 py-8 sm:py-10 md:grid-cols-[minmax(0,15rem)_1fr] md:gap-10">
-        <div>
-          {role.logo ? (
-            <div className="mb-4 flex h-16 w-full max-w-[14rem] items-center justify-center rounded-xl bg-[#f8f9f9] px-4 py-3 shadow-[0_10px_30px_-16px_rgba(0,0,0,.7)]">
-              <img src={role.logo} alt={`${role.company} logo`} loading="lazy" className="max-h-full max-w-full object-contain" />
-            </div>
-          ) : (
-            <span aria-hidden="true"
-              className="mb-3 grid h-11 w-11 place-items-center rounded-xl border border-white/20 bg-white/10 font-display text-lg font-semibold text-white">
-              {role.company[0]}
-            </span>
-          )}
-          <div className="flex flex-wrap items-center gap-2">
-            <span className={`font-mono text-xs font-semibold uppercase tracking-[.14em] ${a.text}`}>{role.company}</span>
-            {role.current && (
-              <span className="rounded-full border border-green/50 bg-green/10 px-2 py-0.5 font-mono text-micro uppercase tracking-wide text-green">Now</span>
-            )}
-          </div>
-          <p className="mt-2 font-mono text-micro text-[color:var(--ink-300)]">{role.when}</p>
-        </div>
-        <div>
-          <h3 className="font-display text-2xl sm:text-3xl font-semibold leading-tight text-white">{role.title}</h3>
-          <p className="mt-3 font-serif italic text-xl sm:text-2xl leading-snug text-[color:var(--ink-100)]">{role.summary}</p>
-          <ul className="mt-4 space-y-2 text-base leading-relaxed text-[color:var(--ink-200)]">
-            {role.bullets.map((b) => (
-              <li key={b} className="flex gap-3">
-                <span className="mt-[.7em] h-1 w-1 shrink-0 rounded-full" style={{ background: a.hex }} />
-                <span>{b}</span>
-              </li>
-            ))}
-          </ul>
-          <div className="mt-5 flex flex-wrap gap-1.5">
-            {role.tags.map((t) => (
-              <TagPill key={t} accent={role.accent}>
-                {t}
-              </TagPill>
-            ))}
-          </div>
-        </div>
-      </article>
-    </Reveal>
+    <article className="flex h-full flex-col rounded-3xl border border-white/12 bg-white/[.03] p-6 sm:p-7" style={{ borderTop: `3px solid ${a.hex}` }}>
+      <div className="flex flex-wrap items-center gap-3">
+        {role.logo && (
+          <span className="flex h-11 items-center rounded-lg bg-[#f8f9f9] px-3 py-2">
+            <img src={role.logo} alt={`${role.company} logo`} loading="lazy" className="max-h-full max-w-[9rem] object-contain" />
+          </span>
+        )}
+        {role.current && (
+          <span className="rounded-full border border-green/50 bg-green/10 px-2 py-0.5 font-mono text-micro uppercase tracking-wide text-green">Now</span>
+        )}
+      </div>
+      <p className="mt-4 font-mono text-micro text-[color:var(--ink-300)]">{role.when}</p>
+      <h3 className="mt-1 font-display text-2xl font-semibold leading-tight text-white">{role.title}</h3>
+      <p className="mt-3 font-serif italic text-lg leading-snug text-[color:var(--ink-100)]">{role.summary}</p>
+      <ul className="mt-4 space-y-2 text-sm leading-relaxed text-[color:var(--ink-200)]">
+        {role.bullets.map((b) => (
+          <li key={b} className="flex gap-3">
+            <span className="mt-[.65em] h-1 w-1 shrink-0 rounded-full" style={{ background: a.hex }} />
+            <span>{b}</span>
+          </li>
+        ))}
+      </ul>
+      <div className="mt-auto flex flex-wrap gap-1.5 pt-5">
+        {role.tags.map((t) => (
+          <TagPill key={t} accent={role.accent}>
+            {t}
+          </TagPill>
+        ))}
+      </div>
+    </article>
   );
 }
 
@@ -746,16 +814,95 @@ export function ExperienceSection() {
           accent="amber"
           kicker="Experience"
           title="Where I've worked"
-          lede="From auditing content catalogues to writing SQL on retail pricing data. Each stop gave me a bit more technical ownership."
+          lede="From auditing content catalogues to writing SQL on retail pricing data. Each stop gave me more technical ownership."
         />
-        <p className="mb-2 font-mono text-xs uppercase tracking-[.16em] text-[color:var(--ink-300)]">Newest first</p>
-        <div className="border-b border-white/15">
-          {ROLES.map((r) => (
-            <RoleRow key={r.company + r.title} role={r} />
+        <div className="grid gap-5 md:grid-cols-2">
+          {ROLES.filter((r) => !r.compact).map((r, i) => (
+            <Reveal key={r.company + r.title} delay={i * 0.06} className="h-full min-w-0">
+              <RoleCard role={r} />
+            </Reveal>
           ))}
         </div>
+        <Reveal>
+          <p className="mt-12 font-mono text-xs uppercase tracking-[.16em] text-[color:var(--ink-300)]">Earlier</p>
+          <ul className="mt-3 border-t border-white/12">
+            {ROLES.filter((r) => r.compact).map((r) => {
+              const a = ACCENTS[r.accent];
+              return (
+                <li key={r.company + r.title} className="flex flex-wrap items-baseline gap-x-4 gap-y-1 border-b border-white/12 py-4">
+                  <span className={`font-mono text-xs font-semibold uppercase tracking-[.14em] ${a.text}`}>{r.company}</span>
+                  <span className="font-display text-lg font-semibold text-white">{r.title}</span>
+                  <span className="ml-auto font-mono text-micro text-[color:var(--ink-300)]">{r.when}</span>
+                </li>
+              );
+            })}
+          </ul>
+        </Reveal>
       </div>
     </section>
+  );
+}
+
+/* One group of skills. Hover, focus or tap a skill to see what it is; the
+   explainer opens under the group (not as a floating tooltip) so it never
+   runs off a phone screen. Same behaviour as the tool lists on project pages. */
+function SkillGroup({ group }) {
+  const a = ACCENTS[group.accent];
+  const [active, setActive] = useState(null);
+  const openedAt = useRef(0);
+  const open = (t) => {
+    openedAt.current = Date.now();
+    setActive(t);
+  };
+  const id = `skill-explainer-${group.title.toLowerCase().replace(/\W+/g, "-")}`;
+  return (
+    <div onPointerLeave={(e) => e.pointerType === "mouse" && setActive(null)}>
+      <h3 className={`mb-3 font-mono text-xs font-semibold uppercase tracking-[.16em] ${a.text}`}>{group.title}</h3>
+      <ul className="flex flex-wrap gap-2">
+        {group.items.map((it) => {
+          const on = active === it;
+          return (
+            <li key={it}>
+              <button
+                type="button"
+                onPointerEnter={(e) => e.pointerType === "mouse" && open(it)}
+                onFocus={() => open(it)}
+                onClick={() => (on && Date.now() - openedAt.current > 400 ? setActive(null) : open(it))}
+                aria-expanded={on}
+                aria-controls={id}
+                className={`inline-flex items-center gap-2 rounded-full border px-3 py-1.5 text-sm transition-colors duration-200 ${
+                  on ? `${a.border} ${a.soft} text-white` : "border-white/15 bg-white/[.04] text-[color:var(--ink-100)] hover:border-white/40"
+                }`}
+              >
+                {SKILL_ICONS[it] && (
+                  <img src={`${import.meta.env.BASE_URL}icons/${SKILL_ICONS[it]}.svg`} alt="" aria-hidden="true" loading="lazy" className="h-4 w-4 invert" />
+                )}
+                {it}
+                {TOOL_INFO[it] && <Info size={12} aria-hidden="true" className="opacity-60" />}
+              </button>
+            </li>
+          );
+        })}
+      </ul>
+      <div id={id} aria-live="polite" className="mt-3 min-h-[1.25rem]">
+        <AnimatePresence mode="wait">
+          {active && TOOL_INFO[active] && (
+            <motion.p
+              key={active}
+              initial={{ opacity: 0, y: -6 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -4 }}
+              transition={{ duration: 0.18 }}
+              className="rounded-xl border border-white/12 bg-white/[.04] p-3.5 text-sm leading-relaxed text-[color:var(--ink-100)]"
+              style={{ borderLeft: `3px solid ${a.hex}` }}
+            >
+              <span className="font-semibold text-white">{active}: </span>
+              {TOOL_INFO[active]}
+            </motion.p>
+          )}
+        </AnimatePresence>
+      </div>
+    </div>
   );
 }
 
@@ -798,24 +945,9 @@ export function AboutSection({ scrollContainerRef }) {
           ))}
         </div>
         <Reveal className="mx-auto mt-16 grid max-w-3xl gap-8 sm:grid-cols-2">
-          {ABOUT.groups.map((g) => {
-            const a = ACCENTS[g.accent];
-            return (
-              <div key={g.title}>
-                <h3 className={`mb-3 font-mono text-xs font-semibold uppercase tracking-[.16em] ${a.text}`}>{g.title}</h3>
-                <div className="flex flex-wrap gap-2">
-                  {g.items.map((it) => (
-                    <span key={it} className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/[.04] px-3 py-1.5 text-sm text-[color:var(--ink-100)]">
-                      {SKILL_ICONS[it] && (
-                        <img src={`${import.meta.env.BASE_URL}icons/${SKILL_ICONS[it]}.svg`} alt="" aria-hidden="true" loading="lazy" className="h-4 w-4 invert" />
-                      )}
-                      {it}
-                    </span>
-                  ))}
-                </div>
-              </div>
-            );
-          })}
+          {ABOUT.groups.map((g) => (
+            <SkillGroup key={g.title} group={g} />
+          ))}
         </Reveal>
       </div>
     </section>
@@ -825,15 +957,15 @@ export function AboutSection({ scrollContainerRef }) {
 /* ── BUILT WITH AI ──────────────────────────────────────────── */
 export function ExperimentsSection() {
   return (
-    <section id="ai" className={`${BLOCK} bg-ink`}>
+    <section id="ai" className="relative scroll-mt-16 bg-block-green px-5 pb-20 pt-4 sm:pb-28">
       <div className={INNER}>
         <SectionHead
           accent="rose"
           kicker="Built with AI"
-          title="Experiments with an AI pair programmer"
-          lede="These aren't my day job. They're what happens when I ask an AI for help, look at the result, and keep pushing. Some of this very page is one of them."
+          title="Experiments"
+          lede="Not my day job. What happens when I ask an AI for help, look at the result, and keep pushing. Some of this very page is one of them."
         />
-        <div className="grid gap-4 sm:gap-5 md:grid-cols-3">
+        <div className="grid gap-4 sm:grid-cols-3">
           {EXPERIMENTS.map((x, i) => {
             const a = ACCENTS[x.accent];
             const Body = x.href ? "a" : "div";
@@ -859,8 +991,7 @@ export function ExperimentsSection() {
                     </div>
                   )}
                   <h3 className="font-display text-xl font-semibold leading-snug text-white">{x.title}</h3>
-                  <p className={`mt-2 text-sm leading-relaxed ${a.text}`}>{x.hook}</p>
-                  <p className="mt-2 text-sm leading-relaxed text-[color:var(--ink-200)]">{x.body}</p>
+                  <p className="mt-2 text-sm leading-relaxed text-[color:var(--ink-200)]">{x.hook}</p>
                   {x.cta && (
                     <span className={`mt-auto pt-5 inline-flex items-center gap-1.5 font-mono text-xs font-semibold uppercase tracking-[.12em] ${a.text}`}>
                       {x.cta} <ArrowRight size={13} className="transition-transform duration-200 group-hover:translate-x-1" />
