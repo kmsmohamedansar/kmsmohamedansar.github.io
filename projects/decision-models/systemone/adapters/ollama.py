@@ -97,8 +97,8 @@ def spread(keys, answer, confidence, neighbours_only=False):
     c = min(max(float(confidence), 0.0), 1.0)
     i = keys.index(answer)
     others = [k for j, k in enumerate(keys) if j != i and (not neighbours_only or abs(j - i) == 1)]
-    probs = {k: 0.0 for k in keys}
-    probs[answer] = c
+    # The answer goes first so a tie (confidence at even odds) resolves to it.
+    probs = {answer: c, **{k: 0.0 for k in keys if k != answer}}
     for k in others:
         probs[k] = (1 - c) / len(others)
     return probs
