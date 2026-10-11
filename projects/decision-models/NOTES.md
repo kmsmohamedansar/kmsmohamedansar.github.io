@@ -88,3 +88,11 @@ MacBook Air M4, 16 GB. Line-up updated in `docs/models.md`: Kev-4B/9B and Clef s
 - Full wire shape now from Kev's README: criteria holds the allowed answers (choice {option: desc|null}, score [level descriptions]); score answers indexed from 0. Adapter translates both ways; documented in docs/jev-api-spec.md. Kev's README example shows choice confidence 0.21 vs top probability 0.47: confidence is defined separately from the probabilities. We score calibration on the confidence it reports.
 - Kev smoke test: first request 2.0 s (warm-up), then 0.35 s. It rounds probabilities to 4 decimals (sums of 1.0001), which the checker rejected at a tolerance of 1e-6. Tolerance raised to 0.005 for sums and 0.01 for the weighted score: rounding, not a broken answer.
 - Early sign to watch: Kev's frustration answers look nearly flat (each level about 0.1 to 0.26) with confidence 0.0, at its default temperature of 2.35. A request's lowest confidence will often be frustration, which matters for fast-then-slow.
+
+### Kev-0.8B, dev (MacBook Air M4 16GB, owner's run; served on MPS via MLX, bf16, default temperature 2.35)
+
+- 200/200. Median 0.31 s per request (25x faster than qwen2.5:7b v2 at 7.8 s).
+- Urgent 0.77 (ECE 0.15); team 0.60 (ECE **0.07**); frustration distance 1.08, exact 0.42 (ECE 0.40).
+- Per team: billing 20/26, account-access 18/23, technical-support 24/30, integrations-api 7/23, security-privacy 17/26, sales 17/23, how-to 10/24, feedback 7/25.
+- Picks: technical-support 65, billing 41, account-access 25, sales 20, security-privacy 17, how-to 15, integrations-api 9, feedback 8. Every team gets picked; no pile-up.
+- Headline so far: on team, matches a 7B general model (0.60 vs 0.61) at 25x the speed, with far more honest confidence (ECE 0.07 vs 0.26). Weak on frustration: nearly flat probabilities, confidence often 0.

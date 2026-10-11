@@ -233,27 +233,43 @@ Machine: MacBook Air M4, 16 GB (models); a Linux cloud container (rules and even
 | Rules | 0.82 | 0.73 | 0.90 | 0.04 / 0.34 / 0.34 | 0.0001 | 0 |
 | `qwen2.5:7b`, prompt v1 | 0.84 | 0.43 | 0.94 | 0.06 / 0.35 / 0.19 | 12.2 | 0 |
 | `qwen2.5:7b`, prompt v2 | 0.80 | 0.61 | 0.79 | 0.15 / 0.26 / 0.43 | 7.8 | 0 |
-| Kev-0.8B | **[pending]** | | | | | |
+| Kev-0.8B | 0.77 | 0.60 | 1.08 | 0.15 / **0.07** / 0.40 | **0.31** | 0 |
 | Strands Decider 2B | **[pending]** | | | | | |
 | Laya-typed-decisions | **[pending]** | | | | | |
 
 Remember that the rules' development numbers are optimistic: the keywords were chosen while reading these requests.
 
-### 5.2 Calibration
+### 5.2 The first decision model: Kev-0.8B
+
+Kev-0.8B is less than an eighth the size of `qwen2.5:7b` and was tested exactly as shipped (its own default calibration setting, a temperature of 2.35). On picking the team, the question with the most options:
+
+| | Kev-0.8B | `qwen2.5:7b`, prompt v2 |
+|---|---|---|
+| Team accuracy | 0.60 | 0.61 |
+| Calibration error, team | **0.07** | 0.26 |
+| Median seconds per request | **0.31** | 7.8 |
+
+It matches the general model's accuracy, about 25 times faster, and its confidence is close to honest: when it says it is 70% sure of the team, it is right about 70% of the time. That is the System One promise, measured on requests it had never seen.
+
+It also fails differently. It handles sales (17 of 23) and how-to (10 of 24), which the general model almost never chose, and is weak on integrations (7 of 23) and feedback (7 of 25). It picks every team; there is no pile-up on the first options.
+
+Its weak spot is frustration: answers are off by 1.08 levels on average, and its probabilities across the five levels are often nearly flat, with a stated confidence of 0. Kev's documentation says its confidence values are "not measured accuracy rates", and on this question it effectively says "I don't know", which is at least honest.
+
+### 5.3 Calibration
 
 **[pending: the calibration chart with every contender, and what it shows.]**
 
 Already visible with two contenders: the keyword rules are *more modest than they need to be* on team (when they say 50%, they are right about 80% of the time) and *overconfident* on frustration. A model's raw accuracy says nothing about which of these it is.
 
-### 5.3 Hard cases
+### 5.4 Hard cases
 
 **[pending: accuracy on two-problem, sarcastic, very short and non-native requests, per contender.]**
 
-### 5.4 Fast then slow
+### 5.5 Fast then slow
 
 **[pending: chosen pair, threshold, share handed over, accuracy, time saved.]**
 
-### 5.5 Held-out set
+### 5.6 Held-out set
 
 **[pending: every contender, scored once.]**
 
@@ -281,7 +297,8 @@ At 10,000 tickets a day, using development-set numbers (held-out numbers will re
 | Rules | about 1 second | a fraction of one | about 2,700 |
 | `qwen2.5:7b`, prompt v1 (12.2 s per request) | about 34 hours | about 1.4, running all day | about 5,700 |
 | `qwen2.5:7b`, prompt v2 (7.8 s per request) | about 22 hours | about 0.9, running all day | about 3,900 |
-| Each decision model | **[pending]** | | |
+| Kev-0.8B (0.31 s per request) | about 52 minutes | a small fraction of one | about 4,000 |
+| Other decision models | **[pending]** | | |
 | Best fast-then-slow pair | **[pending]** | | |
 
 Two things are already clear. A general 7-billion-parameter model on a laptop is too slow to be the first step for a busy desk on its own: it needs more than one machine running around the clock just to keep up with an illustrative volume. And the cheapest option, keyword rules, is fast enough for any volume but sends thousands of tickets a day to the wrong place.
@@ -350,6 +367,7 @@ Every claim in this report, and where its evidence is.
 | Threshold rule fixed before any model run | `scripts/cascade.py`; `NOTES.md`, 11 October 2026 |
 | Scale figures in section 6 (volume illustrative, rates measured) | Formulas in section 6.1; rates from `results/dev/*.json` |
 | Prompt v2: team 0.61, 142 of 200 in first three, frustration ECE 0.43 | `NOTES.md`; owner's run on MacBook Air M4 16 GB |
+| Kev-0.8B on dev: team 0.60 (ECE 0.07), 0.31 s per request | `NOTES.md`; owner's run on MacBook Air M4 16 GB |
 | Prompt v1: 174 of 200 team answers in the first three options | `NOTES.md`; owner's run on MacBook Air M4 16 GB |
 | Development results in section 5.1 | `results/dev/*.json`, machine named in each |
 | Licences of every model tested | `docs/models.md` |
