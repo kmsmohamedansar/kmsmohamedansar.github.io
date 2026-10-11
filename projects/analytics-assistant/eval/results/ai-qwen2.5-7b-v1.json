@@ -1,0 +1,638 @@
+{
+  "summary": {
+    "brain": "ai",
+    "label": "qwen2.5-7b",
+    "set": "main",
+    "model": "qwen2.5:7b",
+    "ran_at": "2026-10-11T01:36:47.076Z",
+    "node": "v26.8.1",
+    "platform": "darwin-arm64",
+    "questions": 30,
+    "correct": 19,
+    "partial": 7,
+    "wrong": 4,
+    "median_ms": 5189,
+    "max_ms": 15592,
+    "rescored_at": "2026-10-11T01:47:28.818Z"
+  },
+  "results": [
+    {
+      "id": 1,
+      "kind": "value",
+      "question": "What were total cereal sales this year?",
+      "expect": {
+        "numbers": [
+          1764523.06
+        ]
+      },
+      "answer": "The total cereal sales for the year 2025 were $1,764,523.06.",
+      "verdict": "correct",
+      "missing": [],
+      "ms": 3630,
+      "tools": [
+        "get_metric"
+      ]
+    },
+    {
+      "id": 2,
+      "kind": "rank",
+      "question": "Which brand had the highest share of sales?",
+      "expect": {
+        "names": [
+          "Crunchwell"
+        ],
+        "numbers": [
+          28.1
+        ]
+      },
+      "answer": "Crunchwell had the highest share of sales at 28.1%, followed closely by Morningfield with 28%.",
+      "verdict": "correct",
+      "missing": [],
+      "ms": 4233,
+      "tools": [
+        "get_metric"
+      ]
+    },
+    {
+      "id": 3,
+      "kind": "rank",
+      "question": "Which brand has the smallest share?",
+      "expect": {
+        "names": [
+          "Little Grain"
+        ],
+        "numbers": [
+          2.6
+        ]
+      },
+      "answer": "The brand with the smallest share is Little Grain, with a share of 2.6% in 2025.",
+      "verdict": "correct",
+      "missing": [],
+      "ms": 4170,
+      "tools": [
+        "get_metric"
+      ]
+    },
+    {
+      "id": 4,
+      "kind": "define",
+      "question": "What does promo lift mean?",
+      "expect": {
+        "anyWords": [
+          "promotion",
+          "promo"
+        ]
+      },
+      "answer": "Promo lift measures how many more units were sold per week while a product was on promotion compared to weeks without a promotion, expressed as a percentage.",
+      "verdict": "correct",
+      "missing": [],
+      "ms": 2872,
+      "tools": [
+        "describe_metric"
+      ]
+    },
+    {
+      "id": 5,
+      "kind": "rank",
+      "question": "Which brand got the biggest lift from promotions?",
+      "expect": {
+        "names": [
+          "Crunchwell"
+        ],
+        "numbers": [
+          138.9
+        ]
+      },
+      "answer": "Crunchwell received the biggest lift from promotions, with sales increasing by 31.7% during the second quarter compared to the first quarter.",
+      "verdict": "partial",
+      "missing": [
+        "138.9"
+      ],
+      "ms": 5624,
+      "tools": [
+        "compare_periods"
+      ]
+    },
+    {
+      "id": 6,
+      "kind": "value",
+      "question": "By how much did Crunchwell's weekly units go up during its promotion?",
+      "expect": {
+        "names": [
+          "Crunchwell"
+        ],
+        "numbers": [
+          138.9
+        ]
+      },
+      "answer": "During its promotion weeks 30 to 39, Crunchwell's weekly units did not change, remaining at 181.5 units per week.",
+      "verdict": "partial",
+      "missing": [
+        "138.9"
+      ],
+      "ms": 6708,
+      "tools": [
+        "compare_periods"
+      ]
+    },
+    {
+      "id": 7,
+      "kind": "compare",
+      "question": "How did Morningfield units change before and after week 30?",
+      "expect": {
+        "names": [
+          "Morningfield"
+        ],
+        "numbers": [
+          -17.9
+        ]
+      },
+      "answer": "Before week 30, Morningfield sold 2055 units, while after week 30, the sales dropped to 1696 units, representing a decrease of 17.5%.",
+      "verdict": "partial",
+      "missing": [
+        "-17.9"
+      ],
+      "ms": 5548,
+      "tools": [
+        "compare_periods"
+      ]
+    },
+    {
+      "id": 8,
+      "kind": "compare",
+      "question": "What happened to Morningfield's average price after week 30?",
+      "expect": {
+        "names": [
+          "Morningfield"
+        ],
+        "numbers": [
+          12.2
+        ]
+      },
+      "answer": "Morningfield's average price increased by 11.7% after week 30, from $4.79 to $5.35 per box.",
+      "verdict": "partial",
+      "missing": [
+        "12.2"
+      ],
+      "ms": 5189,
+      "tools": [
+        "compare_periods"
+      ]
+    },
+    {
+      "id": 9,
+      "kind": "compare",
+      "question": "What was Fernhill's share in Q1 versus Q4?",
+      "expect": {
+        "names": [
+          "Fernhill"
+        ],
+        "numbers": [
+          10.3,
+          13.3
+        ]
+      },
+      "answer": "Fernhill's share of sales in Q1 was 10.3%, while in Q4 it increased to 13.2%, representing a 28.2% increase.",
+      "verdict": "correct",
+      "missing": [],
+      "ms": 9198,
+      "tools": [
+        "compare_periods",
+        "compare_periods"
+      ]
+    },
+    {
+      "id": 10,
+      "kind": "compare",
+      "question": "Is the store brand gaining share?",
+      "expect": {
+        "names": [
+          "Fernhill"
+        ],
+        "numbers": [
+          10.5,
+          13.2
+        ],
+        "anyWords": [
+          "yes",
+          "grew",
+          "gain",
+          "gained",
+          "gaining",
+          "up",
+          "increase",
+          "increased",
+          "rose"
+        ]
+      },
+      "answer": "The store brand Fernhill gained 28.2% share from weeks 1 to 13 to weeks 27 to 52, indicating an increase in its market share over the period.",
+      "verdict": "partial",
+      "missing": [
+        "10.5"
+      ],
+      "ms": 9176,
+      "tools": [
+        "compare_periods",
+        "compare_periods"
+      ]
+    },
+    {
+      "id": 11,
+      "kind": "fact",
+      "question": "When did Little Grain launch?",
+      "expect": {
+        "names": [
+          "Little Grain"
+        ],
+        "numbers": [
+          40
+        ]
+      },
+      "answer": "Little Grain launched two products in week 40: \"Little Grain Ancient Grain Crisps\" and \"Little Grain Seed & Oat Clusters\".",
+      "verdict": "correct",
+      "missing": [],
+      "ms": 3337,
+      "tools": [
+        "list_events"
+      ]
+    },
+    {
+      "id": 12,
+      "kind": "value",
+      "question": "What were Little Grain sales in Q4?",
+      "expect": {
+        "names": [
+          "Little Grain"
+        ],
+        "numbers": [
+          45066.56
+        ]
+      },
+      "answer": "The sales for Little Grain in Q4 (weeks 40-52) were $45,066.56.",
+      "verdict": "correct",
+      "missing": [],
+      "ms": 4089,
+      "tools": [
+        "get_metric"
+      ]
+    },
+    {
+      "id": 13,
+      "kind": "rank",
+      "question": "Which region sells the most cereal?",
+      "expect": {
+        "names": [
+          "South"
+        ]
+      },
+      "answer": "The South region sells the most cereal, with total sales of $546,451.55, followed by the West with $353,628.21, the North with $454,565.26, and the East with $409,878.04 in 2025.",
+      "verdict": "correct",
+      "missing": [],
+      "ms": 13604,
+      "tools": [
+        "get_metric",
+        "get_metric",
+        "get_metric",
+        "get_metric"
+      ]
+    },
+    {
+      "id": 14,
+      "kind": "rank",
+      "question": "Which region had the lowest sales of Sunny Spoon Honey Rings in the second half?",
+      "expect": {
+        "names": [
+          "West"
+        ]
+      },
+      "answer": "The West region had the lowest sales of Sunny Spoon Honey Rings in the second half, with $14,300.47 in sales.",
+      "verdict": "correct",
+      "missing": [],
+      "ms": 15592,
+      "tools": [
+        "get_metric",
+        "get_metric",
+        "get_metric",
+        "get_metric"
+      ]
+    },
+    {
+      "id": 15,
+      "kind": "changed",
+      "question": "What changed between Q3 and Q4?",
+      "expect": {
+        "names": [
+          "Little Grain"
+        ]
+      },
+      "answer": "Between Q3 and Q4, Little Grain saw a significant increase in sales, adding $3,466.66 to its weekly sales. Oat & Acre's sales increased by 38.7%, adding $1,725.70 per week. Fernhill's sales grew by 20%, adding $812.59 per week. Sunny Spoon's sales decreased by 7.2%, losing $323.92 per week. Morningfield's sales decreased by 1.9%, losing $175.91 per week.",
+      "verdict": "correct",
+      "missing": [],
+      "ms": 10409,
+      "tools": [
+        "what_changed"
+      ]
+    },
+    {
+      "id": 16,
+      "kind": "changed",
+      "question": "Which products grew the most from the first half to the second half?",
+      "expect": {
+        "names": [
+          "Little Grain Ancient Grain Crisps"
+        ]
+      },
+      "answer": "From the first half to the second half of 2025, the products that grew the most in sales were \"Little Grain Ancient Grain Crisps\" with a growth of $953.03, and \"Little Grain Seed & Oat Clusters\" with a growth of $780.30.",
+      "verdict": "correct",
+      "missing": [],
+      "ms": 8016,
+      "tools": [
+        "what_changed"
+      ]
+    },
+    {
+      "id": 17,
+      "kind": "value",
+      "question": "What is Morningfield's price gap to the category?",
+      "expect": {
+        "names": [
+          "Morningfield"
+        ],
+        "numbers": [
+          13.5
+        ]
+      },
+      "answer": "Morningfield's price gap to the category is 13.5%.",
+      "verdict": "correct",
+      "missing": [],
+      "ms": 3126,
+      "tools": [
+        "get_metric"
+      ]
+    },
+    {
+      "id": 18,
+      "kind": "rank",
+      "question": "Which brand is cheapest?",
+      "expect": {
+        "names": [
+          "Fernhill"
+        ]
+      },
+      "answer": "The cheapest brand by average price is Fernhill at $3.17 per unit.",
+      "verdict": "correct",
+      "missing": [],
+      "ms": 4234,
+      "tools": [
+        "get_metric"
+      ]
+    },
+    {
+      "id": 19,
+      "kind": "value",
+      "question": "How many packs of Oat & Acre Rolled Oats sold in the North in Q1?",
+      "expect": {
+        "numbers": [
+          2624
+        ]
+      },
+      "answer": "The sales of Oat & Acre Rolled Oats in the North during Q1 amounted to $6,142.69.",
+      "verdict": "wrong",
+      "missing": [
+        "2624"
+      ],
+      "ms": 5076,
+      "tools": [
+        "get_metric"
+      ]
+    },
+    {
+      "id": 20,
+      "kind": "value",
+      "question": "What share of sales did Kids cereal have in the West?",
+      "expect": {
+        "numbers": [
+          33.7
+        ]
+      },
+      "answer": "In the West region, Kids cereal accounted for 33.7% of total sales over weeks 1 to 52.",
+      "verdict": "correct",
+      "missing": [],
+      "ms": 3730,
+      "tools": [
+        "get_metric"
+      ]
+    },
+    {
+      "id": 21,
+      "kind": "trend",
+      "question": "Show the weekly sales trend for hot cereal.",
+      "expect": {
+        "numbers": [
+          7791.15,
+          8331.43
+        ]
+      },
+      "answer": "The weekly sales trend for hot cereal from week 1 to week 52 totals $336,523.26.",
+      "verdict": "wrong",
+      "missing": [
+        "7791.15",
+        "8331.43"
+      ],
+      "ms": 4240,
+      "tools": [
+        "get_metric"
+      ]
+    },
+    {
+      "id": 22,
+      "kind": "compare",
+      "question": "Compare Crunchwell sales in weeks 16 to 19 with weeks 20 to 23.",
+      "expect": {
+        "names": [
+          "Crunchwell"
+        ],
+        "numbers": [
+          104.2
+        ]
+      },
+      "answer": "Crunchwell sales in weeks 16 to 19 were $8,792.58, while in weeks 20 to 23 they increased to $17,952.24, a 104.2% increase.",
+      "verdict": "correct",
+      "missing": [],
+      "ms": 6743,
+      "tools": [
+        "compare_periods"
+      ]
+    },
+    {
+      "id": 23,
+      "kind": "value",
+      "question": "What were total sales in Q2?",
+      "expect": {
+        "numbers": [
+          450507.67
+        ]
+      },
+      "answer": "The total sales in Q2 (weeks 14-26) were $450,507.67.",
+      "verdict": "correct",
+      "missing": [],
+      "ms": 3951,
+      "tools": [
+        "get_metric"
+      ]
+    },
+    {
+      "id": 24,
+      "kind": "compare",
+      "question": "How did granola do in the second half compared with the first half?",
+      "expect": {
+        "names": [
+          "Granola"
+        ],
+        "numbers": [
+          24.6
+        ]
+      },
+      "answer": "Granola sales in the second half of the year were $7,622.31, an increase of 24.6% compared to the first half, which generated $6,116.67 in sales.",
+      "verdict": "correct",
+      "missing": [],
+      "ms": 9185,
+      "tools": [
+        "compare_periods",
+        "compare_periods"
+      ]
+    },
+    {
+      "id": 25,
+      "kind": "why",
+      "question": "Why did Sunny Spoon sales drop in the West?",
+      "expect": {
+        "names": [
+          "Honey Rings"
+        ],
+        "numbers": [
+          35
+        ]
+      },
+      "answer": "Sunny Spoon sales dropped in the West because the product Sunny Spoon Honey Rings stopped selling from week 35 onwards.",
+      "verdict": "correct",
+      "missing": [],
+      "ms": 3397,
+      "tools": [
+        "list_events"
+      ]
+    },
+    {
+      "id": 26,
+      "kind": "value",
+      "question": "What was Crunchwell's average price during its promotion?",
+      "expect": {
+        "names": [
+          "Crunchwell"
+        ],
+        "numbers": [
+          4.19
+        ]
+      },
+      "answer": "Crunchwell's average price during its promotion was $4.67 for Crunchwell Cocoa Puffs and Crunchwell Berry Hoops, and $5.35 for Crunchwell Maple Clusters.",
+      "verdict": "partial",
+      "missing": [
+        "4.19"
+      ],
+      "ms": 7544,
+      "tools": [
+        "find_product",
+        "get_metric"
+      ]
+    },
+    {
+      "id": 27,
+      "kind": "rank",
+      "question": "What were the top 3 brands by units in Q3?",
+      "expect": {
+        "names": [
+          "Crunchwell",
+          "Morningfield",
+          "Fernhill"
+        ]
+      },
+      "answer": "The top 3 brands by units in Q3 (weeks 27-39) were Crunchwell with 23,368 units, Morningfield with 23,167 units, and Fernhill with 16,553 units.",
+      "verdict": "correct",
+      "missing": [],
+      "ms": 6212,
+      "tools": [
+        "get_metric"
+      ]
+    },
+    {
+      "id": 28,
+      "kind": "rank",
+      "question": "Which subcategory has the highest sales?",
+      "expect": {
+        "names": [
+          "Kids"
+        ]
+      },
+      "answer": "The subcategory with the highest sales is Flakes, with total sales of $448,474.35.",
+      "verdict": "wrong",
+      "missing": [
+        "Kids"
+      ],
+      "ms": 4388,
+      "tools": [
+        "get_metric"
+      ]
+    },
+    {
+      "id": 29,
+      "kind": "value",
+      "question": "How much did the East region sell in the last 4 weeks?",
+      "expect": {
+        "numbers": [
+          35536.18
+        ]
+      },
+      "answer": "The East region sold $111,811.79 worth of breakfast cereal in the last 4 weeks.",
+      "verdict": "wrong",
+      "missing": [
+        "35536.18"
+      ],
+      "ms": 4277,
+      "tools": [
+        "get_metric"
+      ]
+    },
+    {
+      "id": 30,
+      "kind": "compare",
+      "question": "Did Morningfield lose share after its price rise?",
+      "expect": {
+        "names": [
+          "Morningfield"
+        ],
+        "numbers": [
+          29.2,
+          26.5
+        ],
+        "anyWords": [
+          "yes",
+          "lost",
+          "fell",
+          "down",
+          "dropped",
+          "decreased",
+          "lower"
+        ]
+      },
+      "answer": "After the price rise, Morningfield lost share in all regions. The largest decrease was in the East region, where its share dropped from 28.9% to 24.3%, a decrease of 15.9 percentage points. Similar decreases were observed in the North and South regions, with a 16.2% drop each, and a 11.9% drop in the West region.",
+      "verdict": "partial",
+      "missing": [
+        "26.5"
+      ],
+      "ms": 9433,
+      "tools": [
+        "compare_periods"
+      ]
+    }
+  ]
+}

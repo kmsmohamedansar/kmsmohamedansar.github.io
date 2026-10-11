@@ -1,0 +1,217 @@
+{
+  "summary": {
+    "brain": "rules",
+    "label": "v2",
+    "set": "holdout",
+    "model": null,
+    "ran_at": "2026-10-10T22:43:42.116Z",
+    "node": "v22.22.0",
+    "platform": "linux-x64",
+    "questions": 10,
+    "correct": 8,
+    "partial": 1,
+    "wrong": 1,
+    "median_ms": 1,
+    "max_ms": 17,
+    "rescored_at": "2026-10-11T01:47:28.829Z"
+  },
+  "results": [
+    {
+      "id": 101,
+      "kind": "value",
+      "question": "How much money did Oat & Acre bring in during Q1?",
+      "expect": {
+        "names": [
+          "Oat & Acre"
+        ],
+        "numbers": [
+          84684.2
+        ]
+      },
+      "answer": "Oat & Acre in Q1: sales $84,684.",
+      "verdict": "correct",
+      "missing": [],
+      "ms": 17,
+      "tools": [
+        "get_metric"
+      ]
+    },
+    {
+      "id": 102,
+      "kind": "rank",
+      "question": "Which product sold the most units in the South?",
+      "expect": {
+        "names": [
+          "Morningfield Golden Flakes"
+        ]
+      },
+      "answer": "Morningfield Golden Flakes has the highest units in the South over the year: 14,901.",
+      "verdict": "correct",
+      "missing": [],
+      "ms": 2,
+      "tools": [
+        "get_metric"
+      ]
+    },
+    {
+      "id": 103,
+      "kind": "compare",
+      "question": "Did Crunchwell sell more after its promotion ended?",
+      "expect": {
+        "names": [
+          "Crunchwell"
+        ],
+        "numbers": [
+          -15.1
+        ]
+      },
+      "answer": "Crunchwell: sales per week went from $8,833 in weeks 1–19 to $9,950 in weeks 20–52 (+12.6%).",
+      "verdict": "partial",
+      "missing": [
+        "-15.1"
+      ],
+      "ms": 4,
+      "tools": [
+        "list_events",
+        "compare_periods"
+      ]
+    },
+    {
+      "id": 104,
+      "kind": "fact",
+      "question": "When did Honey Rings stop selling in the West?",
+      "expect": {
+        "names": [
+          "Honey Rings"
+        ],
+        "numbers": [
+          35
+        ]
+      },
+      "answer": "Sunny Spoon Honey Rings stopped selling in the West from week 35.",
+      "verdict": "correct",
+      "missing": [],
+      "ms": 4,
+      "tools": [
+        "list_events"
+      ]
+    },
+    {
+      "id": 105,
+      "kind": "value",
+      "question": "What's the share for Little Grain in Q4?",
+      "expect": {
+        "names": [
+          "Little Grain"
+        ],
+        "numbers": [
+          9.5
+        ]
+      },
+      "answer": "Little Grain in Q4: share 9.5%.",
+      "verdict": "correct",
+      "missing": [],
+      "ms": 1,
+      "tools": [
+        "get_metric"
+      ]
+    },
+    {
+      "id": 106,
+      "kind": "rank",
+      "question": "Name the three biggest products by sales.",
+      "expect": {
+        "names": [
+          "Morningfield Golden Flakes",
+          "Crunchwell Cocoa Puffs",
+          "Crunchwell Berry Hoops"
+        ]
+      },
+      "answer": "Morningfield Golden Flakes has the highest sales over the year: $227,922.",
+      "verdict": "wrong",
+      "missing": [
+        "Crunchwell Cocoa Puffs",
+        "Crunchwell Berry Hoops"
+      ],
+      "ms": 1,
+      "tools": [
+        "get_metric"
+      ]
+    },
+    {
+      "id": 107,
+      "kind": "define",
+      "question": "How is price gap worked out?",
+      "expect": {
+        "anyWords": [
+          "average price",
+          "category"
+        ]
+      },
+      "answer": "Price gap: How much more (or less) a brand's average price is than the whole category's average price in the same weeks and region, in percent.",
+      "verdict": "correct",
+      "missing": [],
+      "ms": 0,
+      "tools": [
+        "describe_metric"
+      ]
+    },
+    {
+      "id": 108,
+      "kind": "compare",
+      "question": "Compare hot cereal sales in Q1 and Q3.",
+      "expect": {
+        "numbers": [
+          -28.8
+        ]
+      },
+      "answer": "Hot cereal: sales per week went from $7,473 in Q1 to $5,319 in Q3 (-28.8%).",
+      "verdict": "correct",
+      "missing": [],
+      "ms": 1,
+      "tools": [
+        "compare_periods"
+      ]
+    },
+    {
+      "id": 109,
+      "kind": "rank",
+      "question": "Which region has the most expensive average price?",
+      "expect": {
+        "names": [
+          "West"
+        ]
+      },
+      "answer": "West has the highest average price over the year: $4.41.",
+      "verdict": "correct",
+      "missing": [],
+      "ms": 1,
+      "tools": [
+        "get_metric"
+      ]
+    },
+    {
+      "id": 110,
+      "kind": "why",
+      "question": "Why did Morningfield's units fall in the second half?",
+      "expect": {
+        "names": [
+          "Morningfield"
+        ],
+        "numbers": [
+          30
+        ],
+        "anyWords": [
+          "price"
+        ]
+      },
+      "answer": "From the data: Morningfield shelf price up 12% from week 30.",
+      "verdict": "correct",
+      "missing": [],
+      "ms": 1,
+      "tools": [
+        "list_events"
+      ]
+    }
+  ]
+}
