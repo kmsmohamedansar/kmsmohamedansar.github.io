@@ -1,0 +1,50 @@
+{"id": "h001", "text": "phishing email from you?", "urgent": true, "team": "security-privacy", "frustration": 2, "tags": ["very-short"]}
+{"id": "h002", "text": "You've had a bug in the overtime report for two months, I've reported it four times, and every reply is a copy-paste. I'm writing a review today.", "urgent": false, "team": "technical-support", "frustration": 5, "tags": ["plain"]}
+{"id": "h003", "text": "We added a new location and the managers there can see our other location's schedules. They shouldn't. How do I restrict that?", "urgent": false, "team": "account-access", "frustration": 2, "tags": ["plain"]}
+{"id": "h004", "text": "Someone reset all our admin passwords overnight and I didn't ask for it. We're locked out and worried.", "urgent": true, "team": "security-privacy", "frustration": 4, "tags": ["plain"]}
+{"id": "h005", "text": "Nice job on the new reports page!", "urgent": false, "team": "feedback", "frustration": 1, "tags": ["plain"]}
+{"id": "h006", "text": "Page loads but all buttons greyed out", "urgent": true, "team": "technical-support", "frustration": 3, "tags": ["very-short"]}
+{"id": "h007", "text": "Very good application, my team is happy. Only one wish, please make possible to print schedule in A3 big paper.", "urgent": false, "team": "feedback", "frustration": 1, "tags": ["non-native"]}
+{"id": "h008", "text": "We have 120 staff across 4 restaurants. Can we get a quote for the Business plan with a yearly contract?", "urgent": false, "team": "sales", "frustration": 1, "tags": ["plain"]}
+{"id": "h009", "text": "How do I remove a user so we stop paying for them? She left the company last month.", "urgent": false, "team": "billing", "frustration": 1, "tags": ["plain"]}
+{"id": "h010", "text": "Glad to see you're so relaxed about security that a password reset doesn't even log out other sessions. Very trusting of you.", "urgent": false, "team": "security-privacy", "frustration": 3, "tags": ["sarcasm"]}
+{"id": "h011", "text": "Which fields does the invoice webhook include? I need the due date.", "urgent": false, "team": "integrations-api", "frustration": 1, "tags": ["plain"]}
+{"id": "h012", "text": "I asked for my data to be deleted 45 days ago. That's past the legal limit. I'll be contacting the data protection authority if I don't hear back today.", "urgent": true, "team": "security-privacy", "frustration": 5, "tags": ["plain"]}
+{"id": "h013", "text": "Just wanted to say the app has been really slow this week, takes about 10 seconds to open the timesheet. Not urgent.", "urgent": false, "team": "technical-support", "frustration": 2, "tags": ["plain"]}
+{"id": "h014", "text": "my login email has a typo in it, how do i fix", "urgent": false, "team": "account-access", "frustration": 1, "tags": ["plain"]}
+{"id": "h015", "text": "Is there an endpoint to create shifts in bulk? Docs only show one at a time.", "urgent": false, "team": "integrations-api", "frustration": 1, "tags": ["plain"]}
+{"id": "h016", "text": "The new layout is much harder to use than the old one. Everything takes more clicks now. Please bring back the old version or let us choose.", "urgent": false, "team": "feedback", "frustration": 3, "tags": ["plain"]}
+{"id": "h017", "text": "Can you add a map of where staff clocked in from? Would help with our mobile cleaners.", "urgent": false, "team": "feedback", "frustration": 1, "tags": ["plain"]}
+{"id": "h018", "text": "webhook not firing", "urgent": false, "team": "integrations-api", "frustration": 2, "tags": ["very-short"]}
+{"id": "h019", "text": "My employees keep getting logged out of the mobile app in the middle of shifts. Clock-ins are being lost. This has been going on for a week and I'm losing patience.", "urgent": true, "team": "technical-support", "frustration": 4, "tags": ["plain"]}
+{"id": "h020", "text": "Is there a minimum contract length?", "urgent": false, "team": "sales", "frustration": 1, "tags": ["plain"]}
+{"id": "h021", "text": "How do I set up a recurring invoice that goes out on the 1st of every month?", "urgent": false, "team": "how-to", "frustration": 1, "tags": ["plain"]}
+{"id": "h022", "text": "How long do you keep timesheet data after we close our account?", "urgent": false, "team": "security-privacy", "frustration": 1, "tags": ["plain"]}
+{"id": "h023", "text": "Account locked after too many tries. How long until it unlocks?", "urgent": false, "team": "account-access", "frustration": 2, "tags": ["plain"]}
+{"id": "h024", "text": "Love how cancelling takes six clicks and a survey but charging me takes zero. Please just cancel it.", "urgent": false, "team": "billing", "frustration": 4, "tags": ["sarcasm"]}
+{"id": "h025", "text": "Buenas, we want buy for our 3 bakeries, but the website only accept credit card and we pay always by transfer. How to do?", "urgent": false, "team": "sales", "frustration": 1, "tags": ["non-native"]}
+{"id": "h026", "text": "Week view starts on Sunday even though I set Monday in settings.", "urgent": false, "team": "technical-support", "frustration": 2, "tags": ["plain"]}
+{"id": "h027", "text": "I've asked this twice already and keep getting links to the same article that doesn't answer it. How do I set different overtime rules for part-time staff?", "urgent": false, "team": "how-to", "frustration": 4, "tags": ["plain"]}
+{"id": "h028", "text": "Can we have a copy of the data you hold about one of our employees? She made a formal request to us.", "urgent": false, "team": "security-privacy", "frustration": 1, "tags": ["plain"]}
+{"id": "h029", "text": "Reset link expired", "urgent": false, "team": "account-access", "frustration": 2, "tags": ["very-short"]}
+{"id": "h030", "text": "Sorry if stupid question. When worker forget clock out, how I can change the hour after?", "urgent": false, "team": "how-to", "frustration": 1, "tags": ["non-native"]}
+{"id": "h031", "text": "Please, how to put the hour in 24 format? Here we not use AM PM.", "urgent": false, "team": "how-to", "frustration": 1, "tags": ["non-native"]}
+{"id": "h032", "text": "Do you offer a discount for charities? We're a food bank with about 30 volunteers.", "urgent": false, "team": "sales", "frustration": 1, "tags": ["plain"]}
+{"id": "h033", "text": "Great job, Quillstack. Charged me for a Business plan I never chose. Truly the best billing system ever built.", "urgent": true, "team": "billing", "frustration": 4, "tags": ["sarcasm"]}
+{"id": "h034", "text": "pricing for 50 users?", "urgent": false, "team": "sales", "frustration": 1, "tags": ["very-short"]}
+{"id": "h035", "text": "love it", "urgent": false, "team": "feedback", "frustration": 1, "tags": ["very-short"]}
+{"id": "h036", "text": "I've been clicking around for 20 minutes trying to find where to set overtime rules. Where is it hiding?", "urgent": false, "team": "how-to", "frustration": 3, "tags": ["plain"]}
+{"id": "h037", "text": "Can I attach a document, like a menu or a safety sheet, to a shift?", "urgent": false, "team": "how-to", "frustration": 1, "tags": ["plain"]}
+{"id": "h038", "text": "Great, the new login page looks lovely. Shame none of us can actually get through it since this morning.", "urgent": true, "team": "account-access", "frustration": 4, "tags": ["sarcasm"]}
+{"id": "h039", "text": "The receipt emails go to my old address. Also, while I'm here, the mobile app logs me out every few hours, which is annoying.", "urgent": false, "team": "billing", "frustration": 2, "tags": ["two-problems"]}
+{"id": "h040", "text": "I can see another company's employees on my schedule page. Names, phone numbers, everything. This looks like a serious data leak.", "urgent": true, "team": "security-privacy", "frustration": 4, "tags": ["plain"]}
+{"id": "h041", "text": "Guten Tag, the connection with calendar make all shifts one hour later since the clock change. Please can you check timezone?", "urgent": false, "team": "integrations-api", "frustration": 2, "tags": ["non-native"]}
+{"id": "h042", "text": "I'm sure removing the export-to-spreadsheet shortcut made sense in a meeting somewhere. Out here in the real world we miss it.", "urgent": false, "team": "feedback", "frustration": 3, "tags": ["sarcasm"]}
+{"id": "h043", "text": "Demo please", "urgent": false, "team": "sales", "frustration": 1, "tags": ["very-short"]}
+{"id": "h044", "text": "My staff invite link says expired. Also, can you tell me how to set overtime rules? Those are my two questions.", "urgent": false, "team": "account-access", "frustration": 1, "tags": ["two-problems"]}
+{"id": "h045", "text": "What's the rate limit on the public API? We're getting 429 errors when we pull timesheets at night.", "urgent": false, "team": "integrations-api", "frustration": 2, "tags": ["plain"]}
+{"id": "h046", "text": "Can I get webhooks signed so I can check they really come from you?", "urgent": false, "team": "integrations-api", "frustration": 1, "tags": ["plain"]}
+{"id": "h047", "text": "The schedule page won't load. I get 'Something went wrong (error 500)' every time. Started about an hour ago.", "urgent": true, "team": "technical-support", "frustration": 3, "tags": ["plain"]}
+{"id": "h048", "text": "Sir please my company pay two time this month, the bank show it. Kindly return one payment, we are small shop and money is tight.", "urgent": true, "team": "billing", "frustration": 3, "tags": ["non-native"]}
+{"id": "h049", "text": "how do I add a new employee? and also why is my bill higher this month?", "urgent": false, "team": "billing", "frustration": 2, "tags": ["two-problems", "very-short"]}
+{"id": "h050", "text": "The sign-in page just spins forever on Safari. Chrome works. Not a big deal but thought you should know.", "urgent": false, "team": "technical-support", "frustration": 1, "tags": ["plain"]}

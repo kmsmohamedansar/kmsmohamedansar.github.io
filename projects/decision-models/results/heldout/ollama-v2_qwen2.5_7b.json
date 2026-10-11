@@ -1,0 +1,131 @@
+{
+  "adapter": "ollama-v2:qwen2.5:7b",
+  "split": "heldout",
+  "machine": "MacBook Air M4 16GB",
+  "started": "2026-10-11T19:10:56+00:00",
+  "n": 50,
+  "urgent_accuracy": 0.82,
+  "team_accuracy": 0.64,
+  "team_accuracy_by_team": {
+    "billing": {
+      "right": 5,
+      "of": 6
+    },
+    "account-access": {
+      "right": 5,
+      "of": 6
+    },
+    "technical-support": {
+      "right": 7,
+      "of": 7
+    },
+    "integrations-api": {
+      "right": 3,
+      "of": 6
+    },
+    "security-privacy": {
+      "right": 5,
+      "of": 7
+    },
+    "sales": {
+      "right": 4,
+      "of": 6
+    },
+    "how-to": {
+      "right": 0,
+      "of": 6
+    },
+    "feedback": {
+      "right": 3,
+      "of": 6
+    }
+  },
+  "frustration_mean_distance": 0.852,
+  "frustration_exact": 0.4,
+  "seconds_median": 7.7222,
+  "seconds_p90": 8.1661,
+  "tokens": {
+    "input": 23203,
+    "output": 3326
+  },
+  "cost_per_1000": 0.0,
+  "cost_note": "runs locally: no per-request charge (electricity and hardware not counted)",
+  "repairs": {
+    "missing_option": 0,
+    "rescaled": 0,
+    "no_probabilities": 0
+  },
+  "calibration": {
+    "is_urgent": {
+      "ece": 0.126,
+      "bins": [
+        {
+          "from": 0.8,
+          "to": 0.9,
+          "n": 1,
+          "mean_confidence": 0.8,
+          "accuracy": 1.0
+        },
+        {
+          "from": 0.9,
+          "to": 1.0,
+          "n": 49,
+          "mean_confidence": 0.941,
+          "accuracy": 0.816
+        }
+      ]
+    },
+    "team": {
+      "ece": 0.221,
+      "bins": [
+        {
+          "from": 0.6,
+          "to": 0.7,
+          "n": 5,
+          "mean_confidence": 0.6,
+          "accuracy": 0.6
+        },
+        {
+          "from": 0.8,
+          "to": 0.9,
+          "n": 25,
+          "mean_confidence": 0.802,
+          "accuracy": 0.64
+        },
+        {
+          "from": 0.9,
+          "to": 1.0,
+          "n": 20,
+          "mean_confidence": 1.0,
+          "accuracy": 0.65
+        }
+      ]
+    },
+    "frustration": {
+      "ece": 0.428,
+      "bins": [
+        {
+          "from": 0.7,
+          "to": 0.8,
+          "n": 24,
+          "mean_confidence": 0.7,
+          "accuracy": 0.417
+        },
+        {
+          "from": 0.8,
+          "to": 0.9,
+          "n": 6,
+          "mean_confidence": 0.8,
+          "accuracy": 0.167
+        },
+        {
+          "from": 0.9,
+          "to": 1.0,
+          "n": 20,
+          "mean_confidence": 0.99,
+          "accuracy": 0.45
+        }
+      ]
+    }
+  }
+}

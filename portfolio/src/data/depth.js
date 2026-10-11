@@ -17,6 +17,21 @@ export const DEPTH = {
     },
   },
 
+  "decision-models": {
+    found:
+      "A new kind of model, the decision model, promised fast typed answers with honest probabilities, and every number about it came from its makers. I'd also seen how a general model's \"confidence\" can be a number it simply writes down. Nobody had tested both on the same realistic task.",
+    tradeoffs: [
+      { chose: "Writing the labelling rules before any request", over: "labelling as I went", because: "rules written afterwards quietly bend to fit the data." },
+      { chose: "A held-out set scored once, after everything was fixed", over: "reporting the best development numbers", because: "every prompt fix I made was on the development set. The held-out set is the only fair comparison." },
+      { chose: "Measuring calibration, not just accuracy", over: "a single accuracy score", because: "two models with the same accuracy can be very different to deploy: one tells you which answers to check, the other doesn't." },
+      { chose: "Keeping my failed first prompt in the results", over: "showing only the fixed one", because: "it showed that how you ask a general model can matter more than the model. That's a finding, not an embarrassment." },
+    ],
+    ai: {
+      label: "Is a decision model better than a general one?",
+      text: "That's what the project measures. Here, yes: the 2B decision model beat the 7B general model on team by 16 points, five times faster, with honest confidence. But not every decision model did, and keyword rules were close on accuracy. Measure on your own tickets before trusting anyone's benchmark, including mine.",
+    },
+  },
+
   "catalogue-checker": {
     found:
       "My old categorization notebook used a large AI model on five products in about twelve minutes, with no answer key. So I couldn't say whether it was accurate, or whether it could ever check a real catalogue. I rebuilt it to answer both.",

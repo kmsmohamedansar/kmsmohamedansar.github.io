@@ -1,0 +1,37 @@
+{
+  "fast": "strands-decider-2b",
+  "slow": "ollama-v2_qwen2.5_7b",
+  "threshold": 0.0,
+  "basis": "min",
+  "exploratory": false,
+  "cascade": {
+    "threshold": 0.0,
+    "handed_over": 0,
+    "handed_share": 0.0,
+    "urgent_accuracy": 0.82,
+    "team_accuracy": 0.8,
+    "frustration_mean_distance": 1.147,
+    "seconds_total": 73.718,
+    "seconds_median": 1.4538
+  },
+  "fast_alone": {
+    "threshold": 0.0,
+    "handed_over": 0,
+    "handed_share": 0.0,
+    "urgent_accuracy": 0.82,
+    "team_accuracy": 0.8,
+    "frustration_mean_distance": 1.147,
+    "seconds_total": 73.718,
+    "seconds_median": 1.4538
+  },
+  "slow_alone": {
+    "threshold": 1.01,
+    "handed_over": 50,
+    "handed_share": 1.0,
+    "urgent_accuracy": 0.82,
+    "team_accuracy": 0.64,
+    "frustration_mean_distance": 0.852,
+    "seconds_total": 429.35,
+    "seconds_median": 9.14
+  }
+}

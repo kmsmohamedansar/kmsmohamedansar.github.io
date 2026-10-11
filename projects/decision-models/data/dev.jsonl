@@ -1,0 +1,200 @@
+{"id": "d001", "text": "Broken again", "urgent": false, "team": "technical-support", "frustration": 4, "tags": ["very-short"]}
+{"id": "d002", "text": "Hi, I was charged twice for October. Two identical payments of $64 on the 3rd. Could you refund one of them please?", "urgent": true, "team": "billing", "frustration": 2, "tags": ["plain"]}
+{"id": "d003", "text": "2fa code not working", "urgent": true, "team": "account-access", "frustration": 2, "tags": ["very-short"]}
+{"id": "d004", "text": "I accidentally deleted a whole location with 3 months of timesheets. Is there any way to get it back? Please.", "urgent": true, "team": "technical-support", "frustration": 3, "tags": ["plain"]}
+{"id": "d005", "text": "can't log in", "urgent": true, "team": "account-access", "frustration": 2, "tags": ["very-short"]}
+{"id": "d006", "text": "Thank you for the fix yesterday! Small follow-up: the break times still show in the old format on the mobile app.", "urgent": false, "team": "technical-support", "frustration": 1, "tags": ["plain"]}
+{"id": "d007", "text": "Your support person Priya was brilliant yesterday. Please pass on my thanks.", "urgent": false, "team": "feedback", "frustration": 1, "tags": ["plain"]}
+{"id": "d008", "text": "Can employees set their availability in the app so I don't schedule them on days they can't work?", "urgent": false, "team": "how-to", "frustration": 1, "tags": ["plain"]}
+{"id": "d009", "text": "Is there a way to require a photo when staff clock in?", "urgent": false, "team": "how-to", "frustration": 1, "tags": ["plain"]}
+{"id": "d010", "text": "Three emails, zero replies, still can't log in. Is anyone actually working there?", "urgent": true, "team": "account-access", "frustration": 5, "tags": ["plain"]}
+{"id": "d011", "text": "Overtime is calculated wrong for night shifts that cross midnight. It counts them as two separate days.", "urgent": false, "team": "technical-support", "frustration": 2, "tags": ["plain"]}
+{"id": "d012", "text": "Can I see labour cost as a percentage of sales in the schedule view?", "urgent": false, "team": "how-to", "frustration": 1, "tags": ["plain"]}
+{"id": "d013", "text": "Payment connection to our card processor broke after your update. Clients can't pay invoices online and we're losing money every hour.", "urgent": true, "team": "integrations-api", "frustration": 4, "tags": ["plain"]}
+{"id": "d014", "text": "Our single sign-on stopped working this morning. All 40 staff see 'invalid response'. Nobody can clock in.", "urgent": true, "team": "account-access", "frustration": 4, "tags": ["plain"]}
+{"id": "d015", "text": "Can staff log in with a PIN on a shared tablet instead of email?", "urgent": false, "team": "account-access", "frustration": 1, "tags": ["plain"]}
+{"id": "d016", "text": "Our developer left and we don't know which API keys are still used. Can we see when each key was last used?", "urgent": false, "team": "integrations-api", "frustration": 1, "tags": ["plain"]}
+{"id": "d017", "text": "The new icons are cute but the font is too small for older staff. Bigger text option please.", "urgent": false, "team": "feedback", "frustration": 2, "tags": ["plain"]}
+{"id": "d018", "text": "The holiday calendar shows the wrong date for Easter Monday in the UK.", "urgent": false, "team": "technical-support", "frustration": 1, "tags": ["plain"]}
+{"id": "d019", "text": "Strange login alert from a city I've never been to, and my reports page is also loading really slowly. Not sure if related.", "urgent": true, "team": "security-privacy", "frustration": 3, "tags": ["two-problems"]}
+{"id": "d020", "text": "Would love a way to colour shifts by role, not just by employee. Otherwise the app is great!", "urgent": false, "team": "feedback", "frustration": 1, "tags": ["plain"]}
+{"id": "d021", "text": "We were double charged AND now nobody on my team can log in since the payment issue. Please help, payroll runs tomorrow.", "urgent": true, "team": "account-access", "frustration": 4, "tags": ["two-problems"]}
+{"id": "d022", "text": "wrong amount on invoice", "urgent": false, "team": "billing", "frustration": 2, "tags": ["very-short"]}
+{"id": "d023", "text": "Two things: our sales export to the accounting tool failed overnight, and can someone explain the new per-location pricing before we add a fourth shop?", "urgent": false, "team": "integrations-api", "frustration": 2, "tags": ["two-problems"]}
+{"id": "d024", "text": "I wish the app had a simple chat so I can message one person about their shift.", "urgent": false, "team": "feedback", "frustration": 1, "tags": ["plain"]}
+{"id": "d025", "text": "Is there a price for seasonal staff? We go from 10 people in winter to 60 in summer.", "urgent": false, "team": "sales", "frustration": 1, "tags": ["plain"]}
+{"id": "d026", "text": "Calendar sync stopped and also I was billed for a seat for someone I removed. Two issues, sorry.", "urgent": false, "team": "billing", "frustration": 2, "tags": ["two-problems"]}
+{"id": "d027", "text": "We need an audit log of who viewed payroll data in the last 90 days, for an internal investigation.", "urgent": false, "team": "security-privacy", "frustration": 1, "tags": ["plain"]}
+{"id": "d028", "text": "Our employee's payslip was emailed to the wrong person, another staff member. How did this happen and can you tell us who else got it?", "urgent": true, "team": "security-privacy", "frustration": 4, "tags": ["plain"]}
+{"id": "d029", "text": "Someone changed my password and I didn't do it. I can't get in and I see emails about a new device login from another country.", "urgent": true, "team": "security-privacy", "frustration": 4, "tags": ["plain"]}
+{"id": "d030", "text": "Please delete all data you hold about me. I worked at a shop that used Quillstack and I've left.", "urgent": false, "team": "security-privacy", "frustration": 1, "tags": ["plain"]}
+{"id": "d031", "text": "Your timesheet endpoint returns hours as strings sometimes and numbers other times. Can it be consistent?", "urgent": false, "team": "integrations-api", "frustration": 2, "tags": ["plain"]}
+{"id": "d032", "text": "Third month in a row the invoice total doesn't match the number of seats. I'm tired of checking your maths for you. Sort it out or we leave.", "urgent": false, "team": "billing", "frustration": 4, "tags": ["plain"]}
+{"id": "d033", "text": "How do I set a reminder for staff the night before their shift? Also I noticed the logo on my invoices looks blurry.", "urgent": false, "team": "how-to", "frustration": 1, "tags": ["two-problems"]}
+{"id": "d034", "text": "Can I change the email address I log in with? I'm moving to a new domain.", "urgent": false, "team": "account-access", "frustration": 1, "tags": ["plain"]}
+{"id": "d035", "text": "How do I set up two-step login for all admins?", "urgent": false, "team": "account-access", "frustration": 1, "tags": ["plain"]}
+{"id": "d036", "text": "Just wanted to say thank you. Scheduling used to take me a whole Sunday and now it's 20 minutes.", "urgent": false, "team": "feedback", "frustration": 1, "tags": ["plain"]}
+{"id": "d037", "text": "How do I print a weekly schedule to put on the staff room wall?", "urgent": false, "team": "how-to", "frustration": 1, "tags": ["plain"]}
+{"id": "d038", "text": "Our board approves the budget tomorrow morning. I need a signed quote for 150 users by tonight or we lose the budget until next year.", "urgent": true, "team": "sales", "frustration": 3, "tags": ["plain"]}
+{"id": "d039", "text": "PDF invoices have garbled characters wherever there is an accent, like é or ñ. Our client names look broken.", "urgent": false, "team": "technical-support", "frustration": 2, "tags": ["plain"]}
+{"id": "d040", "text": "Can we get a security questionnaire filled in as part of our buying process? It's about 40 questions.", "urgent": false, "team": "sales", "frustration": 1, "tags": ["plain"]}
+{"id": "d041", "text": "I need to transfer the admin role to my business partner before I go on leave Friday.", "urgent": false, "team": "account-access", "frustration": 1, "tags": ["plain"]}
+{"id": "d042", "text": "Can you confirm that you don't sell our employees' data to anyone? A staff member asked.", "urgent": false, "team": "security-privacy", "frustration": 1, "tags": ["plain"]}
+{"id": "d043", "text": "Oh sure, I'll just copy 300 invoices into the accounting system by hand while your sync 'investigates'. No problem at all.", "urgent": false, "team": "integrations-api", "frustration": 4, "tags": ["sarcasm"]}
+{"id": "d044", "text": "Thanks so much for the quick help with the double charge last week, the refund arrived today. Could you also send a corrected invoice?", "urgent": false, "team": "billing", "frustration": 1, "tags": ["plain"]}
+{"id": "d045", "text": "integration gives error code 1007??", "urgent": false, "team": "integrations-api", "frustration": 2, "tags": ["very-short"]}
+{"id": "d046", "text": "I cancelled but you keep emailing me about renewal. Did the cancellation go through or not? I don't want another charge.", "urgent": false, "team": "billing", "frustration": 3, "tags": ["plain"]}
+{"id": "d047", "text": "Nice to know my staff's home addresses are visible to every other employee. Really respectful of their privacy. Please fix.", "urgent": true, "team": "security-privacy", "frustration": 4, "tags": ["sarcasm"]}
+{"id": "d048", "text": "Can I set different pay rates for weekends?", "urgent": false, "team": "how-to", "frustration": 1, "tags": ["plain"]}
+{"id": "d049", "text": "An ex-employee says she can still see the schedule through an old link someone shared. Can you kill those links?", "urgent": true, "team": "security-privacy", "frustration": 3, "tags": ["plain"]}
+{"id": "d050", "text": "THIS IS THE THIRD TIME THE TIMESHEETS HAVE RESET TO ZERO. I AM DONE. GIVE ME A REASON NOT TO SWITCH TODAY.", "urgent": true, "team": "technical-support", "frustration": 5, "tags": ["plain"]}
+{"id": "d051", "text": "How do I disconnect the old accounting connection without losing invoice history?", "urgent": false, "team": "integrations-api", "frustration": 1, "tags": ["plain"]}
+{"id": "d052", "text": "Do you have a plan for a single small shop with 4 employees? Business seems like overkill.", "urgent": false, "team": "sales", "frustration": 1, "tags": ["plain"]}
+{"id": "d053", "text": "where is export button", "urgent": false, "team": "how-to", "frustration": 2, "tags": ["very-short"]}
+{"id": "d054", "text": "Could you add a feature for tracking staff certifications, like food safety, with expiry reminders?", "urgent": false, "team": "feedback", "frustration": 1, "tags": ["plain"]}
+{"id": "d055", "text": "Bonjour, we pay in euros but the invoice shows dollars. Is possible to change the currency for next invoices?", "urgent": false, "team": "billing", "frustration": 1, "tags": ["non-native"]}
+{"id": "d056", "text": "need enterprise quote", "urgent": false, "team": "sales", "frustration": 1, "tags": ["very-short"]}
+{"id": "d057", "text": "someone logged into my account from abroad", "urgent": true, "team": "security-privacy", "frustration": 3, "tags": ["very-short"]}
+{"id": "d058", "text": "I forgot my password and the reset email never arrives. I've checked spam. Can't get in to approve timesheets.", "urgent": true, "team": "account-access", "frustration": 3, "tags": ["plain"]}
+{"id": "d059", "text": "Lovely that your sales rep promised a 20% discount and then the contract says 10%. Very trustworthy. Which number is real?", "urgent": false, "team": "sales", "frustration": 4, "tags": ["sarcasm"]}
+{"id": "d060", "text": "Is it possible to make a read-only login for our accountant?", "urgent": false, "team": "account-access", "frustration": 1, "tags": ["plain"]}
+{"id": "d061", "text": "Cancel. Now.", "urgent": false, "team": "billing", "frustration": 4, "tags": ["very-short"]}
+{"id": "d062", "text": "Your competitor offered us 30% off. Can you match it? Otherwise we'll go with them next month.", "urgent": false, "team": "sales", "frustration": 2, "tags": ["plain"]}
+{"id": "d063", "text": "Is it a good idea for me to suggest that maybe, just maybe, a scheduling app should let you schedule more than 4 weeks ahead? Just a thought.", "urgent": false, "team": "feedback", "frustration": 3, "tags": ["sarcasm"]}
+{"id": "d064", "text": "refund pls", "urgent": false, "team": "billing", "frustration": 2, "tags": ["very-short"]}
+{"id": "d065", "text": "Good evening. My employee say she receive notification with salary of colleague. This is very bad for us, please check what happen.", "urgent": true, "team": "security-privacy", "frustration": 3, "tags": ["non-native"]}
+{"id": "d066", "text": "Oh good, the 'Save' button now does nothing. Very minimalist. I suppose we'll just remember the schedule in our heads.", "urgent": true, "team": "technical-support", "frustration": 4, "tags": ["sarcasm"]}
+{"id": "d067", "text": "Thanks for the very detailed help docs that explain everything except the one thing I need. How do I add a public holiday?", "urgent": false, "team": "how-to", "frustration": 3, "tags": ["sarcasm"]}
+{"id": "d068", "text": "Please, the employee import from our HR system put birth dates in the start date field for all 120 people. How we undo?", "urgent": false, "team": "integrations-api", "frustration": 3, "tags": ["non-native"]}
+{"id": "d069", "text": "error 403 when opening reports", "urgent": false, "team": "technical-support", "frustration": 2, "tags": ["very-short"]}
+{"id": "d070", "text": "Can you turn off the cookie tracking on the employee app? Our works council asked.", "urgent": false, "team": "security-privacy", "frustration": 1, "tags": ["plain"]}
+{"id": "d071", "text": "Hello, I want export all my data before I close account. Which format you give? Also please after delete everything.", "urgent": false, "team": "security-privacy", "frustration": 1, "tags": ["non-native"]}
+{"id": "d072", "text": "Hi, the API return 401 always even with new key. I generate key 3 times. What I am doing wrong?", "urgent": false, "team": "integrations-api", "frustration": 2, "tags": ["non-native"]}
+{"id": "d073", "text": "Interested in upgrading but also the current schedule view keeps freezing. Fix the freezing first and then let's talk.", "urgent": false, "team": "technical-support", "frustration": 3, "tags": ["two-problems"]}
+{"id": "d074", "text": "Our finance team wants all past invoices from 2025 in one file. Is that possible?", "urgent": false, "team": "billing", "frustration": 1, "tags": ["plain"]}
+{"id": "d075", "text": "I'd like to add 20 more people to our plan, and separately our timesheet export has been failing since Monday.", "urgent": false, "team": "technical-support", "frustration": 2, "tags": ["two-problems"]}
+{"id": "d076", "text": "I KEEP GETTING 'USER NOT FOUND' AND I HAVE USED THIS ACCOUNT FOR 3 YEARS. I HAVE STAFF WAITING TO BE PAID. CALL ME.", "urgent": true, "team": "account-access", "frustration": 5, "tags": ["plain"]}
+{"id": "d077", "text": "Suggestion for the mobile app: let staff add a note when they swap shifts, so managers know why.", "urgent": false, "team": "feedback", "frustration": 1, "tags": ["plain"]}
+{"id": "d078", "text": "How to change currency", "urgent": false, "team": "how-to", "frustration": 1, "tags": ["very-short"]}
+{"id": "d079", "text": "app crashes", "urgent": false, "team": "technical-support", "frustration": 2, "tags": ["very-short"]}
+{"id": "d080", "text": "sync stuck on pending", "urgent": false, "team": "integrations-api", "frustration": 2, "tags": ["very-short"]}
+{"id": "d081", "text": "It would help if invoices could be split across two clients, for jobs we share with a partner company.", "urgent": false, "team": "feedback", "frustration": 1, "tags": ["plain"]}
+{"id": "d082", "text": "Totally fine that the timesheets show yesterday's data as today's. Who needs accurate payroll anyway.", "urgent": true, "team": "technical-support", "frustration": 4, "tags": ["sarcasm"]}
+{"id": "d083", "text": "I need a refund for the yearly plan. We bought it by mistake instead of monthly, two days ago.", "urgent": false, "team": "billing", "frustration": 2, "tags": ["plain"]}
+{"id": "d084", "text": "I want to switch from monthly to yearly billing. Is there a discount and will I lose the days I already paid for?", "urgent": false, "team": "billing", "frustration": 1, "tags": ["plain"]}
+{"id": "d085", "text": "Love that the webhook payload changed shape with no warning. Our whole payroll pipeline enjoyed that surprise very much.", "urgent": true, "team": "integrations-api", "frustration": 4, "tags": ["sarcasm"]}
+{"id": "d086", "text": "Hello, we are clinic in Portugal with 25 nurses. We want to buy but need contract in Portuguese and invoice with our NIF. Is possible?", "urgent": false, "team": "sales", "frustration": 1, "tags": ["non-native"]}
+{"id": "d087", "text": "Can the invoices show our VAT number? We're registered in Ireland and the current ones are missing it.", "urgent": false, "team": "billing", "frustration": 1, "tags": ["plain"]}
+{"id": "d088", "text": "Feature request: a 'who's on now' view for the front desk.", "urgent": false, "team": "feedback", "frustration": 1, "tags": ["plain"]}
+{"id": "d089", "text": "Is staff data encrypted when stored?", "urgent": false, "team": "security-privacy", "frustration": 1, "tags": ["plain"]}
+{"id": "d090", "text": "The OAuth redirect for the calendar connection fails with 'redirect_uri mismatch'. We haven't changed anything.", "urgent": false, "team": "integrations-api", "frustration": 2, "tags": ["plain"]}
+{"id": "d091", "text": "Do you have a SOC 2 report or something similar we can see?", "urgent": false, "team": "security-privacy", "frustration": 1, "tags": ["plain"]}
+{"id": "d092", "text": "Locked out. Again.", "urgent": true, "team": "account-access", "frustration": 4, "tags": ["very-short"]}
+{"id": "d093", "text": "I got a new phone and lost my two-step codes. How do I get back into my account?", "urgent": true, "team": "account-access", "frustration": 2, "tags": ["plain"]}
+{"id": "d094", "text": "Where can I download the invoice for last month? My accountant needs it for our records.", "urgent": false, "team": "billing", "frustration": 1, "tags": ["plain"]}
+{"id": "d095", "text": "Got charged after cancelling", "urgent": true, "team": "billing", "frustration": 3, "tags": ["very-short"]}
+{"id": "d096", "text": "Hello, I am owner of account but the email of owner was of my old employee who leave. Now I can not change anything. How to make me the owner?", "urgent": false, "team": "account-access", "frustration": 2, "tags": ["non-native"]}
+{"id": "d097", "text": "Our auditor arrives this afternoon and needs your security certificate and data policy. Can someone send them in the next two hours?", "urgent": true, "team": "security-privacy", "frustration": 3, "tags": ["plain"]}
+{"id": "d098", "text": "Please make app in Tagalog also, many of my workers more comfortable. Thank you very much.", "urgent": false, "team": "feedback", "frustration": 1, "tags": ["non-native"]}
+{"id": "d099", "text": "The search box only finds employees by first name, not last name. Is that a bug?", "urgent": false, "team": "technical-support", "frustration": 1, "tags": ["plain"]}
+{"id": "d100", "text": "Hello, how I can make the invoice in Spanish for my clients in Mexico? I see only English.", "urgent": false, "team": "how-to", "frustration": 1, "tags": ["non-native"]}
+{"id": "d101", "text": "How do I give my assistant manager access to approve shifts without making her a full admin?", "urgent": false, "team": "account-access", "frustration": 1, "tags": ["plain"]}
+{"id": "d102", "text": "Ah yes, removing the weekly email summary that everyone used. Bold choice. Please bring it back.", "urgent": false, "team": "feedback", "frustration": 3, "tags": ["sarcasm"]}
+{"id": "d103", "text": "We'd like to upgrade all 3 locations to Business but only if we can get one invoice for all of them. Possible?", "urgent": false, "team": "sales", "frustration": 1, "tags": ["plain"]}
+{"id": "d104", "text": "You charged my personal card instead of the company card that's on file. Please reverse it and charge the right one.", "urgent": true, "team": "billing", "frustration": 3, "tags": ["plain"]}
+{"id": "d105", "text": "When I print the schedule, the last column is cut off. Using Firefox on Windows.", "urgent": false, "team": "technical-support", "frustration": 1, "tags": ["plain"]}
+{"id": "d106", "text": "Calendar sync duplicates every shift. My staff see each shift two or three times in their phone calendar.", "urgent": false, "team": "integrations-api", "frustration": 3, "tags": ["plain"]}
+{"id": "d107", "text": "Our accounting sync stopped on Tuesday. New invoices aren't showing up in our accounting software. Reconnecting didn't help.", "urgent": false, "team": "integrations-api", "frustration": 3, "tags": ["plain"]}
+{"id": "d108", "text": "Please remove access for j.morales, he no longer works here as of today.", "urgent": true, "team": "account-access", "frustration": 1, "tags": ["plain"]}
+{"id": "d109", "text": "Please add a dark mode to the web app.", "urgent": false, "team": "feedback", "frustration": 1, "tags": ["plain"]}
+{"id": "d110", "text": "Please help, I am locked and tomorrow is salary day. The reset mail come but link say invalid every time.", "urgent": true, "team": "account-access", "frustration": 3, "tags": ["non-native"]}
+{"id": "d111", "text": "The invoice PDF downloads as a blank page. Also how do I add my logo to it?", "urgent": false, "team": "technical-support", "frustration": 2, "tags": ["two-problems"]}
+{"id": "d112", "text": "Absolutely ridiculous. Three refunds promised by three different agents and not one has arrived. I've been a customer for four years. I'm reporting this to consumer protection.", "urgent": true, "team": "billing", "frustration": 5, "tags": ["plain"]}
+{"id": "d113", "text": "Since your update our time clock kiosk shows a white screen. Staff are writing hours on paper. Third day now. Very unhappy.", "urgent": true, "team": "technical-support", "frustration": 4, "tags": ["plain"]}
+{"id": "d114", "text": "We're an IT consultancy and would like to resell Quillstack to our clients. Do you have a partner program?", "urgent": false, "team": "sales", "frustration": 1, "tags": ["plain"]}
+{"id": "d115", "text": "Hi, my suggestion: the app can show weather in schedule? For our ice cream shop the weather decide how many people we need.", "urgent": false, "team": "feedback", "frustration": 1, "tags": ["non-native"]}
+{"id": "d116", "text": "Is the mobile app's location tracking optional? Some staff are uncomfortable with it.", "urgent": false, "team": "security-privacy", "frustration": 1, "tags": ["plain"]}
+{"id": "d117", "text": "Could we pilot the Business plan with one team for a month before rolling out to everyone?", "urgent": false, "team": "sales", "frustration": 1, "tags": ["plain"]}
+{"id": "d118", "text": "The team at Quillstack really listen. The shift-swap feature we asked for is exactly what we needed. Thank you.", "urgent": false, "team": "feedback", "frustration": 1, "tags": ["plain"]}
+{"id": "d119", "text": "You keep adding features nobody asked for while the basics stay clunky. I've been a customer since 2021 and I'm starting to look elsewhere.", "urgent": false, "team": "feedback", "frustration": 4, "tags": ["plain"]}
+{"id": "d120", "text": "The API pagination skips records when there are more than 1,000 timesheets. We noticed missing hours in our reports.", "urgent": false, "team": "integrations-api", "frustration": 3, "tags": ["plain"]}
+{"id": "d121", "text": "Can I pay for 3 years up front for a better price?", "urgent": false, "team": "sales", "frustration": 1, "tags": ["plain"]}
+{"id": "d122", "text": "Is there a way to pay by bank transfer instead of card?", "urgent": false, "team": "billing", "frustration": 1, "tags": ["plain"]}
+{"id": "d123", "text": "We're comparing you against two other scheduling tools. Can you send a short summary of what makes you different, and your pricing for 200 people?", "urgent": false, "team": "sales", "frustration": 1, "tags": ["plain"]}
+{"id": "d124", "text": "Do you offer a money-back guarantee if it doesn't work out for us in the first month?", "urgent": false, "team": "sales", "frustration": 1, "tags": ["plain"]}
+{"id": "d125", "text": "Thanks for making me reset my password every 30 days, it's my favourite hobby. Can I turn that off?", "urgent": false, "team": "account-access", "frustration": 3, "tags": ["sarcasm"]}
+{"id": "d126", "text": "Hello team, in the android app the button for clock out is not appear after update. Workers can clock in but no out. Please fix quick.", "urgent": true, "team": "technical-support", "frustration": 3, "tags": ["non-native"]}
+{"id": "d127", "text": "Sorry for my english. Report hours is showing 0 for all people in September but in timesheet the hours is there. We need report for the tax office this week.", "urgent": false, "team": "technical-support", "frustration": 2, "tags": ["non-native"]}
+{"id": "d128", "text": "Can we extend the free trial by two weeks? Our owner is travelling and hasn't had a chance to look.", "urgent": false, "team": "sales", "frustration": 1, "tags": ["plain"]}
+{"id": "d129", "text": "I can't log in, and when I tried to pay the overdue invoice it said my card was declined. Not sure which is causing which.", "urgent": true, "team": "account-access", "frustration": 3, "tags": ["two-problems"]}
+{"id": "d130", "text": "Is there a way to add notes to an invoice line, like 'materials included'?", "urgent": false, "team": "how-to", "frustration": 1, "tags": ["plain"]}
+{"id": "d131", "text": "Would be great if staff could see their total hours for the month in the app.", "urgent": false, "team": "feedback", "frustration": 1, "tags": ["plain"]}
+{"id": "d132", "text": "Accounting sync broken for 2 weeks. 5 tickets. No fix. Not one useful answer. We are cancelling at the end of the month unless someone senior calls me.", "urgent": false, "team": "integrations-api", "frustration": 5, "tags": ["plain"]}
+{"id": "d133", "text": "How do I add a second location with its own manager?", "urgent": false, "team": "how-to", "frustration": 1, "tags": ["plain"]}
+{"id": "d134", "text": "Please add Welsh language", "urgent": false, "team": "feedback", "frustration": 1, "tags": ["very-short"]}
+{"id": "d135", "text": "What's the best way to handle split shifts, like 10 to 2 then 6 to 10?", "urgent": false, "team": "how-to", "frustration": 1, "tags": ["plain"]}
+{"id": "d136", "text": "Payroll export is missing half my employees' hours. Payroll is due at 9am tomorrow. I need this fixed tonight.", "urgent": true, "team": "technical-support", "frustration": 4, "tags": ["plain"]}
+{"id": "d137", "text": "Wow, a 'request a quote' button that leads to a dead page. Excellent sales strategy. Anyway, I'd like a quote for 80 users.", "urgent": false, "team": "sales", "frustration": 3, "tags": ["sarcasm"]}
+{"id": "d138", "text": "Payroll is tomorrow and I can't figure out how to approve timesheets in bulk. Do I really have to click each one? There are 90.", "urgent": false, "team": "how-to", "frustration": 3, "tags": ["plain"]}
+{"id": "d139", "text": "Our nonprofit status was approved last year but this year's renewal came at full price. Can you apply the discount again?", "urgent": false, "team": "billing", "frustration": 2, "tags": ["plain"]}
+{"id": "d140", "text": "Everything is down for us. Web and mobile. Error page on all of it. We open in 30 minutes.", "urgent": true, "team": "technical-support", "frustration": 4, "tags": ["plain"]}
+{"id": "d141", "text": "Why did my price go up from $8 to $10 per user? I didn't get any email about this.", "urgent": false, "team": "billing", "frustration": 3, "tags": ["plain"]}
+{"id": "d142", "text": "Webhooks retry forever when our server is down, then we get 4,000 at once and it falls over. Can we limit retries? Also the dashboard is slow.", "urgent": false, "team": "integrations-api", "frustration": 3, "tags": ["two-problems"]}
+{"id": "d143", "text": "Can I book a demo for my operations team next week?", "urgent": false, "team": "sales", "frustration": 1, "tags": ["plain"]}
+{"id": "d144", "text": "Oh wonderful, another surprise charge. I just love paying for 14 users when we have 9. Really makes my day.", "urgent": true, "team": "billing", "frustration": 4, "tags": ["sarcasm"]}
+{"id": "d145", "text": "Can I see how many hours each employee worked last month in one report?", "urgent": false, "team": "how-to", "frustration": 1, "tags": ["plain"]}
+{"id": "d146", "text": "There are shift changes in our account that nobody here made, at 3am. Someone has access who shouldn't. What do we do?", "urgent": true, "team": "security-privacy", "frustration": 3, "tags": ["plain"]}
+{"id": "d147", "text": "Love the app, one idea: let me duplicate an invoice. Also, the invoice I just sent shows last year's date, which seems wrong.", "urgent": false, "team": "technical-support", "frustration": 2, "tags": ["two-problems"]}
+{"id": "d148", "text": "I downgraded to Free three weeks ago and you STILL charged me for Team. This is the second time I've written. Fix it or I'm disputing it with my bank.", "urgent": true, "team": "billing", "frustration": 4, "tags": ["plain"]}
+{"id": "d149", "text": "We got an email that looks like it's from Quillstack asking us to 'confirm payment details' on a strange link. Is this real?", "urgent": true, "team": "security-privacy", "frustration": 2, "tags": ["plain"]}
+{"id": "d150", "text": "A former manager still has admin rights and I can't remove him because he's listed as the owner. He left on bad terms. Please help.", "urgent": true, "team": "account-access", "frustration": 3, "tags": ["plain"]}
+{"id": "d151", "text": "How do I copy last week's schedule to this week?", "urgent": false, "team": "how-to", "frustration": 1, "tags": ["plain"]}
+{"id": "d152", "text": "Do you have customers in healthcare we could talk to as references?", "urgent": false, "team": "sales", "frustration": 1, "tags": ["plain"]}
+{"id": "d153", "text": "Is there a sandbox environment for testing the API?", "urgent": false, "team": "integrations-api", "frustration": 1, "tags": ["plain"]}
+{"id": "d154", "text": "We built a small app on your API for our franchise owners. Would love a webhook for 'shift swapped' events. Great API otherwise!", "urgent": false, "team": "feedback", "frustration": 1, "tags": ["plain"]}
+{"id": "d155", "text": "Oh I'm sure the 'Templates' button is very intuitive to people who designed it. How do I actually save a shift template?", "urgent": false, "team": "how-to", "frustration": 3, "tags": ["sarcasm"]}
+{"id": "d156", "text": "Sure, emailing full staff lists as unprotected spreadsheets is a great idea. What could go wrong. Can I turn that feature off?", "urgent": false, "team": "security-privacy", "frustration": 3, "tags": ["sarcasm"]}
+{"id": "d157", "text": "We're a hotel group and need someone who can help us roll out to 12 properties. Do you have onboarding packages?", "urgent": false, "team": "sales", "frustration": 1, "tags": ["plain"]}
+{"id": "d158", "text": "Where are your servers located? We need data to stay in the EU.", "urgent": false, "team": "security-privacy", "frustration": 1, "tags": ["plain"]}
+{"id": "d159", "text": "Please cancel our subscription at the end of this billing period. We're closing the café in December. Thanks for everything.", "urgent": false, "team": "billing", "frustration": 1, "tags": ["plain"]}
+{"id": "d160", "text": "Love the new update. Really enjoying how it deleted every shift I planned for next week. Brilliant work.", "urgent": true, "team": "technical-support", "frustration": 5, "tags": ["sarcasm"]}
+{"id": "d161", "text": "Is it possible to track tips?", "urgent": false, "team": "how-to", "frustration": 1, "tags": ["plain"]}
+{"id": "d162", "text": "API docs page 404", "urgent": false, "team": "integrations-api", "frustration": 2, "tags": ["very-short"]}
+{"id": "d163", "text": "I'm new and honestly overwhelmed. Is there a simple guide for setting up my first schedule?", "urgent": false, "team": "how-to", "frustration": 2, "tags": ["plain"]}
+{"id": "d164", "text": "Payment failed message every day on the dashboard but my bank says no attempt was made. The banner says the account will be suspended Friday.", "urgent": true, "team": "billing", "frustration": 3, "tags": ["plain"]}
+{"id": "d165", "text": "Please rotate our API key, I think it was in a screenshot I posted in a forum.", "urgent": true, "team": "security-privacy", "frustration": 2, "tags": ["plain"]}
+{"id": "d166", "text": "HOW is there still no way to set a shift that repeats every other week?? Every competitor has this. It's 2026.", "urgent": false, "team": "feedback", "frustration": 4, "tags": ["plain"]}
+{"id": "d167", "text": "Invoices I send to my clients show the wrong tax rate since Monday. 20% instead of 13%. Two clients already complained.", "urgent": true, "team": "technical-support", "frustration": 3, "tags": ["plain"]}
+{"id": "d168", "text": "The dark mode makes the shift colours almost invisible. Small thing.", "urgent": false, "team": "technical-support", "frustration": 1, "tags": ["plain"]}
+{"id": "d169", "text": "Can a manager approve their own timesheet or does someone else have to?", "urgent": false, "team": "how-to", "frustration": 1, "tags": ["plain"]}
+{"id": "d170", "text": "Every invoice synced to accounting since the 1st has the wrong customer attached. Our books are a mess and the quarter closes Friday.", "urgent": true, "team": "integrations-api", "frustration": 4, "tags": ["plain"]}
+{"id": "d171", "text": "I'm a former employee of a Quillstack customer and I'm still getting shift notifications with my old team's schedule. I shouldn't see this.", "urgent": false, "team": "security-privacy", "frustration": 2, "tags": ["plain"]}
+{"id": "d172", "text": "When two managers edit the same schedule at once, one person's changes vanish without warning.", "urgent": false, "team": "technical-support", "frustration": 2, "tags": ["plain"]}
+{"id": "d173", "text": "I was promised a call back about volume pricing a month ago. Still waiting. We've now signed with someone else, just letting you know.", "urgent": false, "team": "sales", "frustration": 4, "tags": ["plain"]}
+{"id": "d174", "text": "Do you connect with any point-of-sale systems? We'd like sales numbers next to staffing.", "urgent": false, "team": "integrations-api", "frustration": 1, "tags": ["plain"]}
+{"id": "d175", "text": "Hello, my card is expire and I want to put new card but the page not accept it. Payment is due tomorrow, I don't want the account to stop.", "urgent": true, "team": "billing", "frustration": 2, "tags": ["non-native"]}
+{"id": "d176", "text": "Is there a way to let staff swap shifts without my approval each time?", "urgent": false, "team": "how-to", "frustration": 1, "tags": ["plain"]}
+{"id": "d177", "text": "Fantastic. Locked out for the fourth time this week. Your login page must really like me.", "urgent": true, "team": "account-access", "frustration": 4, "tags": ["sarcasm"]}
+{"id": "d178", "text": "Dear support, since update I cannot enter with my fingerprint in the app, need to type password every time. Is small problem but please check.", "urgent": false, "team": "account-access", "frustration": 2, "tags": ["non-native"]}
+{"id": "d179", "text": "Thrilled that the payroll connection now needs reconnecting every single morning. Such a fun daily ritual.", "urgent": false, "team": "integrations-api", "frustration": 4, "tags": ["sarcasm"]}
+{"id": "d180", "text": "Idea: show a warning when someone is scheduled for more than 6 days in a row.", "urgent": false, "team": "feedback", "frustration": 1, "tags": ["plain"]}
+{"id": "d181", "text": "What's the difference between Team and Business? The comparison page doesn't say if Business includes the API.", "urgent": false, "team": "sales", "frustration": 2, "tags": ["plain"]}
+{"id": "d182", "text": "Notifications for shift swaps arrive about 6 hours late on iPhone. Staff miss swaps because of it.", "urgent": false, "team": "technical-support", "frustration": 3, "tags": ["plain"]}
+{"id": "d183", "text": "Can you put a purchase order number on our invoices? Finance won't pay without it.", "urgent": false, "team": "billing", "frustration": 2, "tags": ["plain"]}
+{"id": "d184", "text": "Can you send us your data processing agreement? Our lawyer needs it before we sign up.", "urgent": false, "team": "security-privacy", "frustration": 1, "tags": ["plain"]}
+{"id": "d185", "text": "Please let us set a custom start of the pay week. Ours runs Thursday to Wednesday.", "urgent": false, "team": "feedback", "frustration": 2, "tags": ["plain"]}
+{"id": "d186", "text": "Mi equipo no puede ver sus turnos en la app desde ayer. Sorry, my team cannot see their shifts in the app since yesterday. They don't know when to come.", "urgent": true, "team": "technical-support", "frustration": 3, "tags": ["non-native"]}
+{"id": "d187", "text": "The app freezes whenever I drag a shift on my iPad. I have to close and reopen it every time. Makes scheduling take an hour instead of ten minutes.", "urgent": false, "team": "technical-support", "frustration": 3, "tags": ["plain"]}
+{"id": "d188", "text": "great update", "urgent": false, "team": "feedback", "frustration": 1, "tags": ["very-short"]}
+{"id": "d189", "text": "delete my account and data", "urgent": false, "team": "security-privacy", "frustration": 2, "tags": ["very-short"]}
+{"id": "d190", "text": "How do I stop staff from clocking in more than 10 minutes before their shift?", "urgent": false, "team": "how-to", "frustration": 1, "tags": ["plain"]}
+{"id": "d191", "text": "Payroll export to our payroll provider failed with 'mapping error' and payroll closes at noon today. 60 people.", "urgent": true, "team": "integrations-api", "frustration": 4, "tags": ["plain"]}
+{"id": "d192", "text": "Salam, we are school with 70 teacher. You have price for education? Also you support Arabic language in app?", "urgent": false, "team": "sales", "frustration": 1, "tags": ["non-native"]}
+{"id": "d193", "text": "Would you consider a cheaper plan for very small teams of 2 or 3?", "urgent": false, "team": "feedback", "frustration": 1, "tags": ["plain"]}
+{"id": "d194", "text": "I think my account was hacked, invoices were sent to my clients with a different bank account number on them!! Clients may have paid the wrong account!!", "urgent": true, "team": "security-privacy", "frustration": 5, "tags": ["plain"]}
+{"id": "d195", "text": "The timesheet total is off by a few minutes for everyone, and also I'd love a way to colour-code shifts by role.", "urgent": false, "team": "technical-support", "frustration": 2, "tags": ["two-problems"]}
+{"id": "d196", "text": "I filled in the contact sales form three times over two weeks and nobody called. Do you actually want new customers?", "urgent": false, "team": "sales", "frustration": 4, "tags": ["plain"]}
+{"id": "d197", "text": "how to add break", "urgent": false, "team": "how-to", "frustration": 1, "tags": ["very-short"]}
+{"id": "d198", "text": "Can I mark an invoice as paid when the client pays in cash?", "urgent": false, "team": "how-to", "frustration": 1, "tags": ["plain"]}
+{"id": "d199", "text": "Honestly the last three updates made the app worse for us. Slower menus, hidden buttons, more pop-ups. Who is testing this?", "urgent": false, "team": "feedback", "frustration": 4, "tags": ["plain"]}
+{"id": "d200", "text": "Do you have a bug bounty? I found a way to see other users' profile photos by changing a number in the URL.", "urgent": true, "team": "security-privacy", "frustration": 1, "tags": ["plain"]}
