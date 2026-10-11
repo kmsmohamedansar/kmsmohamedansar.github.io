@@ -84,6 +84,9 @@ def fake_ollama(url, body):
 def fake_systemone(url, body, headers):
     """Stands in for a /v1/systemone server: spec shape plus an extra field."""
     assert url.endswith("/v1/systemone")
+    for q in body["questions"].values():  # sent the way real servers want it
+        assert "criteria" in q and "instructions" not in q, q
+        q["instructions"] = q.pop("criteria")
     return {**Uniform().answer(body), "model": body["model"] + "-fake", "latency_ms": 12}
 
 

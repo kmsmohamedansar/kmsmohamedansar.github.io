@@ -40,6 +40,10 @@ Request: state *"I have been trying to connect Stripe for 3 days and the integra
 
 Response: `is_urgent` 0.97; `department` technical-support (0.82), confidence 0.89; `frustration_score` 4.62, confidence 0.91; usage 312 input and 64 output tokens.
 
+## Difference found in practice (2026-10-11)
+
+Kev's server, which says it implements TypeSafe's shape and works with TypeSafe's own SDK, rejected questions with `instructions` and required **`criteria`** instead (HTTP 422, "Field required: criteria"). So the question text field is most likely `criteria` in the real API, not `instructions` as this second-hand copy says. Our harness keeps `instructions` internally; `systemone/adapters/http.py` renames it to `criteria` when sending to any server, so every contender still gets identical wording.
+
 ## Open questions to check against the official docs
 - How `confidence` differs from the top probability (the example has 0.89 confidence where the top probability is 0.82).
 - Limits on `state` size, and pricing per token.

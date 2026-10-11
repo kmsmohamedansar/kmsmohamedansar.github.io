@@ -26,15 +26,34 @@ def _post(url, body, headers=None, timeout=60):
         raise RuntimeError(f"{url} said {e.code}: {e.read().decode(errors='replace')[:2000]}") from None
 
 
+def to_wire(request, field):
+    """Our questions say "instructions"; real servers may call it "criteria".
+
+    Kev's server (2026-10-11) rejected "instructions" and required "criteria".
+    Only the field name changes; the wording sent is identical.
+    """
+    if field == "instructions":
+        return request
+    questions = {}
+    for qid, q in request["questions"].items():
+        q = dict(q)
+        q[field] = q.pop("instructions")
+        questions[qid] = q
+    return {**request, "questions": questions}
+
+
 class SystemOneHTTP(SystemOne):
-    def __init__(self, model, url="http://localhost:8000", name=None, post=_post, headers=None):
+    def __init__(self, model, url="http://localhost:8000", name=None, post=_post, headers=None,
+                 field="criteria"):
         self.model = model
         self.url = url.rstrip("/") + "/v1/systemone"
         self.name = name or f"http:{model}"
         self._post, self._headers = post, headers or {}
+        self.field = field
 
     def answer(self, request):
-        reply = self._post(self.url, {**request, "model": self.model}, self._headers)
+        wire = to_wire({**request, "model": self.model}, self.field)
+        reply = self._post(self.url, wire, self._headers)
         if not isinstance(reply, dict):
             return reply  # decide() will reject it
         usage = reply.get("usage") or {}

@@ -84,3 +84,4 @@ MacBook Air M4, 16 GB. Line-up updated in `docs/models.md`: Kev-4B/9B and Clef s
 - Picks: billing 61, technical-support 56, account-access 25, feedback 17, security-privacy 15, integrations-api 13, sales 11, how-to 2. First three options: 142 of 200 (v1: 174). The pile-up shrank but didn't vanish, and how-to is almost never chosen.
 - **Trade-off, recorded:** v2 fixed accuracy (team +18 points) but made stated confidence less honest. Frustration ECE went from 0.19 to 0.43 and urgent from 0.06 to 0.15: confidence the model *writes down* is overconfident, while v1's probability table was better calibrated where the position bias didn't hit (urgent has only two options).
 - Rules still lead on team on dev (0.73), but their dev numbers are optimistic by construction.
+- Kev server rejected `instructions` (422) and required `criteria`: our second-hand spec had the field name wrong. HTTP adapter now renames it on the wire; recorded in docs/jev-api-spec.md.
