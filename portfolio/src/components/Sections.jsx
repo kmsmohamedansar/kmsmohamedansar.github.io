@@ -62,7 +62,7 @@ function ProjectVisual({ project, large = false }) {
           src={project.icon}
           alt=""
           loading="lazy"
-          className="float-y pointer-events-none absolute left-1/2 top-[38%] w-[28%] max-w-[200px] -translate-x-1/2 -translate-y-1/2 rounded-[22%] shadow-[0_30px_60px_-20px_rgba(0,0,0,.7)] transition-transform duration-500 ease-out group-hover:scale-105"
+          className={`float-y pointer-events-none absolute left-1/2 ${large ? "top-[38%] w-[28%]" : "top-1/2 w-[30%]"} max-w-[200px] -translate-x-1/2 -translate-y-1/2 rounded-[22%] shadow-[0_30px_60px_-20px_rgba(0,0,0,.7)] transition-transform duration-500 ease-out group-hover:scale-105`}
         />
       ) : (
         <span
@@ -74,7 +74,8 @@ function ProjectVisual({ project, large = false }) {
         </span>
       )}
       <span className={`relative font-mono text-micro font-semibold uppercase tracking-[.16em] ${a.text}`}>{project.kind}</span>
-      {project.flow && (
+      {/* On small cards a logo needs the room, so the flow chips are left out. */}
+      {project.flow && !(project.icon && !large) && (
         <div className="relative">
           <FlowMini spec={project.flow} accent={project.accent} />
         </div>
@@ -109,10 +110,10 @@ const BUILT = [
   ["Haloscript", "SwiftUI", "a writing app"],
   ["Sitescout", "TypeScript", "a Chrome extension"],
   ["Integration-in-a-box", "Keycloak", "a working integration"],
-  ["SQL Playground", "WebAssembly", "a SQL sandbox"],
+  ["Decision Bench", "Python", "an AI study"],
   ["my digital double", "Claude Code", "a 3D head"],
-  ["a grocery AI assistant", "FAISS", "a search-by-meaning demo"],
-  ["a lineage explorer", "React", "a pipeline map"],
+  ["a catalogue checker", "embeddings", "a data quality check"],
+  ["a weekly data delivery", "DuckDB", "a pipeline that stops itself"],
 ];
 const STYLE_CYCLE = [
   "font-serif italic text-[1.35rem] text-[#0e7490]",
@@ -606,7 +607,7 @@ export function ProjectsSection({ scrollContainerRef }) {
           accent="green"
           kicker="Projects"
           title="Things I've built"
-          lede="Four I'd start with, then the rest. Click any card for the story, a diagram of how it works, and a link to try it or read the code."
+          lede="The ones I'd start with, then the rest. Click any card for the story, a diagram of how it works, and a link to try it or read the code."
         />
         <div className="space-y-16 sm:space-y-24">
           {FEATURED.map((p, i) => (

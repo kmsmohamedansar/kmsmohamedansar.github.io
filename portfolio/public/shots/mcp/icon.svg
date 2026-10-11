@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#211a4d"/><stop offset="1" stop-color="#0b0a1a"/>
+    </linearGradient>
+  </defs>
+  <rect width="512" height="512" rx="112" fill="url(#bg)"/>
+  <rect x="6" y="6" width="500" height="500" rx="106" fill="none" stroke="#b9a8ff" stroke-opacity=".35" stroke-width="4"/>
+  <!-- tools around a hub: an agent calling typed tools -->
+  <g stroke="#b9a8ff" stroke-width="12" stroke-linecap="round">
+    <line x1="256" y1="256" x2="256" y2="128"/>
+    <line x1="256" y1="256" x2="367" y2="320"/>
+    <line x1="256" y1="256" x2="145" y2="320"/>
+  </g>
+  <g fill="#14112e" stroke="#d6ccff" stroke-width="10">
+    <rect x="216" y="88" width="80" height="80" rx="20"/>
+    <rect x="327" y="280" width="80" height="80" rx="20"/>
+    <rect x="105" y="280" width="80" height="80" rx="20"/>
+  </g>
+  <g fill="#b9a8ff">
+    <rect x="240" y="116" width="32" height="8" rx="4"/><rect x="240" y="132" width="20" height="8" rx="4"/>
+    <rect x="351" y="308" width="32" height="8" rx="4"/><rect x="351" y="324" width="20" height="8" rx="4"/>
+    <rect x="129" y="308" width="32" height="8" rx="4"/><rect x="129" y="324" width="20" height="8" rx="4"/>
+  </g>
+  <circle cx="256" cy="256" r="46" fill="#8e7dff"/>
+  <circle cx="256" cy="256" r="46" fill="none" stroke="#f1edff" stroke-width="8"/>
+  <path d="M238 244 l-12 12 l12 12 M274 244 l12 12 l-12 12" fill="none" stroke="#f1edff" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
