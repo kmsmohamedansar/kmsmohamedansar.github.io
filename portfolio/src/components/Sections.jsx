@@ -398,6 +398,17 @@ function FeaturedRow({ project, index }) {
             <FlourishTitle text={project.title} accent={project.accent} />
           </h3>
           <p className="mt-4 max-w-xl text-base sm:text-lg leading-relaxed text-[color:var(--ink-200)]">{project.hook}</p>
+          {project.stats && (
+            <dl className="mt-5 grid max-w-xl grid-cols-2 gap-x-6 gap-y-3 sm:grid-cols-4">
+              {project.stats.map((s) => (
+                <div key={s.label}>
+                  <dt className="sr-only">{s.label}</dt>
+                  <dd className={`font-condensed text-3xl leading-none ${a.text}`}>{s.value}</dd>
+                  <dd className="mt-1 text-xs leading-snug text-[color:var(--ink-300)]">{s.short || s.label}</dd>
+                </div>
+              ))}
+            </dl>
+          )}
           <div className="mt-5 flex flex-wrap gap-2">
             {project.tags.slice(0, 3).map((t) => (
               <TagPill key={t} accent={project.accent}>
