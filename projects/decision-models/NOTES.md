@@ -123,3 +123,15 @@ MacBook Air M4, 16 GB. Line-up updated in `docs/models.md`: Kev-4B/9B and Clef s
 - **Pre-registered** (lowest of three confidences; slow = qwen2.5:7b v2): for every fast decision model the rule "qualifies", but trivially. Strands -> qwen: threshold **0.00**, nothing handed over, because Strands alone (team 0.85) already beats the slow model (0.61). Kev -> qwen and Laya -> qwen hand over 186 and 197 of 200: their frustration confidence is almost always near 0, so the lowest of three confidences drags nearly every request under any threshold. Reported pair: Strands -> qwen v2 (`results/cascade.json`).
 - **Lesson:** the "lowest of three" rule, written before any model ran, breaks when one question is almost never confident. Recorded as a design flaw, not hidden.
 - **Exploratory** (not pre-registered, chosen after seeing dev, fixed before held-out): hand over on team confidence only, Kev-0.8B -> Strands Decider 2B. Same "within 0.02 of slow alone" rule picks **0.70**: 151 of 200 handed over, team 0.84 vs 0.85 for Strands alone, 324 s vs 406 s (about 20% less time). Kev -> qwen on team confidence never beats 0.66. `results/cascade-team.json`.
+
+### Held-out set, scored once (2026-10-11)
+
+Models on MacBook Air M4 16GB (owner's runs); rules in this cloud container. All runs after every prompt, rule and threshold was fixed.
+
+- Strands Decider 2B: urgent 0.82, team **0.80**, frustration 1.15; ECE 0.05 / 0.17 / 0.06; 1.45 s.
+- Rules: urgent 0.84, team 0.78, frustration 0.95; ECE 0.07 / 0.44 / 0.37.
+- qwen2.5:7b v2: urgent 0.82, team 0.64, frustration 0.85; ECE 0.13 / 0.22 / 0.43; 7.72 s.
+- Kev-0.8B: urgent 0.80, team 0.60, frustration 1.08; ECE 0.16 / 0.12 / 0.50; 0.34 s.
+- Laya-typed-decisions: urgent 0.88, team 0.48, frustration 1.26; ECE 0.25 / 0.29 / 0.18; 0.32 s.
+- Fast then slow: planned (Strands -> qwen, threshold 0) handed nothing over, team 0.80. Exploratory (Kev -> Strands on team confidence, 0.70) handed over 42 of 50, team 0.78.
+- With n = 50, one request = 2 points; Strands (40) and rules (39) tie on team accuracy. The rules' strength is most likely shared vocabulary between the author's requests and keywords; noted in the report as a limit.

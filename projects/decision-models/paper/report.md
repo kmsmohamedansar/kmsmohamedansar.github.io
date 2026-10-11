@@ -4,13 +4,13 @@
 
 **Mohamed Ansar** · Technical report · Draft of 11 October 2026
 
-*Independent work, not peer reviewed. Every number in this report comes from runs in the accompanying repository, on the machine named next to it. Sections marked* **[pending]** *wait for runs that have not finished yet.*
+*Independent work, not peer reviewed. Every number in this report comes from runs in the accompanying repository, on the machine named next to it.*
 
 ---
 
 ## Abstract
 
-**[pending: three sentences and the headline numbers, written last.]**
+On 50 held-out support requests, an open 2-billion-parameter decision model (Strands Decider 2B) picked the right team 80% of the time, against 64% for a general 7-billion-parameter model, at one fifth of the time per request on a laptop, and its stated confidence was the most honest of any contender (calibration error 0.05 for urgency, 0.06 for frustration). The general model was overconfident: on the development set it claimed near-certainty on 89 team answers and was right on 68% of them. The surprise was the cheapest contender: keyword rules written by the same author as the requests came within one request of the best model on team (78%), a warning about how much a test set's vocabulary can flatter a simple method, and a reason this report leans on calibration, not accuracy alone.
 
 In 2026 a new kind of model appeared: the *decision model*, sometimes called a *System One* model, which does not write text but answers typed questions (yes or no, pick one, rate on a scale) with a probability for each answer. Within weeks of the first hosted one (TypeSafe's Jev), several open-weight alternatives were released, almost all of them evaluated only by their makers. This report tests the pattern independently on one realistic task, routing support requests, using 250 hand-labelled requests, one shared interface for every contender, and a held-out set scored once. It asks two questions: can a small, cheap model make these routine decisions as well as a bigger general model, and when it says it is 90% sure, is it right 90% of the time?
 
@@ -142,9 +142,9 @@ Every contender gets exactly the same three questions, worded from the labelling
 | Even odds | Equal probability on everything | The floor: any real contender must beat it |
 | Rules | Keyword lists with weights, turned into probabilities | The cheap baseline every model has to justify itself against |
 | `qwen2.5:7b` via Ollama | A general 7-billion-parameter language model, prompted to answer in the System One shape | The "bigger model": what most people would reach for |
-| Kev-0.8B | Open decision model | **[pending]** |
-| Strands Decider 2B | Open decision model | **[pending]** |
-| Laya-typed-decisions | Open decision model, fine-tuned on another benchmark | **[pending]** |
+| Kev-0.8B | Open decision model, 0.8B (adapter on a Qwen3.5 base) | The smallest and fastest decision model that fits a 16 GB laptop |
+| Strands Decider 2B | Open decision model, 1.9B (Qwen3.5 base) | A mid-size decision model with its own published calibration claims |
+| Laya-typed-decisions | Open decision model, 421M encoder, fine-tuned on another benchmark | A different architecture (encoder, not a language model), tested as shipped |
 
 The rules were written while looking at the development set, so their development scores are optimistic by construction. The held-out set is their fair test.
 
@@ -281,13 +281,36 @@ Laya also defines confidence differently from the others: one minus the normalis
 
 ### 5.5 Calibration
 
-**[pending: the calibration chart with every contender, and what it shows.]**
+![Calibration on the development set](../results/dev/calibration.svg)
+
+Each dot is a group of answers with similar stated confidence; on the dashed line, a contender that says 80% is right 80% of the time.
+
+Two readings stand out.
+
+**The general model is overconfident on the question that matters most.** With prompt v2, `qwen2.5:7b` gave a team confidence of about 1.0 on 89 of 200 development requests and was right on 61 of them (68%). Another 96 answers came with a confidence of about 0.8 and were right 58% of the time. Its stated confidence is a number it writes, and the number is inflated.
+
+**Strands Decider is honest, slightly modest even.** Its team answers given with about 0.85 confidence were right 97% of the time on development (37 answers) and 100% on held-out (13). Its frustration answers, the weakest part of every model, come with a calibration error of 0.02 on development and 0.06 on held-out: it is often unsure about frustration, and it says so.
+
+The keyword rules are the opposite of overconfident: their probabilities come from counting keywords, so they say 30% when they are right 80% of the time (team calibration error 0.34 on development, 0.44 on held-out). Accurate, but their confidence carries no useful signal.
 
 Already visible with two contenders: the keyword rules are *more modest than they need to be* on team (when they say 50%, they are right about 80% of the time) and *overconfident* on frustration. A model's raw accuracy says nothing about which of these it is.
 
 ### 5.6 Hard cases
 
-**[pending: accuracy on two-problem, sarcastic, very short and non-native requests, per contender.]**
+Team accuracy on the development set (200 requests; the held-out set has only 3 to 8 of each kind, too few to read):
+
+| Contender | Plain (133) | Two problems (12) | Sarcasm (17) | Very short (21) | Non-native (17) |
+|---|---|---|---|---|---|
+| Strands Decider 2B | **0.85** | **0.67** | **0.88** | **0.95** | **0.82** |
+| Rules | 0.73 | 0.50 | 0.71 | 0.90 | 0.71 |
+| `qwen2.5:7b` v2 | 0.61 | 0.33 | 0.65 | 0.71 | 0.65 |
+| Kev-0.8B | 0.60 | 0.33 | 0.82 | 0.62 | 0.53 |
+
+- **Two problems in one message is the hardest case for everyone.** Choosing which problem "most blocks the customer" is a judgement the labelling rules make and the models mostly don't.
+- **Sarcasm fools urgency, for everyone.** Every model scored exactly 0.59 on urgency for sarcastic requests: sarcastic messages about real problems ("love paying twice") were read as not urgent.
+- **Tone is where the general model still leads.** On sarcastic requests, `qwen2.5:7b` was closest on frustration (off by 0.53 levels against 0.98 for Strands). Reading the emotion behind the words is the one place a bigger language model clearly helped.
+
+Full tables: `results/dev/hard_cases.md`.
 
 ### 5.7 Fast then slow
 
@@ -305,11 +328,33 @@ Already visible with two contenders: the keyword rules are *more modest than the
 
 It keeps almost all of Strands' accuracy for about 20% less time. That is a modest saving, because Strands is already cheap. The pattern is sound; at these speeds, the case for it is weak.
 
-**[pending: both versions on the held-out set.]**
+On the held-out set, with thresholds fixed beforehand:
+
+| On the held-out set (50) | Handed over | Team | Urgent | Total time |
+|---|---|---|---|---|
+| Planned: Strands, then `qwen2.5:7b` below 0.00 | 0 | 0.80 | 0.82 | 74 s |
+| Exploratory: Kev, then Strands below 0.70 | 42 (84%) | 0.78 | 0.82 | 78 s |
+| Strands alone | 50 | 0.80 | 0.82 | 74 s* |
+
+\*Strands alone took 74 seconds for the 50 requests in its own run; in the exploratory pair it took 91 seconds when combined with Kev for all 50.
+
+The exploratory pair held up: one request behind Strands alone, having handed over 84%. At these speeds the saving is small. The bigger lesson is that fast-then-slow needs a slow side that is actually better, and a confidence signal that isn't dominated by one always-uncertain question.
 
 ### 5.8 Held-out set
 
-**[pending: every contender, scored once.]**
+Each contender answered the 50 held-out requests once, after every prompt, rule and threshold was fixed.
+
+| Contender | Urgent | Team | Frustration off by | Calibration error (urgent / team / frustration) | Median seconds | Machine |
+|---|---|---|---|---|---|---|
+| **Strands Decider 2B** | 0.82 | **0.80** | 1.15 | **0.05** / **0.17** / **0.06** | 1.45 | MacBook Air M4 16 GB |
+| Rules | **0.84** | 0.78 | 0.95 | 0.07 / 0.44 / 0.37 | 0.0001 | Cloud container |
+| `qwen2.5:7b`, prompt v2 | 0.82 | 0.64 | **0.85** | 0.13 / 0.22 / 0.43 | 7.72 | MacBook Air M4 16 GB |
+| Kev-0.8B | 0.80 | 0.60 | 1.08 | 0.16 / 0.12 / 0.50 | 0.34 | MacBook Air M4 16 GB |
+| Laya-typed-decisions | **0.88** | 0.48 | 1.26 | 0.25 / 0.29 / 0.18 | 0.32 | MacBook Air M4 16 GB |
+
+Every contender held its development-set level within a few points, so nothing was tuned too closely to the development set. The rules even did slightly better (team 0.73 on development, 0.78 here); see below for why that is not reassuring. With 50 requests, one request is two percentage points: Strands (40 right) and the rules (39) are a tie in accuracy. Laya's 0.88 on urgency is four requests better than the next, not a real lead.
+
+**The rules' result needs explaining, not celebrating.** The keyword lists were written by the same person who wrote the requests, from the same labelling rules, so they share a vocabulary: "invoice" means billing, "webhook" means integrations. Real customers don't write to match the routing team's keyword list. The rules' near-tie on accuracy is most likely a property of this test set, and their confidence is the worst of any contender (team calibration error 0.44), so even here they could not tell their right answers from their wrong ones.
 
 ---
 
@@ -348,13 +393,29 @@ At 250 requests, a wrong answer is a row in a table. At 10,000 a day, the questi
 
 A well-calibrated model's mistakes cluster in its low-confidence answers, so a fast-then-slow setup catches most of them: they are exactly the ones handed over. An overconfident model's mistakes look like its correct answers. They are not handed over; they go to the wrong queue, quietly, every day. Two models with the same accuracy can therefore produce very different outcomes at scale, and the difference is calibration, which is why this report measures it as carefully as accuracy.
 
-**[pending: the same table using held-out numbers, and the fast-then-slow line filled in.]**
+With held-out numbers, at 10,000 tickets a day:
+
+| Contender (held-out) | Machine time per day | Misrouted per day |
+|---|---|---|
+| Strands Decider 2B (1.45 s) | about 4 hours | about 2,000 |
+| `qwen2.5:7b` v2 (7.72 s) | about 21 hours | about 3,600 |
+| Kev-0.8B (0.34 s) | about 57 minutes | about 4,000 |
+
+The difference that matters at scale is not only the 1,600 fewer misrouted tickets a day. It is that Strands' mistakes come with honest low confidence, so a desk could send its least sure answers to a person; the general model's mistakes come with confidence close to 1.0 and would sail through.
 
 ---
 
 ## 7. Discussion
 
-**[pending.]**
+**Can a small decision model match a bigger general model?** On picking the team, yes and more: Strands Decider 2B beat `qwen2.5:7b` by 16 points on held-out, in a fifth of the time, on a laptop with no per-request cost. Not every decision model did: Kev matched the general model's accuracy at 20 times the speed, and Laya, fine-tuned for a different benchmark, did worse. "Decision model" is a category, not a guarantee; each one has to be measured on the task.
+
+**Is the confidence honest?** For the best decision model, largely yes, and that is the result I'd lead with. Strands' calibration errors on held-out were 0.05, 0.17 and 0.06; the general model's were 0.13, 0.22 and 0.43, and its errors were concentrated where it was most sure. A model whose confidence means something can be deployed with a safety net; one whose confidence is inflated can't.
+
+**How a general model is asked changes what it seems to know.** Prompt v1 made the general model look far worse than it is (team 0.43) because of the order of options; prompt v2 fixed accuracy but inflated confidence. Neither way of asking a general model for probabilities gave what the decision models give by design. Any comparison built on "ask the LLM for a probability" should report how it asked.
+
+**Fast then slow needs the right ingredients.** The planned version found nothing to do, because the "slow" model was worse; and a rule built on the lowest of three confidences broke on the one question every model was unsure about. The exploratory version, a fast decision model handing over to a better one on team confidence, worked as designed but saved little, because the better model was already cheap.
+
+**What I'd tell a support team.** Measure a decision model on your own tickets before trusting its benchmark. Check its calibration, not just its accuracy. And don't assume a bigger general model is the safe fallback: here it was both slower and less honest.
 
 ### Where this goes next
 
@@ -412,7 +473,10 @@ Every claim in this report, and where its evidence is.
 | Prompt v1: 174 of 200 team answers in the first three options | `NOTES.md`; owner's run on MacBook Air M4 16 GB |
 | Development results in section 5.1 | `results/dev/*.json`, machine named in each |
 | Licences of every model tested | `docs/models.md` |
-| **[pending]** All remaining results | `results/dev/`, `results/heldout/`, `results/cascade.json` |
+| Held-out results in section 5.8 (scored once) | `results/heldout/*.json`, `results/raw/heldout/*.jsonl` |
+| Fast-then-slow on held-out | `results/heldout/cascade.json`, `results/heldout/cascade-team.json` |
+| Hard-case tables | `results/dev/hard_cases.md`, `scripts/hard_cases.py` |
+| General model near-certain on 89 team answers, right on 61 | `results/dev/ollama-v2_qwen2.5_7b.json`, calibration bins |
 
 ## Appendix B. Sources
 

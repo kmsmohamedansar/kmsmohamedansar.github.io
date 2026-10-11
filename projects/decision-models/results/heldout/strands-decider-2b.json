@@ -1,0 +1,183 @@
+{
+  "adapter": "strands-decider-2b",
+  "split": "heldout",
+  "machine": "MacBook Air M4 16GB",
+  "started": "2026-10-11T19:06:06+00:00",
+  "n": 50,
+  "urgent_accuracy": 0.82,
+  "team_accuracy": 0.8,
+  "team_accuracy_by_team": {
+    "billing": {
+      "right": 4,
+      "of": 6
+    },
+    "account-access": {
+      "right": 4,
+      "of": 6
+    },
+    "technical-support": {
+      "right": 7,
+      "of": 7
+    },
+    "integrations-api": {
+      "right": 4,
+      "of": 6
+    },
+    "security-privacy": {
+      "right": 6,
+      "of": 7
+    },
+    "sales": {
+      "right": 5,
+      "of": 6
+    },
+    "how-to": {
+      "right": 5,
+      "of": 6
+    },
+    "feedback": {
+      "right": 5,
+      "of": 6
+    }
+  },
+  "frustration_mean_distance": 1.147,
+  "frustration_exact": 0.44,
+  "seconds_median": 1.4538,
+  "seconds_p90": 1.4815,
+  "tokens": {
+    "input": 27070,
+    "output": 150
+  },
+  "cost_per_1000": 0.0,
+  "cost_note": "runs locally: no per-request charge (electricity and hardware not counted)",
+  "repairs": null,
+  "calibration": {
+    "is_urgent": {
+      "ece": 0.046,
+      "bins": [
+        {
+          "from": 0.5,
+          "to": 0.6,
+          "n": 1,
+          "mean_confidence": 0.59,
+          "accuracy": 0.0
+        },
+        {
+          "from": 0.6,
+          "to": 0.7,
+          "n": 3,
+          "mean_confidence": 0.664,
+          "accuracy": 0.667
+        },
+        {
+          "from": 0.7,
+          "to": 0.8,
+          "n": 4,
+          "mean_confidence": 0.763,
+          "accuracy": 0.5
+        },
+        {
+          "from": 0.8,
+          "to": 0.9,
+          "n": 34,
+          "mean_confidence": 0.87,
+          "accuracy": 0.882
+        },
+        {
+          "from": 0.9,
+          "to": 1.0,
+          "n": 8,
+          "mean_confidence": 0.906,
+          "accuracy": 0.875
+        }
+      ]
+    },
+    "team": {
+      "ece": 0.172,
+      "bins": [
+        {
+          "from": 0.1,
+          "to": 0.2,
+          "n": 1,
+          "mean_confidence": 0.198,
+          "accuracy": 0.0
+        },
+        {
+          "from": 0.2,
+          "to": 0.3,
+          "n": 4,
+          "mean_confidence": 0.253,
+          "accuracy": 0.5
+        },
+        {
+          "from": 0.3,
+          "to": 0.4,
+          "n": 5,
+          "mean_confidence": 0.349,
+          "accuracy": 0.6
+        },
+        {
+          "from": 0.4,
+          "to": 0.5,
+          "n": 3,
+          "mean_confidence": 0.42,
+          "accuracy": 0.667
+        },
+        {
+          "from": 0.5,
+          "to": 0.6,
+          "n": 5,
+          "mean_confidence": 0.53,
+          "accuracy": 0.6
+        },
+        {
+          "from": 0.6,
+          "to": 0.7,
+          "n": 7,
+          "mean_confidence": 0.648,
+          "accuracy": 0.857
+        },
+        {
+          "from": 0.7,
+          "to": 0.8,
+          "n": 10,
+          "mean_confidence": 0.743,
+          "accuracy": 0.9
+        },
+        {
+          "from": 0.8,
+          "to": 0.9,
+          "n": 13,
+          "mean_confidence": 0.856,
+          "accuracy": 1.0
+        },
+        {
+          "from": 0.9,
+          "to": 1.0,
+          "n": 2,
+          "mean_confidence": 0.925,
+          "accuracy": 1.0
+        }
+      ]
+    },
+    "frustration": {
+      "ece": 0.056,
+      "bins": [
+        {
+          "from": 0.3,
+          "to": 0.4,
+          "n": 6,
+          "mean_confidence": 0.377,
+          "accuracy": 0.667
+        },
+        {
+          "from": 0.4,
+          "to": 0.5,
+          "n": 44,
+          "mean_confidence": 0.433,
+          "accuracy": 0.409
+        }
+      ]
+    }
+  }
+}

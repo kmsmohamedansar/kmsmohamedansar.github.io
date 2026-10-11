@@ -1,10 +1,30 @@
 # Fast decision models, measured
 
-**Draft, 2026-10-11.** Sections marked *pending* wait for the model runs on the owner's Mac. Nothing below is a result until it has a number from a run in this repo.
+**2026-10-11.** Every number here comes from runs in this repo; the full write-up is `paper/report.md`.
 
 ## The short version
 
-*Pending.* Will hold one table: each contender's urgent and team accuracy, how far off its frustration score is, its speed, its cost, and how honest its confidence is, on the 50 held-out requests. Then three or four plain takeaways.
+On 50 support requests it had never seen, scored once:
+
+| Contender | Team right | Urgent right | Honest confidence? (calibration error, urgent / team / frustration; 0 is perfect) | Seconds per request | Cost |
+|---|---|---|---|---|---|
+| **Strands Decider 2B** (open decision model) | **80%** | 82% | **0.05 / 0.17 / 0.06** | 1.45 | 0, local |
+| Keyword rules | 78% | 84% | 0.07 / 0.44 / 0.37 | 0.0001 | 0, local |
+| `qwen2.5:7b` (general model) | 64% | 82% | 0.13 / 0.22 / 0.43 | 7.72 | 0, local |
+| Kev-0.8B (open decision model) | 60% | 80% | 0.16 / 0.12 / 0.50 | 0.34 | 0, local |
+| Laya-typed-decisions (open decision model) | 48% | 88% | 0.25 / 0.29 / 0.18 | 0.32 | 0, local |
+
+Machine: MacBook Air M4, 16 GB (models); a cloud container (rules).
+
+What I took from it:
+
+- **A small decision model beat a bigger general one,** by 16 points on team, five times faster, and with the most honest confidence of any contender.
+- **The general model was confidently wrong.** It claimed near-certainty on 89 team answers and was right on 68% of them.
+- **How you ask a general model matters as much as which model.** Asking for a probability per option made it pile answers onto the first options listed (174 of 200 in the first three); asking for one answer plus a confidence fixed accuracy but inflated the confidence.
+- **The keyword rules' near-tie is a warning, not a win.** I wrote both the requests and the keywords, so they share a vocabulary.
+- **Fast then slow only helps when the slow side is better.** Here the big model wasn't, so the planned version never handed anything over.
+
+The full write-up is the technical report in `paper/report.md`.
 
 ![How the test fits together](docs/diagrams/1-how-it-fits.svg)
 
@@ -41,8 +61,8 @@ Every contender gets the same request in the same shape (the System One shape fr
 |---|---|---|---|
 | Even odds | The floor: knows nothing | n/a | cloud container |
 | Rules | Keyword lists, written from the labelling rules | n/a | cloud container |
-| *pending* | Ollama `qwen2.5:7b`, asked for probabilities | Apache-2.0 | owner's Mac |
-| *pending* | Kev, Strands Decider, Laya (see `docs/models.md`) | Apache-2.0 | owner's Mac |
+| `qwen2.5:7b` | General model via Ollama, prompt v2 (one answer plus confidence) | Apache-2.0 | owner's Mac |
+| Kev-0.8B, Strands Decider 2B, Laya-typed-decisions | Open decision models, as shipped (see `docs/models.md`) | Apache-2.0 | owner's Mac |
 | Jev | Paid API; only if a key is supplied | commercial | not run |
 
 ### Measuring
@@ -55,11 +75,11 @@ Accuracy for each question; accuracy on each team; for frustration, the average 
 
 The fast contender answers everything. If its least sure answer for a request falls under a threshold, the whole request goes to the slow one. The threshold rule was written down before any model ran: the lowest threshold where urgent and team accuracy are both within 0.02 of the slow model alone. It's fixed on the development set and then used once on the held-out set.
 
-*Pending:* how many requests were handed over, accuracy, and time saved.
+On held-out: the planned version handed nothing over (the decision model was already better than the big model). An exploratory version, Kev handing over to Strands on team confidence, handed over 84% and finished one request behind Strands alone.
 
 ### What I found
 
-*Pending.*
+See the short version above, and sections 4 to 7 of `paper/report.md`.
 
 ### Limits
 
@@ -81,5 +101,5 @@ Every claim on the portfolio page, and where its evidence is.
 | Jev never called without the owner's key and switch | `systemone/adapters/jev.py`; `tests/test_adapters.py` |
 | Threshold rule fixed before any model run | `scripts/cascade.py` docstring; NOTES.md, 2026-10-11 |
 | Rules on dev: urgent 0.82, team 0.73 (optimistic) | `results/dev/rules.json` (cloud container) |
-| *pending*: every model result | `results/dev/*.json`, `results/heldout/*.json`, with machine named |
+| Every model result | `results/dev/*.json`, `results/heldout/*.json`, with machine named |
 | All models Apache-2.0 | `docs/models.md` (licence check, 2026-10-11) |
