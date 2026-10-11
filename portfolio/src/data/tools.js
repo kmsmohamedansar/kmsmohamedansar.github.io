@@ -9,7 +9,11 @@ export const TOOL_INFO = {
   Python: "A popular, readable programming language, widely used for data work, automation and machine learning.",
   Swift: "Apple's programming language for iPhone, iPad and Mac apps.",
 
+  SQL: "The standard language for asking questions of a database: pick the rows you want, join tables together, add things up.",
+
   // Web and app building
+  Docker: "Packs a program with everything it needs into a sealed box (a container), so it runs the same on any machine.",
+  "Chrome extensions (MV3)": "Small apps that add features to the Chrome browser. Manifest V3 is Chrome's current, stricter set of rules for building them.",
   Xcode: "Apple's free app for writing, testing and packaging apps for iPhone, iPad and Mac.",
   "App Store Connect": "Apple's website for submitting apps, managing TestFlight testers and getting through App Store review.",
   CloudKit: "Apple's service for syncing an app's data through each person's own iCloud account.",
@@ -33,6 +37,12 @@ export const TOOL_INFO = {
   SwiftData: "Apple's built-in way for apps to save data on the device.",
 
   // Data
+  Snowflake: "A cloud data warehouse: one place where a company keeps huge tables and queries them with SQL, without running its own servers.",
+  BigQuery: "Google's cloud data warehouse. You load big tables in and query them with SQL, and Google handles the machines.",
+  Airflow: "A scheduler for data pipelines: it runs each step in the right order on a timetable, retries failures and shows what ran when.",
+  "ETL and ELT": "Two ways of moving data into a warehouse. ETL cleans it before loading (extract, transform, load); ELT loads it raw and cleans it inside the warehouse.",
+  Tableau: "A tool for building charts and dashboards from data by dragging fields around, then sharing them with a team.",
+  "Dashboards people open every week": "My bar for a dashboard: not just built, but useful enough that people come back to it on their own, every week.",
   DuckDB: "A fast database that runs inside your program or on your laptop, with no server. Good for analytics.",
   dbt: "A tool for building clean tables from raw ones using plain SQL files, with tests that check the results.",
   Dagster: "A scheduler for data pipelines: it runs the steps in order, retries when something fails, and keeps a history of every run.",
@@ -61,6 +71,9 @@ export const TOOL_INFO = {
   "Stateless HTTP transport": "A way of running a server so any copy of it can answer any request, which makes it easy to run several copies.",
 
   // Running and packaging
+  "MCP servers": "Small servers that speak the Model Context Protocol, an open standard that lets AI assistants call real tools and data, safely and with typed inputs.",
+  "Local models with Ollama": "Running AI language models on my own computer with Ollama: free, private, and nothing sent to the cloud.",
+  "FAISS and embeddings": "Embeddings turn text into lists of numbers that capture meaning; FAISS, from Meta, searches millions of them fast to find the closest matches.",
   Cursor: "A code editor with an AI assistant built in. It suggests and writes code that I review.",
   "Claude Code": "Anthropic's AI coding assistant, which works in a terminal and can run tools on your behalf.",
   Blender: "Free, open-source 3D software for modelling, texturing and rendering.",

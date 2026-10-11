@@ -1,7 +1,8 @@
 import { Fragment, useCallback, useEffect, useRef, useState } from "react";
 import NameParticles from "./NameParticles";
 import { animate, AnimatePresence, cubicBezier, motion, useMotionValue, useMotionValueEvent, useReducedMotion, useScroll, useSpring, useTransform, useVelocity } from "framer-motion";
-import { ArrowRight, ArrowUp, ArrowUpRight, ChevronLeft, ChevronRight, ExternalLink, Link2, Lock, Mail } from "lucide-react";
+import { ArrowRight, ArrowUp, ArrowUpRight, ChevronLeft, ChevronRight, ExternalLink, Info, Link2, Lock, Mail } from "lucide-react";
+import { TOOL_INFO } from "../data/tools";
 import { ABOUT, CONTACT, HERO, RECEIPTS, ROLES } from "../data/content";
 import { ACCENTS, EARLIER_PROJECTS, EXPERIMENTS, FEATURED, FEATURED_GRID, LISTED_PROJECTS, MORE_PROJECTS } from "../data/projects";
 import { FlourishTitle, Reveal, ScrollShot, SectionHead, SpinBadge, TagPill } from "./ui";
@@ -842,6 +843,69 @@ export function ExperienceSection() {
   );
 }
 
+/* One group of skills. Hover, focus or tap a skill to see what it is; the
+   explainer opens under the group (not as a floating tooltip) so it never
+   runs off a phone screen. Same behaviour as the tool lists on project pages. */
+function SkillGroup({ group }) {
+  const a = ACCENTS[group.accent];
+  const [active, setActive] = useState(null);
+  const openedAt = useRef(0);
+  const open = (t) => {
+    openedAt.current = Date.now();
+    setActive(t);
+  };
+  const id = `skill-explainer-${group.title.toLowerCase().replace(/\W+/g, "-")}`;
+  return (
+    <div onPointerLeave={(e) => e.pointerType === "mouse" && setActive(null)}>
+      <h3 className={`mb-3 font-mono text-xs font-semibold uppercase tracking-[.16em] ${a.text}`}>{group.title}</h3>
+      <ul className="flex flex-wrap gap-2">
+        {group.items.map((it) => {
+          const on = active === it;
+          return (
+            <li key={it}>
+              <button
+                type="button"
+                onPointerEnter={(e) => e.pointerType === "mouse" && open(it)}
+                onFocus={() => open(it)}
+                onClick={() => (on && Date.now() - openedAt.current > 400 ? setActive(null) : open(it))}
+                aria-expanded={on}
+                aria-controls={id}
+                className={`inline-flex items-center gap-2 rounded-full border px-3 py-1.5 text-sm transition-colors duration-200 ${
+                  on ? `${a.border} ${a.soft} text-white` : "border-white/15 bg-white/[.04] text-[color:var(--ink-100)] hover:border-white/40"
+                }`}
+              >
+                {SKILL_ICONS[it] && (
+                  <img src={`${import.meta.env.BASE_URL}icons/${SKILL_ICONS[it]}.svg`} alt="" aria-hidden="true" loading="lazy" className="h-4 w-4 invert" />
+                )}
+                {it}
+                {TOOL_INFO[it] && <Info size={12} aria-hidden="true" className="opacity-60" />}
+              </button>
+            </li>
+          );
+        })}
+      </ul>
+      <div id={id} aria-live="polite" className="mt-3 min-h-[1.25rem]">
+        <AnimatePresence mode="wait">
+          {active && TOOL_INFO[active] && (
+            <motion.p
+              key={active}
+              initial={{ opacity: 0, y: -6 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -4 }}
+              transition={{ duration: 0.18 }}
+              className="rounded-xl border border-white/12 bg-white/[.04] p-3.5 text-sm leading-relaxed text-[color:var(--ink-100)]"
+              style={{ borderLeft: `3px solid ${a.hex}` }}
+            >
+              <span className="font-semibold text-white">{active}: </span>
+              {TOOL_INFO[active]}
+            </motion.p>
+          )}
+        </AnimatePresence>
+      </div>
+    </div>
+  );
+}
+
 /* ── ABOUT ──────────────────────────────────────────────────── */
 export function AboutSection({ scrollContainerRef }) {
   const reduced = useReducedMotion();
@@ -881,24 +945,9 @@ export function AboutSection({ scrollContainerRef }) {
           ))}
         </div>
         <Reveal className="mx-auto mt-16 grid max-w-3xl gap-8 sm:grid-cols-2">
-          {ABOUT.groups.map((g) => {
-            const a = ACCENTS[g.accent];
-            return (
-              <div key={g.title}>
-                <h3 className={`mb-3 font-mono text-xs font-semibold uppercase tracking-[.16em] ${a.text}`}>{g.title}</h3>
-                <div className="flex flex-wrap gap-2">
-                  {g.items.map((it) => (
-                    <span key={it} className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/[.04] px-3 py-1.5 text-sm text-[color:var(--ink-100)]">
-                      {SKILL_ICONS[it] && (
-                        <img src={`${import.meta.env.BASE_URL}icons/${SKILL_ICONS[it]}.svg`} alt="" aria-hidden="true" loading="lazy" className="h-4 w-4 invert" />
-                      )}
-                      {it}
-                    </span>
-                  ))}
-                </div>
-              </div>
-            );
-          })}
+          {ABOUT.groups.map((g) => (
+            <SkillGroup key={g.title} group={g} />
+          ))}
         </Reveal>
       </div>
     </section>
