@@ -111,3 +111,15 @@ MacBook Air M4, 16 GB. Line-up updated in `docs/models.md`: Kev-4B/9B and Clef s
 - Urgent 0.77 (ECE 0.15); team 0.60 (ECE **0.14**, was 0.07 with null descriptions); frustration 1.08, exact 0.42 (ECE 0.40). Median 0.34 s.
 - Per team: billing 20/26, account-access 18/23, technical-support 23/30, integrations-api 7/23, security-privacy 19/26, sales 17/23, how-to 9/24, feedback 8/25.
 - Same accuracy, but calibration on team doubled: sending option names as descriptions instead of nothing changed how sure Kev is, not which team it picks. These numbers replace the first run.
+
+### Laya-typed-decisions, dev (MacBook Air M4 16GB, owner's run; LAYA_MODELS=typed-decisions)
+
+- 200/200. Median 0.32 s. Urgent 0.80 (ECE 0.18); team 0.46 (ECE 0.20); frustration distance 1.17, exact **0.17** (ECE 0.11).
+- Per team: billing 20/26, account-access 10/23, technical-support 11/30, integrations-api 6/23, security-privacy 6/26, sales 14/23, how-to 12/24, feedback 12/25.
+- Weakest decision model here, as its own README warns: fine-tuned on another benchmark, not on support routing. Laya defines confidence as 1 minus normalised entropy (how spread out its probabilities are), unlike Jev's definition. At load it also warned that one temperature (choice with 11+ options) was invalid; our team question has 8 options, so not affected.
+
+### Fast then slow, fixed on dev 2026-10-11, before any held-out run
+
+- **Pre-registered** (lowest of three confidences; slow = qwen2.5:7b v2): for every fast decision model the rule "qualifies", but trivially. Strands -> qwen: threshold **0.00**, nothing handed over, because Strands alone (team 0.85) already beats the slow model (0.61). Kev -> qwen and Laya -> qwen hand over 186 and 197 of 200: their frustration confidence is almost always near 0, so the lowest of three confidences drags nearly every request under any threshold. Reported pair: Strands -> qwen v2 (`results/cascade.json`).
+- **Lesson:** the "lowest of three" rule, written before any model ran, breaks when one question is almost never confident. Recorded as a design flaw, not hidden.
+- **Exploratory** (not pre-registered, chosen after seeing dev, fixed before held-out): hand over on team confidence only, Kev-0.8B -> Strands Decider 2B. Same "within 0.02 of slow alone" rule picks **0.70**: 151 of 200 handed over, team 0.84 vs 0.85 for Strands alone, 324 s vs 406 s (about 20% less time). Kev -> qwen on team confidence never beats 0.66. `results/cascade-team.json`.

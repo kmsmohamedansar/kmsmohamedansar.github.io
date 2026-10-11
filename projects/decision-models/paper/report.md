@@ -235,7 +235,7 @@ Machine: MacBook Air M4, 16 GB (models); a Linux cloud container (rules and even
 | `qwen2.5:7b`, prompt v2 | 0.80 | 0.61 | 0.79 | 0.15 / 0.26 / 0.43 | 7.8 | 0 |
 | Kev-0.8B | 0.77 | 0.60 | 1.08 | 0.15 / **0.14** / 0.40 | **0.34** | 0 |
 | Strands Decider 2B | 0.80 | **0.85** | 1.10 | 0.08 / 0.21 / **0.02** | 1.64 | 0 |
-| Laya-typed-decisions | **[pending]** | | | | | |
+| Laya-typed-decisions | 0.80 | 0.46 | 1.17 | 0.18 / 0.20 / 0.11 | 0.32 | 0 |
 
 Remember that the rules' development numbers are optimistic: the keywords were chosen while reading these requests.
 
@@ -273,21 +273,41 @@ It picks the right team 85% of the time, 24 points above the general model, in a
 
 Its frustration scores are no better than anyone's (off by 1.10 levels), but its stated confidence on them is almost perfectly honest (calibration error 0.02): it is unsure, and it says so. That is exactly the property that makes fast-then-slow possible.
 
-### 5.4 Calibration
+### 5.4 The third decision model: Laya-typed-decisions
+
+Laya was the weakest decision model here: team 0.46, and the exact frustration level right only 17% of the time. This is what its own documentation predicts. The variant tested was fine-tuned on a different benchmark, never on support routing, and its authors describe Laya as "a fast base to specialise". It was tested as shipped, as agreed before running it. Its speed (0.32 seconds) puts it with Kev, and its frustration confidence is fairly honest (calibration error 0.11), but without fine-tuning on this kind of task it is not a contender for routing.
+
+Laya also defines confidence differently from the others: one minus the normalised entropy of its probabilities, a measure of how spread out they are, rather than Jev's definition. Every project in this test uses "confidence" to mean something slightly different, which is why it is measured here rather than trusted.
+
+### 5.5 Calibration
 
 **[pending: the calibration chart with every contender, and what it shows.]**
 
 Already visible with two contenders: the keyword rules are *more modest than they need to be* on team (when they say 50%, they are right about 80% of the time) and *overconfident* on frustration. A model's raw accuracy says nothing about which of these it is.
 
-### 5.5 Hard cases
+### 5.6 Hard cases
 
 **[pending: accuracy on two-problem, sarcastic, very short and non-native requests, per contender.]**
 
-### 5.6 Fast then slow
+### 5.7 Fast then slow
 
-**[pending: chosen pair, threshold, share handed over, accuracy, time saved.]**
+**The planned version found nothing to hand over.** The rule written before any model ran paired each decision model with the general model as the "slow" side. But the best decision model, Strands Decider 2B, is already more accurate than the general model (team 0.85 against 0.61), so the rule chose a threshold of 0: never hand over. The bigger, slower model added nothing.
 
-### 5.7 Held-out set
+**The rule also had a flaw, which the data exposed.** A request's confidence was defined as the lowest of its three answers' confidences. Kev and Laya are almost never confident about frustration, so frustration dragged nearly every request under the threshold: Kev handed over 186 of 200 requests, Laya 197. A sensible-looking rule broke because one question is almost always uncertain.
+
+**An exploratory version, labelled as such.** After seeing the development results, and before any held-out run, one variant was added and fixed: hand over on the team answer's confidence only, from the fastest decision model (Kev, 0.34 s) to the most accurate (Strands, 1.64 s). The same "within 0.02 of the slow side" rule chose a threshold of 0.70:
+
+| On the development set | Handed over | Team | Urgent | Total time for 200 |
+|---|---|---|---|---|
+| Kev alone | 0 | 0.60 | 0.77 | 69 s |
+| Kev, then Strands below 0.70 team confidence | 151 (76%) | 0.84 | 0.80 | 324 s |
+| Strands alone | 200 | 0.85 | 0.80 | 406 s |
+
+It keeps almost all of Strands' accuracy for about 20% less time. That is a modest saving, because Strands is already cheap. The pattern is sound; at these speeds, the case for it is weak.
+
+**[pending: both versions on the held-out set.]**
+
+### 5.8 Held-out set
 
 **[pending: every contender, scored once.]**
 
@@ -317,8 +337,8 @@ At 10,000 tickets a day, using development-set numbers (held-out numbers will re
 | `qwen2.5:7b`, prompt v2 (7.8 s per request) | about 22 hours | about 0.9, running all day | about 3,900 |
 | Kev-0.8B (0.34 s per request) | about 57 minutes | a small fraction of one | about 4,000 |
 | Strands Decider 2B (1.64 s per request) | about 4.5 hours | about 0.2 | about 1,500 |
-| Laya-typed-decisions | **[pending]** | | |
-| Best fast-then-slow pair | **[pending]** | | |
+| Laya-typed-decisions (0.32 s per request) | about 53 minutes | a small fraction of one | about 5,400 |
+| Kev, then Strands below 0.70 (exploratory) | about 4.5 hours (324 s per 200) | about 0.2 | about 1,600 |
 
 Two things are already clear. A general 7-billion-parameter model on a laptop is too slow to be the first step for a busy desk on its own: it needs more than one machine running around the clock just to keep up with an illustrative volume. And the cheapest option, keyword rules, is fast enough for any volume but sends thousands of tickets a day to the wrong place.
 
@@ -383,6 +403,7 @@ Every claim in this report, and where its evidence is.
 | 250 requests, 200 / 50 split, 35% hard cases | `scripts/build_testset.py` output; `data/` |
 | Labelling rules written before labelling | `docs/labelling-rules.md`; commit history |
 | Every answer checked against the System One shape | `systemone/schema.py`; `tests/` |
+| Fast-then-slow thresholds fixed before any held-out run (0.00 planned; 0.70 exploratory) | `results/cascade.json`, `results/cascade-team.json` |
 | Threshold rule fixed before any model run | `scripts/cascade.py`; `NOTES.md`, 11 October 2026 |
 | Scale figures in section 6 (volume illustrative, rates measured) | Formulas in section 6.1; rates from `results/dev/*.json` |
 | Prompt v2: team 0.61, 142 of 200 in first three, frustration ECE 0.43 | `NOTES.md`; owner's run on MacBook Air M4 16 GB |

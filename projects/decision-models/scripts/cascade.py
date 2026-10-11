@@ -36,7 +36,10 @@ from systemone import load  # noqa: E402
 
 THRESHOLDS = [round(i * 0.05, 2) for i in range(21)]
 MARGIN = 0.02
-CHOICE_FILE = ROOT / "results" / "cascade.json"
+CHOICE_FILES = {"min": ROOT / "results" / "cascade.json",
+                # Exploratory, added 2026-10-11 after the dev runs and before any
+                # held-out run: hand over on the team answer's confidence only.
+                "team": ROOT / "results" / "cascade-team.json"}
 QIDS = ("is_urgent", "team", "frustration")
 
 
@@ -49,11 +52,13 @@ def read_run(split, name):
     return meta, {l["id"]: l for l in lines if "id" in l}
 
 
-def request_confidence(answers, row):
+def request_confidence(answers, row, basis="min"):
+    if basis == "team":
+        return confidence_and_correct("team", answers["team"], row)[0]
     return min(confidence_and_correct(q, answers[q], row)[0] for q in QIDS)
 
 
-def simulate(fast, slow, key, threshold):
+def simulate(fast, slow, key, threshold, basis="min"):
     if set(fast) != set(slow):
         sys.exit("Fast and slow runs don't cover the same requests.")
     n = len(fast)
@@ -62,7 +67,7 @@ def simulate(fast, slow, key, threshold):
         row = key[rid]
         use = f
         t = f["seconds"]
-        if request_confidence(f["response"]["answers"], row) < threshold:
+        if request_confidence(f["response"]["answers"], row, basis) < threshold:
             handed += 1
             use = slow[rid]
             t += slow[rid]["seconds"]
@@ -96,6 +101,8 @@ def table(rows):
 
 
 def cmd_pick(args):
+    CHOICE_FILE = CHOICE_FILES[args.basis]
+    b = args.basis
     if CHOICE_FILE.exists() and not args.again:
         sys.exit(f"{CHOICE_FILE.relative_to(ROOT)} exists. The threshold is fixed; "
                  "use --again only before any held-out run, and note why in NOTES.md.")
@@ -104,12 +111,13 @@ def cmd_pick(args):
     key = {r["id"]: r for r in load("dev")}
     fmeta, fast = read_run("dev", args.fast)
     smeta, slow = read_run("dev", args.slow)
-    sweep = [simulate(fast, slow, key, t) for t in THRESHOLDS]
+    sweep = [simulate(fast, slow, key, t, b) for t in THRESHOLDS]
     fast_alone = sweep[0]  # threshold 0: nothing handed over
-    slow_alone = simulate(fast, slow, key, 1.01)  # everything handed over
+    slow_alone = simulate(fast, slow, key, 1.01, b)  # everything handed over
     threshold, helped = pick(sweep, slow_alone)
     choice = {
         "fast": args.fast, "slow": args.slow, "threshold": threshold, "fast_helped": helped,
+        "basis": b, "exploratory": b != "min",
         "rule": f"lowest threshold within {MARGIN} of slow alone on urgent and team accuracy",
         "fixed_on": datetime.now(timezone.utc).isoformat(timespec="seconds"),
         "machines": {"fast": fmeta["machine"], "slow": smeta["machine"]},
@@ -125,10 +133,12 @@ def cmd_pick(args):
 
 
 def cmd_heldout(args):
+    CHOICE_FILE = CHOICE_FILES[args.basis]
     if not CHOICE_FILE.exists():
         sys.exit("No fixed threshold. Run 'cascade.py pick' on dev first.")
     choice = json.loads(CHOICE_FILE.read_text())
-    out = ROOT / "results" / "heldout" / "cascade.json"
+    b = choice.get("basis", "min")
+    out = ROOT / "results" / "heldout" / CHOICE_FILE.name
     if out.exists():
         sys.exit("Held-out cascade already scored. It is scored once only.")
     key = {r["id"]: r for r in load("heldout")}
@@ -136,9 +146,10 @@ def cmd_heldout(args):
     _, slow = read_run("heldout", choice["slow"])
     result = {
         "fast": choice["fast"], "slow": choice["slow"], "threshold": choice["threshold"],
-        "cascade": simulate(fast, slow, key, choice["threshold"]),
-        "fast_alone": simulate(fast, slow, key, 0.0),
-        "slow_alone": simulate(fast, slow, key, 1.01),
+        "basis": b, "exploratory": b != "min",
+        "cascade": simulate(fast, slow, key, choice["threshold"], b),
+        "fast_alone": simulate(fast, slow, key, 0.0, b),
+        "slow_alone": simulate(fast, slow, key, 1.01, b),
     }
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text(json.dumps(result, indent=2) + "\n")
@@ -152,7 +163,10 @@ def main():
     a.add_argument("--fast", required=True, help="raw run name, e.g. rules")
     a.add_argument("--slow", required=True, help="raw run name, e.g. ollama_qwen2.5_7b")
     a.add_argument("--again", action="store_true")
-    sub.add_parser("heldout")
+    a.add_argument("--basis", choices=["min", "team"], default="min",
+                   help="min: lowest of the three confidences (pre-registered); team: team only (exploratory)")
+    h = sub.add_parser("heldout")
+    h.add_argument("--basis", choices=["min", "team"], default="min")
     args = p.parse_args()
     cmd_pick(args) if args.cmd == "pick" else cmd_heldout(args)
 
