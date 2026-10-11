@@ -7,7 +7,10 @@ touches the held-out set.
 import unittest
 
 from systemone import InvalidRequest, SystemOne, build_request, load
-from systemone.adapters import ADAPTERS
+import json
+import os
+
+from systemone.adapters import ADAPTERS, Jev, Ollama, Uniform
 
 
 def sample_rows():
@@ -65,11 +68,37 @@ class Contract:
             self.adapter.decide({"model": "x", "state": "hi", "questions": {}})
 
 
-# One test class per adapter, e.g. ContractUniform.
-for _name, _cls in ADAPTERS.items():
-    _test = type(f"Contract_{_name}", (Contract, unittest.TestCase), {"adapter_class": _cls})
+def fake_ollama(url, body):
+    """Stands in for an Ollama server: sloppy but parseable probabilities."""
+    schema = body["format"]["properties"]
+    content = {qid: {k: float(i + 1) for i, k in enumerate(spec["required"])}
+               for qid, spec in schema.items()}  # don't add up to 1 on purpose
+    return {"model": body["model"], "message": {"content": json.dumps(content)},
+            "prompt_eval_count": 300, "eval_count": 60}
+
+
+def fake_jev(url, body, key):
+    """Stands in for the Jev API: a spec-shaped response, no network."""
+    return {**Uniform().answer(body), "model": "jev-fake"}
+
+
+# How to build each adapter for the contract. Ollama talks to a real server
+# only when OLLAMA_LIVE=1 (on the owner's Mac); Jev is never called for real.
+FACTORIES = {
+    "uniform": Uniform,
+    "rules": ADAPTERS["rules"],
+    "ollama": (Ollama if os.environ.get("OLLAMA_LIVE") == "1"
+               else lambda: Ollama(post=fake_ollama)),
+    "jev": lambda: Jev(post=fake_jev, key="test", enabled=True),
+}
+assert set(FACTORIES) == set(ADAPTERS), "every adapter needs a contract factory"
+
+# One test class per adapter, e.g. Contract_rules.
+for _name, _make in FACTORIES.items():
+    _test = type(f"Contract_{_name}", (Contract, unittest.TestCase),
+                 {"adapter_class": staticmethod(_make)})
     globals()[_test.__name__] = _test
-del _name, _cls, _test
+del _name, _make, _test
 
 if __name__ == "__main__":
     unittest.main()
