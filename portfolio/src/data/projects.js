@@ -1,6 +1,7 @@
 // Every project on the site, in one place.
 //
-// `featured: true` projects get the big cards at the top. Everything else
+// `featured: true` projects get the spotlight at the top: big rows, or a
+// two-column grid when `grid: true` is also set. Everything else
 // goes in the grid below them. Each project also gets its own
 // detail page at #project/<slug>, built from these same fields.
 //
@@ -21,7 +22,7 @@ export const ACCENTS = {
 };
 
 export const PROJECTS = [
-  /* ───────────── featured ───────────── */
+  /* ───────────── spotlight: big rows ───────────── */
   {
     slug: "decision-models",
     featured: true,
@@ -137,6 +138,7 @@ export const PROJECTS = [
     accent: "violet",
     status: "In testing · App Store soon",
     icon: "/shots/haloscript/icon.png",
+    preferIcon: true,
     shots: ["/shots/haloscript/write_mac.jpg"],
     hook: "A novel-writing app with an infinite whiteboard beside the manuscript. Plan on a corkboard, keep a Story Bible, sketch with Apple Pencil, write in a focused editor.",
     role: "Built solo: one SwiftUI codebase for Mac, iPad and iPhone.",
@@ -175,62 +177,20 @@ export const PROJECTS = [
     ],
   },
   {
-    slug: "reptrack",
-    featured: true,
-    title: "RepTrack",
-    kind: "iOS app",
-    accent: "amber",
-    status: "Live on the App Store",
-    icon: "/shots/reptrack-icon.webp",
-    hook: "A workout log for the gym floor. Log a set in a few taps, see what you did last time, move on.",
-    role: "Built solo, from the first screen to App Store review.",
-    tags: ["SwiftUI", "SwiftData", "iOS 17+", "App Store"],
-    stack: ["Swift", "SwiftUI", "SwiftData", "Xcode", "App Store Connect"],
-    stackUsage: {
-      Swift: "The whole app is written in it.",
-      SwiftUI: "Every screen, laid out for one-thumb logging between sets.",
-      SwiftData: "Stores workouts, exercises and sets on the phone. Your history is a query over it.",
-      Xcode: "Where the app was built, tested on a real phone and packaged for release.",
-      "App Store Connect": "Used to submit builds, screenshots and privacy answers, and get through App Store review.",
-    },
-    story: [
-      "RepTrack is the project where I wanted to prove I could take something all the way, not just the data part. It's a workout log. You pick an exercise, log your sets with reps and weight, and next time the app shows you what you did before, so you know what to beat.",
-      "I kept it local first. Everything lives on the phone in SwiftData, and nothing stands between you and your first set, not even an account. It's also light mode only, on purpose, so the colours and contrast stay the way I designed them.",
-      "The code was only part of the job. Getting through App Store review meant screenshots, privacy answers and a build that behaves on a real phone, and I handled all of that myself.",
-    ],
-    how: [
-      "SwiftUI screens tuned for quick input, because you're usually holding a phone with one thumb between sets.",
-      "SwiftData models shaped around workouts, exercises and sets, so history is just a query.",
-      "Past sessions feed simple progression cues, so you see last time's numbers while you log this time's.",
-      "Nothing leaves the device. No sign-up, no feed, no social features. It's a gym tool.",
-    ],
-    learned: [
-      "Fast input beats a long feature list. Every extra tap between sets is one you feel.",
-      "Shipping alone means owning the unglamorous parts too: signing, metadata, review notes.",
-    ],
-    flow: {
-      caption: "What happens when you log a set.",
-      columns: [
-        { label: "You", nodes: ["Open today's workout"] },
-        { label: "Log", nodes: ["Pick an exercise", "Enter reps and weight"] },
-        { label: "Saved", nodes: ["SwiftData, on the device"] },
-        { label: "Next time", nodes: ["Last session shown", "Progression cue"] },
-      ],
-    },
-    links: [
-      { label: "View on the App Store", href: "https://apps.apple.com/us/app/reptrack-workout-log/id6761032027", external: true, primary: true },
-      { label: "Source is private. Walkthrough on request.", href: "#contact", locked: true },
-    ],
-  },
-  {
     slug: "digital-double",
     featured: true,
-    title: "AI Digital Double",
-    kind: "AI + 3D",
+    title: "Digital Me",
+    kind: "AI + 3D · my digital double",
     accent: "rose",
     status: "Live demo · full write-up",
     shots: ["/shots/digital-double.jpg"],
-    hook: "A 3D model of my own head that looks back at you. I directed Claude Code to build it in Blender from phone photos and a 13-second video.",
+    hook: "A 3D model of my own head that looks back at you. I never touched Blender's tools myself: I directed Claude Code to build it from phone photos and a 13-second video, and judged every render.",
+    stats: [
+      { value: "12", label: "stages tried, most of them failed in useful ways", short: "stages, most failed" },
+      { value: "13 s", label: "of phone video, plus a handful of photos", short: "of phone video" },
+      { value: "$0", label: "spent: every tool used is free", short: "spent, all free tools" },
+      { value: "2", label: "real eyeballs that follow your cursor", short: "eyes that follow you" },
+    ],
     role: "Directed the AI, reviewed every render, made the calls.",
     tags: ["Claude Code", "Blender", "MCP", "three.js"],
     stack: ["Claude Code", "Blender", "KeenTools FaceBuilder", "Apple Object Capture", "Brush", "three.js"],
@@ -259,14 +219,17 @@ export const PROJECTS = [
       { label: "Full write-up", href: "https://github.com/kmsmohamedansar/ai-digital-double", external: true },
     ],
   },
+  /* ───────────── spotlight: two-column grid ───────────── */
   {
     slug: "sitescout",
     featured: true,
+    grid: true,
     theme: { bg: "#120f1f", title: "condensed" },
     title: "Sitescout",
     kind: "Chrome extension",
     accent: "violet",
     status: "Open source, runs in Chrome",
+    cardShot: "/shots/sitescout/card.png",
     hook: "Paste stock tickers, press Scout, and watch a Chrome side panel read each Yahoo Finance page and hand you the numbers as cards and one CSV.",
     role: "Built it myself: a public re-creation of the ideas behind Undercut, my work tool.",
     tags: ["Chrome", "MV3", "TypeScript", "React", "Framer Motion"],
@@ -343,6 +306,7 @@ export const PROJECTS = [
   {
     slug: "integration",
     featured: true,
+    grid: true,
     theme: { bg: "#080a09", title: "mono" },
     title: "Integration-in-a-box",
     kind: "Integration demo",
@@ -434,6 +398,7 @@ export const PROJECTS = [
   {
     slug: "analytics-assistant",
     featured: true,
+    grid: true,
     theme: { bg: "#1c150c", title: "serif" },
     title: "Analytics assistant: rules vs AI",
     kind: "AI + data tools",
@@ -508,6 +473,55 @@ export const PROJECTS = [
     links: [
       { label: "Code, case study and results", href: "https://github.com/kmsmohamedansar/kmsmohamedansar.github.io/tree/main/projects/analytics-assistant", external: true, primary: true },
       { label: "The work behind it", href: "#project/mcp-workflow" },
+    ],
+  },
+  {
+    slug: "reptrack",
+    featured: true,
+    grid: true,
+    title: "RepTrack",
+    kind: "iOS app",
+    accent: "amber",
+    status: "Live on the App Store",
+    icon: "/shots/reptrack-icon.webp",
+    hook: "A workout log for the gym floor. Log a set in a few taps, see what you did last time, move on.",
+    role: "Built solo, from the first screen to App Store review.",
+    tags: ["SwiftUI", "SwiftData", "iOS 17+", "App Store"],
+    stack: ["Swift", "SwiftUI", "SwiftData", "Xcode", "App Store Connect"],
+    stackUsage: {
+      Swift: "The whole app is written in it.",
+      SwiftUI: "Every screen, laid out for one-thumb logging between sets.",
+      SwiftData: "Stores workouts, exercises and sets on the phone. Your history is a query over it.",
+      Xcode: "Where the app was built, tested on a real phone and packaged for release.",
+      "App Store Connect": "Used to submit builds, screenshots and privacy answers, and get through App Store review.",
+    },
+    story: [
+      "RepTrack is the project where I wanted to prove I could take something all the way, not just the data part. It's a workout log. You pick an exercise, log your sets with reps and weight, and next time the app shows you what you did before, so you know what to beat.",
+      "I kept it local first. Everything lives on the phone in SwiftData, and nothing stands between you and your first set, not even an account. It's also light mode only, on purpose, so the colours and contrast stay the way I designed them.",
+      "The code was only part of the job. Getting through App Store review meant screenshots, privacy answers and a build that behaves on a real phone, and I handled all of that myself.",
+    ],
+    how: [
+      "SwiftUI screens tuned for quick input, because you're usually holding a phone with one thumb between sets.",
+      "SwiftData models shaped around workouts, exercises and sets, so history is just a query.",
+      "Past sessions feed simple progression cues, so you see last time's numbers while you log this time's.",
+      "Nothing leaves the device. No sign-up, no feed, no social features. It's a gym tool.",
+    ],
+    learned: [
+      "Fast input beats a long feature list. Every extra tap between sets is one you feel.",
+      "Shipping alone means owning the unglamorous parts too: signing, metadata, review notes.",
+    ],
+    flow: {
+      caption: "What happens when you log a set.",
+      columns: [
+        { label: "You", nodes: ["Open today's workout"] },
+        { label: "Log", nodes: ["Pick an exercise", "Enter reps and weight"] },
+        { label: "Saved", nodes: ["SwiftData, on the device"] },
+        { label: "Next time", nodes: ["Last session shown", "Progression cue"] },
+      ],
+    },
+    links: [
+      { label: "View on the App Store", href: "https://apps.apple.com/us/app/reptrack-workout-log/id6761032027", external: true, primary: true },
+      { label: "Source is private. Walkthrough on request.", href: "#contact", locked: true },
     ],
   },
   /* ───────────── more projects ───────────── */
@@ -1357,7 +1371,8 @@ export const PROJECTS = [
 // `hidden: true` keeps a project's page working for old links but leaves it
 // out of every list on the site.
 const listed = (p) => !p.hidden;
-export const FEATURED = PROJECTS.filter((p) => p.featured && listed(p));
+export const FEATURED = PROJECTS.filter((p) => p.featured && !p.grid && listed(p));
+export const FEATURED_GRID = PROJECTS.filter((p) => p.featured && p.grid && listed(p));
 // Archived course-era work is listed compactly under "Earlier work" instead of in the rail.
 const isEarlier = (p) => p.status === "Archived experiment";
 export const MORE_PROJECTS = PROJECTS.filter((p) => !p.featured && !isEarlier(p) && listed(p));
@@ -1365,18 +1380,9 @@ export const EARLIER_PROJECTS = PROJECTS.filter((p) => !p.featured && isEarlier(
 export const LISTED_PROJECTS = PROJECTS.filter(listed);
 export const getProject = (slug) => PROJECTS.find((p) => p.slug === slug);
 
-/* Things I built with AI as a sparring partner, mostly to see how far it goes. */
+/* Things I built with AI as a sparring partner, mostly to see how far it goes.
+   The digital double has its own spotlight project, so it isn't repeated here. */
 export const EXPERIMENTS = [
-  {
-    id: "digital-double",
-    title: "A 3D model of me that looks back",
-    accent: "rose",
-    hook: "I directed Claude Code to build a 3D model of my head in Blender, from phone photos and a short video. Move your cursor and its eyes follow you.",
-    body: "Twelve stages, most of which failed in instructive ways: code-built meshes, a face-fitting add-on, on-device photogrammetry, a Gaussian splat trained on my laptop. All free tools. The full write-up has every step and screenshot.",
-    href: "#digital-double",
-    shot: "/shots/digital-double.jpg",
-    cta: "Meet the model",
-  },
   {
     id: "emet",
     title: "EMET, a terminal that answers as me",
