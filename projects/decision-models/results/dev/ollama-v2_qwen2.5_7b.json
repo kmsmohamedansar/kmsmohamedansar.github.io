@@ -57,7 +57,7 @@
   },
   "calibration": {
     "is_urgent": {
-      "ece": 0.151,
+      "ece": 0.15,
       "bins": [
         {
           "from": 0.8,
