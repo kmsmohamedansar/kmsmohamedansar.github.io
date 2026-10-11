@@ -1,0 +1,60 @@
+{
+  "ran_at": "2026-10-11T02:51:32+00:00",
+  "fake_models": false,
+  "machine": "Darwin arm64",
+  "python": "3.12.15",
+  "embed_model": "sentence-transformers/all-MiniLM-L6-v2",
+  "zero_shot_model": "facebook/bart-large-mnli",
+  "products": 350,
+  "planted": 50,
+  "checkers": [
+    {
+      "checker": "Keyword match",
+      "caught": 50,
+      "false_alarms": 164,
+      "missed": 0,
+      "flagged": 214,
+      "precision": 0.234,
+      "recall": 1.0,
+      "seconds": 0.0,
+      "per_minute": 7324942,
+      "slow_model_calls": 0
+    },
+    {
+      "checker": "Meaning match",
+      "caught": 49,
+      "false_alarms": 87,
+      "missed": 1,
+      "flagged": 136,
+      "precision": 0.36,
+      "recall": 0.98,
+      "seconds": 2.11,
+      "per_minute": 9931,
+      "slow_model_calls": 0
+    },
+    {
+      "checker": "Zero-shot model",
+      "caught": 50,
+      "false_alarms": 83,
+      "missed": 0,
+      "flagged": 133,
+      "precision": 0.376,
+      "recall": 1.0,
+      "seconds": 46.26,
+      "per_minute": 454,
+      "slow_model_calls": 350
+    },
+    {
+      "checker": "Team: meaning, then zero-shot",
+      "caught": 49,
+      "false_alarms": 76,
+      "missed": 1,
+      "flagged": 125,
+      "precision": 0.392,
+      "recall": 0.98,
+      "seconds": 7.63,
+      "per_minute": 2752,
+      "slow_model_calls": 43
+    }
+  ]
+}
