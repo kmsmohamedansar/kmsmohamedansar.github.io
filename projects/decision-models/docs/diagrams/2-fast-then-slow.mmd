@@ -1,7 +1,0 @@
-flowchart LR
-  Q["Support request"] --> F["Fast model<br/>answers all 3 questions"]
-  F --> X{"Lowest confidence<br/>at or above threshold?"}
-  X -->|yes| A["Keep the fast answers"]
-  X -->|no| SL["Hand the request<br/>to the slow model"]
-  SL --> B["Use the slow answers"]
-  N["Threshold fixed on the development set<br/>before the held-out run"] -.-> X
