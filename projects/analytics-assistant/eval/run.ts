@@ -23,6 +23,16 @@ const questions = (set === "holdout" ? buildHoldout(db) : buildQuestions(db)).fi
 const results = [];
 const counts: Record<Verdict, number> = { correct: 0, partial: 0, wrong: 0 };
 
+// A broken Ollama setup is not a result. Check it answers before running
+// the 30 questions, and save nothing if it doesn't.
+if (brain === "ai") {
+  const probe = await askAI("Reply with the word ready.", makeTools(db));
+  if (probe.error) {
+    console.error(`Brain B can't run, so no results were saved.\n${probe.error}`);
+    process.exit(1);
+  }
+}
+
 console.log(`Brain: ${brain}${brain === "ai" ? ` (${aiConfig().model})` : ""}. ${questions.length} questions.\n`);
 for (const q of questions) {
   const tools = makeTools(db);
