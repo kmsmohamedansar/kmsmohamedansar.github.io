@@ -6,7 +6,7 @@ Share right per kind of request. n = requests of that kind. Frustration: average
 
 | Contender | plain (n=133) | two-problems (n=12) | sarcasm (n=17) | very-short (n=21) | non-native (n=17) |
 |---|---|---|---|---|---|
-| kev-0.8b | 0.60 | 0.33 | 0.82 | 0.62 | 0.53 |
+| kev-0.8b | 0.61 | 0.25 | 0.82 | 0.67 | 0.53 |
 | ollama-v2:qwen2.5:7b | 0.61 | 0.33 | 0.65 | 0.71 | 0.65 |
 | ollama:qwen2.5:7b | 0.44 | 0.50 | 0.29 | 0.52 | 0.41 |
 | rules | 0.73 | 0.50 | 0.71 | 0.90 | 0.71 |
