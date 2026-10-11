@@ -9,6 +9,7 @@ returns the same shape.
 """
 
 import json
+import urllib.error
 import urllib.request
 
 from ..base import SystemOne
@@ -17,8 +18,12 @@ from ..base import SystemOne
 def _post(url, body, headers=None, timeout=60):
     req = urllib.request.Request(url, data=json.dumps(body).encode(), headers={
         "Content-Type": "application/json", **(headers or {})})
-    with urllib.request.urlopen(req, timeout=timeout) as resp:
-        return json.loads(resp.read())
+    try:
+        with urllib.request.urlopen(req, timeout=timeout) as resp:
+            return json.loads(resp.read())
+    except urllib.error.HTTPError as e:
+        # Show the server's own explanation, not just the status code.
+        raise RuntimeError(f"{url} said {e.code}: {e.read().decode(errors='replace')[:2000]}") from None
 
 
 class SystemOneHTTP(SystemOne):

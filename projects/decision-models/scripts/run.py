@@ -2,7 +2,7 @@
 
     python3 scripts/run.py rules                    # dev set
     python3 scripts/run.py ollama --model qwen2.5:7b --prompt v2
-    python3 scripts/run.py systemone-http --model kev-0.8b --url http://localhost:8009
+    python3 scripts/run.py systemone-http --model kev-latest --label kev-0.8b --url http://localhost:8009
     python3 scripts/run.py rules --heldout          # once, at the very end
 
 Raw answers go to results/raw/<split>/<name>.jsonl (not committed); then run
@@ -34,6 +34,8 @@ def make(args):
         kwargs["url"] = args.url
     if args.prompt:
         kwargs["prompt"] = args.prompt
+    if args.label:
+        kwargs["name"] = args.label
     return cls(**kwargs)
 
 
@@ -47,6 +49,7 @@ def main():
     p.add_argument("--model")
     p.add_argument("--url")
     p.add_argument("--prompt", help="Ollama prompt version, v1 or v2")
+    p.add_argument("--label", help="name used in results, e.g. kev-0.8b (System One servers)")
     p.add_argument("--machine", default=f"{platform.system()} {platform.machine()}",
                    help="named in results, e.g. 'MacBook Pro M3 Pro 36 GB'")
     p.add_argument("--heldout", action="store_true", help="the one final held-out run")
