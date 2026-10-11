@@ -48,7 +48,7 @@ def keep(p: dict, searched: str):
 
 def main() -> None:
     OUT.parent.mkdir(parents=True, exist_ok=True)
-    rows, seen, calls = [], set(), 0
+    rows, seen, calls, skipped = [], set(), 0, []
     for cat, info in CATEGORIES.items():
         for country in COUNTRIES:
             for page in range(1, PAGES + 1):
@@ -56,17 +56,19 @@ def main() -> None:
                     "categories_tags": info["tag"], "countries_tags": country, "page": page, "page_size": PAGE_SIZE,
                     "fields": "code,product_name,product_name_en,brands,categories_tags", "sort_by": "unique_scans_n",
                 }
-                for attempt in range(3):
+                # Open Food Facts often answers 503 (busy). Wait longer each time.
+                for attempt, wait in enumerate((20, 60, 120, 240)):
                     try:
                         r = requests.get(API, params=params, headers=HEADERS, timeout=60)
                         r.raise_for_status()
                         products = r.json().get("products", [])
                         break
                     except requests.RequestException as e:
-                        print(f"  retry {attempt + 1} after error: {e}", file=sys.stderr)
-                        time.sleep(15)
+                        print(f"  busy, waiting {wait}s before retry {attempt + 1}: {e}", file=sys.stderr)
+                        time.sleep(wait)
                 else:
                     products = []
+                    skipped.append(f"{cat} / {country} / page {page}")
                 calls += 1
                 kept = 0
                 for p in products:
@@ -83,6 +85,8 @@ def main() -> None:
         w.writeheader()
         w.writerows(rows)
     print(f"\nSaved {len(rows)} products to {OUT} after {calls} searches.")
+    if skipped:
+        print(f"{len(skipped)} pages skipped because the server stayed busy: " + "; ".join(skipped))
 
 
 if __name__ == "__main__":
