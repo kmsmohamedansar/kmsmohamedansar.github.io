@@ -527,6 +527,8 @@ export const PROJECTS = [
   /* ───────────── more projects ───────────── */
   {
     slug: "data-delivery",
+    featured: true,
+    grid: true,
     theme: { bg: "#15120a", title: "condensed" },
     title: "Customer data delivery",
     kind: "Data pipeline",
@@ -596,6 +598,8 @@ export const PROJECTS = [
   },
   {
     slug: "catalogue-checker",
+    featured: true,
+    grid: true,
     theme: { bg: "#0f1418", title: "display" },
     title: "Catalogue checker",
     kind: "AI + data quality",
@@ -759,6 +763,7 @@ export const PROJECTS = [
   },
   {
     slug: "category-copilot",
+    earlier: true,
     title: "Category analytics copilot",
     kind: "Prototype",
     accent: "green",
@@ -856,6 +861,7 @@ export const PROJECTS = [
   },
   {
     slug: "scope-checker",
+    earlier: true,
     title: "In-scope checker",
     kind: "Chrome extension",
     accent: "green",
@@ -944,6 +950,7 @@ export const PROJECTS = [
   },
   {
     slug: "smart-categorization",
+    earlier: true,
     title: "Smart product categorization",
     kind: "NLP project",
     accent: "violet",
@@ -1374,7 +1381,7 @@ const listed = (p) => !p.hidden;
 export const FEATURED = PROJECTS.filter((p) => p.featured && !p.grid && listed(p));
 export const FEATURED_GRID = PROJECTS.filter((p) => p.featured && p.grid && listed(p));
 // Archived course-era work is listed compactly under "Earlier work" instead of in the rail.
-const isEarlier = (p) => p.status === "Archived experiment";
+const isEarlier = (p) => p.earlier || p.status === "Archived experiment";
 export const MORE_PROJECTS = PROJECTS.filter((p) => !p.featured && !isEarlier(p) && listed(p));
 export const EARLIER_PROJECTS = PROJECTS.filter((p) => !p.featured && isEarlier(p) && listed(p));
 export const LISTED_PROJECTS = PROJECTS.filter(listed);
