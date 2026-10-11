@@ -10,7 +10,7 @@ from systemone import InvalidRequest, SystemOne, build_request, load
 import json
 import os
 
-from systemone.adapters import ADAPTERS, Jev, Ollama, Uniform
+from systemone.adapters import ADAPTERS, Jev, Ollama, SystemOneHTTP, Uniform
 
 
 def sample_rows():
@@ -77,9 +77,10 @@ def fake_ollama(url, body):
             "prompt_eval_count": 300, "eval_count": 60}
 
 
-def fake_jev(url, body, key):
-    """Stands in for the Jev API: a spec-shaped response, no network."""
-    return {**Uniform().answer(body), "model": "jev-fake"}
+def fake_systemone(url, body, headers):
+    """Stands in for a /v1/systemone server: spec shape plus an extra field."""
+    assert url.endswith("/v1/systemone")
+    return {**Uniform().answer(body), "model": body["model"] + "-fake", "latency_ms": 12}
 
 
 # How to build each adapter for the contract. Ollama talks to a real server
@@ -89,7 +90,8 @@ FACTORIES = {
     "rules": ADAPTERS["rules"],
     "ollama": (Ollama if os.environ.get("OLLAMA_LIVE") == "1"
                else lambda: Ollama(post=fake_ollama)),
-    "jev": lambda: Jev(post=fake_jev, key="test", enabled=True),
+    "systemone-http": lambda: SystemOneHTTP("kev-4b", post=fake_systemone),
+    "jev": lambda: Jev(post=fake_systemone, key="test", enabled=True),
 }
 assert set(FACTORIES) == set(ADAPTERS), "every adapter needs a contract factory"
 

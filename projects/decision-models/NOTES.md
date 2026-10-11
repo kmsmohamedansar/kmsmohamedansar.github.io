@@ -25,3 +25,11 @@ Project set up. Interface spec saved from the owner (second-hand, to verify agai
   - `adapters/uniform.py`: the floor (equal odds for everything). Every adapter is listed in `adapters/__init__.py`.
 - Assumption: when an adapter has no confidence of its own, confidence = top probability. The spec's example (0.89 confidence vs 0.82 top probability) shows Jev does something else; unknown what.
 - `python3 -m unittest` from this folder, this cloud session: 12 tests, all pass. Includes the spec's own example as a valid response, 13 kinds of broken response that must be caught, and the shared contract (sample of 10 dev rows covering every hard-case tag, other question types, single question, object state, bad request) that every registered adapter runs.
+
+### Step 3: contenders (code done here; runs need the Mac)
+
+- `adapters/rules.py`: keyword baseline, probabilities via softmax. Written from the labelling rules and the dev set, then frozen. Sanity look on dev only (this session, Linux container): urgent 0.82, team 0.73, frustration mean distance 0.86. Optimistic, since the words came from these same rows; not a result.
+- `adapters/ollama.py`: asks for JSON probabilities with Ollama's `format` option, temperature 0. Counts every repair (missing option, rescaled, unusable reply) so we can report them.
+- `adapters/http.py`: `SystemOneHTTP` for any local `/v1/systemone` server (Kev, Strands Decider, Laya). `adapters/jev.py` is the same with a key, off unless `JEV_ENABLED=1` and `JEV_API_KEY`.
+- Model check written up in `docs/models.md`. Hugging Face and docs.typesafe.ai were unreachable from this sandbox, so model cards and the Jev spec are still unverified. Open item: Strands Decider README gives the code licence but not the weights licence.
+- `python3 -m unittest`: 40 tests pass (Ollama, HTTP and Jev against fake servers).
