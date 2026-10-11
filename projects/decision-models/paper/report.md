@@ -18,6 +18,8 @@ In 2026 a new kind of model appeared: the *decision model*, sometimes called a *
 
 ## 1. Why this question
 
+I've worked close to support operations where a single language's queue could hold thousands of tickets. Every one of them gets the same few decisions before a person reads it, and every wrong decision sends a ticket to the wrong queue, where it waits. Multiply that by every language a company supports and it stops being a small problem. That is where this question comes from.
+
 Most of what a support desk does before a person reads a message is a handful of small decisions. Is this urgent? Which team should see it? How upset is this person? Each decision is cheap on its own, but there are thousands a day, and each wrong one costs something: an urgent request waits in the wrong queue, a furious customer gets a template reply.
 
 Large language models can make these decisions, but they are a heavy tool for a light job. They are slow (seconds per request on a laptop), they are often paid per token, and they answer in free text that has to be parsed. Most importantly for this report, they don't naturally say *how sure* they are, and when asked, the number they give is not always meaningful.
@@ -240,13 +242,56 @@ Already visible with two contenders: the keyword rules are *more modest than the
 
 ---
 
-## 6. Discussion
+## 6. What this means at scale
 
-**[pending.]**
+The test set has 250 requests. A real support operation has far more. This section turns the measured numbers into what they would mean at volume. **The volume is an illustration, not a measurement:** a desk receiving 1,000 tickets a day in each of 10 languages, so 10,000 tickets a day. Everything else comes from the runs in section 5. The arithmetic is simple on purpose, so anyone can redo it with their own volume.
+
+### 6.1 The formulas
+
+For a daily volume *V*:
+
+- **Machine time per day** = *V* × median seconds per request. Divided by 86,400 seconds, this is the number of machines (of the kind measured) needed to keep up, running all day.
+- **Misrouted tickets per day** = *V* × (1 − team accuracy).
+- **Missed urgent tickets per day** = *V* × share of tickets that are urgent × (1 − accuracy on urgent tickets).
+- **Fast then slow:** the slow model sees only *V* × share handed over. Machine time = *V* × fast seconds + *V* × share handed over × slow seconds.
+
+### 6.2 Worked example with the numbers so far
+
+At 10,000 tickets a day, using development-set numbers (held-out numbers will replace them):
+
+| Contender | Machine time per day | Laptops needed to keep up | Misrouted per day |
+|---|---|---|---|
+| Rules | about 1 second | a fraction of one | about 2,700 |
+| `qwen2.5:7b`, prompt v1 (12.2 s per request) | about 34 hours | about 1.4, running all day | about 5,700 |
+| `qwen2.5:7b`, prompt v2 | **[pending]** | | |
+| Each decision model | **[pending]** | | |
+| Best fast-then-slow pair | **[pending]** | | |
+
+Two things are already clear. A general 7-billion-parameter model on a laptop is too slow to be the first step for a busy desk on its own: it needs more than one machine running around the clock just to keep up with an illustrative volume. And the cheapest option, keyword rules, is fast enough for any volume but sends thousands of tickets a day to the wrong place.
+
+### 6.3 Why honest confidence matters more at scale
+
+At 250 requests, a wrong answer is a row in a table. At 10,000 a day, the question is *which* answers are wrong, and whether anyone finds out.
+
+A well-calibrated model's mistakes cluster in its low-confidence answers, so a fast-then-slow setup catches most of them: they are exactly the ones handed over. An overconfident model's mistakes look like its correct answers. They are not handed over; they go to the wrong queue, quietly, every day. Two models with the same accuracy can therefore produce very different outcomes at scale, and the difference is calibration, which is why this report measures it as carefully as accuracy.
+
+**[pending: the same table using held-out numbers, and the fast-then-slow line filled in.]**
 
 ---
 
-## 7. Limits
+## 7. Discussion
+
+**[pending.]**
+
+### Where this goes next
+
+- **Other languages.** This test includes 23 requests in non-native English but none written in another language. Support queues are often split by language, and Laya ships a multilingual variant. Repeating the test in two or three other languages is the natural next step.
+- **Real labels.** A second person labelling the same requests would show how often humans disagree, which sets a ceiling on how well any model can do.
+- **Bigger machines.** The larger Kev and Clef models did not fit on a 16 GB laptop.
+
+---
+
+## 8. Limits
 
 - **One author, synthetic data.** Every request was written and labelled by one person in one day. A real queue is messier, more repetitive, and labelled by people who disagree. The labels follow written rules, but nobody else has checked them.
 - **Small numbers.** 50 held-out requests means each one moves accuracy by two percentage points, and only 9 requests in the whole set are at frustration level 5. Differences of a few points between contenders should not be read as real.
@@ -258,7 +303,7 @@ Already visible with two contenders: the keyword rules are *more modest than the
 
 ---
 
-## 8. Reproducing this report
+## 9. Reproducing this report
 
 Everything runs from `projects/decision-models/`, with Python 3 and no third-party packages for the harness.
 
@@ -286,6 +331,7 @@ Every claim in this report, and where its evidence is.
 | Labelling rules written before labelling | `docs/labelling-rules.md`; commit history |
 | Every answer checked against the System One shape | `systemone/schema.py`; `tests/` |
 | Threshold rule fixed before any model run | `scripts/cascade.py`; `NOTES.md`, 11 October 2026 |
+| Scale figures in section 6 (volume illustrative, rates measured) | Formulas in section 6.1; rates from `results/dev/*.json` |
 | Prompt v1: 174 of 200 team answers in the first three options | `NOTES.md`; owner's run on MacBook Air M4 16 GB |
 | Development results in section 5.1 | `results/dev/*.json`, machine named in each |
 | Licences of every model tested | `docs/models.md` |
