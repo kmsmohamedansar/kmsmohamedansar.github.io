@@ -17,13 +17,21 @@ Checked 2026-10-11 from this cloud session. Hugging Face and docs.typesafe.ai co
 - **All benchmark numbers in these READMEs are self-reported.** None are used in our results; only our own runs count (rule 7).
 - **Clef** probably doesn't fit on a Mac; skip unless the owner's Mac has 64 GB or more and they want to try Clef-flash.
 
-## Proposed line-up (owner to confirm)
+## Line-up for the owner's Mac (MacBook Air M4, 16 GB)
 
-1. Rules (baseline), uniform (floor).
-2. Ollama `qwen2.5:7b`, prompted for probabilities.
-3. Kev-4B (and Kev-9B if the Mac has 32 GB).
-4. Strands Decider 2B (Qwen3.5), once the weights licence is confirmed.
-5. Laya-typed-decisions, labelled as "fine-tuned on someone else's data".
-6. Jev only if the owner gets a key.
+Updated 2026-10-11 once the Mac was known. Run one model at a time, with other apps closed. The Air has no fan, so long runs may slow down as it heats up; speeds are reported for this machine only.
+
+| Contender | Fits in 16 GB? | Role |
+|---|---|---|
+| Rules, uniform | yes | baseline and floor |
+| Ollama `qwen2.5:7b` (4-bit, about 5 GB) | yes | the "bigger" model: slow side of fast-then-slow |
+| Kev-0.8B | yes ("any Apple Silicon Mac") | fast decision model |
+| Strands Decider 2B (Qwen3.5) | likely (1.9B parameters, about 4 GB in bf16) | fast decision model, once the weights licence is confirmed |
+| Laya-typed-decisions (421M) | yes | fast decision model, labelled "fine-tuned on someone else's data" |
+| Kev-4B / Kev-9B | no: README says a 32 GB Mac | skipped |
+| Clef, Clef-flash | no: 41 GB+ | skipped |
+| Jev | n/a (hosted) | only if the owner gets a key |
+
+Fast-then-slow pairs to try on dev: each fast decision model with `qwen2.5:7b` as the slow side. Pick the pair to report before the held-out run, and note the choice in NOTES.md.
 
 Each local server is reached through `systemone/adapters/http.py` (`SystemOneHTTP`), so all of them sit behind the exact same interface.

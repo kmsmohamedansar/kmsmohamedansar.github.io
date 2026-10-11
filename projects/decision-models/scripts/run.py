@@ -2,7 +2,7 @@
 
     python3 scripts/run.py rules                    # dev set
     python3 scripts/run.py ollama --model qwen2.5:7b
-    python3 scripts/run.py systemone-http --model kev-4b --url http://localhost:8009
+    python3 scripts/run.py systemone-http --model kev-0.8b --url http://localhost:8009
     python3 scripts/run.py rules --heldout          # once, at the very end
 
 Raw answers go to results/raw/<split>/<name>.jsonl (not committed); then run

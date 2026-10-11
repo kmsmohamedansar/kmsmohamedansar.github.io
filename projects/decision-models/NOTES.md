@@ -57,3 +57,7 @@ Project set up. Interface spec saved from the owner (second-hand, to verify agai
 - Diagrams: `docs/diagrams/1-how-it-fits` and `2-fast-then-slow` (.mmd source, .svg rendered with mermaid-cli 11.4.2 in this container).
 - `scripts/report.py` builds `results/report.html` (own look: support-ticket cards, IBM Plex) from result files only; sections without data say "pending". Checked at phone width (390 px, no sideways scroll) and desktop. Screenshot: `docs/screenshots/2026-10-11-step6-report-draft.png`.
 - `CASE_STUDY.md` drafted: two chapters (Chapter 1 says plainly it's a personal project), limits, claims ledger. Results sections marked pending.
+
+### Owner's Mac
+
+MacBook Air M4, 16 GB. Line-up updated in `docs/models.md`: Kev-4B/9B and Clef skipped (need 32 GB+); Kev-0.8B, Strands Decider 2B and Laya as fast models; `qwen2.5:7b` as the slow side.
