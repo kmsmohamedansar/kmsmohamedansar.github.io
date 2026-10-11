@@ -10,7 +10,11 @@ import math
 QUESTION_TYPES = ("noul", "choice", "score")
 MAX_OPTIONS = 255
 SCORE_LEVELS = (2, 10)  # a score scale has 2 to 10 levels
-TOL = 1e-6  # allowed rounding error when probabilities should add up to 1
+# Allowed rounding error when probabilities should add up to 1. Real servers
+# round (Kev sends 4 decimals, so sums like 1.0001 occur); a broken answer is
+# off by far more than this.
+TOL = 0.005
+SCORE_TOL = 0.01  # same idea for score = probability-weighted level
 
 
 def score_levels(question):
@@ -117,6 +121,6 @@ def _check_answer(q, a):
     else:
         expected = sum(int(k) * p for k, p in probs.items())
         s = a.get("score")
-        if not isinstance(s, (int, float)) or abs(s - expected) > 1e-3:
+        if not isinstance(s, (int, float)) or abs(s - expected) > SCORE_TOL:
             errors.append(f"score must be the probability-weighted level ({expected:.3f})")
     return errors
