@@ -4,7 +4,7 @@ Written 2026-10-11, before any request was labelled. Every request in `data/` ge
 
 ## The made-up company
 
-**Quillstack** (placeholder name; the final name is still open). It sells one web and mobile app that small businesses use for staff scheduling, timesheets and invoicing. Plans: Free, Team ($8 per user per month) and Business ($15). It has a public API, webhooks, and ready-made connections to accounting, payment and calendar tools. Any real tool names in requests are only things a customer might mention; nothing comes from a real support queue.
+**Quillstack** (name confirmed by the owner, 2026-10-11). It sells one web and mobile app that small businesses use for staff scheduling, timesheets and invoicing. Plans: Free, Team ($8 per user per month) and Business ($15). It has a public API, webhooks, and ready-made connections to accounting, payment and calendar tools. Any real tool names in requests are only things a customer might mention; nothing comes from a real support queue.
 
 ## Question 1: `is_urgent` (noul)
 

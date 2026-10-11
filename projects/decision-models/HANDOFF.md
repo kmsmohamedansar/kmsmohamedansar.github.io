@@ -26,5 +26,4 @@ Can a small, cheap "fast decision" model make routine decisions (route a request
 7. **[owner]** Approve before anything touches the portfolio site.
 
 ## Not decided
-- Which open models make the final line-up (depends on step 3 checks).
-- The fictional company's name.
+- Decided 2026-10-11: line-up in docs/models.md; company name Quillstack.

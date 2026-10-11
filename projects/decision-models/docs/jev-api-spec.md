@@ -1,6 +1,6 @@
 # The System One interface (as we have it)
 
-**Source status: second-hand.** Relayed by the owner from a search summary of docs.typesafe.ai/api on 2026-10-11. It hasn't been checked against the official page yet; do that before publishing, and record any differences in NOTES.md.
+**Source status: second-hand.** Relayed by the owner from a search summary of docs.typesafe.ai/api on 2026-10-11. On 2026-10-11 the owner checked it against docs.typesafe.ai/api and found no differences.
 
 Every contender in this project is wrapped to accept this request and return this response, so they can be compared like for like.
 

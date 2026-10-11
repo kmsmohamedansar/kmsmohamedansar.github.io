@@ -61,3 +61,9 @@ Project set up. Interface spec saved from the owner (second-hand, to verify agai
 ### Owner's Mac
 
 MacBook Air M4, 16 GB. Line-up updated in `docs/models.md`: Kev-4B/9B and Clef skipped (need 32 GB+); Kev-0.8B, Strands Decider 2B and Laya as fast models; `qwen2.5:7b` as the slow side.
+
+### Owner decisions and checks
+
+- Laya: run `laya-typed-decisions` as is. Company name: Quillstack. Line-up confirmed.
+- Licences: Apache-2.0 for Strands Decider 2B, Kev-0.8B and Laya, relayed from a Gemini summary of the HF cards. Two checkpoint-name gaps listed in docs/models.md to close on the Mac.
+- Jev spec: owner checked docs.typesafe.ai/api, no differences.

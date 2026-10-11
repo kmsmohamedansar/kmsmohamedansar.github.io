@@ -183,7 +183,7 @@ def main():
         f'<div class="body"><h1>Can a small, cheap model make routine support decisions, '
         f'and is its confidence honest?</h1><p class="lede">{e(lede)}</p></div></header>',
         ticket("The test", "<p>250 made-up support requests to a fictional software company "
-               "(placeholder name Quillstack), labelled by written rules before any model saw them. "
+               "(Quillstack), labelled by written rules before any model saw them. "
                "Three questions each: <b>urgent?</b> (yes or no), <b>which team</b> (8 options), "
                "<b>how frustrated</b> (1 to 5). Hard cases on purpose: two problems in one message, "
                "sarcasm, very short messages, non-native English. 200 for development, 50 held out "

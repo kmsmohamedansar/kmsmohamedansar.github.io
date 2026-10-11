@@ -23,7 +23,7 @@ It builds on two of my earlier projects: the answer-key scoring from the analyti
 
 ### The test set
 
-250 made-up support requests to a fictional company (placeholder name Quillstack, a scheduling and invoicing app for small businesses). I wrote the labelling rules first (`docs/labelling-rules.md`), then the requests, each with an answer for three questions:
+250 made-up support requests to a fictional company (Quillstack, a scheduling and invoicing app for small businesses). I wrote the labelling rules first (`docs/labelling-rules.md`), then the requests, each with an answer for three questions:
 
 - **Urgent?** Needs a person today. Angry tone alone doesn't count.
 - **Which team?** One of eight. With two problems in one message, the one that most blocks the customer.

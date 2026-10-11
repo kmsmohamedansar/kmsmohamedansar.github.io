@@ -17,6 +17,23 @@ Checked 2026-10-11 from this cloud session. Hugging Face and docs.typesafe.ai co
 - **All benchmark numbers in these READMEs are self-reported.** None are used in our results; only our own runs count (rule 7).
 - **Clef** probably doesn't fit on a Mac; skip unless the owner's Mac has 64 GB or more and they want to try Clef-flash.
 
+## Licence check, 2026-10-11
+
+Relayed by the owner from a Gemini summary of the Hugging Face cards (not opened directly from here; Hugging Face is blocked in this sandbox):
+
+| Checkpoint named | Weights licence | Base |
+|---|---|---|
+| `StrandsAgents/strands-decider-2B-hobson-v21` | Apache-2.0 | Qwen3.5-2B-Base, Apache-2.0 |
+| `jaredpalmer/kev-0.8b` | Apache-2.0 | Qwen3.5-0.8B-Base, Apache-2.0 |
+| `convaiinnovations/laya` | Apache-2.0 | ModernBERT-large, Apache-2.0 |
+
+Gaps to close on the Mac before downloading (a glance at the card's licence tag is enough):
+- Strands: the summary names `hobson-v21`; the README's reference model is `strands-decider-2B-qwen3.5-v1-2610`. Confirm the licence on whichever one we run.
+- Laya: the summary covers base `laya`; we run `laya-typed-decisions`. Confirm that card too.
+- `qwen2.5:7b`: Apache-2.0 per Qwen's release; confirm on the Ollama page.
+
+Owner decisions, 2026-10-11: run `laya-typed-decisions` as is (no fine-tuning on our data); keep the name Quillstack; line-up below confirmed.
+
 ## Line-up for the owner's Mac (MacBook Air M4, 16 GB)
 
 Updated 2026-10-11 once the Mac was known. Run one model at a time, with other apps closed. The Air has no fan, so long runs may slow down as it heats up; speeds are reported for this machine only.
