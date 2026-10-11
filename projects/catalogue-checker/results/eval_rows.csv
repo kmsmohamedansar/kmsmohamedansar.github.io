@@ -1,351 +1,351 @@
-code,name,category,true_category,planted,keyword_flagged,keyword_best,keyword_rank,meaning_flagged,meaning_best,meaning_rank,zero-shot_flagged,zero-shot_best,zero-shot_rank,team_flagged,team_best,team_rank
-0056412503042,Allen's Fruit Punch,Fruit juices,Fruit juices,False,True,?,15,False,Fruit juices,1,False,Fruit juices,1,False,Fruit juices,1
-0877693001689,Granolove oatmeal cookie crunch,Breakfast cereals,Breakfast cereals,False,True,?,15,True,Biscuits,2,True,Biscuits,2,True,Biscuits,2
-0071146008274,Harvest Snaps Lightly Salted Crispy Baked Veggie Snacks,Crisps,Crisps,False,True,?,15,False,Crisps,1,False,Crisps,1,False,Crisps,1
-5060367450356,Blue Maize Tortilla Chips,Crisps,Crisps,False,True,?,15,False,Crisps,1,False,Crisps,1,False,Crisps,1
-0058449181101,Sunrise Crunchy Vanilla Cereal,Breakfast cereals,Breakfast cereals,False,False,Breakfast cereals,1,False,Breakfast cereals,1,False,Breakfast cereals,1,False,Breakfast cereals,1
-0069000155035,Double shot expresso,Coffees,Coffees,False,True,?,15,False,Coffees,1,False,Coffees,1,False,Coffees,1
-0898248001640,WHOLE MILK PLAIN,Biscuits,Yogurts,True,True,?,15,True,Yogurts,11,True,Soups,15,True,Yogurts,11
-8901030373930,Bru gold,Coffees,Coffees,False,True,?,15,True,Chocolates,4,True,Sodas,14,True,Chocolates,4
-0060383997212,Extra dark chocolate,Chocolates,Chocolates,False,False,Chocolates,1,False,Chocolates,1,False,Chocolates,1,False,Chocolates,1
-8717677339792,Milk Chocolate,Chocolates,Chocolates,False,False,Chocolates,1,False,Chocolates,1,False,Chocolates,1,False,Chocolates,1
-5018357012534,Simply Fruity muesli,Breakfast cereals,Breakfast cereals,False,True,?,15,True,Fruit juices,3,False,Breakfast cereals,1,False,Breakfast cereals,1
-0063211283815,Chunky Chicken with Rice,Soups,Soups,False,True,?,15,True,Yogurts,4,False,Soups,1,True,Yogurts,4
-0013562300396,Macaroni & Classic Cheddar,Cheeses,Cheeses,False,True,?,15,False,Cheeses,1,True,Pasta,2,False,Cheeses,1
-5099801003315,Organic Porridge Oats,Breakfast cereals,Breakfast cereals,False,True,?,15,False,Breakfast cereals,1,False,Breakfast cereals,1,False,Breakfast cereals,1
-8000070027442,Lavazza Cafe Crema Decoffeinato 500 Gramm,Coffees,Coffees,False,True,?,15,False,Coffees,1,True,Cheeses,5,False,Coffees,1
-0060383205966,Confiture framboise,Jams,Jams,False,True,?,15,True,Yogurts,3,True,Sodas,2,True,Sodas,2
-0070177115227,Camomile & Honey,Teas,Teas,False,True,Honeys,15,True,Honeys,3,True,Honeys,2,True,Honeys,2
-0726635121285,Organic raw Honey,Honeys,Honeys,False,False,Honeys,1,False,Honeys,1,False,Honeys,1,False,Honeys,1
-0751217123470,100% Guava Juice Blend,Fruit juices,Fruit juices,False,False,Fruit juices,1,False,Fruit juices,1,False,Fruit juices,1,False,Fruit juices,1
-4025500277055,Banana Chocolate Flakes deliciously creamy yogurt,Yogurts,Yogurts,False,False,Yogurts,1,False,Yogurts,1,False,Yogurts,1,False,Yogurts,1
-0077652082227,Refreshing Peppermint Tea,Teas,Teas,False,False,Teas,1,False,Teas,1,False,Teas,1,False,Teas,1
-0055991041020,Soft Wheat,Breads,Breads,False,True,?,15,True,Breakfast cereals,2,True,Sodas,2,True,Sodas,2
-0025000100611,Light Lemonade,Sodas,Sodas,False,True,?,15,False,Sodas,1,False,Sodas,1,False,Sodas,1
-00894609,Chunk Smoked Haddock Chowder,Soups,Soups,False,True,?,15,False,Soups,1,False,Soups,1,False,Soups,1
-5060574740011,GINGER,Sodas,Sodas,False,True,?,15,True,Honeys,8,False,Sodas,1,True,Honeys,8
-5055940100537,Cholesterol lowering yogurt drink with added plant stanols and raspberry flavour,Yogurts,Yogurts,False,False,Yogurts,1,False,Yogurts,1,False,Yogurts,1,False,Yogurts,1
-6111267161275,SPARKLING ICE TEA GINGER GREEN TEA,Teas,Teas,False,False,Teas,1,False,Teas,1,False,Teas,1,False,Teas,1
-0747599409943,Milk Chocolate Caramel,Chocolates,Chocolates,False,False,Chocolates,1,False,Chocolates,1,False,Chocolates,1,False,Chocolates,1
-0060383216467,Tom Yum,Soups,Soups,False,True,?,15,True,Breakfast cereals,7,True,Sodas,5,True,Breakfast cereals,7
-0055742551457,Lemon Ginger Herbal Tea,Teas,Teas,False,False,Teas,1,False,Teas,1,False,Teas,1,False,Teas,1
-06741602,Coca-Cola,Sodas,Sodas,False,True,?,15,False,Sodas,1,False,Sodas,1,False,Sodas,1
-0059600060891,Fruit Punch,Fruit juices,Fruit juices,False,True,?,15,False,Fruit juices,1,False,Fruit juices,1,False,Fruit juices,1
-4335619012479,Coffee,Coffees,Coffees,False,False,Coffees,1,False,Coffees,1,False,Coffees,1,False,Coffees,1
-0810090751450,chocolate peanut butter banana,Breakfast cereals,Breakfast cereals,False,True,Chocolates,15,True,Chocolates,2,True,Chocolates,3,True,Chocolates,3
-4088600056135,Organic Jumbo Porridge Oats,Breakfast cereals,Breakfast cereals,False,True,?,15,False,Breakfast cereals,1,False,Breakfast cereals,1,False,Breakfast cereals,1
-0012000021367,Cranberry Juice Cocktail,Fruit juices,Fruit juices,False,False,Fruit juices,1,False,Fruit juices,1,False,Fruit juices,1,False,Fruit juices,1
-0063209237035,Original Blend,Teas,Coffees,True,True,?,15,True,Jams,13,True,Coffees,7,True,Jams,13
-00582599,Organic Red Lentil Sedanini,Pasta,Pasta,False,True,?,15,False,Pasta,1,True,Soups,2,False,Pasta,1
-5900649050327,Cappuccino vanilla,Coffees,Coffees,False,True,?,15,False,Coffees,1,False,Coffees,1,False,Coffees,1
-0061200084450,Milk Chocolate Dairy Milk,Chocolates,Chocolates,False,False,Chocolates,1,False,Chocolates,1,False,Chocolates,1,False,Chocolates,1
-27191101,set pure honey,Honeys,Honeys,False,False,Honeys,1,False,Honeys,1,False,Honeys,1,False,Honeys,1
-00019101,SHORTBREAD all butter fingers,Biscuits,Biscuits,False,True,?,15,False,Biscuits,1,True,Breads,2,False,Biscuits,1
-0059749962575,Confiture de framboises,Jams,Jams,False,True,?,15,True,Yogurts,3,True,Sodas,8,True,Sodas,8
-0068200962207,Cream Cheese Product,Cheeses,Cheeses,False,False,Cheeses,1,False,Cheeses,1,False,Cheeses,1,False,Cheeses,1
-0055742533583,Natural Liquid Pure Honey,Honeys,Honeys,False,False,Honeys,1,False,Honeys,1,False,Honeys,1,False,Honeys,1
-0884912378118,Raisin Bran imp,Breakfast cereals,Breakfast cereals,False,True,?,15,False,Breakfast cereals,1,False,Breakfast cereals,1,False,Breakfast cereals,1
-0041000002878,Tea,Teas,Teas,False,False,Teas,1,False,Teas,1,False,Teas,1,False,Teas,1
-0062502686472,Espresso milano,Coffees,Coffees,False,True,?,15,False,Coffees,1,False,Coffees,1,False,Coffees,1
-5032439100070,Original Sea Salted Wheat Pretzels,Breads,Breads,False,True,?,15,False,Breads,1,False,Breads,1,False,Breads,1
-5000169151266,Duchy Organic Raspberry Preserve Extra Jam,Jams,Jams,False,False,Jams,1,False,Jams,1,False,Jams,1,False,Jams,1
-5010477348630,Muesli 36% fruits noix & graines,Breakfast cereals,Breakfast cereals,False,True,?,15,True,Fruit juices,2,False,Breakfast cereals,1,False,Breakfast cereals,1
-0078742125671,Restaurant Style Tortilla Chips,Crisps,Crisps,False,True,?,15,False,Crisps,1,False,Crisps,1,False,Crisps,1
-3045320094022,Bonne maman apricot extra jam,Jams,Jams,False,False,Jams,1,False,Jams,1,False,Jams,1,False,Jams,1
-0084253240475,Tomato Creamy Soup,Soups,Soups,False,False,Soups,1,False,Soups,1,False,Soups,1,False,Soups,1
-0773373351757,Biscuits aux figues,Biscuits,Biscuits,False,False,Biscuits,1,False,Biscuits,1,False,Biscuits,1,False,Biscuits,1
-0060383195779,shredded cheese,Cheeses,Cheeses,False,False,Cheeses,1,False,Cheeses,1,False,Cheeses,1,False,Cheeses,1
-5060605060576,Italian Blood Orange Soda,Sodas,Sodas,False,False,Sodas,1,False,Sodas,1,False,Sodas,1,False,Sodas,1
-0063211012514,Chicken Noodle,Soups,Soups,False,True,?,15,True,Pasta,2,False,Soups,1,False,Soups,1
-5000119010674,Pure Apple Juice,Fruit juices,Fruit juices,False,False,Fruit juices,1,False,Fruit juices,1,False,Fruit juices,1,False,Fruit juices,1
-0064042007151,Caramel Truffle Cookies,Biscuits,Biscuits,False,True,?,15,False,Biscuits,1,True,Chocolates,2,False,Biscuits,1
-5000358754346,Prawn Crackers,Crisps,Crisps,False,True,?,15,True,Jams,3,False,Crisps,1,False,Crisps,1
-5060054134118,Sparkling Apple Presse,Fruit juices,Fruit juices,False,True,?,15,False,Fruit juices,1,False,Fruit juices,1,False,Fruit juices,1
-0052603054973,Cashew Carrot Ginger Bisque,Soups,Soups,False,True,?,15,True,Breakfast cereals,9,False,Soups,1,True,Breakfast cereals,9
-10090048,Frollini con Muesli,Biscuits,Biscuits,False,True,?,15,True,Pasta,14,True,Breakfast cereals,6,True,Pasta,14
-0072310008496,Toasted Coconut Black Tea,Teas,Teas,False,False,Teas,1,False,Teas,1,False,Teas,1,False,Teas,1
-3175680011480,Biscuit Sesame,Biscuits,Biscuits,False,False,Biscuits,1,False,Biscuits,1,False,Biscuits,1,False,Biscuits,1
-0794522002191,Organic chai,Teas,Teas,False,True,?,15,False,Teas,1,False,Teas,1,False,Teas,1
-0021511362142,Organic Pasta,Chocolates,Pasta,True,True,Pasta,15,True,Pasta,8,True,Pasta,6,True,Pasta,8
-0065633455719,Creamy Deluxe Chocolate Frosting,Chocolates,Chocolates,False,False,Chocolates,1,False,Chocolates,1,False,Chocolates,1,False,Chocolates,1
-0193968327071,PURE PREMIUM HONEY,Honeys,Honeys,False,False,Honeys,1,False,Honeys,1,False,Honeys,1,False,Honeys,1
-0057174048307,Earl grey tea,Teas,Teas,False,False,Teas,1,False,Teas,1,False,Teas,1,False,Teas,1
-5012121005241,Carb Lite 6 Wraps,Breads,Breads,False,True,?,15,True,Pasta,5,True,Sodas,4,True,Pasta,5
-5011273047079,honey,Honeys,Honeys,False,False,Honeys,1,False,Honeys,1,False,Honeys,1,False,Honeys,1
-4088600436296,DIPLOMAT HERBAL BLEND FORTIFIED WITH SELENIUM DIRE,Teas,Teas,False,True,?,15,False,Teas,1,True,Sodas,5,False,Teas,1
-0037466019017,SWISS MILK CHOCOLATE,Chocolates,Chocolates,False,False,Chocolates,1,False,Chocolates,1,False,Chocolates,1,False,Chocolates,1
-0070221011062,85% Cacao Dark Chocolate,Chocolates,Chocolates,False,False,Chocolates,1,False,Chocolates,1,False,Chocolates,1,False,Chocolates,1
-0855868004000,BONE BROTH,Pasta,Soups,True,True,?,15,True,Soups,2,True,Breads,10,True,Breads,10
-8413524004324,Pure blossom honey,Chocolates,Honeys,True,True,Honeys,15,True,Honeys,6,True,Honeys,5,True,Honeys,6
-0012511202316,Organic Blue Agave,Honeys,Honeys,False,True,?,15,False,Honeys,1,True,Fruit juices,4,False,Honeys,1
-5000169016657,High Bake Water Biscuits,Biscuits,Biscuits,False,False,Biscuits,1,False,Biscuits,1,False,Biscuits,1,False,Biscuits,1
-5010525126524,Ecuador dark chocolate 85%,Chocolates,Chocolates,False,False,Chocolates,1,False,Chocolates,1,False,Chocolates,1,False,Chocolates,1
-0066721026590,Chocolate Sandwich Cookies,Biscuits,Biscuits,False,True,Chocolates,15,False,Biscuits,1,True,Chocolates,2,False,Biscuits,1
-5057545619520,WHOLEMEAL BREAD,Breads,Breads,False,False,Breads,1,False,Breads,1,False,Breads,1,False,Breads,1
-0623682118575,Confiture De Framboises Pures,Jams,Jams,False,True,?,15,True,Crisps,5,True,Sodas,10,True,Crisps,5
-0055742552713,Chicken Noodle Soup,Soups,Soups,False,False,Soups,1,False,Soups,1,False,Soups,1,False,Soups,1
-0066721016201,"Biscuit Graham, P'tite abeille",Pasta,Pasta,False,True,Biscuits,15,True,Biscuits,11,True,Biscuits,9,True,Biscuits,11
-0060410046678,Original Recipe,Breads,Crisps,True,True,?,15,True,Pasta,3,True,Biscuits,7,True,Biscuits,7
-6003770009291,Sweet Chilli Jam,Jams,Jams,False,False,Jams,1,False,Jams,1,False,Jams,1,False,Jams,1
-50168064,Penguin Biscuit Bar,Biscuits,Biscuits,False,False,Biscuits,1,False,Biscuits,1,False,Biscuits,1,False,Biscuits,1
-0065250008183,Premium Pineapple Juice,Fruit juices,Fruit juices,False,False,Fruit juices,1,False,Fruit juices,1,False,Fruit juices,1,False,Fruit juices,1
-5055540054582,Clear Honey,Honeys,Honeys,False,False,Honeys,1,False,Honeys,1,False,Honeys,1,False,Honeys,1
-5900396028167,Matcha,Teas,Teas,False,True,?,15,True,Pasta,8,False,Teas,1,True,Pasta,8
-5000128654517,Greek Style Natural Yoghurt,Yogurts,Yogurts,False,False,Yogurts,1,False,Yogurts,1,False,Yogurts,1,False,Yogurts,1
-0832697000595,Plantain Chips Naturally Sweet,Jams,Crisps,True,True,?,15,True,Crisps,13,True,Crisps,4,True,Crisps,13
-5060413263152,Monty Bojangles Choccy Scoffy Truffles,Chocolates,Chocolates,False,True,?,15,False,Chocolates,1,False,Chocolates,1,False,Chocolates,1
-0728229135180,ORIGINAL real vegetable chips,Crisps,Crisps,False,True,?,15,False,Crisps,1,False,Crisps,1,False,Crisps,1
-0649275685781,Pure Pasyorized raw Honey,Honeys,Honeys,False,False,Honeys,1,False,Honeys,1,False,Honeys,1,False,Honeys,1
-0060410079980,Ridged Potato Chips - Magic Masala,Cheeses,Crisps,True,True,?,15,True,Crisps,9,True,Crisps,4,True,Crisps,9
-0757528008680,Takis,Crisps,Crisps,False,True,?,15,True,Pasta,10,True,Teas,8,True,Pasta,10
-06164201,pomegranate juice,Fruit juices,Fruit juices,False,False,Fruit juices,1,False,Fruit juices,1,False,Fruit juices,1,False,Fruit juices,1
-0059749919661,"Creamed Honey, Canadian",Honeys,Honeys,False,False,Honeys,1,False,Honeys,1,False,Honeys,1,False,Honeys,1
-07326646,Premium Pure U.S. Honey,Honeys,Honeys,False,False,Honeys,1,False,Honeys,1,False,Honeys,1,False,Honeys,1
-9551011820022,Vida Sakura,Sodas,Sodas,False,True,?,15,True,Yogurts,12,True,Teas,2,True,Yogurts,12
-0811430000016,Miel,Honeys,Honeys,False,True,?,15,True,Jams,3,True,Cheeses,13,True,Cheeses,13
-0059724101043,VECTOR,Breakfast cereals,Breakfast cereals,False,True,?,15,True,Pasta,7,True,Sodas,12,True,Pasta,7
-0836093011353,Sparkling Strawberry,Sodas,Sodas,False,True,?,15,True,Fruit juices,2,True,Fruit juices,2,True,Fruit juices,2
-8076809523509,Linguine n. 13,Pasta,Pasta,False,True,?,15,False,Pasta,1,True,Cheeses,2,False,Pasta,1
-0667888171866,Milk Chocolate Toonie,Jams,Chocolates,True,True,Chocolates,15,True,Chocolates,15,True,Chocolates,7,True,Chocolates,15
-9350271004681,Organic Kombucha Raspberry Lemonade,Sodas,Sodas,False,True,?,15,True,Fruit juices,3,True,Fruit juices,4,True,Fruit juices,4
-00772303,Cream Of Tomato Soup,Soups,Soups,False,False,Soups,1,False,Soups,1,False,Soups,1,False,Soups,1
-5059319016450,Crunchy Oat Granola Mixed Berries,Breakfast cereals,Breakfast cereals,False,True,?,15,False,Breakfast cereals,1,False,Breakfast cereals,1,False,Breakfast cereals,1
-0048500018330,100% Orange Juice,Fruit juices,Fruit juices,False,False,Fruit juices,1,False,Fruit juices,1,False,Fruit juices,1,False,Fruit juices,1
-0687456286242,Soft mini cookies,Biscuits,Biscuits,False,True,?,15,False,Biscuits,1,False,Biscuits,1,False,Biscuits,1
-5000232865106,Winter Vegetable Soup,Soups,Soups,False,False,Soups,1,False,Soups,1,False,Soups,1,False,Soups,1
-0854137000705,Tortilla Chips Sea Salt,Fruit juices,Crisps,True,True,?,15,True,Crisps,14,True,Crisps,11,True,Crisps,14
-3045320094008,Strawberry Conserve,Jams,Jams,False,True,?,15,True,Fruit juices,9,True,Fruit juices,2,True,Fruit juices,9
-0021908133218,Oats and Honey Granola,Breakfast cereals,Breakfast cereals,False,True,Honeys,15,False,Breakfast cereals,1,False,Breakfast cereals,1,False,Breakfast cereals,1
-5060123602128,Tea Bags One Cup,Teas,Teas,False,False,Teas,1,False,Teas,1,False,Teas,1,False,Teas,1
-20995553,Dark Chocolate - 85% Cocoa,Chocolates,Chocolates,False,False,Chocolates,1,False,Chocolates,1,False,Chocolates,1,False,Chocolates,1
-1230000097048,HAZELNUT BUTTER DARK CHOCOLATE,Chocolates,Chocolates,False,False,Chocolates,1,False,Chocolates,1,False,Chocolates,1,False,Chocolates,1
-3948764012600,Coca cola 400,Teas,Sodas,True,True,?,15,True,Sodas,8,True,Sodas,11,True,Sodas,8
-5010388800166,Red Grape Sparkling Juice Drink,Fruit juices,Fruit juices,False,False,Fruit juices,1,False,Fruit juices,1,False,Fruit juices,1,False,Fruit juices,1
-04128601,Black tea,Teas,Teas,False,False,Teas,1,False,Teas,1,False,Teas,1,False,Teas,1
-5059697731860,Dark Chocolate,Chocolates,Chocolates,False,False,Chocolates,1,False,Chocolates,1,False,Chocolates,1,False,Chocolates,1
-00910132,Organic Tomato & Roasted Red Pepper Soup,Soups,Soups,False,False,Soups,1,False,Soups,1,False,Soups,1,False,Soups,1
-0810063710668,Soda Citron fraise / Strawberry Lemon Soda,Sodas,Sodas,False,False,Sodas,1,False,Sodas,1,False,Sodas,1,False,Sodas,1
-5050974000822,Ryvita Thins Multi-Seed,Breads,Breads,False,True,?,15,True,Fruit juices,12,True,Teas,11,True,Fruit juices,12
-5010228005157,NAKED OVEN CHIPS,Crisps,Crisps,False,True,?,15,False,Crisps,1,False,Crisps,1,False,Crisps,1
-00355827,Sea Salt & Suffolk Cider Vinegar,Crisps,Crisps,False,True,?,15,True,Fruit juices,3,True,Fruit juices,12,True,Fruit juices,12
-8402001036606,"Yogurt 0,0 sabores",Yogurts,Yogurts,False,False,Yogurts,1,False,Yogurts,1,False,Yogurts,1,False,Yogurts,1
-4056489159780,Malted Bloomer,Breads,Breads,False,True,?,15,True,Teas,9,True,Chocolates,14,True,Teas,9
-4088600401270,Whole wheat fusilli,Pasta,Pasta,False,True,?,15,True,Breakfast cereals,4,False,Pasta,1,True,Breakfast cereals,4
-0060383723750,Honey,Honeys,Honeys,False,False,Honeys,1,False,Honeys,1,False,Honeys,1,False,Honeys,1
-5056357909812,Secret centre biscuits,Biscuits,Biscuits,False,False,Biscuits,1,False,Biscuits,1,False,Biscuits,1,False,Biscuits,1
-5060607910183,Royal Flush Kombucha,Teas,Teas,False,True,?,15,True,Fruit juices,3,False,Teas,1,False,Teas,1
-9010158016762,Espresso gemahlen,Teas,Coffees,True,True,?,15,True,Coffees,12,True,Coffees,2,True,Coffees,12
-8445291746084,Caramel Latte Flavour,Coffees,Coffees,False,True,?,15,False,Coffees,1,False,Coffees,1,False,Coffees,1
-0673879000602,Potato Chips,Crisps,Crisps,False,True,?,15,False,Crisps,1,False,Crisps,1,False,Crisps,1
-0856069005650,Sweet Thins Chocolate Brownie,Biscuits,Biscuits,False,True,Chocolates,15,True,Chocolates,4,True,Chocolates,2,True,Chocolates,4
-5000128934169,Extra Fruity Raspberry Conserve,Coffees,Jams,True,True,?,15,True,Fruit juices,9,True,Fruit juices,13,True,Fruit juices,9
-0014100054702,Flavor Blasted Xtra Cheddar Baked Snack Crackers,Biscuits,Biscuits,False,True,?,15,False,Biscuits,1,True,Cheeses,3,False,Biscuits,1
-06221010,Soda Gingembre,Sodas,Sodas,False,False,Sodas,1,False,Sodas,1,False,Sodas,1,False,Sodas,1
-0841631000157,Ethical Bean Coffee Lush,Coffees,Coffees,False,False,Coffees,1,False,Coffees,1,False,Coffees,1,False,Coffees,1
-5997523329013,Soba Wok Style Classic,Sodas,Pasta,True,True,?,15,True,Soups,12,True,Soups,2,True,Soups,12
-0099482446161,Mountain Forest Raw Honey,Sodas,Honeys,True,True,Honeys,15,True,Honeys,8,True,Honeys,9,True,Honeys,8
-00852159,Greek Style Yogurt,Yogurts,Yogurts,False,False,Yogurts,1,False,Yogurts,1,False,Yogurts,1,False,Yogurts,1
-5011546415499,Nescafe Original,Coffees,Coffees,False,True,?,15,False,Coffees,1,False,Coffees,1,False,Coffees,1
-5059697767968,Creamy Veg Soup,Soups,Soups,False,False,Soups,1,False,Soups,1,False,Soups,1,False,Soups,1
-0855823007060,Whole Milk Plain Skyr,Yogurts,Yogurts,False,True,?,15,False,Yogurts,1,False,Yogurts,1,False,Yogurts,1
-5057008762893,Cottage Cheese,Sodas,Cheeses,True,True,Cheeses,15,True,Cheeses,13,True,Cheeses,4,True,Cheeses,13
-7622210689382,Choc Chips,Biscuits,Biscuits,False,True,?,15,True,Crisps,2,True,Chocolates,5,True,Chocolates,5
-0063400030350,D'ITALIANO,Breads,Breads,False,True,?,15,True,Pasta,3,True,Cheeses,10,True,Cheeses,10
-0059749897655,While Wheat Tortilla,Breads,Breads,False,True,?,15,False,Breads,1,False,Breads,1,False,Breads,1
-29398065,dark chocolate with freeze-dried raspberries,Chocolates,Chocolates,False,False,Chocolates,1,False,Chocolates,1,False,Chocolates,1,False,Chocolates,1
-0064819532510,Tartinade de type confiture 3 fruits,Jams,Jams,False,True,?,15,True,Fruit juices,5,True,Fruit juices,2,True,Fruit juices,5
-00964784,FIG BUTTER,Biscuits,Jams,True,True,?,15,True,Breakfast cereals,4,True,Breads,2,True,Breakfast cereals,4
-0056800634228,Yogourt,Yogurts,Yogurts,False,True,?,15,False,Yogurts,1,False,Yogurts,1,False,Yogurts,1
-7613036002455,"GOLD Cappuccino Unsweetened Taste Coffee, 8 Sachets x",Coffees,Coffees,False,False,Coffees,1,False,Coffees,1,False,Coffees,1,False,Coffees,1
-0689407666141,California Wildflower Honey,Honeys,Honeys,False,False,Honeys,1,False,Honeys,1,False,Honeys,1,False,Honeys,1
-0068400030409,Sidekick Creamy Chicken,Pasta,Pasta,False,True,?,15,True,Breakfast cereals,3,True,Soups,9,True,Soups,9
-0056800959802,Probiotic Yogurt Blueberry,Yogurts,Yogurts,False,False,Yogurts,1,False,Yogurts,1,False,Yogurts,1,False,Yogurts,1
-8412289007366,Queso light,Cheeses,Cheeses,False,True,?,15,False,Cheeses,1,False,Cheeses,1,False,Cheeses,1
-5010525281506,"Spicy tomato, red pepper and lentil soup",Soups,Soups,False,False,Soups,1,False,Soups,1,False,Soups,1,False,Soups,1
-5060526430601,Superloaf,Breads,Breads,False,True,?,15,True,Coffees,2,False,Breads,1,False,Breads,1
-8936079140021,VIETNAMESE COFFEE WITH MILK,Coffees,Coffees,False,False,Coffees,1,False,Coffees,1,False,Coffees,1,False,Coffees,1
-0804531110258,Young Coconut Juice with Pulp,Breakfast cereals,Fruit juices,True,True,Fruit juices,15,True,Fruit juices,11,True,Fruit juices,14,True,Fruit juices,11
-0059724101722,Frosted Flakes,Breakfast cereals,Breakfast cereals,False,True,?,15,False,Breakfast cereals,1,False,Breakfast cereals,1,False,Breakfast cereals,1
-5070000126579,Granola Super Nutty,Breakfast cereals,Breakfast cereals,False,True,?,15,False,Breakfast cereals,1,False,Breakfast cereals,1,False,Breakfast cereals,1
-4061462526459,Whole Wheat Spaghetti,Pasta,Pasta,False,True,?,15,False,Pasta,1,False,Pasta,1,False,Pasta,1
-0628915670134,Chicken Noodle Soup Mix,Soups,Soups,False,False,Soups,1,False,Soups,1,False,Soups,1,False,Soups,1
-06780504,Coca Cola,Sodas,Sodas,False,True,?,15,False,Sodas,1,False,Sodas,1,False,Sodas,1
-0055000407137,Coffee instant,Coffees,Coffees,False,False,Coffees,1,False,Coffees,1,False,Coffees,1,False,Coffees,1
-20103354,SOFT CHEESE,Sodas,Cheeses,True,True,Cheeses,15,True,Cheeses,3,True,Cheeses,3,True,Cheeses,3
-5010029208610,Weetabix Oatiflakes,Breakfast cereals,Breakfast cereals,False,True,?,15,False,Breakfast cereals,1,False,Breakfast cereals,1,False,Breakfast cereals,1
-0073420531249,COTTAGE CHEESE with Peaches,Cheeses,Cheeses,False,False,Cheeses,1,False,Cheeses,1,False,Cheeses,1,False,Cheeses,1
-0074682107814,Organic Cranberry Pomegranate Juice,Fruit juices,Fruit juices,False,False,Fruit juices,1,False,Fruit juices,1,False,Fruit juices,1,False,Fruit juices,1
-0078742307305,Raw Honey,Soups,Honeys,True,True,Honeys,15,True,Honeys,4,True,Honeys,4,True,Honeys,4
-0072979004143,GingerAle,Sodas,Sodas,False,True,?,15,True,Honeys,12,False,Sodas,1,True,Honeys,12
-0059749918022,Poulet et gombos,Soups,Soups,False,True,?,15,True,Pasta,11,False,Soups,1,True,Pasta,11
-00852166,Greek Style Natural Yogurt,Yogurts,Yogurts,False,False,Yogurts,1,False,Yogurts,1,False,Yogurts,1,False,Yogurts,1
-5000137002965,Twiglets,Crisps,Crisps,False,True,?,15,True,Yogurts,6,True,Teas,5,True,Yogurts,6
-0038000138416,Original Potato Crisps,Crisps,Crisps,False,False,Crisps,1,False,Crisps,1,False,Crisps,1,False,Crisps,1
-0031142359022,Parmesan,Cheeses,Cheeses,False,True,?,15,True,Pasta,2,False,Cheeses,1,False,Cheeses,1
-3497917001928,Chips Saveur camembert,Crisps,Crisps,False,True,?,15,False,Crisps,1,True,Cheeses,3,False,Crisps,1
-5063270112335,Organic Night Time Berry Herbal Tea,Teas,Teas,False,False,Teas,1,False,Teas,1,False,Teas,1,False,Teas,1
-0063348004369,Maxi Fruits,Biscuits,Biscuits,False,True,?,15,True,Fruit juices,13,True,Fruit juices,15,True,Fruit juices,13
-0673513401505,Avocado Oil Potato Chips Black Sea Salt,Crisps,Crisps,False,True,?,15,False,Crisps,1,False,Crisps,1,False,Crisps,1
-20416690,Greek Style Natural Light 2% fat,Breads,Yogurts,True,True,?,15,True,Yogurts,9,True,Sodas,12,True,Yogurts,9
-0057825750023,Original Balkan Yogurt 2%,Yogurts,Yogurts,False,False,Yogurts,1,False,Yogurts,1,False,Yogurts,1,False,Yogurts,1
-0064042003214,Vital Almond Oat Bran Cookies,Crisps,Biscuits,True,True,?,15,True,Biscuits,6,True,Biscuits,15,True,Biscuits,6
-0078935005322,Rye Crispbread,Breads,Breads,False,True,?,15,False,Breads,1,False,Breads,1,False,Breads,1
-0071730007164,Broad,Pasta,Pasta,False,True,?,15,True,Soups,5,True,Sodas,6,True,Soups,5
-0013764028074,Thin-Sliced Organic Bread Sprouted Whole Grains,Breads,Breads,False,False,Breads,1,False,Breads,1,False,Breads,1,False,Breads,1
-0016000401068,Honey Nut Cheerios,Pasta,Breakfast cereals,True,True,Honeys,15,True,Honeys,12,True,Breakfast cereals,13,True,Honeys,12
-0088702070538,Four Fruit Jam,Jams,Jams,False,False,Jams,1,False,Jams,1,False,Jams,1,False,Jams,1
-0859977005279,2% Low-Fat Classic Cottage Cheese,Pasta,Cheeses,True,True,Cheeses,15,True,Cheeses,3,True,Cheeses,15,True,Cheeses,15
-0084380957543,Apricot Fruit Spread,Jams,Jams,False,True,?,15,True,Fruit juices,5,False,Jams,1,True,Fruit juices,5
-5711953193996,"Oat Caramel Macchiato, Chilled Coffee",Pasta,Coffees,True,True,Coffees,15,True,Coffees,8,True,Coffees,10,True,Coffees,8
-7622210078131,Milka Daim,Soups,Chocolates,True,True,?,15,True,Cheeses,9,True,Sodas,4,True,Cheeses,9
-0078742374253,Mozzarella,Cheeses,Cheeses,False,True,?,15,False,Cheeses,1,False,Cheeses,1,False,Cheeses,1
-0024606941468,PROTEIN LEMONADE grass-fed clear whey isolate,Teas,Teas,False,True,?,15,True,Fruit juices,12,True,Cheeses,7,True,Fruit juices,12
-0070847811169,Monster Energy,Soups,Sodas,True,True,?,15,True,Cheeses,4,True,Sodas,5,True,Cheeses,4
-0657082060400,SAN FRANCISCO STYLE SOURDOUGH,Biscuits,Breads,True,True,?,15,True,Coffees,12,True,Breads,4,True,Coffees,12
-0060383218843,Parmesan Shredded Cheese,Cheeses,Cheeses,False,False,Cheeses,1,False,Cheeses,1,False,Cheeses,1,False,Cheeses,1
-01399240,Rich Roast instant coffee granules,Coffees,Coffees,False,False,Coffees,1,False,Coffees,1,False,Coffees,1,False,Coffees,1
-0041716150078,Shredded Parmesan Cheese,Cheeses,Cheeses,False,False,Cheeses,1,False,Cheeses,1,False,Cheeses,1,False,Cheeses,1
-7610900037360,Mango Papaya Passion Fruit,Yogurts,Yogurts,False,True,?,15,True,Fruit juices,4,True,Fruit juices,4,True,Fruit juices,4
-5036589253556,Oganic Greek Recipe Strained Natural Yoghurt,Yogurts,Yogurts,False,False,Yogurts,1,False,Yogurts,1,False,Yogurts,1,False,Yogurts,1
-5038862004558,"Blood orange, pomegranate, orange and lime",Fruit juices,Fruit juices,False,True,?,15,False,Fruit juices,1,False,Fruit juices,1,False,Fruit juices,1
-5410126006353,Biscoff rol chocolade,Biscuits,Biscuits,False,True,?,15,True,Chocolates,4,True,Chocolates,2,True,Chocolates,4
-0018627116073,berry fruitful,Breakfast cereals,Breakfast cereals,False,True,?,15,True,Fruit juices,5,True,Fruit juices,7,True,Fruit juices,5
-05492935,Boisson gazeuse,Sodas,Sodas,False,True,?,15,True,Pasta,8,True,Cheeses,3,True,Pasta,8
-0062356501303,Confiture d'abricot,Jams,Jams,False,True,?,15,True,Cheeses,2,True,Sodas,7,True,Sodas,7
-5000119450012,Seedless Raspberry Jam,Jams,Jams,False,False,Jams,1,False,Jams,1,False,Jams,1,False,Jams,1
-5033060100057,Pipers Lye cross cheddar & onion crisps,Crisps,Crisps,False,False,Crisps,1,False,Crisps,1,True,Cheeses,2,False,Crisps,1
-0628915380675,Greek Yogurt Plain 2%,Yogurts,Yogurts,False,False,Yogurts,1,False,Yogurts,1,False,Yogurts,1,False,Yogurts,1
-0057961027645,Apple Orange Peach Juice,Fruit juices,Fruit juices,False,False,Fruit juices,1,False,Fruit juices,1,False,Fruit juices,1,False,Fruit juices,1
-3073780828642,Babybel Light Mini,Coffees,Cheeses,True,True,?,15,True,Breakfast cereals,12,True,Sodas,3,True,Breakfast cereals,12
-5000119117182,Short Spaghetti Pasta,Pasta,Pasta,False,False,Pasta,1,False,Pasta,1,False,Pasta,1,False,Pasta,1
-0031200270153,Cran x Pomegranate,Fruit juices,Fruit juices,False,True,?,15,False,Fruit juices,1,False,Fruit juices,1,False,Fruit juices,1
-0041196466461,Chicken Broth Reduced Sodium,Sodas,Soups,True,True,?,15,True,Soups,6,True,Soups,2,True,Soups,6
-5056053308780,Moroccan vegetable tagine soup,Soups,Soups,False,False,Soups,1,False,Soups,1,False,Soups,1,False,Soups,1
-0068200479057,100% Parmesan Grated Cheese,Breads,Cheeses,True,True,Cheeses,15,True,Cheeses,3,True,Cheeses,9,True,Cheeses,9
-5449000214799,Coke Zero,Cheeses,Sodas,True,True,?,15,True,Sodas,6,True,Sodas,7,True,Sodas,6
-0068200357515,Halal Yogurt,Yogurts,Yogurts,False,False,Yogurts,1,False,Yogurts,1,False,Yogurts,1,False,Yogurts,1
-0067200013445,Strawberry Jam,Jams,Jams,False,False,Jams,1,False,Jams,1,False,Jams,1,False,Jams,1
-0884912116505,BANANA NUT CRUNCH CEREAL,Breakfast cereals,Breakfast cereals,False,False,Breakfast cereals,1,False,Breakfast cereals,1,False,Breakfast cereals,1,False,Breakfast cereals,1
-20913465,Multivitamin Juice,Fruit juices,Fruit juices,False,False,Fruit juices,1,False,Fruit juices,1,False,Fruit juices,1,False,Fruit juices,1
-0063209117917,Premium instant coffee medium roast,Coffees,Coffees,False,False,Coffees,1,False,Coffees,1,False,Coffees,1,False,Coffees,1
-5900397750807,Strawberry Jam,Cheeses,Jams,True,True,Jams,15,True,Jams,14,True,Jams,4,True,Jams,14
-0021000122844,Cottage Cheese Small Curd,Cheeses,Cheeses,False,False,Cheeses,1,False,Cheeses,1,False,Cheeses,1,False,Cheeses,1
-5059319013473,Blueberry Wheats,Breakfast cereals,Breakfast cereals,False,True,?,15,False,Breakfast cereals,1,False,Breakfast cereals,1,False,Breakfast cereals,1
-5000157137623,Steak & Potato Big Soup,Soups,Soups,False,False,Soups,1,False,Soups,1,False,Soups,1,False,Soups,1
-0021130310081,100% Apple Juice,Fruit juices,Fruit juices,False,False,Fruit juices,1,False,Fruit juices,1,False,Fruit juices,1,False,Fruit juices,1
-0044000028299,Biscuits blueberry,Biscuits,Biscuits,False,False,Biscuits,1,False,Biscuits,1,False,Biscuits,1,False,Biscuits,1
-0063400138827,"Seeds & Grains Bread with Flax, Sunflower & Rye",Breads,Breads,False,False,Breads,1,False,Breads,1,False,Breads,1,False,Breads,1
-0021000612239,Cream Cheese,Cheeses,Cheeses,False,False,Cheeses,1,False,Cheeses,1,False,Cheeses,1,False,Cheeses,1
-8710912010661,Mild Gouda Cheese Slices,Cheeses,Cheeses,False,False,Cheeses,1,False,Cheeses,1,False,Cheeses,1,False,Cheeses,1
-5060594550157,Superu shroom coffee,Coffees,Coffees,False,False,Coffees,1,False,Coffees,1,False,Coffees,1,False,Coffees,1
-0627843670155,Tartinade,Jams,Jams,False,True,?,15,True,Breads,7,True,Sodas,5,True,Breads,7
-8076809529457,INTEGRALE Whole Wheat Fusilli,Pasta,Pasta,False,True,?,15,True,Breakfast cereals,4,False,Pasta,1,True,Breakfast cereals,4
-0061077778445,Tortillas,Crisps,Breads,True,True,?,15,True,Breads,2,True,Pasta,12,True,Pasta,12
-4099100086829,Grated Parmesan Cheese,Cheeses,Cheeses,False,False,Cheeses,1,False,Cheeses,1,False,Cheeses,1,False,Cheeses,1
-0661475112010,Organic Spaghetti,Pasta,Pasta,False,True,?,15,False,Pasta,1,False,Pasta,1,False,Pasta,1
-6001048000902,100% Sparkling Apple Juice,Fruit juices,Fruit juices,False,False,Fruit juices,1,False,Fruit juices,1,False,Fruit juices,1,False,Fruit juices,1
-0096619440047,Tortilla Strips,Crisps,Crisps,False,True,?,15,True,Biscuits,2,True,Cheeses,6,True,Cheeses,6
-0898248001015,skyr blueberry,Yogurts,Yogurts,False,True,?,15,True,Teas,9,True,Fruit juices,3,True,Teas,9
-0062325500023,Organic Cottage Cheese,Cheeses,Cheeses,False,False,Cheeses,1,False,Cheeses,1,False,Cheeses,1,False,Cheeses,1
-7614500010617,Dark Chocolate with Honey and Almond Nougat,Chocolates,Chocolates,False,False,Chocolates,1,False,Chocolates,1,False,Chocolates,1,False,Chocolates,1
-0850031990173,Protein Pasta Curveballs,Pasta,Pasta,False,False,Pasta,1,False,Pasta,1,False,Pasta,1,False,Pasta,1
-0895681000155,Dahi Yogurt,Yogurts,Yogurts,False,False,Yogurts,1,False,Yogurts,1,False,Yogurts,1,False,Yogurts,1
-0055742510164,Root Beer,Sodas,Sodas,False,True,?,15,False,Sodas,1,False,Sodas,1,False,Sodas,1
-0064042555737,Praeventia Dark Chocolate Chip 70% Cocoa & Wild Blueberry Mini Cookies,Biscuits,Biscuits,False,True,Chocolates,15,False,Biscuits,1,True,Chocolates,2,False,Biscuits,1
-0028000774578,Ice Roast,Coffees,Coffees,False,True,?,15,False,Coffees,1,True,Sodas,2,False,Coffees,1
-4250073462533,TERIYAKI NOODLES,Pasta,Pasta,False,True,?,15,False,Pasta,1,True,Yogurts,11,False,Pasta,1
-0096619866267,Parmigiano Reggiano Cheese,Cheeses,Cheeses,False,False,Cheeses,1,False,Cheeses,1,False,Cheeses,1,False,Cheeses,1
-0060383888466,85% Dark Chocolate,Pasta,Chocolates,True,True,Chocolates,15,True,Chocolates,4,True,Chocolates,13,True,Chocolates,4
-0060383779337,Chocolate Chip Cookies,Biscuits,Biscuits,False,True,Chocolates,15,False,Biscuits,1,True,Chocolates,2,False,Biscuits,1
-0854183006348,Organic Green Lentil Penne,Pasta,Pasta,False,True,?,15,True,Yogurts,7,False,Pasta,1,True,Yogurts,7
-0075002919193,Southwest Raw & Unfiltered Honey,Yogurts,Honeys,True,True,Honeys,15,True,Honeys,2,True,Honeys,3,True,Honeys,3
-0636046700330,Organic orange mango,Fruit juices,Fruit juices,False,True,?,15,False,Fruit juices,1,False,Fruit juices,1,False,Fruit juices,1
-4000539670503,Gold Bunny Dark Chocolate,Chocolates,Chocolates,False,False,Chocolates,1,False,Chocolates,1,False,Chocolates,1,False,Chocolates,1
-4099100291254,Everything Sourdough,Breads,Breads,False,True,?,15,False,Breads,1,False,Breads,1,False,Breads,1
-01810325,Natural Cottage Cheese,Cheeses,Cheeses,False,False,Cheeses,1,False,Cheeses,1,False,Cheeses,1,False,Cheeses,1
-0064100111394,Pringles Cheddar Cheese,Crisps,Crisps,False,True,Cheeses,15,True,Cheeses,8,True,Cheeses,2,True,Cheeses,8
-8713621140858,Stroopwafels,Chocolates,Biscuits,True,True,?,15,True,Pasta,15,True,Biscuits,3,True,Pasta,15
-4056489036135,Lemon tea,Teas,Teas,False,False,Teas,1,False,Teas,1,False,Teas,1,False,Teas,1
-0060383206956,Ginger turmeric herbal tea,Teas,Teas,False,False,Teas,1,False,Teas,1,False,Teas,1,False,Teas,1
-0049000061062,LEMON-LIME,Sodas,Sodas,False,True,?,15,True,Fruit juices,4,True,Fruit juices,2,True,Fruit juices,4
-0048500201831,Blonde roast ICED COFFEE,Cheeses,Coffees,True,True,Coffees,15,True,Coffees,14,True,Coffees,4,True,Coffees,14
-0078196988501,Honey,Honeys,Honeys,False,False,Honeys,1,False,Honeys,1,False,Honeys,1,False,Honeys,1
-4099100036381,apple juice,Fruit juices,Fruit juices,False,False,Fruit juices,1,False,Fruit juices,1,False,Fruit juices,1,False,Fruit juices,1
-01679793,CREAM OF TOMATO SOUP,Soups,Soups,False,False,Soups,1,False,Soups,1,False,Soups,1,False,Soups,1
-0060410046715,Sea Salt & Malt Vinegar Potato Chips,Crisps,Crisps,False,True,?,15,False,Crisps,1,False,Crisps,1,False,Crisps,1
-0061659021990,Lemon Juice,Coffees,Fruit juices,True,True,Fruit juices,15,True,Fruit juices,7,True,Fruit juices,10,True,Fruit juices,7
-0060383755539,Twice the fruit apricot spread,Jams,Jams,False,True,?,15,True,Fruit juices,7,False,Jams,1,True,Fruit juices,7
-0819215021409,Blackberry Lemonade Sparkling Water,Coffees,Sodas,True,True,?,15,True,Sodas,5,True,Fruit juices,10,True,Sodas,5
-0776703261788,Buckwheat Soba Noodles,Pasta,Pasta,False,True,?,15,False,Pasta,1,True,Soups,3,False,Pasta,1
-4337256673181,Indischer Chai,Teas,Teas,False,True,?,15,True,Pasta,8,False,Teas,1,True,Pasta,8
-0041390030703,Instant Tofu Miso Soup Soybean Paste Soup with Tofu,Soups,Soups,False,False,Soups,1,False,Soups,1,False,Soups,1,False,Soups,1
-0082011570680,Oatmeal sandwich cookies with peanut butter filling,Biscuits,Biscuits,False,True,?,15,False,Biscuits,1,False,Biscuits,1,False,Biscuits,1
-0064912121130,Yogourt Style Ferme Set-Style Plain,Yogurts,Yogurts,False,True,?,15,False,Yogurts,1,False,Yogurts,1,False,Yogurts,1
-0850180006077,Cashew Butter Nut Butter Filled Dark Chocolate,Chocolates,Chocolates,False,False,Chocolates,1,False,Chocolates,1,False,Chocolates,1,False,Chocolates,1
-0762111426659,Cold brew,Coffees,Coffees,False,True,?,15,False,Coffees,1,False,Coffees,1,False,Coffees,1
-0671521240208,Seeds & Grains,Breads,Breads,False,True,?,15,True,Breakfast cereals,2,True,Sodas,8,True,Sodas,8
-0056800193527,"Probiotic yogurt 2.9% lactose free 3 each of Lemon-lime, Pomegranate-berry, Raspberry-lychee, Mandarin-orange",Yogurts,Yogurts,False,False,Yogurts,1,False,Yogurts,1,False,Yogurts,1,False,Yogurts,1
-0096619172658,Kirkland Signature Cranberry Walnut Loaf,Breads,Breads,False,True,?,15,False,Breads,1,False,Breads,1,False,Breads,1
-0052603283670,Organic Chicken & Wild Rice Soup,Cheeses,Soups,True,True,Soups,15,True,Soups,11,True,Soups,2,True,Soups,11
-8690105000429,Caykur Gray Tea,Coffees,Teas,True,True,Teas,15,True,Teas,2,True,Teas,4,True,Teas,4
-0628110360007,Brazillian Green,Teas,Teas,False,True,?,15,True,Coffees,2,True,Sodas,2,True,Sodas,2
-00395496,all butter cookies with pistachio nuts and almonds,Biscuits,Biscuits,False,True,?,15,False,Biscuits,1,False,Biscuits,1,False,Biscuits,1
-5025125000037,Sourdough grain and seeds,Breakfast cereals,Breads,True,True,?,15,True,Breads,3,True,Breads,9,True,Breads,9
-29310456,Grano high fibre seeded,Breakfast cereals,Breakfast cereals,False,True,?,15,True,Yogurts,2,True,Cheeses,6,True,Cheeses,6
-07886379,Orange Blossom Honey,Soups,Honeys,True,True,Honeys,15,True,Honeys,8,True,Honeys,8,True,Honeys,8
-0028400516679,Spicy Sweet Chili,Crisps,Crisps,False,True,?,15,True,Honeys,2,True,Soups,4,True,Soups,4
-0014100085980,Whole Grain 15 Grain Bread,Breads,Breads,False,False,Breads,1,False,Breads,1,False,Breads,1,False,Breads,1
-0848206059565,Tartines Bio Craquantes Sarrasin Organic Buckwheat Crispbread,Breads,Breads,False,True,?,15,True,Crisps,2,False,Breads,1,False,Breads,1
-0065633158177,Avoine Croquante,Breakfast cereals,Breakfast cereals,False,True,?,15,True,Pasta,3,True,Cheeses,10,True,Cheeses,10
-0064420006707,Fromage Cottage,Cheeses,Cheeses,False,True,?,15,True,Breads,8,False,Cheeses,1,True,Breads,8
-0051500090022,Strawberry jam,Jams,Jams,False,False,Jams,1,False,Jams,1,False,Jams,1,False,Jams,1
-00940863,Lightly salted pitta chips,Crisps,Crisps,False,True,?,15,False,Crisps,1,False,Crisps,1,False,Crisps,1
-0048500020968,Pure Leaf Black Tea Unsweetened,Teas,Teas,False,False,Teas,1,False,Teas,1,False,Teas,1,False,Teas,1
-5000119300102,Farfalle,Pasta,Pasta,False,True,?,15,True,Breakfast cereals,2,True,Cheeses,4,True,Cheeses,4
-5057545744468,Part Baked Baguettes,Breads,Breads,False,True,?,15,False,Breads,1,True,Biscuits,3,False,Breads,1
-5056315501027,Skinny Whip Mint,Chocolates,Chocolates,False,True,?,15,True,Breakfast cereals,7,True,Fruit juices,4,True,Breakfast cereals,7
-0096619183067,Wildflower Honey,Honeys,Honeys,False,False,Honeys,1,False,Honeys,1,False,Honeys,1,False,Honeys,1
-3948764041259,Thumbs Up (Indian coke),Sodas,Sodas,False,True,?,15,True,Chocolates,2,False,Sodas,1,False,Sodas,1
-8445291846975,NESCAFE GOLD BLEND,Coffees,Coffees,False,True,?,15,False,Coffees,1,True,Sodas,2,False,Coffees,1
-3245412211393,Chocolat lait,Chocolates,Chocolates,False,True,?,15,False,Chocolates,1,False,Chocolates,1,False,Chocolates,1
-0014100170969,Goldfish,Biscuits,Biscuits,False,True,?,15,True,Chocolates,13,True,Cheeses,11,True,Chocolates,13
-1230000097024,Vanilla Crunch Dark Chocolate,Chocolates,Chocolates,False,False,Chocolates,1,False,Chocolates,1,False,Chocolates,1,False,Chocolates,1
-0064819953001,Tartinade de fraises,Jams,Jams,False,True,?,15,True,Coffees,11,True,Biscuits,5,True,Coffees,11
-8002270586835,Sparkling Blood Orange Beverage,Sodas,Sodas,False,True,?,15,False,Sodas,1,True,Fruit juices,2,False,Sodas,1
-0705599019630,Honey Oat Granola,Breakfast cereals,Breakfast cereals,False,True,Honeys,15,True,Honeys,2,True,Honeys,2,True,Honeys,2
-0065633230798,Apple Crisp,Breakfast cereals,Breakfast cereals,False,True,Crisps,15,True,Crisps,4,True,Fruit juices,2,True,Crisps,4
-4061459803570,spinach & ricotta tortellini,Pasta,Pasta,False,True,?,15,False,Pasta,1,True,Cheeses,2,False,Pasta,1
-5057545877678,Natural Yogurt,Yogurts,Yogurts,False,False,Yogurts,1,False,Yogurts,1,False,Yogurts,1,False,Yogurts,1
-0059600010872,Minute maid apple raspberry,Fruit juices,Fruit juices,False,True,?,15,False,Fruit juices,1,False,Fruit juices,1,False,Fruit juices,1
-5057545807316,BUTTERNUT SQUASH & PROVOLA GIRASOLI,Pasta,Pasta,False,True,?,15,True,Breakfast cereals,6,True,Fruit juices,8,True,Breakfast cereals,6
-0819898010790,Croutons,Breads,Breads,False,True,?,15,True,Breakfast cereals,7,True,Crisps,3,True,Breakfast cereals,7
-5449000125019,Citrus Punch,Sodas,Sodas,False,True,?,15,True,Fruit juices,3,True,Fruit juices,2,True,Fruit juices,2
-5057753097349,Tropical Juice Drink,Fruit juices,Fruit juices,False,False,Fruit juices,1,False,Fruit juices,1,False,Fruit juices,1,False,Fruit juices,1
-50354085,Hartley best of Apricot,Jams,Jams,False,True,?,15,True,Chocolates,11,True,Fruit juices,5,True,Chocolates,11
-0627987769524,Beetroot Latte Blend,Teas,Teas,False,True,?,15,True,Sodas,11,True,Coffees,2,True,Sodas,11
-4099100112887,Blackberry Fruit Spread,Jams,Jams,False,True,?,15,True,Fruit juices,2,False,Jams,1,False,Jams,1
-4060800135346,Carbonated Citrus Flavoured Soft Drink,Coffees,Sodas,True,True,?,15,True,Sodas,4,True,Sodas,6,True,Sodas,4
-0009800830039,Nutella Biscuits,Biscuits,Biscuits,False,False,Biscuits,1,False,Biscuits,1,False,Biscuits,1,False,Biscuits,1
-0096619222155,BLACK CHERRY / CERISE NOIRE,Cheeses,Yogurts,True,True,?,15,False,Cheeses,1,True,Chocolates,6,False,Cheeses,1
-0063211024579,Condensed Homestyle Chicken Noodle Soup,Sodas,Soups,True,True,Soups,15,True,Soups,7,True,Soups,4,True,Soups,7
-4062139007806,Lemon Ice Tea,Fruit juices,Teas,True,True,Teas,15,True,Teas,4,True,Teas,2,True,Teas,4
-0040600027885,Chocolat noir,Chocolates,Chocolates,False,True,?,15,False,Chocolates,1,False,Chocolates,1,False,Chocolates,1
-0073299000075,Squeezable Honey,Honeys,Honeys,False,False,Honeys,1,False,Honeys,1,False,Honeys,1,False,Honeys,1
-0021130328277,Strained Greek Yogurt Nonfat Plain,Yogurts,Yogurts,False,False,Yogurts,1,False,Yogurts,1,False,Yogurts,1,False,Yogurts,1
-0871459002330,Dairy-Free Cheddar Mac & Cheese,Pasta,Pasta,False,True,Cheeses,15,True,Cheeses,6,True,Cheeses,2,True,Cheeses,6
-0064420006387,Fromage cottage 4%,Cheeses,Cheeses,False,True,?,15,True,Breads,7,False,Cheeses,1,True,Breads,7
-0021000300471,COTTAGE CHEESE SMALL CURD,Cheeses,Cheeses,False,False,Cheeses,1,False,Cheeses,1,False,Cheeses,1,False,Cheeses,1
-0055000008839,Hazelnut,Coffees,Coffees,False,True,?,15,True,Chocolates,5,True,Breakfast cereals,10,True,Chocolates,5
-0858666000052,Confiture de fraises,Jams,Jams,False,True,?,15,True,Yogurts,9,True,Sodas,8,True,Yogurts,9
-5010477338679,Jordans Natural Muesli,Breakfast cereals,Breakfast cereals,False,True,?,15,True,Yogurts,10,False,Breakfast cereals,1,True,Yogurts,10
-0028000157852,Authentic Mexican Hot Chocolate Drink Tablets,Chocolates,Chocolates,False,False,Chocolates,1,False,Chocolates,1,False,Chocolates,1,False,Chocolates,1
-8801043157735,AnSungTangMyun Noodle,Pasta,Pasta,False,True,?,15,False,Pasta,1,True,Soups,2,False,Pasta,1
-0016600130023,Clubsoda low sodium,Sodas,Sodas,False,True,?,15,True,Pasta,2,False,Sodas,1,False,Sodas,1
-0071757077775,Yakisoba Japanese-Style Stir Fried Noodles with Crisp Vegetables & Savoury Sauce,Soups,Pasta,True,True,Crisps,15,True,Crisps,4,True,Yogurts,2,True,Crisps,4
-5060298575258,Everyday blossom honey,Honeys,Honeys,False,False,Honeys,1,False,Honeys,1,False,Honeys,1,False,Honeys,1
-5000354404009,Pasta 'N' Sauce Cheese & Broccoli,Pasta,Pasta,False,False,Pasta,1,False,Pasta,1,False,Pasta,1,False,Pasta,1
-5054775347735,White Folded Flatbreads,Cheeses,Breads,True,True,?,15,True,Biscuits,6,True,Breads,3,True,Biscuits,6
-0096619222865,Raw Unfiltered Honey,Honeys,Honeys,False,False,Honeys,1,False,Honeys,1,False,Honeys,1,False,Honeys,1
-5010044010175,Crumpet Thins,Breads,Breads,False,True,?,15,True,Soups,6,True,Biscuits,2,True,Soups,6
-5056053308742,Vegetable and roast chicken soup,Soups,Soups,False,False,Soups,1,False,Soups,1,False,Soups,1,False,Soups,1
-4061459823226,Protein granola,Breakfast cereals,Breakfast cereals,False,True,?,15,False,Breakfast cereals,1,False,Breakfast cereals,1,False,Breakfast cereals,1
+code,name,category,true_category,planted,keyword_flagged,keyword_best,keyword_rank,keyword_suspicion,meaning_flagged,meaning_best,meaning_rank,meaning_suspicion,zero-shot_flagged,zero-shot_best,zero-shot_rank,zero-shot_suspicion,team_flagged,team_best,team_rank,team_suspicion
+0056412503042,Allen's Fruit Punch,Fruit juices,Fruit juices,False,True,?,15,0.5,False,Fruit juices,1,-0.12645208835601807,False,Fruit juices,1,-0.8393586464226246,False,Fruit juices,1,-0.12645208835601807
+0877693001689,Granolove oatmeal cookie crunch,Breakfast cereals,Breakfast cereals,False,True,?,15,0.5,True,Biscuits,2,0.022502660751342773,True,Biscuits,2,0.5090344101190567,True,Biscuits,2,0.5090344101190567
+0071146008274,Harvest Snaps Lightly Salted Crispy Baked Veggie Snacks,Crisps,Crisps,False,True,?,15,0.5,False,Crisps,1,-0.1290816366672516,False,Crisps,1,-0.1025371253490448,False,Crisps,1,-0.1290816366672516
+5060367450356,Blue Maize Tortilla Chips,Crisps,Crisps,False,True,?,15,0.5,False,Crisps,1,-0.16299283504486084,False,Crisps,1,-0.3164283335208893,False,Crisps,1,-0.16299283504486084
+0058449181101,Sunrise Crunchy Vanilla Cereal,Breakfast cereals,Breakfast cereals,False,False,Breakfast cereals,1,0.0,False,Breakfast cereals,1,-0.29225099086761475,False,Breakfast cereals,1,-0.8197466535493731,False,Breakfast cereals,1,-0.29225099086761475
+0069000155035,Double shot expresso,Coffees,Coffees,False,True,?,15,0.5,False,Coffees,1,-0.06029133498668671,False,Coffees,1,-0.9466534783132374,False,Coffees,1,-0.06029133498668671
+0898248001640,WHOLE MILK PLAIN,Biscuits,Yogurts,True,True,?,15,0.5,True,Yogurts,11,0.14753717184066772,True,Soups,15,0.13347472622990608,True,Yogurts,11,0.14753717184066772
+8901030373930,Bru gold,Coffees,Coffees,False,True,?,15,0.5,True,Chocolates,4,0.1260548084974289,True,Sodas,14,0.140067670494318,True,Chocolates,4,0.1260548084974289
+0060383997212,Extra dark chocolate,Chocolates,Chocolates,False,False,Chocolates,1,0.0,False,Chocolates,1,-0.3113345801830292,False,Chocolates,1,-0.952306657563895,False,Chocolates,1,-0.3113345801830292
+8717677339792,Milk Chocolate,Chocolates,Chocolates,False,False,Chocolates,1,0.0,False,Chocolates,1,-0.29440850019454956,False,Chocolates,1,-0.9707648551557213,False,Chocolates,1,-0.29440850019454956
+5018357012534,Simply Fruity muesli,Breakfast cereals,Breakfast cereals,False,True,?,15,0.5,True,Fruit juices,3,0.1583501100540161,False,Breakfast cereals,1,-0.9363551726564765,False,Breakfast cereals,1,-0.9363551726564765
+0063211283815,Chunky Chicken with Rice,Soups,Soups,False,True,?,15,0.5,True,Yogurts,4,0.043216824531555176,False,Soups,1,-0.19493737071752548,True,Yogurts,4,0.043216824531555176
+0013562300396,Macaroni & Classic Cheddar,Cheeses,Cheeses,False,True,?,15,0.5,False,Cheeses,1,-0.12089627981185913,True,Pasta,2,0.5704319030046463,False,Cheeses,1,-0.12089627981185913
+5099801003315,Organic Porridge Oats,Breakfast cereals,Breakfast cereals,False,True,?,15,0.5,False,Breakfast cereals,1,-0.047522008419036865,False,Breakfast cereals,1,-0.7527991943061352,False,Breakfast cereals,1,-0.047522008419036865
+8000070027442,Lavazza Cafe Crema Decoffeinato 500 Gramm,Coffees,Coffees,False,True,?,15,0.5,False,Coffees,1,-0.07998350262641907,True,Cheeses,5,0.5401491187512875,False,Coffees,1,-0.07998350262641907
+0060383205966,Confiture framboise,Jams,Jams,False,True,?,15,0.5,True,Yogurts,3,0.024528995156288147,True,Sodas,2,0.07009340822696686,True,Sodas,2,0.07009340822696686
+0070177115227,Camomile & Honey,Teas,Teas,False,True,Honeys,15,1.0,True,Honeys,3,0.27438172698020935,True,Honeys,2,0.7030182257294655,True,Honeys,2,0.7030182257294655
+0726635121285,Organic raw Honey,Honeys,Honeys,False,False,Honeys,1,0.0,False,Honeys,1,-0.3271592855453491,False,Honeys,1,-0.9786326428875327,False,Honeys,1,-0.3271592855453491
+0751217123470,100% Guava Juice Blend,Fruit juices,Fruit juices,False,False,Fruit juices,1,0.0,False,Fruit juices,1,-0.127478688955307,False,Fruit juices,1,-0.9853969388641417,False,Fruit juices,1,-0.127478688955307
+4025500277055,Banana Chocolate Flakes deliciously creamy yogurt,Yogurts,Yogurts,False,False,Yogurts,1,0.0,False,Yogurts,1,-0.12184178829193115,False,Yogurts,1,-0.8007975444197655,False,Yogurts,1,-0.12184178829193115
+0077652082227,Refreshing Peppermint Tea,Teas,Teas,False,False,Teas,1,0.0,False,Teas,1,-0.21509188413619995,False,Teas,1,-0.9834188394015655,False,Teas,1,-0.21509188413619995
+0055991041020,Soft Wheat,Breads,Breads,False,True,?,15,0.5,True,Breakfast cereals,2,0.03650212287902832,True,Sodas,2,0.5955671742558479,True,Sodas,2,0.5955671742558479
+0025000100611,Light Lemonade,Sodas,Sodas,False,True,?,15,0.5,False,Sodas,1,-0.05349203944206238,False,Sodas,1,-0.10853040218353271,False,Sodas,1,-0.05349203944206238
+00894609,Chunk Smoked Haddock Chowder,Soups,Soups,False,True,?,15,0.5,False,Soups,1,-0.07907235622406006,False,Soups,1,-0.966332825133577,False,Soups,1,-0.07907235622406006
+5060574740011,GINGER,Sodas,Sodas,False,True,?,15,0.5,True,Honeys,8,0.17338931560516357,False,Sodas,1,-0.05297298729419708,True,Honeys,8,0.17338931560516357
+5055940100537,Cholesterol lowering yogurt drink with added plant stanols and raspberry flavour,Yogurts,Yogurts,False,False,Yogurts,1,0.0,False,Yogurts,1,-0.12710899114608765,False,Yogurts,1,-0.9644085275940597,False,Yogurts,1,-0.12710899114608765
+6111267161275,SPARKLING ICE TEA GINGER GREEN TEA,Teas,Teas,False,False,Teas,1,0.0,False,Teas,1,-0.1496630311012268,False,Teas,1,-0.9797618095763028,False,Teas,1,-0.1496630311012268
+0747599409943,Milk Chocolate Caramel,Chocolates,Chocolates,False,False,Chocolates,1,0.0,False,Chocolates,1,-0.10735303163528442,False,Chocolates,1,-0.9632712863385677,False,Chocolates,1,-0.10735303163528442
+0060383216467,Tom Yum,Soups,Soups,False,True,?,15,0.5,True,Breakfast cereals,7,0.09742267429828644,True,Sodas,5,0.2508383020758629,True,Breakfast cereals,7,0.09742267429828644
+0055742551457,Lemon Ginger Herbal Tea,Teas,Teas,False,False,Teas,1,0.0,False,Teas,1,-0.1952415406703949,False,Teas,1,-0.9870340300258249,False,Teas,1,-0.1952415406703949
+06741602,Coca-Cola,Sodas,Sodas,False,True,?,15,0.5,False,Sodas,1,-0.10335934162139893,False,Sodas,1,-0.9925482471007854,False,Sodas,1,-0.10335934162139893
+0059600060891,Fruit Punch,Fruit juices,Fruit juices,False,True,?,15,0.5,False,Fruit juices,1,-0.21697688102722168,False,Fruit juices,1,-0.9369474928826094,False,Fruit juices,1,-0.21697688102722168
+4335619012479,Coffee,Coffees,Coffees,False,False,Coffees,1,0.0,False,Coffees,1,-0.34653040766716003,False,Coffees,1,-0.9875388158252463,False,Coffees,1,-0.34653040766716003
+0810090751450,chocolate peanut butter banana,Breakfast cereals,Breakfast cereals,False,True,Chocolates,15,1.0,True,Chocolates,2,0.10484999418258667,True,Chocolates,3,0.9119344875216484,True,Chocolates,3,0.9119344875216484
+4088600056135,Organic Jumbo Porridge Oats,Breakfast cereals,Breakfast cereals,False,True,?,15,0.5,False,Breakfast cereals,1,-0.014640986919403076,False,Breakfast cereals,1,-0.8022234309464693,False,Breakfast cereals,1,-0.014640986919403076
+0012000021367,Cranberry Juice Cocktail,Fruit juices,Fruit juices,False,False,Fruit juices,1,0.0,False,Fruit juices,1,-0.07927477359771729,False,Fruit juices,1,-0.9847927159862593,False,Fruit juices,1,-0.07927477359771729
+0063209237035,Original Blend,Teas,Coffees,True,True,?,15,0.5,True,Jams,13,0.09407493472099304,True,Coffees,7,0.12698090076446533,True,Jams,13,0.09407493472099304
+00582599,Organic Red Lentil Sedanini,Pasta,Pasta,False,True,?,15,0.5,False,Pasta,1,-0.0004252195358276367,True,Soups,2,0.29456301033496857,False,Pasta,1,-0.0004252195358276367
+5900649050327,Cappuccino vanilla,Coffees,Coffees,False,True,?,15,0.5,False,Coffees,1,-0.04724535346031189,False,Coffees,1,-0.904576487839222,False,Coffees,1,-0.04724535346031189
+0061200084450,Milk Chocolate Dairy Milk,Chocolates,Chocolates,False,False,Chocolates,1,0.0,False,Chocolates,1,-0.176322340965271,False,Chocolates,1,-0.9428898431360722,False,Chocolates,1,-0.176322340965271
+27191101,set pure honey,Honeys,Honeys,False,False,Honeys,1,0.0,False,Honeys,1,-0.3824176490306854,False,Honeys,1,-0.9524291660636663,False,Honeys,1,-0.3824176490306854
+00019101,SHORTBREAD all butter fingers,Biscuits,Biscuits,False,True,?,15,0.5,False,Biscuits,1,-0.05389246344566345,True,Breads,2,0.892366012558341,False,Biscuits,1,-0.05389246344566345
+0059749962575,Confiture de framboises,Jams,Jams,False,True,?,15,0.5,True,Yogurts,3,0.031837865710258484,True,Sodas,8,0.2607301026582718,True,Sodas,8,0.2607301026582718
+0068200962207,Cream Cheese Product,Cheeses,Cheeses,False,False,Cheeses,1,0.0,False,Cheeses,1,-0.28978902101516724,False,Cheeses,1,-0.9919161313446239,False,Cheeses,1,-0.28978902101516724
+0055742533583,Natural Liquid Pure Honey,Honeys,Honeys,False,False,Honeys,1,0.0,False,Honeys,1,-0.3344549536705017,False,Honeys,1,-0.982045273995027,False,Honeys,1,-0.3344549536705017
+0884912378118,Raisin Bran imp,Breakfast cereals,Breakfast cereals,False,True,?,15,0.5,False,Breakfast cereals,1,-0.008332759141921997,False,Breakfast cereals,1,-0.6368527188897133,False,Breakfast cereals,1,-0.008332759141921997
+0041000002878,Tea,Teas,Teas,False,False,Teas,1,0.0,False,Teas,1,-0.3655989170074463,False,Teas,1,-0.98177915380802,False,Teas,1,-0.3655989170074463
+0062502686472,Espresso milano,Coffees,Coffees,False,True,?,15,0.5,False,Coffees,1,-0.1107567846775055,False,Coffees,1,-0.9036023411899805,False,Coffees,1,-0.1107567846775055
+5032439100070,Original Sea Salted Wheat Pretzels,Breads,Breads,False,True,?,15,0.5,False,Breads,1,-0.011468052864074707,False,Breads,1,-0.1724630519747734,False,Breads,1,-0.011468052864074707
+5000169151266,Duchy Organic Raspberry Preserve Extra Jam,Jams,Jams,False,False,Jams,1,0.0,False,Jams,1,-0.26149624586105347,False,Jams,1,-0.9760630391538143,False,Jams,1,-0.26149624586105347
+5010477348630,Muesli 36% fruits noix & graines,Breakfast cereals,Breakfast cereals,False,True,?,15,0.5,True,Fruit juices,2,0.08873558044433594,False,Breakfast cereals,1,-0.8451946750283241,False,Breakfast cereals,1,-0.8451946750283241
+0078742125671,Restaurant Style Tortilla Chips,Crisps,Crisps,False,True,?,15,0.5,False,Crisps,1,-0.16443243622779846,False,Crisps,1,-0.058693982660770416,False,Crisps,1,-0.16443243622779846
+3045320094022,Bonne maman apricot extra jam,Jams,Jams,False,False,Jams,1,0.0,False,Jams,1,-0.16893628239631653,False,Jams,1,-0.9615027843974531,False,Jams,1,-0.16893628239631653
+0084253240475,Tomato Creamy Soup,Soups,Soups,False,False,Soups,1,0.0,False,Soups,1,-0.19891905784606934,False,Soups,1,-0.9672363323625177,False,Soups,1,-0.19891905784606934
+0773373351757,Biscuits aux figues,Biscuits,Biscuits,False,False,Biscuits,1,0.0,False,Biscuits,1,-0.1944652795791626,False,Biscuits,1,-0.8030480593442917,False,Biscuits,1,-0.1944652795791626
+0060383195779,shredded cheese,Cheeses,Cheeses,False,False,Cheeses,1,0.0,False,Cheeses,1,-0.260346919298172,False,Cheeses,1,-0.9566755548585206,False,Cheeses,1,-0.260346919298172
+5060605060576,Italian Blood Orange Soda,Sodas,Sodas,False,False,Sodas,1,0.0,False,Sodas,1,-0.12473559379577637,False,Sodas,1,-0.8437896147370338,False,Sodas,1,-0.12473559379577637
+0063211012514,Chicken Noodle,Soups,Soups,False,True,?,15,0.5,True,Pasta,2,0.1287875473499298,False,Soups,1,-0.7042323425412178,False,Soups,1,-0.7042323425412178
+5000119010674,Pure Apple Juice,Fruit juices,Fruit juices,False,False,Fruit juices,1,0.0,False,Fruit juices,1,-0.20058035850524902,False,Fruit juices,1,-0.9894834331935272,False,Fruit juices,1,-0.20058035850524902
+0064042007151,Caramel Truffle Cookies,Biscuits,Biscuits,False,True,?,15,0.5,False,Biscuits,1,-0.14684385061264038,True,Chocolates,2,0.7621363773941994,False,Biscuits,1,-0.14684385061264038
+5000358754346,Prawn Crackers,Crisps,Crisps,False,True,?,15,0.5,True,Jams,3,0.03461885452270508,False,Crisps,1,-0.03199407458305359,False,Crisps,1,-0.03199407458305359
+5060054134118,Sparkling Apple Presse,Fruit juices,Fruit juices,False,True,?,15,0.5,False,Fruit juices,1,-0.03632009029388428,False,Fruit juices,1,-0.7265598028898239,False,Fruit juices,1,-0.03632009029388428
+0052603054973,Cashew Carrot Ginger Bisque,Soups,Soups,False,True,?,15,0.5,True,Breakfast cereals,9,0.09551462531089783,False,Soups,1,-0.7307845577597618,True,Breakfast cereals,9,0.09551462531089783
+10090048,Frollini con Muesli,Biscuits,Biscuits,False,True,?,15,0.5,True,Pasta,14,0.17693039774894714,True,Breakfast cereals,6,0.6004339139908552,True,Pasta,14,0.17693039774894714
+0072310008496,Toasted Coconut Black Tea,Teas,Teas,False,False,Teas,1,0.0,False,Teas,1,-0.13694816827774048,False,Teas,1,-0.9857356945285574,False,Teas,1,-0.13694816827774048
+3175680011480,Biscuit Sesame,Biscuits,Biscuits,False,False,Biscuits,1,0.0,False,Biscuits,1,-0.07969766855239868,False,Biscuits,1,-0.5812195837497711,False,Biscuits,1,-0.07969766855239868
+0794522002191,Organic chai,Teas,Teas,False,True,?,15,0.5,False,Teas,1,-0.008643895387649536,False,Teas,1,-0.8709429204463959,False,Teas,1,-0.008643895387649536
+0021511362142,Organic Pasta,Chocolates,Pasta,True,True,Pasta,15,1.0,True,Pasta,8,0.49251312017440796,True,Pasta,6,0.9857571941684,True,Pasta,8,0.49251312017440796
+0065633455719,Creamy Deluxe Chocolate Frosting,Chocolates,Chocolates,False,False,Chocolates,1,0.0,False,Chocolates,1,-0.2708917558193207,False,Chocolates,1,-0.9738450532313436,False,Chocolates,1,-0.2708917558193207
+0193968327071,PURE PREMIUM HONEY,Honeys,Honeys,False,False,Honeys,1,0.0,False,Honeys,1,-0.3389844000339508,False,Honeys,1,-0.8667553476989269,False,Honeys,1,-0.3389844000339508
+0057174048307,Earl grey tea,Teas,Teas,False,False,Teas,1,0.0,False,Teas,1,-0.3136320114135742,False,Teas,1,-0.9729321822524071,False,Teas,1,-0.3136320114135742
+5012121005241,Carb Lite 6 Wraps,Breads,Breads,False,True,?,15,0.5,True,Pasta,5,0.05233120918273926,True,Sodas,4,0.8751758122816682,True,Pasta,5,0.05233120918273926
+5011273047079,honey,Honeys,Honeys,False,False,Honeys,1,0.0,False,Honeys,1,-0.41495585441589355,False,Honeys,1,-0.951386746019125,False,Honeys,1,-0.41495585441589355
+4088600436296,DIPLOMAT HERBAL BLEND FORTIFIED WITH SELENIUM DIRE,Teas,Teas,False,True,?,15,0.5,False,Teas,1,-0.030515313148498535,True,Sodas,5,0.22896666824817657,False,Teas,1,-0.030515313148498535
+0037466019017,SWISS MILK CHOCOLATE,Chocolates,Chocolates,False,False,Chocolates,1,0.0,False,Chocolates,1,-0.19217848777770996,False,Chocolates,1,-0.9268901469185948,False,Chocolates,1,-0.19217848777770996
+0070221011062,85% Cacao Dark Chocolate,Chocolates,Chocolates,False,False,Chocolates,1,0.0,False,Chocolates,1,-0.25788137316703796,False,Chocolates,1,-0.9817572794854641,False,Chocolates,1,-0.25788137316703796
+0855868004000,BONE BROTH,Pasta,Soups,True,True,?,15,0.5,True,Soups,2,0.07816791534423828,True,Breads,10,0.937815127428621,True,Breads,10,0.937815127428621
+8413524004324,Pure blossom honey,Chocolates,Honeys,True,True,Honeys,15,1.0,True,Honeys,6,0.3600929379463196,True,Honeys,5,0.9811203180579469,True,Honeys,6,0.3600929379463196
+0012511202316,Organic Blue Agave,Honeys,Honeys,False,True,?,15,0.5,False,Honeys,1,-0.04604044556617737,True,Fruit juices,4,0.08023401349782944,False,Honeys,1,-0.04604044556617737
+5000169016657,High Bake Water Biscuits,Biscuits,Biscuits,False,False,Biscuits,1,0.0,False,Biscuits,1,-0.21935582160949707,False,Biscuits,1,-0.4863880127668381,False,Biscuits,1,-0.21935582160949707
+5010525126524,Ecuador dark chocolate 85%,Chocolates,Chocolates,False,False,Chocolates,1,0.0,False,Chocolates,1,-0.2547159790992737,False,Chocolates,1,-0.9734041900373995,False,Chocolates,1,-0.2547159790992737
+0066721026590,Chocolate Sandwich Cookies,Biscuits,Biscuits,False,True,Chocolates,15,1.0,False,Biscuits,1,-0.10823506116867065,True,Chocolates,2,0.9162382744252682,False,Biscuits,1,-0.10823506116867065
+5057545619520,WHOLEMEAL BREAD,Breads,Breads,False,False,Breads,1,0.0,False,Breads,1,-0.24470722675323486,False,Breads,1,-0.9657760211266577,False,Breads,1,-0.24470722675323486
+0623682118575,Confiture De Framboises Pures,Jams,Jams,False,True,?,15,0.5,True,Crisps,5,0.041408464312553406,True,Sodas,10,0.2756950594484806,True,Crisps,5,0.041408464312553406
+0055742552713,Chicken Noodle Soup,Soups,Soups,False,False,Soups,1,0.0,False,Soups,1,-0.15030312538146973,False,Soups,1,-0.9799491027370095,False,Soups,1,-0.15030312538146973
+0066721016201,"Biscuit Graham, P'tite abeille",Pasta,Pasta,False,True,Biscuits,15,1.0,True,Biscuits,11,0.25912028551101685,True,Biscuits,9,0.5987791027873755,True,Biscuits,11,0.25912028551101685
+0060410046678,Original Recipe,Breads,Crisps,True,True,?,15,0.5,True,Pasta,3,0.01813831925392151,True,Biscuits,7,0.13276947662234306,True,Biscuits,7,0.13276947662234306
+6003770009291,Sweet Chilli Jam,Jams,Jams,False,False,Jams,1,0.0,False,Jams,1,-0.1926904022693634,False,Jams,1,-0.9764408173505217,False,Jams,1,-0.1926904022693634
+50168064,Penguin Biscuit Bar,Biscuits,Biscuits,False,False,Biscuits,1,0.0,False,Biscuits,1,-0.11533322930335999,False,Biscuits,1,-0.5559164732694626,False,Biscuits,1,-0.11533322930335999
+0065250008183,Premium Pineapple Juice,Fruit juices,Fruit juices,False,False,Fruit juices,1,0.0,False,Fruit juices,1,-0.20129603147506714,False,Fruit juices,1,-0.9878191305324435,False,Fruit juices,1,-0.20129603147506714
+5055540054582,Clear Honey,Honeys,Honeys,False,False,Honeys,1,0.0,False,Honeys,1,-0.3642621636390686,False,Honeys,1,-0.9656868285965174,False,Honeys,1,-0.3642621636390686
+5900396028167,Matcha,Teas,Teas,False,True,?,15,0.5,True,Pasta,8,0.05655305087566376,False,Teas,1,-0.5200836956501007,True,Pasta,8,0.05655305087566376
+5000128654517,Greek Style Natural Yoghurt,Yogurts,Yogurts,False,False,Yogurts,1,0.0,False,Yogurts,1,-0.3077455759048462,False,Yogurts,1,-0.988947975449264,False,Yogurts,1,-0.3077455759048462
+0832697000595,Plantain Chips Naturally Sweet,Jams,Crisps,True,True,?,15,0.5,True,Crisps,13,0.40706926584243774,True,Crisps,4,0.43405837193131447,True,Crisps,13,0.40706926584243774
+5060413263152,Monty Bojangles Choccy Scoffy Truffles,Chocolates,Chocolates,False,True,?,15,0.5,False,Chocolates,1,-0.04976186156272888,False,Chocolates,1,-0.7482535243034363,False,Chocolates,1,-0.04976186156272888
+0728229135180,ORIGINAL real vegetable chips,Crisps,Crisps,False,True,?,15,0.5,False,Crisps,1,-0.2548045814037323,False,Crisps,1,-0.22072582691907883,False,Crisps,1,-0.2548045814037323
+0649275685781,Pure Pasyorized raw Honey,Honeys,Honeys,False,False,Honeys,1,0.0,False,Honeys,1,-0.2953556478023529,False,Honeys,1,-0.9567989334464073,False,Honeys,1,-0.2953556478023529
+0060410079980,Ridged Potato Chips - Magic Masala,Cheeses,Crisps,True,True,?,15,0.5,True,Crisps,9,0.37044215202331543,True,Crisps,4,0.9120056652463973,True,Crisps,9,0.37044215202331543
+0757528008680,Takis,Crisps,Crisps,False,True,?,15,0.5,True,Pasta,10,0.08933837711811066,True,Teas,8,0.5113360658288002,True,Pasta,10,0.08933837711811066
+06164201,pomegranate juice,Fruit juices,Fruit juices,False,False,Fruit juices,1,0.0,False,Fruit juices,1,-0.24423247575759888,False,Fruit juices,1,-0.9841632643947378,False,Fruit juices,1,-0.24423247575759888
+0059749919661,"Creamed Honey, Canadian",Honeys,Honeys,False,False,Honeys,1,0.0,False,Honeys,1,-0.22605589032173157,False,Honeys,1,-0.9701614715158939,False,Honeys,1,-0.22605589032173157
+07326646,Premium Pure U.S. Honey,Honeys,Honeys,False,False,Honeys,1,0.0,False,Honeys,1,-0.24149110913276672,False,Honeys,1,-0.946478761266917,False,Honeys,1,-0.24149110913276672
+9551011820022,Vida Sakura,Sodas,Sodas,False,True,?,15,0.5,True,Yogurts,12,0.135183647274971,True,Teas,2,0.1597292721271515,True,Yogurts,12,0.135183647274971
+0811430000016,Miel,Honeys,Honeys,False,True,?,15,0.5,True,Jams,3,0.013643667101860046,True,Cheeses,13,0.32897527143359184,True,Cheeses,13,0.32897527143359184
+0059724101043,VECTOR,Breakfast cereals,Breakfast cereals,False,True,?,15,0.5,True,Pasta,7,0.03397573530673981,True,Sodas,12,0.17792033031582832,True,Pasta,7,0.03397573530673981
+0836093011353,Sparkling Strawberry,Sodas,Sodas,False,True,?,15,0.5,True,Fruit juices,2,0.02567046880722046,True,Fruit juices,2,0.6325847655534744,True,Fruit juices,2,0.6325847655534744
+8076809523509,Linguine n. 13,Pasta,Pasta,False,True,?,15,0.5,False,Pasta,1,-0.06658479571342468,True,Cheeses,2,0.6695597246289253,False,Pasta,1,-0.06658479571342468
+0667888171866,Milk Chocolate Toonie,Jams,Chocolates,True,True,Chocolates,15,1.0,True,Chocolates,15,0.4233241081237793,True,Chocolates,7,0.9387271483428776,True,Chocolates,15,0.4233241081237793
+9350271004681,Organic Kombucha Raspberry Lemonade,Sodas,Sodas,False,True,?,15,0.5,True,Fruit juices,3,0.09349372982978821,True,Fruit juices,4,0.8951460085809231,True,Fruit juices,4,0.8951460085809231
+00772303,Cream Of Tomato Soup,Soups,Soups,False,False,Soups,1,0.0,False,Soups,1,-0.19334286451339722,False,Soups,1,-0.9747493031900376,False,Soups,1,-0.19334286451339722
+5059319016450,Crunchy Oat Granola Mixed Berries,Breakfast cereals,Breakfast cereals,False,True,?,15,0.5,False,Breakfast cereals,1,-0.16584575176239014,False,Breakfast cereals,1,-0.6410519033670425,False,Breakfast cereals,1,-0.16584575176239014
+0048500018330,100% Orange Juice,Fruit juices,Fruit juices,False,False,Fruit juices,1,0.0,False,Fruit juices,1,-0.25631606578826904,False,Fruit juices,1,-0.9841078703757375,False,Fruit juices,1,-0.25631606578826904
+0687456286242,Soft mini cookies,Biscuits,Biscuits,False,True,?,15,0.5,False,Biscuits,1,-0.22591117024421692,False,Biscuits,1,-0.7072781585156918,False,Biscuits,1,-0.22591117024421692
+5000232865106,Winter Vegetable Soup,Soups,Soups,False,False,Soups,1,0.0,False,Soups,1,-0.3310664892196655,False,Soups,1,-0.9754113268572837,False,Soups,1,-0.3310664892196655
+0854137000705,Tortilla Chips Sea Salt,Fruit juices,Crisps,True,True,?,15,0.5,True,Crisps,14,0.4203493595123291,True,Crisps,11,0.06543664261698723,True,Crisps,14,0.4203493595123291
+3045320094008,Strawberry Conserve,Jams,Jams,False,True,?,15,0.5,True,Fruit juices,9,0.252964049577713,True,Fruit juices,2,0.5510898530483246,True,Fruit juices,9,0.252964049577713
+0021908133218,Oats and Honey Granola,Breakfast cereals,Breakfast cereals,False,True,Honeys,15,1.0,False,Breakfast cereals,1,-0.049641579389572144,False,Breakfast cereals,1,-0.20546656847000122,False,Breakfast cereals,1,-0.049641579389572144
+5060123602128,Tea Bags One Cup,Teas,Teas,False,False,Teas,1,0.0,False,Teas,1,-0.17908787727355957,False,Teas,1,-0.9536550212651491,False,Teas,1,-0.17908787727355957
+20995553,Dark Chocolate - 85% Cocoa,Chocolates,Chocolates,False,False,Chocolates,1,0.0,False,Chocolates,1,-0.3146596848964691,False,Chocolates,1,-0.982542191632092,False,Chocolates,1,-0.3146596848964691
+1230000097048,HAZELNUT BUTTER DARK CHOCOLATE,Chocolates,Chocolates,False,False,Chocolates,1,0.0,False,Chocolates,1,-0.22266989946365356,False,Chocolates,1,-0.9775945518631488,False,Chocolates,1,-0.22266989946365356
+3948764012600,Coca cola 400,Teas,Sodas,True,True,?,15,0.5,True,Sodas,8,0.18872475624084473,True,Sodas,11,0.9762200085679069,True,Sodas,8,0.18872475624084473
+5010388800166,Red Grape Sparkling Juice Drink,Fruit juices,Fruit juices,False,False,Fruit juices,1,0.0,False,Fruit juices,1,-0.004019439220428467,False,Fruit juices,1,-0.9839378267060965,False,Fruit juices,1,-0.004019439220428467
+04128601,Black tea,Teas,Teas,False,False,Teas,1,0.0,False,Teas,1,-0.3015765845775604,False,Teas,1,-0.9679303995799273,False,Teas,1,-0.3015765845775604
+5059697731860,Dark Chocolate,Chocolates,Chocolates,False,False,Chocolates,1,0.0,False,Chocolates,1,-0.33057695627212524,False,Chocolates,1,-0.95848946319893,False,Chocolates,1,-0.33057695627212524
+00910132,Organic Tomato & Roasted Red Pepper Soup,Soups,Soups,False,False,Soups,1,0.0,False,Soups,1,-0.23806241154670715,False,Soups,1,-0.9799007443943992,False,Soups,1,-0.23806241154670715
+0810063710668,Soda Citron fraise / Strawberry Lemon Soda,Sodas,Sodas,False,False,Sodas,1,0.0,False,Sodas,1,-0.15958088636398315,False,Sodas,1,-0.8973660878837109,False,Sodas,1,-0.15958088636398315
+5050974000822,Ryvita Thins Multi-Seed,Breads,Breads,False,True,?,15,0.5,True,Fruit juices,12,0.14764419198036194,True,Teas,11,0.13473761826753616,True,Fruit juices,12,0.14764419198036194
+5010228005157,NAKED OVEN CHIPS,Crisps,Crisps,False,True,?,15,0.5,False,Crisps,1,-0.14821675419807434,False,Crisps,1,-0.2698761746287346,False,Crisps,1,-0.14821675419807434
+00355827,Sea Salt & Suffolk Cider Vinegar,Crisps,Crisps,False,True,?,15,0.5,True,Fruit juices,3,0.023211926221847534,True,Fruit juices,12,0.07674460485577583,True,Fruit juices,12,0.07674460485577583
+8402001036606,"Yogurt 0,0 sabores",Yogurts,Yogurts,False,False,Yogurts,1,0.0,False,Yogurts,1,-0.3573732078075409,False,Yogurts,1,-0.9722721811849624,False,Yogurts,1,-0.3573732078075409
+4056489159780,Malted Bloomer,Breads,Breads,False,True,?,15,0.5,True,Teas,9,0.09847979247570038,True,Chocolates,14,0.2534147035330534,True,Teas,9,0.09847979247570038
+4088600401270,Whole wheat fusilli,Pasta,Pasta,False,True,?,15,0.5,True,Breakfast cereals,4,0.1376764476299286,False,Pasta,1,-0.6115179359912872,True,Breakfast cereals,4,0.1376764476299286
+0060383723750,Honey,Honeys,Honeys,False,False,Honeys,1,0.0,False,Honeys,1,-0.41495585441589355,False,Honeys,1,-0.9671110017225146,False,Honeys,1,-0.41495585441589355
+5056357909812,Secret centre biscuits,Biscuits,Biscuits,False,False,Biscuits,1,0.0,False,Biscuits,1,-0.21170178055763245,False,Biscuits,1,-0.6157368049025536,False,Biscuits,1,-0.21170178055763245
+5060607910183,Royal Flush Kombucha,Teas,Teas,False,True,?,15,0.5,True,Fruit juices,3,0.01491941511631012,False,Teas,1,-0.41424115002155304,False,Teas,1,-0.41424115002155304
+9010158016762,Espresso gemahlen,Teas,Coffees,True,True,?,15,0.5,True,Coffees,12,0.2168598473072052,True,Coffees,2,0.5964467190206051,True,Coffees,12,0.2168598473072052
+8445291746084,Caramel Latte Flavour,Coffees,Coffees,False,True,?,15,0.5,False,Coffees,1,-0.07854035496711731,False,Coffees,1,-0.24224355816841125,False,Coffees,1,-0.07854035496711731
+0673879000602,Potato Chips,Crisps,Crisps,False,True,?,15,0.5,False,Crisps,1,-0.3222019672393799,False,Crisps,1,-0.9518705848604441,False,Crisps,1,-0.3222019672393799
+0856069005650,Sweet Thins Chocolate Brownie,Biscuits,Biscuits,False,True,Chocolates,15,1.0,True,Chocolates,4,0.23366296291351318,True,Chocolates,2,0.9566427003592253,True,Chocolates,4,0.23366296291351318
+5000128934169,Extra Fruity Raspberry Conserve,Coffees,Jams,True,True,?,15,0.5,True,Fruit juices,9,0.33789151906967163,True,Fruit juices,13,0.361025333404541,True,Fruit juices,9,0.33789151906967163
+0014100054702,Flavor Blasted Xtra Cheddar Baked Snack Crackers,Biscuits,Biscuits,False,True,?,15,0.5,False,Biscuits,1,-0.05301031470298767,True,Cheeses,3,0.7434474490582943,False,Biscuits,1,-0.05301031470298767
+06221010,Soda Gingembre,Sodas,Sodas,False,False,Sodas,1,0.0,False,Sodas,1,-0.14030349254608154,False,Sodas,1,-0.9631154437083751,False,Sodas,1,-0.14030349254608154
+0841631000157,Ethical Bean Coffee Lush,Coffees,Coffees,False,False,Coffees,1,0.0,False,Coffees,1,-0.2935047149658203,False,Coffees,1,-0.9797938920091838,False,Coffees,1,-0.2935047149658203
+5997523329013,Soba Wok Style Classic,Sodas,Pasta,True,True,?,15,0.5,True,Soups,12,0.1414223313331604,True,Soups,2,0.7232469357550144,True,Soups,12,0.1414223313331604
+0099482446161,Mountain Forest Raw Honey,Sodas,Honeys,True,True,Honeys,15,1.0,True,Honeys,8,0.3853667974472046,True,Honeys,9,0.9849022909766063,True,Honeys,8,0.3853667974472046
+00852159,Greek Style Yogurt,Yogurts,Yogurts,False,False,Yogurts,1,0.0,False,Yogurts,1,-0.4216635227203369,False,Yogurts,1,-0.9901816262863576,False,Yogurts,1,-0.4216635227203369
+5011546415499,Nescafe Original,Coffees,Coffees,False,True,?,15,0.5,False,Coffees,1,-0.09332123398780823,False,Coffees,1,-0.8523066267371178,False,Coffees,1,-0.09332123398780823
+5059697767968,Creamy Veg Soup,Soups,Soups,False,False,Soups,1,0.0,False,Soups,1,-0.2795361280441284,False,Soups,1,-0.9697158893104643,False,Soups,1,-0.2795361280441284
+0855823007060,Whole Milk Plain Skyr,Yogurts,Yogurts,False,True,?,15,0.5,False,Yogurts,1,-0.01708558201789856,False,Yogurts,1,-0.0863155722618103,False,Yogurts,1,-0.01708558201789856
+5057008762893,Cottage Cheese,Sodas,Cheeses,True,True,Cheeses,15,1.0,True,Cheeses,13,0.4099504351615906,True,Cheeses,4,0.9900056457263418,True,Cheeses,13,0.4099504351615906
+7622210689382,Choc Chips,Biscuits,Biscuits,False,True,?,15,0.5,True,Crisps,2,0.11731591820716858,True,Chocolates,5,0.9743030497338623,True,Chocolates,5,0.9743030497338623
+0063400030350,D'ITALIANO,Breads,Breads,False,True,?,15,0.5,True,Pasta,3,0.2099573016166687,True,Cheeses,10,0.18849039636552334,True,Cheeses,10,0.18849039636552334
+0059749897655,While Wheat Tortilla,Breads,Breads,False,True,?,15,0.5,False,Breads,1,-0.05539041757583618,False,Breads,1,-0.08527826517820358,False,Breads,1,-0.05539041757583618
+29398065,dark chocolate with freeze-dried raspberries,Chocolates,Chocolates,False,False,Chocolates,1,0.0,False,Chocolates,1,-0.2870837450027466,False,Chocolates,1,-0.9574750964529812,False,Chocolates,1,-0.2870837450027466
+0064819532510,Tartinade de type confiture 3 fruits,Jams,Jams,False,True,?,15,0.5,True,Fruit juices,5,0.2821469306945801,True,Fruit juices,2,0.17370600253343582,True,Fruit juices,5,0.2821469306945801
+00964784,FIG BUTTER,Biscuits,Jams,True,True,?,15,0.5,True,Breakfast cereals,4,0.028345167636871338,True,Breads,2,0.13351625204086304,True,Breakfast cereals,4,0.028345167636871338
+0056800634228,Yogourt,Yogurts,Yogurts,False,True,?,15,0.5,False,Yogurts,1,-0.29371780157089233,False,Yogurts,1,-0.8522608298808336,False,Yogurts,1,-0.29371780157089233
+7613036002455,"GOLD Cappuccino Unsweetened Taste Coffee, 8 Sachets x",Coffees,Coffees,False,False,Coffees,1,0.0,False,Coffees,1,-0.18462204933166504,False,Coffees,1,-0.9839167498284951,False,Coffees,1,-0.18462204933166504
+0689407666141,California Wildflower Honey,Honeys,Honeys,False,False,Honeys,1,0.0,False,Honeys,1,-0.2869857847690582,False,Honeys,1,-0.9862982936901972,False,Honeys,1,-0.2869857847690582
+0068400030409,Sidekick Creamy Chicken,Pasta,Pasta,False,True,?,15,0.5,True,Breakfast cereals,3,0.01583874225616455,True,Soups,9,0.2900652699172497,True,Soups,9,0.2900652699172497
+0056800959802,Probiotic Yogurt Blueberry,Yogurts,Yogurts,False,False,Yogurts,1,0.0,False,Yogurts,1,-0.22610387206077576,False,Yogurts,1,-0.9813189180567861,False,Yogurts,1,-0.22610387206077576
+8412289007366,Queso light,Cheeses,Cheeses,False,True,?,15,0.5,False,Cheeses,1,-0.042002782225608826,False,Cheeses,1,-0.8164031095802784,False,Cheeses,1,-0.042002782225608826
+5010525281506,"Spicy tomato, red pepper and lentil soup",Soups,Soups,False,False,Soups,1,0.0,False,Soups,1,-0.1718570590019226,False,Soups,1,-0.9837473353836685,False,Soups,1,-0.1718570590019226
+5060526430601,Superloaf,Breads,Breads,False,True,?,15,0.5,True,Coffees,2,0.030100226402282715,False,Breads,1,-0.40063314139842987,False,Breads,1,-0.40063314139842987
+8936079140021,VIETNAMESE COFFEE WITH MILK,Coffees,Coffees,False,False,Coffees,1,0.0,False,Coffees,1,-0.19977086782455444,False,Coffees,1,-0.9359333533793688,False,Coffees,1,-0.19977086782455444
+0804531110258,Young Coconut Juice with Pulp,Breakfast cereals,Fruit juices,True,True,Fruit juices,15,1.0,True,Fruit juices,11,0.3244412839412689,True,Fruit juices,14,0.8789716549217701,True,Fruit juices,11,0.3244412839412689
+0059724101722,Frosted Flakes,Breakfast cereals,Breakfast cereals,False,True,?,15,0.5,False,Breakfast cereals,1,-0.025733888149261475,False,Breakfast cereals,1,-0.5606916584074497,False,Breakfast cereals,1,-0.025733888149261475
+5070000126579,Granola Super Nutty,Breakfast cereals,Breakfast cereals,False,True,?,15,0.5,False,Breakfast cereals,1,-0.14005866646766663,False,Breakfast cereals,1,-0.20893041789531708,False,Breakfast cereals,1,-0.14005866646766663
+4061462526459,Whole Wheat Spaghetti,Pasta,Pasta,False,True,?,15,0.5,False,Pasta,1,-0.1595475971698761,False,Pasta,1,-0.9647110784426332,False,Pasta,1,-0.1595475971698761
+0628915670134,Chicken Noodle Soup Mix,Soups,Soups,False,False,Soups,1,0.0,False,Soups,1,-0.1571679413318634,False,Soups,1,-0.9781019252259284,False,Soups,1,-0.1571679413318634
+06780504,Coca Cola,Sodas,Sodas,False,True,?,15,0.5,False,Sodas,1,-0.11240902543067932,False,Sodas,1,-0.9881149259163067,False,Sodas,1,-0.11240902543067932
+0055000407137,Coffee instant,Coffees,Coffees,False,False,Coffees,1,0.0,False,Coffees,1,-0.30439478158950806,False,Coffees,1,-0.9773305299459025,False,Coffees,1,-0.30439478158950806
+20103354,SOFT CHEESE,Sodas,Cheeses,True,True,Cheeses,15,1.0,True,Cheeses,3,0.30210745334625244,True,Cheeses,3,0.9823040836490691,True,Cheeses,3,0.9823040836490691
+5010029208610,Weetabix Oatiflakes,Breakfast cereals,Breakfast cereals,False,True,?,15,0.5,False,Breakfast cereals,1,-0.0945684015750885,False,Breakfast cereals,1,-0.8309489414095879,False,Breakfast cereals,1,-0.0945684015750885
+0073420531249,COTTAGE CHEESE with Peaches,Cheeses,Cheeses,False,False,Cheeses,1,0.0,False,Cheeses,1,-0.13241282105445862,False,Cheeses,1,-0.9793146115262061,False,Cheeses,1,-0.13241282105445862
+0074682107814,Organic Cranberry Pomegranate Juice,Fruit juices,Fruit juices,False,False,Fruit juices,1,0.0,False,Fruit juices,1,-0.2178516387939453,False,Fruit juices,1,-0.9894636274548247,False,Fruit juices,1,-0.2178516387939453
+0078742307305,Raw Honey,Soups,Honeys,True,True,Honeys,15,1.0,True,Honeys,4,0.42747852206230164,True,Honeys,4,0.9729188461787999,True,Honeys,4,0.42747852206230164
+0072979004143,GingerAle,Sodas,Sodas,False,True,?,15,0.5,True,Honeys,12,0.15022467076778412,False,Sodas,1,-0.11123132705688477,True,Honeys,12,0.15022467076778412
+0059749918022,Poulet et gombos,Soups,Soups,False,True,?,15,0.5,True,Pasta,11,0.10586509853601456,False,Soups,1,-0.20328758656978607,True,Pasta,11,0.10586509853601456
+00852166,Greek Style Natural Yogurt,Yogurts,Yogurts,False,False,Yogurts,1,0.0,False,Yogurts,1,-0.4225641191005707,False,Yogurts,1,-0.9904218600713648,False,Yogurts,1,-0.4225641191005707
+5000137002965,Twiglets,Crisps,Crisps,False,True,?,15,0.5,True,Yogurts,6,0.02925160527229309,True,Teas,5,0.2620978131890297,True,Yogurts,6,0.02925160527229309
+0038000138416,Original Potato Crisps,Crisps,Crisps,False,False,Crisps,1,0.0,False,Crisps,1,-0.4659577012062073,False,Crisps,1,-0.9552457826212049,False,Crisps,1,-0.4659577012062073
+0031142359022,Parmesan,Cheeses,Cheeses,False,True,?,15,0.5,True,Pasta,2,0.036066681146621704,False,Cheeses,1,-0.9411395415663719,False,Cheeses,1,-0.9411395415663719
+3497917001928,Chips Saveur camembert,Crisps,Crisps,False,True,?,15,0.5,False,Crisps,1,-0.16850429773330688,True,Cheeses,3,0.7456804849207401,False,Crisps,1,-0.16850429773330688
+5063270112335,Organic Night Time Berry Herbal Tea,Teas,Teas,False,False,Teas,1,0.0,False,Teas,1,-0.19526124000549316,False,Teas,1,-0.9716325039044023,False,Teas,1,-0.19526124000549316
+0063348004369,Maxi Fruits,Biscuits,Biscuits,False,True,?,15,0.5,True,Fruit juices,13,0.31007638573646545,True,Fruit juices,15,0.5912973005324602,True,Fruit juices,13,0.31007638573646545
+0673513401505,Avocado Oil Potato Chips Black Sea Salt,Crisps,Crisps,False,True,?,15,0.5,False,Crisps,1,-0.2546364665031433,False,Crisps,1,-0.9713738418649882,False,Crisps,1,-0.2546364665031433
+20416690,Greek Style Natural Light 2% fat,Breads,Yogurts,True,True,?,15,0.5,True,Yogurts,9,0.09127970039844513,True,Sodas,12,0.7198865576647222,True,Yogurts,9,0.09127970039844513
+0057825750023,Original Balkan Yogurt 2%,Yogurts,Yogurts,False,False,Yogurts,1,0.0,False,Yogurts,1,-0.27682924270629883,False,Yogurts,1,-0.9862534300191328,False,Yogurts,1,-0.27682924270629883
+0064042003214,Vital Almond Oat Bran Cookies,Crisps,Biscuits,True,True,?,15,0.5,True,Biscuits,6,0.19189855456352234,True,Biscuits,15,0.6439403761178255,True,Biscuits,6,0.19189855456352234
+0078935005322,Rye Crispbread,Breads,Breads,False,True,?,15,0.5,False,Breads,1,-0.008695900440216064,False,Breads,1,-0.9567528795450926,False,Breads,1,-0.008695900440216064
+0071730007164,Broad,Pasta,Pasta,False,True,?,15,0.5,True,Soups,5,0.07520721852779388,True,Sodas,6,0.218759473413229,True,Soups,5,0.07520721852779388
+0013764028074,Thin-Sliced Organic Bread Sprouted Whole Grains,Breads,Breads,False,False,Breads,1,0.0,False,Breads,1,-0.20687124133110046,False,Breads,1,-0.9795031739631668,False,Breads,1,-0.20687124133110046
+0016000401068,Honey Nut Cheerios,Pasta,Breakfast cereals,True,True,Honeys,15,1.0,True,Honeys,12,0.2893250286579132,True,Breakfast cereals,13,0.5481040964368731,True,Honeys,12,0.2893250286579132
+0088702070538,Four Fruit Jam,Jams,Jams,False,False,Jams,1,0.0,False,Jams,1,-0.026666998863220215,False,Jams,1,-0.950628905557096,False,Jams,1,-0.026666998863220215
+0859977005279,2% Low-Fat Classic Cottage Cheese,Pasta,Cheeses,True,True,Cheeses,15,1.0,True,Cheeses,3,0.20987197756767273,True,Cheeses,15,0.9842404858209193,True,Cheeses,15,0.9842404858209193
+0084380957543,Apricot Fruit Spread,Jams,Jams,False,True,?,15,0.5,True,Fruit juices,5,0.2912047207355499,False,Jams,1,-0.03093355894088745,True,Fruit juices,5,0.2912047207355499
+5711953193996,"Oat Caramel Macchiato, Chilled Coffee",Pasta,Coffees,True,True,Coffees,15,1.0,True,Coffees,8,0.24826368689537048,True,Coffees,10,0.9768856081645936,True,Coffees,8,0.24826368689537048
+7622210078131,Milka Daim,Soups,Chocolates,True,True,?,15,0.5,True,Cheeses,9,0.120659738779068,True,Sodas,4,0.13718128204345703,True,Cheeses,9,0.120659738779068
+0078742374253,Mozzarella,Cheeses,Cheeses,False,True,?,15,0.5,False,Cheeses,1,-0.12849661707878113,False,Cheeses,1,-0.9903571946779266,False,Cheeses,1,-0.12849661707878113
+0024606941468,PROTEIN LEMONADE grass-fed clear whey isolate,Teas,Teas,False,True,?,15,0.5,True,Fruit juices,12,0.15884225070476532,True,Cheeses,7,0.23386738449335098,True,Fruit juices,12,0.15884225070476532
+0070847811169,Monster Energy,Soups,Sodas,True,True,?,15,0.5,True,Cheeses,4,0.0726294070482254,True,Sodas,5,0.3101903423666954,True,Cheeses,4,0.0726294070482254
+0657082060400,SAN FRANCISCO STYLE SOURDOUGH,Biscuits,Breads,True,True,?,15,0.5,True,Coffees,12,0.15338435769081116,True,Breads,4,0.7284546792507172,True,Coffees,12,0.15338435769081116
+0060383218843,Parmesan Shredded Cheese,Cheeses,Cheeses,False,False,Cheeses,1,0.0,False,Cheeses,1,-0.22931960225105286,False,Cheeses,1,-0.9861268206732348,False,Cheeses,1,-0.22931960225105286
+01399240,Rich Roast instant coffee granules,Coffees,Coffees,False,False,Coffees,1,0.0,False,Coffees,1,-0.2646808326244354,False,Coffees,1,-0.9665436195209622,False,Coffees,1,-0.2646808326244354
+0041716150078,Shredded Parmesan Cheese,Cheeses,Cheeses,False,False,Cheeses,1,0.0,False,Cheeses,1,-0.20286190509796143,False,Cheeses,1,-0.9876858898205683,False,Cheeses,1,-0.20286190509796143
+7610900037360,Mango Papaya Passion Fruit,Yogurts,Yogurts,False,True,?,15,0.5,True,Fruit juices,4,0.20891088247299194,True,Fruit juices,4,0.8475156920030713,True,Fruit juices,4,0.20891088247299194
+5036589253556,Oganic Greek Recipe Strained Natural Yoghurt,Yogurts,Yogurts,False,False,Yogurts,1,0.0,False,Yogurts,1,-0.2624128460884094,False,Yogurts,1,-0.9861198061844334,False,Yogurts,1,-0.2624128460884094
+5038862004558,"Blood orange, pomegranate, orange and lime",Fruit juices,Fruit juices,False,True,?,15,0.5,False,Fruit juices,1,-0.16728535294532776,False,Fruit juices,1,-0.7730486206710339,False,Fruit juices,1,-0.16728535294532776
+5410126006353,Biscoff rol chocolade,Biscuits,Biscuits,False,True,?,15,0.5,True,Chocolates,4,0.11258980631828308,True,Chocolates,2,0.8264448046684265,True,Chocolates,4,0.11258980631828308
+0018627116073,berry fruitful,Breakfast cereals,Breakfast cereals,False,True,?,15,0.5,True,Fruit juices,5,0.2862905263900757,True,Fruit juices,7,0.2730359174311161,True,Fruit juices,5,0.2862905263900757
+05492935,Boisson gazeuse,Sodas,Sodas,False,True,?,15,0.5,True,Pasta,8,0.06760736554861069,True,Cheeses,3,0.45381440222263336,True,Pasta,8,0.06760736554861069
+0062356501303,Confiture d'abricot,Jams,Jams,False,True,?,15,0.5,True,Cheeses,2,0.004594273865222931,True,Sodas,7,0.13684161379933357,True,Sodas,7,0.13684161379933357
+5000119450012,Seedless Raspberry Jam,Jams,Jams,False,False,Jams,1,0.0,False,Jams,1,-0.3033105134963989,False,Jams,1,-0.9757517264224589,False,Jams,1,-0.3033105134963989
+5033060100057,Pipers Lye cross cheddar & onion crisps,Crisps,Crisps,False,False,Crisps,1,0.0,False,Crisps,1,-0.1884934902191162,True,Cheeses,2,0.8257465437054634,False,Crisps,1,-0.1884934902191162
+0628915380675,Greek Yogurt Plain 2%,Yogurts,Yogurts,False,False,Yogurts,1,0.0,False,Yogurts,1,-0.3504944443702698,False,Yogurts,1,-0.9888441547518596,False,Yogurts,1,-0.3504944443702698
+0057961027645,Apple Orange Peach Juice,Fruit juices,Fruit juices,False,False,Fruit juices,1,0.0,False,Fruit juices,1,-0.30845561623573303,False,Fruit juices,1,-0.9894013924058527,False,Fruit juices,1,-0.30845561623573303
+3073780828642,Babybel Light Mini,Coffees,Cheeses,True,True,?,15,0.5,True,Breakfast cereals,12,0.14444731175899506,True,Sodas,3,0.19394971430301666,True,Breakfast cereals,12,0.14444731175899506
+5000119117182,Short Spaghetti Pasta,Pasta,Pasta,False,False,Pasta,1,0.0,False,Pasta,1,-0.3294963836669922,False,Pasta,1,-0.9885663632303476,False,Pasta,1,-0.3294963836669922
+0031200270153,Cran x Pomegranate,Fruit juices,Fruit juices,False,True,?,15,0.5,False,Fruit juices,1,-0.017525076866149902,False,Fruit juices,1,-0.6432223916053772,False,Fruit juices,1,-0.017525076866149902
+0041196466461,Chicken Broth Reduced Sodium,Sodas,Soups,True,True,?,15,0.5,True,Soups,6,0.09572461247444153,True,Soups,2,0.7086489330977201,True,Soups,6,0.09572461247444153
+5056053308780,Moroccan vegetable tagine soup,Soups,Soups,False,False,Soups,1,0.0,False,Soups,1,-0.2710045278072357,False,Soups,1,-0.9736196873709559,False,Soups,1,-0.2710045278072357
+0068200479057,100% Parmesan Grated Cheese,Breads,Cheeses,True,True,Cheeses,15,1.0,True,Cheeses,3,0.2942791283130646,True,Cheeses,9,0.9859867326449603,True,Cheeses,9,0.9859867326449603
+5449000214799,Coke Zero,Cheeses,Sodas,True,True,?,15,0.5,True,Sodas,6,0.18276193737983704,True,Sodas,7,0.9818683882476762,True,Sodas,6,0.18276193737983704
+0068200357515,Halal Yogurt,Yogurts,Yogurts,False,False,Yogurts,1,0.0,False,Yogurts,1,-0.36615341901779175,False,Yogurts,1,-0.9868919212603942,False,Yogurts,1,-0.36615341901779175
+0067200013445,Strawberry Jam,Jams,Jams,False,False,Jams,1,0.0,False,Jams,1,-0.14256083965301514,False,Jams,1,-0.9824247318319976,False,Jams,1,-0.14256083965301514
+0884912116505,BANANA NUT CRUNCH CEREAL,Breakfast cereals,Breakfast cereals,False,False,Breakfast cereals,1,0.0,False,Breakfast cereals,1,-0.2652949094772339,False,Breakfast cereals,1,-0.3439025357365608,False,Breakfast cereals,1,-0.2652949094772339
+20913465,Multivitamin Juice,Fruit juices,Fruit juices,False,False,Fruit juices,1,0.0,False,Fruit juices,1,-0.21840053796768188,False,Fruit juices,1,-0.10755681246519089,False,Fruit juices,1,-0.21840053796768188
+0063209117917,Premium instant coffee medium roast,Coffees,Coffees,False,False,Coffees,1,0.0,False,Coffees,1,-0.2702556848526001,False,Coffees,1,-0.9744215945247561,False,Coffees,1,-0.2702556848526001
+5900397750807,Strawberry Jam,Cheeses,Jams,True,True,Jams,15,1.0,True,Jams,14,0.39137694239616394,True,Jams,4,0.9859639146015979,True,Jams,14,0.39137694239616394
+0021000122844,Cottage Cheese Small Curd,Cheeses,Cheeses,False,False,Cheeses,1,0.0,False,Cheeses,1,-0.1437542736530304,False,Cheeses,1,-0.9797222635243088,False,Cheeses,1,-0.1437542736530304
+5059319013473,Blueberry Wheats,Breakfast cereals,Breakfast cereals,False,True,?,15,0.5,False,Breakfast cereals,1,-0.12124520540237427,False,Breakfast cereals,1,-0.5927349850535393,False,Breakfast cereals,1,-0.12124520540237427
+5000157137623,Steak & Potato Big Soup,Soups,Soups,False,False,Soups,1,0.0,False,Soups,1,-0.2721926271915436,False,Soups,1,-0.978780820267275,False,Soups,1,-0.2721926271915436
+0021130310081,100% Apple Juice,Fruit juices,Fruit juices,False,False,Fruit juices,1,0.0,False,Fruit juices,1,-0.24387875199317932,False,Fruit juices,1,-0.9848635391099378,False,Fruit juices,1,-0.24387875199317932
+0044000028299,Biscuits blueberry,Biscuits,Biscuits,False,False,Biscuits,1,0.0,False,Biscuits,1,-0.23794037103652954,False,Biscuits,1,-0.6358311288058758,False,Biscuits,1,-0.23794037103652954
+0063400138827,"Seeds & Grains Bread with Flax, Sunflower & Rye",Breads,Breads,False,False,Breads,1,0.0,False,Breads,1,-0.06696179509162903,False,Breads,1,-0.9867331486893818,False,Breads,1,-0.06696179509162903
+0021000612239,Cream Cheese,Cheeses,Cheeses,False,False,Cheeses,1,0.0,False,Cheeses,1,-0.2759557366371155,False,Cheeses,1,-0.9881371959345415,False,Cheeses,1,-0.2759557366371155
+8710912010661,Mild Gouda Cheese Slices,Cheeses,Cheeses,False,False,Cheeses,1,0.0,False,Cheeses,1,-0.21458062529563904,False,Cheeses,1,-0.9863744305912405,False,Cheeses,1,-0.21458062529563904
+5060594550157,Superu shroom coffee,Coffees,Coffees,False,False,Coffees,1,0.0,False,Coffees,1,-0.2788020968437195,False,Coffees,1,-0.9014959456399083,False,Coffees,1,-0.2788020968437195
+0627843670155,Tartinade,Jams,Jams,False,True,?,15,0.5,True,Breads,7,0.06026965379714966,True,Sodas,5,0.29251960664987564,True,Breads,7,0.06026965379714966
+8076809529457,INTEGRALE Whole Wheat Fusilli,Pasta,Pasta,False,True,?,15,0.5,True,Breakfast cereals,4,0.08064642548561096,False,Pasta,1,-0.24248915910720825,True,Breakfast cereals,4,0.08064642548561096
+0061077778445,Tortillas,Crisps,Breads,True,True,?,15,0.5,True,Breads,2,0.009631305932998657,True,Pasta,12,0.03086184710264206,True,Pasta,12,0.03086184710264206
+4099100086829,Grated Parmesan Cheese,Cheeses,Cheeses,False,False,Cheeses,1,0.0,False,Cheeses,1,-0.2326938509941101,False,Cheeses,1,-0.9918974963948131,False,Cheeses,1,-0.2326938509941101
+0661475112010,Organic Spaghetti,Pasta,Pasta,False,True,?,15,0.5,False,Pasta,1,-0.18730348348617554,False,Pasta,1,-0.9750661170110106,False,Pasta,1,-0.18730348348617554
+6001048000902,100% Sparkling Apple Juice,Fruit juices,Fruit juices,False,False,Fruit juices,1,0.0,False,Fruit juices,1,-0.13948804140090942,False,Fruit juices,1,-0.987753993482329,False,Fruit juices,1,-0.13948804140090942
+0096619440047,Tortilla Strips,Crisps,Crisps,False,True,?,15,0.5,True,Biscuits,2,0.009448260068893433,True,Cheeses,6,0.016659662127494812,True,Cheeses,6,0.016659662127494812
+0898248001015,skyr blueberry,Yogurts,Yogurts,False,True,?,15,0.5,True,Teas,9,0.10477854311466217,True,Fruit juices,3,0.6251150071620941,True,Teas,9,0.10477854311466217
+0062325500023,Organic Cottage Cheese,Cheeses,Cheeses,False,False,Cheeses,1,0.0,False,Cheeses,1,-0.22020012140274048,False,Cheeses,1,-0.9886063048616052,False,Cheeses,1,-0.22020012140274048
+7614500010617,Dark Chocolate with Honey and Almond Nougat,Chocolates,Chocolates,False,False,Chocolates,1,0.0,False,Chocolates,1,-0.13916301727294922,False,Chocolates,1,-0.9076228775084019,False,Chocolates,1,-0.13916301727294922
+0850031990173,Protein Pasta Curveballs,Pasta,Pasta,False,False,Pasta,1,0.0,False,Pasta,1,-0.18134930729866028,False,Pasta,1,-0.9866709258640185,False,Pasta,1,-0.18134930729866028
+0895681000155,Dahi Yogurt,Yogurts,Yogurts,False,False,Yogurts,1,0.0,False,Yogurts,1,-0.40332505106925964,False,Yogurts,1,-0.9911757896188647,False,Yogurts,1,-0.40332505106925964
+0055742510164,Root Beer,Sodas,Sodas,False,True,?,15,0.5,False,Sodas,1,-0.06183904409408569,False,Sodas,1,-0.9584937701001763,False,Sodas,1,-0.06183904409408569
+0064042555737,Praeventia Dark Chocolate Chip 70% Cocoa & Wild Blueberry Mini Cookies,Biscuits,Biscuits,False,True,Chocolates,15,1.0,False,Biscuits,1,-0.008187860250473022,True,Chocolates,2,0.9689027024433017,False,Biscuits,1,-0.008187860250473022
+0028000774578,Ice Roast,Coffees,Coffees,False,True,?,15,0.5,False,Coffees,1,-0.03983476758003235,True,Sodas,2,0.053694337606430054,False,Coffees,1,-0.03983476758003235
+4250073462533,TERIYAKI NOODLES,Pasta,Pasta,False,True,?,15,0.5,False,Pasta,1,-0.17864182591438293,True,Yogurts,11,0.6868460071273148,False,Pasta,1,-0.17864182591438293
+0096619866267,Parmigiano Reggiano Cheese,Cheeses,Cheeses,False,False,Cheeses,1,0.0,False,Cheeses,1,-0.1588556170463562,False,Cheeses,1,-0.9937388547114097,False,Cheeses,1,-0.1588556170463562
+0060383888466,85% Dark Chocolate,Pasta,Chocolates,True,True,Chocolates,15,1.0,True,Chocolates,4,0.3291865885257721,True,Chocolates,13,0.9660870119696483,True,Chocolates,4,0.3291865885257721
+0060383779337,Chocolate Chip Cookies,Biscuits,Biscuits,False,True,Chocolates,15,1.0,False,Biscuits,1,-0.17425626516342163,True,Chocolates,2,0.9293193649500608,False,Biscuits,1,-0.17425626516342163
+0854183006348,Organic Green Lentil Penne,Pasta,Pasta,False,True,?,15,0.5,True,Yogurts,7,0.07615116238594055,False,Pasta,1,-0.8934764079749584,True,Yogurts,7,0.07615116238594055
+0075002919193,Southwest Raw & Unfiltered Honey,Yogurts,Honeys,True,True,Honeys,15,1.0,True,Honeys,2,0.28878745436668396,True,Honeys,3,0.9743893726263195,True,Honeys,3,0.9743893726263195
+0636046700330,Organic orange mango,Fruit juices,Fruit juices,False,True,?,15,0.5,False,Fruit juices,1,-0.12195861339569092,False,Fruit juices,1,-0.6386590301990509,False,Fruit juices,1,-0.12195861339569092
+4000539670503,Gold Bunny Dark Chocolate,Chocolates,Chocolates,False,False,Chocolates,1,0.0,False,Chocolates,1,-0.27767685055732727,False,Chocolates,1,-0.9893270698376,False,Chocolates,1,-0.27767685055732727
+4099100291254,Everything Sourdough,Breads,Breads,False,True,?,15,0.5,False,Breads,1,-0.02716308832168579,False,Breads,1,-0.6269542425870895,False,Breads,1,-0.02716308832168579
+01810325,Natural Cottage Cheese,Cheeses,Cheeses,False,False,Cheeses,1,0.0,False,Cheeses,1,-0.20312052965164185,False,Cheeses,1,-0.9896706240833737,False,Cheeses,1,-0.20312052965164185
+0064100111394,Pringles Cheddar Cheese,Crisps,Crisps,False,True,Cheeses,15,1.0,True,Cheeses,8,0.37759238481521606,True,Cheeses,2,0.9860593120101839,True,Cheeses,8,0.37759238481521606
+8713621140858,Stroopwafels,Chocolates,Biscuits,True,True,?,15,0.5,True,Pasta,15,0.1404946893453598,True,Biscuits,3,0.11420547962188721,True,Pasta,15,0.1404946893453598
+4056489036135,Lemon tea,Teas,Teas,False,False,Teas,1,0.0,False,Teas,1,-0.23802947998046875,False,Teas,1,-0.9299470912665129,False,Teas,1,-0.23802947998046875
+0060383206956,Ginger turmeric herbal tea,Teas,Teas,False,False,Teas,1,0.0,False,Teas,1,-0.23138687014579773,False,Teas,1,-0.9895422435947694,False,Teas,1,-0.23138687014579773
+0049000061062,LEMON-LIME,Sodas,Sodas,False,True,?,15,0.5,True,Fruit juices,4,0.064191073179245,True,Fruit juices,2,0.642024926841259,True,Fruit juices,4,0.064191073179245
+0048500201831,Blonde roast ICED COFFEE,Cheeses,Coffees,True,True,Coffees,15,1.0,True,Coffees,14,0.3851299285888672,True,Coffees,4,0.9701068527065217,True,Coffees,14,0.3851299285888672
+0078196988501,Honey,Honeys,Honeys,False,False,Honeys,1,0.0,False,Honeys,1,-0.41495585441589355,False,Honeys,1,-0.9671110017225146,False,Honeys,1,-0.41495585441589355
+4099100036381,apple juice,Fruit juices,Fruit juices,False,False,Fruit juices,1,0.0,False,Fruit juices,1,-0.2430131435394287,False,Fruit juices,1,-0.9863548297435045,False,Fruit juices,1,-0.2430131435394287
+01679793,CREAM OF TOMATO SOUP,Soups,Soups,False,False,Soups,1,0.0,False,Soups,1,-0.19334286451339722,False,Soups,1,-0.9641407756134868,False,Soups,1,-0.19334286451339722
+0060410046715,Sea Salt & Malt Vinegar Potato Chips,Crisps,Crisps,False,True,?,15,0.5,False,Crisps,1,-0.32497572898864746,False,Crisps,1,-0.97265589912422,False,Crisps,1,-0.32497572898864746
+0061659021990,Lemon Juice,Coffees,Fruit juices,True,True,Fruit juices,15,1.0,True,Fruit juices,7,0.30977505445480347,True,Fruit juices,10,0.9877700165379792,True,Fruit juices,7,0.30977505445480347
+0060383755539,Twice the fruit apricot spread,Jams,Jams,False,True,?,15,0.5,True,Fruit juices,7,0.28919798135757446,False,Jams,1,-0.16822641342878342,True,Fruit juices,7,0.28919798135757446
+0819215021409,Blackberry Lemonade Sparkling Water,Coffees,Sodas,True,True,?,15,0.5,True,Sodas,5,0.29677966237068176,True,Fruit juices,10,0.7931058560498059,True,Sodas,5,0.29677966237068176
+0776703261788,Buckwheat Soba Noodles,Pasta,Pasta,False,True,?,15,0.5,False,Pasta,1,-0.16164633631706238,True,Soups,3,0.500242929905653,False,Pasta,1,-0.16164633631706238
+4337256673181,Indischer Chai,Teas,Teas,False,True,?,15,0.5,True,Pasta,8,0.0895758718252182,False,Teas,1,-0.8622085619717836,True,Pasta,8,0.0895758718252182
+0041390030703,Instant Tofu Miso Soup Soybean Paste Soup with Tofu,Soups,Soups,False,False,Soups,1,0.0,False,Soups,1,-0.14431825280189514,False,Soups,1,-0.9821163901360705,False,Soups,1,-0.14431825280189514
+0082011570680,Oatmeal sandwich cookies with peanut butter filling,Biscuits,Biscuits,False,True,?,15,0.5,False,Biscuits,1,-0.15353965759277344,False,Biscuits,1,-0.644588727504015,False,Biscuits,1,-0.15353965759277344
+0064912121130,Yogourt Style Ferme Set-Style Plain,Yogurts,Yogurts,False,True,?,15,0.5,False,Yogurts,1,-0.28881123661994934,False,Yogurts,1,-0.42904573678970337,False,Yogurts,1,-0.28881123661994934
+0850180006077,Cashew Butter Nut Butter Filled Dark Chocolate,Chocolates,Chocolates,False,False,Chocolates,1,0.0,False,Chocolates,1,-0.15230968594551086,False,Chocolates,1,-0.9831092618405819,False,Chocolates,1,-0.15230968594551086
+0762111426659,Cold brew,Coffees,Coffees,False,True,?,15,0.5,False,Coffees,1,-0.12247464060783386,False,Coffees,1,-0.5156008750200272,False,Coffees,1,-0.12247464060783386
+0671521240208,Seeds & Grains,Breads,Breads,False,True,?,15,0.5,True,Breakfast cereals,2,0.053212761878967285,True,Sodas,8,0.026357993483543396,True,Sodas,8,0.026357993483543396
+0056800193527,"Probiotic yogurt 2.9% lactose free 3 each of Lemon-lime, Pomegranate-berry, Raspberry-lychee, Mandarin-orange",Yogurts,Yogurts,False,False,Yogurts,1,0.0,False,Yogurts,1,-0.1767394244670868,False,Yogurts,1,-0.9765380541794002,False,Yogurts,1,-0.1767394244670868
+0096619172658,Kirkland Signature Cranberry Walnut Loaf,Breads,Breads,False,True,?,15,0.5,False,Breads,1,-0.07145392894744873,False,Breads,1,-0.7274778690189123,False,Breads,1,-0.07145392894744873
+0052603283670,Organic Chicken & Wild Rice Soup,Cheeses,Soups,True,True,Soups,15,1.0,True,Soups,11,0.41539478302001953,True,Soups,2,0.9835428949445486,True,Soups,11,0.41539478302001953
+8690105000429,Caykur Gray Tea,Coffees,Teas,True,True,Teas,15,1.0,True,Teas,2,0.18355536460876465,True,Teas,4,0.9835953016299754,True,Teas,4,0.9835953016299754
+0628110360007,Brazillian Green,Teas,Teas,False,True,?,15,0.5,True,Coffees,2,0.10804010927677155,True,Sodas,2,0.05815698206424713,True,Sodas,2,0.05815698206424713
+00395496,all butter cookies with pistachio nuts and almonds,Biscuits,Biscuits,False,True,?,15,0.5,False,Biscuits,1,-0.17511150240898132,False,Biscuits,1,-0.5839811526238918,False,Biscuits,1,-0.17511150240898132
+5025125000037,Sourdough grain and seeds,Breakfast cereals,Breads,True,True,?,15,0.5,True,Breads,3,0.13478463888168335,True,Breads,9,0.2010856717824936,True,Breads,9,0.2010856717824936
+29310456,Grano high fibre seeded,Breakfast cereals,Breakfast cereals,False,True,?,15,0.5,True,Yogurts,2,0.01500430703163147,True,Cheeses,6,0.5333916116505861,True,Cheeses,6,0.5333916116505861
+07886379,Orange Blossom Honey,Soups,Honeys,True,True,Honeys,15,1.0,True,Honeys,8,0.32706376910209656,True,Honeys,8,0.9726920321700163,True,Honeys,8,0.32706376910209656
+0028400516679,Spicy Sweet Chili,Crisps,Crisps,False,True,?,15,0.5,True,Honeys,2,0.03846573829650879,True,Soups,4,0.14338818565011024,True,Soups,4,0.14338818565011024
+0014100085980,Whole Grain 15 Grain Bread,Breads,Breads,False,False,Breads,1,0.0,False,Breads,1,-0.19884628057479858,False,Breads,1,-0.9863989182049409,False,Breads,1,-0.19884628057479858
+0848206059565,Tartines Bio Craquantes Sarrasin Organic Buckwheat Crispbread,Breads,Breads,False,True,?,15,0.5,True,Crisps,2,0.019582390785217285,False,Breads,1,-0.8934457823634148,False,Breads,1,-0.8934457823634148
+0065633158177,Avoine Croquante,Breakfast cereals,Breakfast cereals,False,True,?,15,0.5,True,Pasta,3,0.09974423050880432,True,Cheeses,10,0.4789461800828576,True,Cheeses,10,0.4789461800828576
+0064420006707,Fromage Cottage,Cheeses,Cheeses,False,True,?,15,0.5,True,Breads,8,0.10934866964817047,False,Cheeses,1,-0.3046346604824066,True,Breads,8,0.10934866964817047
+0051500090022,Strawberry jam,Jams,Jams,False,False,Jams,1,0.0,False,Jams,1,-0.14256083965301514,False,Jams,1,-0.9890267563750967,False,Jams,1,-0.14256083965301514
+00940863,Lightly salted pitta chips,Crisps,Crisps,False,True,?,15,0.5,False,Crisps,1,-0.23461559414863586,False,Crisps,1,-0.6052844971418381,False,Crisps,1,-0.23461559414863586
+0048500020968,Pure Leaf Black Tea Unsweetened,Teas,Teas,False,False,Teas,1,0.0,False,Teas,1,-0.2921052873134613,False,Teas,1,-0.9865355346119031,False,Teas,1,-0.2921052873134613
+5000119300102,Farfalle,Pasta,Pasta,False,True,?,15,0.5,True,Breakfast cereals,2,0.050954923033714294,True,Cheeses,4,0.22927705198526382,True,Cheeses,4,0.22927705198526382
+5057545744468,Part Baked Baguettes,Breads,Breads,False,True,?,15,0.5,False,Breads,1,-0.032409220933914185,True,Biscuits,3,0.0964050218462944,False,Breads,1,-0.032409220933914185
+5056315501027,Skinny Whip Mint,Chocolates,Chocolates,False,True,?,15,0.5,True,Breakfast cereals,7,0.055418550968170166,True,Fruit juices,4,0.09370721876621246,True,Breakfast cereals,7,0.055418550968170166
+0096619183067,Wildflower Honey,Honeys,Honeys,False,False,Honeys,1,0.0,False,Honeys,1,-0.3303733766078949,False,Honeys,1,-0.9811735281255096,False,Honeys,1,-0.3303733766078949
+3948764041259,Thumbs Up (Indian coke),Sodas,Sodas,False,True,?,15,0.5,True,Chocolates,2,0.007462114095687866,False,Sodas,1,-0.9497831743210554,False,Sodas,1,-0.9497831743210554
+8445291846975,NESCAFE GOLD BLEND,Coffees,Coffees,False,True,?,15,0.5,False,Coffees,1,-0.030999034643173218,True,Sodas,2,0.14846587181091309,False,Coffees,1,-0.030999034643173218
+3245412211393,Chocolat lait,Chocolates,Chocolates,False,True,?,15,0.5,False,Chocolates,1,-0.08672428131103516,False,Chocolates,1,-0.9541093530133367,False,Chocolates,1,-0.08672428131103516
+0014100170969,Goldfish,Biscuits,Biscuits,False,True,?,15,0.5,True,Chocolates,13,0.13830682635307312,True,Cheeses,11,0.02763364464044571,True,Chocolates,13,0.13830682635307312
+1230000097024,Vanilla Crunch Dark Chocolate,Chocolates,Chocolates,False,False,Chocolates,1,0.0,False,Chocolates,1,-0.16834023594856262,False,Chocolates,1,-0.9895027452148497,False,Chocolates,1,-0.16834023594856262
+0064819953001,Tartinade de fraises,Jams,Jams,False,True,?,15,0.5,True,Coffees,11,0.11004039645195007,True,Biscuits,5,0.1417946070432663,True,Coffees,11,0.11004039645195007
+8002270586835,Sparkling Blood Orange Beverage,Sodas,Sodas,False,True,?,15,0.5,False,Sodas,1,-0.0813663899898529,True,Fruit juices,2,0.49593116343021393,False,Sodas,1,-0.0813663899898529
+0705599019630,Honey Oat Granola,Breakfast cereals,Breakfast cereals,False,True,Honeys,15,1.0,True,Honeys,2,0.03045642375946045,True,Honeys,2,0.6373098939657211,True,Honeys,2,0.6373098939657211
+0065633230798,Apple Crisp,Breakfast cereals,Breakfast cereals,False,True,Crisps,15,1.0,True,Crisps,4,0.32136261463165283,True,Fruit juices,2,0.4071882516145706,True,Crisps,4,0.32136261463165283
+4061459803570,spinach & ricotta tortellini,Pasta,Pasta,False,True,?,15,0.5,False,Pasta,1,-0.03766186535358429,True,Cheeses,2,0.39648810029029846,False,Pasta,1,-0.03766186535358429
+5057545877678,Natural Yogurt,Yogurts,Yogurts,False,False,Yogurts,1,0.0,False,Yogurts,1,-0.4800755977630615,False,Yogurts,1,-0.9881586614064872,False,Yogurts,1,-0.4800755977630615
+0059600010872,Minute maid apple raspberry,Fruit juices,Fruit juices,False,True,?,15,0.5,False,Fruit juices,1,-0.06014442443847656,False,Fruit juices,1,-0.36104215681552887,False,Fruit juices,1,-0.06014442443847656
+5057545807316,BUTTERNUT SQUASH & PROVOLA GIRASOLI,Pasta,Pasta,False,True,?,15,0.5,True,Breakfast cereals,6,0.07097430527210236,True,Fruit juices,8,0.34811295196413994,True,Breakfast cereals,6,0.07097430527210236
+0819898010790,Croutons,Breads,Breads,False,True,?,15,0.5,True,Breakfast cereals,7,0.04192093014717102,True,Crisps,3,0.7465154761448503,True,Breakfast cereals,7,0.04192093014717102
+5449000125019,Citrus Punch,Sodas,Sodas,False,True,?,15,0.5,True,Fruit juices,3,0.09676024317741394,True,Fruit juices,2,0.9403833607211709,True,Fruit juices,2,0.9403833607211709
+5057753097349,Tropical Juice Drink,Fruit juices,Fruit juices,False,False,Fruit juices,1,0.0,False,Fruit juices,1,-0.05002850294113159,False,Fruit juices,1,-0.9123915815725923,False,Fruit juices,1,-0.05002850294113159
+50354085,Hartley best of Apricot,Jams,Jams,False,True,?,15,0.5,True,Chocolates,11,0.08271940052509308,True,Fruit juices,5,0.39124956354498863,True,Chocolates,11,0.08271940052509308
+0627987769524,Beetroot Latte Blend,Teas,Teas,False,True,?,15,0.5,True,Sodas,11,0.17483876645565033,True,Coffees,2,0.7142663598060608,True,Sodas,11,0.17483876645565033
+4099100112887,Blackberry Fruit Spread,Jams,Jams,False,True,?,15,0.5,True,Fruit juices,2,0.201450377702713,False,Jams,1,-0.052246227860450745,False,Jams,1,-0.052246227860450745
+4060800135346,Carbonated Citrus Flavoured Soft Drink,Coffees,Sodas,True,True,?,15,0.5,True,Sodas,4,0.27856338024139404,True,Sodas,6,0.9802619806723669,True,Sodas,4,0.27856338024139404
+0009800830039,Nutella Biscuits,Biscuits,Biscuits,False,False,Biscuits,1,0.0,False,Biscuits,1,-0.13033676147460938,False,Biscuits,1,-0.6321451999247074,False,Biscuits,1,-0.13033676147460938
+0096619222155,BLACK CHERRY / CERISE NOIRE,Cheeses,Yogurts,True,True,?,15,0.5,False,Cheeses,1,-0.02440464496612549,True,Chocolates,6,0.43143355473876,False,Cheeses,1,-0.02440464496612549
+0063211024579,Condensed Homestyle Chicken Noodle Soup,Sodas,Soups,True,True,Soups,15,1.0,True,Soups,7,0.3606002628803253,True,Soups,4,0.978103909175843,True,Soups,7,0.3606002628803253
+4062139007806,Lemon Ice Tea,Fruit juices,Teas,True,True,Teas,15,1.0,True,Teas,4,0.24091243743896484,True,Teas,2,0.8783251196146011,True,Teas,4,0.24091243743896484
+0040600027885,Chocolat noir,Chocolates,Chocolates,False,True,?,15,0.5,False,Chocolates,1,-0.09361192584037781,False,Chocolates,1,-0.9865714939078316,False,Chocolates,1,-0.09361192584037781
+0073299000075,Squeezable Honey,Honeys,Honeys,False,False,Honeys,1,0.0,False,Honeys,1,-0.29796701669692993,False,Honeys,1,-0.9576676865108311,False,Honeys,1,-0.29796701669692993
+0021130328277,Strained Greek Yogurt Nonfat Plain,Yogurts,Yogurts,False,False,Yogurts,1,0.0,False,Yogurts,1,-0.36667734384536743,False,Yogurts,1,-0.98979185835924,False,Yogurts,1,-0.36667734384536743
+0871459002330,Dairy-Free Cheddar Mac & Cheese,Pasta,Pasta,False,True,Cheeses,15,1.0,True,Cheeses,6,0.2830114960670471,True,Cheeses,2,0.9677407590206712,True,Cheeses,6,0.2830114960670471
+0064420006387,Fromage cottage 4%,Cheeses,Cheeses,False,True,?,15,0.5,True,Breads,7,0.11358033120632172,False,Cheeses,1,-0.5546012558043003,True,Breads,7,0.11358033120632172
+0021000300471,COTTAGE CHEESE SMALL CURD,Cheeses,Cheeses,False,False,Cheeses,1,0.0,False,Cheeses,1,-0.1437542736530304,False,Cheeses,1,-0.9719557538628578,False,Cheeses,1,-0.1437542736530304
+0055000008839,Hazelnut,Coffees,Coffees,False,True,?,15,0.5,True,Chocolates,5,0.0819065272808075,True,Breakfast cereals,10,0.07174725085496902,True,Chocolates,5,0.0819065272808075
+0858666000052,Confiture de fraises,Jams,Jams,False,True,?,15,0.5,True,Yogurts,9,0.09419003129005432,True,Sodas,8,0.35909194871783257,True,Yogurts,9,0.09419003129005432
+5010477338679,Jordans Natural Muesli,Breakfast cereals,Breakfast cereals,False,True,?,15,0.5,True,Yogurts,10,0.1151997447013855,False,Breakfast cereals,1,-0.8661456517875195,True,Yogurts,10,0.1151997447013855
+0028000157852,Authentic Mexican Hot Chocolate Drink Tablets,Chocolates,Chocolates,False,False,Chocolates,1,0.0,False,Chocolates,1,-0.09376692771911621,False,Chocolates,1,-0.8581421105191112,False,Chocolates,1,-0.09376692771911621
+8801043157735,AnSungTangMyun Noodle,Pasta,Pasta,False,True,?,15,0.5,False,Pasta,1,-0.09043994545936584,True,Soups,2,0.8130157515406609,False,Pasta,1,-0.09043994545936584
+0016600130023,Clubsoda low sodium,Sodas,Sodas,False,True,?,15,0.5,True,Pasta,2,0.008234113454818726,False,Sodas,1,-0.8963884245604277,False,Sodas,1,-0.8963884245604277
+0071757077775,Yakisoba Japanese-Style Stir Fried Noodles with Crisp Vegetables & Savoury Sauce,Soups,Pasta,True,True,Crisps,15,1.0,True,Crisps,4,0.14442870020866394,True,Yogurts,2,0.24159513413906097,True,Crisps,4,0.14442870020866394
+5060298575258,Everyday blossom honey,Honeys,Honeys,False,False,Honeys,1,0.0,False,Honeys,1,-0.2111881673336029,False,Honeys,1,-0.9751633170526475,False,Honeys,1,-0.2111881673336029
+5000354404009,Pasta 'N' Sauce Cheese & Broccoli,Pasta,Pasta,False,False,Pasta,1,0.0,False,Pasta,1,-0.07940083742141724,False,Pasta,1,-0.7567582875490189,False,Pasta,1,-0.07940083742141724
+5054775347735,White Folded Flatbreads,Cheeses,Breads,True,True,?,15,0.5,True,Biscuits,6,0.24063938856124878,True,Breads,3,0.9738060624804348,True,Biscuits,6,0.24063938856124878
+0096619222865,Raw Unfiltered Honey,Honeys,Honeys,False,False,Honeys,1,0.0,False,Honeys,1,-0.3501339256763458,False,Honeys,1,-0.9638597555458546,False,Honeys,1,-0.3501339256763458
+5010044010175,Crumpet Thins,Breads,Breads,False,True,?,15,0.5,True,Soups,6,0.09347082674503326,True,Biscuits,2,0.03294554352760315,True,Soups,6,0.09347082674503326
+5056053308742,Vegetable and roast chicken soup,Soups,Soups,False,False,Soups,1,0.0,False,Soups,1,-0.29466381669044495,False,Soups,1,-0.97398527036421,False,Soups,1,-0.29466381669044495
+4061459823226,Protein granola,Breakfast cereals,Breakfast cereals,False,True,?,15,0.5,False,Breakfast cereals,1,-0.023964494466781616,False,Breakfast cereals,1,-0.04927968978881836,False,Breakfast cereals,1,-0.023964494466781616

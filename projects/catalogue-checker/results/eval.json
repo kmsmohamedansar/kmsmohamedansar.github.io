@@ -1,5 +1,5 @@
 {
-  "ran_at": "2026-10-11T02:51:32+00:00",
+  "ran_at": "2026-10-11T03:29:26+00:00",
   "fake_models": false,
   "machine": "Darwin arm64",
   "python": "3.12.15",
@@ -17,8 +17,9 @@
       "precision": 0.234,
       "recall": 1.0,
       "seconds": 0.0,
-      "per_minute": 7324942,
-      "slow_model_calls": 0
+      "per_minute": 6701681,
+      "slow_model_calls": 0,
+      "top50_real_errors": 24
     },
     {
       "checker": "Meaning match",
@@ -28,9 +29,10 @@
       "flagged": 136,
       "precision": 0.36,
       "recall": 0.98,
-      "seconds": 2.11,
-      "per_minute": 9931,
-      "slow_model_calls": 0
+      "seconds": 0.72,
+      "per_minute": 29353,
+      "slow_model_calls": 0,
+      "top50_real_errors": 33
     },
     {
       "checker": "Zero-shot model",
@@ -40,9 +42,10 @@
       "flagged": 133,
       "precision": 0.376,
       "recall": 1.0,
-      "seconds": 46.26,
-      "per_minute": 454,
-      "slow_model_calls": 350
+      "seconds": 46.48,
+      "per_minute": 452,
+      "slow_model_calls": 350,
+      "top50_real_errors": 30
     },
     {
       "checker": "Team: meaning, then zero-shot",
@@ -52,9 +55,10 @@
       "flagged": 125,
       "precision": 0.392,
       "recall": 0.98,
-      "seconds": 7.63,
-      "per_minute": 2752,
-      "slow_model_calls": 43
+      "seconds": 6.29,
+      "per_minute": 3337,
+      "slow_model_calls": 43,
+      "top50_real_errors": 27
     }
   ]
 }
