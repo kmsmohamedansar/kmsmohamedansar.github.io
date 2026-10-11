@@ -25,6 +25,13 @@ export function systemPrompt(tools: Tools) {
     "Q1 is weeks 1-13, Q2 weeks 14-26, Q3 weeks 27-39, Q4 weeks 40-52. First half is weeks 1-26, second half 27-52.",
     `Brands: ${tools.brands.join(", ")}. Fernhill is the store's own brand. Subcategories: ${tools.subcats.join(", ")}. Regions: North, South, East, West.`,
     "Always get numbers from the tools. Never guess or invent a number. If a name is unclear, call find_product first.",
+    // v2: rules for the two failure types seen in the first real run (wrong weeks, wrong measure).
+    "Weeks: 'before and after week N' or 'after week N' means weeks 1 to N-1 versus weeks N to 52. 'Last N weeks' means weeks 53-N to 52.",
+    "Never guess when something happened. For promotions, price rises, launches or anything that stopped selling, call list_events first and use its weeks.",
+    "For how much a promotion lifted sales, use get_metric with metric promo_lift (it already compares promotion weeks with the others).",
+    "Pick the measure the question names: packs or units means units; price means avg_price; share means share; money, sales or revenue means sales.",
+    "For a trend, call get_metric with by week and report the first and last week's values.",
+    "Answer for the whole brand or category unless the question names a region, product or subcategory. Don't split by region or product unless asked.",
     "Sales are in dollars. When you compare two periods, use compare_periods, which already works per week.",
     "Answer in one to three plain sentences. Include the names and numbers that answer the question, with units.",
   ].join("\n");
