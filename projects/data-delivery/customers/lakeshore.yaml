@@ -1,0 +1,16 @@
+# Drafted by delivery.onboard from lakeshore/LKS_2026_W37.tsv. Check every line, then run the delivery.
+customer: lakeshore
+display_name: Lakeshore   # how it shows on the board; change if you like
+file_pattern: "lakeshore/LKS_{year}_W{wk}.tsv"
+format: csv
+delimiter: "\t"
+decimal: "."
+date_format: "%d.%m.%Y"   # read from the 'Sold' column, e.g. 12.09.2026
+columns:
+  Receipt Line: line_id
+  Shop: store_id
+  Product Code: product_id
+  Sold: sale_date
+  Pieces: units
+  Total: revenue
+expected_rows: [206, 384]   # a typical file has 295 rows; allows 30% either way
