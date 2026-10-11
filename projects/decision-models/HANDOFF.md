@@ -13,7 +13,7 @@ Can a small, cheap "fast decision" model make routine decisions (route a request
 
 ## Steps
 1. **Test set.** (Done 2026-10-11, see NOTES.md.) About 250 made-up requests with known answers for all three questions: 200 for development, 50 held out and scored once at the end. Include hard cases: two problems in one message, sarcasm, very short messages, non-native English. Write the labelling rules down first.
-2. **One interface.** A small Python package with a `SystemOne` base: request in the spec's shape, answer in the spec's shape. Same tests for every adapter.
+2. **One interface.** (Done 2026-10-11, see NOTES.md.) A small Python package with a `SystemOne` base: request in the spec's shape, answer in the spec's shape. Same tests for every adapter.
 3. **Contenders.**
    - Rules (keywords): the baseline.
    - A normal small local model via Ollama (e.g. qwen2.5:7b), prompted to pick from the list and give probabilities.

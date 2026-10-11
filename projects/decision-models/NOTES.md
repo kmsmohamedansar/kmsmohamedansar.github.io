@@ -15,3 +15,13 @@ Project set up. Interface spec saved from the owner (second-hand, to verify agai
   - Held-out 50: 10 urgent, 6 or 7 per team, 21 hard cases.
 - Known weaknesses: all requests written by one author in one sitting, so phrasing is less varied than a real queue; frustration 5 is rare (9 cases), so per-level results there will be noisy; "urgent" is a judgement call on a few borderline rows (e.g. a former employee seeing schedules).
 - Held-out set is now frozen. Don't read it while building contenders.
+
+### Step 2: one interface (done)
+
+- `systemone/` package, standard library only (Python 3.13 here). Requests and responses are plain dicts in the spec's JSON shape, so a real API adapter can pass them straight through.
+  - `schema.py` checks requests and responses against the spec: every question answered, probabilities between 0 and 1 and adding up to 1, `choice` is the most likely option, `score` is the probability-weighted level.
+  - `base.py`: `SystemOne.decide()` checks the request, calls the adapter's `answer()`, checks the response, and raises if anything is off, so a broken adapter can't be scored.
+  - `questions.py`: the three fixed questions, worded from the labelling rules.
+  - `adapters/uniform.py`: the floor (equal odds for everything). Every adapter is listed in `adapters/__init__.py`.
+- Assumption: when an adapter has no confidence of its own, confidence = top probability. The spec's example (0.89 confidence vs 0.82 top probability) shows Jev does something else; unknown what.
+- `python3 -m unittest` from this folder, this cloud session: 12 tests, all pass. Includes the spec's own example as a valid response, 13 kinds of broken response that must be caught, and the shared contract (sample of 10 dev rows covering every hard-case tag, other question types, single question, object state, bad request) that every registered adapter runs.
