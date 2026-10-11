@@ -33,3 +33,15 @@ Project set up. Interface spec saved from the owner (second-hand, to verify agai
 - `adapters/http.py`: `SystemOneHTTP` for any local `/v1/systemone` server (Kev, Strands Decider, Laya). `adapters/jev.py` is the same with a key, off unless `JEV_ENABLED=1` and `JEV_API_KEY`.
 - Model check written up in `docs/models.md`. Hugging Face and docs.typesafe.ai were unreachable from this sandbox, so model cards and the Jev spec are still unverified. Open item: Strands Decider README gives the code licence but not the weights licence.
 - `python3 -m unittest`: 40 tests pass (Ollama, HTTP and Jev against fake servers).
+
+### Step 4: measuring (code done; first runs are the two offline contenders)
+
+- `scripts/run.py <adapter>` runs one contender over dev (or `--heldout`, refused a second time and refused with `--limit`), timing each request; raw answers in `results/raw/` (not committed). `--machine` names the machine in every result.
+- `scripts/score.py` writes `results/<split>/<name>.json`, `summary.md` and `calibration.svg`. Calibration groups answers into 10 confidence bands; ECE (expected calibration error) is the size-weighted gap between stated confidence and actual accuracy.
+- How "right" is judged for calibration: urgent = probability on the right side of 0.5 (confidence = distance from a coin flip); team = chosen team; frustration = most likely level exactly right.
+- First runs, dev set, Claude cloud container (Linux x86_64), see `results/dev/summary.md`:
+  - rules: urgent 0.82, team 0.73, frustration distance 0.90 (exact 0.34); ECE 0.04 / 0.34 / 0.34.
+  - uniform: urgent 0.26, team 0.13, frustration distance 1.29. Its ties break to "urgent", "billing" and level 1, which is why billing is 26/26 for it.
+  - The rules' frustration distance here (0.90) differs from the step 3 sanity look (0.86) because that one rounded the score first; this one uses the score as given.
+- Calibration chart already says something: the rules under-state confidence on team (right more often than they claim) and over-state it on frustration. Screenshot: `docs/screenshots/2026-10-11-step4-calibration-dev.png`.
+- 45 tests pass.
