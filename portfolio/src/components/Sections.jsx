@@ -110,7 +110,7 @@ const BUILT = [
   ["Haloscript", "SwiftUI", "a writing app"],
   ["Sitescout", "TypeScript", "a Chrome extension"],
   ["Integration-in-a-box", "Keycloak", "a working integration"],
-  ["Decision Bench", "Python", "an AI study"],
+  ["My Take on Jev", "Python", "an AI study"],
   ["my digital double", "Claude Code", "a 3D head"],
   ["a catalogue checker", "embeddings", "a data quality check"],
   ["a weekly data delivery", "DuckDB", "a pipeline that stops itself"],

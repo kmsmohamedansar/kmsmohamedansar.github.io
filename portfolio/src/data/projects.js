@@ -25,9 +25,9 @@ export const PROJECTS = [
   {
     slug: "decision-models",
     featured: true,
-    theme: { bg: "#14120f", title: "display" },
-    title: "Decision Bench",
-    kind: "Jev's open rivals, measured",
+    theme: { bg: "#16091a", title: "display" },
+    title: "My Take on Jev",
+    kind: "Its open rivals, measured",
     accent: "rose",
     status: "Independent study · technical report",
     icon: "/shots/decision-models/icon.svg",
