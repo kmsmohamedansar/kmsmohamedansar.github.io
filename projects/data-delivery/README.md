@@ -35,13 +35,13 @@ open delivered/board.html
 
 Schedule and run history: `dagster dev -m orchestration.definitions`, then open http://localhost:3000.
 
-Tests: `python -m pytest` (11 tests, about a minute).
+Tests: `python -m pytest` (15 tests, about a minute).
 
 ## Onboard a new customer
 
 ```bash
-python -m delivery.new_customer                        # Lakeshore's first files arrive
-cp customers/_template.yaml customers/lakeshore.yaml   # fill it in by looking at a file
+python -m delivery.new_customer                                          # Lakeshore's first files arrive
+python -m delivery.onboard landing/lakeshore/LKS_2026_W37.tsv --name lakeshore  # drafts customers/lakeshore.yaml
 python -m delivery.deliver --week 2026-W37
 ```
 

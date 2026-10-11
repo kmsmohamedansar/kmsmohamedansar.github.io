@@ -79,3 +79,28 @@ def test_exact_resent_rows_are_cleaned_not_blocked(tmp_path):
         assert loaded["harbour"] - s["rows_by_customer"]["harbour"] == 37
     finally:
         (config.LANDING / "valley/2026-W39/sales.jsonl").unlink(missing_ok=True)
+
+
+@pytest.mark.parametrize("file, expected", [
+    ("HARBOUR-2026-W37.txt", {"delimiter": ";", "decimal": ",", "date_format": "%d/%m/%Y", "file_pattern": "HARBOUR-{week}.txt"}),
+    ("valley/2026-W37/sales.jsonl", {"format": "jsonl", "date_format": "%m-%d-%Y", "file_pattern": "valley/{week}/sales.jsonl"}),
+    ("northside_sales_2026-W37.csv", {"delimiter": ",", "date_format": "%Y-%m-%d"}),
+])
+def test_onboarding_helper_drafts_the_same_settings_as_written_by_hand(tmp_path, file, expected):
+    import yaml
+    from delivery.onboard import draft
+
+    text, notes = draft(config.LANDING / file, "x")
+    got = yaml.safe_load(text)
+    for k, v in expected.items():
+        assert got[k] == v
+    name = file.split("_")[0].split("-")[0].split("/")[0].lower()
+    by_hand = load_customer(config.CUSTOMERS_DIR / f"{name if name != 'northside' else 'northside'}.yaml")
+    assert got["columns"] == by_hand.columns
+
+
+def test_onboarding_helper_warns_about_an_unusually_small_file():
+    from delivery.onboard import draft
+
+    _, notes = draft(config.LANDING / "northside_sales_2026-W37.csv", "x")
+    assert any("look unusual" in n and "90" in n for n in notes)

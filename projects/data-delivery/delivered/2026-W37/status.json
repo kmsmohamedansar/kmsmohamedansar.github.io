@@ -1,8 +1,8 @@
 {
   "week": "2026-W37",
   "status": "delivered",
-  "at": "2026-10-11T04:08:55+00:00",
-  "seconds": 9.9,
+  "at": "2026-10-11T04:17:57+00:00",
+  "seconds": 6.6,
   "loads": [
     {
       "customer": "harbour",
@@ -34,6 +34,7 @@
   ],
   "rows_by_customer": {
     "harbour": 599,
+    "lakeshore": 279,
     "northside": 1011,
     "valley": 424
   },
