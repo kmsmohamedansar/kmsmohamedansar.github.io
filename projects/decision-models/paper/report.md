@@ -234,7 +234,7 @@ Machine: MacBook Air M4, 16 GB (models); a Linux cloud container (rules and even
 | `qwen2.5:7b`, prompt v1 | 0.84 | 0.43 | 0.94 | 0.06 / 0.35 / 0.19 | 12.2 | 0 |
 | `qwen2.5:7b`, prompt v2 | 0.80 | 0.61 | 0.79 | 0.15 / 0.26 / 0.43 | 7.8 | 0 |
 | Kev-0.8B | 0.77 | 0.60 | 1.08 | 0.15 / **0.07** / 0.40 | **0.31** | 0 |
-| Strands Decider 2B | **[pending]** | | | | | |
+| Strands Decider 2B | 0.80 | **0.85** | 1.10 | 0.08 / 0.21 / **0.02** | 1.64 | 0 |
 | Laya-typed-decisions | **[pending]** | | | | | |
 
 Remember that the rules' development numbers are optimistic: the keywords were chosen while reading these requests.
@@ -255,21 +255,37 @@ It also fails differently. It handles sales (17 of 23) and how-to (10 of 24), wh
 
 Its weak spot is frustration: answers are off by 1.08 levels on average, and its probabilities across the five levels are often nearly flat, with a stated confidence of 0. Kev's documentation says its confidence values are "not measured accuracy rates", and on this question it effectively says "I don't know", which is at least honest.
 
-### 5.3 Calibration
+### 5.3 The second decision model: Strands Decider 2B
+
+Strands Decider 2B was the strongest contender on the development set:
+
+| | Strands Decider 2B | Kev-0.8B | `qwen2.5:7b`, prompt v2 |
+|---|---|---|---|
+| Team accuracy | **0.85** | 0.60 | 0.61 |
+| Urgent accuracy | 0.80 | 0.77 | 0.80 |
+| Frustration off by | 1.10 | 1.08 | **0.79** |
+| Calibration error (urgent / team / frustration) | **0.08** / 0.21 / **0.02** | 0.15 / **0.07** / 0.40 | 0.15 / 0.26 / 0.43 |
+| Median seconds per request | 1.64 | **0.31** | 7.8 |
+
+It picks the right team 85% of the time, 24 points above the general model, in about a fifth of the time. Unlike every other contender it is strong on every team: integrations 20 of 23, how-to 19 of 24, feedback 19 of 25, the teams the general model could barely see.
+
+Its frustration scores are no better than anyone's (off by 1.10 levels), but its stated confidence on them is almost perfectly honest (calibration error 0.02): it is unsure, and it says so. That is exactly the property that makes fast-then-slow possible.
+
+### 5.4 Calibration
 
 **[pending: the calibration chart with every contender, and what it shows.]**
 
 Already visible with two contenders: the keyword rules are *more modest than they need to be* on team (when they say 50%, they are right about 80% of the time) and *overconfident* on frustration. A model's raw accuracy says nothing about which of these it is.
 
-### 5.4 Hard cases
+### 5.5 Hard cases
 
 **[pending: accuracy on two-problem, sarcastic, very short and non-native requests, per contender.]**
 
-### 5.5 Fast then slow
+### 5.6 Fast then slow
 
 **[pending: chosen pair, threshold, share handed over, accuracy, time saved.]**
 
-### 5.6 Held-out set
+### 5.7 Held-out set
 
 **[pending: every contender, scored once.]**
 
@@ -298,7 +314,8 @@ At 10,000 tickets a day, using development-set numbers (held-out numbers will re
 | `qwen2.5:7b`, prompt v1 (12.2 s per request) | about 34 hours | about 1.4, running all day | about 5,700 |
 | `qwen2.5:7b`, prompt v2 (7.8 s per request) | about 22 hours | about 0.9, running all day | about 3,900 |
 | Kev-0.8B (0.31 s per request) | about 52 minutes | a small fraction of one | about 4,000 |
-| Other decision models | **[pending]** | | |
+| Strands Decider 2B (1.64 s per request) | about 4.5 hours | about 0.2 | about 1,500 |
+| Laya-typed-decisions | **[pending]** | | |
 | Best fast-then-slow pair | **[pending]** | | |
 
 Two things are already clear. A general 7-billion-parameter model on a laptop is too slow to be the first step for a busy desk on its own: it needs more than one machine running around the clock just to keep up with an illustrative volume. And the cheapest option, keyword rules, is fast enough for any volume but sends thousands of tickets a day to the wrong place.
@@ -367,6 +384,7 @@ Every claim in this report, and where its evidence is.
 | Threshold rule fixed before any model run | `scripts/cascade.py`; `NOTES.md`, 11 October 2026 |
 | Scale figures in section 6 (volume illustrative, rates measured) | Formulas in section 6.1; rates from `results/dev/*.json` |
 | Prompt v2: team 0.61, 142 of 200 in first three, frustration ECE 0.43 | `NOTES.md`; owner's run on MacBook Air M4 16 GB |
+| Strands Decider 2B on dev: team 0.85, frustration ECE 0.02, 1.64 s | `NOTES.md`; owner's run on MacBook Air M4 16 GB |
 | Kev-0.8B on dev: team 0.60 (ECE 0.07), 0.31 s per request | `NOTES.md`; owner's run on MacBook Air M4 16 GB |
 | Prompt v1: 174 of 200 team answers in the first three options | `NOTES.md`; owner's run on MacBook Air M4 16 GB |
 | Development results in section 5.1 | `results/dev/*.json`, machine named in each |

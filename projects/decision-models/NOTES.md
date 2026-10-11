@@ -97,3 +97,11 @@ MacBook Air M4, 16 GB. Line-up updated in `docs/models.md`: Kev-4B/9B and Clef s
 - Picks: technical-support 65, billing 41, account-access 25, sales 20, security-privacy 17, how-to 15, integrations-api 9, feedback 8. Every team gets picked; no pile-up.
 - Headline so far: on team, matches a 7B general model (0.60 vs 0.61) at 25x the speed, with far more honest confidence (ECE 0.07 vs 0.26). Weak on frustration: nearly flat probabilities, confidence often 0.
 - Strands Decider rejected null option descriptions (Kev accepted them). Choice criteria now send each option's own name as its description, for every server. Kev re-run with this exact shape so all decision models get identical requests; the earlier Kev numbers are replaced.
+
+### Strands Decider 2B (qwen3.5-v1-2610), dev (MacBook Air M4 16GB, owner's run; `--device mps`)
+
+- 200/200. Median 1.64 s per request.
+- Urgent 0.80 (ECE 0.08); team **0.85** (ECE 0.21); frustration distance 1.10, exact 0.42 (ECE **0.02**).
+- Per team: billing 26/26, account-access 22/23, technical-support 25/30, integrations-api 20/23, security-privacy 20/26, sales 19/23, how-to 19/24, feedback 19/25. Strong everywhere.
+- Best team accuracy of any contender so far (24 points above qwen2.5:7b v2 at a fifth of the time); frustration answers weak but their stated confidence almost perfectly honest.
+- Note: its server has no /v1/models (404) and requires string descriptions for choice options.
