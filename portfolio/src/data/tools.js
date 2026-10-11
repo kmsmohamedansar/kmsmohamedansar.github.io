@@ -82,6 +82,7 @@ export const TOOL_INFO = {
   LangChain: "A library that connects language models to data and tools, such as a search index.",
   "Weights & Biases": "A service that records machine learning training runs so you can compare them.",
   "facebook/bart-large-mnli": "A free language model that can judge whether a label fits a piece of text without being trained on it (zero-shot).",
+  "Ollama (qwen2.5:7b)": "Ollama runs AI language models on your own computer, free and offline. qwen2.5:7b is an open model with about seven billion parameters that can call tools.",
   "Ollama (4B local model)": "Runs an AI language model on your own computer, free and offline. 4B means about four billion parameters: small enough for a laptop.",
   Transformers: "The kind of AI model behind modern language tools. Libraries of them can be downloaded and run for free.",
   "Hugging Face Transformers": "A free library of ready-trained AI models for text, images and more.",

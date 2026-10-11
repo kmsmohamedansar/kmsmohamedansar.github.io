@@ -183,29 +183,37 @@ function ToolLog({ calls }: { calls: Call[] }) {
 
 function Results() {
   const [runs, setRuns] = useState<Run[]>([]);
+  const [holdout, setHoldout] = useState<Run[]>([]);
   useEffect(() => {
-    fetch("/api/results").then((r) => r.json()).then((d) => setRuns(d.runs)).catch(() => {});
+    fetch("/api/results").then((r) => r.json()).then((d) => (setRuns(d.runs), setHoldout(d.holdout ?? []))).catch(() => {});
   }, []);
   if (!runs.length) return <main className="results"><p>No test runs yet. Run <code>npm run eval -- rules</code>.</p></main>;
   const qs = runs[0].results;
-  const name = (r: Run) => `${r.summary.brain === "rules" ? "Brain A" : "Brain B"} ${r.summary.label}${r.summary.model ? ` (${r.summary.model})` : ""}`;
+  const name = (r: Run) => `${r.summary.brain === "rules" ? "Brain A" : "Brain B"} ${r.summary.label.replace(/^qwen2\.5-7b-?/, "") || "v1"}${r.summary.model ? ` · ${r.summary.model}` : ""}`;
+  const card = (r: Run) => (
+    <div className={`score ${r.summary.brain}`} key={name(r)}>
+      <h3>{name(r)}</h3>
+      <div className="stack" aria-label={`${r.summary.correct} correct, ${r.summary.partial} partly, ${r.summary.wrong} wrong`}>
+        <span className="c" style={{ flex: r.summary.correct }} />
+        <span className="p" style={{ flex: r.summary.partial }} />
+        <span className="w" style={{ flex: r.summary.wrong }} />
+      </div>
+      <p><b>{r.summary.correct}</b> correct · <b>{r.summary.partial}</b> partly · <b>{r.summary.wrong}</b> wrong</p>
+      <p className="small">median {r.summary.median_ms < 1000 ? `${r.summary.median_ms} ms` : `${(r.summary.median_ms / 1000).toFixed(1)} s`} per question · {r.summary.platform}</p>
+    </div>
+  );
   return (
     <main className="results">
       <p className="lead">The same 30 questions, each with a known answer, put to each brain. Every number here comes from a saved test run in <code>eval/results</code>.</p>
-      <div className="scores">
-        {runs.map((r) => (
-          <div className="score" key={name(r)}>
-            <h3>{name(r)}</h3>
-            <div className="stack" aria-label={`${r.summary.correct} correct, ${r.summary.partial} partly, ${r.summary.wrong} wrong`}>
-              <span className="c" style={{ flex: r.summary.correct }} />
-              <span className="p" style={{ flex: r.summary.partial }} />
-              <span className="w" style={{ flex: r.summary.wrong }} />
-            </div>
-            <p><b>{r.summary.correct}</b> correct · <b>{r.summary.partial}</b> partly · <b>{r.summary.wrong}</b> wrong</p>
-            <p className="small">median {r.summary.median_ms.toLocaleString()} ms · {r.summary.ran_at.slice(0, 10)} · {r.summary.platform}</p>
-          </div>
-        ))}
-      </div>
+      <div className="scores">{runs.map(card)}</div>
+      {holdout.length > 0 && (
+        <>
+          <h2>Held-out check</h2>
+          <p className="lead">Ten more questions, written after the fixes, in new wording. They show whether the fixes were general or tuned to the 30.</p>
+          <div className="scores">{holdout.map(card)}</div>
+        </>
+      )}
+      <h2>Question by question</h2>
       <div className="grid-wrap">
         <table className="grid">
           <thead>

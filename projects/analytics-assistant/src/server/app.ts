@@ -27,9 +27,10 @@ export function buildApp(db: DatabaseSync, opts: { webDir?: string; resultsDir?:
   // The test results, for the Results tab. Only files the eval wrote.
   app.get("/api/results", async () => {
     const dir = opts.resultsDir ?? "eval/results";
-    if (!existsSync(dir)) return { runs: [] };
-    const runs = readdirSync(dir).filter((f) => f.endsWith(".json")).sort().map((f) => JSON.parse(readFileSync(join(dir, f), "utf8")));
-    return { runs };
+    const read = (d: string) => (existsSync(d) ? readdirSync(d).filter((f) => f.endsWith(".json")).sort().reverse().map((f) => JSON.parse(readFileSync(join(d, f), "utf8"))) : []);
+    // Brain B first, then A; newest version first within each.
+    const order = (runs: any[]) => runs.sort((a, b) => a.summary.brain.localeCompare(b.summary.brain) || b.summary.label.localeCompare(a.summary.label));
+    return { runs: order(read(dir)), holdout: order(read(join(dir, "holdout"))) };
   });
 
   app.get("/api/about", async () => ({ planted: Object.values(PLANTED).map((p) => p.text) }));

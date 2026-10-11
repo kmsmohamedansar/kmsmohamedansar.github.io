@@ -12,7 +12,8 @@
     "partial": 1,
     "wrong": 1,
     "median_ms": 1,
-    "max_ms": 17
+    "max_ms": 17,
+    "rescored_at": "2026-10-11T01:47:28.829Z"
   },
   "results": [
     {

@@ -31,3 +31,25 @@ Failure types, by count:
 **Tests.** 31 passing: data, metrics, tools (including read-only database and row limit), brain A, brain B wiring, the MCP server started as a real process over stdio, and the web server.
 
 **Screenshots.** `docs/screenshots/01` to `09`, desktop and phone.
+
+## 2026-10-11
+
+**Brain B, first real attempt.** On the owner's Mac (Apple silicon), the Homebrew build of Ollama (0.40.2) failed on every question with `llama-server binary not found`. The eval still saved a 0/30 file. That file was deleted (it measured a broken install, not the model), and the eval now asks the model one warm-up question first and saves nothing if it fails. Installing the official Ollama app fixed it.
+
+**Also found:** the `.gitignore` rule `data/` (meant for the generated database) also hid `src/data/`, so a fresh clone couldn't run. Fixed to `/data/`, checked with a clean copy.
+
+**Brain B v1 (qwen2.5:7b, real run).** 19 correct, 7 partly correct, 4 wrong. Median 5.2 seconds per question. It answered the questions brain A couldn't parse ("cheapest", "grew the most", "why", "when") with no special rules.
+
+Failure types, by count:
+1. Wrong weeks: guessed the promotion as weeks 30 to 39 (it was 20 to 23) instead of calling `list_events`, put week 30 on the wrong side of "after week 30", got "last 4 weeks" wrong, split by region when not asked. 7 questions.
+2. Wrong measure: dollars when the question said packs, a total when it asked for a trend, prices per product instead of the brand. 4 questions.
+
+**Fix (brain B v2).** Six general lines added to the model's instructions: how to read before/after and last-N-weeks, look up events instead of guessing, which measure each word means, report first and last week for a trend, and don't split unless asked. No answers written in.
+
+**Brain B v2 (real run).** 20 correct, 5 partly correct, 5 wrong. Median 6.0 seconds. Fixed five questions (5, 21, 26, 29, 30) but four that v1 got right went wrong (3, 9, 14, 17). Net: one more correct, one more wrong. A small model is sensitive to its instructions: more rules changed behaviour on questions they weren't about. Each version was run once, so run-to-run variation isn't measured.
+
+**Held-out, brain B v2.** 8 correct, 1 partly correct, 1 wrong. The same as brain A v2.
+
+**Scorer bug found while checking by hand.** A name check matched "West" inside "lowest", so a wrong brain B v2 answer (#14, said South) was marked correct. The scorer now matches whole words. All saved results were re-scored from their stored text with `eval/rescore.ts`; only that one answer changed (brain B v2 went from 21/5/4 to 20/5/5).
+
+**Hand check of brain B's "correct" answers.** Two are generous: #16 (v2) names the right product next to a wrong one, and #26 (v2) gives the right price with the wrong promotion weeks. Kept as scored; reported here.

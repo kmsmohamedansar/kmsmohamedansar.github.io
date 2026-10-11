@@ -25,7 +25,9 @@ export function score(text: string, e: Expected): { verdict: Verdict; passed: nu
   const nums = numbersIn(text);
   const missing: string[] = [];
   let passed = 0, total = 0;
-  for (const n of e.names ?? []) (total++, t.includes(n.toLowerCase()) ? passed++ : missing.push(n));
+  // Whole words only: "West" must not match inside "lowest" (a v1 scorer bug).
+  const has = (n: string) => new RegExp(`(^|[^a-z0-9])${n.toLowerCase().replace(/[.*+?^${}()|[\]\\&]/g, "\\$&")}($|[^a-z0-9])`).test(t);
+  for (const n of e.names ?? []) (total++, has(n) ? passed++ : missing.push(n));
   for (const v of e.numbers ?? []) (total++, nums.some((x) => close(x, v)) ? passed++ : missing.push(String(v)));
   if (e.anyWords) (total++, e.anyWords.some((w) => new RegExp(`\\b${w}\\b`).test(t)) ? passed++ : missing.push(e.anyWords.join("/")));
   const verdict: Verdict = total === 0 || passed === total ? "correct" : passed / total >= 0.5 ? "partial" : "wrong";

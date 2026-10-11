@@ -8,11 +8,12 @@
     "node": "v26.8.1",
     "platform": "darwin-arm64",
     "questions": 30,
-    "correct": 21,
+    "correct": 20,
     "partial": 5,
-    "wrong": 4,
+    "wrong": 5,
     "median_ms": 6027,
-    "max_ms": 13196
+    "max_ms": 13196,
+    "rescored_at": "2026-10-11T01:47:28.824Z"
   },
   "results": [
     {
@@ -309,8 +310,10 @@
         ]
       },
       "answer": "The South region had the lowest sales of Sunny Spoon Honey Rings in the second half, with $9,473.59 in sales.",
-      "verdict": "correct",
-      "missing": [],
+      "verdict": "wrong",
+      "missing": [
+        "West"
+      ],
       "ms": 5200,
       "tools": [
         "get_metric"
