@@ -1,7 +1,7 @@
 import { ArrowLeft, ArrowUpRight, Lock } from "lucide-react";
 
 const IMG = (name) => `${import.meta.env.BASE_URL}shots/haloscript/${name}`;
-const SITE_URL = "https://kmsmohamedansar.github.io/haloscript-site/";
+const SITE_URL = "https://ansarbuilds.dev/haloscript-site/";
 const VIOLET = "#b9a8ff";
 
 const STATS = [
