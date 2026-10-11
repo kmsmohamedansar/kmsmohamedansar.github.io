@@ -1,0 +1,8 @@
+flowchart LR
+  S1[("raw.sales")] --> M1["stg_sales<br/>(view)"]
+  M1 --> M2["weekly_sales<br/>(table, delivered)"]
+  M2 --> T1["test: one row per order line"]
+  M2 --> T2["test: dates inside the week"]
+  M2 --> T3["tests: no empty IDs, dates, units, revenue"]
+  M2 --> T4["test: row count in normal range"]
+  S2[("raw.expectations<br/>from settings files")] --> T4

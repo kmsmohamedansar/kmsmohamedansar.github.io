@@ -33,6 +33,10 @@ export const TOOL_INFO = {
   SwiftData: "Apple's built-in way for apps to save data on the device.",
 
   // Data
+  DuckDB: "A fast database that runs inside your program or on your laptop, with no server. Good for analytics.",
+  dbt: "A tool for building clean tables from raw ones using plain SQL files, with tests that check the results.",
+  Dagster: "A scheduler for data pipelines: it runs the steps in order, retries when something fails, and keeps a history of every run.",
+  YAML: "A simple text format for settings files, readable by people and programs.",
   "Open Food Facts": "A free, open database of food products from around the world, built by volunteers, with names, ingredients and categories.",
   pytest: "Python's most popular tool for automated tests.",
   matplotlib: "Python's standard library for drawing charts.",

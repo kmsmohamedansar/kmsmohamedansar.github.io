@@ -1,0 +1,14 @@
+# Valley Drug Co: one JSON record per line, and its own field names.
+customer: valley
+display_name: Valley Drug Co
+file_pattern: "valley/{week}/sales.jsonl"
+format: jsonl
+date_format: "%m-%d-%Y"
+columns:
+  id: line_id
+  location: store_id
+  product: product_id
+  sold_on: sale_date
+  count: units
+  amount: revenue
+expected_rows: [250, 600]

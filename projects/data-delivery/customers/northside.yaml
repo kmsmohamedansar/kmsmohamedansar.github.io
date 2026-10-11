@@ -1,0 +1,16 @@
+# Northside Pharmacy: a comma-separated file every Sunday night.
+customer: northside
+display_name: Northside Pharmacy
+file_pattern: "northside_sales_{week}.csv"
+format: csv
+delimiter: ","
+decimal: "."
+date_format: "%Y-%m-%d"
+columns:            # their column name: our column name
+  TransactionID: line_id
+  StoreCode: store_id
+  SKU: product_id
+  SaleDate: sale_date
+  Qty: units
+  NetAmount: revenue
+expected_rows: [700, 1300]

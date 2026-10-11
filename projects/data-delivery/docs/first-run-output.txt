@@ -1,0 +1,12 @@
+2026-W36: DELIVERED in 8.4s
+2026-W37: DELIVERED in 8.0s
+2026-W38: BLOCKED in 7.2s
+   Northside Pharmacy: rejected. Header doesn't match the settings file. Unexpected: PromoFlag.
+2026-W39: BLOCKED in 8.0s
+   Valley Drug Co: missing. No file yet: landing/valley/2026-W39/sales.jsonl
+2026-W40: BLOCKED in 8.6s
+   Valley Drug Co: dates_inside_the_week. 6 failing rows (e.g. VA4000356, VA4000248, VA4000143, VA4000404, VA4000181)
+   Harbour Chemists: one_row_per_order_line. 12 failing rows (e.g. HA4000256, HA4000503, HA4000327, HA4000583, HA4000233)
+2026-W41: BLOCKED in 7.6s
+   Northside Pharmacy: row_count_in_normal_range. 1 failing rows (e.g. 90)
+Board: /home/user/kmsmohamedansar.github.io/projects/data-delivery/delivered/board.html

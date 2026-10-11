@@ -1,0 +1,16 @@
+# Harbour Chemists: semicolons, day/month/year dates, and decimal commas.
+customer: harbour
+display_name: Harbour Chemists
+file_pattern: "HARBOUR-{week}.txt"
+format: csv
+delimiter: ";"
+decimal: ","
+date_format: "%d/%m/%Y"
+columns:
+  ref: line_id
+  branch: store_id
+  item: product_id
+  date: sale_date
+  quantity: units
+  value_gbp: revenue
+expected_rows: [400, 800]

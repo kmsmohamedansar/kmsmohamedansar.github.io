@@ -1,0 +1,6 @@
+duckdb>=1.1
+dbt-duckdb>=1.9
+dagster>=1.9
+dagster-webserver>=1.9
+pyyaml>=6
+pytest>=8

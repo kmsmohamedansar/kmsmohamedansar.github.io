@@ -1,0 +1,17 @@
+# Copy this to customers/<name>.yaml and fill in every line by looking at
+# one of the customer's files. Files starting with _ are ignored.
+customer: lowercase_short_name
+display_name: Full Name As Shown On The Board
+file_pattern: "folder/file_name_{week}.ext"   # {week} is 2026-W41; or build it from {year} and {wk} (2026, 41)
+format: csv              # csv (any delimiter) or jsonl
+delimiter: ","           # "\t" for tab-separated
+decimal: "."             # "," if they write 12,50
+date_format: "%Y-%m-%d"  # %d day, %m month, %Y year, e.g. "%d.%m.%Y"
+columns:                 # their column name: our column name (all six needed)
+  TheirLineId: line_id
+  TheirStore: store_id
+  TheirProduct: product_id
+  TheirDate: sale_date
+  TheirQuantity: units
+  TheirAmount: revenue
+expected_rows: [100, 1000]   # a normal week's row count, low to high
