@@ -41,8 +41,8 @@ Every contender gets the same request in the same shape (the System One shape fr
 |---|---|---|---|
 | Even odds | The floor: knows nothing | n/a | cloud container |
 | Rules | Keyword lists, written from the labelling rules | n/a | cloud container |
-| *pending* | Ollama `qwen2.5:7b`, asked for probabilities | Apache-2.0 (to confirm) | owner's Mac |
-| *pending* | Kev, Strands Decider, Laya (see `docs/models.md`) | to confirm on each model card | owner's Mac |
+| *pending* | Ollama `qwen2.5:7b`, asked for probabilities | Apache-2.0 | owner's Mac |
+| *pending* | Kev, Strands Decider, Laya (see `docs/models.md`) | Apache-2.0 | owner's Mac |
 | Jev | Paid API; only if a key is supplied | commercial | not run |
 
 ### Measuring
@@ -82,4 +82,4 @@ Every claim on the portfolio page, and where its evidence is.
 | Threshold rule fixed before any model run | `scripts/cascade.py` docstring; NOTES.md, 2026-10-11 |
 | Rules on dev: urgent 0.82, team 0.73 (optimistic) | `results/dev/rules.json` (cloud container) |
 | *pending*: every model result | `results/dev/*.json`, `results/heldout/*.json`, with machine named |
-| *pending*: model licences | `docs/models.md`, after checking each model card |
+| All models Apache-2.0 | `docs/models.md` (licence check, 2026-10-11) |

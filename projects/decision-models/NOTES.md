@@ -67,3 +67,4 @@ MacBook Air M4, 16 GB. Line-up updated in `docs/models.md`: Kev-4B/9B and Clef s
 - Laya: run `laya-typed-decisions` as is. Company name: Quillstack. Line-up confirmed.
 - Licences: Apache-2.0 for Strands Decider 2B, Kev-0.8B and Laya, relayed from a Gemini summary of the HF cards. Two checkpoint-name gaps listed in docs/models.md to close on the Mac.
 - Jev spec: owner checked docs.typesafe.ai/api, no differences.
+- Licence follow-up: the exact checkpoints we run (Strands qwen3.5-v1-2610, laya-typed-decisions, kev-0.8b, Ollama qwen2.5:7b) all Apache-2.0, links in docs/models.md.

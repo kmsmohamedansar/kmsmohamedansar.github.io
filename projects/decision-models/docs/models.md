@@ -27,10 +27,16 @@ Relayed by the owner from a Gemini summary of the Hugging Face cards (not opened
 | `jaredpalmer/kev-0.8b` | Apache-2.0 | Qwen3.5-0.8B-Base, Apache-2.0 |
 | `convaiinnovations/laya` | Apache-2.0 | ModernBERT-large, Apache-2.0 |
 
-Gaps to close on the Mac before downloading (a glance at the card's licence tag is enough):
-- Strands: the summary names `hobson-v21`; the README's reference model is `strands-decider-2B-qwen3.5-v1-2610`. Confirm the licence on whichever one we run.
-- Laya: the summary covers base `laya`; we run `laya-typed-decisions`. Confirm that card too.
-- `qwen2.5:7b`: Apache-2.0 per Qwen's release; confirm on the Ollama page.
+Follow-up, same day (owner, via Gemini, with links to the cards):
+
+| Checkpoint we run | Licence | Source |
+|---|---|---|
+| `StrandsAgents/strands-decider-2B-qwen3.5-v1-2610` | Apache-2.0 | [HF card](https://huggingface.co/StrandsAgents/strands-decider-2B-qwen3.5-v1-2610) |
+| `convaiinnovations/laya-typed-decisions` | Apache-2.0 | [HF card](https://huggingface.co/convaiinnovations/laya-typed-decisions) |
+| `jaredpalmer/kev-0.8b` | Apache-2.0 | [HF card](https://huggingface.co/jaredpalmer/kev-0.8b) |
+| Ollama `qwen2.5:7b` | Apache-2.0 | [Ollama licence blob](https://ollama.com/library/qwen2.5:7b/blobs/832dd9e00a68) |
+
+Note for later: Qwen2.5 3B and 72B use a different, more restrictive Qwen licence. Don't swap to those sizes without rechecking. Laya-typed-decisions' licence was described as inherited from base Laya; worth a glance at the card's own licence tag when downloading.
 
 Owner decisions, 2026-10-11: run `laya-typed-decisions` as is (no fine-tuning on our data); keep the name Quillstack; line-up below confirmed.
 
