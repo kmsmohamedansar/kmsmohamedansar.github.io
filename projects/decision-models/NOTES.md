@@ -105,3 +105,9 @@ MacBook Air M4, 16 GB. Line-up updated in `docs/models.md`: Kev-4B/9B and Clef s
 - Per team: billing 26/26, account-access 22/23, technical-support 25/30, integrations-api 20/23, security-privacy 20/26, sales 19/23, how-to 19/24, feedback 19/25. Strong everywhere.
 - Best team accuracy of any contender so far (24 points above qwen2.5:7b v2 at a fifth of the time); frustration answers weak but their stated confidence almost perfectly honest.
 - Note: its server has no /v1/models (404) and requires string descriptions for choice options.
+
+### Kev-0.8B re-run with the shared request shape (option names as descriptions)
+
+- Urgent 0.77 (ECE 0.15); team 0.60 (ECE **0.14**, was 0.07 with null descriptions); frustration 1.08, exact 0.42 (ECE 0.40). Median 0.34 s.
+- Per team: billing 20/26, account-access 18/23, technical-support 23/30, integrations-api 7/23, security-privacy 19/26, sales 17/23, how-to 9/24, feedback 8/25.
+- Same accuracy, but calibration on team doubled: sending option names as descriptions instead of nothing changed how sure Kev is, not which team it picks. These numbers replace the first run.

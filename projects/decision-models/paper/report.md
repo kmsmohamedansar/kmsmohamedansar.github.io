@@ -233,7 +233,7 @@ Machine: MacBook Air M4, 16 GB (models); a Linux cloud container (rules and even
 | Rules | 0.82 | 0.73 | 0.90 | 0.04 / 0.34 / 0.34 | 0.0001 | 0 |
 | `qwen2.5:7b`, prompt v1 | 0.84 | 0.43 | 0.94 | 0.06 / 0.35 / 0.19 | 12.2 | 0 |
 | `qwen2.5:7b`, prompt v2 | 0.80 | 0.61 | 0.79 | 0.15 / 0.26 / 0.43 | 7.8 | 0 |
-| Kev-0.8B | 0.77 | 0.60 | 1.08 | 0.15 / **0.07** / 0.40 | **0.31** | 0 |
+| Kev-0.8B | 0.77 | 0.60 | 1.08 | 0.15 / **0.14** / 0.40 | **0.34** | 0 |
 | Strands Decider 2B | 0.80 | **0.85** | 1.10 | 0.08 / 0.21 / **0.02** | 1.64 | 0 |
 | Laya-typed-decisions | **[pending]** | | | | | |
 
@@ -246,10 +246,12 @@ Kev-0.8B is less than an eighth the size of `qwen2.5:7b` and was tested exactly 
 | | Kev-0.8B | `qwen2.5:7b`, prompt v2 |
 |---|---|---|
 | Team accuracy | 0.60 | 0.61 |
-| Calibration error, team | **0.07** | 0.26 |
-| Median seconds per request | **0.31** | 7.8 |
+| Calibration error, team | **0.14** | 0.26 |
+| Median seconds per request | **0.34** | 7.8 |
 
-It matches the general model's accuracy, about 25 times faster, and its confidence is close to honest: when it says it is 70% sure of the team, it is right about 70% of the time. That is the System One promise, measured on requests it had never seen.
+It matches the general model's accuracy, more than 20 times faster, and its confidence on the team is more honest (calibration error 0.14 against 0.26).
+
+One detail shows how sensitive these numbers are. Kev was first run with no description for each option (its server accepts that); Strands Decider requires one, so every decision model was then re-run with each option's own name as its description. Kev's accuracy did not change at all, but its team calibration error doubled, from 0.07 to 0.14. The words around an option change how sure the model is, even when they don't change what it picks. The table uses the re-run, so every decision model saw identical requests.
 
 It also fails differently. It handles sales (17 of 23) and how-to (10 of 24), which the general model almost never chose, and is weak on integrations (7 of 23) and feedback (7 of 25). It picks every team; there is no pile-up on the first options.
 
@@ -264,8 +266,8 @@ Strands Decider 2B was the strongest contender on the development set:
 | Team accuracy | **0.85** | 0.60 | 0.61 |
 | Urgent accuracy | 0.80 | 0.77 | 0.80 |
 | Frustration off by | 1.10 | 1.08 | **0.79** |
-| Calibration error (urgent / team / frustration) | **0.08** / 0.21 / **0.02** | 0.15 / **0.07** / 0.40 | 0.15 / 0.26 / 0.43 |
-| Median seconds per request | 1.64 | **0.31** | 7.8 |
+| Calibration error (urgent / team / frustration) | **0.08** / 0.21 / **0.02** | 0.15 / **0.14** / 0.40 | 0.15 / 0.26 / 0.43 |
+| Median seconds per request | 1.64 | **0.34** | 7.8 |
 
 It picks the right team 85% of the time, 24 points above the general model, in about a fifth of the time. Unlike every other contender it is strong on every team: integrations 20 of 23, how-to 19 of 24, feedback 19 of 25, the teams the general model could barely see.
 
@@ -313,7 +315,7 @@ At 10,000 tickets a day, using development-set numbers (held-out numbers will re
 | Rules | about 1 second | a fraction of one | about 2,700 |
 | `qwen2.5:7b`, prompt v1 (12.2 s per request) | about 34 hours | about 1.4, running all day | about 5,700 |
 | `qwen2.5:7b`, prompt v2 (7.8 s per request) | about 22 hours | about 0.9, running all day | about 3,900 |
-| Kev-0.8B (0.31 s per request) | about 52 minutes | a small fraction of one | about 4,000 |
+| Kev-0.8B (0.34 s per request) | about 57 minutes | a small fraction of one | about 4,000 |
 | Strands Decider 2B (1.64 s per request) | about 4.5 hours | about 0.2 | about 1,500 |
 | Laya-typed-decisions | **[pending]** | | |
 | Best fast-then-slow pair | **[pending]** | | |
@@ -385,7 +387,7 @@ Every claim in this report, and where its evidence is.
 | Scale figures in section 6 (volume illustrative, rates measured) | Formulas in section 6.1; rates from `results/dev/*.json` |
 | Prompt v2: team 0.61, 142 of 200 in first three, frustration ECE 0.43 | `NOTES.md`; owner's run on MacBook Air M4 16 GB |
 | Strands Decider 2B on dev: team 0.85, frustration ECE 0.02, 1.64 s | `NOTES.md`; owner's run on MacBook Air M4 16 GB |
-| Kev-0.8B on dev: team 0.60 (ECE 0.07), 0.31 s per request | `NOTES.md`; owner's run on MacBook Air M4 16 GB |
+| Kev-0.8B on dev: team 0.60 (ECE 0.14; 0.07 before the shared request shape), 0.34 s | `NOTES.md`; owner's run on MacBook Air M4 16 GB |
 | Prompt v1: 174 of 200 team answers in the first three options | `NOTES.md`; owner's run on MacBook Air M4 16 GB |
 | Development results in section 5.1 | `results/dev/*.json`, machine named in each |
 | Licences of every model tested | `docs/models.md` |
