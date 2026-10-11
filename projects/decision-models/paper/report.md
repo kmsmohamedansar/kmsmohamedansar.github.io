@@ -198,7 +198,24 @@ This matters beyond this project. A common way to get "probabilities" out of a g
 
 Prompt v2 asks instead for **one answer, which must be one of the allowed options, plus a confidence from 0 to 1**. The named answer gets the stated confidence; the rest is shared among the other options (on the frustration scale, among the neighbouring levels only, so the score is not pulled toward the middle). Both versions are kept in the results. Adjusting the prompt on the development set is what the development set is for; the held-out set was not touched.
 
-**[pending: v2 results on the development set, and whether the position effect disappears.]**
+With v2, on the same 200 requests and the same machine:
+
+| | Prompt v1 (probability per option) | Prompt v2 (one answer plus confidence) |
+|---|---|---|
+| Team accuracy | 0.43 | **0.61** |
+| Answers in the first three options | 174 of 200 | 142 of 200 |
+| Urgent accuracy | 0.84 | 0.80 |
+| Frustration off by | 0.94 | **0.79** |
+| Calibration error, urgent | **0.06** | 0.15 |
+| Calibration error, team | 0.35 | **0.26** |
+| Calibration error, frustration | **0.19** | 0.43 |
+| Median seconds per request | 12.2 | **7.8** |
+
+v2 fixed most of the accuracy problem: integrations went from 1 to 10 of 23, sales from 3 to 11, feedback from 3 to 17. It was also faster, because the answer it writes is much shorter. The pile-up shrank but did not disappear, and one team, how-to, is still almost never chosen (2 picks in 200).
+
+But the fix had a price that accuracy alone would hide: **the confidence got less honest.** When the model writes its own confidence as a number, it is overconfident. Calibration error on frustration more than doubled, from 0.19 to 0.43, and on urgency went from 0.06 to 0.15. The v1 probability table, where position bias didn't bite (urgent has only two options), was the better-calibrated of the two.
+
+So the two ways of asking a general model for probabilities fail in different directions: a full table is distorted by the order of options, and a self-reported confidence is inflated. Neither gives what a System One model promises by design: a calibrated probability for every answer, in one pass. That is the gap the open decision models claim to fill, and section 5 tests whether they do.
 
 The open decision models avoid this problem by design: they score every allowed answer in one pass rather than writing a list, so the order of options in the prompt should not matter. Whether that holds in practice is part of what section 5 measures.
 
@@ -215,7 +232,7 @@ Machine: MacBook Air M4, 16 GB (models); a Linux cloud container (rules and even
 | Even odds | 0.26 | 0.13 | 1.29 | 0.24 / 0.01 / 0.24 | 0.0000 | 0 |
 | Rules | 0.82 | 0.73 | 0.90 | 0.04 / 0.34 / 0.34 | 0.0001 | 0 |
 | `qwen2.5:7b`, prompt v1 | 0.84 | 0.43 | 0.94 | 0.06 / 0.35 / 0.19 | 12.2 | 0 |
-| `qwen2.5:7b`, prompt v2 | **[pending]** | | | | | |
+| `qwen2.5:7b`, prompt v2 | 0.80 | 0.61 | 0.79 | 0.15 / 0.26 / 0.43 | 7.8 | 0 |
 | Kev-0.8B | **[pending]** | | | | | |
 | Strands Decider 2B | **[pending]** | | | | | |
 | Laya-typed-decisions | **[pending]** | | | | | |
@@ -263,7 +280,7 @@ At 10,000 tickets a day, using development-set numbers (held-out numbers will re
 |---|---|---|---|
 | Rules | about 1 second | a fraction of one | about 2,700 |
 | `qwen2.5:7b`, prompt v1 (12.2 s per request) | about 34 hours | about 1.4, running all day | about 5,700 |
-| `qwen2.5:7b`, prompt v2 | **[pending]** | | |
+| `qwen2.5:7b`, prompt v2 (7.8 s per request) | about 22 hours | about 0.9, running all day | about 3,900 |
 | Each decision model | **[pending]** | | |
 | Best fast-then-slow pair | **[pending]** | | |
 
@@ -332,6 +349,7 @@ Every claim in this report, and where its evidence is.
 | Every answer checked against the System One shape | `systemone/schema.py`; `tests/` |
 | Threshold rule fixed before any model run | `scripts/cascade.py`; `NOTES.md`, 11 October 2026 |
 | Scale figures in section 6 (volume illustrative, rates measured) | Formulas in section 6.1; rates from `results/dev/*.json` |
+| Prompt v2: team 0.61, 142 of 200 in first three, frustration ECE 0.43 | `NOTES.md`; owner's run on MacBook Air M4 16 GB |
 | Prompt v1: 174 of 200 team answers in the first three options | `NOTES.md`; owner's run on MacBook Air M4 16 GB |
 | Development results in section 5.1 | `results/dev/*.json`, machine named in each |
 | Licences of every model tested | `docs/models.md` |

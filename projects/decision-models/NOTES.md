@@ -75,3 +75,12 @@ MacBook Air M4, 16 GB. Line-up updated in `docs/models.md`: Kev-4B/9B and Clef s
 - Urgent 0.84 (ECE 0.06); team 0.43 (ECE 0.35); frustration distance 0.94, exact 0.41 (ECE 0.19).
 - **Failure, recorded:** team answers piled onto the first options listed. Picks: technical-support 96, billing 54, account-access 24, feedback 9, security-privacy 9, sales 3, integrations-api 3, how-to 2. Per team: billing 26/26, account-access 20/23, technical-support 25/30, but integrations-api 1/23, how-to 1/24. Asking a small model for a probability on every option, in a fixed order, measured the prompt as much as the model.
 - Fix on dev (allowed; held-out untouched): prompt v2 asks for one allowed answer plus a confidence. v1 stays in the results as the honest first attempt.
+
+### Ollama qwen2.5:7b, dev, prompt v2 (MacBook Air M4 16GB, owner's run)
+
+- 200/200, no repairs at all. Median 7.8 s per request (v1: 12.2 s; v2 writes a much shorter answer).
+- Urgent 0.80 (ECE 0.15); team 0.61 (ECE 0.26); frustration distance 0.79, exact 0.40 (ECE 0.43).
+- Per team: billing 26/26, account-access 20/23, technical-support 22/30, integrations-api 10/23, security-privacy 14/26, sales 11/23, how-to 2/24, feedback 17/25.
+- Picks: billing 61, technical-support 56, account-access 25, feedback 17, security-privacy 15, integrations-api 13, sales 11, how-to 2. First three options: 142 of 200 (v1: 174). The pile-up shrank but didn't vanish, and how-to is almost never chosen.
+- **Trade-off, recorded:** v2 fixed accuracy (team +18 points) but made stated confidence less honest. Frustration ECE went from 0.19 to 0.43 and urgent from 0.06 to 0.15: confidence the model *writes down* is overconfident, while v1's probability table was better calibrated where the position bias didn't hit (urgent has only two options).
+- Rules still lead on team on dev (0.73), but their dev numbers are optimistic by construction.
