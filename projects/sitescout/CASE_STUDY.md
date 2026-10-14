@@ -1,6 +1,6 @@
 # Sitescout: case study
 
-> **Short version.** At work, product information is collected by a scheduled process that runs about once a week. Running it off-schedule is a big deal. I built **Undercut**, a Chrome extension that lets someone get product information **on demand**, whenever they need it, straight into one spreadsheet. That tool is private. **Sitescout** is my public re-creation of the same ideas, pointed at a different subject (stock prices instead of retail), so anyone can see how it looks, how it works, and how it behaves when things go wrong.
+> **Short version.** At work, product information is collected by a scheduled process that runs about once a week. Running it off-schedule is a big deal. I built **Sidecar**, a Chrome extension that lets someone get product information **on demand**, whenever they need it, straight into one spreadsheet. That tool is private. **Sitescout** is my public re-creation of the same ideas, pointed at a different subject (stock prices instead of retail), so anyone can see how it looks, how it works, and how it behaves when things go wrong.
 
 This page is written so that someone who has never written code can follow it. Technical words are explained the first time they appear, and there is a [glossary](#glossary) at the end.
 
@@ -8,7 +8,7 @@ This page is written so that someone who has never written code can follow it. T
 
 ## Contents
 
-- [Chapter 1. At work: Undercut](#chapter-1-at-work-undercut)
+- [Chapter 1. At work: Sidecar](#chapter-1-at-work-sidecar)
 - [Chapter 2. The public rebuild: Sitescout](#chapter-2-the-public-rebuild-sitescout)
   - [What it does, in one minute](#what-it-does-in-one-minute)
   - [Who it is for: a real use case](#who-it-is-for-a-real-use-case)
@@ -29,7 +29,7 @@ This page is written so that someone who has never written code can follow it. T
 
 ---
 
-## Chapter 1. At work: Undercut
+## Chapter 1. At work: Sidecar
 
 ### The problem
 
@@ -43,7 +43,7 @@ There were also several small, separate browser tools, one per site, each with i
 
 ### What I built
 
-I built Undercut as an **on-demand** alternative that sits completely outside the scheduled process, and folded those separate tools into it: **one Chrome side panel** (a panel that opens on the right of the browser, next to the page you are on). A dropdown at the top picks the retailer, and the panel shows the steps built for that retailer: a category or list of brands for one, postal codes plus a brand for another, a store finder for a third.
+I built Sidecar as an **on-demand** alternative that sits completely outside the scheduled process, and folded those separate tools into it: **one Chrome side panel** (a panel that opens on the right of the browser, next to the page you are on). A dropdown at the top picks the retailer, and the panel shows the steps built for that retailer: a category or list of brands for one, postal codes plus a brand for another, a store finder for a third.
 
 Every path ends the same way: **one spreadsheet file (a CSV) with a small, consistent set of columns**, whichever site you picked.
 
@@ -55,13 +55,9 @@ It runs in the **development environment only**, not production: it's an interna
 
 Lead. I came up with the idea, built it as an on-demand alternative to the scheduled process, merged the earlier single-site tools into this one extension, worked out how each site serves its data, and made the design decisions below.
 
-### Why it's called Undercut
+### Why it's called Sidecar
 
-The name comes from Formula One.
-
-In a race, every car has to stop in the pit lane for fresh tyres. The **undercut** is a strategy for the car in second place: instead of waiting to pit at the same time as the leader, it pits **earlier**. On fresh tyres it can set much faster laps while the leader is still on worn ones. By the time the leader makes their own stop, the chasing car has gained enough time to come out of the pits **ahead**.
-
-The tool does the same thing with data. The scheduled weekly run is the leader's planned pit stop. Undercut doesn't wait for it: it goes early, on demand, and gets you the answer first.
+It rides alongside the page you're already on, in Chrome's side panel, the way a sidecar rides alongside a motorbike. It doesn't replace the scheduled process; it sits next to it and gets you the answer on demand.
 
 ### Key decisions
 
@@ -85,11 +81,11 @@ Getting product details stopped being something you waited a week for, or asked 
 
 ### Why there's a public rebuild
 
-Undercut is a private work tool. I can't show its code, its screens, or the sites it reads. That leaves a portfolio page that is only words. **Sitescout** fixes that: it carries the same ideas into a different subject, stock market pages, and everything about it is public.
+Sidecar is a private work tool. I can't show its code, its screens, or the sites it reads. That leaves a portfolio page that is only words. **Sitescout** fixes that: it carries the same ideas into a different subject, stock market pages, and everything about it is public.
 
-![How the ideas carried over from Undercut to Sitescout](docs/diagrams/4-undercut-to-sitescout.svg)
+![How the ideas carried over from Sidecar to Sitescout](docs/diagrams/4-sidecar-to-sitescout.svg)
 
-| Lesson from Undercut | How it shows up in Sitescout |
+| Lesson from Sidecar | How it shows up in Sitescout |
 |---|---|
 | Get answers on demand instead of waiting for a scheduled run | Paste tickers, press Scout, get the numbers now. |
 | One module per retailer became hard to maintain | **One "recipe" per kind of page.** A recipe is a short list of what to grab and where it lives. A new kind of page needs a new recipe, not new code. |
@@ -126,7 +122,7 @@ The same pattern fits plenty of other people:
 - **A student** pulling numbers for a finance assignment.
 - **A small business** keeping an eye on listed competitors.
 
-The deeper point, and the reason this is a proof of concept for Undercut's ideas: **on demand beats waiting for the next scheduled run.** And **any job of the form "visit a list of similar pages and copy the same handful of facts from each" can be done this way.** Swap the recipe and the same engine reads a different kind of page.
+The deeper point, and the reason this is a proof of concept for Sidecar's ideas: **on demand beats waiting for the next scheduled run.** And **any job of the form "visit a list of similar pages and copy the same handful of facts from each" can be done this way.** Swap the recipe and the same engine reads a different kind of page.
 
 ### A walk through the screens
 
@@ -186,7 +182,7 @@ A quick comparison of the common ways to pull information from websites:
 | **Playwright / Puppeteer** | Newer remote-control tools for browsers, from Microsoft and Google. | Fast, reliable automation and testing. | Same: built for developers running scripts. **I did use Playwright, but only to test Sitescout** (see below). |
 | **Python + requests + BeautifulSoup** | Download the raw page text and pick it apart, with no browser at all. | Simple, very fast on plain pages. | Yahoo builds much of its page with JavaScript after it loads, so the raw download is often missing the numbers. |
 | **An official data API** | A service that hands over data in a clean format, often paid. | The most reliable option when one exists. | Paid or rate-limited, and the point here is to show page-reading skills. |
-| **Chrome extension (what Sitescout is)** | Code that runs inside your own Chrome, using Chrome's tab and scripting tools. | Runs where people already work. One click to start. Sees the page exactly as you do, after JavaScript has run. | Chosen. It's the same approach Undercut uses at work, which is the point of this rebuild. |
+| **Chrome extension (what Sitescout is)** | Code that runs inside your own Chrome, using Chrome's tab and scripting tools. | Runs where people already work. One click to start. Sees the page exactly as you do, after JavaScript has run. | Chosen. It's the same approach Sidecar uses at work, which is the point of this rebuild. |
 
 ### Under the hood
 
@@ -399,7 +395,7 @@ To re-make the screenshots and demo CSV: `npm run demo`. To re-make the diagram 
 | Respects "reduce motion" | `MotionConfig reducedMotion="user"` in `src/panel/main.tsx`; `prefers-reduced-motion` in `styles.css` |
 | Doesn't use Selenium or Playwright at runtime | `package.json`: Playwright is a dev dependency only; runtime uses `chrome.tabs` and `chrome.scripting` in `runner.ts` |
 | Works in a real Chrome on Yahoo Finance | Checked by hand by Mohamed on macOS, 2026-10-10 (NOTES.md); no recorded results yet |
-| Undercut facts in Chapter 1 | Mohamed's own account; private work tool, not in this repo |
+| Sidecar facts in Chapter 1 | Mohamed's own account; private work tool, not in this repo |
 
 ---
 

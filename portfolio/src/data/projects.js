@@ -231,7 +231,7 @@ export const PROJECTS = [
     status: "Open source, runs in Chrome",
     cardShot: "/shots/sitescout/card.png",
     hook: "Paste stock tickers, press Scout, and watch a Chrome side panel read each Yahoo Finance page and hand you the numbers as cards and one CSV.",
-    role: "Built it myself: a public re-creation of the ideas behind Undercut, my work tool.",
+    role: "Built it myself: a public re-creation of the ideas behind Sidecar, my work tool.",
     tags: ["Chrome", "MV3", "TypeScript", "React", "Framer Motion"],
     stack: ["TypeScript", "React", "Framer Motion", "Chrome extension (Manifest V3)", "Vite", "Vitest", "Playwright (tests only)", "Mermaid"],
     stackUsage: {
@@ -251,7 +251,7 @@ export const PROJECTS = [
       "/shots/sitescout/05-failed-loudly.webp",
     ],
     story: [
-      "At work I built Undercut, which gets product data on demand instead of waiting for a weekly scheduled run. It's a private tool, so I can't show it. Sitescout carries the same ideas into a different subject, the stock market, where everything can be public.",
+      "At work I built Sidecar, which gets product data on demand instead of waiting for a weekly scheduled run. It's a private tool, so I can't show it. Sitescout carries the same ideas into a different subject, the stock market, where everything can be public.",
       "Picture a junior analyst whose manager wants a table of 15 companies every Monday: price, market value, P/E ratio, earnings date. Today that means 15 tabs and an hour of copy and paste, and one slip puts Apple's numbers in Microsoft's row. With Sitescout she pastes the 15 tickers, presses Scout, and gets 15 cards and one CSV with the same columns every week.",
       "It isn't Selenium, Playwright or a Python script. It's a Chrome extension: it lives in your own browser and uses Chrome's own tools to open each page in a hidden tab, wait until the price has actually appeared, read it with a recipe, and close the tab. A recipe is a short checklist of what to read and where it lives on the page, so a new kind of page needs a new recipe, not new code.",
       "Websites change, and every page reader breaks eventually. What matters is how. Sitescout marks the company name and price as must haves. If they can't be found, the card turns red and says what broke, instead of quietly handing back a row of blanks that looks like success.",
@@ -269,7 +269,7 @@ export const PROJECTS = [
       { src: "/shots/sitescout/flow.svg", caption: "From pasted tickers to a CSV file, including what happens when a page can't be read.", narrow: true, tall: true },
       { src: "/shots/sitescout/architecture.svg", caption: "The five parts inside Chrome: side panel, runner, reader, recipe and a small background script.", wide: true },
       { src: "/shots/sitescout/sequence.svg", caption: "One run, step by step: who talks to whom, and when.", wide: true },
-      { src: "/shots/sitescout/undercut-to-sitescout.svg", caption: "How each lesson from Undercut shows up in Sitescout.", narrow: true },
+      { src: "/shots/sitescout/sidecar-to-sitescout.svg", caption: "How each lesson from Sidecar shows up in Sitescout.", narrow: true },
     ],
     results: {
       intro: "A scripted end to end run: the real extension loaded in Chromium, typed into, stopped part way, and exported. It ran against hand-made practice pages with made-up numbers, served locally, so the test is repeatable and Yahoo is never contacted.",
@@ -300,7 +300,7 @@ export const PROJECTS = [
     },
     links: [
       { label: "Code and full case study", href: "https://github.com/kmsmohamedansar/kmsmohamedansar.github.io/tree/main/projects/sitescout", external: true, primary: true },
-      { label: "The work tool behind it: Undercut", href: "#project/undercut" },
+      { label: "The work tool behind it: Sidecar", href: "#project/sidecar" },
     ],
   },
   {
@@ -810,8 +810,8 @@ export const PROJECTS = [
     ],
   },
   {
-    slug: "undercut",
-    title: "Undercut",
+    slug: "sidecar",
+    title: "Sidecar",
     kind: "Chrome extension",
     accent: "cyan",
     status: "Internal tool",
@@ -827,7 +827,7 @@ export const PROJECTS = [
     },
     story: [
       "Product data from websites is normally gathered by a scheduled process that runs about once a week, for a selected set of sites. That's fine for routine reporting. It's no good when someone needs an answer today, and running the scheduled process off its timetable is a big deal: it takes coordination, and an extra run can break things the weekly run depends on. So people waited, or did it by hand.",
-      "The name comes from Formula One. In an undercut, the car in second place pits earlier than the leader, sets fast laps on fresh tyres, and comes out ahead when the leader finally stops. Undercut does the same with data: it doesn't wait for the scheduled run. It goes early, on demand, and gets you the answer first.",
+      "It's called Sidecar because it rides alongside the page you're on, in Chrome's side panel. It doesn't replace the scheduled run. It sits next to it and gets you the answer on demand.",
       "It started as a handful of separate little extensions, one per site, each with its own quirks. I folded them into one side panel with a site dropdown at the top. Pick a site and you get the flow built for it: a category or a list of brands for one, postal codes plus a brand for another, a store finder for a third. For each site I worked out how it actually serves its product data, so the tool reads it reliably rather than copying what's drawn on screen.",
       "It runs in the development environment only, by design. Anyone on an internal engineering team can install it and get answers on demand, with no risk to production systems or to the weekly run. Everything ends the same way: a CSV with a small, consistent set of columns. If you stop a run early you still get what it found so far, which turned out to matter more than I expected.",
       "Because the tool itself is private, I rebuilt its ideas in public for a different subject. That's Sitescout, linked below, with screenshots, diagrams and tests.",
@@ -849,7 +849,7 @@ export const PROJECTS = [
       columns: [
         { label: "Need", nodes: ["Someone needs product data now"] },
         { label: "Before", nodes: ["Wait for the weekly run", "Or copy it by hand"] },
-        { label: "Undercut", nodes: ["Pick a site in the side panel", "Its module reads the data"] },
+        { label: "Sidecar", nodes: ["Pick a site in the side panel", "Its module reads the data"] },
         { label: "Result", nodes: ["CSV download, same columns every time"] },
       ],
       links: ["0.0>1.0", "0.0>1.1", "0.0>2.0", "2.0>2.1", "2.1>3.0"],
@@ -887,7 +887,7 @@ export const PROJECTS = [
       "New retailers are added by extending the list, without touching the panel.",
     ],
     learned: [
-      "The same tab bug as in Undercut showed up here first: navigation rejected on browser pages. Preferring an existing retailer tab fixed it.",
+      "The same tab bug as in Sidecar showed up here first: navigation rejected on browser pages. Preferring an existing retailer tab fixed it.",
       "Cursor sped up adding retailers and polishing the loading screen. It could not replace testing on real retailer pages, so every rule still got checked by hand.",
     ],
     flow: {
