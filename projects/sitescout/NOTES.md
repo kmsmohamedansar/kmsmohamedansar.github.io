@@ -5,7 +5,7 @@ Dated log of what was built, what was run, and what happened. Only results from 
 ## 2026-10-10
 
 **Decided**
-- Domain: stock quote pages on Yahoo Finance, so this stays clear of retail, which is what Undercut covers at work.
+- Domain: stock quote pages on Yahoo Finance, so this stays clear of retail, which is what Sidecar covers at work.
 - Owner chose Yahoo Finance as the target and accepted the trade-off: Yahoo's terms don't invite scraping and it changes its pages often. Sitescout reads one public page at a time in the user's own browser, with a pause between pages, and no logins.
 - No AI model for now. Click-to-pick repair and an optional local model can come later.
 - Built inside the site repo at `projects/sitescout` for now, to move to its own repo later.
@@ -29,8 +29,8 @@ Dated log of what was built, what was run, and what happened. Only results from 
 
 **Later the same day**
 - Owner loaded the extension in their own Chrome on macOS and confirmed it works. Live results not yet recorded in the repo.
-- Wrote CASE_STUDY.md (two chapters; Chapter 1 drafted from the portfolio site's Undercut text, with placeholders for the owner).
+- Wrote CASE_STUDY.md (two chapters; Chapter 1 drafted from the portfolio site's Sidecar text, with placeholders for the owner).
 - Added four Mermaid diagrams in `docs/diagrams` with SVG copies (`node scripts/render-diagrams.mjs`). First SVG render was invalid XML (Mermaid wrote `<br>`); fixed by rewriting to `<br/>` and checked with xmllint.
 - Added `scripts/chart.mjs`, which charts "numbers found per page" from any exported CSV. Demo chart made from `docs/demo-export.csv.txt`: EXMP 16/17, DEMO 16/17.
-- Chapter 1 filled in from the owner's own account: the name comes from the Formula One undercut; Undercut gives on-demand product data instead of waiting for the scheduled weekly collection run; it runs in the development environment only and any internal engineer can install it. Kept generic: no team, company or site names.
+- Chapter 1 filled in from the owner's own account: Sidecar gives on-demand product data instead of waiting for the scheduled weekly collection run; it runs in the development environment only and any internal engineer can install it. Kept generic: no team, company or site names.
 - Owner chose not to record a live run for now. The case study says so and claims no live numbers.

@@ -1045,10 +1045,10 @@ export function ContactSection() {
       <div className="px-5 py-16 sm:py-20">
         <Reveal className="mx-auto max-w-3xl text-center">
           <h2 className="font-display text-[clamp(1.9rem,4vw,3rem)] font-semibold leading-tight text-white">
-            If something here caught your eye, <span className="font-serif italic font-normal text-rose">let's talk</span>.
+            Curious about something here? <span className="font-serif italic font-normal text-rose">let's talk</span>.
           </h2>
           <p className="mx-auto mt-4 max-w-xl text-base sm:text-lg leading-relaxed text-[color:var(--ink-200)]">
-            A data problem that needs untangling, a pipeline that has to hold, or a tool that needs building. I read every message.
+            Questions about a project, or just want to talk data? Say hi. I read every message.
           </p>
           <div className="mt-8 flex flex-wrap justify-center gap-3">
             <a

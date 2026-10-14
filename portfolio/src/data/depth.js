@@ -63,7 +63,7 @@ export const DEPTH = {
 
   sitescout: {
     found:
-      "It's the public version of Undercut, a private tool I built at work. I wanted to show the same ideas, so I picked a subject where everything can be public: a weekly table of stock prices that someone builds by hand from 15 browser tabs.",
+      "It's the public version of Sidecar, a private tool I built at work. I wanted to show the same ideas, so I picked a subject where everything can be public: a weekly table of stock prices that someone builds by hand from 15 browser tabs.",
     tradeoffs: [
       { chose: "A Chrome extension", over: "a Python or Playwright script", because: "it runs in the user's own browser, with nothing to install or host. The cost: it only runs while the browser is open." },
       { chose: "Finding table rows by their label", over: "by their position", because: "labels change less often than layouts." },
@@ -91,7 +91,7 @@ export const DEPTH = {
     },
   },
 
-  undercut: {
+  sidecar: {
     found:
       "Product data from websites arrived from a scheduled weekly run. When someone needed an answer the same day, they waited or did it by hand, because running the schedule off its timetable risked breaking it. I'd already written small one-site tools for this, so I merged them into one.",
     tradeoffs: [
