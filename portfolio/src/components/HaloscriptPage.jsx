@@ -88,7 +88,7 @@ export default function HaloscriptPage() {
   return (
     <div className="bg-[#07070b] text-[color:var(--ink-200)]">
       <header className="mx-auto max-w-5xl px-5 pt-10 sm:px-8 sm:pt-16">
-        <a href="#projects" className="inline-flex items-center gap-1.5 font-mono text-xs uppercase tracking-[.12em]" style={{ color: VIOLET }}>
+        <a href="#card-haloscript" className="inline-flex items-center gap-1.5 font-mono text-xs uppercase tracking-[.12em]" style={{ color: VIOLET }}>
           <ArrowLeft size={13} /> Back to projects
         </a>
         <div className="mt-8 flex items-center gap-4">
@@ -237,7 +237,7 @@ export default function HaloscriptPage() {
           <a href="#contact" className="inline-flex items-center gap-2 rounded-full px-5 py-3 text-sm font-semibold text-[#07070b] hover:-translate-y-0.5 transition-transform" style={{ background: VIOLET }}>
             Want to beta test? Get in touch
           </a>
-          <a href="#projects" className="text-sm text-white/70 hover:text-white">Back to projects</a>
+          <a href="#card-haloscript" className="text-sm text-white/70 hover:text-white">Back to projects</a>
         </div>
       </article>
     </div>

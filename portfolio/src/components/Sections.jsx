@@ -406,6 +406,7 @@ function FeaturedRow({ project, index }) {
   return (
     <Reveal>
       <a
+        id={`card-${project.slug}`}
         href={`#project/${project.slug}`}
         data-cursor="View"
         className="group grid items-center gap-6 rounded-3xl lg:gap-14 lg:grid-cols-[1.1fr_1fr] active:scale-[.995] transition-transform duration-200"
@@ -456,6 +457,7 @@ function GridCard({ project }) {
   return (
     <Reveal className="h-full min-w-0">
       <a
+        id={`card-${project.slug}`}
         href={`#project/${project.slug}`}
         data-cursor="View"
         className="group flex h-full min-w-0 flex-col rounded-3xl border border-white/10 bg-white/[.03] p-4 sm:p-5 transition-[border-color,background-color,transform] duration-200 hover:-translate-y-1 hover:border-white/25 hover:bg-white/[.06] active:translate-y-0"
@@ -514,7 +516,8 @@ function RailCard({ project }) {
       </div>
       <h4 className="mt-2 font-display text-xl font-semibold leading-snug text-white">
         <a
-          href={`#project/${project.slug}`}
+          id={`card-${project.slug}`}
+        href={`#project/${project.slug}`}
           data-cursor="View"
           className="after:absolute after:inset-0 after:rounded-2xl after:content-[''] focus-visible:outline-none focus-visible:after:outline focus-visible:after:outline-2 focus-visible:after:outline-offset-[3px] focus-visible:after:outline-current"
         >
@@ -719,7 +722,7 @@ export function ProjectsSection({ scrollContainerRef }) {
           <ul className="mt-4 flex flex-wrap gap-3">
             {EARLIER_PROJECTS.map((p) => (
               <li key={p.slug}>
-                <a href={`#project/${p.slug}`} className="inline-flex min-h-10 items-center rounded-full border border-white/15 px-4 py-2 text-sm text-[color:var(--ink-100)] transition-colors hover:border-white/50 hover:text-white">
+                <a id={`card-${p.slug}`} href={`#project/${p.slug}`} className="inline-flex min-h-10 items-center rounded-full border border-white/15 px-4 py-2 text-sm text-[color:var(--ink-100)] transition-colors hover:border-white/50 hover:text-white">
                   {p.title}
                 </a>
               </li>
