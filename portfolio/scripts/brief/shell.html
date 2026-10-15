@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow, noarchive, nosnippet">
+<meta name="referrer" content="no-referrer">
+<title>Private</title>
+<style>
+:root{--bg:#050911;--panel:#0b1220;--line:#1c2840;--text:#e6edf3;--muted:#8b98ab;--cyan:#22d3ee;--violet:#b9a8ff;--amber:#fbbf24;--green:#34d399;--rose:#fb7185}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font:15px/1.55 system-ui,-apple-system,"Segoe UI",sans-serif;min-height:100vh}
+button,input{font:inherit;color:inherit}
+.lock{min-height:100vh;display:grid;place-items:center;padding:16px}
+.lock form{width:100%;max-width:340px;display:grid;gap:12px}
+.lock input{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:12px 14px;outline:none}
+.lock input:focus{border-color:var(--cyan)}
+.lock button{background:var(--cyan);color:#04121a;border:0;border-radius:10px;padding:12px;font-weight:600;cursor:pointer}
+.lock button:disabled{opacity:.6;cursor:wait}
+.lock .err{color:var(--rose);min-height:1.4em;font-size:13px;margin:0}
+.app{display:none;max-width:1400px;margin:0 auto;padding:24px 16px 80px}
+header{display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between;margin-bottom:28px}
+h1{margin:0;font-size:22px}
+header p{margin:2px 0 0;color:var(--muted);font-size:13px}
+.tools{display:flex;gap:8px}
+.tools input{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:8px 12px;width:200px;outline:none}
+.tools button{background:none;border:1px solid var(--line);border-radius:8px;padding:8px 12px;cursor:pointer;color:var(--muted)}
+.map{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:28px 20px;position:relative}
+.hub{grid-column:1/-1;justify-self:center;border:1px solid var(--cyan);color:var(--cyan);border-radius:999px;padding:8px 22px;font-weight:600;position:relative}
+.lane{position:relative;padding-left:18px;border-left:2px solid var(--line)}
+.lane h2{font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:0 0 10px -18px;padding-left:18px;position:relative}
+.lane h2::before{content:"";position:absolute;left:-2px;top:50%;width:12px;height:2px;background:var(--line)}
+.node{display:block;width:100%;text-align:left;background:var(--panel);border:1px solid var(--line);border-left:3px solid var(--a,var(--cyan));border-radius:10px;padding:10px 12px;margin:0 0 10px;cursor:pointer;position:relative;transition:transform .12s,border-color .12s}
+.node::before{content:"";position:absolute;left:-21px;top:50%;width:18px;height:2px;background:var(--line)}
+.node:hover,.node:focus-visible{transform:translateX(3px);border-color:var(--a);outline:none}
+.node.active{background:#101b2e}
+.node b{display:block;font-size:14px}
+.node span{color:var(--muted);font-size:12px}
+.node.dim{opacity:.25}
+.drawer{position:fixed;top:0;right:0;height:100vh;width:min(560px,100vw);background:#070d18;border-left:1px solid var(--line);transform:translateX(100%);transition:transform .22s ease;overflow-y:auto;padding:24px 22px 60px;z-index:5}
+.drawer.open{transform:none}
+.drawer .x{position:sticky;top:0;float:right;background:var(--panel);border:1px solid var(--line);border-radius:8px;width:34px;height:34px;cursor:pointer}
+.drawer h3{margin:0 0 2px;font-size:22px;padding-right:44px}
+.meta{color:var(--muted);font-size:13px;margin-bottom:18px}
+.sec{margin:18px 0}
+.sec h4{margin:0 0 6px;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--a,var(--cyan))}
+.sec p{margin:0}
+.sec ul{margin:0;padding-left:18px}
+.sec li{margin:4px 0}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:8px}
+.stat{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:8px}
+.stat b{display:block;font-size:20px;color:var(--a)}
+.stat span{font-size:12px;color:var(--muted)}
+.flow{display:flex;flex-wrap:wrap;align-items:center;gap:6px;font-size:12px}
+.flow div{background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:5px 8px}
+.flow div small{display:block;color:var(--muted);font-size:10px;text-transform:uppercase;letter-spacing:.06em}
+.flow i{color:var(--muted);font-style:normal}
+.tbl{overflow-x:auto}
+table{border-collapse:collapse;font-size:12px;width:100%}
+th,td{border-bottom:1px solid var(--line);padding:6px;text-align:left;vertical-align:top}
+th{color:var(--muted);font-weight:500}
+.note{color:var(--muted);font-size:12px;margin-top:6px}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chips span{border:1px solid var(--line);border-radius:999px;padding:2px 10px;font-size:12px;color:var(--muted)}
+</style>
+</head>
+<body>
+<div class="lock" id="lock">
+  <form id="f" autocomplete="off">
+    <input id="pw" type="password" placeholder="Password" aria-label="Password" autofocus>
+    <button id="go">Open</button>
+    <p class="err" id="err"></p>
+  </form>
+</div>
+<div class="app" id="app">
+  <header>
+    <div><h1>Project map</h1><p id="sub"></p></div>
+    <div class="tools"><input id="q" placeholder="Filter…" aria-label="Filter projects"><button id="lockBtn">Lock</button></div>
+  </header>
+  <div class="map" id="map"></div>
+</div>
+<aside class="drawer" id="drawer" aria-live="polite"></aside>
+<script>
+const BLOB = __BLOB__;
+const $ = (id) => document.getElementById(id);
+const b = (s) => Uint8Array.from(atob(s), (c) => c.charCodeAt(0));
+const esc = (s) => String(s ?? "").replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+const ACC = { cyan: "#22d3ee", violet: "#b9a8ff", amber: "#fbbf24", green: "#34d399", rose: "#fb7185" };
+let DATA = null;
+
+$("f").onsubmit = async (e) => {
+  e.preventDefault();
+  $("go").disabled = true; $("err").textContent = "";
+  try {
+    const base = await crypto.subtle.importKey("raw", new TextEncoder().encode($("pw").value), "PBKDF2", false, ["deriveKey"]);
+    const key = await crypto.subtle.deriveKey({ name: "PBKDF2", salt: b(BLOB.s), iterations: BLOB.it, hash: "SHA-256" }, base, { name: "AES-GCM", length: 256 }, false, ["decrypt"]);
+    const plain = await crypto.subtle.decrypt({ name: "AES-GCM", iv: b(BLOB.i) }, key, b(BLOB.c));
+    DATA = JSON.parse(new TextDecoder().decode(plain));
+    $("pw").value = "";
+    render();
+  } catch { $("err").textContent = "That's not it."; }
+  $("go").disabled = false;
+};
+
+function render() {
+  document.title = "Project map";
+  $("lock").style.display = "none"; $("app").style.display = "block";
+  const n = DATA.lanes.reduce((a, l) => a + l.projects.length, 0);
+  $("sub").textContent = `${n} projects · tap any box for what, why and what I found`;
+  $("map").innerHTML = `<div class="hub">Everything I've built</div>` + DATA.lanes.map((l, li) =>
+    `<section class="lane"><h2>${esc(l.label)}</h2>${l.projects.map((p, pi) =>
+      `<button class="node" style="--a:${ACC[p.accent] || ACC.cyan}" data-l="${li}" data-p="${pi}"><b>${esc(p.title)}</b><span>${esc(p.kind)}</span></button>`).join("")}</section>`).join("");
+  document.querySelectorAll(".node").forEach((el) => el.onclick = () => open(el));
+}
+
+function open(el) {
+  document.querySelectorAll(".node.active").forEach((x) => x.classList.remove("active"));
+  el.classList.add("active");
+  const p = DATA.lanes[el.dataset.l].projects[el.dataset.p];
+  const d = $("drawer");
+  d.style.setProperty("--a", ACC[p.accent] || ACC.cyan);
+  const sec = (h, body) => body ? `<div class="sec"><h4>${h}</h4>${body}</div>` : "";
+  d.innerHTML = `<button class="x" aria-label="Close" onclick="closeD()">✕</button>
+    <h3>${esc(p.title)}</h3><div class="meta">${esc(p.kind)} · ${esc(p.status)}</div>
+    ${sec("What it is", p.what && `<p>${esc(p.what)}</p>`)}
+    ${sec("Why I built it", p.why && `<p>${esc(p.why)}</p>`)}
+    ${sec("My role", p.role && `<p>${esc(p.role)}</p>`)}
+    ${sec("Headline numbers", p.stats.length && `<div class="stats">${p.stats.map((s) => `<div class="stat"><b>${esc(s.value)}</b><span>${esc(s.label)}</span></div>`).join("")}</div>`)}
+    ${sec("What I found", p.found.length && `<ul>${p.found.map((f) => `<li>${esc(f)}</li>`).join("")}</ul>`)}
+    ${sec("Results", p.results && `<div class="tbl"><table><tr>${p.results.headers.map((h) => `<th>${esc(h)}</th>`).join("")}</tr>${p.results.rows.map((r) => `<tr>${r.map((c) => `<td>${esc(c)}</td>`).join("")}</tr>`).join("")}</table></div>${p.results.note ? `<div class="note">${esc(p.results.note)}</div>` : ""}`)}
+    ${sec("How it flows", p.flow && `<div class="flow">${p.flow.map((c) => `<div><small>${esc(c.label)}</small>${c.nodes.map(esc).join("<br>")}</div>`).join("<i>→</i>")}</div>`)}
+    ${sec("Stack", p.stack.length && `<div class="chips">${p.stack.map((s) => `<span>${esc(s)}</span>`).join("")}</div>`)}`;
+  d.classList.add("open"); d.scrollTop = 0;
+}
+function closeD() { $("drawer").classList.remove("open"); document.querySelectorAll(".node.active").forEach((x) => x.classList.remove("active")); }
+document.addEventListener("keydown", (e) => { if (e.key === "Escape") closeD(); });
+$("q").oninput = (e) => {
+  const q = e.target.value.toLowerCase();
+  document.querySelectorAll(".node").forEach((el) => {
+    const p = DATA.lanes[el.dataset.l].projects[el.dataset.p];
+    el.classList.toggle("dim", !!q && !JSON.stringify(p).toLowerCase().includes(q));
+  });
+};
+$("lockBtn").onclick = () => location.reload();
+</script>
+</body>
+</html>
