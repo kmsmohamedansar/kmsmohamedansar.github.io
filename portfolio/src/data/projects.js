@@ -845,15 +845,15 @@ export const PROJECTS = [
       "Cursor, an AI coding assistant, was great for the big reorganisation that combined the old tools. It couldn't replace testing on the real websites, though, so every website was still checked by hand.",
     ],
     flow: {
-      caption: "Weekly schedule versus whenever you need it (simplified).",
+      caption: "Whenever you need it, not once a week.",
       columns: [
         { label: "Need", nodes: ["Someone needs product data now"] },
-        { label: "Before", nodes: ["Wait for the weekly run", "Or copy it by hand"] },
         { label: "Sidecar", nodes: ["Pick a website in the side panel", "It collects the data"] },
         { label: "Result", nodes: ["Spreadsheet download, same columns every time"] },
       ],
-      links: ["0.0>1.0", "0.0>1.1", "0.0>2.0", "2.0>2.1", "2.1>3.0"],
+      links: ["0.0>1.0", "1.0>1.1", "1.1>2.0"],
     },
+
     links: [
       { label: "See the public re-creation: Sitescout", href: "#project/sitescout", primary: true },
       { label: "Private work tool. Walkthrough on request.", href: "#contact", locked: true },

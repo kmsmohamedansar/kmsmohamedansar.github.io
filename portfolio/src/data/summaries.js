@@ -12,7 +12,7 @@ export const STEP_TOOLS = {
   "mcp-workflow": [["Cursor"], ["Cursor"], ["Model Context Protocol", "TypeScript", "Zod"], ["Stateless HTTP transport"]],
   "health-dashboard": [[], ["Next.js (App Router)", "TypeScript"], ["React", "Tailwind CSS"]],
   "category-copilot": [["Next.js"], ["TypeScript"], ["TypeScript"], ["Recharts", "TanStack Table"]],
-  sidecar: [[], [], ["Chrome extension (Manifest V3)", "Side panel"], ["CSV export"]],
+  sidecar: [[], ["Chrome extension (Manifest V3)", "Side panel"], ["CSV export"]],
   "scope-checker": [["Side panel"], ["Chrome extension (Manifest V3)"], ["CSV export"]],
   "fine-food-sentiment": [["pandas"], ["scikit-learn", "DistilBERT"], ["Weights & Biases"]],
   "news-scraper": [[], ["Selenium"], ["Beautiful Soup", "pandas"]],
