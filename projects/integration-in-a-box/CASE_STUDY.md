@@ -215,8 +215,8 @@ The build is half the job. [docs/PLANNING-A-CUSTOMER-INTEGRATION.md](docs/PLANNI
 You need Docker (Docker Desktop, or Colima with the Compose plugin).
 
 ```bash
-git clone https://github.com/kmsmohamedansar/kmsmohamedansar.github.io.git
-cd kmsmohamedansar.github.io/projects/integration-in-a-box
+git clone https://github.com/kmsmohamedansar/integration-in-a-box.git
+cd integration-in-a-box
 docker compose up --build
 ```
 

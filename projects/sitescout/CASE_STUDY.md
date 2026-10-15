@@ -351,8 +351,8 @@ Full dated log: [NOTES.md](NOTES.md).
 You need [Node.js](https://nodejs.org) and Chrome.
 
 ```bash
-git clone https://github.com/kmsmohamedansar/kmsmohamedansar.github.io.git
-cd kmsmohamedansar.github.io/projects/sitescout
+git clone https://github.com/kmsmohamedansar/sitescout.git
+cd sitescout
 npm install
 npm test        # 13 unit tests
 npm run build   # builds the extension into the dist folder
