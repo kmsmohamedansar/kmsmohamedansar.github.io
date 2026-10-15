@@ -1,3 +1,0 @@
-stock.changed pending attempts 4 unreachable: fetch failed
-stock.changed pending attempts 4 unreachable: fetch failed
-stock.changed delivered attempts 1 

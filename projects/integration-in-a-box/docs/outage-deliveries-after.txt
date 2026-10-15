@@ -1,3 +1,0 @@
-stock.changed delivered attempts 5
-stock.changed delivered attempts 5
-stock.changed delivered attempts 1
