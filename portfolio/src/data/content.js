@@ -27,6 +27,7 @@ export const RECEIPTS = [
 
 export const SECTION_LINKS = [
   { id: "projects", label: "Projects" },
+  { id: "work", label: "Project Work" },
   { id: "about", label: "About" },
   { id: "experience", label: "Experience" },
   { id: "contact", label: "Contact" },

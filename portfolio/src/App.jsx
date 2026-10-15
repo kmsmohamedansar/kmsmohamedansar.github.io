@@ -4,6 +4,7 @@ import { Command } from "lucide-react";
 import EmetSection from "./components/EmetSection";
 import { Hero, ProjectsSection, SkillsTicker, ExperienceSection, AboutSection, ExperimentsSection, ContactSection } from "./components/Sections";
 import ProjectPage from "./components/ProjectPage";
+import ProjectWorkPage from "./components/ProjectWorkPage";
 import { SECTION_LINKS } from "./data/content";
 import SandboxStubs from "./components/SandboxStubs";
 import CommandPalette from "./components/CommandPalette";
@@ -33,7 +34,7 @@ const InfinityPage = lazy(() => import("./components/InfinityPage"));
    section to scroll to."
    ============================================================ */
 function parseRoute(h) {
-  if (h === "emet" || h === "explore" || h === "lineage-demo" || h === "digital-double" || h === "infinity") return h;
+  if (h === "emet" || h === "explore" || h === "lineage-demo" || h === "digital-double" || h === "infinity" || h === "work") return h;
   if (h.startsWith("project/")) return h;
   return "main";
 }
@@ -269,6 +270,16 @@ function Stage({ bootDone }) {
             <Suspense fallback={<div className="h-full bg-[#02050c]" aria-hidden="true" />}>
               <SolarSystemExplorer />
             </Suspense>
+          </motion.div>
+        ) : route === "work" ? (
+          <motion.div
+            key="work"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.2, ease: EASE_OUT }}
+          >
+            <ProjectWorkPage />
           </motion.div>
         ) : route.startsWith("project/") ? (
           <motion.div
