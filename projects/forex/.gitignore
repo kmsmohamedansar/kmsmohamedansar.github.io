@@ -1,0 +1,8 @@
+__pycache__/
+*.pyc
+
+# Generated reports/data — run the scripts to regenerate
+forex_data/
+dashboard.html
+audusd_*.csv
+news_events*.csv

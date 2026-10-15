@@ -10,18 +10,19 @@ For the full project index, live demos, and how to reach out about private repos
 
 ```
 portfolio/            React + Vite + Tailwind site, deployed to GitHub Pages
+projects/
+  forex/              AUD/USD trading analysis (Python)
+  f1-telemetry/       F1 session/car telemetry pipeline (Python)
 .github/workflows/    CI/CD for portfolio deployment
 ```
 
-Each project lives in its own repository:
+Other projects live in their own repositories:
 
 - [analytics-assistant](https://github.com/kmsmohamedansar/analytics-assistant)
 - [catalogue-checker](https://github.com/kmsmohamedansar/catalogue-checker)
 - [data-delivery](https://github.com/kmsmohamedansar/data-delivery)
 - [integration-in-a-box](https://github.com/kmsmohamedansar/integration-in-a-box)
 - [sitescout](https://github.com/kmsmohamedansar/sitescout)
-- [forex](https://github.com/kmsmohamedansar/forex)
-- [f1-telemetry](https://github.com/kmsmohamedansar/f1-telemetry)
 - [mcp-analytics-stub](https://github.com/kmsmohamedansar/mcp-analytics-stub)
 - [mv3-sidepanel-starter](https://github.com/kmsmohamedansar/mv3-sidepanel-starter)
 

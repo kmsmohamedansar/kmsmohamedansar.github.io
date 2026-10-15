@@ -1338,7 +1338,7 @@ export const PROJECTS = [
         { label: "Result", nodes: ["One dashboard page"] },
       ],
     },
-    links: [{ label: "Code on GitHub", href: "https://github.com/kmsmohamedansar/forex", external: true, primary: true }],
+    links: [{ label: "Code on GitHub", href: "https://github.com/kmsmohamedansar/kmsmohamedansar.github.io/tree/main/projects/forex", external: true, primary: true }],
   },
   {
     slug: "f1-telemetry",
@@ -1371,7 +1371,7 @@ export const PROJECTS = [
         { label: "Output", nodes: ["CSV files", "HTML report"] },
       ],
     },
-    links: [{ label: "Code on GitHub", href: "https://github.com/kmsmohamedansar/f1-telemetry", external: true, primary: true }],
+    links: [{ label: "Code on GitHub", href: "https://github.com/kmsmohamedansar/kmsmohamedansar.github.io/tree/main/projects/f1-telemetry", external: true, primary: true }],
   },
 ];
 
