@@ -16,8 +16,8 @@ const BRIEF_SLUG = "k7q2-brief-9xw4m";
 const ITERATIONS = 600_000;
 
 const password = process.env.BRIEF_PASSWORD;
-if (!password || password.length < 12) {
-  console.error("Set BRIEF_PASSWORD (12+ characters) to build the brief.");
+if (!password || password.length < 4) {
+  console.error("Set BRIEF_PASSWORD (4+ characters) to build the brief.");
   process.exit(1);
 }
 
