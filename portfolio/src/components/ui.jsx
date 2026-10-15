@@ -1,6 +1,6 @@
 import { Fragment, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { motion, useReducedMotion, useScroll, useTransform } from "framer-motion";
-import { ArrowDown, ArrowUpRight } from "lucide-react";
+import { ArrowDown, ArrowRight, ArrowUpRight } from "lucide-react";
 import { EASE_REVEAL } from "../lib/motion";
 import { ACCENTS } from "../data/projects";
 import { useScrollContainer } from "../App";
@@ -204,9 +204,11 @@ const TONE_CLASS = {
 
 /* Flow diagram drawn from a plain description:
      { columns: [{ label, nodes: ["text" | { text, tone }] }], links?: ["0.0>1.1"] }
-   With no `links`, every box connects to every box in the next column.
-   Wide screens draw curved arrows between measured boxes; narrow ones
-   stack the columns and drop the arrows for simple down chevrons. */
+   With no `links`, each column flows into the next with one arrow in the
+   gap between them. With `links`, wide screens draw a curved arrow per
+   link between the measured boxes. Labels sit in one row across the top,
+   and the boxes in each column are centred under them. Narrow screens
+   stack the columns with down arrows. */
 export default function FlowDiagram({ spec, compact = false }) {
   const wrapRef = useRef(null);
   const nodeRefs = useRef({});
@@ -214,14 +216,7 @@ export default function FlowDiagram({ spec, compact = false }) {
   const [wide, setWide] = useState(true);
 
   const columns = spec.columns;
-  const edges = useMemo(() => {
-    if (spec.links) return spec.links.map((s) => s.split(">"));
-    const out = [];
-    for (let c = 0; c < columns.length - 1; c++) {
-      columns[c].nodes.forEach((_, i) => columns[c + 1].nodes.forEach((__, j) => out.push([`${c}.${i}`, `${c + 1}.${j}`])));
-    }
-    return out;
-  }, [spec, columns]);
+  const edges = useMemo(() => (spec.links ? spec.links.map((s) => s.split(">")) : []), [spec]);
 
   useLayoutEffect(() => {
     const wrap = wrapRef.current;
@@ -229,20 +224,26 @@ export default function FlowDiagram({ spec, compact = false }) {
     function measure() {
       const isWide = wrap.clientWidth >= 620;
       setWide(isWide);
-      if (!isWide) return setPaths([]);
+      if (!isWide || !edges.length) return setPaths([]);
       const base = wrap.getBoundingClientRect();
       const next = [];
       for (const [from, to] of edges) {
         const a = nodeRefs.current[from]?.getBoundingClientRect();
         const b = nodeRefs.current[to]?.getBoundingClientRect();
         if (!a || !b) continue;
-        const backwards = b.left < a.right;
-        const x1 = backwards ? a.left + a.width / 2 - base.left : a.right - base.left;
-        const y1 = backwards ? a.top - base.top : a.top + a.height / 2 - base.top;
-        const x2 = backwards ? b.left + b.width / 2 - base.left : b.left - base.left - 6;
-        const y2 = backwards ? b.top - base.top : b.top + b.height / 2 - base.top;
+        const sameColumn = Math.abs(a.left - b.left) < 4;
+        if (sameColumn) {
+          // A step within one column: a short straight drop.
+          const x = a.left + a.width / 2 - base.left;
+          next.push(`M${x},${a.bottom - base.top} L${x},${b.top - base.top - 3}`);
+          continue;
+        }
+        const x1 = a.right - base.left;
+        const y1 = a.top + a.height / 2 - base.top;
+        const x2 = b.left - base.left - 4;
+        const y2 = b.top + b.height / 2 - base.top;
         const mx = (x1 + x2) / 2;
-        next.push(backwards ? `M${x1},${y1} C${x1},${y1 - 34} ${x2},${y2 - 34} ${x2},${y2}` : `M${x1},${y1} C${mx},${y1} ${mx},${y2} ${x2},${y2}`);
+        next.push(`M${x1},${y1} C${mx},${y1} ${mx},${y2} ${x2},${y2}`);
       }
       setPaths(next);
     }
@@ -254,8 +255,8 @@ export default function FlowDiagram({ spec, compact = false }) {
 
   return (
     <figure className={compact ? "" : "my-2"}>
-      <div ref={wrapRef} className="relative rounded-xl border border-white/12 bg-[#050911]/85 p-4 sm:p-5">
-        {wide && (
+      <div ref={wrapRef} className="relative rounded-xl border border-white/12 bg-[#050911]/85 p-5 sm:p-6">
+        {wide && paths.length > 0 && (
           <svg className="absolute inset-0 w-full h-full pointer-events-none" aria-hidden="true">
             <defs>
               <marker id="flow-arrow" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto">
@@ -263,34 +264,51 @@ export default function FlowDiagram({ spec, compact = false }) {
               </marker>
             </defs>
             {paths.map((d, i) => (
-              <path key={i} d={d} fill="none" stroke="rgba(226,232,240,0.55)" strokeWidth="1.4" markerEnd="url(#flow-arrow)" />
+              <path key={i} d={d} fill="none" stroke="rgba(226,232,240,0.5)" strokeWidth="1.4" markerEnd="url(#flow-arrow)" />
             ))}
           </svg>
         )}
-        <div className="relative flex flex-col sm:flex-row sm:justify-between gap-4 sm:gap-5">
-          {columns.map((col, ci) => (
-            <div key={col.label} className="flex flex-col gap-2.5 sm:flex-1 sm:justify-center">
-              <span className="font-mono text-[.58rem] uppercase tracking-[.16em] text-[color:var(--ink-300)] text-center">{col.label}</span>
-              {col.nodes.map((n, ni) => {
-                const node = typeof n === "string" ? { text: n } : n;
-                const tone = node.tone || TONE_ORDER[ci % TONE_ORDER.length];
-                return (
-                  <div
-                    key={ni}
-                    ref={(el) => {
-                      nodeRefs.current[`${ci}.${ni}`] = el;
-                    }}
-                    className={`rounded-lg border px-3 py-2.5 text-center text-[.78rem] leading-snug font-medium ${TONE_CLASS[tone]}`}
-                  >
-                    {node.text}
+        <div className={`relative flex ${wide ? "flex-row items-stretch" : "flex-col gap-3"}`}>
+          {columns.map((col, ci) => {
+            const last = ci === columns.length - 1;
+            return (
+              <Fragment key={col.label}>
+                <div className={`flex flex-col ${wide ? "flex-1 min-w-0" : ""}`}>
+                  <span className="mb-3 min-h-[1.1rem] font-mono text-[.6rem] uppercase tracking-[.16em] text-[color:var(--ink-300)] text-center">
+                    {col.label}
+                  </span>
+                  <div className="flex flex-1 flex-col justify-center gap-3">
+                    {col.nodes.map((n, ni) => {
+                      const node = typeof n === "string" ? { text: n } : n;
+                      const tone = node.tone || TONE_ORDER[ci % TONE_ORDER.length];
+                      return (
+                        <div
+                          key={ni}
+                          ref={(el) => {
+                            nodeRefs.current[`${ci}.${ni}`] = el;
+                          }}
+                          className={`rounded-lg border px-3 py-3 text-center text-[.8rem] leading-snug font-medium ${TONE_CLASS[tone]}`}
+                        >
+                          {node.text}
+                        </div>
+                      );
+                    })}
                   </div>
-                );
-              })}
-              {!wide && ci < columns.length - 1 && (
-                <ArrowDown size={16} className="self-center text-[color:var(--ink-300)]" aria-hidden="true" />
-              )}
-            </div>
-          ))}
+                </div>
+                {!last &&
+                  (wide ? (
+                    <div aria-hidden="true" className="flex w-12 shrink-0 flex-col">
+                      <span className="mb-3 min-h-[1.1rem]" />
+                      <div className="flex flex-1 items-center justify-center text-[color:var(--ink-300)]">
+                        {!edges.length && <ArrowRight size={18} />}
+                      </div>
+                    </div>
+                  ) : (
+                    <ArrowDown size={16} className="self-center text-[color:var(--ink-300)]" aria-hidden="true" />
+                  ))}
+              </Fragment>
+            );
+          })}
         </div>
       </div>
       {spec.caption && (
