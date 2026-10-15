@@ -8,8 +8,7 @@
     "build": "vite build",
     "lint": "oxlint",
     "preview": "vite preview",
-    "check:tools": "node scripts/check-tools.mjs",
-    "brief": "node scripts/brief/build.mjs"
+    "check:tools": "node scripts/check-tools.mjs"
   },
   "dependencies": {
     "framer-motion": "^13.1.0",
