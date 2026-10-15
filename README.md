@@ -2,7 +2,7 @@
 
 Live portfolio for **Mohamed Ansar** — Solutions Engineer building data systems, pipelines, and shipped native apps.
 
-**Live site:** [kmsmohamedansar.github.io](https://kmsmohamedansar.github.io), https://ansarbuilds.dev/
+**Live site:** [ansarbuilds.dev](https://ansarbuilds.dev)
 
 For the full project index, live demos, and how to reach out about private repos, see my [GitHub profile](https://github.com/kmsmohamedansar).
 
