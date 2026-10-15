@@ -54,9 +54,14 @@ export const useRoute = () => useContext(RouteContext);
 const ScrollContext = createContext(null);
 export const useScrollContainer = () => useContext(ScrollContext);
 
-function scrollToSection(id) {
+// Coming back from a project page, the main document only mounts once the
+// page's exit animation finishes, so keep looking for the section for a
+// moment instead of giving up after one frame.
+function scrollToSection(id, tries = 60) {
   requestAnimationFrame(() => {
-    document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" });
+    const el = document.getElementById(id);
+    if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
+    else if (tries > 0) scrollToSection(id, tries - 1);
   });
 }
 
