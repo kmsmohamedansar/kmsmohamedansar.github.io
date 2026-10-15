@@ -4,7 +4,7 @@ import { ArrowDown, ArrowLeft, ArrowRight, ArrowUpRight, ChevronDown, Info, Lock
 import { ACCENTS, LISTED_PROJECTS, PROJECTS, getProject } from "../data/projects";
 import { DEPTH } from "../data/depth";
 import { TOOL_INFO } from "../data/tools";
-import { STEP_TOOLS } from "../data/summaries";
+import { BEFORE_AFTER, STEP_TOOLS } from "../data/summaries";
 import FlowDiagram, { FlourishTitle, Kicker, TagPill } from "./ui";
 import { EASE_REVEAL } from "../lib/motion";
 
@@ -108,15 +108,42 @@ function SummaryArrow() {
   );
 }
 
+function BeforeAfter({ data, accent }) {
+  const a = ACCENTS[accent];
+  const col = (title, items, on) => (
+    <div
+      className="flex-1 rounded-xl border p-4 text-sm leading-relaxed"
+      style={on ? { borderColor: `${a.hex}55`, background: `${a.hex}14` } : { borderColor: "rgba(255,255,255,.12)", background: "rgba(255,255,255,.02)" }}
+    >
+      <p className={`font-mono text-micro uppercase tracking-[.14em] ${on ? a.text : "text-[color:var(--ink-300)]"}`}>{title}</p>
+      <ul className={`mt-2 space-y-1.5 ${on ? "text-[color:var(--ink-100)]" : "text-[color:var(--ink-300)]"}`}>
+        {items.map((t) => (
+          <li key={t}>{t}</li>
+        ))}
+      </ul>
+    </div>
+  );
+  return (
+    <div className="mt-6">
+      <p className="mb-3 font-mono text-micro uppercase tracking-[.14em] text-[color:var(--ink-200)]">Before and after</p>
+      <div className="flex flex-col gap-2 md:flex-row md:items-stretch">
+        {col("Before", data.before, false)}
+        <SummaryArrow />
+        {col("After", data.after, true)}
+      </div>
+    </div>
+  );
+}
+
 function SummaryChart({ project }) {
   const [open, setOpen] = useState(false);
   const a = ACCENTS[project.accent];
   if (!project.flow) return null;
   const tools = STEP_TOOLS[project.slug] || [];
   const why = firstSentences(project.story?.[0], 2);
-  const result = project.stats?.length
+  const result = BEFORE_AFTER[project.slug]?.change || (project.stats?.length
     ? `${project.stats[0].value} ${project.stats[0].short || project.stats[0].label}`
-    : firstSentences(project.learned?.[0], 1);
+    : firstSentences(project.learned?.[0], 1));
   const box = "rounded-xl border p-4 text-sm leading-relaxed";
   return (
     <section className="mt-6 rounded-2xl border border-white/12 bg-black/20">
@@ -185,6 +212,7 @@ function SummaryChart({ project }) {
                   </div>
                 </>
               )}
+              {BEFORE_AFTER[project.slug] && <BeforeAfter data={BEFORE_AFTER[project.slug]} accent={project.accent} />}
             </div>
           </motion.div>
         )}
