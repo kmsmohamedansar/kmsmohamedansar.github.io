@@ -1,9 +1,10 @@
 import { AnimatePresence, motion } from "framer-motion";
 import { useRef, useState } from "react";
-import { ArrowLeft, ArrowRight, ArrowUpRight, Info, Lock } from "lucide-react";
+import { ArrowDown, ArrowLeft, ArrowRight, ArrowUpRight, ChevronDown, Info, Lock } from "lucide-react";
 import { ACCENTS, LISTED_PROJECTS, PROJECTS, getProject } from "../data/projects";
 import { DEPTH } from "../data/depth";
 import { TOOL_INFO } from "../data/tools";
+import { STEP_TOOLS } from "../data/summaries";
 import FlowDiagram, { FlourishTitle, Kicker, TagPill } from "./ui";
 import { EASE_REVEAL } from "../lib/motion";
 
@@ -91,6 +92,105 @@ function PageTitle({ project, style }) {
       </span>
     );
   return <span aria-hidden="true" className="font-display font-bold normal-case tracking-[-.035em] text-[.8em]">{project.title}<span className={a.text}>.</span></span>;
+}
+
+/* A one-picture summary of the project, folded away by default so the
+   page stays short: why it exists, each step of the flow with the tools
+   used there, and what came out of it. */
+const firstSentences = (text, n) => (text || "").match(/[^.!?]+[.!?]+(\s|$)/g)?.slice(0, n).join("").trim() || text || "";
+
+function SummaryArrow() {
+  return (
+    <div aria-hidden="true" className="grid place-items-center text-[color:var(--ink-300)] py-1 md:py-0 md:px-1">
+      <ArrowDown size={16} className="md:hidden" />
+      <ArrowRight size={16} className="hidden md:block" />
+    </div>
+  );
+}
+
+function SummaryChart({ project }) {
+  const [open, setOpen] = useState(false);
+  const a = ACCENTS[project.accent];
+  if (!project.flow) return null;
+  const tools = STEP_TOOLS[project.slug] || [];
+  const why = firstSentences(project.story?.[0], 2);
+  const result = project.stats?.length
+    ? `${project.stats[0].value} ${project.stats[0].short || project.stats[0].label}`
+    : firstSentences(project.learned?.[0], 1);
+  const box = "rounded-xl border p-4 text-sm leading-relaxed";
+  return (
+    <section className="mt-6 rounded-2xl border border-white/12 bg-black/20">
+      <button
+        onClick={() => setOpen((o) => !o)}
+        aria-expanded={open}
+        className="flex w-full items-center justify-between gap-3 px-5 py-4 text-left sm:px-7"
+      >
+        <span className={`font-mono text-xs font-semibold uppercase tracking-[.16em] ${a.text}`}>Summary</span>
+        <span className="flex items-center gap-1.5 font-mono text-micro uppercase tracking-[.12em] text-[color:var(--ink-200)]">
+          {open ? "Hide" : "Show"}
+          <ChevronDown size={14} className={`transition-transform ${open ? "rotate-180" : ""}`} />
+        </span>
+      </button>
+      <AnimatePresence initial={false}>
+        {open && (
+          <motion.div
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: "auto", opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{ duration: 0.3, ease: EASE_REVEAL }}
+            className="overflow-hidden"
+          >
+            <div className="flex flex-col px-5 pb-6 sm:px-7">
+              <div className={box} style={{ borderColor: `${a.hex}55`, background: `${a.hex}14` }}>
+                <p className={`font-mono text-micro uppercase tracking-[.14em] ${a.text}`}>Why</p>
+                <p className="mt-2 text-[color:var(--ink-100)]">{why}</p>
+              </div>
+              <div aria-hidden="true" className="grid place-items-center py-1 text-[color:var(--ink-300)]">
+                <ArrowDown size={16} />
+              </div>
+              <div className="flex flex-col md:flex-row md:items-stretch">
+                {project.flow.columns.map((c, n) => (
+                  <div key={c.label} className="contents">
+                    {n > 0 && <SummaryArrow />}
+                    <div className={`${box} border-white/12 bg-white/[.03] md:flex-1 md:min-w-0`}>
+                      <p className="font-mono text-micro uppercase tracking-[.14em] text-[color:var(--ink-300)]">
+                        {n + 1}. {c.label}
+                      </p>
+                      <ul className="mt-2 space-y-1 text-[color:var(--ink-100)]">
+                        {c.nodes.map((t) => (
+                          <li key={t}>{t}</li>
+                        ))}
+                      </ul>
+                      {tools[n]?.length > 0 && (
+                        <div className="mt-3 flex flex-wrap gap-1.5">
+                          {tools[n].map((t) => (
+                            <span key={t} className="rounded-full border px-2 py-0.5 font-mono text-[.62rem] break-words" style={{ borderColor: `${a.hex}50`, color: a.hex }}>
+                              {t}
+                            </span>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                ))}
+              </div>
+              {result && (
+                <>
+                  <div aria-hidden="true" className="grid place-items-center py-1 text-[color:var(--ink-300)]">
+                    <ArrowDown size={16} />
+                  </div>
+                  <div className={box} style={{ borderColor: `${a.hex}55`, background: `${a.hex}14` }}>
+                    <p className={`font-mono text-micro uppercase tracking-[.14em] ${a.text}`}>Result</p>
+                    <p className="mt-2 text-[color:var(--ink-100)]">{result}</p>
+                  </div>
+                </>
+              )}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </section>
+  );
 }
 
 function Block({ label, accent, children }) {
@@ -300,6 +400,8 @@ export default function ProjectPage({ slug }) {
           ))}
         </div>
       </header>
+
+      <SummaryChart project={project} />
 
       {project.shots?.length > 0 && (
         <div className={`mt-6 grid gap-4 ${project.shots.length > 1 ? "sm:grid-cols-2" : ""}`}>

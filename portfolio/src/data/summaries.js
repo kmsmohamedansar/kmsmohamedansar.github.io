@@ -1,0 +1,30 @@
+// Tools used at each step of a project's "How it works" flow, in column
+// order. The Summary panel on each project page puts these under the
+// matching step. Why and result come from the project itself.
+export const STEP_TOOLS = {
+  "decision-models": [[], [], ["Ollama", "qwen2.5:7b", "Strands Decider 2B", "Kev-0.8B", "Laya", "MLX"], ["Python"]],
+  sitescout: [["React", "Side panel"], ["Chrome extension (Manifest V3)"], ["TypeScript"], ["React", "Framer Motion"]],
+  integration: [["React"], ["Node.js", "Fastify", "OAuth 2.0 / OpenID Connect"], ["Keycloak", "SQLite"], ["Fastify", "SQLite"]],
+  "analytics-assistant": [["React"], ["Ollama (qwen2.5:7b)", "TypeScript"], ["Model Context Protocol", "Zod", "SQLite"], ["React", "Framer Motion"]],
+  reptrack: [["SwiftUI"], ["SwiftUI"], ["SwiftData"], ["SwiftUI"]],
+  "data-delivery": [["Python"], ["YAML", "Dagster"], ["dbt", "DuckDB"], ["Dagster", "pytest"]],
+  "catalogue-checker": [["Open Food Facts", "pandas"], ["sentence-transformers"], ["facebook/bart-large-mnli"], ["pandas", "matplotlib"]],
+  "mcp-workflow": [["Cursor"], ["Cursor"], ["Model Context Protocol", "TypeScript", "Zod"], ["Stateless HTTP transport"]],
+  "health-dashboard": [[], ["Next.js (App Router)", "TypeScript"], ["React", "Tailwind CSS"]],
+  "category-copilot": [["Next.js"], ["TypeScript"], ["TypeScript"], ["Recharts", "TanStack Table"]],
+  sidecar: [[], [], ["Chrome extension (Manifest V3)", "Side panel"], ["CSV export"]],
+  "scope-checker": [["Side panel"], ["Chrome extension (Manifest V3)"], ["CSV export"]],
+  "fine-food-sentiment": [["pandas"], ["scikit-learn", "DistilBERT"], ["Weights & Biases"]],
+  "news-scraper": [[], ["Selenium"], ["Beautiful Soup", "pandas"]],
+  "smart-categorization": [["pandas"], ["facebook/bart-large-mnli"], ["pandas"], []],
+  "spotify-trends": [["pandas"], ["pandas", "Jupyter"], ["matplotlib", "seaborn"]],
+  "cpl-dream-xi": [["pandas"], ["Scoring logic"], ["pandas"], ["Power BI"]],
+  "sql-playground": [["Static HTML"], ["JavaScript"], ["sql.js (SQLite in WebAssembly)"], ["PapaParse"]],
+  "lineage-explorer": [[], [], [], ["React", "SVG", "Framer Motion"]],
+  "local-agent": [["OpenClaw"], ["Docker via Colima", "DuckDuckGo search"], ["Ollama (4B local model)"], ["Telegram"]],
+  taskmaster: [["Python"], ["Python"], ["Python"], ["Hugging Face Spaces"]],
+  "customer-predictor": [["pandas"], ["scikit-learn Random Forest"], ["SHAP", "matplotlib"], ["Streamlit", "Hugging Face Spaces"]],
+  "grocery-assistant": [[], ["sentence-transformers", "FAISS"], ["LangChain", "Flan-T5"], ["Gradio"]],
+  "forex-tools": [["Dukascopy tick data", "Google News RSS"], ["pandas", "matplotlib"], ["Python"], ["Static HTML"]],
+  "f1-telemetry": [["FastF1", "OpenF1 API"], ["pandas"], []],
+};
