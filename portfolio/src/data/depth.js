@@ -5,30 +5,30 @@
 export const DEPTH = {
   "analytics-assistant": {
     found:
-      "I use an AI assistant with my team's analytics tools every day, and I'd also built a rules-only prototype that answers similar questions. Two approaches to the same job, and nobody had measured which was better. That gap was the problem.",
+      "I ask an AI assistant about sales data every day, and I'd also built a rules-only prototype that answers similar questions. Two approaches to the same job, and nobody had tested which was better. That gap was the problem.",
     tradeoffs: [
-      { chose: "A small model on my laptop", over: "a paid cloud model", because: "anyone can rerun the tests for free, and no data leaves the machine. The cost is speed: about 6 seconds an answer." },
-      { chose: "Six read-only tools, at most 60 rows per call", over: "letting the AI write its own SQL", because: "every number is defined once and can be checked. It limits what can be asked, on purpose." },
-      { chose: "Ten held-out questions written after the fixes", over: "only the original 30", because: "fixing against the same questions you score on flatters you. The held-out set is where the two brains tied." },
+      { chose: "A small AI on my laptop", over: "a paid AI in the cloud", because: "anyone can rerun the tests for free, and no data leaves the computer. The cost is speed: about 6 seconds an answer." },
+      { chose: "Six read-only tools, at most 60 rows each", over: "letting the AI write its own database queries", because: "every number is defined once and can be checked. It limits what can be asked, on purpose." },
+      { chose: "Ten fresh questions written after the fixes", over: "only the original 30", because: "fixing things against the same questions you're marked on makes you look better than you are. The fresh questions are where the two brains tied." },
     ],
     ai: {
       label: "Is AI needed here?",
-      text: "That's the question the project measures. Rules got 28 of 30 on questions they were written for, a thousand times faster. On 10 new questions both got 8. AI earns its place when people ask in wording you didn't plan for. Rules are better when the questions are known and a wrong number is expensive.",
+      text: "That's the question the project tests. Rules got 28 of 30 on questions they were written for, a thousand times faster. On 10 new questions, both got 8. AI earns its place when people ask things in ways you didn't plan for. Rules are better when the questions are known and a wrong number is costly.",
     },
   },
 
   "decision-models": {
     found:
-      "A new kind of model, the decision model, promised fast typed answers with honest probabilities, and every number about it came from its makers. I'd also seen how a general model's \"confidence\" can be a number it simply writes down. Nobody had tested both on the same realistic task.",
+      "A new kind of AI, the decision model, promised quick set answers with honest likelihoods, and every number about it came from the companies that made them. I'd also seen how a general AI's \"confidence\" can be a number it just writes down. Nobody had tested both on the same real-world job.",
     tradeoffs: [
-      { chose: "Writing the labelling rules before any request", over: "labelling as I went", because: "rules written afterwards quietly bend to fit the data." },
-      { chose: "A held-out set scored once, after everything was fixed", over: "reporting the best development numbers", because: "every prompt fix I made was on the development set. The held-out set is the only fair comparison." },
-      { chose: "Measuring calibration, not just accuracy", over: "a single accuracy score", because: "two models with the same accuracy can be very different to deploy: one tells you which answers to check, the other doesn't." },
-      { chose: "Keeping my failed first prompt in the results", over: "showing only the fixed one", because: "it showed that how you ask a general model can matter more than the model. That's a finding, not an embarrassment." },
+      { chose: "Writing the rules for right answers before writing any message", over: "deciding as I went", because: "rules written afterwards quietly bend to fit the data." },
+      { chose: "A set of messages kept aside and tested once, at the end", over: "reporting my best practice scores", because: "every fix I made was tested on the practice messages. The kept-aside set is the only fair comparison." },
+      { chose: "Measuring whether confidence is honest, not just accuracy", over: "a single accuracy score", because: "two models with the same accuracy can be very different to use: one tells you which answers to double-check, the other doesn't." },
+      { chose: "Keeping my failed first attempt in the results", over: "showing only the fixed one", because: "it showed that how you ask a general AI can matter more than which AI it is. That's a finding, not an embarrassment." },
     ],
     ai: {
       label: "Is a decision model better than a general one?",
-      text: "That's what the project measures. Here, yes: the 2B decision model beat the 7B general model on team by 16 points, five times faster, with honest confidence. But not every decision model did, and keyword rules were close on accuracy. Measure on your own tickets before trusting anyone's benchmark, including mine.",
+      text: "That's what the project measures. Here, yes: the small decision model beat the bigger general model at picking the team by 16 points, five times faster, with honest confidence. But not every decision model did, and keyword rules were close on accuracy. Test on your own messages before trusting anyone's results, including mine.",
     },
   },
 
@@ -48,74 +48,74 @@ export const DEPTH = {
 
   "data-delivery": {
     found:
-      "At work I see the receiving end of a recurring data delivery. The lesson there is simple: a late delivery can be explained, a wrong one gets used. I wanted to build the checks and the stop-if-anything's-off behaviour myself.",
+      "At work I see the receiving end of a regular data delivery. The lesson there is simple: a late delivery can be explained, a wrong one gets used. I wanted to build the checks, and the stop-if-anything-looks-wrong behaviour, myself.",
     tradeoffs: [
-      { chose: "One bad customer holds the whole week", over: "delivering the customers that passed", because: "the receiving team gets one complete table or nothing, never a table quietly missing a customer. A real contract could choose otherwise." },
-      { chose: "Removing exact copies, stopping on different copies", over: "one rule for all duplicates", because: "exact copies are safe to drop. Two different amounts for one order line need a person to decide." },
-      { chose: "DuckDB on a laptop", over: "a cloud warehouse trial", because: "it's free for good and anyone can run it. Its SQL is close enough to Snowflake's that the skills carry over." },
-      { chose: "A settings file per customer", over: "code per customer", because: "onboarding customer four took 37 seconds with the drafting helper, and no code changes." },
+      { chose: "One bad pharmacy holds back the whole week", over: "sending the pharmacies that passed", because: "the receiving team gets one complete table or nothing, never a table quietly missing a pharmacy. A real contract could choose differently." },
+      { chose: "Removing exact copies, but stopping on conflicting copies", over: "one rule for all duplicates", because: "exact copies are safe to drop. Two different amounts for the same order need a person to decide." },
+      { chose: "DuckDB on a laptop", over: "a free trial of a cloud database", because: "it's free forever and anyone can run it. Its query language is close enough to Snowflake's that the skills carry over." },
+      { chose: "A settings file per pharmacy", over: "separate code for each one", because: "adding the fourth pharmacy took 37 seconds with the helper, and no code changes." },
     ],
     ai: {
       label: "Why no AI",
-      text: "Deciding whether data is safe to send has to give the same answer every time and explain itself. Plain tests do that. The one place guessing helps, drafting a new customer's settings, uses simple rules, and a person checks every line.",
+      text: "Deciding whether data is safe to send has to give the same answer every time and explain itself. Plain tests do that. The one place where guessing helps, drafting a new pharmacy's settings, uses simple rules, and a person checks every line.",
     },
   },
 
   sitescout: {
     found:
-      "It's the public version of Sidecar, a private tool I built at work. I wanted to show the same ideas, so I picked a subject where everything can be public: a weekly table of stock prices that someone builds by hand from 15 browser tabs.",
+      "It's the public version of Sidecar, a private tool I built at work. I wanted to show the same ideas, so I picked a subject where everything can be public: a weekly table of share prices that someone builds by hand from 15 browser tabs.",
     tradeoffs: [
-      { chose: "A Chrome extension", over: "a Python or Playwright script", because: "it runs in the user's own browser, with nothing to install or host. The cost: it only runs while the browser is open." },
-      { chose: "Finding table rows by their label", over: "by their position", because: "labels change less often than layouts." },
-      { chose: "One page at a time, with a pause", over: "opening all pages at once", because: "it's polite to the site and less likely to be blocked. Slower, but reliable." },
-      { chose: "A red card when a must-have is missing", over: "returning blanks", because: "a blank row that looks like success is worse than a clear failure." },
+      { chose: "A Chrome extension", over: "a separate program that controls a browser", because: "it runs in the person's own browser, with nothing to install or host. The downside: it only works while the browser is open." },
+      { chose: "Finding numbers by the name next to them", over: "by where they sit on the page", because: "names change less often than page layouts." },
+      { chose: "One page at a time, with a pause", over: "opening every page at once", because: "it's polite to the website and less likely to be blocked. Slower, but dependable." },
+      { chose: "A red card when a must-have is missing", over: "returning empty boxes", because: "an empty row that looks like it worked is worse than a clear failure." },
     ],
     ai: {
       label: "Why no AI",
-      text: "Reading a price off a page is a solved, exact problem. An AI model would be slower and could make up a number. Recipes are predictable, and when they break they say so.",
+      text: "Reading a price off a page is a straightforward, exact job. An AI model would be slower and could make up a number. Recipes are predictable, and when they break, they say so.",
     },
   },
 
   integration: {
     found:
-      "At work I've built tools on undocumented third-party APIs and led a dashboard that pulls live data through a small server. Connecting two systems that name things differently is a common job. I wanted to show it properly, including what happens when it goes wrong.",
+      "At work I've built tools on other companies' systems with no instruction manual, and led a dashboard that pulls in live data. Connecting two systems that name things differently is a common job. I wanted to show it properly, including what happens when it goes wrong.",
     tradeoffs: [
-      { chose: "Keycloak, with real OAuth and single sign-on", over: "a fake login", because: "logins are where real integrations get stuck. It cost the most setup time." },
-      { chose: "A mapping file", over: "translating field names in code", because: "a new partner's naming is a settings change, not a code change." },
-      { chose: "Treating each webhook as a hint and re-reading the product", over: "trusting the webhook's data", because: "a late message can't put an old number back." },
-      { chose: "Asking \"will retrying help?\" on each failure", over: "retrying everything", because: "retrying bad data just fails again. It gets parked with the reason instead." },
+      { chose: "A real login system with secure passes", over: "a pretend login", because: "logins are where real connections get stuck. It took the most setup time." },
+      { chose: "A translation file", over: "translating names inside the code", because: "connecting a new partner becomes a settings change, not a code change." },
+      { chose: "Treating each update message as a nudge and looking up the latest number", over: "trusting what the message says", because: "a late message can't bring back an old number." },
+      { chose: "Asking \"will trying again help?\" every time something fails", over: "retrying everything", because: "retrying bad data just fails again. It's set aside with the reason instead." },
     ],
     ai: {
       label: "Why no AI",
-      text: "Moving orders and stock between two companies has to be exact and repeatable. There's no judgement call for a model to make, so it doesn't use one.",
+      text: "Moving orders and stock between two companies has to be exact and repeatable. There's no judgement call for an AI to make, so it doesn't use one.",
     },
   },
 
   sidecar: {
     found:
-      "Product data from websites arrived from a scheduled weekly run. When someone needed an answer the same day, they waited or did it by hand, because running the schedule off its timetable risked breaking it. I'd already written small one-site tools for this, so I merged them into one.",
+      "Product data from websites came from an automatic weekly run. When someone needed an answer the same day, they waited or did it by hand, because running it outside its schedule risked breaking it. I'd already written small one-website tools for this, so I combined them into one.",
     tradeoffs: [
-      { chose: "Development environment only", over: "connecting it to production", because: "any engineer can use it with no risk to the weekly run." },
-      { chose: "Reading how each site serves its data", over: "copying what's drawn on screen", because: "it's much more reliable, but it means working out each site separately." },
-      { chose: "One module per site", over: "one shared scraper", because: "changing one site can't break the others." },
+      { chose: "Testing environment only", over: "connecting it to the live systems", because: "any engineer can use it with no risk to the weekly run." },
+      { chose: "Reading where each website's data comes from behind the scenes", over: "copying what's drawn on screen", because: "it's much more reliable, but it means working out each website separately." },
+      { chose: "Separate code for each website", over: "one shared tool for all of them", because: "changing one website can't break the others." },
     ],
     ai: {
       label: "Where AI fits",
-      text: "Not inside the tool: it needs exact, repeatable data. AI helped me build it. I used Cursor for the big refactor that merged the old tools, and checked every flow by hand on the real sites.",
+      text: "Not inside the tool: it needs exact, repeatable data. AI helped me build it. I used Cursor, an AI coding assistant, for the big reorganisation that combined the old tools, and checked every website by hand.",
     },
   },
 
   "health-dashboard": {
     found:
-      "Our weekly health review was a manual job. Someone pulled statuses from the project tracker by hand and put them together in a separate BI dashboard and exported files before every meeting. I was on the team doing it, so I felt the cost every week.",
+      "Our weekly review was a manual job. Before every meeting, someone copied statuses from the work-tracking tool by hand and put them together in a separate reporting dashboard and exported files. I was on the team doing it, so I felt the cost every week.",
     tradeoffs: [
-      { chose: "Pulling statuses live from the tracker's API", over: "the weekly manual export", because: "the numbers are current when the meeting starts. It means depending on that API, so the server falls back to cached data if it's down." },
-      { chose: "Keeping every credential on the server", over: "calling the API from the browser", because: "no token ever reaches a user's screen." },
-      { chose: "A mock mode", over: "always needing live keys", because: "demos and tests work for anyone, without asking for a token." },
+      { chose: "Pulling statuses live from the work-tracking tool", over: "the weekly manual export", because: "the numbers are up to date when the meeting starts. It means relying on that tool, so the server falls back to its saved copy if the tool is down." },
+      { chose: "Keeping every access key on the server", over: "having the browser fetch the data directly", because: "no key ever reaches anyone's screen." },
+      { chose: "A practice mode with fake data", over: "always needing live access keys", because: "demos and tests work for anyone, without asking for a key." },
     ],
     ai: {
       label: "Where AI fits",
-      text: "The dashboard itself doesn't need it. Pulling statuses is a plain API call, and a meeting needs exact numbers. The win was removing the manual work, not adding a model.",
+      text: "The dashboard itself doesn't need it. Fetching statuses is a straightforward request, and a meeting needs exact numbers. The win was removing the manual work, not adding AI.",
     },
   },
 
@@ -123,26 +123,26 @@ export const DEPTH = {
     found:
       "I write novels as a hobby. The apps I tried either cost a lot every month or kept text and drawing apart. None let me write and sketch with Apple Pencil on the same page, lined up together. So I built the one I wanted.",
     tradeoffs: [
-      { chose: "The writer's own iCloud (CloudKit)", over: "my own server and accounts", because: "it's free to run, private, and needs no sign-up. The cost: Apple devices only, and the data model can only grow, so it had to be right early." },
-      { chose: "One codebase for Mac, iPad and iPhone", over: "separate apps", because: "one adaptive layout is less to maintain on my own." },
-      { chose: "Saving each whiteboard item separately, with a tested merge", over: "saving the whole board at once", because: "two devices editing at the same time don't overwrite each other." },
+      { chose: "The writer's own iCloud", over: "my own server and accounts", because: "it's free to run, private, and needs no sign-up. The downside: it only works on Apple devices, and the way data is organised can only be added to, so it had to be right early." },
+      { chose: "One set of code for Mac, iPad and iPhone", over: "three separate apps", because: "one adaptable layout is less to look after on my own." },
+      { chose: "Saving each whiteboard item separately, and merging changes carefully", over: "saving the whole board at once", because: "two devices editing at the same time don't overwrite each other." },
     ],
     ai: {
       label: "Where AI fits",
-      text: "Not in the app: it's a writing tool, and the writing is mine. AI is how I built it. I didn't know Swift, so I built it by describing what I wanted and giving feedback on each version. It's come a long way since my first app.",
+      text: "Not in the app: it's a writing tool, and the writing is mine. AI is how I built it. I didn't know Swift, Apple's programming language, so I built it by describing what I wanted and giving feedback on each version. It's come a long way since my first app.",
     },
   },
 
   reptrack: {
     found:
-      "A learning project with a real use. I wanted to find out what building and shipping an iOS app really involves, and how long it takes. I didn't know Swift, so I wanted to see how far plain English and steady feedback to an AI could take me. I use it at the gym myself.",
+      "A learning project with a real use. I wanted to find out what building and releasing an iPhone app really involves, and how long it takes. I didn't know Swift, Apple's programming language, so I wanted to see how far describing things in plain English and giving steady feedback to an AI could take me. I use it at the gym myself.",
     tradeoffs: [
-      { chose: "Everything on the phone, no account", over: "a backend with sign-up", because: "nothing stands between you and your first set, and there's nothing to host. The cost: no sync between devices yet." },
-      { chose: "A small set of features, shipped", over: "a long list, unshipped", because: "the goal was to go through App Store review end to end. It still needs a lot of improvement, and I use it enough to know where." },
+      { chose: "Everything on the phone, no account", over: "an online service with sign-up", because: "nothing stands between you and your first set, and there's nothing to keep running online. The downside: it doesn't sync between devices yet." },
+      { chose: "A few features, released", over: "a long list, never released", because: "the goal was to get all the way through App Store review. It still needs a lot of improvement, and I use it enough to know where." },
     ],
     ai: {
       label: "Where AI fits",
-      text: "AI is how it was built, not part of the app. I didn't know Swift when I started. The real lesson was prompting: being specific, giving feedback on each build, and checking it on a real phone.",
+      text: "AI is how it was built, not part of the app. I didn't know Swift when I started. The real lesson was how to instruct the AI: being specific, giving feedback on each version, and checking it on a real phone.",
     },
   },
 };
