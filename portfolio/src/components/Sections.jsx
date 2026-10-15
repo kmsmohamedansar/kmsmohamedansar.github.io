@@ -691,7 +691,14 @@ export function ProjectsSection({ scrollContainerRef }) {
           kicker="Projects"
           title="Things I've built"
           lede="Three I'd start with, four more worth your time, then the rest. Click any card for the story, a diagram of how it works, and a link to try it or read the code."
-        />
+        >
+          <a
+            href="#work"
+            className="mt-6 inline-flex min-h-10 items-center gap-2 rounded-full border border-white/25 px-5 py-2 font-mono text-[.7rem] uppercase tracking-[.12em] text-white transition-colors hover:border-white/60"
+          >
+            All projects <span aria-hidden="true">→</span>
+          </a>
+        </SectionHead>
         <div className="space-y-16 sm:space-y-24">
           {FEATURED.map((p, i) => (
             <FeaturedRow key={p.slug} project={p} index={i} />
