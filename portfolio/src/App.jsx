@@ -60,7 +60,7 @@ export const useScrollContainer = () => useContext(ScrollContext);
 function scrollToSection(id, tries = 60) {
   requestAnimationFrame(() => {
     const el = document.getElementById(id);
-    if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
+    if (el) el.scrollIntoView({ behavior: "smooth", block: id.startsWith("card-") ? "center" : "start", inline: "nearest" });
     else if (tries > 0) scrollToSection(id, tries - 1);
   });
 }

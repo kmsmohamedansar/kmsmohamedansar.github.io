@@ -394,7 +394,7 @@ export default function ProjectPage({ slug }) {
       transition={{ duration: 0.8, ease: EASE_REVEAL }}
       className="mx-auto w-full max-w-4xl px-5 pt-28 pb-24"
     >
-      <a href="#projects" className="inline-flex items-center gap-2 font-mono text-xs uppercase tracking-[.12em] text-[color:var(--ink-200)] transition-colors duration-200 hover:text-white">
+      <a href={LISTED_PROJECTS.some((p) => p.slug === slug) ? `#card-${slug}` : "#projects"} className="inline-flex items-center gap-2 font-mono text-xs uppercase tracking-[.12em] text-[color:var(--ink-200)] transition-colors duration-200 hover:text-white">
         <ArrowLeft size={14} /> All projects
       </a>
 
