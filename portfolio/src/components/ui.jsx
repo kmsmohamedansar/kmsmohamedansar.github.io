@@ -130,7 +130,7 @@ export function ScrollShot({ src, label, onError, ratio = "aspect-[16/10]" }) {
   );
 }
 
-export function SectionHead({ kicker, title, lede, accent = "cyan", align = "left" }) {
+export function SectionHead({ kicker, title, lede, accent = "cyan", align = "left", children }) {
   const center = align === "center";
   return (
     <Reveal className={`max-w-3xl mb-10 sm:mb-14 ${center ? "mx-auto text-center" : ""}`} y={0}>
@@ -139,6 +139,7 @@ export function SectionHead({ kicker, title, lede, accent = "cyan", align = "lef
         <RiseText text={title} />
       </h2>
       {lede && <p className={`mt-5 max-w-2xl text-base sm:text-lg leading-relaxed text-[color:var(--ink-200)] ${center ? "mx-auto" : ""}`}>{lede}</p>}
+      {children}
     </Reveal>
   );
 }
