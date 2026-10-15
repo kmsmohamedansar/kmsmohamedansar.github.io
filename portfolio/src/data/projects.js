@@ -299,7 +299,7 @@ export const PROJECTS = [
       links: ["0.0>1.0", "1.0>1.1", "1.1>2.0", "2.0>3.0", "3.0>3.1"],
     },
     links: [
-      { label: "Code and full case study", href: "https://github.com/kmsmohamedansar/kmsmohamedansar.github.io/tree/main/projects/sitescout", external: true, primary: true },
+      { label: "Code and full case study", href: "https://github.com/kmsmohamedansar/sitescout", external: true, primary: true },
       { label: "The work tool behind it: Sidecar", href: "#project/sidecar" },
     ],
   },
@@ -390,8 +390,8 @@ export const PROJECTS = [
       links: ["0.0>1.0", "1.0>2.0", "2.0>2.1", "2.1>3.0"],
     },
     links: [
-      { label: "Code, case study and runbook", href: "https://github.com/kmsmohamedansar/kmsmohamedansar.github.io/tree/main/projects/integration-in-a-box", external: true, primary: true },
-      { label: "Watch the walkthrough", href: "https://github.com/kmsmohamedansar/kmsmohamedansar.github.io/blob/main/projects/integration-in-a-box/docs/control-room-walkthrough.mp4", external: true },
+      { label: "Code, case study and runbook", href: "https://github.com/kmsmohamedansar/integration-in-a-box", external: true, primary: true },
+      { label: "Watch the walkthrough", href: "https://github.com/kmsmohamedansar/integration-in-a-box/blob/main/docs/control-room-walkthrough.mp4", external: true },
       { label: "The work behind it", href: "#project/health-dashboard" },
     ],
   },
@@ -471,7 +471,7 @@ export const PROJECTS = [
       links: ["0.0>1.0", "0.0>1.1", "1.0>2.0", "1.1>2.0", "2.0>3.0"],
     },
     links: [
-      { label: "Code, case study and results", href: "https://github.com/kmsmohamedansar/kmsmohamedansar.github.io/tree/main/projects/analytics-assistant", external: true, primary: true },
+      { label: "Code, case study and results", href: "https://github.com/kmsmohamedansar/analytics-assistant", external: true, primary: true },
       { label: "The work behind it", href: "#project/mcp-workflow" },
     ],
   },
@@ -592,7 +592,7 @@ export const PROJECTS = [
       ],
     },
     links: [
-      { label: "Code, case study and runbook", href: "https://github.com/kmsmohamedansar/kmsmohamedansar.github.io/tree/main/projects/data-delivery", external: true, primary: true },
+      { label: "Code, case study and runbook", href: "https://github.com/kmsmohamedansar/data-delivery", external: true, primary: true },
       { label: "See the lineage explorer", href: "#lineage-demo" },
     ],
   },
@@ -662,7 +662,7 @@ export const PROJECTS = [
       ],
     },
     links: [
-      { label: "Code, case study and results", href: "https://github.com/kmsmohamedansar/kmsmohamedansar.github.io/tree/main/projects/catalogue-checker", external: true, primary: true },
+      { label: "Code, case study and results", href: "https://github.com/kmsmohamedansar/catalogue-checker", external: true, primary: true },
       { label: "The notebook it grew from", href: "#project/smart-categorization" },
     ],
   },
@@ -1338,7 +1338,7 @@ export const PROJECTS = [
         { label: "Result", nodes: ["One dashboard page"] },
       ],
     },
-    links: [{ label: "Code in my portfolio repo", href: "https://github.com/kmsmohamedansar/kmsmohamedansar.github.io/tree/main/projects/forex", external: true, primary: true }],
+    links: [{ label: "Code on GitHub", href: "https://github.com/kmsmohamedansar/kmsmohamedansar.github.io/tree/main/projects/forex", external: true, primary: true }],
   },
   {
     slug: "f1-telemetry",
@@ -1371,7 +1371,7 @@ export const PROJECTS = [
         { label: "Output", nodes: ["CSV files", "HTML report"] },
       ],
     },
-    links: [{ label: "Code in my portfolio repo", href: "https://github.com/kmsmohamedansar/kmsmohamedansar.github.io/tree/main/projects/f1-telemetry", external: true, primary: true }],
+    links: [{ label: "Code on GitHub", href: "https://github.com/kmsmohamedansar/kmsmohamedansar.github.io/tree/main/projects/f1-telemetry", external: true, primary: true }],
   },
 ];
 
