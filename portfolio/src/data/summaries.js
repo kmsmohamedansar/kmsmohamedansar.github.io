@@ -28,3 +28,43 @@ export const STEP_TOOLS = {
   "forex-tools": [["Dukascopy tick data", "Google News RSS"], ["pandas", "matplotlib"], ["Python"], ["Static HTML"]],
   "f1-telemetry": [["FastF1", "OpenF1 API"], ["pandas"], []],
 };
+
+// Before and after, for projects that replaced a slower way of working.
+// Work projects stay generic: no numbers, per the rules in projects.js.
+export const BEFORE_AFTER = {
+  "catalogue-checker": {
+    before: ["Old notebook, one product at a time", "No answer key, so accuracy unknown"],
+    after: ["Fast pass on everything, slow pass only on doubtful ones", "Scored against 50 planted errors"],
+    change: "About 12 minutes for 5 products → 1.45 minutes for 5,000",
+  },
+  sitescout: {
+    before: ["15 tabs open", "Copy and paste every number", "One slip puts a number in the wrong row"],
+    after: ["Paste tickers, press Scout", "Cards plus one CSV", "A broken page shows a red card saying what broke"],
+    change: "About an hour of copy and paste → one click",
+  },
+  "analytics-assistant": {
+    before: ["Rules or AI? Nobody had measured it"],
+    after: ["Both answer the same 30 questions with the same six tools", "Every answer scored"],
+    change: "Rules: 28 of 30 right in about 1 ms. Local AI: 20 of 30 in about 6 s",
+  },
+  "data-delivery": {
+    before: ["Files in different formats, each with its own mess", "A wrong delivery gets used"],
+    after: ["A settings file per customer", "dbt cleans and tests every week", "Deliver, or block with a reason"],
+    change: "Bad weeks are stopped with the problem named, before anyone uses them",
+  },
+  sidecar: {
+    before: ["Wait for the weekly scheduled run", "Or copy the data by hand"],
+    after: ["Pick a site in the side panel", "CSV download, same columns every time"],
+    change: "Data the same day, without touching the weekly run",
+  },
+  "scope-checker": {
+    before: ["Check each product by hand against the retailer's rules", "Slow, and two careful people could disagree"],
+    after: ["Paste IDs, pick a retailer", "Yes or no for each, with a reason", "CSV download"],
+    change: "Consistent answers, with the reason written down",
+  },
+  "health-dashboard": {
+    before: ["Exported files and the work tracker open side by side"],
+    after: ["Headline numbers and the priority queue on one screen", "Each issue shows the accounts it affects"],
+    change: "One page for the whole weekly review",
+  },
+};
