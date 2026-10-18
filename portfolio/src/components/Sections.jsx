@@ -715,6 +715,9 @@ export function ProjectsSection({ scrollContainerRef }) {
           </div>
         )}
         <div className="mt-20 sm:mt-28">
+          <p className="mb-6 max-w-2xl text-sm leading-relaxed text-[color:var(--ink-200)]">
+            Professional work is described without client names, private data, or sensitive internal details. Public practice versions use unrelated public or sample data.
+          </p>
           <ProjectRail projects={MORE_PROJECTS} />
         </div>
         <div className="mt-14">
