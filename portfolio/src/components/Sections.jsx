@@ -957,7 +957,10 @@ export function AboutSection({ scrollContainerRef }) {
             </p>
           ))}
         </div>
-        <Reveal className="mx-auto mt-16 grid max-w-3xl gap-8 sm:grid-cols-2">
+        <p className="mx-auto mt-14 max-w-3xl text-sm leading-relaxed text-[color:var(--ink-200)]">
+          These are the tools behind the work. Tap or hover over a name to see what it does.
+        </p>
+        <Reveal className="mx-auto mt-6 grid max-w-3xl gap-8 sm:grid-cols-2">
           {ABOUT.groups.map((g) => (
             <SkillGroup key={g.title} group={g} />
           ))}
