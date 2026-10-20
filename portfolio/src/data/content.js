@@ -5,12 +5,12 @@
 
 export const HERO = {
   eyebrow: "Solutions Engineer · Remote, Canada",
-  title: "Hi, I'm Mohamed. I turn retail data into answers, and ship apps on the side.",
+  title: "Hi, I'm Mohamed. I turn retail data into answers, and build apps on the side.",
   lede: [
-    { text: "By day I write " },
+    { text: "By day I use " },
     { text: "SQL", cls: "text-cyan font-semibold" },
-    { text: " on a big retail pricing dataset and help teams get answers they can trust. The rest of the time I build things: an " },
-    { text: "iOS app", cls: "text-amber font-semibold" },
+    { text: " to study retail prices and help teams get answers they can trust. The rest of the time I build things: an " },
+    { text: "iPhone app", cls: "text-amber font-semibold" },
     { text: " on the App Store, a novel-writing app in testing, and a 3D model of my own head built with " },
     { text: "AI", cls: "text-[#b9a8ff] font-semibold" },
     { text: " that looks back at you." },
@@ -19,10 +19,10 @@ export const HERO = {
 
 // Quick proof, right under the intro, before anyone reads a paragraph.
 export const RECEIPTS = [
-  { value: "2", label: "native apps built, one live on the App Store", accent: "amber" },
-  { value: "1", label: "independent AI study, with a full technical report", accent: "rose" },
+  { value: "2", label: "apps for Apple devices built, one live on the App Store", accent: "amber" },
+  { value: "2", label: "independent AI studies, each with a full report", accent: "rose" },
   { value: "PROJECTS", label: "projects with code, write-ups or live demos", accent: "green" },
-  { value: "2019", label: "working with data since, from content ops to Snowflake", accent: "cyan" },
+  { value: "2019", label: "the year I started working with data", accent: "cyan" },
 ];
 
 export const SECTION_LINKS = [
@@ -35,14 +35,14 @@ export const SECTION_LINKS = [
 export const ABOUT = {
   title: "What I do, and what I know",
   story: [
-    "At Amazon Prime Video I learned that bad data rarely shows up as an error. It shows up two teams later as a wrong decision. Since then I've wanted to be the one building the pipeline, not just reading what comes out of it, and I check my own numbers before anyone else has to.",
-    "Outside work I keep building. Two native apps, an independent study of the new AI decision models, data tools with honest tests, and a growing pile of things made with AI as a pair programmer. None of it was assigned. It's just how I learn.",
+    "At Amazon Prime Video I learned that bad data rarely shows up as an error. It shows up two teams later as a wrong decision. Since then I've wanted to build the systems that move and check data, not just read the results. I check my own numbers before anyone else has to.",
+    "Outside work I keep building. Two apps for Apple devices, two independent AI studies, data tools with honest tests, and a growing pile of things made with AI as a coding partner. None of it was assigned. It's just how I learn.",
   ],
   groups: [
     { title: "Data", accent: "cyan", items: ["SQL", "Snowflake", "BigQuery", "Python", "pandas", "DuckDB", "Airflow", "ETL and ELT"] },
     { title: "Reporting", accent: "amber", items: ["Tableau", "Power BI", "Dashboards people open every week"] },
     { title: "Building", accent: "green", items: ["Swift", "SwiftUI", "SwiftData", "React", "Next.js", "TypeScript", "three.js", "Docker", "Chrome extensions (MV3)"] },
-    { title: "AI tooling", accent: "violet", items: ["Claude Code", "Cursor", "MCP servers", "Local models with Ollama", "Hugging Face Transformers", "FAISS and embeddings", "Blender"] },
+    { title: "AI tools", accent: "violet", items: ["Claude Code", "Cursor", "MCP servers", "Local models with Ollama", "Hugging Face Transformers", "FAISS and embeddings", "Blender"] },
   ],
 };
 
@@ -56,9 +56,9 @@ export const ROLES = [
     accent: "cyan",
     summary: "Turning a client's question into data work that holds up, on a big retail pricing dataset.",
     bullets: [
-      "Build data solutions for retail pricing: client needs, pre-sales analysis, and one-off data requests.",
+      "Build reports and tools for retail pricing, from early client questions to one-off data requests.",
       "Use SQL and Snowflake to dig into tricky data problems, then check my own work before handing it over.",
-      "Work with other teams to turn a business question into something technical that actually gets used.",
+      "Work with other teams to turn a business question into a useful report or tool.",
     ],
     tags: ["SQL", "Snowflake", "Pre-sales", "Data solutions"],
   },
@@ -68,7 +68,7 @@ export const ROLES = [
     title: "Tech Support",
     when: "Aug 2024 to Dec 2025 · Remote, Canada",
     accent: "violet",
-    summary: "Where I got properly deep into SQL reporting and Snowflake, helping clients and internal teams.",
+    summary: "Helped clients and coworkers get reliable answers from retail pricing data.",
     bullets: [
       "Built SQL reports for pricing analytics and tidied up internal data workflows along the way.",
       "Fixed recurring data issues for clients and internal teams, mostly in Snowflake.",
@@ -83,7 +83,7 @@ export const ROLES = [
     title: "Business Development Intern, Business Analysis",
     when: "Jan to Apr 2024 · Remote, Canada",
     accent: "amber",
-    summary: "Where SQL and Snowflake went from something I used to something I wanted to do properly.",
+    summary: "Used data tools to turn business questions into reports and dashboards.",
     bullets: [
       "Business analysis tied to data workflows and reporting needs.",
       "SQL and Snowflake work behind the dashboards and reports.",
@@ -102,7 +102,7 @@ export const ROLES = [
     bullets: [
       "Quality auditing and process improvement for content operations.",
       "Reporting and analysis to spot workflow gaps and support decisions.",
-      "Updated SOPs and helped make audits consistent across teams.",
+      "Updated written procedures and helped make audits consistent across teams.",
     ],
     tags: ["Quality auditing", "Process improvement", "Reporting"],
   },
@@ -116,7 +116,7 @@ export const ROLES = [
     summary: "Keeping a large digital catalogue accurate and ready to publish.",
     bullets: [
       "Quality control and day-to-day coordination for the digital content catalogue.",
-      "Worked with stakeholders on defects, metadata accuracy and getting content ready to publish.",
+      "Worked with other teams to fix errors in catalogue information and get content ready to publish.",
       "Kept quality steady across recurring operations and solved issues as they came up.",
     ],
     tags: ["Digital content", "Quality control", "Stakeholders"],
@@ -136,7 +136,7 @@ export const EMET_TOPICS = [
       { text: "Datasembly", cls: "font-bold" },
       {
         text:
-          ", since January 2026. Lots of SQL and Snowflake on a big retail pricing dataset, plus some pre-sales work: working out what a stakeholder is really asking and building something that holds up.",
+          ", since January 2026. I use SQL and Snowflake to work with retail pricing data, and help clients turn their questions into reports or tools they can rely on.",
       },
     ],
   },
