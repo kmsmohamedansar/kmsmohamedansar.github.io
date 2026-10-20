@@ -32,6 +32,21 @@ export const DEPTH = {
     },
   },
 
+  "rea-study": {
+    found:
+      "REA is new and free, and the only published test of it came from the author of a competing tool. Nobody independent had checked whether it makes an AI agent's answers better, or whether the agent says what it can't tell.",
+    tradeoffs: [
+      { chose: "Programs where I know every answer", over: "taking apart a real app", because: "you can only mark an answer you can check, and a live commercial app raises terms-of-service questions." },
+      { chose: "Writing the rules for what I could claim before the held-out run", over: "deciding after seeing the numbers", because: "my script's own held-out numbers looked like a big gap. The rule I set beforehand is what turned it into \"no difference\" once the answers were read." },
+      { chose: "Keeping the answer key off the machine that ran the agents", over: "keeping everything in one folder", because: "an agent that can read the key can pass without understanding anything." },
+      { chose: "Three set-ups, not two", over: "just REA against no REA", because: "the agent ignored REA when left alone. Without a third set-up that told it to use REA, the test would have measured REA sitting unused." },
+    ],
+    ai: {
+      label: "Does REA help an AI?",
+      text: "That's what the project measures. On these small programs, no: the plain tools matched it on accuracy and were faster and cheaper. What it does on large or scrambled programs is still open.",
+    },
+  },
+
   "catalogue-checker": {
     found:
       "My old categorization notebook used a large AI model on five products in about twelve minutes, with no answer key. So I couldn't say whether it was accurate, or whether it could ever check a real catalogue. I rebuilt it to answer both.",

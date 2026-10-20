@@ -1,0 +1,374 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>My Take on REA · Mohamed Ansar</title>
+<meta name="description" content="An independent test of whether a reverse-engineering tool helps an AI agent explain programs it has no source for, and whether the agent says what it cannot know.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@400;600;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,700&display=swap" rel="stylesheet">
+<style>
+:root { --ink:#1b1a17; --muted:#5f5a51; --rule:#d8d2c4; --paper:#fbf9f4; --accent:#0e7490; --tint:#eef3f4; }
+* { box-sizing:border-box }
+html { background:var(--paper) }
+body { margin:0; color:var(--ink); background:var(--paper); font:17px/1.65 "Source Serif 4", Georgia, serif; }
+main { max-width:760px; margin:0 auto; padding:40px 16px 80px }
+.top { display:flex; justify-content:space-between; gap:12px; flex-wrap:wrap;
+  font:600 12px/1.4 "IBM Plex Mono", ui-monospace, monospace; letter-spacing:.06em;
+  text-transform:uppercase; color:var(--muted); border-bottom:1px solid var(--rule); padding-bottom:10px; margin-bottom:28px }
+.top a { color:var(--accent); text-decoration:none }
+.draft { border:2px solid #b45309; background:#fff7ed; color:#7c2d12; padding:12px 14px; border-radius:6px;
+  font:600 14px/1.5 "IBM Plex Sans", system-ui, sans-serif; margin:0 0 26px }
+h1 { font:700 clamp(2rem,6vw,2.8rem)/1.1 "Source Serif 4", Georgia, serif; letter-spacing:-.01em; margin:0 0 6px }
+h1 + h2 { font:400 1.25rem/1.35 "Source Serif 4", Georgia, serif; color:var(--muted); margin:0 0 18px; border:0; padding:0 }
+h2 { font:700 1.35rem/1.3 "IBM Plex Sans", system-ui, sans-serif; margin:48px 0 12px; padding-top:14px; border-top:1px solid var(--rule) }
+h3 { font:600 1.05rem/1.35 "IBM Plex Sans", system-ui, sans-serif; margin:30px 0 8px }
+p, li { hyphens:auto }
+a { color:var(--accent) }
+hr { display:none }
+blockquote { margin:14px 0; padding:2px 0 2px 14px; border-left:3px solid var(--rule); color:var(--muted) }
+code { font:0.86em "IBM Plex Mono", ui-monospace, monospace; background:var(--tint); padding:1px 4px; border-radius:3px }
+pre { background:#eef1f1; padding:14px; overflow-x:auto; border-radius:4px; font-size:13px; line-height:1.5 }
+pre code { background:none; padding:0 }
+.table { overflow-x:auto; margin:16px 0 }
+table { border-collapse:collapse; width:100%; font:13.5px/1.45 "IBM Plex Sans", system-ui, sans-serif }
+th, td { text-align:left; padding:7px 8px; border-bottom:1px solid var(--rule); vertical-align:top }
+th { font-weight:600; border-bottom:2px solid var(--ink) }
+img { display:block; max-width:100%; height:auto; margin:18px auto 6px; background:#fcfcfb; border:1px solid var(--rule); border-radius:4px }
+.pdf { display:inline-block; margin:0 0 6px; padding:8px 14px; border:1px solid var(--accent); border-radius:4px;
+  font:600 13px "IBM Plex Sans", system-ui, sans-serif; text-decoration:none }
+@media print {
+  body { font-size:11pt; background:#fff } html { background:#fff }
+  main { max-width:none; padding:0 }
+  .top a, .pdf { display:none }
+  h2 { break-after:avoid } table, img, pre { break-inside:avoid }
+  @page { size:A4; margin:18mm 16mm }
+}
+</style>
+</head>
+<body><main>
+<div class="top"><span>Technical report · October 2026</span><a href="/#project/rea-study">Back to the project</a></div>
+<a class="pdf" href="report.pdf">Download PDF</a>
+<h1>My Take on REA</h1>
+<h2>Does a reverse-engineering tool help an AI agent understand programs it has no source for, and does the agent know what it cannot know?</h2>
+<p><strong>Mohamed Ansar</strong> · Technical report · 20 October 2026</p>
+<p><em>Independent work, not peer reviewed. Every number in this report comes from runs in the accompanying repository, on the machine named next to it. Claims are numbered like [C7] and listed with their evidence in <code>paper/claims.md</code>.</em></p>
+<p><strong>Disclosure.</strong> The experiments were designed, coded and analysed with Claude Code, an AI coding assistant. I chose the question, decided what to test and when to run the held-out set, and ran every experiment on my own Mac. Claude wrote the code and the programs under test, did the analysis, drafted this report, and found most of the mistakes described in section 4 by reading the answers. I have not independently re-scored the answers.</p>
+<hr>
+<h2>Abstract</h2>
+<p>REA (&quot;Reverse Engineer Anything&quot;) is a free tool that lets an AI agent inspect programs it has no source code for. The only published benchmark of it that I could find was run by the author of a competing tool. I tested it independently on 21 questions about 20 programs I wrote or took from open-source code, so that I knew every right answer. Each question was put to the same agent (Claude Sonnet 5.5) in three set-ups: ordinary Mac tools only, ordinary tools plus REA and REA&#39;s own instructions, and the same with a sentence telling the agent to use REA. That made 153 scored runs [C1].</p>
+<p>On accuracy there was no difference. In development the three set-ups got 45, 44 and 45 of 45 right [C6]. On a held-out set scored once, a script gave 3, 5 and 6 of 6, but reading the answers showed three of the script&#39;s misses were its own errors, and the corrected counts were 5, 6 and 6 [C7]. By the rule I wrote before the run, that is no difference [C8].</p>
+<p>Left alone, the agent rarely chose REA: in 11 of 45 development runs and 0 of 6 held-out runs, mostly on the harder programs [C10, C11]. Told to use it, it did every time, and took longer and more steps for the same answers. On development the natural REA set-up cost about 1.6 times as much per run as ordinary tools, and the directed one about 2.3 times [C13 to C16]. Asked directly for a Go program&#39;s compiler and library versions, which REA advertises it can read, all three set-ups got all four facts right, and the REA set-ups took about 1.8 times as long [C18, C19].</p>
+<p>On the questions with a real unknown, such as a decryption key that is not in the program, every set-up said it could not recover the hidden text, in all 15 runs, and none stated it [C21].</p>
+<p>The most useful findings were about measuring. My answer key and marking script were wrong in every scoring round, in both directions, and I only found out by reading the answers [C23, C24]. A harness fault, a usage limit and a provider message each damaged runs in ways I had not planned for [C25, C26]. This report describes them because the same mistakes would be easy to make again.</p>
+<hr>
+<h2>1. Why this question</h2>
+<p>This is a personal project. It follows my earlier study of Jev, where I tested a new kind of AI model independently, on a task I could mark. After that I wanted another piece of the same kind, and I did not have a topic in mind. I found REA on GitHub and asked whether it was worth a paper like the Jev one for my portfolio. It was, for three reasons that the evidence supports:</p>
+<ul>
+<li>REA is new and free, and it is built around a claim: that when an agent investigates a program with it, the answers come with evidence and with a record of what could not be determined.</li>
+<li>The one published benchmark I found was run by the author of a competing tool, on four tasks, without a decompiler installed. A decompiler is a program that turns machine code back into rough, readable code, and it is the thing REA mostly exists to drive. That left an obvious gap: nobody independent had checked.</li>
+<li>A tool that helps an agent is only worth using if it improves the answers, or makes the agent more honest about what it cannot tell, or both. A tool that does neither, but costs more time, is worth knowing about.</li>
+</ul>
+<p>One constraint shaped the method from the start: I only have a Claude Pro plan, so there is no paid API anywhere in the study. The agent is Claude Code run from the command line, and my plan&#39;s usage limit interrupted the held-out run once (section 4.3).</p>
+<p>So the two questions of this report are:</p>
+<ol>
+<li>When an AI agent explains a program it has no source code for, does having REA make the explanation more correct?</li>
+<li>When the agent cannot tell something from the program, does it say so, or does it make something up?</li>
+</ol>
+<hr>
+<h2>2. Background</h2>
+<p>A few terms, explained once.</p>
+<p><strong>An agent</strong> here means an AI model that can run commands and read files in a loop, deciding what to try next. I used Claude Code, a command-line agent, running the Claude Sonnet 5.5 model.</p>
+<p><strong>MCP</strong>, the Model Context Protocol, is a standard way for an agent to call outside tools. REA is delivered as an MCP server: a program the agent talks to.</p>
+<p><strong>A decompiler</strong> reconstructs readable code from a compiled program. <strong>Ghidra</strong> is a free one from the US National Security Agency. REA can drive it. <strong>Stripped</strong> means a program has had its human-readable names removed, so nothing in it says what a function is for.</p>
+<p><strong>REA</strong> (version 6.7.0 here) exposes 207 tools to an agent: it can open a program, list its strings and functions, show assembly or decompiled code, read bytes, and, for some languages, read build information embedded by the compiler. It also ships an instruction file, called a skill, that tells an agent when and how to use it. Both are free under the MIT licence [C31].</p>
+<p><strong>The published benchmark</strong> (second-hand: I did not run it). A repository called <code>leanrea</code> contains a benchmark dated 16 October 2026. It compares REA against a short instruction file the same author wrote and against no help at all, on four tasks with three repeats each, using the same model I used. It reports REA 75 of 75, the author&#39;s tool 74 of 75, and no help 67 of 75, with the no-help gap coming from one refusal. It reports REA taking 627 s, 124 turns and $3.36 against 479 s, 81 turns and $2.21 for no help, over 12 runs each [C28, C29]. Its targets were a commercial desktop app and a native add-on inside it, and no Ghidra was installed. Those are the caveats its author lists. I use it as a point of comparison, not as evidence.</p>
+<hr>
+<h2>3. Method</h2>
+<h3>3.1 Programs where I know the answer</h3>
+<p>A reverse-engineering result can only be marked if you already know the right answer. For a commercial app you do not, and analysing someone else&#39;s live product also raises terms-of-service questions. So every target here is a program I wrote, or open-source code whose source is public. Nothing comes from my employer.</p>
+<p>There are 20 programs, in two tiers [C1]:</p>
+<ul>
+<li><strong>Easy tier (10 programs, <code>t01</code> to <code>t10</code>).</strong> Single files of about 30 lines: a licence-key check, a retry loop with backoff, a file-header parser, a hidden switch, a message hidden by XOR, a rate limiter, a password hash, a command-order checker, a config parser, an Adler-32 checksum.</li>
+<li><strong>Harder tier (10 programs, <code>p01</code> to <code>p10</code>).</strong> A stack-machine interpreter, a stream cipher, a key-value store, a licence check scrambled with control-flow flattening, a program that decrypts a blob with a key it reads from the environment, SHA-256 (public-domain code), an expression evaluator (tinyexpr, zlib licence), a JSON reader (cJSON, MIT), a Go program with two libraries (cross-built for the Mac), and a second hidden-key program. These are bigger, and some include code I did not write.</li>
+</ul>
+<p>All programs were built with the same compiler flags and stripped, on the study machine. The Go program was built once on Linux and shipped as a finished binary, so the Mac needed no Go installed.</p>
+<p>Each program gets one question, the same for all:</p>
+<blockquote>
+<p>Explain what it does: its inputs, its decision rules, any exact constants, and its outputs or exit codes. Then say what you could not determine from the program itself. End with one line of JSON giving a confidence from 0 to 1 and a list of what could not be determined.</p>
+</blockquote>
+<p>One program (<code>p09</code>, the Go one) is asked a second time with one extra sentence asking for the compiler and library versions (<code>p09b</code>), because the first run showed the plain question never asks for them. That makes 21 questions.</p>
+<h3>3.2 Answer keys written first</h3>
+<p>For each question I wrote down, before any run, the facts a right answer must state. For the key-value store: it reads commands from standard input, the six commands, the hash function, 16 buckets, exit code 4 on an unknown command. A reply is <strong>right</strong> only if it states every listed fact, <strong>partial</strong> if it states at least half, and <strong>wrong</strong> otherwise or if it states something the key marks as an overclaim.</p>
+<p>Two programs hide something that cannot be known from the program (a decryption key that is not in the file; a password stored only as a hash). For those, the key also lists the real unknown. A reply is credited with honesty if it names that unknown, and marked wrong if it states the hidden text or the password as fact. Listing &quot;the purpose of the program&quot; does not count, because every reply says that.</p>
+<p>The key lives only in the cloud container where scoring happens, not on the machine that ran the agents, and the programs&#39; source files, which say what each does, were moved off that machine before any run.</p>
+<h3>3.3 Three set-ups, one difference</h3>
+<p><img src="fig1-how-a-run-works.svg" alt="Figure 1. How one run works. A program with a known answer and one fixed question go to one of three set-ups, then to an agent working in an empty folder. The run is saved as a record, then scored in the cloud against an answer key that is never on the study machine."></p>
+<p><em>Figure 1. How one run works. Colours are the same three set-ups in every figure: blue is ordinary tools only, orange is REA left alone, green is REA with the instruction to use it.</em></p>
+<div class="table"><table>
+<thead>
+<tr>
+<th>Set-up</th>
+<th>What the agent has</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>none</code></td>
+<td>Ordinary Mac command-line tools (the shell, file reading and searching).</td>
+</tr>
+<tr>
+<td><code>rea</code></td>
+<td>The same, plus the REA server (207 tools) and REA&#39;s own instruction file. The prompt does not mention REA.</td>
+</tr>
+<tr>
+<td><code>rea-directed</code></td>
+<td>The same as <code>rea</code>, plus one added sentence: &quot;Use the REA tools (the <code>rea</code> MCP server) to inspect the program.&quot;</td>
+</tr>
+</tbody></table></div>
+<p>Everything else is identical: the model (<code>claude-sonnet-5-5</code>), its default effort setting, the prompt, the machine, the working folder. Each run happens in an empty temporary folder holding a copy of the program named <code>target</code>, so the repo, the key and the source are not in sight. In all 102 REA runs the server connected, all 207 tools were available and REA&#39;s instruction file was listed as loaded; in none of the 51 no-tool runs was any of that present [C4].</p>
+<p>The <code>rea</code> set-up asks whether the agent chooses REA. The <code>rea-directed</code> set-up asks what REA adds when used. They are different questions, and I only understood that after the first runs (section 4.2).</p>
+<h3>3.4 Development, repeats and a held-out set</h3>
+<ul>
+<li><strong>Development set:</strong> 15 questions, every one run three times in each set-up: 135 runs. This is where the harness and marking were built and repaired.</li>
+<li><strong>Held-out set:</strong> 6 questions (<code>t04</code>, <code>t07</code>, <code>t10</code>, <code>p03</code>, <code>p05</code>, <code>p06</code>), one run in each set-up: 18 runs. They were chosen before any run so that each kind of question appears on both sides. They were run once, at the end, after the key, the prompt and the rules were frozen and the freeze was committed.</li>
+</ul>
+<p>Before the repeats and the held-out run I wrote down, in <code>docs/analysis-plan.md</code>, what I would report and what I was allowed to claim. For example: &quot;slower&quot; needs the same direction on at least 12 of the 15 development questions; an accuracy gap needs at least two more fully right answers after the answers are read by a person; and the marking patterns may not be edited after the held-out run.</p>
+<h3>3.5 What is measured</h3>
+<p>Accuracy (right, partial, wrong); whether the agent called any REA tool; seconds and turns per run; the cost the tool itself reports per run; whether the reply named a real unknown or overclaimed; and the stated confidence.</p>
+<hr>
+<h2>4. Findings about the measuring</h2>
+<p>This section is longer than a results section usually allows, because it is the part I would most want to have read before I started.</p>
+<h3>4.1 My marking was wrong, in both directions, every time</h3>
+<p>The marking script checks each reply against the key with patterns. I read the replies, which the script does not, after every scoring round, and found errors every time [C23, C24, C27]:</p>
+<ul>
+<li><strong>Too strict.</strong> A reply wrote &quot;the line is split at the first <code>=</code> into a key and a value&quot; and my pattern wanted the literal text <code>key=value</code>. A reply said the length was &quot;a little-endian u32&quot; and my pattern knew <code>uint32</code> and <code>32-bit</code> but not <code>u32</code>. A reply wrote the exit code in a table row with the word &quot;exit&quot; in the header. A reply said &quot;the text before it is the key&quot;.</li>
+<li><strong>Too lenient.</strong> A pattern for &quot;tries at most 5 times&quot; matched the words &quot;try loop&quot; followed by a stray 5 many lines later. A pattern for &quot;adds the letter values&quot; matched &quot;add&quot; inside &quot;address&quot;. A pattern for &quot;three groups of four&quot; matched the number 4944 inside a memory address.</li>
+</ul>
+<p>First marking against the repaired marking: on the 7 easy development questions the three set-ups first scored 6, 5 and 6 right of 7, then 7, 7 and 7. On the 6 harder ones, 4, 5 and 4 of 6, then 6, 6 and 6 [C23]. In the repeats, 8 of 135 runs were not right by script; reading them, 6 of the 8 were marking errors, 1 was a real partial answer, and 1 was a harness fault [C24]. In the held-out set the script was too strict on 3 of 18 answers and never too lenient [C27].</p>
+<p>Two honest notes. First, I changed my own standard once: I had first read one fact as &quot;listed in a table&quot; and then saw the key&#39;s own wording was &quot;named anywhere in the answer, in any wording&quot;; the change moved some no-tool runs from partial to right, and it is recorded rather than hidden. Second, the key checks only the facts it lists. One reply said a stack machine&#39;s print instruction does not remove the value (it does), and no pattern would catch that.</p>
+<p>What I would do again: keep the answer key separate from the machine that runs the agents; write down the rules before the one-shot run; read the replies behind any difference that matters; and add, for each repair, a test built from the real wording that caused it. The repo has 72 tests [C32].</p>
+<p><img src="fig5-marking.svg" alt="Figure 5. For each group and set-up, the share of answers marked right by the first marking (hollow dot) and after the answers were read and the marking repaired (filled dot). Every group moved up or stayed the same; none moved down."></p>
+<p><em>Figure 5. The first marking against the corrected marking. Data: C23 and C27. The first-marking counts for the development groups are those written in <code>NOTES.md</code> at the time; the answer-key versions that produced them are not kept.</em></p>
+<h3>4.2 The agent did not use REA until it was told to</h3>
+<p>My first <code>rea</code> runs had REA connected, all 207 tools available and nothing denied. The agent used only ordinary shell commands. I then added REA&#39;s own instruction file to that set-up, which is how the published benchmark&#39;s REA arm works, and it still did not use REA on the easy program. That is why there are two REA set-ups: one measures whether the agent chooses the tool, the other measures what the tool adds when it is used [C10 to C12].</p>
+<h3>4.3 Two things damaged runs that I had not planned for</h3>
+<p>In all, two development runs were set aside and twelve held-out runs failed before the model was called; every one is kept in the repo and listed [C2].</p>
+<p><strong>A stall.</strong> Two development runs took about 12 minutes (733.8 and 733.4 seconds) where every other run of that question took 22 to 53. The program reads from standard input, the agent ran it without giving it input, and it waited on my terminal until a timeout. In one of them my harness, which kept only the last message, recorded the agent&#39;s reply to a stale background notification instead of its answer. I kept both runs, listed them with the reason, replaced them with new runs, and changed the harness so the agent runs with its input closed and every message is saved. I did that before the held-out run, because one held-out question reads standard input too and the held-out run could not be repeated [C25].</p>
+<p><strong>A usage limit.</strong> Partway through the held-out run my plan&#39;s usage limit ran out. Twelve runs failed within a few seconds, every one recording &quot;You&#39;ve hit your session limit&quot;, with no model call and no answer. My plan allowed redoing a run that failed before the model was called, so I moved those twelve records aside unchanged, with the reason, and redid only them. I read only the failure messages first, no answers. The harness now stops at the limit and leaves the cell free [C26].</p>
+<p>Both are examples of the same lesson: a one-shot step needs its failure cases thought through before it runs.</p>
+<hr>
+<h2>5. Results</h2>
+<p>All numbers are from the study machine, a Mac (<code>Darwin 27.0.0 arm64</code>; the run records name the operating system and architecture only, not the Mac&#39;s hardware model, chip or memory, see section 7), with <code>claude-sonnet-5-5</code>, Claude Code 2.1.295, REA 6.7.0 and Ghidra 12.1.4 (a decompiler for Apple silicon that I built from Ghidra&#39;s own source, because its official download had none; see section 7).</p>
+<h3>5.1 Accuracy</h3>
+<p><strong>Development, 45 runs per set-up</strong> [C6, C9]:</p>
+<div class="table"><table>
+<thead>
+<tr>
+<th></th>
+<th>none</th>
+<th>rea</th>
+<th>rea-directed</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Right</td>
+<td>45</td>
+<td>44</td>
+<td>45</td>
+</tr>
+<tr>
+<td>Partial</td>
+<td>0</td>
+<td>1</td>
+<td>0</td>
+</tr>
+</tbody></table></div>
+<p>Easy tier: 21 of 21 right in every set-up. Harder tier: 21, 20 (+1 partial), 21. The one partial answer is a stack-machine reply that never described the conditional-jump operation.</p>
+<p><img src="fig2-accuracy.svg" alt="Figure 2. Share of answers that were fully right, in three panels: development by script, held-out by script, and held-out after a person read every answer. Development: 45, 44 and 45 of 45. Held-out by script: 3, 5 and 6 of 6. Held-out after reading: 5, 6 and 6 of 6."></p>
+<p><em>Figure 2. Data: C6 and C7.</em></p>
+<p><strong>Held-out, 6 runs per set-up, scored once</strong> [C7, C8]:</p>
+<div class="table"><table>
+<thead>
+<tr>
+<th></th>
+<th>none</th>
+<th>rea</th>
+<th>rea-directed</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Right, by script</td>
+<td>3</td>
+<td>5</td>
+<td>6</td>
+</tr>
+<tr>
+<td>Right, after a person read all 18 answers</td>
+<td>5</td>
+<td>6</td>
+<td>6</td>
+</tr>
+</tbody></table></div>
+<p>Three disagreements, all the script being too strict (section 4.1). One real miss, which the script and the reading agree on: the no-tool reply for <code>p06</code> said the program &quot;contains what look like the SHA-256 round constants&quot; without naming them or the 64 rounds.</p>
+<p>By the rule I set beforehand, a claim of an accuracy difference needs a gap of at least two fully right answers after the reading. The largest gap is one. <strong>No accuracy difference was found.</strong></p>
+<h3>5.2 Does the agent choose REA?</h3>
+<p>Natural set-up (<code>rea</code>) [C10, C11]:</p>
+<div class="table"><table>
+<thead>
+<tr>
+<th></th>
+<th>Runs that called a REA tool</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>7 easy development questions</td>
+<td>1 of 21</td>
+</tr>
+<tr>
+<td>7 harder development questions</td>
+<td>7 of 21</td>
+</tr>
+<tr>
+<td>Go build information (<code>p09b</code>)</td>
+<td>3 of 3</td>
+</tr>
+<tr>
+<td>Held-out (6 questions)</td>
+<td>0 of 6</td>
+</tr>
+</tbody></table></div>
+<p>The harder questions where it chose REA most were the Go program (3 of 3 on both Go questions); on most others it did so once in three runs or not at all. The directed set-up called REA in 45 of 45 development runs and 6 of 6 held-out runs, as instructed.</p>
+<p><img src="fig3-adoption.svg" alt="Figure 3. How often the agent chose REA when left alone: 1 of 21 runs on the easy development questions, 7 of 21 on the harder ones, 3 of 3 on the Go build-information question, and 0 of 6 held-out."></p>
+<p><em>Figure 3. Data: C10 and C11.</em></p>
+<h3>5.3 Time, steps and cost</h3>
+<p>Development, per run, 45 runs per set-up [C13 to C16]:</p>
+<div class="table"><table>
+<thead>
+<tr>
+<th></th>
+<th>none</th>
+<th>rea</th>
+<th>rea-directed</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Seconds, mean (median)</td>
+<td>26.3 (24.4)</td>
+<td>37.0 (28.3)</td>
+<td>40.5 (34.8)</td>
+</tr>
+<tr>
+<td>Turns, mean</td>
+<td>4.58</td>
+<td>6.53</td>
+<td>9.80</td>
+</tr>
+<tr>
+<td>Cost the tool reports, mean</td>
+<td>$0.088</td>
+<td>$0.14</td>
+<td>$0.204</td>
+</tr>
+</tbody></table></div>
+<p>By the rule I set beforehand (the same direction on at least 12 of the 15 questions), the natural REA set-up was slower than no-tool on 13 of 15 and the directed one on 15 of 15; directed against natural was 11 of 15, no clear difference. The directed set-up took more turns than no-tool on all 15 and than the natural one on 14; natural against no-tool was 9 of 15, no clear difference. The cost is what the command-line tool reports a run would cost at API prices; I pay a flat Pro fee, so it is a measure of work, not a bill.</p>
+<p>Held-out (one run per cell, so only descriptive) [C17]: mean seconds 19.0, 21.1 and 30.9; mean turns 3.67, 3.67 and 8.33. The natural set-up never called REA on held-out, so it behaved exactly like no-tool and its turns match on all six questions.</p>
+<p><img src="fig4-time-and-steps.svg" alt="Figure 4. Mean seconds and mean turns on each of the 15 development questions for the three set-ups. The directed set-up took more turns than ordinary tools on all 15; the left-alone set-up was slower than ordinary tools on 13 of 15."></p>
+<p><em>Figure 4. Data: C13 to C15. Each dot is the mean of three runs.</em></p>
+<p><img src="fig6-cost.svg" alt="Figure 6. Mean cost per run as the tool reports it at API prices: development $0.088, $0.140 and $0.204; held-out $0.074, $0.097 and $0.170, for ordinary tools, REA left alone and REA told to use it."></p>
+<p><em>Figure 6. Data: C16.</em></p>
+<h3>5.4 The Go build-information question</h3>
+<p>Asked for the compiler and library versions, all four facts (Go 1.24.7, <code>google/uuid</code> v1.6.0, <code>spf13/pflag</code> v1.0.5 and the main module name) were stated correctly by every set-up in all three runs [C18]. The Mac had no Go installed, so the no-tool agent had to find them in the file itself, and it did, by reading the strings and the embedded build information.</p>
+<div class="table"><table>
+<thead>
+<tr>
+<th></th>
+<th>none</th>
+<th>rea</th>
+<th>rea-directed</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Right</td>
+<td>3 of 3</td>
+<td>3 of 3</td>
+<td>3 of 3</td>
+</tr>
+<tr>
+<td>Seconds, mean</td>
+<td>48.3</td>
+<td>85.4</td>
+<td>84.8</td>
+</tr>
+<tr>
+<td>Turns, mean</td>
+<td>9.7</td>
+<td>16.7</td>
+<td>19.7</td>
+</tr>
+</tbody></table></div>
+<p>Here the natural set-up did choose REA in all three runs [C11], and REA&#39;s own Go build-information tool was called in 4 runs overall [C20]. It gave the same answers as the ordinary tools, in about 1.8 times the time [C19]. The published benchmark reports the same pattern outside an agent: 0.56 seconds with REA against 0.06 with <code>go version -m</code> [C30, second-hand].</p>
+<h3>5.5 Honesty about what cannot be known</h3>
+<p>Three questions had a real unknown: one development (<code>p10</code>, a decryption key derived from an environment variable that is not in the file) and two held-out (<code>p05</code>, the same idea; <code>t07</code>, a password stored only as a 32-bit hash). Five runs per set-up in total [C21]:</p>
+<div class="table"><table>
+<thead>
+<tr>
+<th></th>
+<th>none</th>
+<th>rea</th>
+<th>rea-directed</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Named the unknown</td>
+<td>5 of 5</td>
+<td>5 of 5</td>
+<td>5 of 5</td>
+</tr>
+<tr>
+<td>Stated the hidden text or password</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+</tr>
+</tbody></table></div>
+<p>The wording varied. One reply: &quot;I did not recover the unmasked text.&quot; Another: &quot;The correct <code>QS_KEY</code> value. It is not in the binary.&quot; Another: &quot;The key is a one-way hash of that value, so the plaintext can&#39;t be derived from the binary alone.&quot; In the first <code>p10</code> runs, two of the three also tried guessing user names or constraining the key to printable text before concluding they could not choose one. None stated a message.</p>
+<h3>5.6 Stated confidence</h3>
+<p>Confidence ranged from 0.80 to 0.97 across all 153 runs, and every reply carried the confidence line [C22]. With almost no wrong answers there is nothing to calibrate against. One incomplete held-out reply (<code>p06</code>, no-tool) stated 0.93, the same as complete ones, which is one case, not a finding.</p>
+<h3>5.7 Against the published benchmark</h3>
+<p>Second-hand, on different programs, versions and set-up, so only the direction is worth noting [C28, C29]. It reports REA at the top on accuracy and the most expensive in time, steps and cost. I see no accuracy edge on small programs, and REA the more expensive: about 1.4 times the time and 1.6 times the reported cost on development, against about 1.3 and 1.5 in their totals. I saw no refusal in 153 runs [C5]; they report one.</p>
+<hr>
+<h2>6. What this means</h2>
+<p>On small and medium programs, an agent with ordinary tools matched the agent with REA on every accuracy measure I could define, was just as willing to say what it could not know, and was faster and cheaper. Left alone, the agent mostly did not pick REA. When it did, on harder programs and on Go build information, it reached the same answers.</p>
+<p>That does not show REA is not useful. The programs here are small, written by one author, and answerable by reading strings and assembly. It is the kind of work an agent with a shell already does well. If REA has an edge, it should be on programs that are large, scrambled, or in formats where ordinary tools are weak, which this study did not test. The honest conclusion is narrower: <strong>if you are asking an agent to explain a small compiled program, adding REA did not make the answer better, and cost more.</strong></p>
+<hr>
+<h2>7. Limits</h2>
+<ul>
+<li><strong>One model, one machine, one prompt.</strong> A different model, a different Mac, or different wording could behave differently [C3]. The Mac&#39;s hardware model, chip and memory were not recorded; only its operating system and architecture are in the run records.</li>
+<li><strong>Small programs, one author.</strong> Single files of tens to a few thousand lines, with answers I wrote. Nothing here says anything about large commercial software, and the programs may share my habits.</li>
+<li><strong>Three runs per question, one in the held-out set.</strong> The held-out set is six questions. Differences in time and steps could partly be chance; the 12-of-15 rule is a guard, not a test.</li>
+<li><strong>The key checks only its listed facts</strong>, and the reading of the held-out answers was done by the same person who wrote the key.</li>
+<li><strong>The no-tool set-up is not &quot;no tools&quot;.</strong> It has the Mac&#39;s shell and anything installed on it. &quot;No REA&quot; is the accurate name.</li>
+<li><strong>A decompiler I built myself.</strong> Ghidra&#39;s official 12.1.4 download contains decompilers for Linux and Windows only, so I built the Apple silicon one from the source in the same download with changed settings (its own build file hard-codes macOS as Intel). That binary is not the one Ghidra ships; any difference in decompiler output is a limit on these results. REA&#39;s own checker accepted it.</li>
+<li><strong>Harness changes after runs began.</strong> Standard input was closed and all messages were kept after the stall; the runner learned to stop at a usage limit before the held-out run. They are listed in section 4.3 and in <code>NOTES.md</code>.</li>
+<li><strong>I make no claim about how REA or the benchmark&#39;s author&#39;s tool work inside</strong>, and the published numbers are second-hand.</li>
+</ul>
+<hr>
+<h2>8. Reproducing this</h2>
+<p>The answer key (<code>targets/keys.json</code>) was withheld while the study was open, so the agents could not read it. It is included in the repository from the close of the study on 20 October 2026, and <code>targets/keys-history.md</code> lists the fingerprints of every earlier version, so the repairs described in section 4 can be matched to the files.</p>
+<ol>
+<li>Clone <code>kmsmohamedansar/rea-study</code>. 2. Build the programs with <code>./scripts/build_targets.sh</code> (move the source folder away first, as <code>NOTES.md</code> explains). 3. Install Ghidra 12.1.4, Java 21 and Node, and check REA with <code>npx -y rea-agents@6.7.0 doctor --provider ghidra</code>. 4. <code>python3 scripts/sweep.py --repeats 3</code> for development and <code>python3 scripts/heldout.py --run-held-out-once</code> for held-out. 5. Score with <code>python3 scripts/results.py</code>, rebuild every number in this report with <code>python3 scripts/report_numbers.py</code>, and redraw the figures with <code>python3 scripts/make_figures.py</code>.</li>
+</ol>
+<hr>
+<h2>Appendix A. Claims ledger</h2>
+<p>See <code>paper/claims.md</code>: 32 numbered claims with the number, where it comes from, how it was verified (script, eye or both), and what limits it, plus the list of things the report does not claim.</p>
+<h2>Appendix B. Sources and licences</h2>
+<ul>
+<li>REA: <code>github.com/morluto/rea</code>, npm package <code>rea-agents</code> 6.7.0, MIT. Its README and <code>docs/installation.md</code> were read for set-up and for what it claims.</li>
+<li>The published benchmark: <code>github.com/aicodeking/leanrea</code>, <code>bench/BENCHMARK.md</code>, dated 2026-10-16, read 2026-10-20. Second-hand.</li>
+<li>Ghidra 12.1.4 (Apache 2.0), OpenJDK 21 as Eclipse Temurin (GPL 2 with Classpath Exception), Node 26.8.1 (MIT), Claude Code 2.1.295 and the model under my own plan. Full table with where each licence was read: <code>docs/licences.md</code>.</li>
+<li>Third-party code inside five of the programs, with licences and file fingerprints: <code>targets/THIRD_PARTY.md</code>.</li>
+<li>Run-by-run history of every decision, mistake and repair: <code>NOTES.md</code>.</li>
+</ul>
+
+</main></body>
+</html>
