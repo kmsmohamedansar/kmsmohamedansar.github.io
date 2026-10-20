@@ -592,6 +592,9 @@ export default function ProjectPage({ slug }) {
         </Block>
 
         <Block label="Built with" accent={project.accent}>
+          <p className="mb-3 text-sm leading-relaxed text-[color:var(--ink-200)]">
+            Tap or hover over a tool to see what it is and how I used it here.
+          </p>
           <ToolList tools={project.stack} usage={project.stackUsage} accent={project.accent} />
         </Block>
       </div>
