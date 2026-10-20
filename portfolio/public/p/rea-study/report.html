@@ -48,15 +48,12 @@ img { display:block; max-width:100%; height:auto; margin:18px auto 6px; backgrou
 </head>
 <body><main>
 <div class="top"><span>Technical report · October 2026</span><a href="/#project/rea-study">Back to the project</a></div>
-<p class="draft">Draft. Parts marked [OWNER] are still to be written by the author, and the title, byline and disclosure are not yet approved. Do not treat this page as final.</p><a class="pdf" href="report.pdf">Download PDF</a>
+<a class="pdf" href="report.pdf">Download PDF</a>
 <h1>My Take on REA</h1>
 <h2>Does a reverse-engineering tool help an AI agent understand programs it has no source for, and does the agent know what it cannot know?</h2>
-<p><strong>Mohamed Ansar</strong> · Technical report · DRAFT of 20 October 2026</p>
+<p><strong>Mohamed Ansar</strong> · Technical report · 20 October 2026</p>
 <p><em>Independent work, not peer reviewed. Every number in this report comes from runs in the accompanying repository, on the machine named next to it. Claims are numbered like [C7] and listed with their evidence in <code>paper/claims.md</code>.</em></p>
-<blockquote>
-<p><strong>[OWNER] to approve or change:</strong> the title, the byline, and the disclosure below.</p>
-</blockquote>
-<p><strong>Disclosure.</strong> The experiments were designed, coded and analysed with Claude Code, an AI coding assistant. I chose the question, ran every experiment on my own MacBook, and reviewed the results. Claude wrote most of the code and the first drafts of the analysis, and found most of the mistakes described in section 4 by reading the answers. <em>(Wording is the author&#39;s to change, but it must stay as specific as this.)</em></p>
+<p><strong>Disclosure.</strong> The experiments were designed, coded and analysed with Claude Code, an AI coding assistant. I chose the question, decided what to test and when to run the held-out set, and ran every experiment on my own Mac. Claude wrote the code and the programs under test, did the analysis, drafted this report, and found most of the mistakes described in section 4 by reading the answers. I have not independently re-scored the answers.</p>
 <hr>
 <h2>Abstract</h2>
 <p>REA (&quot;Reverse Engineer Anything&quot;) is a free tool that lets an AI agent inspect programs it has no source code for. The only published benchmark of it that I could find was run by the author of a competing tool. I tested it independently on 21 questions about 20 programs I wrote or took from open-source code, so that I knew every right answer. Each question was put to the same agent (Claude Sonnet 5.5) in three set-ups: ordinary Mac tools only, ordinary tools plus REA and REA&#39;s own instructions, and the same with a sentence telling the agent to use REA. That made 153 scored runs [C1].</p>
@@ -66,15 +63,13 @@ img { display:block; max-width:100%; height:auto; margin:18px auto 6px; backgrou
 <p>The most useful findings were about measuring. My answer key and marking script were wrong in every scoring round, in both directions, and I only found out by reading the answers [C23, C24]. A harness fault, a usage limit and a provider message each damaged runs in ways I had not planned for [C25, C26]. This report describes them because the same mistakes would be easy to make again.</p>
 <hr>
 <h2>1. Why this question</h2>
-<blockquote>
-<p><strong>[OWNER] to write, in your own words (rule 2: nothing from your employer; Chapter 1 may say plainly this is a personal project).</strong> Suggested prompts: What made you curious about REA specifically? What did you expect to find? Why does &quot;does it know what it does not know&quot; matter to you? What did you hope this project would show about how you work?</p>
-</blockquote>
-<p>What I can say from the evidence, without your voice:</p>
+<p>This is a personal project. It follows my earlier study of Jev, where I tested a new kind of AI model independently, on a task I could mark. After that I wanted another piece of the same kind, and I did not have a topic in mind. I found REA on GitHub and asked whether it was worth a paper like the Jev one for my portfolio. It was, for three reasons that the evidence supports:</p>
 <ul>
 <li>REA is new and free, and it is built around a claim: that when an agent investigates a program with it, the answers come with evidence and with a record of what could not be determined.</li>
 <li>The one published benchmark I found was run by the author of a competing tool, on four tasks, without a decompiler installed. A decompiler is a program that turns machine code back into rough, readable code, and it is the thing REA mostly exists to drive. That left an obvious gap: nobody independent had checked.</li>
 <li>A tool that helps an agent is only worth using if it improves the answers, or makes the agent more honest about what it cannot tell, or both. A tool that does neither, but costs more time, is worth knowing about.</li>
 </ul>
+<p>One constraint shaped the method from the start: I only have a Claude Pro plan, so there is no paid API anywhere in the study. The agent is Claude Code run from the command line, and my plan&#39;s usage limit interrupted the held-out run once (section 4.3).</p>
 <p>So the two questions of this report are:</p>
 <ol>
 <li>When an AI agent explains a program it has no source code for, does having REA make the explanation more correct?</li>
@@ -163,7 +158,7 @@ img { display:block; max-width:100%; height:auto; margin:18px auto 6px; backgrou
 <p>Both are examples of the same lesson: a one-shot step needs its failure cases thought through before it runs.</p>
 <hr>
 <h2>5. Results</h2>
-<p>All numbers are from the study machine, a Mac (<code>Darwin 27.0.0 arm64</code>; <em>[OWNER] add the model name, chip and memory</em>), with <code>claude-sonnet-5-5</code>, Claude Code 2.1.295, REA 6.7.0 and Ghidra 12.1.4 (a decompiler for Apple silicon that I built from Ghidra&#39;s own source, because its official download had none; see section 7).</p>
+<p>All numbers are from the study machine, a Mac (<code>Darwin 27.0.0 arm64</code>; the run records name the operating system and architecture only, not the Mac&#39;s hardware model, chip or memory, see section 7), with <code>claude-sonnet-5-5</code>, Claude Code 2.1.295, REA 6.7.0 and Ghidra 12.1.4 (a decompiler for Apple silicon that I built from Ghidra&#39;s own source, because its official download had none; see section 7).</p>
 <h3>5.1 Accuracy</h3>
 <p><strong>Development, 45 runs per set-up</strong> [C6, C9]:</p>
 <div class="table"><table>
@@ -343,15 +338,12 @@ img { display:block; max-width:100%; height:auto; margin:18px auto 6px; backgrou
 <p>Second-hand, on different programs, versions and set-up, so only the direction is worth noting [C28, C29]. It reports REA at the top on accuracy and the most expensive in time, steps and cost. I see no accuracy edge on small programs, and REA the more expensive: about 1.4 times the time and 1.6 times the reported cost on development, against about 1.3 and 1.5 in their totals. I saw no refusal in 153 runs [C5]; they report one.</p>
 <hr>
 <h2>6. What this means</h2>
-<blockquote>
-<p><strong>[OWNER] to decide how far to go here.</strong> A suggested short version:</p>
-</blockquote>
 <p>On small and medium programs, an agent with ordinary tools matched the agent with REA on every accuracy measure I could define, was just as willing to say what it could not know, and was faster and cheaper. Left alone, the agent mostly did not pick REA. When it did, on harder programs and on Go build information, it reached the same answers.</p>
 <p>That does not show REA is not useful. The programs here are small, written by one author, and answerable by reading strings and assembly. It is the kind of work an agent with a shell already does well. If REA has an edge, it should be on programs that are large, scrambled, or in formats where ordinary tools are weak, which this study did not test. The honest conclusion is narrower: <strong>if you are asking an agent to explain a small compiled program, adding REA did not make the answer better, and cost more.</strong></p>
 <hr>
 <h2>7. Limits</h2>
 <ul>
-<li><strong>One model, one machine, one prompt.</strong> A different model, a different Mac, or different wording could behave differently [C3].</li>
+<li><strong>One model, one machine, one prompt.</strong> A different model, a different Mac, or different wording could behave differently [C3]. The Mac&#39;s hardware model, chip and memory were not recorded; only its operating system and architecture are in the run records.</li>
 <li><strong>Small programs, one author.</strong> Single files of tens to a few thousand lines, with answers I wrote. Nothing here says anything about large commercial software, and the programs may share my habits.</li>
 <li><strong>Three runs per question, one in the held-out set.</strong> The held-out set is six questions. Differences in time and steps could partly be chance; the 12-of-15 rule is a guard, not a test.</li>
 <li><strong>The key checks only its listed facts</strong>, and the reading of the held-out answers was done by the same person who wrote the key.</li>
@@ -362,7 +354,7 @@ img { display:block; max-width:100%; height:auto; margin:18px auto 6px; backgrou
 </ul>
 <hr>
 <h2>8. Reproducing this</h2>
-<p><em>[OWNER] decide what to publish, and when. The answer key is withheld during the study so the agents could not read it; reproducing the scoring needs it.</em></p>
+<p>The answer key (<code>targets/keys.json</code>) was withheld while the study was open, so the agents could not read it. It is included in the repository from the close of the study on 20 October 2026, and <code>targets/keys-history.md</code> lists the fingerprints of every earlier version, so the repairs described in section 4 can be matched to the files.</p>
 <ol>
 <li>Clone <code>kmsmohamedansar/rea-study</code>. 2. Build the programs with <code>./scripts/build_targets.sh</code> (move the source folder away first, as <code>NOTES.md</code> explains). 3. Install Ghidra 12.1.4, Java 21 and Node, and check REA with <code>npx -y rea-agents@6.7.0 doctor --provider ghidra</code>. 4. <code>python3 scripts/sweep.py --repeats 3</code> for development and <code>python3 scripts/heldout.py --run-held-out-once</code> for held-out. 5. Score with <code>python3 scripts/results.py</code>, rebuild every number in this report with <code>python3 scripts/report_numbers.py</code>, and redraw the figures with <code>python3 scripts/make_figures.py</code>.</li>
 </ol>

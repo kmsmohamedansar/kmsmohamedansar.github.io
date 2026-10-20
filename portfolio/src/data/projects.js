@@ -671,7 +671,7 @@ export const PROJECTS = [
     title: "My Take on REA",
     kind: "An AI tool, tested independently",
     accent: "cyan",
-    status: "Independent study · technical report (draft)",
+    status: "Independent study · technical report",
     icon: "/shots/rea-study/icon.svg",
     hook: "Does a free reverse-engineering tool make an AI agent better at explaining programs it has no source code for? I tested it on 20 programs where I knew every right answer. On accuracy it matched the plain tools. It cost more, and the agent mostly ignored it unless told to use it.",
     stats: [
@@ -680,7 +680,7 @@ export const PROJECTS = [
       { value: "2.3×", label: "the cost per run when the agent was told to use REA, against ordinary tools, as the tool reports it", short: "cost per run with REA directed" },
       { value: "3 of 18", label: "held-out answers my own marking script got wrong, all too strict, found only by reading them", short: "answers my script marked wrong" },
     ],
-    role: "Chose the question and ran every experiment on my own Mac. Claude Code wrote most of the code and the first drafts of the analysis, and I reviewed the results.",
+    role: "Chose the question and ran every experiment on my own Mac. Claude Code wrote the code, did the analysis and drafted the report; I have not independently re-scored the answers.",
     tags: ["Python", "Agent evaluation", "Reverse engineering", "Honest uncertainty"],
     stack: ["Python", "Claude Code", "Claude Sonnet 5.5", "REA", "Ghidra", "Model Context Protocol", "C", "Go"],
     stackUsage: {
@@ -739,7 +739,7 @@ export const PROJECTS = [
       ],
     },
     reportCta: {
-      kicker: "Technical report · draft",
+      kicker: "Technical report",
       title: "The full story is in the report",
       text: "Every rule for what I could claim was written before the held-out run, the failures are left in, and every claim has a row in a ledger that points at its evidence.",
       contents: [

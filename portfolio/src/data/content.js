@@ -206,7 +206,7 @@ export const COMMAND_ITEMS = [
   { label: "A 3D model of me, made with AI", go: "#digital-double", group: "Fun" },
   { label: "RepTrack on the App Store", href: "https://apps.apple.com/us/app/reptrack-workout-log/id6761032027", group: "Links" },
   { label: "My Take on Jev, technical report", href: "/p/decision-models/report.html", group: "Links" },
-  { label: "My Take on REA, technical report (draft)", href: "/p/rea-study/report.html", group: "Links" },
+  { label: "My Take on REA, technical report", href: "/p/rea-study/report.html", group: "Links" },
   { label: "GitHub", href: CONTACT.github, group: "Links" },
   { label: "LinkedIn", href: CONTACT.linkedin, group: "Links" },
   { label: "Email · " + CONTACT.email, href: "mailto:" + CONTACT.email, group: "Links" },
