@@ -215,8 +215,8 @@ export default function DigitalDouble() {
           One person, a phone, a laptop and an AI agent. Is that enough for a 3D double?
         </h2>
         <p className="mt-4 max-w-2xl leading-relaxed">
-          Mostly, yes. I never touched a Blender menu for the modelling: I described what I saw, and Claude Code wrote and ran the
-          Python, Swift and shader work live in Blender through MCP, then showed me renders. Here's the whole loop, failures included.
+          I directed the work from start to finish: I supplied the photos and video, described each change, reviewed the renders and chose what to try next.
+          Claude Code ran the modelling steps in Blender. Here's the whole loop, failures included.
         </p>
 
         <dl className="mt-10 grid grid-cols-2 gap-4 sm:grid-cols-4">
