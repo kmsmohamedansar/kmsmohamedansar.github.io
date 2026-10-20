@@ -158,7 +158,7 @@ img { display:block; max-width:100%; height:auto; margin:18px auto 6px; backgrou
 <p>Both are examples of the same lesson: a one-shot step needs its failure cases thought through before it runs.</p>
 <hr>
 <h2>5. Results</h2>
-<p>All numbers are from the study machine, a Mac (<code>Darwin 27.0.0 arm64</code>; the run records name the operating system and architecture only, not the Mac&#39;s hardware model, chip or memory, see section 7), with <code>claude-sonnet-5-5</code>, Claude Code 2.1.295, REA 6.7.0 and Ghidra 12.1.4 (a decompiler for Apple silicon that I built from Ghidra&#39;s own source, because its official download had none; see section 7).</p>
+<p>All numbers are from the study machine, a MacBook Air with an M4 chip and 16 GB of memory (<code>Darwin 27.0.0 arm64</code>; the run records hold the operating system and architecture only, and the model, chip and memory are as the author reported them afterwards, see section 7), with <code>claude-sonnet-5-5</code>, Claude Code 2.1.295, REA 6.7.0 and Ghidra 12.1.4 (a decompiler for Apple silicon that I built from Ghidra&#39;s own source, because its official download had none; see section 7).</p>
 <h3>5.1 Accuracy</h3>
 <p><strong>Development, 45 runs per set-up</strong> [C6, C9]:</p>
 <div class="table"><table>
@@ -343,7 +343,7 @@ img { display:block; max-width:100%; height:auto; margin:18px auto 6px; backgrou
 <hr>
 <h2>7. Limits</h2>
 <ul>
-<li><strong>One model, one machine, one prompt.</strong> A different model, a different Mac, or different wording could behave differently [C3]. The Mac&#39;s hardware model, chip and memory were not recorded; only its operating system and architecture are in the run records.</li>
+<li><strong>One model, one machine, one prompt.</strong> A different model, a different Mac, or different wording could behave differently [C3]. The Mac&#39;s model, chip and memory (MacBook Air, M4, 16 GB) were reported by the author after the runs and are not recorded by the harness; only its operating system and architecture are in the run records.</li>
 <li><strong>Small programs, one author.</strong> Single files of tens to a few thousand lines, with answers I wrote. Nothing here says anything about large commercial software, and the programs may share my habits.</li>
 <li><strong>Three runs per question, one in the held-out set.</strong> The held-out set is six questions. Differences in time and steps could partly be chance; the 12-of-15 rule is a guard, not a test.</li>
 <li><strong>The key checks only its listed facts</strong>, and the reading of the held-out answers was done by the same person who wrote the key.</li>
