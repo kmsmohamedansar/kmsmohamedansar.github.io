@@ -130,11 +130,16 @@ function PunchTitle({ text }) {
 function ProjectPlate({ project, compact = false }) {
   const [broken, setBroken] = useState(false);
   const [artBroken, setArtBroken] = useState(false);
-  // If the cover art fails, fall through to the plate this project had before
-  // it got one, rather than leaving an empty frame behind the caption. It is
-  // tracked apart from `broken` so a failed cover still gets the screenshot.
-  if (project.spotlightArt && !artBroken) return <div className="ed-project-plate ed-spotlight-cover" aria-hidden="true">
-    <img className="ed-spotlight-art ed-lazy-media" src={media(project.spotlightArt)} alt="" loading="lazy" onLoad={revealImage} onError={() => setArtBroken(true)} />
+  // Spotlight covers sit on the large spreads and set their own proportion;
+  // card covers ride the tile's, so they only differ by which class shapes
+  // the plate. The artwork carries no copy, and the card already names the
+  // project, so it is decorative. If it fails, fall through to the plate this
+  // project had before it got one, rather than leaving an empty frame behind
+  // the caption. Tracked apart from `broken` so a failed cover still gets the
+  // screenshot.
+  const coverArt = project.spotlightArt || project.cardArt;
+  if (coverArt && !artBroken) return <div className={`ed-project-plate ${project.spotlightArt ? "ed-spotlight-cover" : "ed-card-cover"} ${compact ? "ed-plate-compact" : ""}`} aria-hidden="true">
+    <img className="ed-spotlight-art ed-lazy-media" src={media(coverArt)} alt="" loading="lazy" onLoad={revealImage} onError={() => setArtBroken(true)} />
     <span className="ed-poster-cross">✳</span>
     <span className="ed-plate-caption">{project.kind}</span>
   </div>;
