@@ -6,6 +6,7 @@ import { ABOUT, CONTACT, HERO, RECEIPTS, ROLES } from "../data/content";
 import { EARLIER_PROJECTS, EXPERIMENTS, FEATURED, FEATURED_GRID, LISTED_PROJECTS, MORE_PROJECTS } from "../data/projects";
 import { TOOL_INFO } from "../data/tools";
 import { EASE_REVEAL } from "../lib/motion";
+import { useStaticHero } from "../lib/staticHero";
 import { useRoute } from "../App";
 import "../editorial.css";
 
@@ -91,6 +92,7 @@ function BuiltLine({ run }) {
 
 export function Hero({ ready = true }) {
   const reduced = useReducedMotion();
+  const staticHero = useStaticHero();
   const heroRef = useRef(null);
   const visible = useInView(heroRef, { margin: "50px" });
   const [settled, setSettled] = useState(false);
@@ -100,7 +102,9 @@ export function Hero({ ready = true }) {
       <div className="ed-hero-meta"><span>Mohamed Ansar / Selected work</span><span>Solutions engineer · Canada</span></div>
       <h1 id="hero-name" className="sr-only">Hi, I'm Mohamed Ansar</h1>
       <div className="ed-hero-canvas"><NameParticles ready={ready} onSettled={onSettled} /></div>
-      <p className={reduced ? "ed-static-statement" : "ed-mobile-statement"}>{HERO.title}</p>
+      {/* Shown only when the canvas stays static, so it never doubles the
+          statement the animated hero morphs into. */}
+      {staticHero && <p className={reduced ? "ed-static-statement" : "ed-mobile-statement"}>{HERO.title}</p>}
       <div className="ed-hero-bottom">
         <motion.div initial={reduced ? false : { opacity: 0, y: 12 }} animate={settled || reduced ? { opacity: 1, y: 0 } : { opacity: 0, y: 12 }} transition={{ duration: 0.28 }}><BuiltLine run={(settled || reduced) && visible} /></motion.div>
         <a href="#projects" className="ed-scroll-link">Explore the work <ArrowDown size={20} aria-hidden="true" /></a>

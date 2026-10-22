@@ -1,5 +1,6 @@
 import { useEffect, useRef } from "react";
 import { HERO } from "../data/content";
+import { COARSE_OR_NARROW_QUERY, REDUCED_MOTION_QUERY } from "../lib/staticHero";
 
 /* One opening: infinity → name → what I build. Both text shapes keep the
    same pointer repulsion and spring return. Reduced motion shows a static
@@ -23,7 +24,7 @@ function sweep(f) {
   return `rgb(${c[0]},${c[1]},${c[2]})`;
 }
 
-function sampleText(w, h, dpr, statement = false) {
+function sampleText(w, h, dpr, statement = false, stepScale = 1) {
   const c = document.createElement("canvas");
   c.width = w;
   c.height = h;
@@ -59,7 +60,7 @@ function sampleText(w, h, dpr, statement = false) {
     g.fillText(line, w / 2, y);
     y += lineHeight;
   }
-  const step = Math.max(2, Math.round((narrow ? 2.5 : 3) * dpr * Math.max(0.7, big / (220 * dpr))));
+  const step = Math.max(2, Math.round((narrow ? 2.5 : 3) * dpr * Math.max(0.7, big / (220 * dpr)) * stepScale));
   const data = g.getImageData(0, 0, w, h).data;
   const pts = [];
   for (let py = 0; py < h; py += step) {
@@ -74,6 +75,9 @@ function sampleText(w, h, dpr, statement = false) {
 // fillStyle thousands of times per frame. The visual sweep stays the same.
 const PALETTE = Array.from({ length: 16 }, (_, i) => sweep(i / 15));
 const PHASES = 16;
+// Ceiling for a drawn-once hero: enough to keep the letterforms solid at any
+// viewport, low enough to bound allocation and the colour sort on weak devices.
+const STATIC_MAX = 14000;
 
 export default function NameParticles({ ready = true, onSettled }) {
   const ref = useRef(null);
@@ -86,13 +90,12 @@ export default function NameParticles({ ready = true, onSettled }) {
       onSettled?.();
       return;
     }
-    const reducedQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
     // On touch phones the pointer interaction is unavailable and a perpetual
     // canvas loop costs battery for little gain. Draw the name once instead.
-    // Kept in step with the .ed-mobile-statement query in editorial.css.
-    const staticQuery = window.matchMedia("(max-width: 640px), (pointer: coarse)");
-    // Read live: someone can turn motion down, or resize past the breakpoint,
-    // with the page already open.
+    // The same condition decides whether Hero renders the statement as text,
+    // so both read it from lib/staticHero.js.
+    const reducedQuery = window.matchMedia(REDUCED_MOTION_QUERY);
+    const staticQuery = window.matchMedia(COARSE_OR_NARROW_QUERY);
     let staticMode = reducedQuery.matches || staticQuery.matches;
     let raf = null;
     let parts = [];
@@ -116,12 +119,19 @@ export default function NameParticles({ ready = true, onSettled }) {
       canvas.width = Math.max(1, Math.round(rect.width * dpr));
       canvas.height = Math.max(1, Math.round(rect.height * dpr));
       const w = canvas.width, h = canvas.height;
-      const name = sampleText(w, h, dpr);
+      let name = sampleText(w, h, dpr);
+      // Thinning by striding the point list leaves gaps in a regular pattern
+      // that break up the strokes, so an oversized static sample is taken
+      // again on a coarser grid instead. Coverage stays even and the particle
+      // count stays bounded on large screens and across repeated rebuilds.
+      if (staticMode && name.pts.length > STATIC_MAX) {
+        name = sampleText(w, h, dpr, false, Math.sqrt(name.pts.length / STATIC_MAX));
+      }
       // A static hero never morphs, so the statement shape is dead weight there.
       const statement = staticMode ? name : sampleText(w, h, dpr, true);
       const sampledCount = Math.max(name.pts.length, statement.pts.length);
-      // Capping the animated hero keeps the per-frame cost down. A static one is
-      // drawn once, so a cap buys no battery and only breaks up the letterforms.
+      // The animated hero is capped for per-frame cost; the static one is drawn
+      // once and is already bounded by the grid above.
       const count = Math.min(sampledCount, staticMode ? sampledCount : rect.width < 640 ? 3200 : 7000);
       // Slightly larger points retain the letter density with fewer particles.
       radius = Math.min(Math.min(name.step, statement.step) * 0.36 * Math.sqrt(sampledCount / Math.max(1, count)), 2.4 * dpr);
@@ -261,25 +271,33 @@ export default function NameParticles({ ready = true, onSettled }) {
       lastPointerMove = performance.now();
     }
     function onLeave() { pointer.x = pointer.y = -1e4; }
-    let resizeTimer;
-    function onResize() {
-      clearTimeout(resizeTimer);
-      resizeTimer = setTimeout(() => {
+    // Crossing the breakpoint fires the resize observer and the media query
+    // together, so every rebuild goes through one timer and runs once.
+    let rebuildTimer;
+    function scheduleRebuild() {
+      clearTimeout(rebuildTimer);
+      rebuildTimer = setTimeout(() => {
         if (!initialized || !alive) return;
         build(true);
         if (staticMode) draw();
+        sync();
       }, 100);
     }
+    const onResize = scheduleRebuild;
     // Switching between the animated and static hero changes the particle
     // budget, so rebuild rather than letting the old set drift on screen.
     function onModeChange() {
       const next = reducedQuery.matches || staticQuery.matches;
       if (next === staticMode) return;
       staticMode = next;
-      if (!initialized || !alive) return;
-      build(true);
-      if (staticMode) draw();
-      sync();
+      // Returning to the animated hero replays the entrance from the start.
+      // Without this the timeline stays wherever it was frozen and the hero
+      // can be left permanently settled, so the reveal never runs again.
+      if (!staticMode) {
+        elapsed = 0;
+        settledSent = false;
+      }
+      scheduleRebuild();
     }
     reducedQuery.addEventListener?.("change", onModeChange);
     staticQuery.addEventListener?.("change", onModeChange);
@@ -298,7 +316,7 @@ export default function NameParticles({ ready = true, onSettled }) {
       alive = false;
       cancelAnimationFrame(raf);
       clearTimeout(fontTimer);
-      clearTimeout(resizeTimer);
+      clearTimeout(rebuildTimer);
       intersection?.disconnect();
       resizeObserver?.disconnect();
       reducedQuery.removeEventListener?.("change", onModeChange);
