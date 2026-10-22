@@ -106,16 +106,28 @@ function RouteProvider({ children }) {
     document.title = titleForRoute(route);
     if (first.current) { first.current = false; return; }
     if (route === "main") return;
-    // Focus the main landmark rather than a heading: the outgoing view is
-    // still mounted while it animates out, so a heading query here can match
-    // the old page and lose the focus again when it unmounts. <main> is the
-    // one node that survives the swap.
-    const main = document.querySelector("main");
-    if (!main) return;
-    // Focusable only for this programmatic move, so it never joins the tab
-    // order. No plain :focus rule exists, so no ring shows for pointer users.
-    main.setAttribute("tabindex", "-1");
-    main.focus({ preventScroll: true });
+    // AnimatePresence keeps the outgoing view mounted until its exit
+    // animation finishes, so both it and <main> still hold the old content
+    // for a few hundred milliseconds. Focusing either one now would announce
+    // the page being left. Wait for a heading that is a different node from
+    // the one on screen at the moment the route changed.
+    const outgoing = document.querySelector("main h1, main h2");
+    let cancelled = false;
+    let tries = 120;
+    const focusIncoming = () => {
+      if (cancelled) return;
+      const heading = document.querySelector("main h1, main h2");
+      if (!heading || heading === outgoing) {
+        // Lazy routes mount their heading only once the chunk arrives. If it
+        // never does, leave focus alone rather than announce the old view.
+        if (tries-- > 0) requestAnimationFrame(focusIncoming);
+        return;
+      }
+      heading.setAttribute("tabindex", "-1");
+      heading.focus({ preventScroll: true });
+    };
+    requestAnimationFrame(focusIncoming);
+    return () => { cancelled = true; };
   }, [route]);
 
   const navigate = (id) => {
