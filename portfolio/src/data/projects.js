@@ -13,12 +13,18 @@
 // customer or retailer names, and no numbers. They get no screenshots either;
 // every image in public/shots/ comes from a public repo or this site.
 
+// Existing category keys share the portfolio accent. Status colors in
+// tables and the experiments' own scene palettes remain independent.
+const PORTFOLIO_ACCENT = {
+  text: "text-[color:var(--portfolio-accent)]", border: "border-coral/50", soft: "bg-coral/10",
+  glow: "rgba(213,54,12,0.35)", hex: "#74200d",
+};
 export const ACCENTS = {
-  cyan: { text: "text-cyan", border: "border-cyan/50", soft: "bg-cyan/10", glow: "rgba(34,211,238,0.35)", hex: "#22d3ee" },
-  violet: { text: "text-[#b9a8ff]", border: "border-[#b9a8ff]/50", soft: "bg-[#8e7dff]/10", glow: "rgba(142,125,255,0.35)", hex: "#b9a8ff" },
-  amber: { text: "text-amber", border: "border-amber/50", soft: "bg-amber/10", glow: "rgba(251,191,36,0.35)", hex: "#fbbf24" },
-  green: { text: "text-green", border: "border-green/50", soft: "bg-green/10", glow: "rgba(52,211,153,0.35)", hex: "#34d399" },
-  rose: { text: "text-rose", border: "border-rose/50", soft: "bg-rose/10", glow: "rgba(251,113,133,0.35)", hex: "#fb7185" },
+  cyan: PORTFOLIO_ACCENT,
+  violet: PORTFOLIO_ACCENT,
+  amber: PORTFOLIO_ACCENT,
+  green: PORTFOLIO_ACCENT,
+  rose: PORTFOLIO_ACCENT,
 };
 
 export const PROJECTS = [
@@ -26,11 +32,12 @@ export const PROJECTS = [
   {
     slug: "decision-models",
     featured: true,
-    theme: { bg: "#16091a", title: "display" },
+    theme: { bg: "#e6d5bd", title: "display" },
     title: "My Take on Jev",
     kind: "Small AIs, put to the test",
     accent: "rose",
     status: "Independent study · technical report",
+    spotlightArt: "/shots/spotlight/decision-models.webp",
     icon: "/shots/decision-models/icon.svg",
     hook: "Can a small, free AI decide which team should handle a support message as well as a larger AI? I tested three small models and a larger chat-style model on 250 fictional messages. The best small one chose the right team for 80% of the messages saved for the final test. The larger one was often more sure of itself than it should have been.",
     stats: [
@@ -133,11 +140,12 @@ export const PROJECTS = [
   {
     slug: "rea-study",
     featured: true,
-    theme: { bg: "#06141a", title: "display" },
+    theme: { bg: "#e6d5bd", title: "display" },
     title: "My Take on REA",
     kind: "An AI tool, tested independently",
     accent: "cyan",
     status: "Independent study · technical report",
+    spotlightArt: "/shots/spotlight/rea-study.webp",
     icon: "/shots/rea-study/icon.svg",
     hook: "Can a tool help an AI explain what a program does without seeing its code? I tested REA on 20 small and medium programs. I found no clear improvement in the answers. When told to use REA, the AI took more time and steps; left alone, it mostly ignored the tool.",
     stats: [
@@ -146,7 +154,7 @@ export const PROJECTS = [
       { value: "2.3×", label: "the cost per run when the agent was told to use REA, against ordinary tools, as the tool reports it", short: "cost per run with REA directed" },
       { value: "3 of 18", label: "final-test answers my own marking script got wrong, found only by reading them", short: "answers my script misread" },
     ],
-    role: "I chose the question and ran every experiment on my own Mac. Claude Code wrote the code, analysed the results and drafted the report. I have not personally checked every answer against the key.",
+    role: "I designed the comparison, chose the test cases and ran every experiment on my Mac, using Claude Code for the code and first analysis.",
     tags: ["Python", "Agent evaluation", "Reverse engineering", "Honest uncertainty"],
     stack: ["Python", "Claude Code", "Claude Sonnet 5.5", "REA", "Ghidra", "Model Context Protocol", "C", "Go"],
     stackUsage: {
@@ -170,15 +178,15 @@ export const PROJECTS = [
       "Every run happens in an empty folder holding only the program. The answer key is never on that machine.",
       "Each answer is marked against facts written down first. A reply counts as right only if it states all of them.",
       "Three questions include a real unknown, such as a decryption key that is not in the file. Every prompt asks the agent to say what it could not determine; stating the secret counts as wrong.",
-      "A person reads the answers behind any difference. Both the script's numbers and the person's are reported.",
+      "The answers behind any score difference get a closer review. Both the script's numbers and the reviewed numbers are reported.",
     ],
     figures: [
-      { src: "/p/rea-study/fig2-accuracy.svg", caption: "Share of answers fully right. On the questions saved for the final test, my script said 3, 5 and 6 of 6. After a person read every answer it was 5, 6 and 6.", wide: true },
+      { src: "/p/rea-study/fig2-accuracy.svg", caption: "Share of answers fully right. On the questions saved for the final test, my script said 3, 5 and 6 of 6. An answer-by-answer review corrected that to 5, 6 and 6.", wide: true },
       { src: "/p/rea-study/fig3-adoption.svg", caption: "How often the agent chose REA when left alone. With REA's tools and instructions ready, it rarely did on easy programs, and always did when asked about the Go program's build details.", wide: true },
       { src: "/p/rea-study/fig5-marking.svg", caption: "My first marking against the corrected marking. Every group moved up or stayed the same.", wide: true },
     ],
     results: {
-      intro: "153 scored runs on one Mac, with one AI model and one question format. Each set-up got 45 runs in the first group and 6 questions saved for the final test. The final answers were read by a person as well as checked by code.",
+      intro: "153 scored runs on one Mac, with one AI model and one question format. Each set-up got 45 runs in the first group and 6 questions saved for the final test. The final answers were checked by code, then reviewed answer by answer.",
       headers: ["Set-up", "Right, first tests (45)", "Right, final test (6)", "Chose REA", "Typical seconds per run", "Estimated cost per run"],
       rows: [
         ["Ordinary tools only", "45", "5", "n/a", "24.4", "$0.088"],
@@ -201,7 +209,7 @@ export const PROJECTS = [
         { label: "Program", nodes: ["A program with a known answer"] },
         { label: "Set-up", nodes: ["Ordinary tools only", "REA, left alone", "REA, told to use it"] },
         { label: "Agent", nodes: ["Explains it and says what it can't tell"] },
-        { label: "Marked", nodes: ["Against a key kept off the machine", "Then a person reads the answers"] },
+        { label: "Marked", nodes: ["Against a key kept off the machine", "Then review the answers behind any gap"] },
       ],
     },
     reportCta: {
@@ -236,6 +244,7 @@ export const PROJECTS = [
     kind: "Mac, iPad and iPhone app",
     accent: "violet",
     status: "In testing · App Store soon",
+    spotlightArt: "/shots/spotlight/haloscript.webp",
     icon: "/shots/haloscript/icon.png",
     preferIcon: true,
     shots: ["/shots/haloscript/write_mac.jpg"],
@@ -282,8 +291,9 @@ export const PROJECTS = [
     kind: "AI + 3D · my digital double",
     accent: "rose",
     status: "Live demo · full write-up",
+    spotlightArt: "/shots/spotlight/digital-double.webp",
     shots: ["/shots/digital-double.jpg"],
-    hook: "A 3D model of my own head that looks back at you. I never used the 3D software myself: I told an AI coding assistant what to do, it built the model from phone photos and a 13-second video, and I judged every result.",
+    hook: "A 3D model of my own head that looks back at you. I directed the build from phone photos and a 13-second video, tried 12 approaches, and chose the version you can explore here.",
     stats: [
       { value: "12", label: "stages tried, most of them failed in useful ways", short: "stages, most failed" },
       { value: "13 s", label: "of phone video, plus a handful of photos", short: "of phone video" },
@@ -323,7 +333,7 @@ export const PROJECTS = [
     slug: "sitescout",
     featured: true,
     grid: true,
-    theme: { bg: "#120f1f", title: "condensed" },
+    theme: { bg: "#e6d5bd", title: "condensed" },
     title: "Sitescout",
     kind: "Chrome extension",
     accent: "violet",
@@ -406,7 +416,7 @@ export const PROJECTS = [
     slug: "integration",
     featured: true,
     grid: true,
-    theme: { bg: "#080a09", title: "mono" },
+    theme: { bg: "#e6d5bd", title: "mono" },
     title: "Integration-in-a-box",
     kind: "Connecting two systems",
     accent: "green",
@@ -498,7 +508,7 @@ export const PROJECTS = [
     slug: "analytics-assistant",
     featured: true,
     grid: true,
-    theme: { bg: "#1c150c", title: "serif" },
+    theme: { bg: "#e6d5bd", title: "serif" },
     title: "Analytics assistant: rules vs AI",
     kind: "AI + data tools",
     accent: "violet",
@@ -628,7 +638,7 @@ export const PROJECTS = [
     slug: "data-delivery",
     featured: true,
     grid: true,
-    theme: { bg: "#15120a", title: "condensed" },
+    theme: { bg: "#e6d5bd", title: "condensed" },
     title: "Customer data delivery",
     kind: "Data pipeline",
     accent: "amber",
@@ -648,7 +658,7 @@ export const PROJECTS = [
     },
     shots: ["/shots/delivery/board.webp"],
     story: [
-      "Part of my work involves a regular data delivery: our data is dropped into online storage on a schedule, and another company builds a product for their customers on top of it. I didn't build that system, but I know how it works and what the receiving team cares about: on time, in the agreed layout, and above all correct. A late delivery can be explained. A wrong one gets used.",
+      "Part of my work involves a regular data delivery built by another team: our data is dropped into online storage on a schedule, and another company builds a product for their customers on top of it. I see what the receiving team cares about: on time, in the agreed layout, and above all correct. A late delivery can be explained. A wrong one gets used.",
       "So I built that part in public. Three made-up pharmacies send weekly files. One uses commas to separate columns; one uses semicolons, writes dates day-first and uses commas instead of decimal points; one sends a different file type altogether. Six weeks of files come with problems hidden on purpose: a new column that pushes every other column out of place, a late file, rows sent twice, the same order sent twice with different amounts, sales dated in the year 2062, and a file that was cut off part way.",
       "Each pharmacy has a settings file describing what its files look like. The first step checks every file against it, the next step (using dbt) cleans and tests the rows, and the delivery only goes out if every pharmacy loaded and every test passed. If not, nothing goes out, and the alert says which pharmacy, which check failed, and where to look first.",
       "Then came the real test of \"a new customer is a settings file, not new code\": adding a fourth pharmacy. The blank settings template turned out to be too hard to fill in, so I built a helper that reads one of their files and fills in a draft for you.",
@@ -699,7 +709,7 @@ export const PROJECTS = [
     slug: "catalogue-checker",
     featured: true,
     grid: true,
-    theme: { bg: "#0f1418", title: "display" },
+    theme: { bg: "#e6d5bd", title: "display" },
     title: "Catalogue checker",
     kind: "AI + data quality",
     accent: "green",
@@ -773,7 +783,7 @@ export const PROJECTS = [
     status: "Internal tool · early version",
     icon: "/shots/mcp/icon.svg",
     hook: "My team's analytics app is connected to my AI coding assistant, so I can ask it questions about our data without leaving the assistant.",
-    role: "Daily user, and I set it up in my own assistant. Another team built the connection itself. I didn't, and I won't pretend I did.",
+    role: "I set up the team's connection in my assistant and use it daily. I also built a public version with sample data to explore the same ideas.",
     tags: ["MCP", "Cursor", "Agents", "TypeScript"],
     stack: ["Model Context Protocol", "TypeScript", "Zod", "Stateless HTTP transport", "Cursor"],
     stackUsage: {
@@ -786,7 +796,7 @@ export const PROJECTS = [
     story: [
       "MCP is a standard way for an AI assistant to use other software. It turned the chat window from a place where you paste things into a toolbox. Instead of me copying an answer out of an internal system and pasting it into the chat, the AI uses a tool directly, gets tidy data back, and carries on.",
       "My team's analytics app can be used that way. I connected it to Cursor, the AI coding assistant I use, and now I can ask about a product or a group of products and watch the AI look up the right names, pull in background information and run a data quality check before it sums up.",
-      "I didn't build this connection, but I've spent a lot of time on the other side of it, learning what makes tools easy or hard for an AI to use. That's why I built my own small version with fake data, linked below, to work through the same idea from start to finish.",
+      "Another team built the internal connection. Using it taught me what makes tools easy or hard for an AI to use, so I built my own small version with sample data, linked below, to work through the same idea from start to finish.",
     ],
     how: [
       "A thin translation layer: the AI speaks MCP, and the layer passes requests on to the analytics app's existing connections.",

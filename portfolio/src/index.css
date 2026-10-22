@@ -4,10 +4,17 @@
    DESIGN TOKENS
    ============================================================ */
 @theme {
-  --color-ink: #050911;
-  --color-ink-1: #0a0f1c;
-  --color-ink-2: #0e1730;
-  --color-ink-3: #13203f;
+  --color-ivory: #e6d5bd;
+  --color-blue: #101010;
+  --color-coral: #d5360c;
+  /* Compatibility names for the existing detail pages and overlays. */
+  --color-silver: #e6d5bd;
+  --color-aubergine: #101010;
+  --color-marigold: #d5360c;
+  --color-ink: #101010;
+  --color-ink-1: #181513;
+  --color-ink-2: #211c18;
+  --color-ink-3: #332820;
 
   --color-cyan: #22d3ee;
   --color-cyan-deep: #0e7490;
@@ -17,13 +24,12 @@
   --color-rose: #fb7185;
   --color-green: #34d399;
 
-  /* Full-bleed section blocks: each section's accent, sunk to near-ink so
-     body copy keeps its contrast. The hero is the one light block. */
-  --color-hero: #eef6f7;
-  --color-block-green: #06231a;
-  --color-block-amber: #231806;
-  --color-block-violet: #140f2e;
-  --color-block-rose: #23091a;
+  /* Legacy block tokens remain for the separate experiment views. */
+  --color-hero: #e6d5bd;
+  --color-block-green: #101010;
+  --color-block-amber: #211c18;
+  --color-block-violet: #101010;
+  --color-block-rose: #101010;
 
   /* Below text-xs, for tags and meta lines (11.5px at the 18px root). */
   --text-micro: 0.64rem;
@@ -55,16 +61,26 @@
    the CRT chassis lean on the same scale for consistency.
    ============================================================ */
 :root {
-  --ink-50: #f8fafc;
-  --ink-100: #f1f5f9;
-  --ink-200: #e2e8f0;
-  --ink-300: #e2e8f0;
+  --portfolio-accent: #d5360c;
+  --diagram-surface: #101010;
+  --ink-50: #f4f6f8;
+  --ink-100: #e6d5bd;
+  --ink-200: #e6d5bd;
+  --ink-300: #cbd0d8;
   /* Brightened from #a7b4c8 — this is the color most body copy (ledes,
      project/role descriptions, tags) actually renders in across the
      site, not just de-emphasized meta text, and it was reading too
      dim against a livelier background than the numbering implies. */
-  --ink-400: #d5deee;
+  --ink-400: #cbd0d8;
 }
+/* The terminal keeps its original screen colors and contrast. */
+.dark-surface {
+  --color-ink: #050911;
+  --color-ink-1: #0a0f1c;
+  --color-ink-2: #0e1730;
+  --color-ink-3: #13203f;
+}
+
 /* emet is the one section this portfolio-wide font refresh skips —
    it already looked right, so it keeps the previous heading font
    exactly as it was rather than picking up the new display font. */
@@ -85,13 +101,13 @@
   }
   body {
     background: var(--color-ink);
-    color: #e9effb;
+    color: var(--color-silver);
     font-family: var(--font-body);
     -webkit-font-smoothing: antialiased;
     overflow-x: hidden;
   }
   ::selection {
-    background: rgba(34, 211, 238, 0.25);
+    background: rgba(213, 54, 12, 0.32);
     color: #fff;
   }
 }
@@ -104,7 +120,7 @@
   }
   .panel {
     backdrop-filter: blur(14px);
-    background: rgba(5, 9, 17, 0.78);
+    background: rgba(21, 63, 96, 0.95);
     border: 1px solid rgba(255, 255, 255, 0.09);
     box-shadow: 0 18px 40px -22px rgba(0, 0, 0, 0.8);
   }
@@ -118,7 +134,7 @@
   }
   .glass {
     backdrop-filter: blur(16px);
-    background: rgba(2, 6, 16, 0.4);
+    background: rgba(21, 63, 96, 0.95);
     border: 1px solid rgba(255, 255, 255, 0.06);
   }
   .text-glow-cyan {
@@ -342,6 +358,32 @@
 }
 .mono-scroll::-webkit-scrollbar-track {
   background: transparent;
+}
+
+/* A visible hand-off while lazy route code and WebGL scenes initialise. */
+.route-loader {
+  min-height: 100%;
+  display: grid;
+  place-content: center;
+  justify-items: center;
+  gap: 14px;
+  background: #02050c;
+  color: #e6d5bd;
+  font: 500 0.68rem/1.4 var(--font-mono);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+.route-loader > span {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  border: 2px solid rgb(230 213 189 / .2);
+  border-top-color: #d5360c;
+  animation: route-loader-spin .75s linear infinite;
+}
+@keyframes route-loader-spin { to { transform: rotate(360deg); } }
+@media (prefers-reduced-motion: reduce) {
+  .route-loader > span { animation: none; border-color: #d5360c; }
 }
 
 /* ============================================================

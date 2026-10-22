@@ -1,12 +1,21 @@
 import { useEffect, useRef } from "react";
+import { HERO } from "../data/content";
+import { COARSE_OR_NARROW_QUERY, REDUCED_MOTION_QUERY } from "../lib/staticHero";
 
-/* The opening: a few thousand dots start out tracing the infinity loop,
-   then drift into "Hi, I'm / Mohamed Ansar". Plain 2D canvas (no three.js),
-   so it paints fast. The pointer gently pushes dots aside. With reduced
-   motion the name is drawn straight away, no movement. */
+/* One opening: infinity → name → what I build. Both text shapes keep the
+   same pointer repulsion and spring return. Reduced motion shows a static
+   name; Hero renders the statement as ordinary text beside it. */
+const LOOP_HOLD = 0.05;
+const NAME_FORM = 0.52;
+const STAGGER = 0.12;
+const NAME_PAUSE = 0.72;
+const MORPH_START = LOOP_HOLD + NAME_FORM + STAGGER + NAME_PAUSE;
+const MORPH_DURATION = 0.56;
+const clamp01 = (v) => Math.max(0, Math.min(1, v));
+const ease = (k) => 1 - Math.pow(1 - k, 4);
 
-// A sweep across the name, left to right: deep cyan, violet, rose, amber.
-const STOPS = [[14, 116, 144], [109, 40, 217], [190, 24, 93], [180, 83, 9]];
+// Soft-black letterforms carry the name; burnt orange catches the perimeter.
+const STOPS = [[16, 16, 16], [16, 16, 16], [16, 16, 16], [213, 54, 12]];
 function sweep(f) {
   const x = Math.min(0.999, Math.max(0, f)) * (STOPS.length - 1);
   const i = Math.floor(x), k = x - i;
@@ -15,32 +24,43 @@ function sweep(f) {
   return `rgb(${c[0]},${c[1]},${c[2]})`;
 }
 
-function sampleText(w, h, dpr) {
+function sampleText(w, h, dpr, statement = false, stepOverride = 0) {
   const c = document.createElement("canvas");
   c.width = w;
   c.height = h;
   const g = c.getContext("2d");
   const narrow = w / dpr < 640;
-  const lines = narrow ? ["Mohamed", "Ansar"] : ["Mohamed Ansar"];
-  // Biggest size that fits the width, capped by height.
-  g.font = `700 100px Outfit, sans-serif`;
-  const widest = Math.max(...lines.map((l) => g.measureText(l).width));
-  const big = Math.min((w * 0.86 * 100) / widest, (h * 0.62) / (lines.length * 0.95 + 0.55));
-  const small = big * 0.42;
-  const total = small * 1.1 + lines.length * big * 0.95;
-  let y = (h - total) / 2 + small;
+  // The copy comes from HERO, so the canvas and accessible text stay in sync.
+  const sentences = HERO.title.match(/[^.!?]+[.!?]+/g)?.map((line) => line.trim()) || [HERO.title];
+  const lines = statement
+    ? sentences.flatMap((line) => {
+        if (!narrow) return [line];
+        const words = line.split(" ");
+        const middle = Math.ceil(words.length / 2);
+        return [words.slice(0, middle).join(" "), words.slice(middle).join(" ")];
+      })
+    : narrow ? ["Mohamed", "Ansar"] : ["Mohamed Ansar"];
+  g.font = statement ? "700 100px Outfit, sans-serif" : "400 100px Anton, sans-serif";
+  const widest = Math.max(...lines.map((line) => g.measureText(line).width));
+  const big = Math.min((w * 0.86 * 100) / widest, (h * 0.62) / (lines.length * 0.95 + (statement ? 0 : 0.55)));
+  const small = statement ? 0 : big * 0.42;
+  const lineHeight = big * (statement ? 1.15 : 0.95);
+  const total = small * 1.1 + big + (lines.length - 1) * lineHeight;
+  let y = (h - total) / 2 + (statement ? big * 0.78 : small);
   g.fillStyle = "#000";
   g.textAlign = "center";
   g.textBaseline = "alphabetic";
-  g.font = `500 ${small}px Outfit, sans-serif`;
-  g.fillText("Hi, I'm", w / 2, y);
-  y += small * 0.2 + big * 0.82;
-  g.font = `700 ${big}px Outfit, sans-serif`;
-  for (const l of lines) {
-    g.fillText(l, w / 2, y);
-    y += big * 0.95;
+  if (!statement) {
+    g.font = `600 ${small}px Outfit, sans-serif`;
+    g.fillText("Hi, I'm", w / 2, y);
+    y += small * 0.2 + big * 0.82;
   }
-  const step = Math.max(2, Math.round((narrow ? 2.5 : 3) * dpr * Math.max(0.7, big / (220 * dpr))));
+  g.font = statement ? `700 ${big}px Outfit, sans-serif` : `400 ${big}px Anton, sans-serif`;
+  for (const line of lines) {
+    g.fillText(line, w / 2, y);
+    y += lineHeight;
+  }
+  const step = Math.max(2, stepOverride || Math.round((narrow ? 2.5 : 3) * dpr * Math.max(0.7, big / (220 * dpr))));
   const data = g.getImageData(0, 0, w, h).data;
   const pts = [];
   for (let py = 0; py < h; py += step) {
@@ -51,6 +71,14 @@ function sampleText(w, h, dpr) {
   return { pts, step };
 }
 
+// Quantized colors let us draw in color order instead of changing canvas
+// fillStyle thousands of times per frame. The visual sweep stays the same.
+const PALETTE = Array.from({ length: 16 }, (_, i) => sweep(i / 15));
+const PHASES = 16;
+// Ceiling for a drawn-once hero: enough to keep the letterforms solid at any
+// viewport, low enough to bound allocation and the colour sort on weak devices.
+const STATIC_MAX = 14000;
+
 export default function NameParticles({ ready = true, onSettled }) {
   const ref = useRef(null);
 
@@ -58,117 +86,247 @@ export default function NameParticles({ ready = true, onSettled }) {
     if (!ready) return;
     const canvas = ref.current;
     const ctx = canvas.getContext("2d");
-    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    let raf = 0;
+    if (!ctx) {
+      onSettled?.();
+      return;
+    }
+    // On touch phones the pointer interaction is unavailable and a perpetual
+    // canvas loop costs battery for little gain. Draw the name once instead.
+    // The same condition decides whether Hero renders the statement as text,
+    // so both read it from lib/staticHero.js.
+    const reducedQuery = window.matchMedia(REDUCED_MOTION_QUERY);
+    const staticQuery = window.matchMedia(COARSE_OR_NARROW_QUERY);
+    let staticMode = reducedQuery.matches || staticQuery.matches;
+    let raf = null;
     let parts = [];
     let radius = 1;
-    let start = 0;
+    let elapsed = 0;
+    let lastFrame = 0;
+    let lastPointerMove = -Infinity;
     let settledSent = false;
-    const pointer = { x: -1e4, y: -1e4 };
+    let initialized = false;
+    let onScreen = true;
+    let alive = true;
     let dpr = 1;
+    const pointer = { x: -1e4, y: -1e4 };
+    const waveX = new Float32Array(PHASES);
+    const waveY = new Float32Array(PHASES);
+    const waveIntro = new Float32Array(PHASES);
 
-    function build() {
-      dpr = Math.min(window.devicePixelRatio || 1, 2);
-      const r = canvas.getBoundingClientRect();
-      canvas.width = Math.max(1, Math.round(r.width * dpr));
-      canvas.height = Math.max(1, Math.round(r.height * dpr));
-      const { pts, step } = sampleText(canvas.width, canvas.height, dpr);
-      radius = step * 0.36;
+    function build(preservePhase = false) {
+      dpr = Math.min(window.devicePixelRatio || 1, 1.5);
+      const rect = canvas.getBoundingClientRect();
+      canvas.width = Math.max(1, Math.round(rect.width * dpr));
+      canvas.height = Math.max(1, Math.round(rect.height * dpr));
       const w = canvas.width, h = canvas.height;
-      const s = Math.min(w * 0.38, h * 0.62);
-      parts = pts.map(([tx, ty], i) => {
-        // Start on the infinity loop (a lemniscate), like the old opening.
-        const t = (i / pts.length) * Math.PI * 2 + Math.random() * 0.05;
-        const d = 1 + Math.sin(t) ** 2;
-        const sx = w / 2 + (s * Math.cos(t)) / d + (Math.random() - 0.5) * s * 0.08;
-        const sy = h / 2 + (s * Math.sin(t) * Math.cos(t)) / d + (Math.random() - 0.5) * s * 0.08;
-        return { tx, ty, x: sx, y: sy, sx, sy, vx: 0, vy: 0, c: Math.random() < 0.18 ? "#0b1220" : sweep(tx / w + (Math.random() - 0.5) * 0.08), delay: Math.random() * 0.5, ph: Math.random() * 6.28 };
-      });
+      let name = sampleText(w, h, dpr);
+      // Thinning by striding the point list leaves gaps in a regular pattern
+      // that break up the strokes, so an oversized static sample is taken
+      // again on a coarser grid instead. Coverage stays even and the count
+      // stays bounded on large screens and across repeated rebuilds. Points
+      // scale with the square of the step, so rounding the step up puts the
+      // second pass under the ceiling without having to sample again.
+      if (staticMode && name.pts.length > STATIC_MAX) {
+        name = sampleText(w, h, dpr, false, Math.ceil(name.step * Math.sqrt(name.pts.length / STATIC_MAX)));
+      }
+      // A static hero never morphs, so the statement shape is dead weight there.
+      const statement = staticMode ? name : sampleText(w, h, dpr, true);
+      const sampledCount = Math.max(name.pts.length, statement.pts.length);
+      // The animated hero is capped for per-frame cost; the static one is drawn
+      // once and is already bounded by the grid above.
+      const count = Math.min(sampledCount, staticMode ? sampledCount : rect.width < 640 ? 3200 : 7000);
+      // Slightly larger points retain the letter density with fewer particles.
+      radius = Math.min(Math.min(name.step, statement.step) * 0.36 * Math.sqrt(sampledCount / Math.max(1, count)), 2.4 * dpr);
+      const scale = Math.min(w * 0.38, h * 0.62);
+      if (!name.pts.length || !statement.pts.length) {
+        parts = [];
+        canvas.dataset.particleCount = "0";
+        return;
+      }
+      parts = Array.from({ length: count }, (_, i) => {
+        const [nx, ny] = name.pts[Math.floor(i * name.pts.length / count)];
+        const [tx, ty] = statement.pts[Math.floor(i * statement.pts.length / count)];
+        const angle = i / count * Math.PI * 2 + Math.random() * 0.05;
+        const denominator = 1 + Math.sin(angle) ** 2;
+        const sx = w / 2 + scale * Math.cos(angle) / denominator + (Math.random() - 0.5) * scale * 0.08;
+        const sy = h / 2 + scale * Math.sin(angle) * Math.cos(angle) / denominator + (Math.random() - 0.5) * scale * 0.08;
+        const delay = Math.random() * STAGGER;
+        const morph = staticMode ? 0 : ease(clamp01((elapsed - MORPH_START - delay) / MORPH_DURATION));
+        const x = preservePhase ? nx + (tx - nx) * morph : sx;
+        const y = preservePhase ? ny + (ty - ny) * morph : sy;
+        const color = Math.random() < 0.18 ? 0 : Math.min(15, Math.max(0, Math.round((nx / w + (Math.random() - 0.5) * 0.08) * 15)));
+        return { nx, ny, tx, ty, x, y, sx, sy, vx: 0, vy: 0, color, delay, phase: Math.floor(Math.random() * PHASES) };
+      }).sort((a, b) => a.color - b.color);
+      canvas.dataset.particleCount = String(parts.length);
     }
 
-    const ease = (k) => 1 - Math.pow(1 - k, 4);
-    const HOLD = 0.7, FLY = 1.6;
-
-    function frame(now) {
-      if (!start) start = now;
-      const el = (now - start) / 1000;
+    function draw(dt = 1) {
       const w = canvas.width, h = canvas.height;
       ctx.clearRect(0, 0, w, h);
-      const pr = 70 * dpr;
+      const pointerRadius = 70 * dpr;
+      const damping = Math.pow(0.82, dt);
+      // Shared phase buckets replace two trig calls per particle per frame.
+      for (let i = 0; i < PHASES; i++) {
+        const phase = i / PHASES * Math.PI * 2;
+        waveX[i] = Math.sin(elapsed * 1.3 + phase) * 0.6 * dpr;
+        waveY[i] = Math.cos(elapsed * 1.1 + phase) * 0.6 * dpr;
+        waveIntro[i] = Math.sin(elapsed * 1.4 + phase) * 3 * dpr;
+      }
       let allHome = true;
+      let color = -1;
       for (const p of parts) {
-        const k = reduced ? 1 : Math.min(1, Math.max(0, (el - HOLD - p.delay) / FLY));
+        const k = staticMode ? 1 : clamp01((elapsed - LOOP_HOLD - p.delay) / NAME_FORM);
         if (k < 1) {
           allHome = false;
-          // Before the move, the loop slowly turns.
-          const e = ease(k);
-          const wob = (1 - e) * Math.sin(el * 1.4 + p.ph) * 3 * dpr;
-          p.x = p.sx + (p.tx - p.sx) * e + wob;
-          p.y = p.sy + (p.ty - p.sy) * e;
-        } else if (!reduced) {
-          // Settled: spring home, pushed aside by the pointer.
+          const eased = ease(k);
+          p.x = p.sx + (p.nx - p.sx) * eased + (1 - eased) * waveIntro[p.phase];
+          p.y = p.sy + (p.ny - p.sy) * eased;
+        } else if (!staticMode) {
+          const morph = ease(clamp01((elapsed - MORPH_START - p.delay) / MORPH_DURATION));
+          const homeX = p.nx + (p.tx - p.nx) * morph;
+          const homeY = p.ny + (p.ty - p.ny) * morph;
           const dx = p.x - pointer.x, dy = p.y - pointer.y;
-          const d2 = dx * dx + dy * dy;
-          if (d2 < pr * pr) {
-            const f = (1 - Math.sqrt(d2) / pr) * 2.2 * dpr;
-            const d = Math.sqrt(d2) || 1;
-            p.vx += (dx / d) * f;
-            p.vy += (dy / d) * f;
+          const distanceSquared = dx * dx + dy * dy;
+          if (distanceSquared < pointerRadius * pointerRadius) {
+            const distance = Math.sqrt(distanceSquared) || 1;
+            const force = (1 - distance / pointerRadius) * 2.2 * dpr * dt;
+            p.vx += dx / distance * force;
+            p.vy += dy / distance * force;
           }
-          p.vx += (p.tx + Math.sin(el * 1.3 + p.ph) * 0.6 * dpr - p.x) * 0.06;
-          p.vy += (p.ty + Math.cos(el * 1.1 + p.ph) * 0.6 * dpr - p.y) * 0.06;
-          p.vx *= 0.82;
-          p.vy *= 0.82;
-          p.x += p.vx;
-          p.y += p.vy;
+          p.vx += (homeX + waveX[p.phase] - p.x) * 0.06 * dt;
+          p.vy += (homeY + waveY[p.phase] - p.y) * 0.06 * dt;
+          p.vx *= damping;
+          p.vy *= damping;
+          p.x += p.vx * dt;
+          p.y += p.vy * dt;
         } else {
-          p.x = p.tx;
-          p.y = p.ty;
+          p.x = p.nx;
+          p.y = p.ny;
         }
-        ctx.fillStyle = p.c;
+        if (p.color !== color) {
+          color = p.color;
+          ctx.fillStyle = PALETTE[color];
+        }
         ctx.fillRect(p.x - radius, p.y - radius, radius * 2, radius * 2);
       }
       if (allHome && !settledSent) {
         settledSent = true;
         onSettled?.();
       }
-      if (!reduced) raf = requestAnimationFrame(frame);
     }
 
-    let alive = true;
-    (document.fonts?.load ? document.fonts.load("700 100px Outfit") : Promise.resolve()).finally(() => {
-      if (!alive) return;
-      build();
+    function frame(now) {
+      raf = null;
+      // Full rate during the entrance and pointer interaction; the tiny
+      // resting drift only needs 30fps. Scrolling away cancels RAF entirely.
+      const active = elapsed < MORPH_START + MORPH_DURATION + STAGGER || now - lastPointerMove < 600;
+      if (lastFrame && now - lastFrame < (active ? 1000 / 60 : 1000 / 30) - 1) {
+        raf = requestAnimationFrame(frame);
+        return;
+      }
+      const seconds = lastFrame ? (now - lastFrame) / 1000 : 1 / 60;
+      lastFrame = now;
+      elapsed += seconds;
+      draw(Math.min(seconds * 60, 2));
       raf = requestAnimationFrame(frame);
-    });
+    }
 
-    function onMove(e) {
-      const r = canvas.getBoundingClientRect();
-      pointer.x = (e.clientX - r.left) * dpr;
-      pointer.y = (e.clientY - r.top) * dpr;
+    function sync() {
+      if (!initialized || !alive) return;
+      const running = !staticMode && onScreen && !document.hidden;
+      if (running && raf === null) raf = requestAnimationFrame(frame);
+      if (!running) {
+        cancelAnimationFrame(raf);
+        raf = null;
+        lastFrame = 0; // Pause the timeline as well as drawing.
+        pointer.x = pointer.y = -1e4;
+      }
+      canvas.dataset.animationState = staticMode ? "static" : running ? "running" : "paused";
     }
-    function onLeave() {
-      pointer.x = pointer.y = -1e4;
+
+    function initialize() {
+      if (!alive || initialized) return;
+      clearTimeout(fontTimer);
+      build();
+      initialized = true;
+      if (staticMode) draw();
+      sync();
     }
-    let resizeT;
-    function onResize() {
-      clearTimeout(resizeT);
-      resizeT = setTimeout(() => {
-        build();
-        start = performance.now() - (HOLD + FLY + 0.6) * 1000; // no replay on resize
-        if (reduced) frame(performance.now());
-      }, 150);
+    // Don't leave the entire opening blank behind a slow font request.
+    const fontTimer = setTimeout(initialize, 350);
+    const fontReady = document.fonts?.load
+      ? Promise.all([document.fonts.load("400 100px Anton"), document.fonts.load("700 100px Outfit")])
+      : Promise.resolve();
+    fontReady.then(() => {
+      if (!alive) return;
+      if (!initialized) initialize();
+      else {
+        build(true);
+        if (staticMode) draw();
+      }
+    }, initialize);
+
+    function onMove(event) {
+      // Canvas-local offsets avoid a forced layout read on every pointer move.
+      pointer.x = event.offsetX * dpr;
+      pointer.y = event.offsetY * dpr;
+      lastPointerMove = performance.now();
     }
-    window.addEventListener("pointermove", onMove, { passive: true });
-    window.addEventListener("pointerleave", onLeave);
-    window.addEventListener("resize", onResize);
+    function onLeave() { pointer.x = pointer.y = -1e4; }
+    // Crossing the breakpoint fires the resize observer and the media query
+    // together, so every rebuild goes through one timer and runs once.
+    let rebuildTimer;
+    function scheduleRebuild() {
+      clearTimeout(rebuildTimer);
+      rebuildTimer = setTimeout(() => {
+        if (!initialized || !alive) return;
+        build(true);
+        if (staticMode) draw();
+        sync();
+      }, 100);
+    }
+    const onResize = scheduleRebuild;
+    // Switching between the animated and static hero changes the particle
+    // budget, so rebuild rather than letting the old set drift on screen.
+    function onModeChange() {
+      const next = reducedQuery.matches || staticQuery.matches;
+      if (next === staticMode) return;
+      staticMode = next;
+      // Returning to the animated hero replays the entrance from the start.
+      // Without this the timeline stays wherever it was frozen and the hero
+      // can be left permanently settled, so the reveal never runs again.
+      if (!staticMode) {
+        elapsed = 0;
+        settledSent = false;
+      }
+      scheduleRebuild();
+    }
+    reducedQuery.addEventListener?.("change", onModeChange);
+    staticQuery.addEventListener?.("change", onModeChange);
+    const intersection = typeof IntersectionObserver === "undefined" ? null : new IntersectionObserver(([entry]) => {
+      onScreen = entry.isIntersecting;
+      sync();
+    }, { rootMargin: "50px" });
+    intersection?.observe(canvas);
+    const resizeObserver = typeof ResizeObserver === "undefined" ? null : new ResizeObserver(onResize);
+    resizeObserver?.observe(canvas);
+    if (!resizeObserver) window.addEventListener("resize", onResize);
+    canvas.addEventListener("pointermove", onMove, { passive: true });
+    canvas.addEventListener("pointerleave", onLeave);
+    document.addEventListener("visibilitychange", sync);
     return () => {
       alive = false;
       cancelAnimationFrame(raf);
-      clearTimeout(resizeT);
-      window.removeEventListener("pointermove", onMove);
-      window.removeEventListener("pointerleave", onLeave);
+      clearTimeout(fontTimer);
+      clearTimeout(rebuildTimer);
+      intersection?.disconnect();
+      resizeObserver?.disconnect();
+      reducedQuery.removeEventListener?.("change", onModeChange);
+      staticQuery.removeEventListener?.("change", onModeChange);
       window.removeEventListener("resize", onResize);
+      canvas.removeEventListener("pointermove", onMove);
+      canvas.removeEventListener("pointerleave", onLeave);
+      document.removeEventListener("visibilitychange", sync);
     };
   }, [ready, onSettled]);
 

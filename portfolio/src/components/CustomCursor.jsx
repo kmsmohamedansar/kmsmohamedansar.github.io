@@ -26,7 +26,7 @@ export default function CustomCursor() {
     let ringY = window.innerHeight / 2;
     let targetX = ringX;
     let targetY = ringY;
-    let raf;
+    let raf = null;
     let placed = false;
 
     function onMove(e) {
@@ -52,16 +52,20 @@ export default function CustomCursor() {
       ring.dataset.label = label;
       // The dot would sit on the label's letters; the bubble is the cursor now.
       dot.style.opacity = label ? "0" : "1";
+      if (raf === null) raf = requestAnimationFrame(tick);
     }
 
     function tick() {
+      raf = null;
       ringX += (targetX - ringX) * 0.22;
       ringY += (targetY - ringY) * 0.22;
       ring.style.transform = `translate(${ringX}px, ${ringY}px)`;
-      raf = requestAnimationFrame(tick);
+      if (Math.abs(targetX - ringX) + Math.abs(targetY - ringY) > 0.15) raf = requestAnimationFrame(tick);
     }
 
     function onLeave() {
+      cancelAnimationFrame(raf);
+      raf = null;
       dot.style.opacity = "0";
       ring.style.opacity = "0";
     }
@@ -74,7 +78,6 @@ export default function CustomCursor() {
     window.addEventListener("pointermove", onMove, { passive: true });
     document.addEventListener("mouseleave", onLeave);
     document.addEventListener("mouseenter", onEnter);
-    raf = requestAnimationFrame(tick);
 
     return () => {
       document.documentElement.classList.remove("has-custom-cursor");

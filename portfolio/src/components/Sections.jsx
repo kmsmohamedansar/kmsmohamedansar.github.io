@@ -1,112 +1,29 @@
-import { Fragment, useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { AnimatePresence, motion, useReducedMotion, useInView } from "framer-motion";
+import { ArrowDown, ArrowRight, ArrowUpRight, ExternalLink, Info, Mail } from "lucide-react";
 import NameParticles from "./NameParticles";
-import { animate, AnimatePresence, cubicBezier, motion, useMotionValue, useMotionValueEvent, useReducedMotion, useScroll, useSpring, useTransform, useVelocity } from "framer-motion";
-import { ArrowRight, ArrowUp, ArrowUpRight, ChevronLeft, ChevronRight, ExternalLink, Info, Link2, Lock, Mail } from "lucide-react";
-import { TOOL_INFO } from "../data/tools";
 import { ABOUT, CONTACT, HERO, RECEIPTS, ROLES } from "../data/content";
-import { ACCENTS, EARLIER_PROJECTS, EXPERIMENTS, FEATURED, FEATURED_GRID, LISTED_PROJECTS, MORE_PROJECTS } from "../data/projects";
-import { FlourishTitle, Reveal, ScrollShot, SectionHead, SpinBadge, TagPill } from "./ui";
-import { useRoute } from "../App";
+import { EARLIER_PROJECTS, EXPERIMENTS, FEATURED, FEATURED_GRID, LISTED_PROJECTS, MORE_PROJECTS } from "../data/projects";
+import { TOOL_INFO } from "../data/tools";
 import { EASE_REVEAL } from "../lib/motion";
+import { media } from "../lib/media";
+import { useStaticHero } from "../lib/staticHero";
+import { useRoute } from "../App";
+import "../editorial.css";
 
-// Every section below the hero is a full-bleed color block of its own.
-const BLOCK = "relative overflow-hidden scroll-mt-16 px-5 py-20 sm:py-28";
-const INNER = "relative mx-auto w-full max-w-[1180px]";
+const firstSentence = (text) => text.match(/[^.!?]+[.!?]+(?:\s|$)/)?.[0]?.trim() || text;
+const revealImage = (event) => event.currentTarget.classList.add("is-loaded");
 
-/* A one-line flowchart preview: the column labels as coloured chips
-   joined by arrows. The full diagram lives on the project page. */
-function FlowMini({ spec, accent }) {
-  const a = ACCENTS[accent];
-  return (
-    <div className="flex flex-wrap items-center gap-x-1.5 gap-y-2" aria-hidden="true">
-      {spec.columns.map((c, i) => (
-        <span key={c.label} className="flex items-center gap-1.5">
-          <span className={`font-mono text-micro uppercase tracking-wide px-2 py-1 rounded-md border ${a.border} ${a.text} ${a.soft}`}>
-            {c.label}
-          </span>
-          {i < spec.columns.length - 1 && <ArrowRight size={12} className="text-[color:var(--ink-300)]" />}
-        </span>
-      ))}
-    </div>
-  );
-}
-
-/* Where a project's live link points, shown in the preview frame's
-   address bar; falls back to the project title. */
-function frameLabel(project) {
-  const live = project.links?.find((l) => l.external && l.primary);
-  try {
-    return live ? new URL(live.href).host + new URL(live.href).pathname.replace(/\/$/, "") : project.title;
-  } catch {
-    return project.title;
-  }
-}
-
-/* The project's visual, in order of preference: its first screenshot in
-   a scrolling browser frame; its app icon (RepTrack) floating over the
-   flow; or a typographic card (kind, flow chips, large initial). A
-   screenshot that fails to load falls back to the typographic card. */
-function ProjectVisual({ project, large = false }) {
-  const a = ACCENTS[project.accent];
-  const [broken, setBroken] = useState(false);
-  const ratio = large ? "aspect-[16/11]" : "aspect-[16/9]";
-  const cardShot = project.cardShot || (!project.preferIcon && project.shots?.[0]);
-  if (cardShot && !broken) {
-    return <ScrollShot src={cardShot} label={frameLabel(project)} onError={() => setBroken(true)} ratio={ratio} />;
-  }
-  return (
-    <div
-      className={`relative flex flex-col justify-between overflow-hidden rounded-2xl border p-5 ${large ? "sm:p-8" : ""} ${ratio}`}
-      style={{ background: `radial-gradient(130% 100% at 0% 0%, ${a.hex}38, transparent 62%), rgba(5, 9, 17, 0.5)`, borderColor: `${a.hex}45` }}
-    >
-      {project.icon ? (
-        <img
-          src={project.icon}
-          alt=""
-          loading="lazy"
-          className={`float-y pointer-events-none absolute left-1/2 ${large ? "top-[38%] w-[28%]" : "top-1/2 w-[30%]"} max-w-[200px] -translate-x-1/2 -translate-y-1/2 rounded-[22%] shadow-[0_30px_60px_-20px_rgba(0,0,0,.7)] transition-transform duration-500 ease-out group-hover:scale-105`}
-        />
-      ) : (
-        <span
-          aria-hidden="true"
-          className="pointer-events-none absolute -bottom-[.18em] right-[.06em] font-serif italic leading-none transition-transform duration-500 ease-out group-hover:-translate-y-2"
-          style={{ color: `${a.hex}2e`, fontSize: large ? "clamp(9rem,20vw,16rem)" : "8rem" }}
-        >
-          {project.title[0]}
-        </span>
-      )}
-      <span className={`relative font-mono text-micro font-semibold uppercase tracking-[.16em] ${a.text}`}>{project.kind}</span>
-      {/* On small cards a logo needs the room, so the flow chips are left out. */}
-      {project.flow && !(project.icon && !large) && (
-        <div className="relative">
-          <FlowMini spec={project.flow} accent={project.accent} />
-        </div>
-      )}
-    </div>
-  );
-}
-
-/* Oversized, faint section word behind the content, drifting slower than
-   the page scrolls. Decorative only. */
-function Watermark({ text, targetRef, scrollContainerRef }) {
+function Enter({ children, className = "", delay = 0 }) {
   const reduced = useReducedMotion();
-  const { scrollYProgress } = useScroll({ container: scrollContainerRef, target: targetRef, offset: ["start end", "end start"] });
-  // Function form, for the same ScrollTimeline reason as HeroPhrase.
-  const y = useTransform(scrollYProgress, (v) => `${(v - 0.5) * 60}vh`);
-  return (
-    <motion.div
-      aria-hidden="true"
-      style={reduced ? undefined : { y }}
-      className="pointer-events-none absolute inset-x-0 top-[12vh] select-none text-center font-condensed uppercase leading-none tracking-[.12em] text-white/[.045] text-[clamp(6rem,24vw,22rem)]"
-    >
-      {text}
-    </motion.div>
-  );
+  return <motion.div className={className} initial={reduced ? false : { opacity: 0, y: 12 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, amount: 0.08 }} transition={{ duration: 0.3, delay: Math.min(delay, 0.06), ease: EASE_REVEAL }}>{children}</motion.div>;
 }
-
-/* ── HERO ───────────────────────────────────────────────────── */
-// What I build, and with what. Each pair is true: that project was built
-// with that tool. Words cycle in turn, each in its own type and colour.
+function IndexLabel({ number, children }) {
+  return <p className="ed-label"><span>{number}</span>{children}</p>;
+}
+function ArrowLink({ href, children, light = false }) {
+  return <a className={`ed-link ${light ? "ed-link-light" : ""}`} href={href}>{children}<ArrowUpRight size={18} aria-hidden="true" /></a>;
+}
 const BUILT = [
   ["RepTrack", "Swift", "an iOS app"],
   ["Haloscript", "SwiftUI", "a writing app"],
@@ -117,25 +34,17 @@ const BUILT = [
   ["a catalogue checker", "embeddings", "a data quality check"],
   ["a weekly data delivery", "DuckDB", "a pipeline that stops itself"],
 ];
-const STYLE_CYCLE = [
-  "font-serif italic text-[1.35rem] text-[#0e7490]",
-  "font-condensed uppercase tracking-[.04em] text-[1.15rem] text-[#6d28d9]",
-  "font-mono text-[.95rem] font-semibold text-[#b45309]",
-  "font-display font-bold text-[1.2rem] text-[#be185d]",
-  "font-serif italic text-[1.35rem] text-[#15803d]",
-];
 const PROJECT_STYLES = [
-  "font-serif italic text-[#0e7490]",
-  "font-condensed uppercase tracking-[.02em] text-[#6d28d9]",
-  "font-display font-bold text-[#be185d]",
-  "font-serif italic text-[#15803d]",
+  "font-serif italic text-[#74200d]",
+  "font-condensed uppercase tracking-[.02em] text-[#101010]",
+  "font-display font-bold text-[#74200d]",
+  "font-serif italic text-[#101010]",
 ];
 const TOOL_STYLES = [
-  "font-mono font-semibold text-[#b45309]",
-  "font-condensed uppercase tracking-[.03em] text-[#0e7490]",
-  "font-mono font-semibold text-[#6d28d9]",
+  "font-mono font-semibold text-[#74200d]",
+  "font-condensed uppercase tracking-[.03em] text-[#101010]",
+  "font-mono font-semibold text-[#74200d]",
 ];
-const TICKER = BUILT.flatMap(([p, t]) => [p, t]);
 
 /* "I built RepTrack with Swift." The project and tool swap every few
    seconds, each rising in from below in a new font and colour. */
@@ -156,7 +65,7 @@ function BuiltLine({ run }) {
           initial={reduced ? false : { y: "110%", opacity: 0 }}
           animate={{ y: "0%", opacity: 1 }}
           exit={reduced ? undefined : { y: "-110%", opacity: 0 }}
-          transition={{ duration: 0.55, ease: EASE_REVEAL }}
+          transition={{ duration: 0.32, ease: EASE_REVEAL }}
           className={`inline-block whitespace-nowrap ${cls}`}
         >
           {text}
@@ -166,11 +75,11 @@ function BuiltLine({ run }) {
   );
   return (
     <div>
-      <p className="font-display text-[clamp(1.25rem,3.2vw,2.1rem)] leading-snug text-[#334155]">
+      <p className="font-display text-[clamp(1.25rem,2.4vw,2rem)] leading-snug text-[#101010]">
         I built {word(project, PROJECT_STYLES[i % PROJECT_STYLES.length], "p" + i)} with{" "}
         {word(tool, TOOL_STYLES[i % TOOL_STYLES.length], "t" + i)}
       </p>
-      <p className="mt-2 font-mono text-xs uppercase tracking-[.18em] text-[#64748b]">
+      <p className="mt-2 font-mono text-xs uppercase tracking-[.18em] text-[#51463c]">
         <span className="sr-only">That's </span>
         {what} · {i + 1} of {BUILT.length}
       </p>
@@ -178,940 +87,135 @@ function BuiltLine({ run }) {
   );
 }
 
-const HERO_INK = "#0b1220";
-// The lede's highlighted phrases (SQL, iOS app, AI), reused as the
-// script overlays on the pinned headline, each in its own accent color
-// and position. Positions are % of the headline box.
-const OVERLAY_SPOTS = [
-  { top: "4%", left: "56%", rotate: -7, range: [0.5, 0.6] },
-  { top: "38%", left: "4%", rotate: -5, range: [0.6, 0.7] },
-  { top: "70%", left: "50%", rotate: -8, range: [0.7, 0.8] },
-];
-const HERO_PHRASES = HERO.lede.filter((s) => s.cls);
-const TITLE_WORDS = HERO.title.split(" ");
-// Where the headline is fully built (the last phrase's range ends here).
-const REVEAL_END = 0.8;
-// How long a visitor can pause mid-headline before it finishes itself.
-const IDLE_MS = 250;
 
-const revealEase = cubicBezier(...EASE_REVEAL);
-const eased = (v, from, to) => revealEase(Math.min(1, Math.max(0, (v - from) / (to - from))));
-
-/* One word of the pinned headline: it rises out of its own mask (with a
-   slight tilt that straightens as it lands) over its own slice of the
-   scroll, so the sentence builds word by word as you scroll into it. */
-function RiseWord({ word, index, progress, reduced }) {
-  const from = 0.02 + index * 0.026;
-  const k = useTransform(progress, (v) => eased(v, from, from + 0.12));
-  const y = useTransform(k, (t) => `${(1 - t) * 108}%`);
-  const rotate = useTransform(k, (t) => (1 - t) * 7);
-  return (
-    <span className="inline-block overflow-hidden align-bottom pb-[.04em] -mb-[.04em]">
-      <motion.span className="inline-block origin-bottom-left" style={reduced ? undefined : { y, rotate }}>
-        {word}
-      </motion.span>
-    </span>
-  );
-}
-
-function HeroPhrase({ phrase, spot, progress, reduced }) {
-  // Function-form transforms on purpose: framer hands a plain range-mapped
-  // opacity to the browser's native ScrollTimeline, which tracks the
-  // document scroller, not <main>, so the phrases faded on the wrong scroll.
-  const [from, to] = spot.range;
-  const opacity = useTransform(progress, (v) => eased(v, from, to));
-  const y = useTransform(opacity, (k) => 28 * (1 - k));
-  return (
-    <motion.span
-      aria-hidden="true"
-      style={reduced ? { top: spot.top, left: spot.left, rotate: spot.rotate } : { top: spot.top, left: spot.left, rotate: spot.rotate, opacity, y }}
-      className={`absolute whitespace-nowrap font-serif italic font-normal normal-case leading-none tracking-normal text-[clamp(2.2rem,5.6vw,5.4rem)] [text-shadow:0_0_2px_#050911,0_2px_18px_rgba(5,9,17,.85)] ${phrase.cls.replace("font-semibold", "")}`}
-    >
-      {phrase.text}
-    </motion.span>
-  );
-}
-
-/* Quick proof under the intro: four numbers before anyone reads a paragraph. */
-function Receipts() {
-  return (
-    <Reveal>
-      <dl className="mt-14 grid grid-cols-2 gap-x-6 gap-y-8 border-t border-white/12 pt-10 lg:grid-cols-4">
-        {RECEIPTS.map((r) => {
-          const a = ACCENTS[r.accent];
-          const value = r.value === "PROJECTS" ? `${LISTED_PROJECTS.length}+` : r.value;
-          return (
-            <div key={r.label}>
-              <dt className="sr-only">{r.label}</dt>
-              <dd className={`font-condensed text-[clamp(3rem,7vw,5rem)] leading-none ${a.text}`}>{value}</dd>
-              <dd className="mt-2 max-w-[16rem] text-sm leading-snug text-[color:var(--ink-200)]">{r.label}</dd>
-            </div>
-          );
-        })}
-      </dl>
-    </Reveal>
-  );
-}
-
-export function Hero({ ready = true, scrollContainerRef }) {
+export function Hero({ ready = true }) {
   const reduced = useReducedMotion();
+  const staticHero = useStaticHero();
   const heroRef = useRef(null);
-  const pinRef = useRef(null);
-  // Starts while the headline section is still rising into view (its top
-  // at 60% of the viewport), so the first words are already landing by
-  // the time it pins.
-  const { scrollYProgress } = useScroll({
-    container: scrollContainerRef,
-    target: pinRef,
-    offset: ["start 0.6", "end end"],
-  });
-  // Camera dolly: as the hero scrolls away the card pulls back while the
-  // oval pushes in toward the loop (which is dispersing at the same time).
-  const { scrollYProgress: heroOut } = useScroll({
-    container: scrollContainerRef,
-    target: heroRef,
-    offset: ["start start", "end start"],
-  });
-  // If the visitor stops scrolling partway through the headline, it
-  // finishes on its own after IDLE_MS: `auto` plays from where the scroll
-  // left it up to REVEAL_END, and the words read whichever is further
-  // along. Once that's happened it stays built (no un-revealing on the
-  // way back up); before that, scroll scrubs it both ways as usual.
-  const auto = useMotionValue(0);
-  const revealed = useTransform([scrollYProgress, auto], ([s, a]) => Math.max(s, a));
-  const finished = useRef(false);
-  const idle = useRef(null);
-  useMotionValueEvent(scrollYProgress, "change", (v) => {
-    clearTimeout(idle.current);
-    if (reduced || finished.current || v <= 0.001 || v >= REVEAL_END) return;
-    idle.current = setTimeout(() => {
-      finished.current = true;
-      const from = Math.max(auto.get(), scrollYProgress.get());
-      auto.set(from);
-      animate(auto, REVEAL_END, { duration: 0.5 + 1.4 * (1 - from / REVEAL_END), ease: "linear" });
-    }, IDLE_MS);
-  });
-  useEffect(() => () => clearTimeout(idle.current), []);
-
-  const cardScale = useTransform(heroOut, (v) => 1 - 0.08 * v);
+  const visible = useInView(heroRef, { margin: "50px" });
   const [settled, setSettled] = useState(false);
   const onSettled = useCallback(() => setSettled(true), []);
-  const chromeOpacity = useTransform(heroOut, (v) => 1 - Math.min(1, v * 2.2));
-  return (
-    <>
-      {/* 1. The opening: dots trace the infinity loop, then gather into my
-          name. Under it, what I build and with what, each in its own type. */}
-      <section
-        ref={heroRef}
-        id="hero"
-        aria-labelledby="hero-name"
-        className="relative min-h-[100dvh] flex flex-col bg-[#eef6f7] px-3 sm:px-5 pt-[4.75rem] pb-4 sm:pb-5"
-        style={{ color: HERO_INK }}
-      >
-        <h1 id="hero-name" className="sr-only">Hi, I'm Mohamed Ansar</h1>
-        <motion.div
-          style={reduced ? undefined : { scale: cardScale }}
-          className="relative flex-1 min-h-[440px] flex flex-col origin-top rounded-2xl bg-white border border-[#0b1220]/10 overflow-hidden"
-        >
-          <motion.div style={reduced ? undefined : { opacity: chromeOpacity }} className="relative flex-1 min-h-[260px]">
-            <NameParticles ready={ready} onSettled={onSettled} />
-          </motion.div>
-          <motion.div
-            initial={reduced ? false : { opacity: 0, y: 16 }}
-            animate={settled || reduced ? { opacity: 1, y: 0 } : { opacity: 0, y: 16 }}
-            transition={{ duration: 0.8, ease: EASE_REVEAL }}
-            style={reduced ? undefined : { opacity: chromeOpacity }}
-            className="relative px-5 pb-8 sm:pb-12 text-center"
-          >
-            <BuiltLine run={settled || reduced} />
-          </motion.div>
-        </motion.div>
-
-        {/* Ticker: tools and projects, each in its own type and colour. */}
-        <div aria-hidden="true" className="mt-3 overflow-hidden whitespace-nowrap">
-          <div className="marquee-track inline-flex items-center">
-            {[0, 1].map((half) => (
-              <span key={half} className="inline-flex items-center">
-                {TICKER.map((t, i) => (
-                  <span key={i} className="inline-flex items-center">
-                    <span className={`${STYLE_CYCLE[i % STYLE_CYCLE.length]} px-3`}>{t}</span>
-                    <span className="text-[#94a3b8]">✦</span>
-                  </span>
-                ))}
-              </span>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* 2. The headline, pinned while the lede's phrases write themselves in. */}
-      <section ref={pinRef} aria-labelledby="hero-title" className={`relative bg-ink ${reduced ? "" : "h-[125vh]"}`}>
-        <div className={`${reduced ? "py-24" : "sticky top-0 h-[100dvh]"} flex items-center justify-center overflow-hidden px-5`}>
-          <div className="relative w-full max-w-[1200px]">
-            <h2
-              id="hero-title"
-              className="font-condensed uppercase text-white text-center leading-[.94] tracking-[.005em] text-[clamp(3rem,8.6vw,8.5rem)]"
-            >
-              {TITLE_WORDS.map((w, i) => (
-                <Fragment key={i}>
-                  <RiseWord word={w} index={i} progress={revealed} reduced={reduced} />
-                  {i < TITLE_WORDS.length - 1 && " "}
-                </Fragment>
-              ))}
-            </h2>
-            {HERO_PHRASES.map((phrase, i) => (
-              <HeroPhrase key={phrase.text} phrase={phrase} spot={OVERLAY_SPOTS[i % OVERLAY_SPOTS.length]} progress={revealed} reduced={reduced} />
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* 3. The lede in full, and the two ways forward. */}
-      <section className="bg-ink px-5 pb-20 pt-4 sm:pb-28">
-        <div className="mx-auto w-full max-w-[1180px]">
-          <Reveal className="max-w-3xl">
-            <p className="text-lg sm:text-xl leading-relaxed text-[color:var(--ink-200)]">
-              {HERO.lede.map((s, i) => (
-                <span key={i} className={s.cls}>
-                  {s.text}
-                </span>
-              ))}
-            </p>
-            <div className="mt-8 flex flex-wrap gap-3">
-              <a
-                href="#projects"
-                className="inline-flex min-h-11 items-center gap-2 px-5 py-3 rounded-full bg-white text-[#050911] font-bold text-sm transition-colors duration-200 hover:bg-[#a8f8ff] active:scale-[.97]"
-              >
-                See my projects <ArrowRight size={15} />
-              </a>
-              <a
-                href="#contact"
-                className="inline-flex min-h-11 items-center gap-2 px-5 py-3 rounded-full border border-white/30 text-white font-medium text-sm transition-colors duration-200 hover:bg-white/10 hover:border-white/60 active:scale-[.97]"
-              >
-                Say hello
-              </a>
-            </div>
-          </Reveal>
-          <Receipts />
-        </div>
-      </section>
-    </>
-  );
-}
-
-/* ── PROJECTS ───────────────────────────────────────────────── */
-function FeaturedRow({ project, index }) {
-  const a = ACCENTS[project.accent];
-  const flip = index % 2 === 1;
-  return (
-    <Reveal>
-      <a
-        id={`card-${project.slug}`}
-        href={`#project/${project.slug}`}
-        data-cursor="View"
-        className="group grid items-center gap-6 rounded-3xl lg:gap-14 lg:grid-cols-[1.1fr_1fr] active:scale-[.995] transition-transform duration-200"
-      >
-        <div className={flip ? "lg:order-2" : ""}>
-          <ProjectVisual project={project} large />
-        </div>
-        <div>
-          <div className="flex flex-wrap items-center gap-x-4 gap-y-1 font-mono text-xs uppercase tracking-[.16em]">
-            <span className={`font-semibold ${a.text}`}>{project.kind}</span>
-            <span className="text-[color:var(--ink-300)]">{project.status}</span>
-          </div>
-          <h3 aria-label={project.title} className="mt-3 text-white leading-[.95] text-[clamp(2.6rem,6vw,4.8rem)]">
-            <FlourishTitle text={project.title} accent={project.accent} />
-          </h3>
-          <p className="mt-4 max-w-xl text-base sm:text-lg leading-relaxed text-[color:var(--ink-200)]">{project.hook}</p>
-          {project.stats && (
-            <dl className="mt-5 grid max-w-xl grid-cols-2 gap-x-6 gap-y-3 sm:grid-cols-4">
-              {project.stats.map((s) => (
-                <div key={s.label}>
-                  <dt className="sr-only">{s.label}</dt>
-                  <dd className={`font-condensed text-3xl leading-none ${a.text}`}>{s.value}</dd>
-                  <dd className="mt-1 text-xs leading-snug text-[color:var(--ink-300)]">{s.short || s.label}</dd>
-                </div>
-              ))}
-            </dl>
-          )}
-          <div className="mt-5 flex flex-wrap gap-2">
-            {project.tags.slice(0, 3).map((t) => (
-              <TagPill key={t} accent={project.accent}>
-                {t}
-              </TagPill>
-            ))}
-          </div>
-          <div className="mt-7">
-            <SpinBadge label="Read the story" accent={project.accent} />
-          </div>
-        </div>
-      </a>
-    </Reveal>
-  );
-}
-
-/* The second tier of the spotlight: two projects side by side, each with
-   its visual, numbers and hook, at roughly half the height of a big row. */
-function GridCard({ project }) {
-  const a = ACCENTS[project.accent];
-  return (
-    <Reveal className="h-full min-w-0">
-      <a
-        id={`card-${project.slug}`}
-        href={`#project/${project.slug}`}
-        data-cursor="View"
-        className="group flex h-full min-w-0 flex-col rounded-3xl border border-white/10 bg-white/[.03] p-4 sm:p-5 transition-[border-color,background-color,transform] duration-200 hover:-translate-y-1 hover:border-white/25 hover:bg-white/[.06] active:translate-y-0"
-      >
-        <ProjectVisual project={project} />
-        <div className="mt-5 flex flex-wrap items-center gap-x-3 gap-y-1 font-mono text-micro uppercase tracking-[.14em]">
-          <span className={`font-semibold ${a.text}`}>{project.kind}</span>
-          <span className="text-[color:var(--ink-300)]">{project.status}</span>
-        </div>
-        <h3 aria-label={project.title} className="mt-2 text-white leading-[.95] text-[clamp(2rem,3.4vw,2.9rem)]">
-          <FlourishTitle text={project.title} accent={project.accent} />
-        </h3>
-        <p className="mt-3 text-base leading-relaxed text-[color:var(--ink-200)]">{project.hook}</p>
-        {project.stats && (
-          <dl className="mt-4 grid grid-cols-2 gap-x-5 gap-y-2.5 sm:grid-cols-4">
-            {project.stats.map((s) => (
-              <div key={s.label}>
-                <dt className="sr-only">{s.label}</dt>
-                <dd className={`font-condensed text-2xl leading-none ${a.text}`}>{s.value}</dd>
-                <dd className="mt-1 text-xs leading-snug text-[color:var(--ink-300)]">{s.short || s.label}</dd>
-              </div>
-            ))}
-          </dl>
-        )}
-        <div className="mt-auto flex flex-wrap items-center justify-between gap-3 pt-5">
-          <div className="flex flex-wrap gap-1.5">
-            {project.tags.slice(0, 3).map((t) => (
-              <TagPill key={t} accent={project.accent}>
-                {t}
-              </TagPill>
-            ))}
-          </div>
-          <span className={`inline-flex items-center gap-1 font-mono text-xs uppercase tracking-[.12em] ${a.text}`}>
-            Read the story <ArrowRight size={13} className="transition-transform duration-200 group-hover:translate-x-1" />
-          </span>
-        </div>
-      </a>
-    </Reveal>
-  );
-}
-
-/* One project in the side-scrolling rail, with everything the old grid
-   card had and more: visual, kind and status, the full hook (no clamp),
-   my role, every tag, and its own primary link. The card's title is a
-   stretched link to the project page; the primary link sits above it so
-   both stay clickable (no nested <a>). */
-function RailCard({ project }) {
-  const a = ACCENTS[project.accent];
-  const link = project.links?.find((l) => l.primary) || project.links?.[0];
-  return (
-    <article className="group relative flex h-full flex-col rounded-2xl border border-white/10 bg-white/[.03] p-4 sm:p-5 transition-[border-color,background-color] duration-200 hover:border-white/25 hover:bg-white/[.06]">
-      <ProjectVisual project={project} />
-      <div className="mt-4 flex flex-wrap items-center gap-x-3 gap-y-1 font-mono text-micro uppercase tracking-[.14em]">
-        <span className={`font-semibold ${a.text}`}>{project.kind}</span>
-        <span className="text-[color:var(--ink-300)]">{project.status}</span>
+  return <>
+    <section ref={heroRef} id="hero" aria-labelledby="hero-name" className="ed-hero ed-light">
+      <div className="ed-hero-meta"><span>Mohamed Ansar / Selected work</span><span>Solutions engineer · Canada</span></div>
+      <h1 id="hero-name" className="sr-only">Hi, I'm Mohamed Ansar</h1>
+      <div className="ed-hero-canvas"><NameParticles ready={ready} onSettled={onSettled} /></div>
+      {/* Shown only when the canvas stays static, so it never doubles the
+          statement the animated hero morphs into. */}
+      {staticHero && <p className={reduced ? "ed-static-statement" : "ed-mobile-statement"}>{HERO.title}</p>}
+      <div className="ed-hero-bottom">
+        <motion.div initial={reduced ? false : { opacity: 0, y: 12 }} animate={settled || reduced ? { opacity: 1, y: 0 } : { opacity: 0, y: 12 }} transition={{ duration: 0.28 }}><BuiltLine run={(settled || reduced) && visible} /></motion.div>
+        <a href="#projects" className="ed-scroll-link">Explore the work <ArrowDown size={20} aria-hidden="true" /></a>
       </div>
-      <h4 className="mt-2 font-display text-xl font-semibold leading-snug text-white">
-        <a
-          id={`card-${project.slug}`}
-        href={`#project/${project.slug}`}
-          data-cursor="View"
-          className="after:absolute after:inset-0 after:rounded-2xl after:content-[''] focus-visible:outline-none focus-visible:after:outline focus-visible:after:outline-2 focus-visible:after:outline-offset-[3px] focus-visible:after:outline-current"
-        >
-          {project.title}
-        </a>
-      </h4>
-      <p className="mt-2 text-sm leading-relaxed text-[color:var(--ink-200)]">{project.hook}</p>
-      <p className="mt-3 text-sm leading-relaxed text-[color:var(--ink-300)]">
-        <span className={`mr-2 font-mono text-micro uppercase tracking-[.14em] ${a.text}`}>My role</span>
-        {project.role}
-      </p>
-      <div className="mt-4 flex flex-wrap gap-1.5">
-        {project.tags.map((t) => (
-          <TagPill key={t} accent={project.accent}>
-            {t}
-          </TagPill>
-        ))}
-      </div>
-      <div className="mt-auto flex flex-wrap items-center justify-between gap-3 pt-5">
-        <span className={`inline-flex items-center gap-1 font-mono text-xs uppercase tracking-[.12em] ${a.text}`}>
-          Read the story <ArrowRight size={13} className="transition-transform duration-200 group-hover:translate-x-1" />
-        </span>
-        {link && (
-          <a
-            href={link.href}
-            {...(link.external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
-            className="relative z-10 inline-flex min-h-11 max-w-full items-center gap-1.5 rounded-full border border-white/20 px-3.5 py-2 text-left text-xs text-[color:var(--ink-200)] transition-colors duration-200 hover:border-white/50 hover:text-white active:scale-[.97]"
-          >
-            {link.locked ? <Lock size={12} className="shrink-0" /> : <ArrowUpRight size={13} className="shrink-0" />}
-            <span>{link.label}</span>
-          </a>
-        )}
-      </div>
-    </article>
-  );
-}
-
-/* The other projects in one horizontal rail: native scroll (swipe,
-   trackpad, shift-wheel, arrow keys once focused), snap points, arrow
-   buttons, a position counter and a progress bar, plus click-drag for
-   mouse users. Dragging suppresses the click that would otherwise
-   follow it, so letting go over a card doesn't open it. */
-function ProjectRail({ projects }) {
-  const reduced = useReducedMotion();
-  const ref = useRef(null);
-  const drag = useRef(null);
-  const [view, setView] = useState({ index: 0, progress: 0, visible: 1, atStart: true, atEnd: false });
-  const [dragging, setDragging] = useState(false);
-
-  function step() {
-    const el = ref.current;
-    const first = el?.firstElementChild;
-    if (!el || !first) return 1;
-    const gap = parseFloat(getComputedStyle(el).columnGap) || 0;
-    return first.getBoundingClientRect().width + gap;
-  }
-  function update() {
-    const el = ref.current;
-    if (!el) return;
-    const max = el.scrollWidth - el.clientWidth;
-    setView({
-      index: Math.min(projects.length - 1, Math.round(el.scrollLeft / step())),
-      progress: max > 0 ? el.scrollLeft / max : 0,
-      visible: el.scrollWidth > 0 ? el.clientWidth / el.scrollWidth : 1,
-      atStart: el.scrollLeft < 4,
-      atEnd: el.scrollLeft > max - 4,
-    });
-  }
-  useEffect(() => {
-    update();
-    const ro = new ResizeObserver(update);
-    ro.observe(ref.current);
-    return () => ro.disconnect();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  function nudge(dir) {
-    const el = ref.current;
-    const perPage = Math.max(1, Math.floor(el.clientWidth / step()));
-    el.scrollBy({ left: dir * perPage * step(), behavior: reduced ? "auto" : "smooth" });
-  }
-
-  function onPointerDown(e) {
-    if (e.pointerType !== "mouse" || e.button !== 0) return;
-    drag.current = { x: e.clientX, left: ref.current.scrollLeft, moved: false };
-  }
-  function onPointerMove(e) {
-    const d = drag.current;
-    if (!d) return;
-    const dx = e.clientX - d.x;
-    if (!d.moved && Math.abs(dx) > 6) {
-      d.moved = true;
-      setDragging(true);
-      ref.current.setPointerCapture(e.pointerId);
-    }
-    if (d.moved) ref.current.scrollLeft = d.left - dx;
-  }
-  function endDrag() {
-    if (drag.current?.moved) setDragging(false);
-    // Keep the flag for the click that fires right after pointerup.
-    setTimeout(() => {
-      drag.current = null;
-    }, 0);
-  }
-
-  const arrow =
-    "grid h-11 w-11 place-items-center rounded-full border border-white/25 text-white transition-[opacity,background-color,border-color] duration-200 hover:border-white/60 hover:bg-white/10 active:scale-95 disabled:pointer-events-none disabled:opacity-30";
-  return (
-    <div>
-      <div className="mb-5 flex items-end justify-between gap-4">
-        <div>
-          <p className="font-mono text-xs uppercase tracking-[.16em] text-[color:var(--ink-300)]">More projects</p>
-          <p className="mt-1 font-condensed text-3xl leading-none text-white tabular-nums" aria-live="polite">
-            {String(view.index + 1).padStart(2, "0")}
-            <span className="text-white/35"> / {String(projects.length).padStart(2, "0")}</span>
-          </p>
-        </div>
-        <div className="flex gap-2">
-          <button type="button" onClick={() => nudge(-1)} disabled={view.atStart} aria-label="Previous projects" className={arrow}>
-            <ChevronLeft size={18} />
-          </button>
-          <button type="button" onClick={() => nudge(1)} disabled={view.atEnd} aria-label="Next projects" className={arrow}>
-            <ChevronRight size={18} />
-          </button>
-        </div>
-      </div>
-      <div
-        ref={ref}
-        role="region"
-        aria-label={`More projects, ${projects.length} cards, scroll sideways`}
-        tabIndex={0}
-        onScroll={update}
-        onPointerDown={onPointerDown}
-        onPointerMove={onPointerMove}
-        onPointerUp={endDrag}
-        onPointerCancel={endDrag}
-        // Links and images are natively draggable; that HTML drag would
-        // cancel the pointer stream before click-drag scrolling starts.
-        onDragStart={(e) => e.preventDefault()}
-        onClickCapture={(e) => {
-          if (drag.current?.moved) {
-            e.preventDefault();
-            e.stopPropagation();
-          }
-        }}
-        className={`-mx-5 flex gap-5 overflow-x-auto scroll-px-5 px-5 pb-3 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden ${
-          dragging ? "cursor-grabbing select-none" : "snap-x snap-mandatory"
-        }`}
-      >
-        {projects.map((p) => (
-          <div key={p.slug} className="w-[min(84vw,380px)] shrink-0 snap-start">
-            <RailCard project={p} />
+      <div className="ed-hero-edge" aria-hidden="true"><span>DATA / APPS / EXPERIMENTS</span><span>A little curiosity goes a long way.</span></div>
+    </section>
+    <section className="ed-intro ed-light" aria-label="What I build">
+      <div className="ed-wrap">
+        <Enter className="ed-intro-grid">
+          <IndexLabel number="01">A bit of context</IndexLabel>
+          <div><p className="ed-intro-copy">I work with retail data.<br />Then I <em>keep building.</em></p>
+            <p className="ed-copy">{HERO.lede.map((part) => part.text).join("")}</p>
+            <ArrowLink href="#about">More about me</ArrowLink>
           </div>
-        ))}
-      </div>
-      <div className="relative mt-4 h-px overflow-hidden bg-white/15" aria-hidden="true">
-        <div
-          className="absolute inset-y-0 left-0 bg-white"
-          style={{ width: `${view.visible * 100}%`, transform: `translateX(${(view.progress * (1 - view.visible)) / Math.max(view.visible, 0.0001) * 100}%)` }}
-        />
-      </div>
-    </div>
-  );
-}
-
-export function ProjectsSection({ scrollContainerRef }) {
-  const ref = useRef(null);
-  return (
-    <section ref={ref} id="projects" className={`${BLOCK} bg-block-green`}>
-      <Watermark text="Projects" targetRef={ref} scrollContainerRef={scrollContainerRef} />
-      <div className={INNER}>
-        <SectionHead
-          accent="green"
-          kicker="Projects"
-          title="Things I've built"
-          lede="Three I'd start with, four more worth your time, then the rest. Click any card for the story, a diagram of how it works, and a link to try it or read the code."
-        >
-          <a
-            href="#work"
-            className="mt-6 inline-flex min-h-10 items-center gap-2 rounded-full border border-white/25 px-5 py-2 font-mono text-[.7rem] uppercase tracking-[.12em] text-white transition-colors hover:border-white/60"
-          >
-            All projects <span aria-hidden="true">→</span>
-          </a>
-        </SectionHead>
-        <div className="space-y-16 sm:space-y-24">
-          {FEATURED.map((p, i) => (
-            <FeaturedRow key={p.slug} project={p} index={i} />
-          ))}
-        </div>
-        {FEATURED_GRID.length > 0 && (
-          <div className="mt-16 grid grid-cols-1 gap-5 sm:mt-24 md:grid-cols-2">
-            {FEATURED_GRID.map((p) => (
-              <GridCard key={p.slug} project={p} />
-            ))}
-          </div>
-        )}
-        <div className="mt-20 sm:mt-28">
-          <p className="mb-6 max-w-2xl text-sm leading-relaxed text-[color:var(--ink-200)]">
-            Professional work is described without client names, private data, or sensitive internal details. Public practice versions use unrelated public or sample data.
-          </p>
-          <ProjectRail projects={MORE_PROJECTS} />
-        </div>
-        <div className="mt-14">
-          <p className="font-mono text-xs font-semibold uppercase tracking-[.14em] text-[color:var(--ink-200)]">Earlier work</p>
-          <ul className="mt-4 flex flex-wrap gap-3">
-            {EARLIER_PROJECTS.map((p) => (
-              <li key={p.slug}>
-                <a id={`card-${p.slug}`} href={`#project/${p.slug}`} className="inline-flex min-h-10 items-center rounded-full border border-white/15 px-4 py-2 text-sm text-[color:var(--ink-100)] transition-colors hover:border-white/50 hover:text-white">
-                  {p.title}
-                </a>
-              </li>
-            ))}
-          </ul>
-        </div>
+        </Enter>
+        <dl className="ed-receipts">{RECEIPTS.map((item) => <div key={item.label}><dt>{item.value === "PROJECTS" ? `${LISTED_PROJECTS.length}+` : item.value}</dt><dd>{item.label}</dd></div>)}</dl>
       </div>
     </section>
-  );
+  </>;
 }
 
-/* ── SKILLS TICKER ──────────────────────────────────────────── */
-/* The About section's skills on a giant loop between sections. It runs
-   on its own, and scrolling bends it: the scroll velocity, smoothed by
-   a spring, skews the type and pushes it along faster, then lets it
-   settle back when you stop. Decorative; the skills are listed in About. */
-// Official brand icons from Simple Icons (CC0). Tools without an official icon there show as text only.
-const SKILL_ICONS = {
-  Snowflake: "snowflake", BigQuery: "googlebigquery", Python: "python", pandas: "pandas", DuckDB: "duckdb",
-  Airflow: "apacheairflow", Tableau: "tableau", Swift: "swift", SwiftUI: "swift", SwiftData: "swift",
-  React: "react", "Next.js": "nextdotjs", TypeScript: "typescript", "three.js": "threedotjs", Docker: "docker",
-  "Chrome extensions (MV3)": "googlechrome", "Claude Code": "claude", "Local models with Ollama": "ollama",
-  "Hugging Face Transformers": "huggingface", Blender: "blender",
-};
-const SKILL_ITEMS = ABOUT.groups.flatMap((g) => g.items.map((item) => ({ item, accent: g.accent })));
-
-export function SkillsTicker({ scrollContainerRef }) {
-  const reduced = useReducedMotion();
-  const { scrollY } = useScroll({ container: scrollContainerRef });
-  const velocity = useVelocity(scrollY);
-  const smooth = useSpring(velocity, { damping: 40, stiffness: 300 });
-  const skewX = useTransform(smooth, (v) => Math.max(-12, Math.min(12, v / -120)));
-  const x = useTransform(smooth, (v) => `${Math.max(-6, Math.min(6, v / -600))}vw`);
-  const row = (
-    <span className="inline-flex items-center pr-[.4em]">
-      {SKILL_ITEMS.map(({ item, accent }, i) => (
-        <span key={item} className="inline-flex items-center">
-          <span className={i % 3 === 1 ? `font-serif italic normal-case ${ACCENTS[accent].text}` : "font-condensed uppercase text-white"}>{item}</span>
-          <span className="mx-[.45em] text-[.4em] text-white/40">✻</span>
-        </span>
-      ))}
-    </span>
-  );
-  return (
-    <div aria-hidden="true" className="relative overflow-hidden border-y border-white/10 bg-ink py-6 sm:py-8">
-      <motion.div style={reduced ? undefined : { skewX, x }} className="whitespace-nowrap text-[clamp(2.4rem,6.5vw,5.5rem)] leading-none">
-        <div className="marquee-track inline-flex [animation-duration:60s]">
-          {row}
-          {row}
-        </div>
-      </motion.div>
+function PunchTitle({ text }) {
+  return <span className="ed-punch-title" aria-hidden="true"><i>{text[0]}</i><span>{text.slice(1)}</span></span>;
+}
+function ProjectPlate({ project, compact = false }) {
+  const [broken, setBroken] = useState(false);
+  const [artBroken, setArtBroken] = useState(false);
+  // If the cover art fails, fall through to the plate this project had before
+  // it got one, rather than leaving an empty frame behind the caption. It is
+  // tracked apart from `broken` so a failed cover still gets the screenshot.
+  if (project.spotlightArt && !artBroken) return <div className="ed-project-plate ed-spotlight-cover" aria-hidden="true">
+    <img className="ed-spotlight-art ed-lazy-media" src={media(project.spotlightArt)} alt="" loading="lazy" onLoad={revealImage} onError={() => setArtBroken(true)} />
+    <span className="ed-poster-cross">✳</span>
+    <span className="ed-plate-caption">{project.kind}</span>
+  </div>;
+  const screenshot = project.cardShot || project.shots?.[0];
+  const study = project.slug === "decision-models" || project.slug === "rea-study";
+  if (study) return <div className={`ed-project-plate ed-study-cover ${project.slug === "rea-study" ? "ed-cover-rea" : "ed-cover-jev"}`} aria-hidden="true">
+    <div className="ed-cover-grid" />
+    <div className="ed-cover-orbit" />
+    <p className="ed-cover-label">{project.kind}</p>
+    <span className="ed-cover-type">{project.slug === "rea-study" ? "REA" : "JEV"}</span>
+    <img className="ed-cover-icon ed-lazy-media" src={media(project.icon)} alt="" loading="lazy" onLoad={revealImage} />
+    <span className="ed-cover-stamp">{project.slug === "rea-study" ? "TESTED, NOT ASSUMED" : "SMALL MODELS. REAL TESTS."}</span>
+    <div className="ed-cover-flow">{project.flow?.columns.map((column, i) => <span key={column.label}>{column.label}{i < project.flow.columns.length - 1 && <b>↗</b>}</span>)}</div>
+  </div>;
+  return <div className={`ed-project-plate ed-poster-plate ed-poster-${project.slug} ${compact ? "ed-plate-compact" : ""} ${!screenshot && project.icon ? "ed-plate-icon" : ""} ${project.slug === "haloscript" ? "ed-plate-app" : ""}`}>
+    <span className="ed-poster-word" aria-hidden="true">{project.title}</span><span className="ed-poster-cross" aria-hidden="true">✳</span>
+    {screenshot && !broken ? <img className="ed-project-image ed-lazy-media" src={media(screenshot)} alt={`${project.title} interface`} loading="lazy" onLoad={revealImage} onError={() => setBroken(true)} /> : project.icon ? <><span className="ed-app-watermark" aria-hidden="true">{project.title}</span><img className="ed-project-icon ed-lazy-media" src={media(project.icon)} alt="" loading="lazy" onLoad={revealImage} /></> : <div className="ed-type-plate" aria-hidden="true"><span>{project.kind}</span><strong>{project.title}</strong><ArrowUpRight size={56} /></div>}
+    <span className="ed-plate-caption">{project.kind}</span>
+  </div>;
+}
+function FeaturedSpread({ project, index }) {
+  return <Enter className={`ed-feature ${index % 2 ? "ed-feature-reverse" : ""}`}>
+    <a href={`#project/${project.slug}`} id={`card-${project.slug}`} aria-label={`Read ${project.title}${project.stats?.[0] ? `. ${project.stats[0].value} ${project.stats[0].label}` : ""}`} data-cursor="View" className="ed-feature-image"><ProjectPlate project={project} /></a>
+    <div className="ed-feature-body"><p className="ed-label"><span>0{index + 1}</span>{project.kind}</p>
+      <h3><a href={`#project/${project.slug}`} aria-label={project.title}><PunchTitle text={project.title} /></a></h3>
+      <p className="ed-copy">{project.hook}</p>
+      <p className="ed-project-status">{project.status}</p>
+      {project.stats && <dl className="ed-project-stats">{project.stats.map((stat) => <div key={stat.label}><dt>{stat.value}</dt><dd>{stat.short || stat.label}</dd></div>)}</dl>}
+      <ArrowLink href={`#project/${project.slug}`}>Read the story</ArrowLink>
     </div>
-  );
+  </Enter>;
 }
-
-/* ── EXPERIENCE ─────────────────────────────────────────────── */
-/* A current role as a card, so two sit side by side. */
-function RoleCard({ role }) {
-  const a = ACCENTS[role.accent];
-  return (
-    <article className="flex h-full flex-col rounded-3xl border border-white/12 bg-white/[.03] p-6 sm:p-7" style={{ borderTop: `3px solid ${a.hex}` }}>
-      <div className="flex flex-wrap items-center gap-3">
-        {role.logo && (
-          <span className="flex h-11 items-center rounded-lg bg-[#f8f9f9] px-3 py-2">
-            <img src={role.logo} alt={`${role.company} logo`} loading="lazy" className="max-h-full max-w-[9rem] object-contain" />
-          </span>
-        )}
-        {role.current && (
-          <span className="rounded-full border border-green/50 bg-green/10 px-2 py-0.5 font-mono text-micro uppercase tracking-wide text-green">Now</span>
-        )}
-      </div>
-      <p className="mt-4 font-mono text-micro text-[color:var(--ink-300)]">{role.when}</p>
-      <h3 className="mt-1 font-display text-2xl font-semibold leading-tight text-white">{role.title}</h3>
-      <p className="mt-3 font-serif italic text-lg leading-snug text-[color:var(--ink-100)]">{role.summary}</p>
-      <ul className="mt-4 space-y-2 text-sm leading-relaxed text-[color:var(--ink-200)]">
-        {role.bullets.map((b) => (
-          <li key={b} className="flex gap-3">
-            <span className="mt-[.65em] h-1 w-1 shrink-0 rounded-full" style={{ background: a.hex }} />
-            <span>{b}</span>
-          </li>
-        ))}
-      </ul>
-      <div className="mt-auto flex flex-wrap gap-1.5 pt-5">
-        {role.tags.map((t) => (
-          <TagPill key={t} accent={role.accent}>
-            {t}
-          </TagPill>
-        ))}
-      </div>
-    </article>
-  );
+function ProjectTile({ project, index }) {
+  return <Enter delay={(index % 2) * 0.08} className="ed-project-tile">
+    <a id={`card-${project.slug}`} href={`#project/${project.slug}`} data-cursor="View"><ProjectPlate project={project} compact /><div className="ed-tile-heading"><h3 aria-label={project.title}><PunchTitle text={project.title} /></h3><ArrowUpRight size={26} aria-hidden="true" /></div><p className="ed-copy">{firstSentence(project.hook)}</p><p className="ed-tile-tags">{project.tags.slice(0, 3).join(" / ")}</p></a>
+  </Enter>;
 }
-
-export function ExperienceSection() {
-  return (
-    <section id="experience" className={`${BLOCK} bg-block-amber`}>
-      <div className={INNER}>
-        <SectionHead
-          accent="amber"
-          kicker="Experience"
-          title="Where I've worked"
-          lede="From auditing content catalogues to writing SQL on retail pricing data. Each stop gave me more technical ownership."
-        />
-        <div className="grid gap-5 md:grid-cols-2">
-          {ROLES.filter((r) => !r.compact).map((r, i) => (
-            <Reveal key={r.company + r.title} delay={i * 0.06} className="h-full min-w-0">
-              <RoleCard role={r} />
-            </Reveal>
-          ))}
-        </div>
-        <Reveal>
-          <p className="mt-12 font-mono text-xs uppercase tracking-[.16em] text-[color:var(--ink-300)]">Earlier</p>
-          <ul className="mt-3 border-t border-white/12">
-            {ROLES.filter((r) => r.compact).map((r) => {
-              const a = ACCENTS[r.accent];
-              return (
-                <li key={r.company + r.title} className="flex flex-wrap items-baseline gap-x-4 gap-y-1 border-b border-white/12 py-4">
-                  <span className={`font-mono text-xs font-semibold uppercase tracking-[.14em] ${a.text}`}>{r.company}</span>
-                  <span className="font-display text-lg font-semibold text-white">{r.title}</span>
-                  <span className="ml-auto font-mono text-micro text-[color:var(--ink-300)]">{r.when}</span>
-                </li>
-              );
-            })}
-          </ul>
-        </Reveal>
-      </div>
-    </section>
-  );
-}
-
-/* One group of skills. Hover, focus or tap a skill to see what it is; the
-   explainer opens under the group (not as a floating tooltip) so it never
-   runs off a phone screen. Same behaviour as the tool lists on project pages. */
-function SkillGroup({ group }) {
-  const a = ACCENTS[group.accent];
-  const [active, setActive] = useState(null);
-  const openedAt = useRef(0);
-  const open = (t) => {
-    openedAt.current = Date.now();
-    setActive(t);
-  };
-  const id = `skill-explainer-${group.title.toLowerCase().replace(/\W+/g, "-")}`;
-  return (
-    <div onPointerLeave={(e) => e.pointerType === "mouse" && setActive(null)}>
-      <h3 className={`mb-3 font-mono text-xs font-semibold uppercase tracking-[.16em] ${a.text}`}>{group.title}</h3>
-      <ul className="flex flex-wrap gap-2">
-        {group.items.map((it) => {
-          const on = active === it;
-          return (
-            <li key={it}>
-              <button
-                type="button"
-                onPointerEnter={(e) => e.pointerType === "mouse" && open(it)}
-                onFocus={() => open(it)}
-                onClick={() => (on && Date.now() - openedAt.current > 400 ? setActive(null) : open(it))}
-                aria-expanded={on}
-                aria-controls={id}
-                className={`inline-flex items-center gap-2 rounded-full border px-3 py-1.5 text-sm transition-colors duration-200 ${
-                  on ? `${a.border} ${a.soft} text-white` : "border-white/15 bg-white/[.04] text-[color:var(--ink-100)] hover:border-white/40"
-                }`}
-              >
-                {SKILL_ICONS[it] && (
-                  <img src={`${import.meta.env.BASE_URL}icons/${SKILL_ICONS[it]}.svg`} alt="" aria-hidden="true" loading="lazy" className="h-4 w-4 invert" />
-                )}
-                {it}
-                {TOOL_INFO[it] && <Info size={12} aria-hidden="true" className="opacity-60" />}
-              </button>
-            </li>
-          );
-        })}
-      </ul>
-      <div id={id} aria-live="polite" className="mt-3 min-h-[1.25rem]">
-        <AnimatePresence mode="wait">
-          {active && TOOL_INFO[active] && (
-            <motion.p
-              key={active}
-              initial={{ opacity: 0, y: -6 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -4 }}
-              transition={{ duration: 0.18 }}
-              className="rounded-xl border border-white/12 bg-white/[.04] p-3.5 text-sm leading-relaxed text-[color:var(--ink-100)]"
-              style={{ borderLeft: `3px solid ${a.hex}` }}
-            >
-              <span className="font-semibold text-white">{active}: </span>
-              {TOOL_INFO[active]}
-            </motion.p>
-          )}
-        </AnimatePresence>
+export function ProjectsSection() {
+  return <section id="projects" className="ed-projects ed-light ed-section">
+    <div className="ed-section-watermark" aria-hidden="true">PROJECTS</div>
+    <div className="ed-wrap"><Enter className="ed-section-heading"><div><IndexLabel number="02">Selected projects</IndexLabel><h2>Things I’ve <em>built.</em></h2></div><div className="ed-heading-aside"><p>Apps, data systems, and questions I wanted to test for myself.</p><ArrowLink href="#work">The full project index</ArrowLink></div></Enter>
+      <div className="ed-feature-list">{FEATURED.map((project, i) => <FeaturedSpread key={project.slug} project={project} index={i} />)}</div>
+      <div className="ed-grid-heading"><h3>More from the workbench.</h3><span>Keep exploring ↘</span></div>
+      <div className="ed-project-grid">{FEATURED_GRID.map((project, i) => <ProjectTile key={project.slug} project={project} index={i} />)}</div>
+      <div className="ed-work-list"><IndexLabel number="↳">Behind the scenes</IndexLabel><p className="ed-copy">Professional work is described without client names or private data. Public practice versions use unrelated public or sample data.</p>
+        {MORE_PROJECTS.map((project, i) => <a key={project.slug} id={`card-${project.slug}`} href={`#project/${project.slug}`} className="ed-work-row"><span className="ed-row-number">{String(i + 1).padStart(2, "0")}</span><div><h3>{project.title}</h3><p>{project.kind}</p></div><ArrowUpRight size={22} aria-hidden="true" /></a>)}
+        <details className="ed-archive"><summary>Earlier work <span>{EARLIER_PROJECTS.length} projects</span></summary><ul>{EARLIER_PROJECTS.map((project) => <li key={project.slug}><a id={`card-${project.slug}`} href={`#project/${project.slug}`}>{project.title}<ArrowUpRight size={16} /></a></li>)}</ul></details>
       </div>
     </div>
-  );
+  </section>;
 }
 
-/* ── ABOUT ──────────────────────────────────────────────────── */
-export function AboutSection({ scrollContainerRef }) {
-  const reduced = useReducedMotion();
-  const storyRef = useRef(null);
-  // Word-by-word reveal off a single scroll value: the container carries
-  // --p (0-1 progress) and --n (word count), each word its own --i, and
-  // CSS (.word-reveal) turns that into an opacity. One style write per
-  // scroll frame, no per-word observers or motion values.
-  const { scrollYProgress } = useScroll({ container: scrollContainerRef, target: storyRef, offset: ["start 0.85", "end 0.55"] });
-  useMotionValueEvent(scrollYProgress, "change", (v) => {
-    if (!reduced) storyRef.current?.style.setProperty("--p", v.toFixed(4));
-  });
-  useEffect(() => {
-    storyRef.current?.style.setProperty("--p", reduced ? "1" : scrollYProgress.get().toFixed(4));
-  }, [reduced, scrollYProgress]);
-
-  let wordIndex = 0;
-  const paragraphs = ABOUT.story.map((para) => para.split(" ").map((w) => ({ w, i: wordIndex++ })));
-
-  return (
-    <section id="about" className={`${BLOCK} bg-block-violet`}>
-      <div className={INNER}>
-        <SectionHead accent="violet" kicker="About" title={ABOUT.title} align="center" />
-        <div
-          ref={storyRef}
-          style={{ "--n": wordIndex, "--p": reduced ? 1 : 0 }}
-          className="mx-auto max-w-3xl space-y-7 font-serif italic text-[clamp(1.35rem,2.4vw,2rem)] leading-[1.38] text-white"
-        >
-          {paragraphs.map((words) => (
-            <p key={words[0].i}>
-              {words.map(({ w, i }) => (
-                <span key={i} className="word-reveal" style={{ "--i": i }}>
-                  {w}{" "}
-                </span>
-              ))}
-            </p>
-          ))}
-        </div>
-        <p className="mx-auto mt-14 max-w-3xl text-sm leading-relaxed text-[color:var(--ink-200)]">
-          These are the tools behind the work. Tap or hover over a name to see what it does.
-        </p>
-        <Reveal className="mx-auto mt-6 grid max-w-3xl gap-8 sm:grid-cols-2">
-          {ABOUT.groups.map((g) => (
-            <SkillGroup key={g.title} group={g} />
-          ))}
-        </Reveal>
-      </div>
-    </section>
-  );
-}
-
-/* ── BUILT WITH AI ──────────────────────────────────────────── */
 export function ExperimentsSection() {
-  return (
-    <section id="ai" className="relative scroll-mt-16 bg-block-green px-5 pb-20 pt-4 sm:pb-28">
-      <div className={INNER}>
-        <SectionHead
-          accent="rose"
-          kicker="Built with AI"
-          title="Experiments"
-          lede="Not my day job. What happens when I ask an AI for help, look at the result, and keep pushing. Some of this very page is one of them."
-        />
-        <div className="grid gap-4 sm:grid-cols-3">
-          {EXPERIMENTS.map((x, i) => {
-            const a = ACCENTS[x.accent];
-            const Body = x.href ? "a" : "div";
-            return (
-              <Reveal key={x.id} delay={i * 0.07} className="h-full">
-                <Body
-                  {...(x.href ? { href: x.href, "data-cursor": "Open" } : {})}
-                  className={`flex h-full flex-col rounded-2xl border border-white/10 bg-white/[.03] p-5 sm:p-6 ${
-                    x.href
-                      ? "group transition-[transform,border-color,background-color] duration-200 ease-out hover:-translate-y-1 hover:border-white/25 hover:bg-white/[.06] focus-visible:-translate-y-1 active:translate-y-0 active:scale-[.99]"
-                      : ""
-                  }`}
-                  style={{ borderTop: `3px solid ${a.hex}` }}
-                >
-                  {x.shot && (
-                    <div className="-mx-5 -mt-5 mb-5 overflow-hidden rounded-t-[14px] border-b border-white/10 sm:-mx-6 sm:-mt-6 aspect-[16/9]">
-                      <img
-                        src={x.shot}
-                        alt=""
-                        loading="lazy"
-                        className="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.06]"
-                      />
-                    </div>
-                  )}
-                  <h3 className="font-display text-xl font-semibold leading-snug text-white">{x.title}</h3>
-                  <p className="mt-2 text-sm leading-relaxed text-[color:var(--ink-200)]">{x.hook}</p>
-                  {x.cta && (
-                    <span className={`mt-auto pt-5 inline-flex items-center gap-1.5 font-mono text-xs font-semibold uppercase tracking-[.12em] ${a.text}`}>
-                      {x.cta} <ArrowRight size={13} className="transition-transform duration-200 group-hover:translate-x-1" />
-                    </span>
-                  )}
-                </Body>
-              </Reveal>
-            );
-          })}
-        </div>
-      </div>
-    </section>
-  );
+  return <section id="ai" className="ed-experiments ed-section"><div className="ed-wrap">
+    <Enter className="ed-section-heading"><div><IndexLabel number="03">The curiosity department</IndexLabel><h2>What if<br /><em>I tried this?</em></h2></div><p className="ed-heading-aside">Small experiments, made with AI as a coding partner. Open one and have a play.</p></Enter>
+    <div className="ed-experiment-grid">{EXPERIMENTS.map((experiment, i) => <Enter key={experiment.id} delay={i * 0.07}><a href={experiment.href} data-cursor="Play" className="ed-experiment"><div className="ed-experiment-image"><img className="ed-lazy-media" src={media(experiment.shot)} alt="" loading="lazy" onLoad={revealImage} /><span>0{i + 1} / Interactive</span></div><div className="ed-experiment-title"><h3>{experiment.title}</h3><ArrowUpRight size={22} /></div><p>{experiment.hook}</p><span className="ed-experiment-cta">{experiment.cta}<ArrowRight size={16} /></span></a></Enter>)}</div>
+  </div></section>;
 }
 
-/* ── CONTACT ────────────────────────────────────────────────── */
-function MarqueeUnit() {
-  return (
-    <span className="inline-flex items-center">
-      <span className="relative inline-block">
-        <span className="font-condensed uppercase text-white">Say hello</span>
-        <span className="absolute left-[22%] top-[34%] -rotate-6 whitespace-nowrap font-serif italic normal-case text-rose text-[.42em] [text-shadow:0_0_2px_#23091a,0_2px_16px_rgba(35,9,26,.9)]">
-          let's talk
-        </span>
-      </span>
-      <span className="mx-[.3em] grid h-[.72em] w-[.72em] place-items-center rounded-full bg-rose text-[#23091a]">
-        <Mail className="h-[.32em] w-[.32em]" />
-      </span>
-    </span>
-  );
+export function SkillsTicker() {
+  const reduced = useReducedMotion();
+  const items = ["SQL", "Python", "Swift", "React", "Curiosity", "Build. Test. Repeat."];
+  return <div className="ed-ticker" aria-hidden="true"><div className="ed-ticker-content"><div className={`marquee-track ${reduced ? "motion-reduce:animate-none" : ""}`}>{[0, 1].map((half) => <span key={half}>{items.map((item, i) => <span key={item} className={i % 2 ? "ed-ticker-serif" : ""}>{item}<b>✳</b></span>)}</span>)}</div></div></div>;
 }
-
+function SkillGroup({ group }) {
+  const [active, setActive] = useState(null);
+  const id = `ed-skill-${group.title.toLowerCase().replace(/\W+/g, "-")}`;
+  return <div className="ed-skill-group"><h3>{group.title}</h3><div className="ed-skills">{group.items.map((item) => <button key={item} type="button" aria-expanded={active === item} aria-controls={id} onClick={() => setActive((value) => value === item ? null : item)}>{item}{TOOL_INFO[item] && <Info size={12} aria-hidden="true" />}</button>)}</div><div id={id} aria-live="polite">{active && TOOL_INFO[active] && <p className="ed-skill-definition"><strong>{active}.</strong> {TOOL_INFO[active]}</p>}</div></div>;
+}
+export function AboutSection() {
+  return <section id="about" className="ed-about ed-light ed-section"><div className="ed-wrap ed-about-grid">
+    <Enter><IndexLabel number="04">The person behind the projects</IndexLabel><h2>Always<br /><em>learning.</em><br />Usually<br />building.</h2><div className="ed-about-mark" aria-hidden="true">ma<span>✳</span></div></Enter>
+    <div><Enter className="ed-about-story">{ABOUT.story.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}</Enter><div className="ed-skill-groups">{ABOUT.groups.map((group) => <SkillGroup key={group.title} group={group} />)}</div></div>
+  </div></section>;
+}
+export function ExperienceSection() {
+  return <section id="experience" className="ed-experience ed-section"><div className="ed-wrap"><Enter className="ed-section-heading"><div><IndexLabel number="05">Experience</IndexLabel><h2>The path<br /><em>so far.</em></h2></div><p className="ed-heading-aside">From checking content catalogues to working with retail pricing data. More responsibility. More things to figure out.</p></Enter>
+    <div className="ed-timeline">{ROLES.map((role) => <Enter key={role.company + role.title} className={`ed-role ${role.compact ? "ed-role-compact" : ""}`}><div className="ed-role-when"><span>{role.when}</span>{role.current && <b>Currently here</b>}</div><div><p className="ed-role-company">{role.company}</p><h3>{role.title}</h3>{!role.compact && <><p className="ed-role-summary">{role.summary}</p><ul>{role.bullets.map((bullet) => <li key={bullet}>{bullet}</li>)}</ul></>}</div><span className="ed-role-arrow" aria-hidden="true">↗</span></Enter>)}</div>
+  </div></section>;
+}
 export function ContactSection() {
   const { navigate } = useRoute();
-  return (
-    <section id="contact" className="relative overflow-hidden scroll-mt-16 bg-block-rose">
-      {/* The whole strip is the email link; the moving text is decoration. */}
-      <a
-        href={`mailto:${CONTACT.email}`}
-        aria-label={`Email me at ${CONTACT.email}`}
-        data-cursor="Email"
-        className="group block overflow-hidden whitespace-nowrap border-b border-white/12 pt-20 pb-8 sm:pt-28 sm:pb-10 text-[clamp(4rem,13vw,11rem)] leading-none"
-      >
-        <div aria-hidden="true" className="marquee-track inline-flex [animation-duration:22s] group-hover:[animation-play-state:paused]">
-          {[0, 1, 2, 3, 4, 5].map((k) => (
-            <MarqueeUnit key={k} />
-          ))}
-        </div>
-      </a>
-
-      <div className="px-5 py-16 sm:py-20">
-        <Reveal className="mx-auto max-w-3xl text-center">
-          <h2 className="font-display text-[clamp(1.9rem,4vw,3rem)] font-semibold leading-tight text-white">
-            Curious about something here? <span className="font-serif italic font-normal text-rose">let's talk</span>.
-          </h2>
-          <p className="mx-auto mt-4 max-w-xl text-base sm:text-lg leading-relaxed text-[color:var(--ink-200)]">
-            Questions about a project, or just want to talk data? Say hi. I read every message.
-          </p>
-          <div className="mt-8 flex flex-wrap justify-center gap-3">
-            <a
-              href={`mailto:${CONTACT.email}`}
-              className="inline-flex min-h-11 items-center gap-2 rounded-full bg-white px-5 py-3 text-sm font-bold text-[#23091a] transition-colors duration-200 hover:bg-[#ffd3dc] active:scale-[.97]"
-            >
-              <Mail size={15} /> Email me
-            </a>
-            <a
-              href={CONTACT.linkedin}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex min-h-11 items-center gap-2 rounded-full border border-white/30 px-5 py-3 text-sm font-medium text-white transition-colors duration-200 hover:border-white/60 hover:bg-white/10 active:scale-[.97]"
-            >
-              <Link2 size={15} /> LinkedIn
-            </a>
-            <a
-              href={CONTACT.github}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex min-h-11 items-center gap-2 rounded-full border border-white/30 px-5 py-3 text-sm font-medium text-white transition-colors duration-200 hover:border-white/60 hover:bg-white/10 active:scale-[.97]"
-            >
-              <ExternalLink size={15} /> GitHub
-            </a>
-          </div>
-          <p className="mt-6 font-mono text-xs text-[color:var(--ink-300)]">{CONTACT.email}</p>
-        </Reveal>
-      </div>
-
-      <footer className="border-t border-white/12 px-5 py-6">
-        <div className="mx-auto flex max-w-[1180px] items-center justify-between gap-4">
-          <div className="font-mono text-micro uppercase tracking-[.12em] text-[color:var(--ink-300)]">
-            <p>
-              Designed and built by Mohamed Ansar · © {new Date().getFullYear()}
-            </p>
-            <p className="mt-1">Built with React, Vite and Tailwind</p>
-          </div>
-          <button
-            type="button"
-            onClick={() => navigate("deck")}
-            aria-label="Back to top"
-            className="grid h-11 w-11 shrink-0 place-items-center rounded-full bg-white text-[#23091a] transition-transform duration-200 hover:-translate-y-0.5 active:scale-95"
-          >
-            <ArrowUp size={18} />
-          </button>
-        </div>
-      </footer>
-    </section>
-  );
+  return <section id="contact" className="ed-contact ed-light"><div className="ed-wrap"><IndexLabel number="06">Something in mind?</IndexLabel><h2>Let's make<br /><em>something work.</em></h2><div className="ed-contact-bottom"><a href={`mailto:${CONTACT.email}`} className="ed-contact-email" data-cursor="Email">Say hello<ArrowUpRight aria-hidden="true" /></a><div><p>Questions about a project, or want to talk data?<br />I read every message.</p><div className="ed-socials"><a href={CONTACT.linkedin} target="_blank" rel="noopener noreferrer">LinkedIn<ExternalLink size={14} /></a><a href={CONTACT.github} target="_blank" rel="noopener noreferrer">GitHub<ExternalLink size={14} /></a><a href={`mailto:${CONTACT.email}`}><Mail size={14} />Email</a></div></div></div><footer className="ed-footer"><span>Mohamed Ansar © {new Date().getFullYear()}</span><span>Made with curiosity. And a lot of testing.</span><button onClick={() => navigate("deck")} aria-label="Back to top">Back to top ↑</button></footer></div></section>;
 }
