@@ -11,6 +11,7 @@ import CustomCursor from "./components/CustomCursor";
 import IntroCurtain from "./components/IntroCurtain";
 import { shouldPlayIntro } from "./lib/intro";
 import { EASE_OUT } from "./lib/motion";
+import { titleForRoute } from "./lib/routeTitle";
 
 const SolarSystemExplorer = lazy(() => import("./components/SolarSystemExplorer"));
 const DataLineageExplorer = lazy(() => import("./components/DataLineageExplorer"));
@@ -74,6 +75,9 @@ function scrollToSection(id, tries = 60) {
 function RouteProvider({ children }) {
   const [route, setRoute] = useState(readRoute);
   const scrollContainerRef = useContext(ScrollContext);
+  // The first run is the initial render, where moving focus would steal it
+  // from the top of the page the visitor just opened.
+  const first = useRef(true);
 
   useEffect(() => {
     function onHashChange() {
@@ -93,6 +97,26 @@ function RouteProvider({ children }) {
     if (h && parseRoute(h) === "main") scrollToSection(h);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  // A takeover view is a page as far as the browser and assistive tech are
+  // concerned: give it its own title, and move focus to its heading so the
+  // change is announced and the next Tab carries on from the new view
+  // instead of restarting at the top of the document.
+  useEffect(() => {
+    document.title = titleForRoute(route);
+    if (first.current) { first.current = false; return; }
+    if (route === "main") return;
+    // Focus the main landmark rather than a heading: the outgoing view is
+    // still mounted while it animates out, so a heading query here can match
+    // the old page and lose the focus again when it unmounts. <main> is the
+    // one node that survives the swap.
+    const main = document.querySelector("main");
+    if (!main) return;
+    // Focusable only for this programmatic move, so it never joins the tab
+    // order. No plain :focus rule exists, so no ring shows for pointer users.
+    main.setAttribute("tabindex", "-1");
+    main.focus({ preventScroll: true });
+  }, [route]);
 
   const navigate = (id) => {
     if (id === "deck") {

@@ -95,6 +95,12 @@
     outline: 2px solid currentColor;
     outline-offset: 3px;
   }
+  /* The router focuses <main> on a route change so the new view is announced.
+     It is never in the tab order, so a ring around the whole page would mark
+     something the visitor cannot reach by keyboard anyway. */
+  main[tabindex="-1"]:focus-visible {
+    outline: none;
+  }
   html {
     scroll-behavior: smooth;
     font-size: 18px;
