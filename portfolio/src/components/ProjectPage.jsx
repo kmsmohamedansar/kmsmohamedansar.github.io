@@ -7,6 +7,7 @@ import { TOOL_INFO } from "../data/tools";
 import { BEFORE_AFTER, STEP_TOOLS } from "../data/summaries";
 import FlowDiagram, { FlourishTitle, Kicker, TagPill } from "./ui";
 import { EASE_REVEAL } from "../lib/motion";
+import { media } from "../lib/media";
 
 /* Big headline numbers under a project's hook. */
 function StatTiles({ stats, accent }) {
@@ -435,7 +436,7 @@ export default function ProjectPage({ slug }) {
                   frame; overscroll-contain keeps the page from moving
                   when you reach the end. */}
               <div tabIndex={0} aria-label={`${project.title} screenshot, scrollable`} className="max-h-[72vh] overflow-y-auto overscroll-contain">
-                <img src={s} alt={`${project.title} screenshot`} loading="lazy" onLoad={(event) => event.currentTarget.classList.add("is-loaded")} className="ed-lazy-media block w-full" />
+                <img src={media(s)} alt={`${project.title} screenshot`} loading="lazy" onLoad={(event) => event.currentTarget.classList.add("is-loaded")} className="ed-lazy-media block w-full" />
               </div>
             </figure>
           ))}
@@ -509,7 +510,7 @@ export default function ProjectPage({ slug }) {
                     aria-label={f.tall ? `${f.caption} Scrollable.` : undefined}
                     className={`overflow-x-auto rounded-xl bg-white p-3 sm:p-5 ${f.tall ? "max-h-[75vh] overflow-y-auto overscroll-contain" : ""}`}
                   >
-                    <img src={f.src} alt={f.alt ?? f.caption} loading="lazy" onLoad={(event) => event.currentTarget.classList.add("is-loaded")} className={`ed-lazy-media mx-auto block w-full ${f.narrow ? "max-w-sm" : ""} ${f.wide ? "min-w-[860px]" : ""}`} />
+                    <img src={media(f.src)} alt={f.alt ?? f.caption} loading="lazy" onLoad={(event) => event.currentTarget.classList.add("is-loaded")} className={`ed-lazy-media mx-auto block w-full ${f.narrow ? "max-w-sm" : ""} ${f.wide ? "min-w-[860px]" : ""}`} />
                   </div>
                   <figcaption className="mt-2 text-sm text-[color:var(--ink-300)]">
                     {f.caption}

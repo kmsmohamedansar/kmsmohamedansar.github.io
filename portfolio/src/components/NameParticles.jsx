@@ -24,7 +24,7 @@ function sweep(f) {
   return `rgb(${c[0]},${c[1]},${c[2]})`;
 }
 
-function sampleText(w, h, dpr, statement = false, stepScale = 1) {
+function sampleText(w, h, dpr, statement = false, stepOverride = 0) {
   const c = document.createElement("canvas");
   c.width = w;
   c.height = h;
@@ -60,7 +60,7 @@ function sampleText(w, h, dpr, statement = false, stepScale = 1) {
     g.fillText(line, w / 2, y);
     y += lineHeight;
   }
-  const step = Math.max(2, Math.round((narrow ? 2.5 : 3) * dpr * Math.max(0.7, big / (220 * dpr)) * stepScale));
+  const step = Math.max(2, stepOverride || Math.round((narrow ? 2.5 : 3) * dpr * Math.max(0.7, big / (220 * dpr))));
   const data = g.getImageData(0, 0, w, h).data;
   const pts = [];
   for (let py = 0; py < h; py += step) {
@@ -122,10 +122,12 @@ export default function NameParticles({ ready = true, onSettled }) {
       let name = sampleText(w, h, dpr);
       // Thinning by striding the point list leaves gaps in a regular pattern
       // that break up the strokes, so an oversized static sample is taken
-      // again on a coarser grid instead. Coverage stays even and the particle
-      // count stays bounded on large screens and across repeated rebuilds.
+      // again on a coarser grid instead. Coverage stays even and the count
+      // stays bounded on large screens and across repeated rebuilds. Points
+      // scale with the square of the step, so rounding the step up puts the
+      // second pass under the ceiling without having to sample again.
       if (staticMode && name.pts.length > STATIC_MAX) {
-        name = sampleText(w, h, dpr, false, Math.sqrt(name.pts.length / STATIC_MAX));
+        name = sampleText(w, h, dpr, false, Math.ceil(name.step * Math.sqrt(name.pts.length / STATIC_MAX)));
       }
       // A static hero never morphs, so the statement shape is dead weight there.
       const statement = staticMode ? name : sampleText(w, h, dpr, true);

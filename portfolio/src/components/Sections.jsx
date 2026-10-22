@@ -6,13 +6,11 @@ import { ABOUT, CONTACT, HERO, RECEIPTS, ROLES } from "../data/content";
 import { EARLIER_PROJECTS, EXPERIMENTS, FEATURED, FEATURED_GRID, LISTED_PROJECTS, MORE_PROJECTS } from "../data/projects";
 import { TOOL_INFO } from "../data/tools";
 import { EASE_REVEAL } from "../lib/motion";
+import { media } from "../lib/media";
 import { useStaticHero } from "../lib/staticHero";
 import { useRoute } from "../App";
 import "../editorial.css";
 
-// Original project media stay intact. The private preview can set a media
-// origin so its sparse checkout uses the live portfolio's existing assets.
-const media = (src) => src?.startsWith("/") ? `${import.meta.env.VITE_MEDIA_ORIGIN || ""}${src}` : src;
 const firstSentence = (text) => text.match(/[^.!?]+[.!?]+(?:\s|$)/)?.[0]?.trim() || text;
 const revealImage = (event) => event.currentTarget.classList.add("is-loaded");
 
@@ -131,8 +129,12 @@ function PunchTitle({ text }) {
 }
 function ProjectPlate({ project, compact = false }) {
   const [broken, setBroken] = useState(false);
-  if (project.spotlightArt) return <div className="ed-project-plate ed-spotlight-cover" aria-hidden="true">
-    <img className="ed-spotlight-art ed-lazy-media" src={media(project.spotlightArt)} alt="" loading="lazy" onLoad={revealImage} />
+  const [artBroken, setArtBroken] = useState(false);
+  // If the cover art fails, fall through to the plate this project had before
+  // it got one, rather than leaving an empty frame behind the caption. It is
+  // tracked apart from `broken` so a failed cover still gets the screenshot.
+  if (project.spotlightArt && !artBroken) return <div className="ed-project-plate ed-spotlight-cover" aria-hidden="true">
+    <img className="ed-spotlight-art ed-lazy-media" src={media(project.spotlightArt)} alt="" loading="lazy" onLoad={revealImage} onError={() => setArtBroken(true)} />
     <span className="ed-poster-cross">✳</span>
     <span className="ed-plate-caption">{project.kind}</span>
   </div>;

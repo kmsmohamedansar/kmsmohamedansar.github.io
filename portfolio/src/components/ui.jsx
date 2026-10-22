@@ -4,6 +4,7 @@ import { ArrowDown, ArrowRight, ArrowUpRight } from "lucide-react";
 import { EASE_REVEAL } from "../lib/motion";
 import { ACCENTS } from "../data/projects";
 import { useScrollContainer } from "../App";
+import { media } from "../lib/media";
 
 const clamp01 = (v) => Math.min(1, Math.max(0, v));
 
@@ -118,7 +119,7 @@ export function ScrollShot({ src, label, onError, ratio = "aspect-[16/10]" }) {
         <div ref={viewRef} className={`relative overflow-hidden ${ratio}`}>
           <motion.img
             ref={imgRef}
-            src={src}
+            src={media(src)}
             alt=""
             loading="lazy"
             onLoad={(event) => event.currentTarget.classList.add("is-loaded")}
