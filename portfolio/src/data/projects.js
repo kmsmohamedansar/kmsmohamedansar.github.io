@@ -37,6 +37,7 @@ export const PROJECTS = [
     kind: "Small AIs, put to the test",
     accent: "rose",
     status: "Independent study · technical report",
+    spotlightArt: "/shots/spotlight/decision-models.webp",
     icon: "/shots/decision-models/icon.svg",
     hook: "Can a small, free AI decide which team should handle a support message as well as a larger AI? I tested three small models and a larger chat-style model on 250 fictional messages. The best small one chose the right team for 80% of the messages saved for the final test. The larger one was often more sure of itself than it should have been.",
     stats: [
@@ -144,6 +145,7 @@ export const PROJECTS = [
     kind: "An AI tool, tested independently",
     accent: "cyan",
     status: "Independent study · technical report",
+    spotlightArt: "/shots/spotlight/rea-study.webp",
     icon: "/shots/rea-study/icon.svg",
     hook: "Can a tool help an AI explain what a program does without seeing its code? I tested REA on 20 small and medium programs. I found no clear improvement in the answers. When told to use REA, the AI took more time and steps; left alone, it mostly ignored the tool.",
     stats: [
@@ -242,6 +244,7 @@ export const PROJECTS = [
     kind: "Mac, iPad and iPhone app",
     accent: "violet",
     status: "In testing · App Store soon",
+    spotlightArt: "/shots/spotlight/haloscript.webp",
     icon: "/shots/haloscript/icon.png",
     preferIcon: true,
     shots: ["/shots/haloscript/write_mac.jpg"],
@@ -288,6 +291,7 @@ export const PROJECTS = [
     kind: "AI + 3D · my digital double",
     accent: "rose",
     status: "Live demo · full write-up",
+    spotlightArt: "/shots/spotlight/digital-double.webp",
     shots: ["/shots/digital-double.jpg"],
     hook: "A 3D model of my own head that looks back at you. I directed the build from phone photos and a 13-second video, tried 12 approaches, and chose the version you can explore here.",
     stats: [

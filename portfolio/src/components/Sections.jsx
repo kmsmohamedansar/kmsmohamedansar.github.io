@@ -127,6 +127,11 @@ function PunchTitle({ text }) {
 }
 function ProjectPlate({ project, compact = false }) {
   const [broken, setBroken] = useState(false);
+  if (project.spotlightArt) return <div className="ed-project-plate ed-spotlight-cover" aria-hidden="true">
+    <img className="ed-spotlight-art ed-lazy-media" src={media(project.spotlightArt)} alt="" loading="lazy" onLoad={revealImage} />
+    <span className="ed-poster-cross">✳</span>
+    <span className="ed-plate-caption">{project.kind}</span>
+  </div>;
   const screenshot = project.cardShot || project.shots?.[0];
   const study = project.slug === "decision-models" || project.slug === "rea-study";
   if (study) return <div className={`ed-project-plate ed-study-cover ${project.slug === "rea-study" ? "ed-cover-rea" : "ed-cover-jev"}`} aria-hidden="true">
