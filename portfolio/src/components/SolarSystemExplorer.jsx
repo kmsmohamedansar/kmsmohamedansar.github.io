@@ -689,6 +689,10 @@ export default function SolarSystemExplorer() {
 
   return (
     <div className="relative w-full h-full overflow-hidden bg-[#02050c]">
+      {/* The view is a bare canvas by design, but the route still needs a
+          heading: it is what names the page and what the router moves focus
+          to on arrival. */}
+      <h1 className="sr-only">Solar system explorer</h1>
       {!failed && <div ref={mountRef} className="w-full h-full touch-none" />}
       {!failed && !ready && <div className="route-loader absolute inset-0 z-10" aria-hidden="true"><span /><p>Preparing the solar system</p></div>}
       {failed && (

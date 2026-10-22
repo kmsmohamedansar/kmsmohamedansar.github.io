@@ -1,4 +1,4 @@
-import { Component, createContext, lazy, Suspense, useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
+import { Component, createContext, createRef, lazy, Suspense, useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import EmetSection from "./components/EmetSection";
 import { Hero, ProjectsSection, SkillsTicker, ExperienceSection, AboutSection, ExperimentsSection, ContactSection } from "./components/Sections";
@@ -117,14 +117,25 @@ function RouteProvider({ children }) {
     const focusIncoming = () => {
       if (cancelled) return;
       const heading = document.querySelector("main h1, main h2");
-      if (!heading || heading === outgoing) {
-        // Lazy routes mount their heading only once the chunk arrives. If it
-        // never does, leave focus alone rather than announce the old view.
-        if (tries-- > 0) requestAnimationFrame(focusIncoming);
+      if (heading && heading !== outgoing) {
+        heading.setAttribute("tabindex", "-1");
+        heading.focus({ preventScroll: true });
         return;
       }
-      heading.setAttribute("tabindex", "-1");
-      heading.focus({ preventScroll: true });
+      // Lazy routes mount their heading only once the chunk arrives.
+      if (tries-- > 0) { requestAnimationFrame(focusIncoming); return; }
+      // The wait expired, so a chunk is slow or has failed. Once the outgoing
+      // heading is gone, <main> can no longer announce the page being left,
+      // which makes it a safe fallback. If it is somehow still there, leave
+      // focus alone rather than announce it.
+      if (outgoing?.isConnected) return;
+      // A chunk that fails outright is not reachable from here: the error
+      // boundary sits above this provider and unmounts it, so the boundary
+      // moves focus itself.
+      const main = document.querySelector("main");
+      if (!main) return;
+      main.setAttribute("tabindex", "-1");
+      main.focus({ preventScroll: true });
     };
     requestAnimationFrame(focusIncoming);
     return () => { cancelled = true; };
@@ -425,6 +436,7 @@ class ErrorBoundary extends Component {
   constructor(props) {
     super(props);
     this.state = { hasError: false };
+    this.headingRef = createRef();
   }
   static getDerivedStateFromError() {
     return { hasError: true };
@@ -432,6 +444,14 @@ class ErrorBoundary extends Component {
   componentDidCatch(error) {
     // eslint-disable-next-line no-console
     console.error("Portfolio crashed:", error);
+    // This replaces the whole shell, router included, so nothing else is left
+    // to move focus. Without this the message is never announced.
+    requestAnimationFrame(() => {
+      const heading = this.headingRef.current;
+      if (!heading) return;
+      heading.setAttribute("tabindex", "-1");
+      heading.focus({ preventScroll: true });
+    });
   }
   render() {
     if (this.state.hasError) {
@@ -441,7 +461,7 @@ class ErrorBoundary extends Component {
             <p className="font-mono text-[.7rem] uppercase tracking-[.14em] text-rose mb-3">
               something broke
             </p>
-            <h1 className="font-display text-2xl font-semibold mb-3">This page hit an error</h1>
+            <h1 ref={this.headingRef} className="font-display text-2xl font-semibold mb-3">This page hit an error</h1>
             <p className="text-slate-400 text-sm mb-6">
               Try reloading. If it keeps happening, the contact details still work.
             </p>
