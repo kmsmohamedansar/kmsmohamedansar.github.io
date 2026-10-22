@@ -1,4 +1,4 @@
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { useRef, useState } from "react";
 import { ArrowDown, ArrowLeft, ArrowRight, ArrowUpRight, ChevronDown, Info, Lock } from "lucide-react";
 import { ACCENTS, LISTED_PROJECTS, PROJECTS, getProject } from "../data/projects";
@@ -13,8 +13,8 @@ function StatTiles({ stats, accent }) {
   const a = ACCENTS[accent];
   return (
     <dl className="mt-6 grid grid-cols-2 gap-3 lg:grid-cols-4">
-      {stats.map((s) => (
-        <div key={s.label} className="rounded-2xl border p-4" style={{ borderColor: `${a.hex}40`, background: `${a.hex}12` }}>
+      {stats.map((s, index) => (
+        <div key={s.label} className={`project-stat-tile rounded-2xl border p-4 ${index === 0 ? "project-stat-primary" : ""}`} style={{ borderColor: `${a.hex}40`, background: `${a.hex}12` }}>
           <dt className="sr-only">{s.label}</dt>
           <dd className={`font-condensed text-[clamp(2rem,5vw,3rem)] leading-none ${a.text}`}>{s.value}</dd>
           <dd className="mt-2 text-sm leading-snug text-[color:var(--ink-200)]">{s.label}</dd>
@@ -42,10 +42,10 @@ function ReportCta({ cta, accent }) {
   return (
     <section
       className="mt-6 rounded-3xl border p-6 sm:p-10"
-      style={{ background: `radial-gradient(120% 120% at 100% 0%, ${a.hex}35, transparent 60%), rgba(0, 0, 0, 0.3)`, borderColor: `${a.hex}55` }}
+      style={{ background: `radial-gradient(120% 120% at 100% 0%, ${a.hex}35, transparent 60%), rgba(16, 16, 16, 0.04)`, borderColor: `${a.hex}55` }}
     >
       <p className={`font-mono text-xs uppercase tracking-[.16em] ${a.text}`}>{cta.kicker}</p>
-      <h2 className="mt-3 font-display text-[clamp(1.8rem,4vw,2.8rem)] font-semibold leading-tight text-white">{cta.title}</h2>
+      <h2 className="mt-3 font-display text-[clamp(1.8rem,4vw,2.8rem)] font-semibold leading-tight text-[color:var(--ink-100)]">{cta.title}</h2>
       <p className="mt-3 max-w-2xl text-base sm:text-lg leading-relaxed text-[color:var(--ink-100)]">{cta.text}</p>
       {cta.contents && (
         <ol className="mt-5 grid gap-x-8 gap-y-1.5 text-sm text-[color:var(--ink-200)] sm:grid-cols-2">
@@ -66,10 +66,8 @@ function ReportCta({ cta, accent }) {
   );
 }
 
-/* Each project page gets its own look: a deep background tone and a title
-   typeface. Assigned by position, so neighbouring pages always differ; a
-   project can pin its own with `theme: { bg, title }` in projects.js. */
-const PAGE_TONES = ["#0b1a14", "#1a0f12", "#0d1326", "#17121f", "#171410", "#0a1718", "#14161a", "#1b1408"];
+/* Project stories share the ivory surface and editorial typography. */
+const PAGE_TONES = ["#e6d5bd"];
 const TITLE_STYLES = ["condensed", "serif", "mono", "display"];
 
 function pageTheme(project, index) {
@@ -79,19 +77,8 @@ function pageTheme(project, index) {
   };
 }
 
-function PageTitle({ project, style }) {
-  const a = ACCENTS[project.accent];
-  if (style === "condensed") return <FlourishTitle text={project.title} accent={project.accent} />;
-  if (style === "serif")
-    return <span aria-hidden="true" className="font-serif font-normal normal-case italic tracking-[-.01em]">{project.title}</span>;
-  if (style === "mono")
-    return (
-      <span aria-hidden="true" className="font-mono font-bold uppercase tracking-[-.04em] text-[.62em] leading-[1.05]">
-        <span className={a.text}>&gt; </span>
-        {project.title}
-      </span>
-    );
-  return <span aria-hidden="true" className="font-display font-bold normal-case tracking-[-.035em] text-[.8em]">{project.title}<span className={a.text}>.</span></span>;
+function PageTitle({ project }) {
+  return <FlourishTitle text={project.title} accent={project.accent} />;
 }
 
 /* A one-picture summary of the project, folded away by default so the
@@ -146,7 +133,7 @@ function SummaryChart({ project }) {
     : firstSentences(project.learned?.[0], 1));
   const box = "rounded-xl border p-4 text-sm leading-relaxed";
   return (
-    <section className="mt-6 rounded-2xl border border-white/12 bg-black/20">
+    <section className="mt-6 rounded-2xl border border-blue/12 bg-blue/[.04]">
       <button
         onClick={() => setOpen((o) => !o)}
         aria-expanded={open}
@@ -179,7 +166,7 @@ function SummaryChart({ project }) {
                 {project.flow.columns.map((c, n) => (
                   <div key={c.label} className="contents">
                     {n > 0 && <SummaryArrow />}
-                    <div className={`${box} border-white/12 bg-white/[.03] md:flex-1 md:min-w-0`}>
+                    <div className={`${box} border-blue/12 bg-blue/[.03] md:flex-1 md:min-w-0`}>
                       <p className="font-mono text-micro uppercase tracking-[.14em] text-[color:var(--ink-300)]">
                         {n + 1}. {c.label}
                       </p>
@@ -286,8 +273,8 @@ function ToolList({ tools, usage = {}, accent }) {
                 onClick={() => (on && Date.now() - openedAt.current > 400 ? setActive(null) : open(t))}
                 aria-expanded={on}
                 aria-controls="tool-explainer"
-                className={`inline-flex items-center gap-1.5 font-mono text-micro uppercase tracking-wide px-2.5 py-1 rounded-full border transition-colors duration-200 ${
-                  on ? `${a.border} ${a.text} ${a.soft}` : "border-white/15 text-[color:var(--ink-200)] bg-white/[.04] hover:border-white/40"
+                className={`inline-flex min-h-11 items-center gap-1.5 font-mono text-micro uppercase tracking-wide px-3 py-2 rounded-full border transition-colors duration-200 ${
+                  on ? `${a.border} ${a.text} ${a.soft}` : "border-blue/15 text-[color:var(--ink-200)] bg-blue/[.04] hover:border-blue/40"
                 }`}
               >
                 {t}
@@ -306,19 +293,19 @@ function ToolList({ tools, usage = {}, accent }) {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -4 }}
               transition={{ duration: 0.18 }}
-              className="rounded-xl border border-white/12 bg-white/[.04] p-4"
+              className="rounded-xl border border-blue/12 bg-blue/[.04] p-4"
               style={{ borderLeft: `3px solid ${a.hex}` }}
             >
               <p className={`font-mono text-micro uppercase tracking-[.14em] ${a.text}`}>{active}</p>
               {what && (
                 <p className="mt-2 text-sm leading-relaxed text-[color:var(--ink-100)]">
-                  <span className="font-semibold text-white">What it is: </span>
+                  <span className="font-semibold text-[color:var(--ink-100)]">What it is: </span>
                   {what}
                 </p>
               )}
               {here && (
                 <p className="mt-2 text-sm leading-relaxed text-[color:var(--ink-100)]">
-                  <span className="font-semibold text-white">In this project: </span>
+                  <span className="font-semibold text-[color:var(--ink-100)]">In this project: </span>
                   {here}
                 </p>
               )}
@@ -340,7 +327,7 @@ function LinkButton({ link, accent }) {
   const a = ACCENTS[accent];
   if (link.locked) {
     return (
-      <a href={link.href} className="inline-flex min-h-11 items-center gap-2 px-4 py-2.5 rounded-full border border-white/20 text-[color:var(--ink-200)] text-sm transition-colors duration-200 hover:border-white/50 hover:text-white active:scale-[.97]">
+      <a href={link.href} className="inline-flex min-h-11 items-center gap-2 px-4 py-2.5 rounded-full border border-blue/20 text-[color:var(--ink-200)] text-sm transition-colors duration-200 hover:border-blue/50 hover:text-[color:var(--ink-100)] active:scale-[.97]">
         <Lock size={14} /> {link.label}
       </a>
     );
@@ -351,8 +338,8 @@ function LinkButton({ link, accent }) {
       {...(link.external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
       className={
         link.primary
-          ? "inline-flex min-h-11 items-center gap-2 px-5 py-3 rounded-full font-bold text-sm text-[#050911] transition-[filter] duration-200 hover:brightness-110 active:scale-[.97]"
-          : "inline-flex min-h-11 items-center gap-2 px-4 py-2.5 rounded-full border border-white/25 text-white text-sm transition-colors duration-200 hover:border-white/60 hover:bg-white/10 active:scale-[.97]"
+          ? "inline-flex min-h-11 items-center gap-2 px-5 py-3 rounded-full font-bold text-sm text-aubergine transition-[filter] duration-200 hover:brightness-110 active:scale-[.97]"
+          : "inline-flex min-h-11 items-center gap-2 px-4 py-2.5 rounded-full border border-blue/25 text-[color:var(--ink-100)] text-sm transition-colors duration-200 hover:border-blue/60 hover:bg-white/10 active:scale-[.97]"
       }
       style={link.primary ? { background: a.hex } : undefined}
     >
@@ -362,13 +349,14 @@ function LinkButton({ link, accent }) {
 }
 
 export default function ProjectPage({ slug }) {
+  const reduced = useReducedMotion();
   const project = getProject(slug);
 
   if (!project) {
     return (
       <div className="mx-auto max-w-3xl px-5 pt-32 pb-24">
         <div className="panel project-panel rounded-2xl p-8">
-          <h1 className="font-display text-2xl font-semibold text-white">I couldn't find that project</h1>
+          <h1 className="font-display text-2xl font-semibold text-[color:var(--ink-100)]">I couldn't find that project</h1>
           <p className="mt-2 text-[color:var(--ink-200)]">It may have moved. The full list is on the home page.</p>
           <a href="#projects" className="mt-5 inline-flex items-center gap-2 text-cyan font-mono text-xs uppercase tracking-[.12em]">
             <ArrowLeft size={14} /> All projects
@@ -387,26 +375,26 @@ export default function ProjectPage({ slug }) {
   const depth = DEPTH[slug];
 
   return (
-    <div style={{ background: `radial-gradient(120% 60% at 50% 0%, ${a.hex}14, transparent 70%), ${theme.bg}` }} className="min-h-full">
+    <div style={{ background: theme.bg }} className="ed-case-study min-h-full">
     <motion.article
-      initial={{ opacity: 0, y: 14 }}
+      initial={reduced ? false : { opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.8, ease: EASE_REVEAL }}
+      transition={{ duration: 0.35, ease: EASE_REVEAL }}
       className="mx-auto w-full max-w-4xl px-5 pt-28 pb-24"
     >
-      <a href={LISTED_PROJECTS.some((p) => p.slug === slug) ? `#card-${slug}` : "#projects"} className="inline-flex items-center gap-2 font-mono text-xs uppercase tracking-[.12em] text-[color:var(--ink-200)] transition-colors duration-200 hover:text-white">
+      <a href={LISTED_PROJECTS.some((p) => p.slug === slug) ? `#card-${slug}` : "#projects"} className="inline-flex min-h-11 items-center gap-2 font-mono text-xs uppercase tracking-[.12em] text-[color:var(--ink-200)] transition-colors duration-200 hover:text-[color:var(--ink-100)]">
         <ArrowLeft size={14} /> All projects
       </a>
 
       <header
         className="mt-5 rounded-3xl border p-6 sm:p-10"
-        style={{ background: `radial-gradient(130% 100% at 0% 0%, ${a.hex}30, transparent 62%), rgba(0, 0, 0, 0.25)`, borderColor: `${a.hex}40` }}
+        style={{ background: `radial-gradient(130% 100% at 0% 0%, ${a.hex}30, transparent 62%), rgba(16, 16, 16, 0.04)`, borderColor: `${a.hex}40` }}
       >
         <div className="flex flex-wrap items-center gap-x-4 gap-y-1 font-mono text-xs uppercase tracking-[.16em]">
           <span className={`font-semibold ${a.text}`}>{project.kind}</span>
           <span className="text-[color:var(--ink-300)]">{project.status}</span>
         </div>
-        <h1 aria-label={project.title} className="mt-4 text-white leading-[.92] text-[clamp(3rem,8vw,6.5rem)]">
+        <h1 aria-label={project.title} className="mt-4 text-[color:var(--ink-100)] leading-[.92] text-[clamp(3rem,8vw,6.5rem)]">
           <PageTitle project={project} style={theme.title} />
         </h1>
         <p className="mt-5 text-lg leading-relaxed text-[color:var(--ink-100)]">{project.hook}</p>
@@ -434,8 +422,8 @@ export default function ProjectPage({ slug }) {
       {project.shots?.length > 0 && (
         <div className={`mt-6 grid gap-4 ${project.shots.length > 1 ? "sm:grid-cols-2" : ""}`}>
           {project.shots.map((s, n) => (
-            <figure key={s} className="overflow-hidden rounded-2xl border border-white/12 bg-[#0b1220]">
-              <figcaption className="flex items-center gap-1.5 border-b border-white/10 px-3.5 py-2.5">
+            <figure key={s} className="overflow-hidden rounded-2xl border border-blue/12 bg-blue/[.04]">
+              <figcaption className="flex items-center gap-1.5 border-b border-blue/10 px-3.5 py-2.5">
                 <span aria-hidden="true" className="h-2.5 w-2.5 rounded-full bg-[#ff5f57]" />
                 <span aria-hidden="true" className="h-2.5 w-2.5 rounded-full bg-[#febc2e]" />
                 <span aria-hidden="true" className="h-2.5 w-2.5 rounded-full bg-[#28c840]" />
@@ -447,7 +435,7 @@ export default function ProjectPage({ slug }) {
                   frame; overscroll-contain keeps the page from moving
                   when you reach the end. */}
               <div tabIndex={0} aria-label={`${project.title} screenshot, scrollable`} className="max-h-[72vh] overflow-y-auto overscroll-contain">
-                <img src={s} alt={`${project.title} screenshot`} loading="lazy" className="block w-full" />
+                <img src={s} alt={`${project.title} screenshot`} loading="lazy" onLoad={(event) => event.currentTarget.classList.add("is-loaded")} className="ed-lazy-media block w-full" />
               </div>
             </figure>
           ))}
@@ -473,13 +461,13 @@ export default function ProjectPage({ slug }) {
 
         {project.sample && (
           <Block label={project.sample.label || "A look at the output"} accent={project.accent}>
-            <div className="overflow-x-auto rounded-xl border border-white/12">
+            <div className="overflow-x-auto rounded-xl border border-blue/12">
               <table className="w-full text-left text-sm">
                 <caption className="text-left px-4 pt-3 pb-2 font-mono text-micro uppercase tracking-[.1em] text-[color:var(--ink-300)]">
                   {project.sample.title}
                 </caption>
                 <thead>
-                  <tr className="border-b border-white/12 text-[color:var(--ink-300)] font-mono text-micro uppercase tracking-wide">
+                  <tr className="border-b border-blue/12 text-[color:var(--ink-300)] font-mono text-micro uppercase tracking-wide">
                     {project.sample.headers.map((h) => (
                       <th key={h} className="px-4 py-2 font-semibold">
                         {h}
@@ -489,7 +477,7 @@ export default function ProjectPage({ slug }) {
                 </thead>
                 <tbody>
                   {project.sample.rows.map((r) => (
-                    <tr key={r[0]} className="border-b border-white/8 last:border-0">
+                    <tr key={r[0]} className="border-b border-blue/8 last:border-0">
                       {r.map((c, i) => (
                         <td key={i} className={`px-4 py-2.5 align-top ${sampleCellClass(project.sample, c, i)}`}>
                           {c}
@@ -521,7 +509,7 @@ export default function ProjectPage({ slug }) {
                     aria-label={f.tall ? `${f.caption} Scrollable.` : undefined}
                     className={`overflow-x-auto rounded-xl bg-white p-3 sm:p-5 ${f.tall ? "max-h-[75vh] overflow-y-auto overscroll-contain" : ""}`}
                   >
-                    <img src={f.src} alt={f.alt ?? f.caption} loading="lazy" className={`mx-auto block w-full ${f.narrow ? "max-w-sm" : ""} ${f.wide ? "min-w-[860px]" : ""}`} />
+                    <img src={f.src} alt={f.alt ?? f.caption} loading="lazy" onLoad={(event) => event.currentTarget.classList.add("is-loaded")} className={`ed-lazy-media mx-auto block w-full ${f.narrow ? "max-w-sm" : ""} ${f.wide ? "min-w-[860px]" : ""}`} />
                   </div>
                   <figcaption className="mt-2 text-sm text-[color:var(--ink-300)]">
                     {f.caption}
@@ -536,10 +524,10 @@ export default function ProjectPage({ slug }) {
         {project.results && (
           <Block label="Results" accent={project.accent}>
             {project.results.intro && <p className="mb-4 text-base leading-relaxed text-[color:var(--ink-100)]">{project.results.intro}</p>}
-            <div className="overflow-x-auto rounded-xl border border-white/12">
+            <div className="overflow-x-auto rounded-xl border border-blue/12">
               <table className="w-full text-left text-sm">
                 <thead>
-                  <tr className="border-b border-white/12 text-[color:var(--ink-300)] font-mono text-micro uppercase tracking-wide">
+                  <tr className="border-b border-blue/12 text-[color:var(--ink-300)] font-mono text-micro uppercase tracking-wide">
                     {project.results.headers.map((h) => (
                       <th key={h} className="px-4 py-2 font-semibold">
                         {h}
@@ -549,7 +537,7 @@ export default function ProjectPage({ slug }) {
                 </thead>
                 <tbody>
                   {project.results.rows.map((r) => (
-                    <tr key={r[0]} className="border-b border-white/8 last:border-0">
+                    <tr key={r[0]} className="border-b border-blue/8 last:border-0">
                       {r.map((c, i) => (
                         <td key={i} className="px-4 py-2.5 text-[color:var(--ink-100)]">
                           {c}
@@ -570,10 +558,10 @@ export default function ProjectPage({ slug }) {
           <Block label="Trade-offs I made" accent={project.accent}>
             <ul className="space-y-3">
               {depth.tradeoffs.map((t) => (
-                <li key={t.chose} className="rounded-xl border border-white/12 p-4 text-[color:var(--ink-100)] leading-relaxed">
+                <li key={t.chose} className="rounded-xl border border-blue/12 p-4 text-[color:var(--ink-100)] leading-relaxed">
                   <span className={`font-semibold ${a.text}`}>{t.chose}</span>
                   <span className="text-[color:var(--ink-300)]"> over </span>
-                  <span className="font-semibold text-white">{t.over}</span>
+                  <span className="font-semibold text-[color:var(--ink-100)]">{t.over}</span>
                   <span className="block mt-1.5 text-[color:var(--ink-200)]">Because {t.because}</span>
                 </li>
               ))}
@@ -601,11 +589,11 @@ export default function ProjectPage({ slug }) {
 
       <a
         href={`#project/${next.slug}`}
-        className="group panel mt-6 rounded-2xl p-5 flex items-center justify-between gap-4 transition-[border-color,transform] duration-200 hover:border-white/30 active:scale-[.99]"
+        className="group panel mt-6 rounded-2xl p-5 flex items-center justify-between gap-4 transition-[border-color,transform] duration-200 hover:border-blue/30 active:scale-[.99]"
       >
         <span>
           <span className="block font-mono text-micro uppercase tracking-[.14em] text-[color:var(--ink-300)]">Next project</span>
-          <span className="block font-display text-xl font-semibold text-white mt-1">{next.title}</span>
+          <span className="block font-display text-xl font-semibold text-[color:var(--ink-100)] mt-1">{next.title}</span>
         </span>
         <ArrowRight className={`${ACCENTS[next.accent].text} transition-transform duration-200 group-hover:translate-x-1`} />
       </a>

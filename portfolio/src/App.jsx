@@ -1,11 +1,9 @@
 import { Component, createContext, lazy, Suspense, useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { Command } from "lucide-react";
 import EmetSection from "./components/EmetSection";
 import { Hero, ProjectsSection, SkillsTicker, ExperienceSection, AboutSection, ExperimentsSection, ContactSection } from "./components/Sections";
 import ProjectPage from "./components/ProjectPage";
 import ProjectWorkPage from "./components/ProjectWorkPage";
-import { SECTION_LINKS } from "./data/content";
 import SandboxStubs from "./components/SandboxStubs";
 import CommandPalette from "./components/CommandPalette";
 import { MatrixBackground } from "./components/RouteBackgrounds";
@@ -60,7 +58,15 @@ export const useScrollContainer = () => useContext(ScrollContext);
 function scrollToSection(id, tries = 60) {
   requestAnimationFrame(() => {
     const el = document.getElementById(id);
-    if (el) el.scrollIntoView({ behavior: "smooth", block: id.startsWith("card-") ? "center" : "start", inline: "nearest" });
+    if (el) {
+      const archive = el.closest("details");
+      if (archive) archive.open = true;
+      const scroller = el.closest("main");
+      const distance = scroller ? Math.abs(el.getBoundingClientRect().top - scroller.getBoundingClientRect().top) : 0;
+      const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      const behavior = reduced || (scroller && distance > scroller.clientHeight * 1.25) ? "auto" : "smooth";
+      el.scrollIntoView({ behavior, block: id.startsWith("card-") ? "center" : "start", inline: "nearest" });
+    }
     else if (tries > 0) scrollToSection(id, tries - 1);
   });
 }
@@ -91,7 +97,10 @@ function RouteProvider({ children }) {
   const navigate = (id) => {
     if (id === "deck") {
       if (window.location.hash) window.location.hash = "";
-      scrollContainerRef?.current?.scrollTo({ top: 0, behavior: "smooth" });
+      const scroller = scrollContainerRef?.current;
+      const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      const behavior = reduced || (scroller && scroller.scrollTop > scroller.clientHeight * 1.25) ? "auto" : "smooth";
+      scroller?.scrollTo({ top: 0, behavior });
       return;
     }
     window.location.hash = id;
@@ -135,94 +144,53 @@ function SandboxProvider({ children }) {
   return <SandboxContext.Provider value={value}>{children}</SandboxContext.Provider>;
 }
 
-// Deliberately no section links here (EMET / Current / Before /
-// Projects / Contact) and no Contact CTA — that row was a plain-text
-// shortcut around the deck's whole reason for existing: an actual
-// 3D scene you navigate by clicking a card, not a menu bar. The one
-// thing every view still needs is a way back to the top, so the logo
-// doubles as a Home control once you've scrolled past the hero or
-// stepped into EMET. ⌘K stays as the accessibility/power-user
-// fallback — it's opt-in, not a visible competing menu.
+// A consistent paper navigation anchors the alternating editorial sections.
 function Nav() {
   const { route, navigate } = useRoute();
-
+  const editorial = route === "main";
   function openPalette() {
     window.dispatchEvent(new KeyboardEvent("keydown", { key: "k", metaKey: true }));
   }
+  return <nav className="ed-nav" aria-label="Main navigation"><div className="ed-nav-inner">
+    <button onClick={() => navigate("deck")} className="ed-wordmark" aria-label="Mohamed Ansar, home"><span className="ed-wordmark-symbol" aria-hidden="true">ma</span><span>mohamed ansar<small>Solutions engineer</small></span></button>
+    <div className="ed-nav-links">{editorial ? <><a href="#projects">Work</a><a href="#about" className="ed-nav-wide">About</a><a href="#experience" className="ed-nav-wide">Experience</a><a href="#contact" className="ed-nav-contact">Let's talk ↗</a></> : <button onClick={() => navigate("deck")}>← Home</button>}
+      <button onClick={openPalette} className="ed-nav-command" aria-label="Open command palette">⌘ K</button>
+    </div>
+  </div></nav>;
+}
 
-  // On the main page the nav has no bar of its own: plain white type and
-  // hairlines with mix-blend-mode: difference, so it reads dark over the
-  // light hero and light over every dark block below without swapping
-  // styles per section. The full-takeover routes (EMET, the explorers,
-  // project pages) keep the original glass bar.
-  const editorial = route === "main";
+function ScrollProgress() {
+  const { route } = useRoute();
+  const scrollContainerRef = useContext(ScrollContext);
+  const barRef = useRef(null);
 
-  return (
-    <nav
-      className={`fixed top-0 inset-x-0 z-[100] transition-colors ${
-        editorial ? "mix-blend-difference text-white" : "bg-ink/70 backdrop-blur-xl border-b border-white/8"
-      }`}
-    >
-      <div className="mx-auto max-w-[1260px] flex items-center justify-between px-5 py-4">
-        <button
-          onClick={() => navigate("deck")}
-          className="flex items-center gap-3 font-mono text-[.85rem] font-semibold text-left"
-        >
-          <span
-            className={`w-8 h-8 grid place-items-center text-[.68rem] ${
-              editorial ? "rounded-full border border-white" : "rounded-lg bg-gradient-to-br from-cyan/20 to-violet/20 border border-white/10 text-cyan"
-            }`}
-          >
-            MA
-          </span>
-          <span>
-            mohamed.ansar
-            <small
-              className={`hidden sm:block text-[.6rem] font-normal tracking-[.16em] uppercase ${
-                editorial ? "text-white/75" : "text-[color:var(--ink-400)]"
-              }`}
-            >
-              solutions engineer
-            </small>
-          </span>
-        </button>
+  useEffect(() => {
+    const scroller = scrollContainerRef?.current;
+    const bar = barRef.current;
+    if (!scroller || !bar) return;
+    let raf = null;
+    const update = () => {
+      raf = null;
+      const distance = scroller.scrollHeight - scroller.clientHeight;
+      const progress = distance > 0 ? Math.min(1, Math.max(0, scroller.scrollTop / distance)) : 0;
+      bar.style.transform = `scaleX(${progress})`;
+    };
+    const onScroll = () => {
+      if (raf === null) raf = requestAnimationFrame(update);
+    };
+    update();
+    scroller.addEventListener("scroll", onScroll, { passive: true });
+    return () => {
+      scroller.removeEventListener("scroll", onScroll);
+      if (raf !== null) cancelAnimationFrame(raf);
+    };
+  }, [route, scrollContainerRef]);
 
-        <div className="flex items-center gap-1">
-          {route === "main" &&
-            SECTION_LINKS.map((l) => (
-              <a
-                key={l.id}
-                href={`#${l.id}`}
-                className={`${l.id === "projects" || l.id === "contact" ? "inline-flex" : "hidden md:inline-flex"} items-center px-2 sm:px-3 py-2 rounded-lg ${
-                  editorial ? "text-white hover:opacity-60 transition-opacity" : "text-[color:var(--ink-100)] hover:text-cyan transition-colors"
-                } font-mono text-[.7rem] uppercase tracking-[.1em]`}
-              >
-                {l.label}
-              </a>
-            ))}
-          {route !== "main" && (
-            <button
-              onClick={() => navigate("deck")}
-              className="flex items-center gap-1.5 px-3 py-2 rounded-lg border border-white/10 text-cyan hover:border-cyan/40 transition-colors font-mono text-[.68rem] uppercase tracking-[.1em]"
-            >
-              ← Home
-            </button>
-          )}
-          <button
-            onClick={openPalette}
-            className={`ml-1 hidden sm:flex items-center gap-1 px-2.5 py-2 rounded-lg font-mono text-[.65rem] ${
-              editorial
-                ? "border border-white/70 text-white hover:opacity-60 transition-opacity"
-                : "border border-white/10 text-[color:var(--ink-400)] hover:text-cyan hover:border-cyan/30 transition-colors"
-            }`}
-            aria-label="Open command palette"
-          >
-            <Command size={11} /> K
-          </button>
-        </div>
-      </div>
-    </nav>
-  );
+  return <div className="ed-scroll-progress" aria-hidden="true"><span ref={barRef} /></div>;
+}
+
+function RouteLoader({ label = "Loading interactive" }) {
+  return <div className="route-loader" role="status"><span aria-hidden="true" /><p>{label}</p></div>;
 }
 
 function MainDocument({ bootDone }) {
@@ -250,7 +218,7 @@ function Stage({ bootDone }) {
   }, [route, scrollContainerRef]);
 
   return (
-    <main ref={scrollContainerRef} className="flex-1 min-h-0 overflow-y-auto mono-scroll">
+    <main ref={scrollContainerRef} className="relative flex-1 min-h-0 overflow-y-auto mono-scroll">
       <AnimatePresence mode="wait">
         {route === "emet" ? (
           <motion.div
@@ -258,7 +226,7 @@ function Stage({ bootDone }) {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 0.28, ease: EASE_OUT }}
+            transition={{ duration: 0.14, ease: EASE_OUT }}
             className="h-full"
           >
             <EmetSection />
@@ -269,10 +237,10 @@ function Stage({ bootDone }) {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 0.28, ease: EASE_OUT }}
+            transition={{ duration: 0.14, ease: EASE_OUT }}
             className="h-full"
           >
-            <Suspense fallback={<div className="h-full bg-[#02050c]" aria-hidden="true" />}>
+            <Suspense fallback={<RouteLoader label="Loading solar system" />}>
               <SolarSystemExplorer />
             </Suspense>
           </motion.div>
@@ -282,7 +250,7 @@ function Stage({ bootDone }) {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 0.2, ease: EASE_OUT }}
+            transition={{ duration: 0.12, ease: EASE_OUT }}
           >
             <ProjectWorkPage />
           </motion.div>
@@ -292,14 +260,14 @@ function Stage({ bootDone }) {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 0.2, ease: EASE_OUT }}
+            transition={{ duration: 0.12, ease: EASE_OUT }}
           >
             {route === "project/digital-double" ? (
-              <Suspense fallback={<div className="h-full bg-[#050506]" aria-hidden="true" />}>
+              <Suspense fallback={<RouteLoader label="Loading 3D project" />}>
                 <DigitalDouble />
               </Suspense>
             ) : route === "project/haloscript" ? (
-              <Suspense fallback={<div className="h-full bg-[#07070b]" aria-hidden="true" />}>
+              <Suspense fallback={<RouteLoader label="Loading project" />}>
                 <HaloscriptPage />
               </Suspense>
             ) : (
@@ -312,10 +280,10 @@ function Stage({ bootDone }) {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 0.28, ease: EASE_OUT }}
+            transition={{ duration: 0.14, ease: EASE_OUT }}
             className="h-full"
           >
-            <Suspense fallback={<div className="h-full bg-[#050911]" aria-hidden="true" />}>
+            <Suspense fallback={<RouteLoader label="Loading data explorer" />}>
               <DataLineageExplorer />
             </Suspense>
           </motion.div>
@@ -325,10 +293,10 @@ function Stage({ bootDone }) {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 0.28, ease: EASE_OUT }}
+            transition={{ duration: 0.14, ease: EASE_OUT }}
             className="h-full"
           >
-            <Suspense fallback={<div className="h-full bg-[#0b1426]" aria-hidden="true" />}>
+            <Suspense fallback={<RouteLoader label="Loading particle scene" />}>
               <InfinityPage />
             </Suspense>
           </motion.div>
@@ -338,10 +306,10 @@ function Stage({ bootDone }) {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 0.28, ease: EASE_OUT }}
+            transition={{ duration: 0.14, ease: EASE_OUT }}
             className="h-full"
           >
-            <Suspense fallback={<div className="h-full bg-[#050506]" aria-hidden="true" />}>
+            <Suspense fallback={<RouteLoader label="Loading 3D project" />}>
               <DigitalDouble />
             </Suspense>
           </motion.div>
@@ -351,7 +319,7 @@ function Stage({ bootDone }) {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 0.28, ease: EASE_OUT }}
+            transition={{ duration: 0.14, ease: EASE_OUT }}
           >
             <MainDocument bootDone={bootDone} />
           </motion.div>
@@ -397,6 +365,7 @@ function AppShell({ bootDone }) {
           <Backdrop />
           <div className="relative z-10 h-full flex flex-col">
             <Nav />
+            <ScrollProgress />
             {/* No page-level `perspective` here on purpose: setting it on an
                 ancestor this high up turns it into the CSS containing block
                 for every `position: fixed` descendant (modals, overlays)
@@ -442,7 +411,7 @@ class ErrorBoundary extends Component {
             </p>
             <a
               href="mailto:mohamedansarkms@gmail.com"
-              className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-lg bg-gradient-to-r from-cyan to-[#9be9ff] text-ink text-[.8rem] font-bold"
+              className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-lg bg-gradient-to-r from-coral to-[#f7b598] text-aubergine text-[.8rem] font-bold"
             >
               mohamedansarkms@gmail.com
             </a>

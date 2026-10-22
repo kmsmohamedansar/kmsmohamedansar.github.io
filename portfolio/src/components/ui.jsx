@@ -8,13 +8,14 @@ import { useScrollContainer } from "../App";
 const clamp01 = (v) => Math.min(1, Math.max(0, v));
 
 export function Reveal({ children, className = "", delay = 0, y = 24 }) {
+  const reduced = useReducedMotion();
   return (
     <motion.div
       className={className}
-      initial={{ opacity: 0, y }}
+      initial={reduced ? false : { opacity: 0, y }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, amount: 0.15 }}
-      transition={{ duration: 0.8, delay, ease: EASE_REVEAL }}
+      transition={{ duration: 0.4, delay: Math.min(delay, 0.08), ease: EASE_REVEAL }}
     >
       {children}
     </motion.div>
@@ -106,7 +107,7 @@ export function ScrollShot({ src, label, onError, ratio = "aspect-[16/10]" }) {
     <div ref={wrapRef} className="[perspective:1400px]">
       <motion.div
         style={reduced ? undefined : { rotateX, scale }}
-        className="origin-bottom overflow-hidden rounded-2xl border border-white/12 bg-[#0b1220] shadow-[0_40px_80px_-40px_rgba(0,0,0,.85)]"
+        className="origin-bottom overflow-hidden rounded-2xl border border-white/12 bg-ink-1 shadow-[0_40px_80px_-40px_rgba(0,0,0,.85)]"
       >
         <div className="flex items-center gap-1.5 border-b border-white/10 px-3.5 py-2.5" aria-hidden="true">
           <span className="h-2.5 w-2.5 rounded-full bg-[#ff5f57]" />
@@ -120,9 +121,10 @@ export function ScrollShot({ src, label, onError, ratio = "aspect-[16/10]" }) {
             src={src}
             alt=""
             loading="lazy"
+            onLoad={(event) => event.currentTarget.classList.add("is-loaded")}
             onError={onError}
             style={reduced || short ? undefined : { y }}
-            className={`block w-full ${short ? "h-full object-cover object-top" : ""}`}
+            className={`ed-lazy-media block w-full ${short ? "h-full object-cover object-top" : ""}`}
           />
         </div>
       </motion.div>
@@ -135,7 +137,7 @@ export function SectionHead({ kicker, title, lede, accent = "cyan", align = "lef
   return (
     <Reveal className={`max-w-3xl mb-10 sm:mb-14 ${center ? "mx-auto text-center" : ""}`} y={0}>
       <Kicker accent={accent}>{kicker}</Kicker>
-      <h2 className="mt-4 font-condensed uppercase text-white leading-[.92] text-[clamp(2.6rem,7vw,5.6rem)]">
+      <h2 className="mt-4 font-condensed uppercase text-[color:var(--ink-100)] leading-[.92] text-[clamp(2.6rem,7vw,5.6rem)]">
         <RiseText text={title} />
       </h2>
       {lede && <p className={`mt-5 max-w-2xl text-base sm:text-lg leading-relaxed text-[color:var(--ink-200)] ${center ? "mx-auto" : ""}`}>{lede}</p>}
@@ -188,7 +190,7 @@ export function SpinBadge({ label, accent }) {
         </text>
       </svg>
       <span className="grid h-10 w-10 place-items-center rounded-full bg-current transition-transform duration-200 ease-out group-hover:scale-110 group-focus-visible:scale-110">
-        <ArrowUpRight size={18} className="text-[#050911]" />
+        <ArrowUpRight size={18} className="text-aubergine" />
       </span>
     </span>
   );
@@ -196,10 +198,10 @@ export function SpinBadge({ label, accent }) {
 
 const TONE_ORDER = ["cyan", "violet", "green", "amber"];
 const TONE_CLASS = {
-  cyan: "border-cyan/50 text-cyan bg-[#04222b]",
-  violet: "border-[#b9a8ff]/50 text-[#d2c8ff] bg-[#1a1535]",
-  green: "border-green/50 text-green bg-[#06261c]",
-  amber: "border-amber/50 text-amber bg-[#2b2106]",
+  cyan: "border-blue/30 text-[color:var(--ink-100)] bg-blue/10",
+  violet: "border-blue/30 text-[color:var(--ink-100)] bg-blue/10",
+  green: "border-coral/40 text-[color:var(--ink-100)] bg-coral/10",
+  amber: "border-coral/40 text-[color:var(--ink-100)] bg-coral/10",
 };
 
 /* Flow diagram drawn from a plain description:
@@ -255,7 +257,7 @@ export default function FlowDiagram({ spec, compact = false }) {
 
   return (
     <figure className={compact ? "" : "my-2"}>
-      <div ref={wrapRef} className="relative rounded-xl border border-white/12 bg-[#050911]/85 p-5 sm:p-6">
+      <div ref={wrapRef} className="ed-flow-surface relative rounded-xl border border-white/12 bg-ink/85 p-5 sm:p-6">
         {wide && paths.length > 0 && (
           <svg className="absolute inset-0 w-full h-full pointer-events-none" aria-hidden="true">
             <defs>

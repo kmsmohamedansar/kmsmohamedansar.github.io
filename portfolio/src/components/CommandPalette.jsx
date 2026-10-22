@@ -103,7 +103,7 @@ export default function CommandPalette() {
           onClick={() => setOpen(false)}
         >
           <motion.div
-            className="glass w-full max-w-xl rounded-2xl overflow-hidden shadow-2xl shadow-black/60 ring-1 ring-cyan/10"
+            className="glass w-full max-w-xl rounded-2xl overflow-hidden shadow-2xl shadow-black/60 ring-1 ring-marigold/10"
             initial={{ opacity: 0, y: -16, scale: 0.96 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: -10, scale: 0.97 }}
@@ -114,7 +114,7 @@ export default function CommandPalette() {
             aria-label="Command palette"
           >
             <div className="flex items-center gap-3 px-4 py-3 border-b border-white/8">
-              <Search size={16} className="text-cyan shrink-0" />
+              <Search size={16} className="text-marigold shrink-0" />
               <input
                 ref={inputRef}
                 value={query}
@@ -154,11 +154,11 @@ export default function CommandPalette() {
                           onMouseEnter={() => setActiveIndex(item._index)}
                           onClick={() => runItem(item)}
                           className={`relative w-full flex items-center justify-between gap-3 pl-4 pr-4 py-2.5 text-left text-sm transition-colors ${
-                            active ? "bg-cyan/10 text-cyan" : "text-[color:var(--ink-300)] hover:bg-white/5"
+                            active ? "bg-marigold/10 text-marigold" : "text-[color:var(--ink-300)] hover:bg-white/5"
                           }`}
                         >
                           <span
-                            className={`absolute left-0 top-1 bottom-1 w-[2.5px] rounded-full bg-cyan transition-opacity ${
+                            className={`absolute left-0 top-1 bottom-1 w-[2.5px] rounded-full bg-marigold transition-opacity ${
                               active ? "opacity-100" : "opacity-0"
                             }`}
                             aria-hidden="true"

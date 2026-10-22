@@ -1,18 +1,29 @@
 # Mohamed Ansar, portfolio
 
 The source for [ansarbuilds.dev](https://ansarbuilds.dev).
-React 19, Vite, Tailwind v4, Framer Motion, and three.js for the hero's infinity loop.
+React 19, Vite, Tailwind v4, Framer Motion, and three.js for the interactive experiments.
 
 ## How the site is laid out
 
 One scrolling page, then a detail page per project:
 
-1. **Hero**: who I am, in two sentences.
-2. **Projects**: three featured cards, then a sideways scroller with the rest.
-3. **Experience**: a sideways scroller of roles.
-4. **About**: the short story and what I know.
-5. **Built with AI**: experiments (the EMET terminal, the solar system, the infinity loop).
+1. **Hero**: particles gather into my name, then morph into what I build. The rotating project/tool line stays underneath, and the pointer disperses either text shape.
+2. **Projects**: featured stories, a card grid, then a sideways scroller.
+3. **Built with AI**: the EMET terminal, solar system, and infinity loop.
+4. **Skills ticker** and **About**.
+5. **Experience**.
 6. **Contact**.
+
+The portfolio uses warm ivory (`#EAE6DE`), editorial blue (`#226192`), and
+coral (`#EF8557`). `src/editorial.css` contains the homepage's layout and light/dark
+surfaces. Shared compatibility tokens live in `src/index.css`. The main page uses
+oversized condensed headings, illustrated covers using the original project
+icons, an open project grid, an experience timeline, and a blue
+interactive experiments section. The particle name-to-statement sequence and
+rotating project/tool line remain in the opening. The terminal and 3D scenes
+keep their own colors. The opening pauses offscreen and in hidden tabs, caps
+particles at 7,000 on desktop and 3,200 on phones, and reserves space for the
+rotating copy to avoid layout shifts.
 
 Clicking a project opens `#project/<slug>`: the story, a flow diagram, what I took from it, and links.
 
@@ -27,7 +38,8 @@ src/
     ProjectPage.jsx     the per-project detail page
     ui.jsx              Rail (scroller), FlowDiagram, tags, section heading
     EmetSection.jsx     the terminal
-    SolarSystemExplorer.jsx, DataLineageExplorer.jsx, StarFormationBackground.jsx
+    NameParticles.jsx    canvas name animation
+    SolarSystemExplorer.jsx, DataLineageExplorer.jsx, InfinityLoop.jsx
 public/shots/           screenshots used on project pages
 ```
 

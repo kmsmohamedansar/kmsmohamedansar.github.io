@@ -609,6 +609,7 @@ export default function InfinityLoop({ scrollContainerRef }) {
   const wrapRef = useRef(null);
   const canvasRef = useRef(null);
   const [failed, setFailed] = useState(false);
+  const [ready, setReady] = useState(false);
 
   useEffect(() => {
     const wrap = wrapRef.current;
@@ -768,6 +769,7 @@ export default function InfinityLoop({ scrollContainerRef }) {
       // frame is in the framebuffer, so there's never a blank WebGL flash.
       requestAnimationFrame(() => {
         canvas.style.opacity = "1";
+        setReady(true);
       });
     }
 
@@ -860,6 +862,7 @@ export default function InfinityLoop({ scrollContainerRef }) {
 
   return (
     <div ref={wrapRef} aria-hidden="true" className="absolute inset-0">
+      {!failed && !ready && <div className="route-loader absolute inset-0 z-10"><span /><p>Preparing particles</p></div>}
       {failed ? (
         <div className="atmosphere-fallback absolute inset-0" />
       ) : (

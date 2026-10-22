@@ -21,7 +21,7 @@ export default function IntroCurtain({ onReveal, onGone }) {
     } catch {
       /* storage unavailable: shouldPlayIntro already handled that case */
     }
-    const t = setTimeout(() => setLifting(true), 1500);
+    const t = setTimeout(() => setLifting(true), 650);
     return () => clearTimeout(t);
   }, []);
 
@@ -35,39 +35,39 @@ export default function IntroCurtain({ onReveal, onGone }) {
       onClick={() => setLifting(true)}
       initial={{ clipPath: "inset(0% 0% 0% 0%)" }}
       animate={lifting ? { clipPath: "inset(0% 0% 100% 0%)" } : undefined}
-      transition={{ duration: 0.85, ease: CURTAIN_EASE }}
+      transition={{ duration: 0.42, ease: CURTAIN_EASE }}
       onAnimationComplete={() => lifting && onGone()}
       className="fixed inset-0 z-[400] grid place-items-center bg-ink px-5"
     >
       <div className="text-center">
         <motion.div
-          className="overflow-hidden whitespace-nowrap font-condensed uppercase leading-[.95] text-white text-[clamp(3rem,13vw,11rem)]"
+          className="overflow-hidden whitespace-nowrap font-condensed uppercase leading-[.95] text-ivory text-[clamp(2.35rem,11vw,11rem)]"
           initial="hidden"
           animate="shown"
-          transition={{ staggerChildren: 0.035, delayChildren: 0.1 }}
+          transition={{ staggerChildren: 0.012, delayChildren: 0.03 }}
         >
           {NAME.split("").map((ch, i) => (
             <motion.span
               key={i}
               className="inline-block"
               variants={{ hidden: { y: "110%" }, shown: { y: "0%" } }}
-              transition={{ duration: 0.8, ease: EASE_REVEAL }}
+              transition={{ duration: 0.35, ease: EASE_REVEAL }}
             >
               {ch === " " ? " " : ch}
             </motion.span>
           ))}
         </motion.div>
         <motion.div
-          className="mx-auto mt-5 h-px origin-left bg-white/60"
+          className="mx-auto mt-5 h-px origin-left bg-coral"
           initial={{ scaleX: 0 }}
           animate={{ scaleX: 1 }}
-          transition={{ duration: 1.1, delay: 0.3, ease: EASE_REVEAL }}
+          transition={{ duration: 0.45, delay: 0.1, ease: EASE_REVEAL }}
         />
         <motion.p
           className="mt-4 font-mono text-xs uppercase tracking-[.3em] text-[color:var(--ink-300)]"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ duration: 0.6, delay: 0.6 }}
+          transition={{ duration: 0.2, delay: 0.25 }}
         >
           solutions engineer
         </motion.p>

@@ -277,6 +277,7 @@ function formatPeriod(days) {
 export default function SolarSystemExplorer() {
   const mountRef = useRef(null);
   const [failed, setFailed] = useState(false);
+  const [ready, setReady] = useState(false);
   const [selected, setSelected] = useState(null); // planet name, or "Sun", or null
   const [isPlaying, setIsPlaying] = useState(true);
   const [speed, setSpeed] = useState(6);
@@ -578,6 +579,7 @@ export default function SolarSystemExplorer() {
     renderer.domElement.addEventListener("pointerup", onPointerUp);
 
     let raf;
+    let firstFrame = true;
     const startTime = performance.now();
     let simDaysAccum = 0;
     let lastNow = startTime;
@@ -617,6 +619,10 @@ export default function SolarSystemExplorer() {
       }
       controls.update();
       renderScene();
+      if (firstFrame) {
+        firstFrame = false;
+        setReady(true);
+      }
     }
     raf = requestAnimationFrame(tick);
 
@@ -684,6 +690,7 @@ export default function SolarSystemExplorer() {
   return (
     <div className="relative w-full h-full overflow-hidden bg-[#02050c]">
       {!failed && <div ref={mountRef} className="w-full h-full touch-none" />}
+      {!failed && !ready && <div className="route-loader absolute inset-0 z-10" aria-hidden="true"><span /><p>Preparing the solar system</p></div>}
       {failed && (
         <div className="w-full h-full grid place-items-center px-6 text-center">
           <p className="text-[color:var(--ink-400)] max-w-sm">
@@ -692,7 +699,7 @@ export default function SolarSystemExplorer() {
         </div>
       )}
 
-      {!failed && showHint && (
+      {!failed && ready && showHint && (
         <div className="pointer-events-none absolute top-20 inset-x-0 flex justify-center px-4">
           <p className="glass rounded-full px-4 py-2 font-mono text-[.68rem] text-[color:var(--ink-300)] text-center">
             Drag to look around · Scroll or pinch to zoom · Click a planet
@@ -700,13 +707,13 @@ export default function SolarSystemExplorer() {
         </div>
       )}
 
-      {!failed && (
+      {!failed && ready && (
         <div className="absolute bottom-6 inset-x-0 flex justify-center px-4 z-20">
           <div className="glass rounded-full flex items-center gap-3 px-4 py-2.5">
             <button
               onClick={() => setIsPlaying((v) => !v)}
               aria-label={isPlaying ? "Pause" : "Play"}
-              className="w-8 h-8 grid place-items-center rounded-full border border-white/10 text-cyan hover:border-cyan/40 transition-colors"
+              className="w-11 h-11 grid place-items-center rounded-full border border-white/10 text-cyan hover:border-cyan/40 transition-colors"
             >
               {isPlaying ? <Pause size={14} /> : <Play size={14} />}
             </button>
@@ -725,7 +732,7 @@ export default function SolarSystemExplorer() {
         </div>
       )}
 
-      {!failed && factEntry && (
+      {!failed && ready && factEntry && (
         <div className="absolute top-20 right-4 sm:right-6 z-20 w-[min(320px,calc(100vw-2rem))]">
           <div className="glass rounded-2xl p-5">
             <div className="flex items-start justify-between gap-3 mb-3">
@@ -739,7 +746,7 @@ export default function SolarSystemExplorer() {
                   recenterRef.current(null);
                 }}
                 aria-label="Close"
-                className="w-7 h-7 grid place-items-center rounded-lg border border-white/10 text-[color:var(--ink-400)] hover:text-cyan hover:border-cyan/40 transition-colors shrink-0"
+                className="w-11 h-11 grid place-items-center rounded-lg border border-white/10 text-[color:var(--ink-400)] hover:text-cyan hover:border-cyan/40 transition-colors shrink-0"
               >
                 <X size={13} />
               </button>
@@ -763,7 +770,7 @@ export default function SolarSystemExplorer() {
             <p className="text-[.82rem] text-[color:var(--ink-300)] leading-relaxed">{factEntry.fact}</p>
             <button
               onClick={() => recenterRef.current(selected)}
-              className="mt-4 inline-flex items-center gap-1.5 font-mono text-[.66rem] uppercase tracking-wide text-cyan hover:text-cyan/80 transition-colors"
+              className="mt-4 inline-flex min-h-11 items-center gap-1.5 font-mono text-[.66rem] uppercase tracking-wide text-cyan hover:text-cyan/80 transition-colors"
             >
               <Locate size={12} /> Re-center
             </button>

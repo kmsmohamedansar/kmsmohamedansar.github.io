@@ -13,12 +13,18 @@
 // customer or retailer names, and no numbers. They get no screenshots either;
 // every image in public/shots/ comes from a public repo or this site.
 
+// Existing category keys share the portfolio accent. Status colors in
+// tables and the experiments' own scene palettes remain independent.
+const PORTFOLIO_ACCENT = {
+  text: "text-[color:var(--portfolio-accent)]", border: "border-coral/50", soft: "bg-coral/10",
+  glow: "rgba(213,54,12,0.35)", hex: "#74200d",
+};
 export const ACCENTS = {
-  cyan: { text: "text-cyan", border: "border-cyan/50", soft: "bg-cyan/10", glow: "rgba(34,211,238,0.35)", hex: "#22d3ee" },
-  violet: { text: "text-[#b9a8ff]", border: "border-[#b9a8ff]/50", soft: "bg-[#8e7dff]/10", glow: "rgba(142,125,255,0.35)", hex: "#b9a8ff" },
-  amber: { text: "text-amber", border: "border-amber/50", soft: "bg-amber/10", glow: "rgba(251,191,36,0.35)", hex: "#fbbf24" },
-  green: { text: "text-green", border: "border-green/50", soft: "bg-green/10", glow: "rgba(52,211,153,0.35)", hex: "#34d399" },
-  rose: { text: "text-rose", border: "border-rose/50", soft: "bg-rose/10", glow: "rgba(251,113,133,0.35)", hex: "#fb7185" },
+  cyan: PORTFOLIO_ACCENT,
+  violet: PORTFOLIO_ACCENT,
+  amber: PORTFOLIO_ACCENT,
+  green: PORTFOLIO_ACCENT,
+  rose: PORTFOLIO_ACCENT,
 };
 
 export const PROJECTS = [
@@ -26,7 +32,7 @@ export const PROJECTS = [
   {
     slug: "decision-models",
     featured: true,
-    theme: { bg: "#16091a", title: "display" },
+    theme: { bg: "#e6d5bd", title: "display" },
     title: "My Take on Jev",
     kind: "Small AIs, put to the test",
     accent: "rose",
@@ -133,7 +139,7 @@ export const PROJECTS = [
   {
     slug: "rea-study",
     featured: true,
-    theme: { bg: "#06141a", title: "display" },
+    theme: { bg: "#e6d5bd", title: "display" },
     title: "My Take on REA",
     kind: "An AI tool, tested independently",
     accent: "cyan",
@@ -323,7 +329,7 @@ export const PROJECTS = [
     slug: "sitescout",
     featured: true,
     grid: true,
-    theme: { bg: "#120f1f", title: "condensed" },
+    theme: { bg: "#e6d5bd", title: "condensed" },
     title: "Sitescout",
     kind: "Chrome extension",
     accent: "violet",
@@ -406,7 +412,7 @@ export const PROJECTS = [
     slug: "integration",
     featured: true,
     grid: true,
-    theme: { bg: "#080a09", title: "mono" },
+    theme: { bg: "#e6d5bd", title: "mono" },
     title: "Integration-in-a-box",
     kind: "Connecting two systems",
     accent: "green",
@@ -498,7 +504,7 @@ export const PROJECTS = [
     slug: "analytics-assistant",
     featured: true,
     grid: true,
-    theme: { bg: "#1c150c", title: "serif" },
+    theme: { bg: "#e6d5bd", title: "serif" },
     title: "Analytics assistant: rules vs AI",
     kind: "AI + data tools",
     accent: "violet",
@@ -628,7 +634,7 @@ export const PROJECTS = [
     slug: "data-delivery",
     featured: true,
     grid: true,
-    theme: { bg: "#15120a", title: "condensed" },
+    theme: { bg: "#e6d5bd", title: "condensed" },
     title: "Customer data delivery",
     kind: "Data pipeline",
     accent: "amber",
@@ -699,7 +705,7 @@ export const PROJECTS = [
     slug: "catalogue-checker",
     featured: true,
     grid: true,
-    theme: { bg: "#0f1418", title: "display" },
+    theme: { bg: "#e6d5bd", title: "display" },
     title: "Catalogue checker",
     kind: "AI + data quality",
     accent: "green",

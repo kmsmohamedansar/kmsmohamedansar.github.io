@@ -5,14 +5,14 @@
 
 export const HERO = {
   eyebrow: "Solutions Engineer · Remote, Canada",
-  title: "Hi, I'm Mohamed. I turn retail data into answers, and build apps on the side.",
+  title: "Retail data into answers. Ideas into working apps.",
   lede: [
     { text: "By day I use " },
-    { text: "SQL", cls: "text-cyan font-semibold" },
+    { text: "SQL", cls: "text-marigold font-semibold" },
     { text: " to study retail prices and help teams get answers they can trust. The rest of the time I build things: an " },
-    { text: "iPhone app", cls: "text-amber font-semibold" },
+    { text: "iPhone app", cls: "text-marigold font-semibold" },
     { text: " on the App Store, a novel-writing app in testing, and a 3D model of my own head built with " },
-    { text: "AI", cls: "text-[#b9a8ff] font-semibold" },
+    { text: "AI", cls: "text-marigold font-semibold" },
     { text: " that looks back at you." },
   ],
 };
