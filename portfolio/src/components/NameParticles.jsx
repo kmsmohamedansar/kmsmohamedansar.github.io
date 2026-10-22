@@ -86,11 +86,14 @@ export default function NameParticles({ ready = true, onSettled }) {
       onSettled?.();
       return;
     }
-    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const reducedQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
     // On touch phones the pointer interaction is unavailable and a perpetual
     // canvas loop costs battery for little gain. Draw the name once instead.
-    const phoneStatic = window.matchMedia("(max-width: 640px), (pointer: coarse)").matches;
-    const staticMode = reduced || phoneStatic;
+    // Kept in step with the .ed-mobile-statement query in editorial.css.
+    const staticQuery = window.matchMedia("(max-width: 640px), (pointer: coarse)");
+    // Read live: someone can turn motion down, or resize past the breakpoint,
+    // with the page already open.
+    let staticMode = reducedQuery.matches || staticQuery.matches;
     let raf = null;
     let parts = [];
     let radius = 1;
@@ -114,9 +117,12 @@ export default function NameParticles({ ready = true, onSettled }) {
       canvas.height = Math.max(1, Math.round(rect.height * dpr));
       const w = canvas.width, h = canvas.height;
       const name = sampleText(w, h, dpr);
-      const statement = sampleText(w, h, dpr, true);
+      // A static hero never morphs, so the statement shape is dead weight there.
+      const statement = staticMode ? name : sampleText(w, h, dpr, true);
       const sampledCount = Math.max(name.pts.length, statement.pts.length);
-      const count = Math.min(sampledCount, rect.width < 640 ? (staticMode ? 1600 : 3200) : 7000);
+      // Capping the animated hero keeps the per-frame cost down. A static one is
+      // drawn once, so a cap buys no battery and only breaks up the letterforms.
+      const count = Math.min(sampledCount, staticMode ? sampledCount : rect.width < 640 ? 3200 : 7000);
       // Slightly larger points retain the letter density with fewer particles.
       radius = Math.min(Math.min(name.step, statement.step) * 0.36 * Math.sqrt(sampledCount / Math.max(1, count)), 2.4 * dpr);
       const scale = Math.min(w * 0.38, h * 0.62);
@@ -264,6 +270,19 @@ export default function NameParticles({ ready = true, onSettled }) {
         if (staticMode) draw();
       }, 100);
     }
+    // Switching between the animated and static hero changes the particle
+    // budget, so rebuild rather than letting the old set drift on screen.
+    function onModeChange() {
+      const next = reducedQuery.matches || staticQuery.matches;
+      if (next === staticMode) return;
+      staticMode = next;
+      if (!initialized || !alive) return;
+      build(true);
+      if (staticMode) draw();
+      sync();
+    }
+    reducedQuery.addEventListener?.("change", onModeChange);
+    staticQuery.addEventListener?.("change", onModeChange);
     const intersection = typeof IntersectionObserver === "undefined" ? null : new IntersectionObserver(([entry]) => {
       onScreen = entry.isIntersecting;
       sync();
@@ -282,6 +301,8 @@ export default function NameParticles({ ready = true, onSettled }) {
       clearTimeout(resizeTimer);
       intersection?.disconnect();
       resizeObserver?.disconnect();
+      reducedQuery.removeEventListener?.("change", onModeChange);
+      staticQuery.removeEventListener?.("change", onModeChange);
       window.removeEventListener("resize", onResize);
       canvas.removeEventListener("pointermove", onMove);
       canvas.removeEventListener("pointerleave", onLeave);

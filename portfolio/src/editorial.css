@@ -35,7 +35,15 @@
 .ed-hero-edge { display: flex; justify-content: space-between; gap: 20px; font: .56rem/1.5 var(--font-mono); letter-spacing: .06em; padding-block: 17px; border-top: 1px solid var(--ed-rule); }
 .ed-hero-edge span:first-child { background: var(--ed-deep); color: var(--ed-ivory); border-bottom: 3px solid var(--ed-coral); padding: 5px 9px; margin-top: -5px; }
 .ed-static-statement { max-width: 34ch; font: 500 1.5rem/1.35 var(--font-display); text-align: center; margin: 0 auto 18px; }
+/* The canvas only morphs the name into the positioning statement when it
+   animates. Wherever NameParticles falls back to a static name — narrow
+   screens and any coarse pointer, tablets included — the statement has to be
+   read out as ordinary text instead, so this condition must stay in step with
+   the phoneStatic query in NameParticles.jsx. */
 .ed-mobile-statement { display: none; }
+@media (max-width: 640px), (pointer: coarse) {
+  .ed-mobile-statement { display: block; max-width: 30ch; margin: -4px auto 10px; text-align: center; font: 600 .86rem/1.45 var(--font-display); color: var(--ed-blue); }
+}
 .ed-intro { padding-block: 100px 60px; }
 .ed-intro-grid { display: grid; grid-template-columns: 1fr 1.8fr; gap: 70px; padding-top: 28px; border-top: 1px solid var(--ed-rule); }
 .ed-intro-copy { font: 550 clamp(2rem,4.2vw,3.4rem)/1.12 var(--font-body); letter-spacing: -.06em; margin-bottom: 24px; }
@@ -62,7 +70,6 @@ a:hover .ed-project-image { transform: scale(1.025); }
 .ed-plate-app .ed-project-image { object-fit: contain; padding: 24px; }
 .ed-plate-caption { position: absolute; bottom: 14px; left: 14px; max-width: calc(100% - 28px); background: var(--ed-ivory); color: var(--ed-blue); padding: 6px 12px; font: .5rem/1.5 var(--font-mono); text-transform: uppercase; letter-spacing: .07em; }
 .ed-study-plate { display: flex; flex-direction: column; padding: 30px; background: var(--ed-blue); color: var(--ed-ivory); }
-.ed-study-coral { background: var(--ed-coral); color: var(--ed-ivory); }
 .ed-plate-top { display: flex; justify-content: space-between; gap: 10px; font: .5rem var(--font-mono); text-transform: uppercase; letter-spacing: .1em; padding-bottom: 16px; border-bottom: 1px solid currentColor; }
 .ed-plate-top span:last-child { font-size: 1rem; }
 .ed-study-result { flex: 1; display: flex; flex-direction: column; justify-content: center; padding-block: 25px; }
@@ -336,7 +343,6 @@ a:hover .ed-project-icon { transform: translate(-50%,-54%) rotate(0); }
 @media (max-width: 640px) {
  .ed-scroll-progress { top: 63px; }
  .ed-nav-links .ed-nav-command { display: none; }
- .ed-mobile-statement { display: block; max-width: 30ch; margin: -4px auto 10px; text-align: center; font: 600 .86rem/1.45 var(--font-display); color: var(--ed-blue); }
  .ed-section-heading h2 { font-size: clamp(4.2rem,17vw,5.2rem); }
  .ed-feature, .ed-feature-reverse { grid-template-columns: 1fr; gap: 24px; margin-bottom: 65px; }
  .ed-feature-body h3 { font-size: clamp(3.5rem,14vw,4.4rem); }
