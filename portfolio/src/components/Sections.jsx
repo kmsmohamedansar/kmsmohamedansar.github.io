@@ -1,9 +1,9 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion, useReducedMotion, useInView } from "framer-motion";
-import { ArrowDown, ArrowRight, ArrowUpRight, ExternalLink, Info, Mail } from "lucide-react";
+import { ArrowDown, ArrowLeft, ArrowRight, ArrowUpRight, ExternalLink, Info, Mail } from "lucide-react";
 import NameParticles from "./NameParticles";
 import { ABOUT, CONTACT, HERO, RECEIPTS, ROLES } from "../data/content";
-import { EARLIER_PROJECTS, EXPERIMENTS, FEATURED, FEATURED_GRID, LISTED_PROJECTS, MORE_PROJECTS } from "../data/projects";
+import { EARLIER_PROJECTS, EXPERIMENTS, FEATURED, FEATURED_GRID, LISTED_PROJECTS, MORE_PROJECTS, OPEN_SOURCE_PROJECTS } from "../data/projects";
 import { TOOL_INFO } from "../data/tools";
 import { EASE_REVEAL } from "../lib/motion";
 import { media } from "../lib/media";
@@ -30,6 +30,7 @@ const BUILT = [
   ["Sitescout", "TypeScript", "a Chrome extension"],
   ["Integration-in-a-box", "Keycloak", "a working integration"],
   ["My Take on Jev", "Python", "an AI study"],
+  ["StoryEra", "Codex", "a skill for writers"],
   ["my digital double", "Claude Code", "a 3D head"],
   ["a catalogue checker", "embeddings", "a data quality check"],
   ["a weekly data delivery", "DuckDB", "a pipeline that stops itself"],
@@ -172,6 +173,59 @@ function FeaturedSpread({ project, index }) {
     </div>
   </Enter>;
 }
+
+// A manually controlled feature: each project keeps its own artwork, evidence
+// and detail route. There is no timer competing with reading or keyboard focus.
+function OpenSourceSpotlight() {
+  const reduced = useReducedMotion();
+  const [active, setActive] = useState(() => Math.max(0, OPEN_SOURCE_PROJECTS.findIndex((p) => window.location.hash === `#card-${p.slug}`)));
+  const tabs = useRef([]);
+  const project = OPEN_SOURCE_PROJECTS[active];
+
+  useEffect(() => {
+    const selectLinkedProject = () => {
+      const index = OPEN_SOURCE_PROJECTS.findIndex((p) => window.location.hash === `#card-${p.slug}`);
+      if (index !== -1) setActive(index);
+    };
+    window.addEventListener("hashchange", selectLinkedProject);
+    return () => window.removeEventListener("hashchange", selectLinkedProject);
+  }, []);
+
+  const select = (index, focus = false) => {
+    const next = (index + OPEN_SOURCE_PROJECTS.length) % OPEN_SOURCE_PROJECTS.length;
+    setActive(next);
+    if (focus) tabs.current[next]?.focus();
+  };
+  const onTabKey = (event) => {
+    const next = { ArrowRight: active + 1, ArrowLeft: active - 1, Home: 0, End: OPEN_SOURCE_PROJECTS.length - 1 }[event.key];
+    if (next === undefined) return;
+    event.preventDefault();
+    select(next, true);
+  };
+
+  return <Enter className="ed-open-source" >
+    <div className="ed-open-source-heading">
+      <div><p className="ed-label"><span>01</span>Open source & experiments</p><h3>Ideas worth <em>trying.</em></h3></div>
+      <p>Studies I ran. Skills I built.<br />Code and findings you can inspect.</p>
+    </div>
+    <div className="ed-open-source-toolbar">
+      <div className="ed-open-source-tabs" role="tablist" aria-label="Open source projects" onKeyDown={onTabKey}>
+        {OPEN_SOURCE_PROJECTS.map((item, index) => <button key={item.slug} ref={(node) => { tabs.current[index] = node; }} type="button" role="tab" id={`open-source-tab-${item.slug}`} aria-controls="open-source-panel" aria-selected={active === index} tabIndex={active === index ? 0 : -1} onClick={() => select(index)}><span>{String(index + 1).padStart(2, "0")}</span>{item.title}</button>)}
+      </div>
+      <div className="ed-open-source-controls"><span aria-hidden="true">{String(active + 1).padStart(2, "0")} / {String(OPEN_SOURCE_PROJECTS.length).padStart(2, "0")}</span><button type="button" aria-label="Previous open source project" onClick={() => select(active - 1)}><ArrowLeft size={19} aria-hidden="true" /></button><button type="button" aria-label="Next open source project" onClick={() => select(active + 1)}><ArrowRight size={19} aria-hidden="true" /></button></div>
+    </div>
+    <p className="sr-only" role="status" aria-atomic="true">{project.title}, project {active + 1} of {OPEN_SOURCE_PROJECTS.length}</p>
+    <div id="open-source-panel" role="tabpanel" aria-labelledby={`open-source-tab-${project.slug}`} tabIndex={0}>
+      <motion.div key={project.slug} className="ed-open-source-slide" initial={reduced ? false : { opacity: 0, x: 10 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.18 }}>
+        <a id={`card-${project.slug}`} href={`#project/${project.slug}`} aria-label={`Read ${project.title}`} className="ed-feature-image" data-cursor="View"><ProjectPlate project={project} /></a>
+        <div className="ed-feature-body"><p className="ed-label">{project.kind}</p><h3><a href={`#project/${project.slug}`} aria-label={project.title}><PunchTitle text={project.title} /></a></h3><p className="ed-copy">{project.hook}</p><p className="ed-project-status">{project.status}</p>
+          {project.stats && <dl className="ed-project-stats">{project.stats.map((stat) => <div key={stat.label}><dt>{stat.value}</dt><dd>{stat.short || stat.label}</dd></div>)}</dl>}
+          <div className="ed-open-source-links"><ArrowLink href={`#project/${project.slug}`}>Read the story</ArrowLink>{project.spotlightLink && <ArrowLink href={project.spotlightLink.href}>{project.spotlightLink.label}</ArrowLink>}</div>
+        </div>
+      </motion.div>
+    </div>
+  </Enter>;
+}
 function ProjectTile({ project, index }) {
   return <Enter delay={(index % 2) * 0.08} className="ed-project-tile">
     <a id={`card-${project.slug}`} href={`#project/${project.slug}`} data-cursor="View"><ProjectPlate project={project} compact /><div className="ed-tile-heading"><h3 aria-label={project.title}><PunchTitle text={project.title} /></h3><ArrowUpRight size={26} aria-hidden="true" /></div><p className="ed-copy">{firstSentence(project.hook)}</p><p className="ed-tile-tags">{project.tags.slice(0, 3).join(" / ")}</p></a>
@@ -181,7 +235,7 @@ export function ProjectsSection() {
   return <section id="projects" className="ed-projects ed-light ed-section">
     <div className="ed-section-watermark" aria-hidden="true">PROJECTS</div>
     <div className="ed-wrap"><Enter className="ed-section-heading"><div><IndexLabel number="02">Selected projects</IndexLabel><h2>Things I’ve <em>built.</em></h2></div><div className="ed-heading-aside"><p>Apps, data systems, and questions I wanted to test for myself.</p><ArrowLink href="#work">The full project index</ArrowLink></div></Enter>
-      <div className="ed-feature-list">{FEATURED.map((project, i) => <FeaturedSpread key={project.slug} project={project} index={i} />)}</div>
+      <div className="ed-feature-list"><OpenSourceSpotlight />{FEATURED.map((project, i) => <FeaturedSpread key={project.slug} project={project} index={i + 1} />)}</div>
       <div className="ed-grid-heading"><h3>More from the workbench.</h3><span>Keep exploring ↘</span></div>
       <div className="ed-project-grid">{FEATURED_GRID.map((project, i) => <ProjectTile key={project.slug} project={project} index={i} />)}</div>
       <div className="ed-work-list"><IndexLabel number="↳">Behind the scenes</IndexLabel><p className="ed-copy">Professional work is described without client names or private data. Public practice versions use unrelated public or sample data.</p>

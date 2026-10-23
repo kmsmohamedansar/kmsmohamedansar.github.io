@@ -3,6 +3,14 @@
 // `stackUsage` in projects.js; this file says what each tool is in general.
 
 export const TOOL_INFO = {
+  "Agent Skills": "Reusable instructions and supporting files that teach an existing AI agent a specific workflow. A skill is not a separate AI model.",
+  Codex: "OpenAI's agent for working with files and code. Skills can give it a repeatable workflow such as checking a novel's continuity.",
+  Markdown: "A plain-text format for headings, links, lists and other document structure. StoryEra uses it for instructions, chapters and documentation.",
+  "Claude Sonnet 5.5": "The Claude model named in the REA study's recorded setup. The study kept the same model across the tool comparisons.",
+  REA: "The reverse-engineering tool evaluated in this portfolio. It gives an agent tools to inspect compiled programs through a decompiler.",
+  Ghidra: "A software analysis toolkit that can reconstruct approximate source code from a compiled program. REA uses it in this study.",
+  C: "A compiled programming language used here to write small programs with known behavior for the REA tests.",
+  Go: "A compiled programming language. The REA study includes Go programs to test how the tool handles their build details.",
   // Languages
   TypeScript: "JavaScript with labels on every piece of data (\"this is a number\", \"this might be missing\"), so many mistakes are caught before the code runs.",
   JavaScript: "The language every web browser runs. It makes web pages interactive.",
