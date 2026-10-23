@@ -1513,6 +1513,7 @@ export const EXPERIMENTS = [
     body: "It matches what you type against a few topics, so it isn't a chatbot, and that's the point. Short, honest answers, typed out one letter at a time.",
     href: "#emet",
     shot: "/shots/emet.webp",
+    cardArt: "/shots/project-covers/emet.webp",
     cta: "Open the terminal",
   },
   {
@@ -1523,6 +1524,7 @@ export const EXPERIMENTS = [
     body: "This one is pure curiosity. I wanted to see how far I could push three.js with an AI pair programmer, and it turned into several hundred lines of orbit maths and planet shaders.",
     href: "#explore",
     shot: "/shots/solar-system.webp",
+    cardArt: "/shots/project-covers/solar-system.webp",
     cta: "Take a look around",
   },
   {
@@ -1533,6 +1535,8 @@ export const EXPERIMENTS = [
     body: "Thousands of points drawn on the graphics card and held in a loop shape. It's the same kind of experiment: ask the AI, look at the result, push it further. Its dots now gather into my name at the top of the page.",
     href: "#infinity",
     shot: "/shots/infinity.webp",
+    cardArt: "/shots/project-covers/infinity.webp",
     cta: "See the infinity",
   },
 ];
+
