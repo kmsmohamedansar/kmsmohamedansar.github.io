@@ -64,6 +64,23 @@ button, a { font: inherit; }
 }
 
 .bb8-kicker, .bb8-status { display: flex; align-items: center; gap: 10px; }
+.bb8-header-actions { display: flex; align-items: center; gap: clamp(14px, 2vw, 30px); }
+.bb8-sound {
+  border: 1px solid rgba(255,255,255,.12);
+  border-radius: 999px;
+  padding: 8px 12px;
+  color: #8f9399;
+  background: rgba(7,9,13,.42);
+  font: inherit;
+  letter-spacing: inherit;
+  text-transform: inherit;
+  cursor: pointer;
+}
+.bb8-sound b { color: var(--orange); font-weight: 500; }
+.bb8-sound:hover { border-color: rgba(237,106,25,.55); color: #d7d8da; }
+.bb8-sound[aria-pressed="true"] { border-color: rgba(126,214,154,.42); }
+.bb8-sound[aria-pressed="true"] b { color: #7ed69a; }
+.bb8-sound:disabled { cursor: default; opacity: .45; }
 .bb8-kicker span { width: 27px; height: 1px; background: var(--orange); }
 .bb8-status { color: #9ca0a7; }
 .bb8-status i { width: 6px; height: 6px; border-radius: 50%; background: #777; box-shadow: 0 0 0 4px rgba(255,255,255,.03); }

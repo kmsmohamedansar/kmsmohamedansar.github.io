@@ -25,6 +25,10 @@ export function createBB8Behavior({ container, camera, droid }) {
   let reactionDirection = 1;
   let pointerX = 0;
 
+  const emitSound = (cue) => {
+    container.dispatchEvent(new CustomEvent("bb8:sound", { detail: cue }));
+  };
+
   const readPointer = (event) => {
     const bounds = container.getBoundingClientRect();
     pointer.set(
@@ -55,10 +59,14 @@ export function createBB8Behavior({ container, camera, droid }) {
     const screenY = bounds.top + (1 - droidScreen.y) * 0.5 * bounds.height;
     const nearDroid = Math.hypot(event.clientX - screenX, event.clientY - screenY) < Math.min(bounds.width, bounds.height) * 0.24;
 
-    if (hitsDroid()) curiousUntil = now + CURIOUS_MEMORY;
+    if (hitsDroid()) {
+      if (now >= curiousUntil) emitSound("curious");
+      curiousUntil = now + CURIOUS_MEMORY;
+    }
     if (speed > 1050 && nearDroid && now - alertStartedAt > 1400) {
       alertStartedAt = now;
       reactionDirection = event.clientX < screenX ? 1 : -1;
+      emitSound("alert");
     }
 
     previousPointer.set(event.clientX, event.clientY);
@@ -72,6 +80,7 @@ export function createBB8Behavior({ container, camera, droid }) {
     startleStartedAt = performance.now();
     reactionDirection = pointer.x < 0 ? 1 : -1;
     curiousUntil = 0;
+    emitSound("startle");
   };
 
   container.addEventListener("pointermove", onPointerMove, { passive: true });
@@ -115,6 +124,7 @@ export function createBB8Behavior({ container, camera, droid }) {
       if (now >= nextScanAt) {
         scanStartedAt = now;
         nextScanAt = now + SCAN_DURATION + randomBetween(5200, 9200);
+        emitSound("scan");
       }
       const scanProgress = (now - scanStartedAt) / SCAN_DURATION;
       if (scanProgress >= 0 && scanProgress < 1) {

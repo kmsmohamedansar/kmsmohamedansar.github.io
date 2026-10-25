@@ -3,23 +3,39 @@ import { createBB8Scene } from "./createBB8Scene";
 
 export default function BB8Experience() {
   const viewportRef = useRef(null);
+  const experienceRef = useRef(null);
   const [ready, setReady] = useState(false);
+  const [soundEnabled, setSoundEnabled] = useState(false);
 
   useEffect(() => {
     const viewport = viewportRef.current;
     if (!viewport) return undefined;
 
     const experience = createBB8Scene(viewport);
+    experienceRef.current = experience;
     setReady(true);
-    return () => experience.dispose();
+    return () => {
+      experienceRef.current = null;
+      experience.dispose();
+    };
   }, []);
+
+  const toggleSound = async () => {
+    const enabled = await experienceRef.current?.sound.setEnabled(!soundEnabled);
+    setSoundEnabled(Boolean(enabled));
+  };
 
   return (
     <main className="bb8-page">
       <div className="bb8-ambient" aria-hidden="true" />
       <header className="bb8-header">
         <div className="bb8-kicker"><span /> Droid study 001</div>
-        <div className="bb8-status"><i className={ready ? "is-ready" : ""} /> {ready ? "Scene online" : "Initializing"}</div>
+        <div className="bb8-header-actions">
+          <button className="bb8-sound" type="button" aria-pressed={soundEnabled} onClick={toggleSound} disabled={!ready}>
+            Sound <b>{soundEnabled ? "on" : "off"}</b>
+          </button>
+          <div className="bb8-status"><i className={ready ? "is-ready" : ""} /> {ready ? "Scene online" : "Initializing"}</div>
+        </div>
       </header>
 
       <section className="bb8-copy" aria-labelledby="bb8-title">

@@ -44,6 +44,11 @@ export function createBB8Locomotion({ container, camera, droid, body, contactSha
   let hasDestination = false;
   let pointerStart = null;
   let travelYaw = null;
+  let wasMoving = false;
+
+  const emitSound = (cue) => {
+    container.dispatchEvent(new CustomEvent("bb8:sound", { detail: cue }));
+  };
 
   const updateShadow = () => {
     contactShadow.position.x = droid.position.x;
@@ -135,6 +140,11 @@ export function createBB8Locomotion({ container, camera, droid, body, contactSha
       const response = changingDirection ? ACCELERATION : BRAKING;
       velocity.x = moveToward(velocity.x, desiredVelocity.x, response * delta);
       velocity.z = moveToward(velocity.z, desiredVelocity.z, response * delta);
+
+      const moving = velocity.lengthSq() > 0.0025;
+      if (moving && !wasMoving) emitSound("roll");
+      if (!moving && wasMoving) emitSound("arrive");
+      wasMoving = moving;
 
       displacement.copy(velocity).multiplyScalar(delta);
       if (displacement.lengthSq() < 0.0000001) {
