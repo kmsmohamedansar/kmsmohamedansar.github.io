@@ -1,6 +1,7 @@
 import * as THREE from "three";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 import { createBB8Animator } from "./createBB8Animator";
+import { createBB8Behavior } from "./createBB8Behavior";
 import { createBB8Locomotion } from "./createBB8Locomotion";
 
 const COLORS = {
@@ -156,15 +157,23 @@ function createHead(materials) {
   sidePanel.rotation.y = Math.PI / 2;
   head.add(sidePanel);
 
+  const tallAntennaRig = new THREE.Group();
+  tallAntennaRig.name = "BB8_ANTENNA_TALL";
+  tallAntennaRig.position.set(0.16, 1, 0.02);
+  tallAntennaRig.rotation.z = -0.025;
   const antennaTall = mesh(new THREE.CylinderGeometry(0.014, 0.018, 0.75, 10), materials.porcelainShade);
-  antennaTall.position.set(0.16, 1.38, 0.02);
-  antennaTall.rotation.z = -0.025;
+  antennaTall.position.y = 0.38;
   const antennaTip = mesh(new THREE.CylinderGeometry(0.018, 0.014, 0.13, 10), materials.graphite);
-  antennaTip.position.set(0.17, 1.81, 0.02);
+  antennaTip.position.set(0.01, 0.81, 0);
+  tallAntennaRig.add(antennaTall, antennaTip);
+  const shortAntennaRig = new THREE.Group();
+  shortAntennaRig.name = "BB8_ANTENNA_SHORT";
+  shortAntennaRig.position.set(-0.18, 1.02, -0.01);
+  shortAntennaRig.rotation.z = 0.035;
   const antennaShort = mesh(new THREE.CylinderGeometry(0.012, 0.016, 0.46, 10), materials.graphite);
-  antennaShort.position.set(-0.18, 1.25, -0.01);
-  antennaShort.rotation.z = 0.035;
-  head.add(antennaTall, antennaTip, antennaShort);
+  antennaShort.position.y = 0.23;
+  shortAntennaRig.add(antennaShort);
+  head.add(tallAntennaRig, shortAntennaRig);
 
   return head;
 }
@@ -250,7 +259,8 @@ export function createBB8Scene(container) {
   controls.enablePan = false;
 
   const locomotion = createBB8Locomotion({ container, camera, droid, body, contactShadow });
-  const animator = createBB8Animator({ container, camera, droid, head, controls, locomotion });
+  const behavior = createBB8Behavior({ container, camera, droid });
+  const animator = createBB8Animator({ container, camera, droid, head, controls, locomotion, behavior });
 
   const resize = () => {
     const width = Math.max(container.clientWidth, 1);
@@ -285,6 +295,7 @@ export function createBB8Scene(container) {
       cancelAnimationFrame(frameId);
       observer.disconnect();
       locomotion.dispose();
+      behavior.dispose();
       animator.dispose();
       controls.dispose();
       scene.traverse((object) => {

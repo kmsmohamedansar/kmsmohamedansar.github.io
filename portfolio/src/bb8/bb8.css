@@ -118,7 +118,7 @@ button, a { font: inherit; }
   text-transform: uppercase;
 }
 .bb8-footer p { margin: 0; }
-.bb8-controls { display: flex; gap: clamp(20px, 3vw, 50px); }
+.bb8-controls { display: flex; flex-wrap: wrap; gap: 9px clamp(18px, 2.6vw, 44px); }
 .bb8-controls span { display: flex; gap: 9px; }
 .bb8-controls b { color: var(--orange); font-weight: 500; }
 

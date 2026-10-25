@@ -57,6 +57,8 @@ export function createBB8Locomotion({ container, camera, droid, body, contactSha
       -((event.clientY - bounds.top) / bounds.height) * 2 + 1,
     );
     raycaster.setFromCamera(pointer, camera);
+    droid.updateMatrixWorld(true);
+    if (raycaster.intersectObject(droid, true).length > 0) return;
     if (!raycaster.ray.intersectPlane(groundPlane, hit)) return;
     destination.set(hit.x, 0, hit.z);
     clampToArena(destination);
