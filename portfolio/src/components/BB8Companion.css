@@ -1,21 +1,20 @@
 .bb8-edge {
   position: fixed;
   z-index: 60;
-  right: clamp(4px, 1.6vw, 24px);
-  bottom: 0;
-  width: min(290px, 42vw);
-  height: min(380px, 55vh);
+  top: 0;
+  left: 0;
+  width: min(230px, 34vw);
+  height: min(310px, 46vh);
   color: #e6d5bd;
   font-family: var(--font-mono);
   filter: drop-shadow(0 22px 24px rgb(0 0 0 / .38));
-  transition: transform .9s cubic-bezier(.22, .8, .2, 1), opacity .45s ease;
+  pointer-events: none;
+  will-change: transform, opacity;
+  transition: opacity .35s ease;
 }
 
-.bb8-edge--waiting,
-.bb8-edge--leaving {
+.bb8-edge--waiting {
   opacity: 0;
-  transform: translateY(108%);
-  pointer-events: none;
 }
 
 .bb8-edge--route-hidden {
@@ -24,16 +23,36 @@
   pointer-events: none;
 }
 
-.bb8-edge--peeking { opacity: 1; transform: translateY(56%); }
-.bb8-edge--observing { opacity: 1; transform: translateY(3%); }
+.bb8-edge--peeking,
+.bb8-edge--traveling,
+.bb8-edge--observing,
+.bb8-edge--leaving { opacity: 1; }
 
 .bb8-edge-character,
 .bb8-edge-viewport { position: absolute; inset: 0; }
 .bb8-edge-character { transform-origin: 60% 100%; }
-.bb8-edge-viewport { cursor: pointer; touch-action: none; }
+.bb8-edge-viewport { pointer-events: none; touch-action: none; }
 .bb8-edge-viewport:focus { outline: none; }
 .bb8-edge-viewport:focus-visible { border-radius: 50%; box-shadow: inset 0 0 0 1px rgb(237 106 25 / .75); }
-.bb8-edge-viewport canvas { display: block; width: 100%; height: 100%; }
+.bb8-edge-viewport canvas { position: absolute; z-index: 0; inset: 0; display: block; width: 100%; height: 100%; pointer-events: none; }
+.bb8-edge-hit-target {
+  position: absolute;
+  z-index: 2;
+  top: 22%;
+  right: 12%;
+  bottom: 2%;
+  left: 18%;
+  border: 0;
+  border-radius: 48% 48% 44% 44%;
+  background: transparent;
+  pointer-events: auto;
+  cursor: pointer;
+}
+.bb8-edge-hit-target:focus { outline: none; }
+.bb8-edge-hit-target:focus-visible { box-shadow: 0 0 0 2px rgb(237 106 25 / .82); }
+.bb8-edge--waiting .bb8-edge-hit-target,
+.bb8-edge--leaving .bb8-edge-hit-target,
+.bb8-edge--route-hidden .bb8-edge-hit-target { pointer-events: none; }
 
 .bb8-edge-controls {
   position: absolute;
@@ -45,7 +64,12 @@
   opacity: 0;
   transform: translateY(5px);
   transition: opacity .2s ease, transform .2s ease;
+  pointer-events: none;
 }
+
+.bb8-edge--peeking .bb8-edge-controls,
+.bb8-edge--traveling .bb8-edge-controls,
+.bb8-edge--observing .bb8-edge-controls { pointer-events: auto; }
 
 .bb8-edge:hover .bb8-edge-controls,
 .bb8-edge:focus-within .bb8-edge-controls { opacity: 1; transform: translateY(0); }
@@ -62,6 +86,8 @@
 }
 
 .bb8-edge--fallback {
+  top: auto;
+  left: auto;
   right: clamp(12px, 2vw, 28px);
   bottom: clamp(12px, 2vw, 28px);
   width: 174px;
@@ -76,6 +102,7 @@
   background: rgb(9 11 14 / .88);
   filter: none;
   backdrop-filter: blur(12px);
+  pointer-events: auto;
 }
 
 .bb8-edge--fallback p { margin: 0; color: #d9d4c9; font-size: .48rem; line-height: 1.4; }
@@ -140,9 +167,13 @@
   opacity: 0;
   transform: translateY(6px) scale(.96);
   transition: opacity .25s ease .48s, transform .3s ease .48s;
-  pointer-events: auto;
+  pointer-events: none;
   backdrop-filter: blur(12px);
 }
+
+.bb8-edge--traveling .bb8-edge-bubble { opacity: 0; pointer-events: none; }
+.bb8-edge--ui-right .bb8-edge-bubble { right: auto; left: 44px; border-radius: 13px 13px 13px 3px; }
+.bb8-edge--ui-right .bb8-edge-bubble::after { right: auto; left: 9px; }
 
 .bb8-edge-bubble::after {
   content: "";
@@ -158,7 +189,7 @@
 }
 
 .bb8-edge--peeking .bb8-edge-bubble,
-.bb8-edge--observing .bb8-edge-bubble { opacity: 1; transform: translateY(0) scale(1); }
+.bb8-edge--observing .bb8-edge-bubble { opacity: 1; transform: translateY(0) scale(1); pointer-events: auto; }
 .bb8-edge--guide-open .bb8-edge-bubble { opacity: 0; pointer-events: none; }
 .bb8-edge-bubble span { display: block; }
 .bb8-edge-bubble button {
@@ -192,6 +223,8 @@
 .bb8-edge--mischief.bb8-edge--observing .bb8-edge-character { animation: bb8-mischief 1.35s ease-in-out 2; }
 
 .bb8-edge--reduced {
+  top: auto;
+  left: auto;
   width: auto;
   height: auto;
   right: clamp(12px, 2vw, 28px);
@@ -206,6 +239,7 @@
   font-size: .48rem;
   letter-spacing: .1em;
   text-transform: uppercase;
+  pointer-events: auto;
 }
 
 .bb8-edge-guide {
@@ -222,7 +256,10 @@
   box-shadow: 0 24px 60px rgb(0 0 0 / .42);
   animation: bb8-guide-enter .32s cubic-bezier(.22, .8, .2, 1) both;
   backdrop-filter: blur(16px);
+  pointer-events: auto;
 }
+
+.bb8-edge--ui-right .bb8-edge-guide { right: auto; left: calc(100% - 18px); }
 
 .bb8-edge-guide-heading {
   display: flex;
@@ -284,11 +321,12 @@
 }
 
 @media (max-width: 720px) {
-  .bb8-edge { width: min(230px, 58vw); height: min(310px, 48vh); }
-  .bb8-edge--peeking { transform: translateY(59%); }
-  .bb8-edge-bubble { right: 22px; max-width: 175px; font-size: .48rem; }
+  .bb8-edge { width: min(190px, 50vw); height: min(260px, 42vh); }
+  .bb8-edge-bubble { right: 18px; max-width: 150px; font-size: .48rem; }
+  .bb8-edge--ui-right .bb8-edge-bubble { right: auto; left: 22px; }
   .bb8-edge-controls { top: 55px; right: 0; }
-  .bb8-edge-guide { right: 5px; bottom: 184px; width: min(230px, calc(100vw - 24px)); }
+  .bb8-edge-guide,
+  .bb8-edge--ui-right .bb8-edge-guide { right: 0; bottom: 154px; left: auto; width: min(190px, calc(100vw - 24px)); }
 }
 
 @media (hover: none) {
@@ -298,7 +336,6 @@
 
 @media (prefers-reduced-motion: reduce) {
   .bb8-edge { transition: none; }
-  .bb8-edge--observing { transform: translateY(3%); }
   .bb8-edge--mischief.bb8-edge--observing .bb8-edge-character,
   .bb8-edge-zzzs span,
   .bb8-edge-guide { animation: none; }

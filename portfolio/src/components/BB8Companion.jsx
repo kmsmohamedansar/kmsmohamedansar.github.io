@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useRoute } from "../App";
 import { createBB8Scene } from "../bb8/createBB8Scene";
+import { createBB8Roaming } from "./createBB8Roaming";
 import "./BB8Companion.css";
 
 const MAX_APPEARANCES = 5;
@@ -56,9 +57,12 @@ function randomDelay() {
 export default function BB8Companion() {
   const { route } = useRoute();
   const routeHidden = HIDDEN_ROUTES.has(route);
+  const edgeRef = useRef(null);
   const viewportRef = useRef(null);
+  const hitTargetRef = useRef(null);
   const guideRef = useRef(null);
   const experienceRef = useRef(null);
+  const roamingRef = useRef(null);
   const firstAppearance = useRef(true);
   const [appearances, setAppearances] = useState(() => readSessionNumber("bb8-appearances"));
   const [reducedMotion, setReducedMotion] = useState(() => window.matchMedia("(prefers-reduced-motion: reduce)").matches);
@@ -105,6 +109,32 @@ export default function BB8Companion() {
   }, [started, dismissed, renderFailed]);
 
   useEffect(() => {
+    if (!started || dismissed || renderFailed || !edgeRef.current) return undefined;
+    const roaming = createBB8Roaming(edgeRef.current, {
+      reducedMotion,
+      onWaypoint: () => setPhase((current) => current === "traveling" ? "observing" : current),
+      onExit: () => setPhase((current) => current === "leaving" ? "waiting" : current),
+    });
+    roamingRef.current = roaming;
+    return () => {
+      roamingRef.current = null;
+      roaming.dispose();
+    };
+  }, [dismissed, reducedMotion, renderFailed, started]);
+
+  useEffect(() => {
+    const roaming = roamingRef.current;
+    if (!roaming) return;
+    roaming.setPaused(routeHidden);
+    if (routeHidden) return;
+    if (reducedMotion) roaming.showStatic();
+    else if (phase === "peeking") roaming.peek();
+    else if (phase === "traveling") roaming.travel();
+    else if (phase === "observing") roaming.hold();
+    else if (phase === "leaving") roaming.leave();
+  }, [phase, reducedMotion, routeHidden]);
+
+  useEffect(() => {
     const updatePlayback = () => experienceRef.current?.setPaused(phase === "waiting" || routeHidden || document.hidden);
     updatePlayback();
     document.addEventListener("visibilitychange", updatePlayback);
@@ -143,14 +173,9 @@ export default function BB8Companion() {
     if (guideOpen) return undefined;
     let timer;
     if (phase === "peeking") {
-      timer = window.setTimeout(
-        () => setPhase(routine === "guide" || routine === "mischief" ? "observing" : "leaving"),
-        routine === "guide" || routine === "mischief" ? 1500 : 5200,
-      );
+      timer = window.setTimeout(() => setPhase("traveling"), 2800);
     } else if (phase === "observing") {
       timer = window.setTimeout(() => setPhase("leaving"), routine === "mischief" ? 5600 : 7200);
-    } else if (phase === "leaving") {
-      timer = window.setTimeout(() => setPhase("waiting"), 950);
     }
     return () => window.clearTimeout(timer);
   }, [guideOpen, phase, reducedMotion, routine]);
@@ -161,7 +186,7 @@ export default function BB8Companion() {
     const closeOnEscape = (event) => {
       if (event.key !== "Escape") return;
       setGuideOpen(false);
-      viewportRef.current?.focus({ preventScroll: true });
+      hitTargetRef.current?.focus({ preventScroll: true });
     };
     window.addEventListener("keydown", closeOnEscape);
     return () => window.removeEventListener("keydown", closeOnEscape);
@@ -218,11 +243,12 @@ export default function BB8Companion() {
     );
   }
 
-  const active = phase === "peeking" || phase === "observing";
+  const active = phase === "peeking" || phase === "traveling" || phase === "observing";
   const copy = ROUTINE_COPY[routine];
 
   return (
     <aside
+      ref={edgeRef}
       className={`bb8-edge bb8-edge--${phase} bb8-edge--${routine}${guideOpen ? " bb8-edge--guide-open" : ""}${routeHidden ? " bb8-edge--route-hidden" : ""}`}
       aria-label="BB-8 portfolio companion"
       aria-hidden={routeHidden || undefined}
@@ -245,7 +271,7 @@ export default function BB8Companion() {
               type="button"
               onClick={() => {
                 setGuideOpen(false);
-                window.requestAnimationFrame(() => viewportRef.current?.focus({ preventScroll: true }));
+                window.requestAnimationFrame(() => hitTargetRef.current?.focus({ preventScroll: true }));
               }}
               aria-label="Close portfolio guide"
             >×</button>
@@ -270,23 +296,26 @@ export default function BB8Companion() {
         <div
           ref={viewportRef}
           className="bb8-edge-viewport"
-          role="button"
-          tabIndex={active ? 0 : -1}
-          aria-hidden={!active}
-          aria-label="Open BB-8 portfolio guide"
-          aria-expanded={guideOpen}
-          aria-controls={guideOpen ? "bb8-portfolio-guide" : undefined}
-          onClick={openGuide}
           onPointerEnter={() => {
             if (phase === "peeking" && routine === "peek") setPhase("observing");
           }}
-          onKeyDown={(event) => {
-            if (event.key !== "Enter" && event.key !== " ") return;
-            event.preventDefault();
-            experienceRef.current?.react();
-            openGuide();
-          }}
-        />
+        >
+          <button
+            ref={hitTargetRef}
+            type="button"
+            className="bb8-edge-hit-target"
+            tabIndex={active ? 0 : -1}
+            aria-hidden={!active}
+            aria-label="Open BB-8 portfolio guide"
+            aria-expanded={guideOpen}
+            aria-controls={guideOpen ? "bb8-portfolio-guide" : undefined}
+            onClick={openGuide}
+            onKeyDown={(event) => {
+              if (event.key !== "Enter" && event.key !== " ") return;
+              experienceRef.current?.react();
+            }}
+          />
+        </div>
       </div>
     </aside>
   );
