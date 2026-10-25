@@ -29,6 +29,13 @@ export function createBB8Behavior({ container, camera, droid }) {
     container.dispatchEvent(new CustomEvent("bb8:sound", { detail: cue }));
   };
 
+  const triggerStartle = (direction = 1) => {
+    startleStartedAt = performance.now();
+    reactionDirection = direction;
+    curiousUntil = 0;
+    emitSound("startle");
+  };
+
   const readPointer = (event) => {
     const bounds = container.getBoundingClientRect();
     pointer.set(
@@ -77,16 +84,16 @@ export function createBB8Behavior({ container, camera, droid }) {
     if (event.button !== 0) return;
     readPointer(event);
     if (!hitsDroid()) return;
-    startleStartedAt = performance.now();
-    reactionDirection = pointer.x < 0 ? 1 : -1;
-    curiousUntil = 0;
-    emitSound("startle");
+    triggerStartle(pointer.x < 0 ? 1 : -1);
   };
 
   container.addEventListener("pointermove", onPointerMove, { passive: true });
   container.addEventListener("pointerdown", onPointerDown);
 
   return {
+    react() {
+      triggerStartle(Math.random() > 0.5 ? 1 : -1);
+    },
     getPose(elapsed, now = performance.now()) {
       if (motionQuery.matches) return null;
 

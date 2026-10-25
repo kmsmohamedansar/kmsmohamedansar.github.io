@@ -195,6 +195,11 @@ function createMaterials() {
 
 export function createBB8Scene(container, { variant = "preview" } = {}) {
   const companion = variant === "companion";
+  const constrainedDevice = companion && (
+    (navigator.deviceMemory && navigator.deviceMemory <= 4)
+    || (navigator.hardwareConcurrency && navigator.hardwareConcurrency <= 4)
+    || window.matchMedia("(max-width: 720px)").matches
+  );
   const scene = new THREE.Scene();
   if (!companion) scene.fog = new THREE.FogExp2(0x07090d, 0.055);
 
@@ -202,7 +207,7 @@ export function createBB8Scene(container, { variant = "preview" } = {}) {
   camera.position.set(companion ? 4 : 5.7, companion ? 3.25 : 3.85, companion ? 6.3 : 8.25);
 
   const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, powerPreference: "high-performance" });
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio, companion ? 1.5 : 2));
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, companion ? (constrainedDevice ? 1 : 1.35) : 2));
   renderer.shadowMap.enabled = true;
   renderer.shadowMap.type = THREE.PCFShadowMap;
   renderer.outputColorSpace = THREE.SRGBColorSpace;
@@ -240,7 +245,7 @@ export function createBB8Scene(container, { variant = "preview" } = {}) {
   const key = new THREE.DirectionalLight(0xfff1d8, 5.8);
   key.position.set(4.5, 7, 5.5);
   key.castShadow = true;
-  key.shadow.mapSize.set(1536, 1536);
+  key.shadow.mapSize.set(companion ? 1024 : 1536, companion ? 1024 : 1536);
   key.shadow.camera.left = -4;
   key.shadow.camera.right = 4;
   key.shadow.camera.top = 5;
@@ -275,8 +280,9 @@ export function createBB8Scene(container, { variant = "preview" } = {}) {
     camera.updateProjectionMatrix();
     renderer.setSize(width, height, false);
   };
-  const observer = new ResizeObserver(resize);
-  observer.observe(container);
+  const observer = typeof ResizeObserver === "undefined" ? null : new ResizeObserver(resize);
+  if (observer) observer.observe(container);
+  else window.addEventListener("resize", resize, { passive: true });
   resize();
 
   let frameId = 0;
@@ -299,6 +305,8 @@ export function createBB8Scene(container, { variant = "preview" } = {}) {
     body,
     head,
     sound,
+    react: behavior.react,
+    canvas: renderer.domElement,
     setPaused(paused) {
       if (paused && running) {
         running = false;
@@ -312,7 +320,8 @@ export function createBB8Scene(container, { variant = "preview" } = {}) {
     dispose() {
       running = false;
       cancelAnimationFrame(frameId);
-      observer.disconnect();
+      observer?.disconnect();
+      if (!observer) window.removeEventListener("resize", resize);
       locomotion.dispose();
       behavior.dispose();
       animator.dispose();

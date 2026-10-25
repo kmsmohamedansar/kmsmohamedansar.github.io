@@ -44,28 +44,53 @@ export default function BB8Companion() {
   const experienceRef = useRef(null);
   const firstAppearance = useRef(true);
   const [appearances, setAppearances] = useState(() => readSessionNumber("bb8-appearances"));
-  const [reducedMotion] = useState(() => window.matchMedia("(prefers-reduced-motion: reduce)").matches);
+  const [reducedMotion, setReducedMotion] = useState(() => window.matchMedia("(prefers-reduced-motion: reduce)").matches);
   const [dismissed, setDismissed] = useState(() => readSessionFlag("bb8-dismissed"));
   const [started, setStarted] = useState(false);
   const [phase, setPhase] = useState("waiting");
   const [routine, setRoutine] = useState("peek");
   const [soundEnabled, setSoundEnabled] = useState(false);
+  const [renderFailed, setRenderFailed] = useState(false);
 
   useEffect(() => {
-    if (!started || dismissed || !viewportRef.current) return undefined;
-    const experience = createBB8Scene(viewportRef.current, { variant: "companion" });
+    const query = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const updatePreference = (event) => setReducedMotion(event.matches);
+    query.addEventListener("change", updatePreference);
+    return () => query.removeEventListener("change", updatePreference);
+  }, []);
+
+  useEffect(() => {
+    if (!started || dismissed || renderFailed || !viewportRef.current) return undefined;
+    let experience;
+    try {
+      experience = createBB8Scene(viewportRef.current, { variant: "companion" });
+    } catch (error) {
+      console.warn("BB-8 companion could not start WebGL.", error);
+      setRenderFailed(true);
+      return undefined;
+    }
+
+    const onContextLost = (event) => {
+      event.preventDefault();
+      setRenderFailed(true);
+    };
+    experience.canvas.addEventListener("webglcontextlost", onContextLost);
     experienceRef.current = experience;
-    experience.setPaused(phase === "waiting");
+    experience.setPaused(phase === "waiting" || document.hidden);
     return () => {
       experienceRef.current = null;
+      experience.canvas.removeEventListener("webglcontextlost", onContextLost);
       experience.dispose();
     };
     // The Three.js scene should survive routine and phase changes.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [started, dismissed]);
+  }, [started, dismissed, renderFailed]);
 
   useEffect(() => {
-    experienceRef.current?.setPaused(phase === "waiting");
+    const updatePlayback = () => experienceRef.current?.setPaused(phase === "waiting" || document.hidden);
+    updatePlayback();
+    document.addEventListener("visibilitychange", updatePlayback);
+    return () => document.removeEventListener("visibilitychange", updatePlayback);
   }, [phase]);
 
   useEffect(() => {
@@ -141,6 +166,16 @@ export default function BB8Companion() {
 
   if (!started) return null;
 
+  if (renderFailed) {
+    return (
+      <aside className="bb8-edge bb8-edge--fallback" aria-label="BB-8 companion unavailable">
+        <div className="bb8-edge-fallback-droid" aria-hidden="true"><i /><span /></div>
+        <p>BB-8’s projector is offline.</p>
+        <button type="button" onClick={dismiss}>Dismiss</button>
+      </aside>
+    );
+  }
+
   const active = phase === "peeking" || phase === "observing";
   const copy = ROUTINE_COPY[routine];
 
@@ -169,6 +204,11 @@ export default function BB8Companion() {
           aria-label="Interactive BB-8 companion. Move the pointer nearby or click BB-8 for a reaction."
           onPointerEnter={() => {
             if (phase === "peeking" && routine === "peek") setPhase("observing");
+          }}
+          onKeyDown={(event) => {
+            if (event.key !== "Enter" && event.key !== " ") return;
+            event.preventDefault();
+            experienceRef.current?.react();
           }}
         />
       </div>

@@ -55,6 +55,41 @@
   backdrop-filter: blur(10px);
 }
 
+.bb8-edge--fallback {
+  right: clamp(12px, 2vw, 28px);
+  bottom: clamp(12px, 2vw, 28px);
+  width: 174px;
+  height: auto;
+  display: grid;
+  grid-template-columns: 42px 1fr;
+  align-items: center;
+  gap: 4px 10px;
+  padding: 10px;
+  border: 1px solid rgb(230 213 189 / .22);
+  border-radius: 14px;
+  background: rgb(9 11 14 / .88);
+  filter: none;
+  backdrop-filter: blur(12px);
+}
+
+.bb8-edge--fallback p { margin: 0; color: #d9d4c9; font-size: .48rem; line-height: 1.4; }
+.bb8-edge--fallback button {
+  grid-column: 2;
+  justify-self: start;
+  padding: 0;
+  border: 0;
+  color: #ff914f;
+  background: none;
+  font: inherit;
+  font-size: .43rem;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+.bb8-edge-fallback-droid { position: relative; width: 38px; height: 38px; border: 4px solid #e66b18; border-radius: 50%; background: #f2f0e9; }
+.bb8-edge-fallback-droid i { position: absolute; inset: -8px 3px auto; height: 15px; border: 3px solid #e66b18; border-radius: 22px 22px 5px 5px; background: #f2f0e9; }
+.bb8-edge-fallback-droid span { position: absolute; z-index: 1; top: -3px; left: 10px; width: 8px; height: 8px; border-radius: 50%; background: #17191b; }
+
 .bb8-edge-controls button:first-child {
   min-width: 50px;
   padding: 6px 9px;
@@ -171,6 +206,11 @@
   .bb8-edge--peeking { transform: translateY(59%); }
   .bb8-edge-bubble { right: 22px; max-width: 175px; font-size: .48rem; }
   .bb8-edge-controls { top: 55px; right: 0; }
+}
+
+@media (hover: none) {
+  .bb8-edge--peeking .bb8-edge-controls,
+  .bb8-edge--observing .bb8-edge-controls { opacity: 1; transform: translateY(0); }
 }
 
 @media (prefers-reduced-motion: reduce) {
