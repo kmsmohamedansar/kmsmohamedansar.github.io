@@ -116,9 +116,9 @@ export function createBB8Roaming(element, { onWaypoint, onExit, onMotion, onRest
       const rect = canvas.getBoundingClientRect();
       return rect.width >= window.innerWidth * 0.6 && rect.height >= window.innerHeight * 0.3;
     });
-    // Narrow viewports have no room beside the copy at all: the companion is
-    // half the screen wide there, so the lower lane is the only safe place
-    // whether or not a viewport-scale canvas was detected.
+    // Narrow viewports have no room beside the copy: even at its compact size
+    // the companion occupies substantial screen space, so the lower lane is
+    // the only safe place whether or not a large canvas was detected.
     const lowerLaneOnly = hasViewportCanvas || window.innerWidth <= NARROW_VIEWPORT_WIDTH;
 
     // Edges get first refusal because they feel like a character sharing the
@@ -139,15 +139,24 @@ export function createBB8Roaming(element, { onWaypoint, onExit, onMotion, onRest
       });
     }
 
+    const safeCandidates = [];
     let best = candidates[0];
     let bestPenalty = Infinity;
     for (const candidate of candidates) {
       const penalty = contentPenalty(candidate);
-      if (penalty === 0) return candidate;
+      if (penalty === 0) {
+        safeCandidates.push(candidate);
+        continue;
+      }
       if (penalty < bestPenalty) {
         best = candidate;
         bestPenalty = penalty;
       }
+    }
+    // Choose among every safe option instead of always returning the first
+    // left-edge candidate, so successive cameos genuinely appear here and there.
+    if (safeCandidates.length) {
+      return safeCandidates[Math.floor(Math.random() * safeCandidates.length)];
     }
     return best;
   }

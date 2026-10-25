@@ -7,7 +7,7 @@ import "./BB8Companion.css";
 
 const ROUTINES = ["peek", "guide", "sleepy", "mischief"];
 const NARROW_VIEWPORT = "(max-width: 720px)";
-const FIRST_APPEARANCE_DELAY = 1800;
+const FIRST_APPEARANCE_DELAY = 1400;
 const GUIDE_IDLE_TIMEOUT = 12000;
 const ROUTINE_COPY = {
   peek: { message: "Bweep! Need a quick tour?" },
@@ -46,7 +46,7 @@ function writeSession(key, value) {
 }
 
 function quietDelay() {
-  return 26000 + Math.random() * 22000;
+  return 10000 + Math.random() * 10000;
 }
 
 function isEditableTarget(target) {
@@ -204,9 +204,9 @@ export default function BB8Companion() {
         ? "peek"
         : ROUTINES[Math.floor(Math.random() * ROUTINES.length)];
       firstAppearance.current = false;
-      // Each appearance is a short active stretch of two to four waypoints,
-      // followed by a substantially longer quiet period.
-      waypointsRemainingRef.current = 1 + Math.floor(Math.random() * 3);
+      // Keep each cameo brief: one or two destinations followed by a short,
+      // varied pause before Emet turns up somewhere else.
+      waypointsRemainingRef.current = Math.floor(Math.random() * 2);
       setRoutine(nextRoutine);
       setStarted(true);
       setPhase("peeking");
@@ -228,7 +228,7 @@ export default function BB8Companion() {
       advance();
     };
     if (phase === "peeking") {
-      timer = window.setTimeout(() => advanceWhenCalm(() => setPhase("traveling")), 2800);
+      timer = window.setTimeout(() => advanceWhenCalm(() => setPhase("traveling")), 1900);
     } else if (phase === "observing") {
       timer = window.setTimeout(() => advanceWhenCalm(() => {
         if (waypointsRemainingRef.current > 0) {
@@ -238,7 +238,7 @@ export default function BB8Companion() {
         } else {
           setPhase("leaving");
         }
-      }), routine === "mischief" ? 5600 : 7200);
+      }), routine === "mischief" ? 4200 : 5000);
     }
     return () => window.clearTimeout(timer);
   }, [guideOpen, phase, reducedMotion, routeHidden, routine]);
