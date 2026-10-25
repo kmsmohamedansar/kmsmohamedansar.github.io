@@ -325,8 +325,19 @@
   .bb8-edge-bubble { right: 18px; max-width: 150px; font-size: .48rem; }
   .bb8-edge--ui-right .bb8-edge-bubble { right: auto; left: 22px; }
   .bb8-edge-controls { top: 55px; right: 0; }
+  /* Portalled to the body at this width (see BB8Companion.jsx), so it is
+     pinned to the viewport instead of to wherever Emet has rolled to, and
+     sits above the fixed nav rather than sliding under it. */
   .bb8-edge-guide,
-  .bb8-edge--ui-right .bb8-edge-guide { right: 0; bottom: 154px; left: auto; width: min(190px, calc(100vw - 24px)); }
+  .bb8-edge--ui-right .bb8-edge-guide {
+    position: fixed;
+    z-index: 120;
+    inset: auto 12px 12px 12px;
+    width: auto;
+    max-height: calc(100dvh - 100px);
+    overflow: auto;
+    overscroll-behavior: contain;
+  }
 }
 
 @media (hover: none) {

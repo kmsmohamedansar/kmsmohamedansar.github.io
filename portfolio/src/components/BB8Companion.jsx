@@ -1,10 +1,12 @@
 import { useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import { useRoute } from "../App";
 import { createBB8Scene } from "../bb8/createBB8Scene";
 import { createBB8Roaming } from "./createBB8Roaming";
 import "./BB8Companion.css";
 
 const ROUTINES = ["peek", "guide", "sleepy", "mischief"];
+const NARROW_VIEWPORT = "(max-width: 720px)";
 const FIRST_APPEARANCE_DELAY = 1800;
 const GUIDE_IDLE_TIMEOUT = 12000;
 const ROUTINE_COPY = {
@@ -64,6 +66,10 @@ export default function BB8Companion() {
   const waypointsRemainingRef = useRef(0);
   const visitorBusyUntilRef = useRef(0);
   const [reducedMotion, setReducedMotion] = useState(() => window.matchMedia("(prefers-reduced-motion: reduce)").matches);
+  // The companion is moved with a transform, which makes it the containing
+  // block for fixed descendants. On narrow viewports the guide is therefore
+  // portalled to the body so it can be pinned to the viewport instead.
+  const [narrowViewport, setNarrowViewport] = useState(() => window.matchMedia(NARROW_VIEWPORT).matches);
   const [dismissed, setDismissed] = useState(() => readSessionFlag("emet-companion-dismissed"));
   const [started, setStarted] = useState(false);
   const [phase, setPhase] = useState("waiting");
@@ -77,6 +83,13 @@ export default function BB8Companion() {
     const updatePreference = (event) => setReducedMotion(event.matches);
     query.addEventListener("change", updatePreference);
     return () => query.removeEventListener("change", updatePreference);
+  }, []);
+
+  useEffect(() => {
+    const query = window.matchMedia(NARROW_VIEWPORT);
+    const updateWidth = (event) => setNarrowViewport(event.matches);
+    query.addEventListener("change", updateWidth);
+    return () => query.removeEventListener("change", updateWidth);
   }, []);
 
   useEffect(() => {
@@ -335,6 +348,46 @@ export default function BB8Companion() {
   const active = phase === "peeking" || phase === "traveling" || phase === "observing";
   const copy = ROUTINE_COPY[routine];
 
+  const guidePanel = guideOpen ? (
+    <div
+      ref={guideRef}
+      id="bb8-portfolio-guide"
+      className="bb8-edge-guide"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="bb8-guide-title"
+    >
+      <div className="bb8-edge-guide-heading">
+        <div><span>Emet recommends</span><strong id="bb8-guide-title">Where should we go?</strong></div>
+        <button
+          type="button"
+          onClick={() => {
+            setGuideOpen(false);
+            window.requestAnimationFrame(() => guideTriggerRef.current?.focus({ preventScroll: true }));
+          }}
+          aria-label="Close portfolio guide"
+        >×</button>
+      </div>
+      <nav className="bb8-edge-guide-links" aria-label="Portfolio destinations">
+        {GUIDE_LINKS.map((item) => (
+          <a
+            key={item.href}
+            href={route === "main" ? item.href : `${window.location.pathname}${item.href}`}
+            onClick={(event) => {
+              event.preventDefault();
+              followGuideLink();
+              navigate(item.href.slice(1));
+            }}
+          >
+            <span>{item.eyebrow}</span>
+            <strong>{item.label}</strong>
+            <small>{item.detail}</small>
+          </a>
+        ))}
+      </nav>
+    </div>
+  ) : null;
+
   return (
     <aside
       ref={edgeRef}
@@ -352,45 +405,7 @@ export default function BB8Companion() {
         <button ref={guideTriggerRef} type="button" tabIndex={guideOpen ? -1 : 0} onClick={openGuide}>Show me</button>
       </div>
 
-      {guideOpen && (
-        <div
-          ref={guideRef}
-          id="bb8-portfolio-guide"
-          className="bb8-edge-guide"
-          role="dialog"
-          aria-modal="true"
-          aria-labelledby="bb8-guide-title"
-        >
-          <div className="bb8-edge-guide-heading">
-            <div><span>Emet recommends</span><strong id="bb8-guide-title">Where should we go?</strong></div>
-            <button
-              type="button"
-              onClick={() => {
-                setGuideOpen(false);
-                window.requestAnimationFrame(() => guideTriggerRef.current?.focus({ preventScroll: true }));
-              }}
-              aria-label="Close portfolio guide"
-            >×</button>
-          </div>
-          <nav className="bb8-edge-guide-links" aria-label="Portfolio destinations">
-            {GUIDE_LINKS.map((item) => (
-              <a
-                key={item.href}
-                href={route === "main" ? item.href : `${window.location.pathname}${item.href}`}
-                onClick={(event) => {
-                  event.preventDefault();
-                  followGuideLink();
-                  navigate(item.href.slice(1));
-                }}
-              >
-                <span>{item.eyebrow}</span>
-                <strong>{item.label}</strong>
-                <small>{item.detail}</small>
-              </a>
-            ))}
-          </nav>
-        </div>
-      )}
+      {narrowViewport && guidePanel ? createPortal(guidePanel, document.body) : guidePanel}
 
       {routine === "sleepy" && (
         <div className="bb8-edge-zzzs" aria-hidden="true"><span>Z</span><span>Z</span><span>Z</span></div>
