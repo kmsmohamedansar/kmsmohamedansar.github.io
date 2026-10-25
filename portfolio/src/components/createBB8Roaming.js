@@ -1,6 +1,8 @@
 const SAFE_MARGIN = 14;
 const BOTTOM_MARGIN = 4;
 const NAV_CLEARANCE = 76;
+// Matches the companion's CSS breakpoint in BB8Companion.css.
+const NARROW_VIEWPORT_WIDTH = 720;
 const BLOCKING_CONTENT = "h1,h2,h3,p,a,button,input,textarea,select,label,[role='button'],[contenteditable='true']";
 
 function clamp(value, min, max) {
@@ -112,13 +114,17 @@ export function createBB8Roaming(element, { onWaypoint, onExit, onMotion, onRest
     const hasViewportCanvas = [...document.querySelectorAll("canvas")].some((canvas) => {
       if (element.contains(canvas)) return false;
       const rect = canvas.getBoundingClientRect();
-      return rect.width >= window.innerWidth * 0.6 && rect.height >= window.innerHeight * 0.45;
+      return rect.width >= window.innerWidth * 0.6 && rect.height >= window.innerHeight * 0.3;
     });
+    // Narrow viewports have no room beside the copy at all: the companion is
+    // half the screen wide there, so the lower lane is the only safe place
+    // whether or not a viewport-scale canvas was detected.
+    const lowerLaneOnly = hasViewportCanvas || window.innerWidth <= NARROW_VIEWPORT_WIDTH;
 
     // Edges get first refusal because they feel like a character sharing the
     // page rather than a modal floating over its centre.
     candidates.push({ x: SAFE_MARGIN, y: lowerY }, { x: bounds.maxX, y: lowerY });
-    if (!hasViewportCanvas) {
+    if (!lowerLaneOnly) {
       candidates.push({ x: SAFE_MARGIN, y: middleY }, { x: bounds.maxX, y: middleY });
     }
     for (let index = 0; index < 16; index += 1) {
@@ -127,7 +133,7 @@ export function createBB8Roaming(element, { onWaypoint, onExit, onMotion, onRest
         // On this portfolio the hero headline is rendered into a full-screen
         // canvas. Keeping the entire route in the lower lane prevents a safe
         // destination from producing a visually unsafe path through the copy.
-        y: hasViewportCanvas
+        y: lowerLaneOnly
           ? lowerY
           : NAV_CLEARANCE + Math.random() * Math.max(0, bounds.maxY - NAV_CLEARANCE),
       });
