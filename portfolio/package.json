@@ -5,7 +5,9 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "dev:bb8": "vite --open /bb8.html",
     "build": "vite build",
+    "build:bb8": "vite build --config vite.bb8.config.js",
     "lint": "oxlint",
     "preview": "vite preview",
     "check:tools": "node scripts/check-tools.mjs"
