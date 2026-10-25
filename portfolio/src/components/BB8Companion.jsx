@@ -5,11 +5,18 @@ import "./BB8Companion.css";
 const MAX_APPEARANCES = 5;
 const ROUTINES = ["peek", "guide", "sleepy", "mischief"];
 const ROUTINE_COPY = {
-  peek: { message: "Bweep! Visitor detected." },
-  guide: { message: "Psst… the AI experiments are this way.", href: "#ai" },
+  peek: { message: "Bweep! Need a quick tour?" },
+  guide: { message: "Psst… I know the interesting shortcuts." },
   sleepy: { message: "Power-saving mode…" },
   mischief: { message: "That panel was already loose." },
 };
+
+const GUIDE_LINKS = [
+  { href: "#projects", eyebrow: "Start here", label: "Selected work", detail: "The projects I’m proudest of" },
+  { href: "#ai", eyebrow: "Explore", label: "AI experiments", detail: "Interactive things to try" },
+  { href: "#about", eyebrow: "Background", label: "About me", detail: "How I work and what I use" },
+  { href: "#contact", eyebrow: "Connect", label: "Say hello", detail: "Email and profile links" },
+];
 
 function readSessionNumber(key) {
   try {
@@ -41,6 +48,7 @@ function randomDelay() {
 
 export default function BB8Companion() {
   const viewportRef = useRef(null);
+  const guideRef = useRef(null);
   const experienceRef = useRef(null);
   const firstAppearance = useRef(true);
   const [appearances, setAppearances] = useState(() => readSessionNumber("bb8-appearances"));
@@ -51,6 +59,7 @@ export default function BB8Companion() {
   const [routine, setRoutine] = useState("peek");
   const [soundEnabled, setSoundEnabled] = useState(false);
   const [renderFailed, setRenderFailed] = useState(false);
+  const [guideOpen, setGuideOpen] = useState(false);
 
   useEffect(() => {
     const query = window.matchMedia("(prefers-reduced-motion: reduce)");
@@ -122,6 +131,7 @@ export default function BB8Companion() {
 
   useEffect(() => {
     if (reducedMotion) return undefined;
+    if (guideOpen) return undefined;
     let timer;
     if (phase === "peeking") {
       timer = window.setTimeout(
@@ -134,7 +144,19 @@ export default function BB8Companion() {
       timer = window.setTimeout(() => setPhase("waiting"), 950);
     }
     return () => window.clearTimeout(timer);
-  }, [phase, reducedMotion, routine]);
+  }, [guideOpen, phase, reducedMotion, routine]);
+
+  useEffect(() => {
+    if (!guideOpen) return undefined;
+    guideRef.current?.querySelector("a")?.focus({ preventScroll: true });
+    const closeOnEscape = (event) => {
+      if (event.key !== "Escape") return;
+      setGuideOpen(false);
+      viewportRef.current?.focus({ preventScroll: true });
+    };
+    window.addEventListener("keydown", closeOnEscape);
+    return () => window.removeEventListener("keydown", closeOnEscape);
+  }, [guideOpen]);
 
   const toggleSound = async () => {
     const enabled = await experienceRef.current?.sound.setEnabled(!soundEnabled);
@@ -145,7 +167,18 @@ export default function BB8Companion() {
     experienceRef.current?.sound.setEnabled(false);
     writeSession("bb8-dismissed", true);
     setSoundEnabled(false);
+    setGuideOpen(false);
     setDismissed(true);
+  };
+
+  const openGuide = () => {
+    setPhase("observing");
+    setGuideOpen(true);
+  };
+
+  const followGuideLink = () => {
+    setGuideOpen(false);
+    if (!reducedMotion) setPhase("leaving");
   };
 
   const showReducedMotionCompanion = () => {
@@ -180,15 +213,41 @@ export default function BB8Companion() {
   const copy = ROUTINE_COPY[routine];
 
   return (
-    <aside className={`bb8-edge bb8-edge--${phase} bb8-edge--${routine}`} aria-label="BB-8 portfolio companion">
+    <aside className={`bb8-edge bb8-edge--${phase} bb8-edge--${routine}${guideOpen ? " bb8-edge--guide-open" : ""}`} aria-label="BB-8 portfolio companion">
       <div className="bb8-edge-controls" aria-label="Companion controls">
         <button type="button" onClick={toggleSound} aria-pressed={soundEnabled}>{soundEnabled ? "Mute" : "Sound"}</button>
         <button type="button" onClick={dismiss} aria-label="Dismiss BB-8 for this visit">×</button>
       </div>
 
-      <div className="bb8-edge-bubble" role="status">
-        {copy.href ? <a href={copy.href}>{copy.message}</a> : copy.message}
+      <div className="bb8-edge-bubble">
+        <span role="status">{copy.message}</span>
+        <button type="button" onClick={openGuide}>Show me</button>
       </div>
+
+      {guideOpen && (
+        <nav ref={guideRef} id="bb8-portfolio-guide" className="bb8-edge-guide" aria-label="BB-8 portfolio guide">
+          <div className="bb8-edge-guide-heading">
+            <div><span>BB-8 recommends</span><strong>Where should we go?</strong></div>
+            <button
+              type="button"
+              onClick={() => {
+                setGuideOpen(false);
+                window.requestAnimationFrame(() => viewportRef.current?.focus({ preventScroll: true }));
+              }}
+              aria-label="Close portfolio guide"
+            >×</button>
+          </div>
+          <div className="bb8-edge-guide-links">
+            {GUIDE_LINKS.map((item) => (
+              <a key={item.href} href={item.href} onClick={followGuideLink}>
+                <span>{item.eyebrow}</span>
+                <strong>{item.label}</strong>
+                <small>{item.detail}</small>
+              </a>
+            ))}
+          </div>
+        </nav>
+      )}
 
       {routine === "sleepy" && (
         <div className="bb8-edge-zzzs" aria-hidden="true"><span>Z</span><span>Z</span><span>Z</span></div>
@@ -198,10 +257,13 @@ export default function BB8Companion() {
         <div
           ref={viewportRef}
           className="bb8-edge-viewport"
-          role="application"
+          role="button"
           tabIndex={active ? 0 : -1}
           aria-hidden={!active}
-          aria-label="Interactive BB-8 companion. Move the pointer nearby or click BB-8 for a reaction."
+          aria-label="Open BB-8 portfolio guide"
+          aria-expanded={guideOpen}
+          aria-controls={guideOpen ? "bb8-portfolio-guide" : undefined}
+          onClick={openGuide}
           onPointerEnter={() => {
             if (phase === "peeking" && routine === "peek") setPhase("observing");
           }}
@@ -209,6 +271,7 @@ export default function BB8Companion() {
             if (event.key !== "Enter" && event.key !== " ") return;
             event.preventDefault();
             experienceRef.current?.react();
+            openGuide();
           }}
         />
       </div>
