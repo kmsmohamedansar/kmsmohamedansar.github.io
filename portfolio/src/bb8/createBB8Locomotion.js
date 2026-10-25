@@ -14,15 +14,15 @@ function moveToward(current, target, amount) {
   return current + Math.sign(target - current) * amount;
 }
 
-function clampToArena(point) {
-  const distance = Math.hypot(point.x / BOUNDS_X, point.z / BOUNDS_Z);
+function clampToArena(point, arenaScale) {
+  const distance = Math.hypot(point.x / (BOUNDS_X * arenaScale), point.z / (BOUNDS_Z * arenaScale));
   if (distance <= 1) return point;
   point.x /= distance;
   point.z /= distance;
   return point;
 }
 
-export function createBB8Locomotion({ container, camera, droid, body, contactShadow }) {
+export function createBB8Locomotion({ container, camera, droid, body, contactShadow, arenaScale = 1 }) {
   const velocity = new THREE.Vector3();
   const desiredVelocity = new THREE.Vector3();
   const displacement = new THREE.Vector3();
@@ -66,7 +66,7 @@ export function createBB8Locomotion({ container, camera, droid, body, contactSha
     if (raycaster.intersectObject(droid, true).length > 0) return;
     if (!raycaster.ray.intersectPlane(groundPlane, hit)) return;
     destination.set(hit.x, 0, hit.z);
-    clampToArena(destination);
+    clampToArena(destination, arenaScale);
     hasDestination = destination.distanceToSquared(droid.position) > 0.01;
   };
 
@@ -155,7 +155,7 @@ export function createBB8Locomotion({ container, camera, droid, body, contactSha
       const previousX = droid.position.x;
       const previousZ = droid.position.z;
       droid.position.add(displacement);
-      clampToArena(droid.position);
+      clampToArena(droid.position, arenaScale);
       displacement.set(droid.position.x - previousX, 0, droid.position.z - previousZ);
       updateShadow();
 

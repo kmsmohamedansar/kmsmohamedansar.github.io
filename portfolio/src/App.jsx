@@ -18,6 +18,7 @@ const DataLineageExplorer = lazy(() => import("./components/DataLineageExplorer"
 const DigitalDouble = lazy(() => import("./components/DigitalDouble"));
 const HaloscriptPage = lazy(() => import("./components/HaloscriptPage"));
 const InfinityPage = lazy(() => import("./components/InfinityPage"));
+const BB8Companion = lazy(() => import("./components/BB8Companion"));
 
 /* ============================================================
    ROUTER: "emet", "explore", "lineage-demo", "digital-double" and "project/<slug>" are
@@ -421,11 +422,18 @@ function AppShell({ bootDone }) {
                 project cards) establishes its own local perspective instead. */}
             <Stage bootDone={bootDone} />
             <CommandPalette />
+            <HomepageCompanion active={bootDone} />
           </div>
         </div>
       </RouteProvider>
     </ScrollContext.Provider>
   );
+}
+
+function HomepageCompanion({ active }) {
+  const { route } = useRoute();
+  if (!active || route !== "main") return null;
+  return <Suspense fallback={null}><BB8Companion /></Suspense>;
 }
 
 /* ============================================================

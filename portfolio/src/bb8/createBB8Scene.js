@@ -193,15 +193,16 @@ function createMaterials() {
   };
 }
 
-export function createBB8Scene(container) {
+export function createBB8Scene(container, { variant = "preview" } = {}) {
+  const companion = variant === "companion";
   const scene = new THREE.Scene();
-  scene.fog = new THREE.FogExp2(0x07090d, 0.055);
+  if (!companion) scene.fog = new THREE.FogExp2(0x07090d, 0.055);
 
-  const camera = new THREE.PerspectiveCamera(34, 1, 0.1, 60);
-  camera.position.set(5.7, 3.85, 8.25);
+  const camera = new THREE.PerspectiveCamera(companion ? 39 : 34, 1, 0.1, 60);
+  camera.position.set(companion ? 4 : 5.7, companion ? 3.25 : 3.85, companion ? 6.3 : 8.25);
 
   const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, powerPreference: "high-performance" });
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, companion ? 1.5 : 2));
   renderer.shadowMap.enabled = true;
   renderer.shadowMap.type = THREE.PCFShadowMap;
   renderer.outputColorSpace = THREE.SRGBColorSpace;
@@ -218,7 +219,9 @@ export function createBB8Scene(container) {
   droid.add(body, head);
   scene.add(droid);
 
-  const groundMaterial = new THREE.MeshStandardMaterial({ color: 0x0b0d11, roughness: 0.86, metalness: 0.12 });
+  const groundMaterial = companion
+    ? new THREE.ShadowMaterial({ color: 0x000000, opacity: 0.26 })
+    : new THREE.MeshStandardMaterial({ color: 0x0b0d11, roughness: 0.86, metalness: 0.12 });
   const ground = mesh(new THREE.CircleGeometry(8, 96), groundMaterial, { cast: false });
   ground.rotation.x = -Math.PI / 2;
   ground.position.y = 0.035;
@@ -258,9 +261,10 @@ export function createBB8Scene(container) {
   controls.minPolarAngle = Math.PI * 0.23;
   controls.maxPolarAngle = Math.PI * 0.54;
   controls.enablePan = false;
+  controls.enabled = !companion;
 
   const sound = createBB8Sound(container);
-  const locomotion = createBB8Locomotion({ container, camera, droid, body, contactShadow });
+  const locomotion = createBB8Locomotion({ container, camera, droid, body, contactShadow, arenaScale: companion ? 0.36 : 1 });
   const behavior = createBB8Behavior({ container, camera, droid });
   const animator = createBB8Animator({ container, camera, droid, head, controls, locomotion, behavior });
 

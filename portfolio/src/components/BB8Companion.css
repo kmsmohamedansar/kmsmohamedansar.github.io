@@ -1,0 +1,97 @@
+.bb8-companion {
+  position: fixed;
+  z-index: 60;
+  right: clamp(12px, 2vw, 28px);
+  bottom: clamp(12px, 2vw, 28px);
+  font-family: var(--font-mono);
+}
+
+.bb8-companion--open {
+  width: min(310px, calc(100vw - 32px));
+  height: min(410px, calc(100dvh - 116px));
+  min-height: 330px;
+  overflow: hidden;
+  border: 1px solid rgb(230 213 189 / .22);
+  border-radius: 20px;
+  background:
+    radial-gradient(circle at 52% 48%, rgb(62 68 77 / .56), rgb(14 16 20 / .9) 69%),
+    rgb(10 11 14 / .88);
+  box-shadow: 0 24px 64px rgb(0 0 0 / .42), inset 0 1px rgb(255 255 255 / .07);
+  backdrop-filter: blur(16px);
+  animation: bb8-companion-enter .55s var(--ease-out) both;
+}
+
+.bb8-companion-bar {
+  position: absolute;
+  z-index: 3;
+  inset: 0 0 auto;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 0 11px 0 14px;
+  border-bottom: 1px solid rgb(230 213 189 / .12);
+  background: rgb(7 9 13 / .62);
+}
+
+.bb8-companion-bar > div { display: flex; align-items: center; gap: 5px; }
+.bb8-companion-label { display: flex; align-items: center; gap: 7px; color: #d9d4c9; font-size: .48rem; letter-spacing: .1em; text-transform: uppercase; white-space: nowrap; }
+.bb8-companion-label i { width: 6px; height: 6px; border-radius: 50%; background: #7ed69a; box-shadow: 0 0 10px rgb(126 214 154 / .72); }
+.bb8-companion button { color: inherit; font: inherit; cursor: pointer; }
+
+.bb8-companion-sound,
+.bb8-companion-close {
+  border: 1px solid rgb(230 213 189 / .15);
+  color: #a8abb0;
+  background: rgb(255 255 255 / .025);
+}
+.bb8-companion .bb8-companion-sound { border-radius: 999px; padding: 6px 8px; font-size: .42rem; line-height: 1; letter-spacing: .05em; text-transform: uppercase; }
+.bb8-companion-sound[aria-pressed="true"] { color: #7ed69a; border-color: rgb(126 214 154 / .38); }
+.bb8-companion-close { width: 28px; height: 28px; display: grid; place-items: center; border-radius: 50%; font: 400 1rem/1 sans-serif !important; }
+.bb8-companion-sound:hover,
+.bb8-companion-close:hover { color: #f4f1ea; border-color: rgb(237 106 25 / .6); }
+
+.bb8-companion-viewport { position: absolute; inset: 48px 0 26px; cursor: pointer; touch-action: none; }
+.bb8-companion-viewport:focus { outline: none; }
+.bb8-companion-viewport:focus-visible { box-shadow: inset 0 0 0 1px rgb(237 106 25 / .68); }
+.bb8-companion-viewport canvas { display: block; width: 100%; height: 100%; }
+.bb8-companion-hint { position: absolute; z-index: 3; inset: auto 0 0; height: 27px; display: grid; place-items: center; margin: 0; color: #777c84; background: rgb(7 9 13 / .58); font-size: .4rem; letter-spacing: .08em; text-transform: uppercase; pointer-events: none; }
+
+.bb8-companion--closed { animation: bb8-companion-enter .4s var(--ease-out) both; }
+.bb8-companion-launcher {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  min-height: 44px;
+  padding: 8px 14px 8px 8px;
+  border: 1px solid rgb(230 213 189 / .2);
+  border-radius: 999px;
+  color: #e6d5bd !important;
+  background: rgb(12 14 18 / .9);
+  box-shadow: 0 14px 36px rgb(0 0 0 / .34);
+  font-size: .49rem !important;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  backdrop-filter: blur(12px);
+}
+.bb8-companion-launcher > span { width: 30px; height: 30px; display: grid; place-items: center; border: 4px solid #ed6a19; border-radius: 50%; background: #ece9e1; }
+.bb8-companion-launcher i { width: 8px; height: 8px; border-radius: 50%; background: #16191d; }
+.bb8-companion-launcher:hover { border-color: rgb(237 106 25 / .68); transform: translateY(-2px); }
+
+@keyframes bb8-companion-enter {
+  from { opacity: 0; transform: translateY(14px) scale(.97); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@media (max-width: 720px) {
+  .bb8-companion--open { width: min(260px, calc(100vw - 24px)); height: min(340px, calc(100dvh - 92px)); min-height: 300px; }
+  .bb8-companion-label { font-size: .43rem; }
+  .bb8-companion-hint { font-size: .36rem; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bb8-companion--open,
+  .bb8-companion--closed { animation: none; }
+  .bb8-companion-launcher:hover { transform: none; }
+}
