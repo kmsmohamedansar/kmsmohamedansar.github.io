@@ -31,15 +31,16 @@ export default function BB8Experience() {
       <div
         ref={viewportRef}
         className="bb8-viewport"
-        role="img"
-        aria-label="Interactive three-dimensional fan-art model of BB-8. Drag to orbit, scroll to zoom, or move the pointer to attract his attention."
+        role="application"
+        tabIndex="0"
+        aria-label="Interactive three-dimensional fan-art model of BB-8. Click the floor to roll, use WASD or arrow keys to steer, drag to orbit, and scroll to zoom."
       />
 
       <footer className="bb8-footer">
         <div className="bb8-controls" aria-label="Scene controls">
           <span><b>01</b> Drag to orbit</span>
-          <span><b>02</b> Scroll to zoom</span>
-          <span><b>03</b> Move to engage</span>
+          <span><b>02</b> Click floor to roll</span>
+          <span><b>03</b> WASD to steer</span>
         </div>
         <p>Fan-art prototype · Built without external 3D models</p>
       </footer>

@@ -12,7 +12,7 @@ function randomBetween(min, max) {
   return min + Math.random() * (max - min);
 }
 
-export function createBB8Animator({ container, camera, droid, head, controls }) {
+export function createBB8Animator({ container, camera, droid, head, controls, locomotion }) {
   const pointer = new THREE.Vector2();
   const raycaster = new THREE.Raycaster();
   const headWorld = new THREE.Vector3();
@@ -105,13 +105,19 @@ export function createBB8Animator({ container, camera, droid, head, controls }) 
       const independent = now < independentGlanceEndsAt;
       const cursorIsRecent = pointerPresent && now - lastPointerAt < CURSOR_MEMORY_MS && now >= interactionBlockedUntil;
       const cursor = !independent && cursorIsRecent ? cursorPose() : null;
+      const travel = locomotion.getHeadPose();
 
       let targetYaw = BASE_HEAD_YAW;
       let targetPitch = Math.sin(elapsed * 0.7) * 0.018;
       let targetRoll = Math.sin(elapsed * 0.43) * 0.012;
       let responseSpeed = 2.4;
 
-      if (independent) {
+      if (travel) {
+        targetYaw = travel.yaw;
+        targetPitch = travel.pitch;
+        targetRoll = travel.roll;
+        responseSpeed = 4.1;
+      } else if (independent) {
         targetYaw = glanceYaw;
         targetPitch = glancePitch;
         targetRoll = glanceRoll;

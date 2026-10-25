@@ -1,6 +1,7 @@
 import * as THREE from "three";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 import { createBB8Animator } from "./createBB8Animator";
+import { createBB8Locomotion } from "./createBB8Locomotion";
 
 const COLORS = {
   porcelain: 0xf2f0e9,
@@ -248,7 +249,8 @@ export function createBB8Scene(container) {
   controls.maxPolarAngle = Math.PI * 0.54;
   controls.enablePan = false;
 
-  const animator = createBB8Animator({ container, camera, droid, head, controls });
+  const locomotion = createBB8Locomotion({ container, camera, droid, body, contactShadow });
+  const animator = createBB8Animator({ container, camera, droid, head, controls, locomotion });
 
   const resize = () => {
     const width = Math.max(container.clientWidth, 1);
@@ -268,8 +270,9 @@ export function createBB8Scene(container) {
     const delta = Math.min((now - lastFrameAt) / 1000, 0.05);
     elapsed += delta;
     lastFrameAt = now;
-    animator.update(elapsed, delta, now);
     controls.update();
+    locomotion.update(delta);
+    animator.update(elapsed, delta, now);
     renderer.render(scene, camera);
     frameId = requestAnimationFrame(render);
   };
@@ -281,6 +284,7 @@ export function createBB8Scene(container) {
     dispose() {
       cancelAnimationFrame(frameId);
       observer.disconnect();
+      locomotion.dispose();
       animator.dispose();
       controls.dispose();
       scene.traverse((object) => {
