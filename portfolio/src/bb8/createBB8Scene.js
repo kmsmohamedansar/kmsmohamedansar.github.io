@@ -282,6 +282,7 @@ export function createBB8Scene(container, { variant = "preview" } = {}) {
   let frameId = 0;
   let elapsed = 0;
   let lastFrameAt = performance.now();
+  let running = true;
   const render = (now = performance.now()) => {
     const delta = Math.min((now - lastFrameAt) / 1000, 0.05);
     elapsed += delta;
@@ -290,7 +291,7 @@ export function createBB8Scene(container, { variant = "preview" } = {}) {
     locomotion.update(delta);
     animator.update(elapsed, delta, now);
     renderer.render(scene, camera);
-    frameId = requestAnimationFrame(render);
+    if (running) frameId = requestAnimationFrame(render);
   };
   render();
 
@@ -298,7 +299,18 @@ export function createBB8Scene(container, { variant = "preview" } = {}) {
     body,
     head,
     sound,
+    setPaused(paused) {
+      if (paused && running) {
+        running = false;
+        cancelAnimationFrame(frameId);
+      } else if (!paused && !running) {
+        running = true;
+        lastFrameAt = performance.now();
+        frameId = requestAnimationFrame(render);
+      }
+    },
     dispose() {
+      running = false;
       cancelAnimationFrame(frameId);
       observer.disconnect();
       locomotion.dispose();
