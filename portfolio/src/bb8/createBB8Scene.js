@@ -307,6 +307,8 @@ export function createBB8Scene(container, { variant = "preview" } = {}) {
     sound,
     react: behavior.react,
     canvas: renderer.domElement,
+    setScreenMotion: locomotion.applyScreenDisplacement,
+    stopScreenMotion: locomotion.stopScreenMotion,
     setPaused(paused) {
       if (paused && running) {
         running = false;

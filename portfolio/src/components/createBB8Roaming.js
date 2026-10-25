@@ -7,7 +7,7 @@ function clamp(value, min, max) {
   return Math.min(max, Math.max(min, value));
 }
 
-export function createBB8Roaming(element, { onWaypoint, onExit, reducedMotion = false }) {
+export function createBB8Roaming(element, { onWaypoint, onExit, onMotion, onRest, reducedMotion = false }) {
   // createBB8Locomotion moves the mesh through Three.js world space and maps
   // clicks through the scene camera. This controller deliberately operates in
   // viewport pixels: one compositor transform moves the whole companion UI.
@@ -156,6 +156,7 @@ export function createBB8Roaming(element, { onWaypoint, onExit, reducedMotion = 
     const completedMode = mode;
     mode = "idle";
     frameId = 0;
+    onRest?.();
     if (completedMode === "waypoint") onWaypoint?.();
     if (completedMode === "exit") onExit?.();
   }
@@ -170,12 +171,18 @@ export function createBB8Roaming(element, { onWaypoint, onExit, reducedMotion = 
     const distance = Math.hypot(dx, dy);
     const travel = speed * delta;
     if (distance <= Math.max(travel, 0.75)) {
+      const finalDx = target.x - position.x;
+      const finalDy = target.y - position.y;
       setPosition(target);
+      if (finalDx || finalDy) onMotion?.(finalDx, finalDy);
       arrive();
       return;
     }
-    position.x += (dx / distance) * travel;
-    position.y += (dy / distance) * travel;
+    const moveX = (dx / distance) * travel;
+    const moveY = (dy / distance) * travel;
+    position.x += moveX;
+    position.y += moveY;
+    onMotion?.(moveX, moveY);
     updateElement();
     frameId = requestAnimationFrame(step);
   }
@@ -206,6 +213,7 @@ export function createBB8Roaming(element, { onWaypoint, onExit, reducedMotion = 
     if (frameId) cancelAnimationFrame(frameId);
     frameId = 0;
     mode = "idle";
+    onRest?.();
   }
 
   function leave() {
@@ -257,15 +265,17 @@ export function createBB8Roaming(element, { onWaypoint, onExit, reducedMotion = 
     showStatic,
     setPaused(paused) {
       externallyPaused = paused;
-      if (paused && frameId) {
-        cancelAnimationFrame(frameId);
+      if (paused) {
+        if (frameId) cancelAnimationFrame(frameId);
         frameId = 0;
+        onRest?.();
       } else if (!paused) {
         startLoop();
       }
     },
     dispose() {
       if (frameId) cancelAnimationFrame(frameId);
+      onRest?.();
       window.removeEventListener("resize", onResize);
       window.removeEventListener("orientationchange", onResize);
       document.removeEventListener("visibilitychange", onVisibilityChange);

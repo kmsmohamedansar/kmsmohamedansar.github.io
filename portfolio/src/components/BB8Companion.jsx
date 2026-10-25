@@ -149,6 +149,8 @@ export default function BB8Companion() {
       reducedMotion,
       onWaypoint: () => setPhase((current) => current === "traveling" ? "observing" : current),
       onExit: () => setPhase((current) => current === "leaving" ? "waiting" : current),
+      onMotion: (dx, dy) => experienceRef.current?.setScreenMotion(dx, dy),
+      onRest: () => experienceRef.current?.stopScreenMotion(),
     });
     roamingRef.current = roaming;
     return () => {

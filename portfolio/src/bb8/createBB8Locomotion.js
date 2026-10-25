@@ -7,6 +7,7 @@ const BRAKING = 4.2;
 const BOUNDS_X = 1.75;
 const BOUNDS_Z = 1.15;
 const CLICK_DRAG_THRESHOLD = 7;
+const SCREEN_BODY_RADIUS_PX = 68;
 const MOVEMENT_KEYS = new Set(["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight", "KeyW", "KeyA", "KeyS", "KeyD"]);
 
 function moveToward(current, target, amount) {
@@ -33,6 +34,8 @@ export function createBB8Locomotion({ container, camera, droid, body, contactSha
   const up = new THREE.Vector3(0, 1, 0);
   const rollAxis = new THREE.Vector3();
   const roll = new THREE.Quaternion();
+  const screenRollAxis = new THREE.Vector3();
+  const screenRoll = new THREE.Quaternion();
   const raycaster = new THREE.Raycaster();
   const pointer = new THREE.Vector2();
   const groundPlane = new THREE.Plane(up, 0);
@@ -44,6 +47,7 @@ export function createBB8Locomotion({ container, camera, droid, body, contactSha
   let hasDestination = false;
   let pointerStart = null;
   let travelYaw = null;
+  let screenTravelPose = null;
   let wasMoving = false;
 
   const emitSound = (cue) => {
@@ -110,6 +114,29 @@ export function createBB8Locomotion({ container, camera, droid, body, contactSha
   container.addEventListener("blur", onBlur);
 
   return {
+    applyScreenDisplacement(dx, dy) {
+      const distance = Math.hypot(dx, dy);
+      if (motionQuery.matches || distance < 0.001) return;
+
+      // Viewport roaming moves the surrounding DOM element rather than the
+      // Three.js droid. Convert that screen-space displacement into the same
+      // visual body roll while leaving the standalone world-space controller
+      // and its arena coordinates untouched.
+      screenRollAxis.set(dy, 0, -dx).normalize();
+      screenRoll.setFromAxisAngle(screenRollAxis, Math.min(distance / SCREEN_BODY_RADIUS_PX, 0.24));
+      body.quaternion.premultiply(screenRoll).normalize();
+
+      const horizontal = dx / distance;
+      const vertical = dy / distance;
+      screenTravelPose = {
+        yaw: THREE.MathUtils.clamp(-0.08 + horizontal * 0.38, -0.48, 0.48),
+        pitch: THREE.MathUtils.clamp(0.035 + vertical * 0.045, -0.02, 0.08),
+        roll: THREE.MathUtils.clamp(-horizontal * 0.075, -0.075, 0.075),
+      };
+    },
+    stopScreenMotion() {
+      screenTravelPose = null;
+    },
     update(delta) {
       desiredVelocity.set(0, 0, 0);
 
@@ -174,6 +201,7 @@ export function createBB8Locomotion({ container, camera, droid, body, contactSha
       body.quaternion.premultiply(roll).normalize();
     },
     getHeadPose() {
+      if (!motionQuery.matches && screenTravelPose) return screenTravelPose;
       if (travelYaw === null || velocity.lengthSq() < 0.0025) return null;
       return {
         yaw: travelYaw,
