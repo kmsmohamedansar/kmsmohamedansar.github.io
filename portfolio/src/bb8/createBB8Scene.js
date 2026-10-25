@@ -1,5 +1,6 @@
 import * as THREE from "three";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
+import { createBB8Animator } from "./createBB8Animator";
 
 const COLORS = {
   porcelain: 0xf2f0e9,
@@ -104,6 +105,7 @@ function addLens(group, materials, position, radius, glow = false) {
   group.add(mount, glass);
   if (glow) {
     const glint = mesh(new THREE.SphereGeometry(radius * 0.19, 12, 8), materials.glint, { cast: false });
+    glint.name = "BB8_LENS_GLINT";
     glint.position.set(position[0] - radius * 0.3, position[1] + radius * 0.3, position[2] + radius * 0.9);
     group.add(glint);
   }
@@ -246,6 +248,8 @@ export function createBB8Scene(container) {
   controls.maxPolarAngle = Math.PI * 0.54;
   controls.enablePan = false;
 
+  const animator = createBB8Animator({ container, camera, droid, head, controls });
+
   const resize = () => {
     const width = Math.max(container.clientWidth, 1);
     const height = Math.max(container.clientHeight, 1);
@@ -258,7 +262,13 @@ export function createBB8Scene(container) {
   resize();
 
   let frameId = 0;
-  const render = () => {
+  let elapsed = 0;
+  let lastFrameAt = performance.now();
+  const render = (now = performance.now()) => {
+    const delta = Math.min((now - lastFrameAt) / 1000, 0.05);
+    elapsed += delta;
+    lastFrameAt = now;
+    animator.update(elapsed, delta, now);
     controls.update();
     renderer.render(scene, camera);
     frameId = requestAnimationFrame(render);
@@ -271,6 +281,7 @@ export function createBB8Scene(container) {
     dispose() {
       cancelAnimationFrame(frameId);
       observer.disconnect();
+      animator.dispose();
       controls.dispose();
       scene.traverse((object) => {
         if (object.geometry) object.geometry.dispose();
