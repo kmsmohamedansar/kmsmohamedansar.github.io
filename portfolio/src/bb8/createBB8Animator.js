@@ -21,9 +21,9 @@ export function createBB8Animator({ container, camera, droid, head, controls, lo
   const cursorLocal = new THREE.Vector3();
   const lookDirection = new THREE.Vector3();
   const attentionPlane = new THREE.Plane();
-  const glint = head.getObjectByName("BB8_LENS_GLINT");
-  const tallAntenna = head.getObjectByName("BB8_ANTENNA_TALL");
-  const shortAntenna = head.getObjectByName("BB8_ANTENNA_SHORT");
+  const glint = head.getObjectByName("EMET_LENS_GLINT");
+  const tallAntenna = head.getObjectByName("EMET_ANTENNA_TALL");
+  const shortAntenna = head.getObjectByName("EMET_ANTENNA_SHORT");
   const motionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
 
   let reducedMotion = motionQuery.matches;

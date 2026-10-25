@@ -33,7 +33,7 @@
 .bb8-edge-character { transform-origin: 60% 100%; }
 .bb8-edge-viewport { pointer-events: none; touch-action: none; }
 .bb8-edge-viewport:focus { outline: none; }
-.bb8-edge-viewport:focus-visible { border-radius: 50%; box-shadow: inset 0 0 0 1px rgb(237 106 25 / .75); }
+.bb8-edge-viewport:focus-visible { border-radius: 50%; box-shadow: inset 0 0 0 1px rgb(66 221 235 / .75); }
 .bb8-edge-viewport canvas { position: absolute; z-index: 0; inset: 0; display: block; width: 100%; height: 100%; pointer-events: none; }
 .bb8-edge-hit-target {
   position: absolute;
@@ -49,7 +49,7 @@
   cursor: pointer;
 }
 .bb8-edge-hit-target:focus { outline: none; }
-.bb8-edge-hit-target:focus-visible { box-shadow: 0 0 0 2px rgb(237 106 25 / .82); }
+.bb8-edge-hit-target:focus-visible { box-shadow: 0 0 0 2px rgb(66 221 235 / .82); }
 .bb8-edge--waiting .bb8-edge-hit-target,
 .bb8-edge--leaving .bb8-edge-hit-target,
 .bb8-edge--route-hidden .bb8-edge-hit-target { pointer-events: none; }
@@ -111,7 +111,7 @@
   justify-self: start;
   padding: 0;
   border: 0;
-  color: #ff914f;
+  color: #53dce8;
   background: none;
   font: inherit;
   font-size: .43rem;
@@ -119,9 +119,9 @@
   cursor: pointer;
 }
 
-.bb8-edge-fallback-droid { position: relative; width: 38px; height: 38px; border: 4px solid #e66b18; border-radius: 50%; background: #f2f0e9; }
-.bb8-edge-fallback-droid i { position: absolute; inset: -8px 3px auto; height: 15px; border: 3px solid #e66b18; border-radius: 22px 22px 5px 5px; background: #f2f0e9; }
-.bb8-edge-fallback-droid span { position: absolute; z-index: 1; top: -3px; left: 10px; width: 8px; height: 8px; border-radius: 50%; background: #17191b; }
+.bb8-edge-fallback-droid { position: relative; width: 38px; height: 38px; border: 3px solid #ad6a43; border-radius: 50%; background: #e8dfcf; }
+.bb8-edge-fallback-droid i { position: absolute; inset: -9px -2px auto; height: 14px; border: 2px solid #ad6a43; border-radius: 5px 14px 5px 5px; background: #17191b; transform: rotate(-3deg); }
+.bb8-edge-fallback-droid span { position: absolute; z-index: 1; top: -5px; left: 19px; width: 8px; height: 8px; border: 2px solid #42ddeb; border-radius: 50%; background: #07151d; }
 
 .bb8-edge-controls button:first-child {
   min-width: 50px;
@@ -145,7 +145,7 @@
 .bb8-edge-controls button:hover,
 .bb8-edge-controls button:focus-visible,
 .bb8-edge-show:hover,
-.bb8-edge-show:focus-visible { color: #fff; border-color: rgb(237 106 25 / .72); }
+.bb8-edge-show:focus-visible { color: #fff; border-color: rgb(66 221 235 / .72); }
 
 .bb8-edge-controls button[aria-pressed="true"] { color: #85dda2; border-color: rgb(133 221 162 / .48); }
 
@@ -196,7 +196,7 @@
   margin: 5px 0 -2px;
   padding: 0;
   border: 0;
-  color: #ff914f;
+  color: #53dce8;
   background: none;
   font: inherit;
   font-size: .46rem;
@@ -271,7 +271,7 @@
 }
 
 .bb8-edge-guide-heading div { display: grid; gap: 3px; }
-.bb8-edge-guide-heading span { color: #ff914f; font-size: .43rem; letter-spacing: .11em; text-transform: uppercase; }
+.bb8-edge-guide-heading span { color: #53dce8; font-size: .43rem; letter-spacing: .11em; text-transform: uppercase; }
 .bb8-edge-guide-heading strong { font-family: var(--font-display, sans-serif); font-size: .9rem; font-weight: 500; letter-spacing: .01em; }
 .bb8-edge-guide-heading button {
   width: 27px;

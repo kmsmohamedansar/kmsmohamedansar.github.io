@@ -40,8 +40,8 @@ export default function BB8Experience() {
 
       <section className="bb8-copy" aria-labelledby="bb8-title">
         <p className="bb8-eyebrow">Procedural Three.js prototype</p>
-        <h1 id="bb8-title">Meet <em>BB-8.</em></h1>
-        <p className="bb8-lede">A small companion built from geometry, light, and a little resistance-era optimism.</p>
+        <h1 id="bb8-title">Meet <em>Emet.</em></h1>
+        <p className="bb8-lede">A curious data scout built from geometry, light, and a stubborn need to investigate.</p>
       </section>
 
       <div
@@ -49,17 +49,17 @@ export default function BB8Experience() {
         className="bb8-viewport"
         role="application"
         tabIndex="0"
-        aria-label="Interactive three-dimensional fan-art model of BB-8. Click the droid for a reaction, click the floor to roll, use WASD or arrow keys to steer, drag to orbit, and scroll to zoom."
+        aria-label="Interactive three-dimensional model of Emet. Click the robot for a reaction, click the floor to roll, use WASD or arrow keys to steer, drag to orbit, and scroll to zoom."
       />
 
       <footer className="bb8-footer">
         <div className="bb8-controls" aria-label="Scene controls">
           <span><b>01</b> Drag to orbit</span>
           <span><b>02</b> Click floor to roll</span>
-          <span><b>03</b> Click BB-8 to react</span>
+          <span><b>03</b> Click Emet to react</span>
           <span><b>04</b> WASD to steer</span>
         </div>
-        <p>Fan-art prototype · Built without external 3D models</p>
+        <p>Original character · Built without external 3D models</p>
       </footer>
     </main>
   );

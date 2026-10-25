@@ -64,7 +64,7 @@ export default function BB8Companion() {
   const waypointsRemainingRef = useRef(0);
   const visitorBusyUntilRef = useRef(0);
   const [reducedMotion, setReducedMotion] = useState(() => window.matchMedia("(prefers-reduced-motion: reduce)").matches);
-  const [dismissed, setDismissed] = useState(() => readSessionFlag("bb8-dismissed"));
+  const [dismissed, setDismissed] = useState(() => readSessionFlag("emet-companion-dismissed"));
   const [started, setStarted] = useState(false);
   const [phase, setPhase] = useState("waiting");
   const [routine, setRoutine] = useState("peek");
@@ -122,7 +122,7 @@ export default function BB8Companion() {
     try {
       experience = createBB8Scene(viewportRef.current, { variant: "companion" });
     } catch (error) {
-      console.warn("BB-8 companion could not start WebGL.", error);
+      console.warn("Emet companion could not start WebGL.", error);
       setRenderFailed(true);
       return undefined;
     }
@@ -283,7 +283,7 @@ export default function BB8Companion() {
 
   const dismiss = () => {
     experienceRef.current?.sound.setEnabled(false);
-    writeSession("bb8-dismissed", true);
+    writeSession("emet-companion-dismissed", true);
     setSoundEnabled(false);
     setGuideOpen(false);
     setDismissed(true);
@@ -314,8 +314,8 @@ export default function BB8Companion() {
 
   if (reducedMotion && !started) {
     return (
-      <aside className="bb8-edge bb8-edge--reduced" aria-label="BB-8 companion">
-        <button type="button" className="bb8-edge-show" onClick={showReducedMotionCompanion}>Show BB-8</button>
+      <aside className="bb8-edge bb8-edge--reduced" aria-label="Emet companion">
+        <button type="button" className="bb8-edge-show" onClick={showReducedMotionCompanion}>Show Emet</button>
       </aside>
     );
   }
@@ -324,9 +324,9 @@ export default function BB8Companion() {
 
   if (renderFailed) {
     return (
-      <aside className="bb8-edge bb8-edge--fallback" aria-label="BB-8 companion unavailable">
+      <aside className="bb8-edge bb8-edge--fallback" aria-label="Emet companion unavailable">
         <div className="bb8-edge-fallback-droid" aria-hidden="true"><i /><span /></div>
-        <p>BB-8’s projector is offline.</p>
+        <p>Emet’s projector is offline.</p>
         <button type="button" onClick={dismiss}>Dismiss</button>
       </aside>
     );
@@ -339,12 +339,12 @@ export default function BB8Companion() {
     <aside
       ref={edgeRef}
       className={`bb8-edge bb8-edge--${phase} bb8-edge--${routine}${guideOpen ? " bb8-edge--guide-open" : ""}${routeHidden ? " bb8-edge--route-hidden" : ""}`}
-      aria-label="BB-8 portfolio companion"
+      aria-label="Emet portfolio companion"
       aria-hidden={routeHidden || undefined}
     >
       <div className="bb8-edge-controls" aria-label="Companion controls">
         <button type="button" onClick={toggleSound} aria-pressed={soundEnabled}>{soundEnabled ? "Mute" : "Sound"}</button>
-        <button type="button" onClick={dismiss} aria-label="Dismiss BB-8 for this visit">×</button>
+        <button type="button" onClick={dismiss} aria-label="Dismiss Emet for this visit">×</button>
       </div>
 
       <div className="bb8-edge-bubble">
@@ -362,7 +362,7 @@ export default function BB8Companion() {
           aria-labelledby="bb8-guide-title"
         >
           <div className="bb8-edge-guide-heading">
-            <div><span>BB-8 recommends</span><strong id="bb8-guide-title">Where should we go?</strong></div>
+            <div><span>Emet recommends</span><strong id="bb8-guide-title">Where should we go?</strong></div>
             <button
               type="button"
               onClick={() => {
@@ -409,7 +409,7 @@ export default function BB8Companion() {
             className="bb8-edge-hit-target"
             tabIndex={active ? 0 : -1}
             aria-hidden={!active}
-            aria-label="Open BB-8 portfolio guide"
+            aria-label="Open Emet portfolio guide"
             aria-expanded={guideOpen}
             aria-controls={guideOpen ? "bb8-portfolio-guide" : undefined}
             onClick={openGuide}

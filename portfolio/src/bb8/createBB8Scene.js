@@ -1,18 +1,17 @@
 import * as THREE from "three";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
+import { RoundedBoxGeometry } from "three/addons/geometries/RoundedBoxGeometry.js";
 import { createBB8Animator } from "./createBB8Animator";
 import { createBB8Behavior } from "./createBB8Behavior";
 import { createBB8Locomotion } from "./createBB8Locomotion";
 import { createBB8Sound } from "./createBB8Sound";
 
 const COLORS = {
-  porcelain: 0xf2f0e9,
-  porcelainShade: 0xd9d8d2,
-  orange: 0xe66b18,
-  orangeDark: 0xa93b0b,
-  silver: 0x6f7880,
-  graphite: 0x17191b,
-  lens: 0x07151d,
+  ceramic: 0xe8dfcf,
+  copper: 0xad6a43,
+  graphite: 0x11171b,
+  lens: 0x041116,
+  cyan: 0x42ddeb,
 };
 
 function standard(color, roughness = 0.45, metalness = 0.05) {
@@ -26,37 +25,27 @@ function mesh(geometry, material, { cast = true, receive = true } = {}) {
   return result;
 }
 
-function addBodyPanel(parent, normal, scale, materials, rotation = 0) {
+function addSurfaceModule(parent, normal, size, materials, rotation = 0, illuminated = false) {
   const panel = new THREE.Group();
   const direction = new THREE.Vector3(...normal).normalize();
-  panel.position.copy(direction.multiplyScalar(1.407));
+  panel.position.copy(direction.multiplyScalar(1.398));
   panel.quaternion.setFromUnitVectors(new THREE.Vector3(0, 0, 1), direction.normalize());
   panel.rotateZ(rotation);
 
-  const outer = mesh(new THREE.TorusGeometry(0.42 * scale, 0.064, 10, 42), materials.orange);
-  const inner = mesh(new THREE.CylinderGeometry(0.305 * scale, 0.305 * scale, 0.025, 36), materials.porcelainShade);
-  inner.rotation.x = Math.PI / 2;
-  inner.position.z = -0.002;
-  const hub = mesh(new THREE.CylinderGeometry(0.13 * scale, 0.13 * scale, 0.035, 28), materials.silver);
-  hub.rotation.x = Math.PI / 2;
-  hub.position.z = 0.028;
-  const inset = mesh(new THREE.CylinderGeometry(0.075 * scale, 0.075 * scale, 0.045, 24), materials.graphite);
-  inset.rotation.x = Math.PI / 2;
-  inset.position.z = 0.055;
-
-  panel.add(outer, inner, hub, inset);
-  for (let index = 0; index < 4; index += 1) {
-    const tab = mesh(new THREE.BoxGeometry(0.1 * scale, 0.17 * scale, 0.04), materials.orangeDark);
-    const angle = index * Math.PI / 2;
-    tab.position.set(Math.cos(angle) * 0.28 * scale, Math.sin(angle) * 0.28 * scale, 0.025);
-    tab.rotation.z = angle;
-    panel.add(tab);
-  }
+  const outer = mesh(new RoundedBoxGeometry(size[0], size[1], 0.075, 4, 0.06), materials.graphite);
+  outer.position.z = 0.01;
+  const inset = mesh(
+    new RoundedBoxGeometry(size[0] * 0.52, size[1] * 0.58, 0.085, 4, 0.045),
+    illuminated ? materials.cyan : materials.copper,
+    { cast: false },
+  );
+  inset.position.z = 0.065;
+  panel.add(outer, inset);
   parent.add(panel);
 }
 
 function addPanelSeams(body, materials) {
-  const seamGeometry = new THREE.TorusGeometry(1.405, 0.012, 8, 96);
+  const seamGeometry = new THREE.TorusGeometry(1.405, 0.014, 8, 96);
   const rings = [
     [0, 0, 0],
     [Math.PI / 2, 0, 0],
@@ -68,32 +57,33 @@ function addPanelSeams(body, materials) {
     body.add(ring);
   });
 
-  [-0.55, 0.55].forEach((y) => {
-    const latitudeRadius = Math.sqrt(1.405 ** 2 - y ** 2);
-    const ring = mesh(new THREE.TorusGeometry(latitudeRadius, 0.014, 8, 80), materials.seam, { cast: false });
-    ring.rotation.x = Math.PI / 2;
-    ring.position.y = y;
-    body.add(ring);
-  });
+  const copperBand = mesh(new THREE.TorusGeometry(1.412, 0.044, 10, 96), materials.copper, { cast: false });
+  copperBand.rotation.set(Math.PI / 2, 0.18, -0.16);
+  body.add(copperBand);
 }
 
 function createBody(materials) {
   const body = new THREE.Group();
-  body.name = "BB8_BODY_TRANSFORM";
+  body.name = "EMET_BODY_TRANSFORM";
   body.position.y = 1.45;
 
-  const shell = mesh(new THREE.SphereGeometry(1.4, 64, 48), materials.porcelain);
+  const shell = mesh(new THREE.SphereGeometry(1.4, 64, 48), materials.ceramic);
   body.add(shell);
   addPanelSeams(body, materials);
 
-  [
-    { normal: [0.13, 0.12, 1], scale: 1.05, rotation: 0.15 },
-    { normal: [0.9, 0.2, 0.42], scale: 0.9, rotation: -0.3 },
-    { normal: [-0.86, 0.08, 0.5], scale: 0.88, rotation: 0.45 },
-    { normal: [0.35, -0.8, 0.5], scale: 0.78, rotation: -0.2 },
-    { normal: [0.2, 0.85, 0.45], scale: 0.7, rotation: 0.2 },
-    { normal: [0, 0.05, -1], scale: 0.9, rotation: 0.1 },
-  ].forEach(({ normal, scale, rotation }) => addBodyPanel(body, normal, scale, materials, rotation));
+  addSurfaceModule(body, [0.18, 0.12, 1], [0.28, 0.72], materials, 0.04, true);
+  addSurfaceModule(body, [0.92, 0.16, 0.35], [0.5, 0.3], materials, -0.28);
+  addSurfaceModule(body, [-0.78, -0.18, 0.58], [0.34, 0.62], materials, 0.36);
+
+  const sideHub = new THREE.Group();
+  sideHub.position.set(-1.34, 0.05, 0.22);
+  sideHub.rotation.z = Math.PI / 2;
+  const hubOuter = mesh(new THREE.CylinderGeometry(0.38, 0.38, 0.09, 48), materials.graphite);
+  const hubRing = mesh(new THREE.TorusGeometry(0.27, 0.045, 10, 48), materials.copper);
+  hubRing.rotation.x = Math.PI / 2;
+  hubRing.position.y = -0.055;
+  sideHub.add(hubOuter, hubRing);
+  body.add(sideHub);
 
   return body;
 }
@@ -108,7 +98,7 @@ function addLens(group, materials, position, radius, glow = false) {
   group.add(mount, glass);
   if (glow) {
     const glint = mesh(new THREE.SphereGeometry(radius * 0.19, 12, 8), materials.glint, { cast: false });
-    glint.name = "BB8_LENS_GLINT";
+    glint.name = "EMET_LENS_GLINT";
     glint.position.set(position[0] - radius * 0.3, position[1] + radius * 0.3, position[2] + radius * 0.9);
     group.add(glint);
   }
@@ -116,63 +106,55 @@ function addLens(group, materials, position, radius, glow = false) {
 
 function createHead(materials) {
   const head = new THREE.Group();
-  head.name = "BB8_HEAD_TRANSFORM";
+  head.name = "EMET_HEAD_TRANSFORM";
   head.position.y = 2.77;
   head.rotation.y = -0.08;
 
-  const neck = mesh(new THREE.CylinderGeometry(0.65, 0.69, 0.14, 48), materials.graphite);
-  neck.position.y = 0.02;
-  const lowerRing = mesh(new THREE.CylinderGeometry(0.76, 0.76, 0.12, 64), materials.silver);
-  lowerRing.position.y = 0.11;
-  const orangeRing = mesh(new THREE.CylinderGeometry(0.78, 0.78, 0.105, 64), materials.orange);
-  orangeRing.position.y = 0.19;
-  const whiteRim = mesh(new THREE.CylinderGeometry(0.75, 0.77, 0.13, 64), materials.porcelain);
-  whiteRim.position.y = 0.27;
-  const dome = mesh(new THREE.SphereGeometry(0.75, 64, 32, 0, Math.PI * 2, 0, Math.PI / 2), materials.porcelain);
-  dome.position.y = 0.28;
-  head.add(neck, lowerRing, orangeRing, whiteRim, dome);
+  const neck = mesh(new THREE.CylinderGeometry(0.31, 0.43, 0.24, 36), materials.graphite);
+  neck.position.y = 0.08;
+  const neckRing = mesh(new THREE.TorusGeometry(0.37, 0.045, 10, 48), materials.copper);
+  neckRing.rotation.x = Math.PI / 2;
+  neckRing.position.y = 0.12;
+  const shell = mesh(new RoundedBoxGeometry(1.82, 0.76, 1.12, 6, 0.2), materials.graphite);
+  shell.position.y = 0.55;
+  shell.rotation.z = -0.035;
+  const rearArmor = mesh(new RoundedBoxGeometry(0.66, 0.56, 1.14, 5, 0.16), materials.ceramic);
+  rearArmor.position.set(-0.58, 0.55, -0.01);
+  rearArmor.rotation.z = -0.035;
+  const face = mesh(new RoundedBoxGeometry(1.12, 0.48, 0.08, 5, 0.12), materials.lens);
+  face.position.set(0.28, 0.56, 0.57);
+  head.add(neck, neckRing, shell, rearArmor, face);
 
-  const crownBand = mesh(new THREE.TorusGeometry(0.48, 0.055, 10, 56), materials.orange);
-  crownBand.rotation.x = Math.PI / 2;
-  crownBand.position.y = 0.84;
-  head.add(crownBand);
+  addLens(head, materials, [0.42, 0.58, 0.63], 0.25, true);
+  const cyanRing = mesh(new THREE.TorusGeometry(0.285, 0.035, 10, 48), materials.cyan, { cast: false });
+  cyanRing.position.set(0.42, 0.58, 0.69);
+  head.add(cyanRing);
+  const statusSlot = mesh(new RoundedBoxGeometry(0.075, 0.3, 0.045, 4, 0.025), materials.cyan, { cast: false });
+  statusSlot.position.set(-0.26, 0.56, 0.64);
+  head.add(statusSlot);
 
-  // Front equipment is slightly asymmetrical, which keeps the silhouette
-  // recognizable even when viewed at an angle.
-  addLens(head, materials, [-0.18, 0.69, 0.655], 0.19, true);
-  addLens(head, materials, [0.28, 0.51, 0.685], 0.095);
-
-  const sensorPanel = mesh(new THREE.BoxGeometry(0.22, 0.09, 0.035), materials.silver);
-  sensorPanel.position.set(0.23, 0.76, 0.64);
-  sensorPanel.rotation.x = -0.15;
-  head.add(sensorPanel);
-  [-0.06, 0, 0.06].forEach((x) => {
-    const port = mesh(new THREE.CylinderGeometry(0.018, 0.018, 0.04, 12), materials.graphite);
-    port.rotation.x = Math.PI / 2;
-    port.position.set(0.23 + x, 0.76, 0.67);
-    head.add(port);
-  });
-
-  const sidePanel = mesh(new THREE.TorusGeometry(0.17, 0.035, 8, 30), materials.orange);
-  sidePanel.position.set(0.67, 0.6, 0.15);
-  sidePanel.rotation.y = Math.PI / 2;
+  const sidePanel = mesh(new THREE.CylinderGeometry(0.19, 0.19, 0.08, 32), materials.copper);
+  sidePanel.position.set(0.88, 0.53, 0.02);
+  sidePanel.rotation.z = Math.PI / 2;
   head.add(sidePanel);
 
   const tallAntennaRig = new THREE.Group();
-  tallAntennaRig.name = "BB8_ANTENNA_TALL";
-  tallAntennaRig.position.set(0.16, 1, 0.02);
+  tallAntennaRig.name = "EMET_ANTENNA_TALL";
+  tallAntennaRig.position.set(-0.38, 0.96, -0.13);
   tallAntennaRig.rotation.z = -0.025;
-  const antennaTall = mesh(new THREE.CylinderGeometry(0.014, 0.018, 0.75, 10), materials.porcelainShade);
-  antennaTall.position.y = 0.38;
-  const antennaTip = mesh(new THREE.CylinderGeometry(0.018, 0.014, 0.13, 10), materials.graphite);
-  antennaTip.position.set(0.01, 0.81, 0);
-  tallAntennaRig.add(antennaTall, antennaTip);
+  const antennaTall = mesh(new THREE.ConeGeometry(0.13, 0.72, 4), materials.graphite);
+  antennaTall.position.y = 0.31;
+  antennaTall.scale.z = 0.32;
+  const antennaInset = mesh(new THREE.BoxGeometry(0.035, 0.34, 0.025), materials.copper);
+  antennaInset.position.set(0, 0.3, 0.045);
+  tallAntennaRig.add(antennaTall, antennaInset);
   const shortAntennaRig = new THREE.Group();
-  shortAntennaRig.name = "BB8_ANTENNA_SHORT";
-  shortAntennaRig.position.set(-0.18, 1.02, -0.01);
+  shortAntennaRig.name = "EMET_ANTENNA_SHORT";
+  shortAntennaRig.position.set(-0.7, 0.9, -0.12);
   shortAntennaRig.rotation.z = 0.035;
-  const antennaShort = mesh(new THREE.CylinderGeometry(0.012, 0.016, 0.46, 10), materials.graphite);
+  const antennaShort = mesh(new THREE.ConeGeometry(0.11, 0.55, 4), materials.graphite);
   antennaShort.position.y = 0.23;
+  antennaShort.scale.z = 0.32;
   shortAntennaRig.add(antennaShort);
   head.add(tallAntennaRig, shortAntennaRig);
 
@@ -181,15 +163,13 @@ function createHead(materials) {
 
 function createMaterials() {
   return {
-    porcelain: standard(COLORS.porcelain, 0.32, 0.03),
-    porcelainShade: standard(COLORS.porcelainShade, 0.46, 0.05),
-    orange: standard(COLORS.orange, 0.36, 0.08),
-    orangeDark: standard(COLORS.orangeDark, 0.45, 0.08),
-    silver: standard(COLORS.silver, 0.25, 0.72),
+    ceramic: standard(COLORS.ceramic, 0.38, 0.04),
+    copper: standard(COLORS.copper, 0.28, 0.62),
     seam: standard(0x555d62, 0.48, 0.42),
     graphite: standard(COLORS.graphite, 0.28, 0.55),
     lens: new THREE.MeshPhysicalMaterial({ color: COLORS.lens, roughness: 0.08, metalness: 0.18, clearcoat: 1, clearcoatRoughness: 0.08 }),
-    glint: new THREE.MeshBasicMaterial({ color: 0x9fddff }),
+    cyan: new THREE.MeshStandardMaterial({ color: COLORS.cyan, emissive: COLORS.cyan, emissiveIntensity: 2.2, roughness: 0.22 }),
+    glint: new THREE.MeshBasicMaterial({ color: 0xc8faff }),
   };
 }
 
@@ -217,7 +197,7 @@ export function createBB8Scene(container, { variant = "preview" } = {}) {
 
   const materials = createMaterials();
   const droid = new THREE.Group();
-  droid.name = "BB8_DROID";
+  droid.name = "EMET_DROID";
   droid.rotation.y = -0.16;
   const body = createBody(materials);
   const head = createHead(materials);
@@ -253,9 +233,11 @@ export function createBB8Scene(container, { variant = "preview" } = {}) {
   key.shadow.bias = -0.0003;
   const rim = new THREE.DirectionalLight(0x6eb8ff, 3.4);
   rim.position.set(-5, 4, -3);
-  const orangeFill = new THREE.PointLight(0xff7a24, 20, 9, 2);
-  orangeFill.position.set(3.2, 1.3, -1.5);
-  scene.add(hemi, key, rim, orangeFill);
+  const copperFill = new THREE.PointLight(0xc7794b, 16, 9, 2);
+  copperFill.position.set(3.2, 1.3, -1.5);
+  const cyanFill = new THREE.PointLight(0x42ddeb, 7, 5, 2);
+  cyanFill.position.set(-1.4, 3.2, 3.2);
+  scene.add(hemi, key, rim, copperFill, cyanFill);
 
   const controls = new OrbitControls(camera, renderer.domElement);
   controls.target.set(0, 1.85, 0);
