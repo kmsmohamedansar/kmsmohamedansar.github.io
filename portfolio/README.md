@@ -8,7 +8,7 @@ React 19, Vite, Tailwind v4, Framer Motion, and three.js for the interactive exp
 One scrolling page, then a detail page per project:
 
 1. **Hero**: particles gather into my name, then morph into what I build. The rotating project/tool line stays underneath, and the pointer disperses either text shape.
-2. **Projects**: featured stories, a card grid, then a sideways scroller.
+2. **Projects**: one manually controlled Open Source & Experiments feature for JEV, REA and StoryEra, followed by the other featured stories and project grid.
 3. **Built with AI**: the EMET terminal, solar system, and infinity loop.
 4. **Skills ticker** and **About**.
 5. **Experience**.
@@ -45,7 +45,7 @@ public/shots/           screenshots used on project pages
 
 ## Adding or changing a project
 
-Edit `src/data/projects.js`. Set `featured: true` to put it in the top three. Flow diagrams are columns of boxes; boxes link to the next column automatically, or list `links` like `"0.0>1.1"` for a specific shape. Add images to `public/shots/` and list them under `shots`.
+Edit `src/data/projects.js`. Set `featured: true` for a featured story. Add `spotlightGroup: "open-source"` to include a featured project in the shared Open Source & Experiments collection. Each card keeps its own artwork, copy, evidence and detail route; `spotlightLink` adds a direct report or documentation link. Flow diagrams are columns of boxes; boxes link to the next column automatically, or list `links` like `"0.0>1.1"` for a specific shape. Add images to `public/shots/` and list them under `shots`.
 
 ## Writing style
 
@@ -63,3 +63,11 @@ npm run lint
 ## Deploy
 
 `.github/workflows/deploy-portfolio.yml` builds and publishes to GitHub Pages on every push to `main` that touches `portfolio/**`. Pages must be set to the **GitHub Actions** source.
+
+## Open source spotlight and StoryEra
+
+JEV and REA remain independent studies with their original report links. StoryEra is the third slide, a reusable agent skill rather than another model benchmark. Its detail page documents the workflow, Codex and Claude Code installation, curated novel examples, saved evaluation limits and links to the public repository. The original novel is not included.
+
+The collection displays all three projects together: cards across on desktop, image-and-detail rows on tablets, and stacked cards on phones. Each retains its image, details, story and report links. Existing project anchors scroll to the corresponding card. The full project index and command palette still expose each project individually.
+
+`public/shots/spotlight/storyera.webp` is original AI-generated editorial artwork, made as a companion to the existing covers. It is an illustration, not an application screenshot. The two StoryEra diagrams in `public/shots/storyera/` come from the MIT-licensed StoryEra repository.

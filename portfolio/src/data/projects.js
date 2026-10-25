@@ -32,6 +32,8 @@ export const PROJECTS = [
   {
     slug: "decision-models",
     featured: true,
+    spotlightGroup: "open-source",
+    spotlightLink: { label: "Read the report", href: "/p/decision-models/report.html" },
     theme: { bg: "#e6d5bd", title: "display" },
     title: "My Take on Jev",
     kind: "Small AIs, put to the test",
@@ -140,6 +142,8 @@ export const PROJECTS = [
   {
     slug: "rea-study",
     featured: true,
+    spotlightGroup: "open-source",
+    spotlightLink: { label: "Read the report", href: "/p/rea-study/report.html" },
     theme: { bg: "#e6d5bd", title: "display" },
     title: "My Take on REA",
     kind: "An AI tool, tested independently",
@@ -235,6 +239,92 @@ export const PROJECTS = [
       { label: "Download the PDF", href: "/p/rea-study/report.pdf", external: true },
       { label: "Code, data and every run", href: "https://github.com/kmsmohamedansar/rea-study", external: true },
       { label: "The earlier study it follows: My Take on Jev", href: "#project/decision-models" },
+    ],
+  },
+  {
+    slug: "storyera",
+    featured: true,
+    spotlightGroup: "open-source",
+    spotlightLink: { label: "Get the skill", href: "https://github.com/kmsmohamedansar/storyera" },
+    theme: { bg: "#e6d5bd", title: "display" },
+    title: "StoryEra",
+    kind: "An agent skill for novel continuity",
+    accent: "amber",
+    status: "Open source skill · documented examples",
+    spotlightArt: "/shots/spotlight/storyera.webp",
+    hook: "A second pair of eyes for a novel. StoryEra gives Codex or Claude Code a repeatable way to track facts, check continuity, and separate a plot hole from an intentional mystery. It cites the passages and suggests repairs. The author decides what changes.",
+    stats: [
+      { value: "53", label: "chapters in the original novel workflow demonstration, not an accuracy benchmark", short: "chapters in the original demo" },
+      { value: "4", label: "finding types: contradictions, explained changes, intentional mysteries, and author questions", short: "ways to classify a finding" },
+      { value: "24", label: "offline checks for the grader, evidence and package; these do not measure model accuracy", short: "checks for the tooling" },
+      { value: "No edits", label: "to the manuscript during an audit; repairs stay proposals", short: "the author keeps control" },
+    ],
+    role: "I defined the continuity workflow, supplied my novel as a real example, and built the skill, documentation and evaluation tools with Codex.",
+    tags: ["Agent Skills", "Creative writing", "Codex", "Claude Code"],
+    stack: ["Agent Skills", "Codex", "Claude Code", "Markdown", "Python"],
+    stackUsage: {
+      "Agent Skills": "The portable folder format: a SKILL.md playbook with supporting references. StoryEra uses instructions rather than a separate model or service.",
+      Codex: "The host used to build the skill and run its recorded fictional-sample evaluations. Invoke the installed skill with $storyera.",
+      "Claude Code": "A documented local installation target. Invoke /storyera after installing the folder. A Claude Code behavioral run has not been recorded.",
+      Markdown: "The skill instructions, chapter input, documentation and cited evidence are plain-text files.",
+      Python: "Standard-library utilities validate saved reports, source quotes, classifications and package contents. They do not read a novel on their own.",
+    },
+    story: [
+      "I wanted a way to check a long novel without treating every surprise as a mistake. A change of clothes can be explained. A concealed identity can be deliberate. A missing explanation can be a question for the author. A useful audit needs to tell those apart.",
+      "I first tried the workflow on my own novel, YAKUZA: The Borrowed Life, across a prologue and 53 chapters. One finding caught two different groups of children being counted as the same group. Another caught a character's first job happening twice. The full manuscript stayed unchanged; the public case study uses selected excerpts with my permission.",
+      "That first audit followed a README description before an installable skill existed. I then turned the process into StoryEra: instructions, a cited fact ledger, a report contract, examples, and a small fictional test manuscript. It is a playbook for an existing AI, not a new AI model or a background agent.",
+      "The saved full-sample audit found the seeded cases. The partial-reading audit kept the identity mystery unresolved but left one expected author question only in its ledger. I kept that shortfall in the documentation. The 24 code checks test the tooling, not how accurately an AI can read every novel.",
+    ],
+    how: [
+      "Clone or download the repository and copy the whole skills/storyera folder. Cloning alone does not activate it, and no plugin installation is required for this version.",
+      "In a Codex novel project, install at .agents/skills/storyera and invoke $storyera. For personal use across local projects, use ~/.agents/skills/storyera.",
+      "In Claude Code, install at .claude/skills/storyera in the novel project, or ~/.claude/skills/storyera for personal use. Invoke /storyera. This setup follows the host's documentation; the recorded behavioral tests used Codex.",
+      "Supply chapters in reading order and any author canon. The agent reads the text, builds a cited ledger, checks later explanations, and labels each finding before proposing a small repair.",
+      "For a long novel, work in batches and retain the ledger. Disclose unread chapters, check manuscript hashes when tools are available, and keep the author's decision separate from the agent's proposal.",
+    ],
+    sample: {
+      label: "An example from my novel",
+      title: "Spoilers for YAKUZA, Volumes One to Three. These are curated examples, not a blind benchmark.",
+      headers: ["The established facts", "The apparent conflict", "The review note"],
+      rows: [
+        ["34 children already shipped away; 14 rescued in the next shipment.", "The ending subtracts the new rescue group from the earlier 34.", "Keep 34 missing, or explicitly establish overlap between the groups."],
+        ["Paid receipt-checking and spreadsheet work are already established.", "A later chapter reintroduces the first job and first pay.", "Make it the first office posting and reconcile the earlier experience."],
+        ["An initially weak body improves through months of training.", "The character becomes much stronger.", "Preserve the explained change rather than reporting an automatic error."],
+      ],
+    },
+    figures: [
+      { src: "/shots/storyera/workflow.png", caption: "The audit workflow: establish scope, read the passages, retain cited facts, reconcile explanations, then propose repairs. This is an explanatory diagram, not an app screenshot.", wide: true },
+      { src: "/shots/storyera/cohorts.png", caption: "A curated finding from my novel: distinguish the 34 already shipped from the 14 newly rescued. The count needs an explicit bridge if the groups overlap.", wide: true },
+    ],
+    learned: [
+      "Evidence makes a finding useful. A line reference and a small repair are easier to act on than a vague warning about the plot.",
+      "The negative cases matter: explained changes and deliberate mysteries should survive the audit.",
+      "A valid report is not proof of good reasoning. The saved evaluations, limitations and partial-reading shortfall stay visible.",
+      "The author's manuscript and copyright stay separate from the reusable skill. The skill is MIT licensed; the published novel excerpts retain my copyright.",
+    ],
+    flow: {
+      caption: "The existing AI does the reading. The skill supplies the method.",
+      columns: [
+        { label: "Input", nodes: ["Chapters in order", "Author canon and scope"] },
+        { label: "Ledger", nodes: ["Facts, viewpoints and exact citations"] },
+        { label: "Reconcile", nodes: ["Later explanations", "Mysteries and uncertainty"] },
+        { label: "Review", nodes: ["Classified findings", "Repairs for the author to decide"] },
+      ],
+    },
+    reportCta: {
+      kicker: "Open source · install and try it",
+      title: "The skill, the examples, and the limits",
+      text: "The repository explains what StoryEra is, how to install it in Codex or Claude Code, how it was created, and what the saved evaluations actually show. No extra model or API key is required by the skill; you use your existing agent host.",
+      contents: ["Codex and Claude Code setup", "Copyable audit prompts", "A cited case study from my novel", "How the skill was created", "Saved full and partial audit runs", "The known shortfall, kept in the results"],
+      links: [
+        { label: "Install StoryEra", href: "https://github.com/kmsmohamedansar/storyera/blob/main/docs/installation.md", external: true, primary: true },
+        { label: "Read the novel case study", href: "https://github.com/kmsmohamedansar/storyera/blob/main/docs/case-study.md", external: true },
+        { label: "Code and documentation", href: "https://github.com/kmsmohamedansar/storyera", external: true },
+      ],
+    },
+    links: [
+      { label: "Read the documentation", href: "https://github.com/kmsmohamedansar/storyera", external: true, primary: true },
+      { label: "Install in Codex or Claude Code", href: "https://github.com/kmsmohamedansar/storyera/blob/main/docs/installation.md", external: true },
     ],
   },
   {
@@ -338,6 +428,7 @@ export const PROJECTS = [
     kind: "Chrome extension",
     accent: "violet",
     status: "Public code · runs in Chrome",
+    cardArt: "/shots/project-covers/sitescout.webp",
     cardShot: "/shots/sitescout/card.png",
     hook: "Enter a few company ticker codes, such as AAPL, and press Scout. A panel in Chrome visits each company's Yahoo Finance page, collects the key numbers, and gives them back as tidy cards and one spreadsheet file.",
     role: "Built it myself: a public version of the ideas behind Sidecar, a tool I built at work.",
@@ -421,6 +512,7 @@ export const PROJECTS = [
     kind: "Connecting two systems",
     accent: "green",
     status: "Public code · runs with Docker",
+    cardArt: "/shots/project-covers/integration.webp",
     hook: "Two made-up companies whose software needs to talk to each other, the link I built between them, real secure logins, and ten things I broke on purpose, each with a written fix.",
     role: "Built it myself: a public version of the kind of system-connecting work I do at work, using made-up companies.",
     tags: ["APIs", "OAuth 2.0", "SSO", "Webhooks", "TypeScript"],
@@ -513,6 +605,7 @@ export const PROJECTS = [
     kind: "AI + data tools",
     accent: "violet",
     status: "Public code · measured results",
+    cardArt: "/shots/project-covers/analytics-assistant.webp",
     hook: "Two \"brains\" answer the same 30 questions about a year of grocery sales: one follows rules I wrote, the other is an AI running on my laptop. They use the same six tools, and both are scored.",
     role: "Built it myself: a public, tested version of how I ask an AI assistant about sales data at work.",
     tags: ["MCP", "Ollama", "Evaluation", "TypeScript"],
@@ -592,6 +685,7 @@ export const PROJECTS = [
     kind: "iOS app",
     accent: "amber",
     status: "Live on the App Store",
+    cardArt: "/shots/project-covers/reptrack.webp",
     icon: "/shots/reptrack-icon.webp",
     hook: "A workout log for the gym floor. Record a set in a few taps, see what you did last time, and get back to it.",
     role: "Built on my own, from the first screen to getting approved on the App Store.",
@@ -643,6 +737,7 @@ export const PROJECTS = [
     kind: "Data pipeline",
     accent: "amber",
     status: "Public code · runs on a laptop",
+    cardArt: "/shots/project-covers/data-delivery.webp",
     hook: "Three pharmacies send their weekly sales files, each in a different layout and each with its own mistakes. Every Monday they're turned into one clean table, and it's only sent out if every check passes.",
     role: "Built it myself: a public version of the kind of data delivery I'm involved in at work.",
     tags: ["dbt", "Dagster", "DuckDB", "Data quality"],
@@ -714,6 +809,7 @@ export const PROJECTS = [
     kind: "AI + data quality",
     accent: "green",
     status: "Public code · measured results",
+    cardArt: "/shots/project-covers/catalogue-checker.webp",
     hook: "Online grocery stores sometimes put products in the wrong aisle, like crisps under \"Cheese\". I built three ways to spot them automatically, then tested each one on real products where I had hidden 50 mistakes on purpose.",
     role: "Built it myself: the bigger, properly tested version of my earlier product categorization notebook.",
     shots: ["/shots/catalogue/report.webp"],
@@ -1487,7 +1583,8 @@ export const PROJECTS = [
 // `hidden: true` keeps a project's page working for old links but leaves it
 // out of every list on the site.
 const listed = (p) => !p.hidden;
-export const FEATURED = PROJECTS.filter((p) => p.featured && !p.grid && listed(p));
+export const OPEN_SOURCE_PROJECTS = PROJECTS.filter((p) => p.spotlightGroup === "open-source" && listed(p));
+export const FEATURED = PROJECTS.filter((p) => p.featured && !p.grid && !p.spotlightGroup && listed(p));
 export const FEATURED_GRID = PROJECTS.filter((p) => p.featured && p.grid && listed(p));
 // Archived course-era work is listed compactly under "Earlier work" instead of in the rail.
 const isEarlier = (p) => p.earlier || p.status === "Archived experiment";
@@ -1507,6 +1604,7 @@ export const EXPERIMENTS = [
     body: "It matches what you type against a few topics, so it isn't a chatbot, and that's the point. Short, honest answers, typed out one letter at a time.",
     href: "#emet",
     shot: "/shots/emet.webp",
+    cardArt: "/shots/project-covers/emet.webp",
     cta: "Open the terminal",
   },
   {
@@ -1517,6 +1615,7 @@ export const EXPERIMENTS = [
     body: "This one is pure curiosity. I wanted to see how far I could push three.js with an AI pair programmer, and it turned into several hundred lines of orbit maths and planet shaders.",
     href: "#explore",
     shot: "/shots/solar-system.webp",
+    cardArt: "/shots/project-covers/solar-system.webp",
     cta: "Take a look around",
   },
   {
@@ -1527,6 +1626,8 @@ export const EXPERIMENTS = [
     body: "Thousands of points drawn on the graphics card and held in a loop shape. It's the same kind of experiment: ask the AI, look at the result, push it further. Its dots now gather into my name at the top of the page.",
     href: "#infinity",
     shot: "/shots/infinity.webp",
+    cardArt: "/shots/project-covers/infinity.webp",
     cta: "See the infinity",
   },
 ];
+

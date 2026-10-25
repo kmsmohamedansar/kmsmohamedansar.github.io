@@ -3,7 +3,7 @@ import { AnimatePresence, motion, useReducedMotion, useInView } from "framer-mot
 import { ArrowDown, ArrowRight, ArrowUpRight, ExternalLink, Info, Mail } from "lucide-react";
 import NameParticles from "./NameParticles";
 import { ABOUT, CONTACT, HERO, RECEIPTS, ROLES } from "../data/content";
-import { EARLIER_PROJECTS, EXPERIMENTS, FEATURED, FEATURED_GRID, LISTED_PROJECTS, MORE_PROJECTS } from "../data/projects";
+import { EARLIER_PROJECTS, EXPERIMENTS, FEATURED, FEATURED_GRID, LISTED_PROJECTS, MORE_PROJECTS, OPEN_SOURCE_PROJECTS } from "../data/projects";
 import { TOOL_INFO } from "../data/tools";
 import { EASE_REVEAL } from "../lib/motion";
 import { media } from "../lib/media";
@@ -30,6 +30,7 @@ const BUILT = [
   ["Sitescout", "TypeScript", "a Chrome extension"],
   ["Integration-in-a-box", "Keycloak", "a working integration"],
   ["My Take on Jev", "Python", "an AI study"],
+  ["StoryEra", "Codex", "a skill for writers"],
   ["my digital double", "Claude Code", "a 3D head"],
   ["a catalogue checker", "embeddings", "a data quality check"],
   ["a weekly data delivery", "DuckDB", "a pipeline that stops itself"],
@@ -130,11 +131,16 @@ function PunchTitle({ text }) {
 function ProjectPlate({ project, compact = false }) {
   const [broken, setBroken] = useState(false);
   const [artBroken, setArtBroken] = useState(false);
-  // If the cover art fails, fall through to the plate this project had before
-  // it got one, rather than leaving an empty frame behind the caption. It is
-  // tracked apart from `broken` so a failed cover still gets the screenshot.
-  if (project.spotlightArt && !artBroken) return <div className="ed-project-plate ed-spotlight-cover" aria-hidden="true">
-    <img className="ed-spotlight-art ed-lazy-media" src={media(project.spotlightArt)} alt="" loading="lazy" onLoad={revealImage} onError={() => setArtBroken(true)} />
+  // Spotlight covers sit on the large spreads and set their own proportion;
+  // card covers ride the tile's, so they only differ by which class shapes
+  // the plate. The artwork carries no copy, and the card already names the
+  // project, so it is decorative. If it fails, fall through to the plate this
+  // project had before it got one, rather than leaving an empty frame behind
+  // the caption. Tracked apart from `broken` so a failed cover still gets the
+  // screenshot.
+  const coverArt = project.spotlightArt || project.cardArt;
+  if (coverArt && !artBroken) return <div className={`ed-project-plate ${project.spotlightArt ? "ed-spotlight-cover" : "ed-card-cover"} ${compact ? "ed-plate-compact" : ""}`} aria-hidden="true">
+    <img className="ed-spotlight-art ed-lazy-media" src={media(coverArt)} alt="" loading="lazy" onLoad={revealImage} onError={() => setArtBroken(true)} />
     <span className="ed-poster-cross">✳</span>
     <span className="ed-plate-caption">{project.kind}</span>
   </div>;
@@ -167,6 +173,25 @@ function FeaturedSpread({ project, index }) {
     </div>
   </Enter>;
 }
+
+// Every project stays visible within the shared collection.
+function OpenSourceSpotlight() {
+  return <Enter className="ed-open-source" >
+    <div className="ed-open-source-heading">
+      <div><p className="ed-label"><span>01</span>Open source & experiments</p><h3>Ideas worth <em>trying.</em></h3></div>
+      <p>Studies I ran. Skills I built.<br />Code and findings you can inspect.</p>
+    </div>
+    <div className="ed-open-source-grid">
+      {OPEN_SOURCE_PROJECTS.map((project) => <article key={project.slug} className="ed-open-source-card" aria-labelledby={`open-source-title-${project.slug}`}>
+        <a id={`card-${project.slug}`} href={`#project/${project.slug}`} aria-label={`Read ${project.title}`} className="ed-feature-image" data-cursor="View"><ProjectPlate project={project} /></a>
+        <div className="ed-feature-body"><p className="ed-label">{project.kind}</p><h3 id={`open-source-title-${project.slug}`}><a href={`#project/${project.slug}`}>{project.title}</a></h3><p className="ed-copy">{project.hook}</p><p className="ed-project-status">{project.status}</p>
+          {project.stats && <dl className="ed-project-stats">{project.stats.map((stat) => <div key={stat.label}><dt>{stat.value}</dt><dd>{stat.short || stat.label}</dd></div>)}</dl>}
+          <div className="ed-open-source-links"><ArrowLink href={`#project/${project.slug}`}>Read the story</ArrowLink>{project.spotlightLink && <ArrowLink href={project.spotlightLink.href}>{project.spotlightLink.label}</ArrowLink>}</div>
+        </div>
+      </article>)}
+    </div>
+  </Enter>;
+}
 function ProjectTile({ project, index }) {
   return <Enter delay={(index % 2) * 0.08} className="ed-project-tile">
     <a id={`card-${project.slug}`} href={`#project/${project.slug}`} data-cursor="View"><ProjectPlate project={project} compact /><div className="ed-tile-heading"><h3 aria-label={project.title}><PunchTitle text={project.title} /></h3><ArrowUpRight size={26} aria-hidden="true" /></div><p className="ed-copy">{firstSentence(project.hook)}</p><p className="ed-tile-tags">{project.tags.slice(0, 3).join(" / ")}</p></a>
@@ -176,7 +201,7 @@ export function ProjectsSection() {
   return <section id="projects" className="ed-projects ed-light ed-section">
     <div className="ed-section-watermark" aria-hidden="true">PROJECTS</div>
     <div className="ed-wrap"><Enter className="ed-section-heading"><div><IndexLabel number="02">Selected projects</IndexLabel><h2>Things I’ve <em>built.</em></h2></div><div className="ed-heading-aside"><p>Apps, data systems, and questions I wanted to test for myself.</p><ArrowLink href="#work">The full project index</ArrowLink></div></Enter>
-      <div className="ed-feature-list">{FEATURED.map((project, i) => <FeaturedSpread key={project.slug} project={project} index={i} />)}</div>
+      <div className="ed-feature-list"><OpenSourceSpotlight />{FEATURED.map((project, i) => <FeaturedSpread key={project.slug} project={project} index={i + 1} />)}</div>
       <div className="ed-grid-heading"><h3>More from the workbench.</h3><span>Keep exploring ↘</span></div>
       <div className="ed-project-grid">{FEATURED_GRID.map((project, i) => <ProjectTile key={project.slug} project={project} index={i} />)}</div>
       <div className="ed-work-list"><IndexLabel number="↳">Behind the scenes</IndexLabel><p className="ed-copy">Professional work is described without client names or private data. Public practice versions use unrelated public or sample data.</p>
@@ -187,10 +212,16 @@ export function ProjectsSection() {
   </section>;
 }
 
+// Keep the real screenshot as a fallback if a decorative cover cannot load.
+function ExperimentImage({ experiment }) {
+  const [artBroken, setArtBroken] = useState(false);
+  return <img className="ed-lazy-media" src={media(!artBroken && experiment.cardArt ? experiment.cardArt : experiment.shot)} alt="" width={1200} height={900} loading="lazy" onLoad={revealImage} onError={() => setArtBroken(true)} />;
+}
+
 export function ExperimentsSection() {
   return <section id="ai" className="ed-experiments ed-section"><div className="ed-wrap">
     <Enter className="ed-section-heading"><div><IndexLabel number="03">The curiosity department</IndexLabel><h2>What if<br /><em>I tried this?</em></h2></div><p className="ed-heading-aside">Small experiments, made with AI as a coding partner. Open one and have a play.</p></Enter>
-    <div className="ed-experiment-grid">{EXPERIMENTS.map((experiment, i) => <Enter key={experiment.id} delay={i * 0.07}><a href={experiment.href} data-cursor="Play" className="ed-experiment"><div className="ed-experiment-image"><img className="ed-lazy-media" src={media(experiment.shot)} alt="" loading="lazy" onLoad={revealImage} /><span>0{i + 1} / Interactive</span></div><div className="ed-experiment-title"><h3>{experiment.title}</h3><ArrowUpRight size={22} /></div><p>{experiment.hook}</p><span className="ed-experiment-cta">{experiment.cta}<ArrowRight size={16} /></span></a></Enter>)}</div>
+    <div className="ed-experiment-grid">{EXPERIMENTS.map((experiment, i) => <Enter key={experiment.id} delay={i * 0.07}><a href={experiment.href} data-cursor="Play" className="ed-experiment"><div className="ed-experiment-image"><ExperimentImage experiment={experiment} /><span>0{i + 1} / Interactive</span></div><div className="ed-experiment-title"><h3>{experiment.title}</h3><ArrowUpRight size={22} /></div><p>{experiment.hook}</p><span className="ed-experiment-cta">{experiment.cta}<ArrowRight size={16} /></span></a></Enter>)}</div>
   </div></section>;
 }
 
@@ -219,3 +250,4 @@ export function ContactSection() {
   const { navigate } = useRoute();
   return <section id="contact" className="ed-contact ed-light"><div className="ed-wrap"><IndexLabel number="06">Something in mind?</IndexLabel><h2>Let's make<br /><em>something work.</em></h2><div className="ed-contact-bottom"><a href={`mailto:${CONTACT.email}`} className="ed-contact-email" data-cursor="Email">Say hello<ArrowUpRight aria-hidden="true" /></a><div><p>Questions about a project, or want to talk data?<br />I read every message.</p><div className="ed-socials"><a href={CONTACT.linkedin} target="_blank" rel="noopener noreferrer">LinkedIn<ExternalLink size={14} /></a><a href={CONTACT.github} target="_blank" rel="noopener noreferrer">GitHub<ExternalLink size={14} /></a><a href={`mailto:${CONTACT.email}`}><Mail size={14} />Email</a></div></div></div><footer className="ed-footer"><span>Mohamed Ansar © {new Date().getFullYear()}</span><span>Made with curiosity. And a lot of testing.</span><button onClick={() => navigate("deck")} aria-label="Back to top">Back to top ↑</button></footer></div></section>;
 }
+

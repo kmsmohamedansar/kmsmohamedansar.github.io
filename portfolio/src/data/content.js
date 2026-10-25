@@ -200,6 +200,7 @@ export const COMMAND_ITEMS = [
   { label: "RepTrack, project page", go: "#project/reptrack", group: "Projects" },
   { label: "My Take on Jev, project page", go: "#project/decision-models", group: "Projects" },
   { label: "My Take on REA, project page", go: "#project/rea-study", group: "Projects" },
+  { label: "StoryEra, novel continuity skill", go: "#project/storyera", group: "Projects" },
   { label: "Haloscript, project page", go: "#project/haloscript", group: "Projects" },
   { label: "EMET · ask the terminal", go: "#emet", group: "Fun" },
   { label: "Solar system explorer", go: "#explore", group: "Fun" },

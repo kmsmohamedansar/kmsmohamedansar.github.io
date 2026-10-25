@@ -1,12 +1,13 @@
 import { motion } from "framer-motion";
 import { ArrowUpRight } from "lucide-react";
-import { ACCENTS, EARLIER_PROJECTS, FEATURED, FEATURED_GRID, MORE_PROJECTS } from "../data/projects";
+import { ACCENTS, EARLIER_PROJECTS, FEATURED, FEATURED_GRID, MORE_PROJECTS, OPEN_SOURCE_PROJECTS } from "../data/projects";
 import { EASE_OUT } from "../lib/motion";
 
 // Every listed project on one page, as a plain index. Each row opens the
 // project's own page at #project/<slug>. Hidden projects stay out, same as
 // on the main page.
 const GROUPS = [
+  { label: "Open source & experiments", projects: OPEN_SOURCE_PROJECTS },
   { label: "Featured", projects: [...FEATURED, ...FEATURED_GRID] },
   { label: "More projects", projects: MORE_PROJECTS },
   { label: "Earlier work", projects: EARLIER_PROJECTS },
