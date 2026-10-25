@@ -414,6 +414,7 @@ function AppShell({ bootDone }) {
           <div className="relative z-10 h-full flex flex-col">
             <Nav />
             <ScrollProgress />
+            {bootDone && <Suspense fallback={null}><BB8Companion /></Suspense>}
             {/* No page-level `perspective` here on purpose: setting it on an
                 ancestor this high up turns it into the CSS containing block
                 for every `position: fixed` descendant (modals, overlays)
@@ -422,18 +423,11 @@ function AppShell({ bootDone }) {
                 project cards) establishes its own local perspective instead. */}
             <Stage bootDone={bootDone} />
             <CommandPalette />
-            <HomepageCompanion active={bootDone} />
           </div>
         </div>
       </RouteProvider>
     </ScrollContext.Provider>
   );
-}
-
-function HomepageCompanion({ active }) {
-  const { route } = useRoute();
-  if (!active || route !== "main") return null;
-  return <Suspense fallback={null}><BB8Companion /></Suspense>;
 }
 
 /* ============================================================

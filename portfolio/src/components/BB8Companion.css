@@ -18,6 +18,12 @@
   pointer-events: none;
 }
 
+.bb8-edge--route-hidden {
+  visibility: hidden;
+  opacity: 0;
+  pointer-events: none;
+}
+
 .bb8-edge--peeking { opacity: 1; transform: translateY(56%); }
 .bb8-edge--observing { opacity: 1; transform: translateY(3%); }
 

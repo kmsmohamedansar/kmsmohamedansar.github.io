@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { useRoute } from "../App";
 import { createBB8Scene } from "../bb8/createBB8Scene";
 import "./BB8Companion.css";
 
@@ -17,6 +18,12 @@ const GUIDE_LINKS = [
   { href: "#about", eyebrow: "Background", label: "About me", detail: "How I work and what I use" },
   { href: "#contact", eyebrow: "Connect", label: "Say hello", detail: "Email and profile links" },
 ];
+
+// These takeover routes dedicate the full viewport to pointer-driven tools or
+// a terminal with controls at the bottom edge. Keep the companion mounted so
+// its personality/session state survives navigation, but do not let it cover
+// or compete with those interfaces.
+const HIDDEN_ROUTES = new Set(["emet", "explore", "lineage-demo", "infinity", "digital-double"]);
 
 function readSessionNumber(key) {
   try {
@@ -47,6 +54,8 @@ function randomDelay() {
 }
 
 export default function BB8Companion() {
+  const { route } = useRoute();
+  const routeHidden = HIDDEN_ROUTES.has(route);
   const viewportRef = useRef(null);
   const guideRef = useRef(null);
   const experienceRef = useRef(null);
@@ -96,14 +105,14 @@ export default function BB8Companion() {
   }, [started, dismissed, renderFailed]);
 
   useEffect(() => {
-    const updatePlayback = () => experienceRef.current?.setPaused(phase === "waiting" || document.hidden);
+    const updatePlayback = () => experienceRef.current?.setPaused(phase === "waiting" || routeHidden || document.hidden);
     updatePlayback();
     document.addEventListener("visibilitychange", updatePlayback);
     return () => document.removeEventListener("visibilitychange", updatePlayback);
-  }, [phase]);
+  }, [phase, routeHidden]);
 
   useEffect(() => {
-    if (dismissed || reducedMotion || phase !== "waiting" || appearances >= MAX_APPEARANCES) return undefined;
+    if (dismissed || reducedMotion || routeHidden || phase !== "waiting" || appearances >= MAX_APPEARANCES) return undefined;
 
     let timer;
     const attemptAppearance = () => {
@@ -127,7 +136,7 @@ export default function BB8Companion() {
 
     timer = window.setTimeout(attemptAppearance, firstAppearance.current ? 1800 : randomDelay());
     return () => window.clearTimeout(timer);
-  }, [appearances, dismissed, phase, reducedMotion]);
+  }, [appearances, dismissed, phase, reducedMotion, routeHidden]);
 
   useEffect(() => {
     if (reducedMotion) return undefined;
@@ -213,7 +222,11 @@ export default function BB8Companion() {
   const copy = ROUTINE_COPY[routine];
 
   return (
-    <aside className={`bb8-edge bb8-edge--${phase} bb8-edge--${routine}${guideOpen ? " bb8-edge--guide-open" : ""}`} aria-label="BB-8 portfolio companion">
+    <aside
+      className={`bb8-edge bb8-edge--${phase} bb8-edge--${routine}${guideOpen ? " bb8-edge--guide-open" : ""}${routeHidden ? " bb8-edge--route-hidden" : ""}`}
+      aria-label="BB-8 portfolio companion"
+      aria-hidden={routeHidden || undefined}
+    >
       <div className="bb8-edge-controls" aria-label="Companion controls">
         <button type="button" onClick={toggleSound} aria-pressed={soundEnabled}>{soundEnabled ? "Mute" : "Sound"}</button>
         <button type="button" onClick={dismiss} aria-label="Dismiss BB-8 for this visit">×</button>
