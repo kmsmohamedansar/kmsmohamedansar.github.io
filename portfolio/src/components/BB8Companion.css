@@ -3,8 +3,8 @@
   z-index: 60;
   top: 0;
   left: 0;
-  width: min(230px, 34vw);
-  height: min(310px, 46vh);
+  width: clamp(168px, 18vw, 190px);
+  height: clamp(228px, 24vw, 255px);
   color: #e6d5bd;
   font-family: var(--font-mono);
   filter: drop-shadow(0 22px 24px rgb(0 0 0 / .38));
@@ -321,10 +321,10 @@
 }
 
 @media (max-width: 720px) {
-  .bb8-edge { width: min(190px, 50vw); height: min(260px, 42vh); }
+  .bb8-edge { width: min(150px, 40vw); height: min(205px, 42vh); }
   .bb8-edge-bubble { right: 18px; max-width: 150px; font-size: .48rem; }
   .bb8-edge--ui-right .bb8-edge-bubble { right: auto; left: 22px; }
-  .bb8-edge-controls { top: 55px; right: 0; }
+  .bb8-edge-controls { top: 46px; right: 0; }
   /* Portalled to the body at this width (see BB8Companion.jsx), so it is
      pinned to the viewport instead of to wherever Emet has rolled to, and
      sits above the fixed nav rather than sliding under it. */
