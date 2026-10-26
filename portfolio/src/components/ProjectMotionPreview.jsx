@@ -27,6 +27,31 @@ export default function ProjectMotionPreview({ project, active = false, expanded
     );
   }
 
+  if (project.slug === "haloscript") {
+    return (
+      <div className={`ed-project-motion ed-motion-haloscript ${active ? "is-active" : ""} ${expanded ? "is-expanded" : ""}`} aria-hidden="true">
+        <span className="ed-halo-sheet"><i /><i /><i /><b /></span>
+        <span className="ed-halo-card ed-halo-card-draft">DRAFT</span>
+        <span className="ed-halo-card ed-halo-card-board">WHITEBOARD</span>
+        <span className="ed-halo-sync">ICLOUD / SYNCED</span>
+      </div>
+    );
+  }
+
+  if (project.slug === "digital-double") {
+    return (
+      <div className={`ed-project-motion ed-motion-double ${active ? "is-active" : ""} ${expanded ? "is-expanded" : ""}`} aria-hidden="true">
+        <span className="ed-double-grid" />
+        <span className="ed-double-orbit ed-double-orbit-a" />
+        <span className="ed-double-orbit ed-double-orbit-b" />
+        <span className="ed-double-reticle"><i /></span>
+        <span className="ed-double-label ed-double-label-capture">13S / CAPTURE</span>
+        <span className="ed-double-label ed-double-label-build">12 / REBUILDS</span>
+        <span className="ed-double-label ed-double-label-live">WEBGL / LIVE</span>
+      </div>
+    );
+  }
+
   return (
     <div className={`ed-project-motion ed-motion-study ed-motion-${project.slug} ${active ? "is-active" : ""}`} aria-hidden="true">
       <span className="ed-study-pulse ed-study-pulse-a" />
