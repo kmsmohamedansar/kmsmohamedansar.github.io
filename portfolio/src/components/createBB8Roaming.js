@@ -77,7 +77,6 @@ export function createBB8Roaming(element, { onWaypoint, onExit, onMotion, onRest
       if (element.contains(canvas)) return;
       const rect = canvas.getBoundingClientRect();
       if (rect.width < window.innerWidth * 0.6 || rect.height < window.innerHeight * 0.45) return;
-      if (candidate.y < bounds.maxY - 4) penalty += 4;
       const protectedArea = {
         left: rect.left + rect.width * 0.12,
         right: rect.right - rect.width * 0.12,
@@ -111,15 +110,9 @@ export function createBB8Roaming(element, { onWaypoint, onExit, onMotion, onRest
     const candidates = [];
     const lowerY = bounds.maxY;
     const middleY = clamp(window.innerHeight * 0.46 - bounds.height * 0.5, NAV_CLEARANCE, bounds.maxY);
-    const hasViewportCanvas = [...document.querySelectorAll("canvas")].some((canvas) => {
-      if (element.contains(canvas)) return false;
-      const rect = canvas.getBoundingClientRect();
-      return rect.width >= window.innerWidth * 0.6 && rect.height >= window.innerHeight * 0.3;
-    });
-    // Narrow viewports have no room beside the copy: even at its compact size
-    // the companion occupies substantial screen space, so the lower lane is
-    // the only safe place whether or not a large canvas was detected.
-    const lowerLaneOnly = hasViewportCanvas || window.innerWidth <= NARROW_VIEWPORT_WIDTH;
+    // Narrow viewports have no room beside the copy. Desktop destinations can
+    // use the side lanes as long as the overlap scoring considers them safe.
+    const lowerLaneOnly = window.innerWidth <= NARROW_VIEWPORT_WIDTH;
 
     // Edges get first refusal because they feel like a character sharing the
     // page rather than a modal floating over its centre.
@@ -130,9 +123,6 @@ export function createBB8Roaming(element, { onWaypoint, onExit, onMotion, onRest
     for (let index = 0; index < 16; index += 1) {
       candidates.push({
         x: SAFE_MARGIN + Math.random() * Math.max(0, bounds.maxX - SAFE_MARGIN),
-        // On this portfolio the hero headline is rendered into a full-screen
-        // canvas. Keeping the entire route in the lower lane prevents a safe
-        // destination from producing a visually unsafe path through the copy.
         y: lowerLaneOnly
           ? lowerY
           : NAV_CLEARANCE + Math.random() * Math.max(0, bounds.maxY - NAV_CLEARANCE),
@@ -154,9 +144,15 @@ export function createBB8Roaming(element, { onWaypoint, onExit, onMotion, onRest
       }
     }
     // Choose among every safe option instead of always returning the first
-    // left-edge candidate, so successive cameos genuinely appear here and there.
+    // left-edge candidate. Prefer a meaningful change of scenery so successive
+    // stops read as curious roaming rather than positional jitter.
     if (safeCandidates.length) {
-      return safeCandidates[Math.floor(Math.random() * safeCandidates.length)];
+      const minimumTravel = Math.min(window.innerWidth * 0.22, 240);
+      const distantCandidates = safeCandidates.filter((candidate) => (
+        Math.hypot(candidate.x - position.x, candidate.y - position.y) >= minimumTravel
+      ));
+      const pool = distantCandidates.length ? distantCandidates : safeCandidates;
+      return pool[Math.floor(Math.random() * pool.length)];
     }
     return best;
   }
@@ -221,7 +217,7 @@ export function createBB8Roaming(element, { onWaypoint, onExit, onMotion, onRest
 
   function travel() {
     bounds = readBounds();
-    moveTo(pickWaypoint(), "waypoint", 205);
+    moveTo(pickWaypoint(), "waypoint", 165 + Math.random() * 70);
   }
 
   function hold() {
