@@ -1,5 +1,5 @@
 import { Component, createContext, createRef, lazy, Suspense, useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import EmetSection from "./components/EmetSection";
 import { Hero, ProjectsSection, SkillsTicker, ExperienceSection, AboutSection, ExperimentsSection, ContactSection } from "./components/Sections";
 import ProjectPage from "./components/ProjectPage";
@@ -260,6 +260,7 @@ function Stage({ bootDone }) {
   const { route } = useRoute();
   const { devMode, toggleDevMode } = useSandbox();
   const scrollContainerRef = useContext(ScrollContext);
+  const reduced = useReducedMotion();
 
   useEffect(() => {
     if (route !== "main" && scrollContainerRef?.current) scrollContainerRef.current.scrollTop = 0;
@@ -267,6 +268,7 @@ function Stage({ bootDone }) {
 
   return (
     <main ref={scrollContainerRef} className="relative flex-1 min-h-0 overflow-y-auto mono-scroll">
+      <div className="ed-paper-grain" aria-hidden="true" />
       <AnimatePresence mode="wait">
         {route === "emet" ? (
           <motion.div
@@ -305,10 +307,10 @@ function Stage({ bootDone }) {
         ) : route.startsWith("project/") ? (
           <motion.div
             key={route}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.12, ease: EASE_OUT }}
+            initial={reduced ? { opacity: 0 } : { opacity: 0, y: 14 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={reduced ? { opacity: 0 } : { opacity: 0, y: -10 }}
+            transition={{ duration: reduced ? 0.12 : 0.3, ease: EASE_OUT }}
           >
             {route === "project/digital-double" ? (
               <Suspense fallback={<RouteLoader label="Loading 3D project" />}>

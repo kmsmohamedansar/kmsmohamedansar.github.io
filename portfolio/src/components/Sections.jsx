@@ -2,11 +2,13 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion, useReducedMotion, useInView } from "framer-motion";
 import { ArrowDown, ArrowRight, ArrowUpRight, ExternalLink, Info, Mail } from "lucide-react";
 import NameParticles from "./NameParticles";
+import ProjectMotionPreview from "./ProjectMotionPreview";
 import { ABOUT, CONTACT, HERO, RECEIPTS, ROLES } from "../data/content";
 import { EARLIER_PROJECTS, EXPERIMENTS, FEATURED, FEATURED_GRID, LISTED_PROJECTS, MORE_PROJECTS, OPEN_SOURCE_GROUPS } from "../data/projects";
 import { TOOL_INFO } from "../data/tools";
 import { EASE_REVEAL } from "../lib/motion";
 import { media } from "../lib/media";
+import { cursorAction } from "../lib/projectMotion";
 import { useStaticHero } from "../lib/staticHero";
 import { useRoute } from "../App";
 import "../editorial.css";
@@ -127,7 +129,14 @@ export function Hero({ ready = true }) {
 }
 
 function PunchTitle({ text }) {
-  return <span className="ed-punch-title" aria-hidden="true"><i>{text[0]}</i><span>{text.slice(1)}</span></span>;
+  const reduced = useReducedMotion();
+  return <span className="ed-title-mask" aria-hidden="true"><motion.span
+    className="ed-punch-title"
+    initial={reduced ? false : { y: "112%" }}
+    whileInView={{ y: "0%" }}
+    viewport={{ once: true, amount: 0.72 }}
+    transition={{ duration: 0.48, ease: EASE_REVEAL }}
+  ><i>{text[0]}</i><span>{text.slice(1)}</span></motion.span></span>;
 }
 function ProjectPlate({ project, compact = false }) {
   const [broken, setBroken] = useState(false);
@@ -142,6 +151,7 @@ function ProjectPlate({ project, compact = false }) {
   const coverArt = project.spotlightArt || project.cardArt;
   if (coverArt && !artBroken) return <div className={`ed-project-plate ${project.spotlightArt ? "ed-spotlight-cover" : "ed-card-cover"} ${compact ? "ed-plate-compact" : ""}`} aria-hidden="true">
     <img className="ed-spotlight-art ed-lazy-media" src={media(coverArt)} alt="" loading="lazy" onLoad={revealImage} onError={() => setArtBroken(true)} />
+    <ProjectMotionPreview project={project} />
     <span className="ed-poster-cross">✳</span>
     <span className="ed-plate-caption">{project.kind}</span>
   </div>;
@@ -155,6 +165,7 @@ function ProjectPlate({ project, compact = false }) {
     <img className="ed-cover-icon ed-lazy-media" src={media(project.icon)} alt="" loading="lazy" onLoad={revealImage} />
     <span className="ed-cover-stamp">{project.slug === "rea-study" ? "TESTED, NOT ASSUMED" : "SMALL MODELS. REAL TESTS."}</span>
     <div className="ed-cover-flow">{project.flow?.columns.map((column, i) => <span key={column.label}>{column.label}{i < project.flow.columns.length - 1 && <b>↗</b>}</span>)}</div>
+    <ProjectMotionPreview project={project} />
   </div>;
   return <div className={`ed-project-plate ed-poster-plate ed-poster-${project.slug} ${compact ? "ed-plate-compact" : ""} ${!screenshot && project.icon ? "ed-plate-icon" : ""} ${project.slug === "haloscript" ? "ed-plate-app" : ""}`}>
     <span className="ed-poster-word" aria-hidden="true">{project.title}</span><span className="ed-poster-cross" aria-hidden="true">✳</span>
@@ -164,7 +175,7 @@ function ProjectPlate({ project, compact = false }) {
 }
 function FeaturedSpread({ project, index }) {
   return <Enter className={`ed-feature ${index % 2 ? "ed-feature-reverse" : ""}`}>
-    <a href={`#project/${project.slug}`} id={`card-${project.slug}`} aria-label={`Read ${project.title}${project.stats?.[0] ? `. ${project.stats[0].value} ${project.stats[0].label}` : ""}`} data-cursor="View" className="ed-feature-image"><ProjectPlate project={project} /></a>
+    <a href={`#project/${project.slug}`} id={`card-${project.slug}`} aria-label={`Read ${project.title}${project.stats?.[0] ? `. ${project.stats[0].value} ${project.stats[0].label}` : ""}`} data-cursor={cursorAction(project)} className="ed-feature-image"><ProjectPlate project={project} /></a>
     <div className="ed-feature-body"><p className="ed-label"><span>0{index + 1}</span>{project.kind}</p>
       <h3><a href={`#project/${project.slug}`} aria-label={project.title}><PunchTitle text={project.title} /></a></h3>
       <p className="ed-copy">{project.hook}</p>
@@ -177,7 +188,7 @@ function FeaturedSpread({ project, index }) {
 
 function OpenSourceProject({ project }) {
   return <article className="ed-open-source-project" aria-labelledby={`open-source-title-${project.slug}`}>
-    <a id={`card-${project.slug}`} href={`#project/${project.slug}`} aria-label={`Read ${project.title}`} className="ed-feature-image" data-cursor="View"><ProjectPlate project={project} compact /></a>
+    <a id={`card-${project.slug}`} href={`#project/${project.slug}`} aria-label={`Read ${project.title}`} className="ed-feature-image" data-cursor={cursorAction(project)}><ProjectPlate project={project} compact /></a>
     <div className="ed-feature-body">
       <p className="ed-label">{project.kind}</p>
       <h4 id={`open-source-title-${project.slug}`}><a href={`#project/${project.slug}`}>{project.title}</a></h4>
@@ -209,7 +220,7 @@ function OpenSourceSpotlight() {
 }
 function ProjectTile({ project, index }) {
   return <Enter delay={(index % 2) * 0.08} className="ed-project-tile">
-    <a id={`card-${project.slug}`} href={`#project/${project.slug}`} data-cursor="View"><ProjectPlate project={project} compact /><div className="ed-tile-heading"><h3 aria-label={project.title}><PunchTitle text={project.title} /></h3><ArrowUpRight size={26} aria-hidden="true" /></div><p className="ed-copy">{firstSentence(project.hook)}</p><p className="ed-tile-tags">{project.tags.slice(0, 3).join(" / ")}</p></a>
+    <a id={`card-${project.slug}`} href={`#project/${project.slug}`} data-cursor={cursorAction(project)}><ProjectPlate project={project} compact /><div className="ed-tile-heading"><h3 aria-label={project.title}><PunchTitle text={project.title} /></h3><ArrowUpRight size={26} aria-hidden="true" /></div><p className="ed-copy">{firstSentence(project.hook)}</p><p className="ed-tile-tags">{project.tags.slice(0, 3).join(" / ")}</p></a>
   </Enter>;
 }
 export function ProjectsSection() {
@@ -220,7 +231,7 @@ export function ProjectsSection() {
       <div className="ed-grid-heading"><h3>More from the workbench.</h3><span>Keep exploring ↘</span></div>
       <div className="ed-project-grid">{FEATURED_GRID.map((project, i) => <ProjectTile key={project.slug} project={project} index={i} />)}</div>
       <div className="ed-work-list"><IndexLabel number="↳">Behind the scenes</IndexLabel><p className="ed-copy">Professional work is described without client names or private data. Public practice versions use unrelated public or sample data.</p>
-        {MORE_PROJECTS.map((project, i) => <a key={project.slug} id={`card-${project.slug}`} href={`#project/${project.slug}`} className="ed-work-row"><span className="ed-row-number">{String(i + 1).padStart(2, "0")}</span><div><h3>{project.title}</h3><p>{project.kind}</p></div><ArrowUpRight size={22} aria-hidden="true" /></a>)}
+        {MORE_PROJECTS.map((project, i) => <a key={project.slug} id={`card-${project.slug}`} href={`#project/${project.slug}`} data-cursor={cursorAction(project)} className="ed-work-row"><span className="ed-row-number">{String(i + 1).padStart(2, "0")}</span><div><h3>{project.title}</h3><p>{project.kind}</p></div><ArrowUpRight size={22} aria-hidden="true" /></a>)}
         <details className="ed-archive"><summary>Earlier work <span>{EARLIER_PROJECTS.length} projects</span></summary><ul>{EARLIER_PROJECTS.map((project) => <li key={project.slug}><a id={`card-${project.slug}`} href={`#project/${project.slug}`}>{project.title}<ArrowUpRight size={16} /></a></li>)}</ul></details>
       </div>
     </div>
