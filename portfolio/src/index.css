@@ -115,8 +115,11 @@
 @layer utilities {
   /* Content panel: a dark, mostly opaque card so body copy never has to
      fight bright stars for contrast. Use for anything with paragraphs. */
-  .project-panel {
-    background: rgba(0, 0, 0, 0.28) !important;
+  /* Doubled-up selector so this beats .panel below without !important —
+     !important inside a layer would also beat the unlayered editorial
+     overrides, which repaint this panel for the light case-study pages. */
+  .project-panel.project-panel {
+    background: rgba(0, 0, 0, 0.28);
   }
   .panel {
     backdrop-filter: blur(14px);
