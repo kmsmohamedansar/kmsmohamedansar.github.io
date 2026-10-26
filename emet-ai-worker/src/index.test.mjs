@@ -27,10 +27,10 @@ function environment({ rateAllowed = true, modelResponse = "Ansar builds useful 
   };
 }
 
-function chatRequest(body, origin = ORIGIN) {
+function chatRequest(body, origin = ORIGIN, ip = "203.0.113.42") {
   return new Request("https://emet.example/chat", {
     method: "POST",
-    headers: { "content-type": "application/json", origin },
+    headers: { "cf-connecting-ip": ip, "content-type": "application/json", origin },
     body: JSON.stringify(body),
   });
 }
@@ -42,13 +42,42 @@ test("answers a valid portfolio question with a safe destination", async () => {
 
   assert.equal(response.status, 200);
   assert.equal(response.headers.get("access-control-allow-origin"), ORIGIN);
+  assert.equal(response.headers.get("vary"), "Origin");
   assert.deepEqual(body, {
     answer: "Ansar builds Apple apps and data tools.",
     destination: "projects",
   });
   assert.equal(calls[0].type, "rate");
+  assert.equal(calls[0].input.key, "203.0.113.42");
   assert.equal(calls[1].type, "ai");
   assert.match(calls[1].input.messages[0].content, /Never invent facts/);
+});
+
+test("health check does not disclose the model identifier", async () => {
+  const { env } = environment();
+  const response = await worker.fetch(new Request("https://emet.example/health"), env);
+
+  assert.equal(response.status, 200);
+  assert.deepEqual(await response.json(), { ok: true });
+});
+
+test("rejects an oversized body even without a content-length header", async () => {
+  const { env, calls } = environment();
+  const request = new Request("https://emet.example/chat", {
+    method: "POST",
+    headers: { "content-type": "application/json", origin: ORIGIN },
+    body: new ReadableStream({
+      start(controller) {
+        controller.enqueue(new TextEncoder().encode("x".repeat(4097)));
+        controller.close();
+      },
+    }),
+    duplex: "half",
+  });
+  const response = await worker.fetch(request, env);
+
+  assert.equal(response.status, 413);
+  assert.equal(calls.length, 0);
 });
 
 test("rejects requests from other origins before inference", async () => {

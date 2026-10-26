@@ -31,6 +31,7 @@ function corsHeaders(origin, env) {
     "access-control-max-age": "86400",
     "cache-control": "no-store",
     "content-type": "application/json; charset=utf-8",
+    "vary": "Origin",
     "x-content-type-options": "nosniff",
   };
   if (origin && allowedOrigins(env).has(origin)) headers["access-control-allow-origin"] = origin;
@@ -67,6 +68,21 @@ function validSession(value) {
   return typeof value === "string" && /^[a-zA-Z0-9-]{16,64}$/.test(value);
 }
 
+function rateLimitKey(request, sessionId) {
+  // Cloudflare sets this header at the edge. Falling back to the session keeps
+  // local development and unit tests usable without weakening production.
+  return request.headers.get("cf-connecting-ip") || sessionId;
+}
+
+async function readJsonBody(request) {
+  const contentLength = Number(request.headers.get("content-length") || 0);
+  if (contentLength > 4096) return { tooLarge: true };
+
+  const rawBody = await request.text();
+  if (new TextEncoder().encode(rawBody).byteLength > 4096) return { tooLarge: true };
+  return { body: JSON.parse(rawBody) };
+}
+
 export default {
   async fetch(request, env) {
     const url = new URL(request.url);
@@ -78,7 +94,7 @@ export default {
     }
 
     if (request.method === "GET" && url.pathname === "/health") {
-      return json({ ok: true, model: MODEL }, 200, origin, env);
+      return json({ ok: true }, 200, origin, env);
     }
 
     if (request.method !== "POST" || url.pathname !== "/chat") {
@@ -86,12 +102,11 @@ export default {
     }
     if (!originAllowed) return json({ error: "Origin not allowed." }, 403, origin, env);
 
-    const contentLength = Number(request.headers.get("content-length") || 0);
-    if (contentLength > 4096) return json({ error: "Request is too large." }, 413, origin, env);
-
     let body;
     try {
-      body = await request.json();
+      const parsed = await readJsonBody(request);
+      if (parsed.tooLarge) return json({ error: "Request is too large." }, 413, origin, env);
+      body = parsed.body;
     } catch {
       return json({ error: "Send a JSON request." }, 400, origin, env);
     }
@@ -102,7 +117,7 @@ export default {
     }
     if (!validSession(body.sessionId)) return json({ error: "Invalid session." }, 400, origin, env);
 
-    const rate = await env.EMET_RATE_LIMITER.limit({ key: body.sessionId });
+    const rate = await env.EMET_RATE_LIMITER.limit({ key: rateLimitKey(request, body.sessionId) });
     if (!rate.success) return json({ error: "Emet needs a quick recharge. Try again in a minute." }, 429, origin, env);
 
     try {

@@ -13,7 +13,7 @@ The model identifier is deliberately pinned in `src/index.js` to `@cf/zai-org/gl
 1. Create or sign in to a Cloudflare account.
 2. Run `npm install` in this directory.
 3. Run `npx wrangler login`.
-4. Run `npm run dev` to start the Worker.
+4. Run `npm run dev -- --var 'ALLOWED_ORIGINS:http://localhost:5173,http://127.0.0.1:5173,http://0.0.0.0:5173'` to start the Worker with local origins. The deployed configuration allows only `https://ansarbuilds.dev`.
 5. Copy `portfolio/.env.example` to `portfolio/.env.local` and set `VITE_EMET_AI_URL` to the local Worker's `/chat` URL.
 6. Restart the Vite portfolio server.
 
@@ -30,6 +30,7 @@ The Worker accepts requests only from origins listed in `wrangler.jsonc`. Add an
 - Questions are limited to 280 characters.
 - Answers are capped and prompted to remain under 70 words.
 - The model receives curated portfolio facts, not private data or a database.
-- The session rate limiter is approximate and protects the free allocation from ordinary abuse.
+- The rate limiter uses Cloudflare's visitor IP in production and the browser session only as a local-development fallback. It protects against ordinary abuse but is per Cloudflare location, not a strict worldwide quota.
+- Worker observability is disabled to avoid an unnecessary future billing surface.
 - No paid-model fallback is configured. If free inference is unavailable or exhausted, the request fails and the browser uses deterministic guidance.
 - Model errors return a generic response and the browser falls back to deterministic guidance.

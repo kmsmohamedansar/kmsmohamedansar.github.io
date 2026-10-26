@@ -17,9 +17,9 @@
     }
   ],
   "vars": {
-    "ALLOWED_ORIGINS": "https://ansarbuilds.dev,http://localhost:5173,http://0.0.0.0:5173"
+    "ALLOWED_ORIGINS": "https://ansarbuilds.dev"
   },
   "observability": {
-    "enabled": true
+    "enabled": false
   }
 }
