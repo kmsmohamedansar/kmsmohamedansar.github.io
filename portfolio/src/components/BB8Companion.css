@@ -172,6 +172,10 @@
 }
 
 .bb8-edge--traveling .bb8-edge-bubble { opacity: 0; pointer-events: none; }
+.bb8-edge--silent .bb8-edge-bubble { opacity: 0; pointer-events: none; }
+.bb8-edge--quiet .bb8-edge-bubble { opacity: 0; pointer-events: none; }
+.bb8-edge--quiet:hover .bb8-edge-bubble,
+.bb8-edge--quiet:focus-within .bb8-edge-bubble { opacity: 1; transform: translateY(0) scale(1); pointer-events: auto; }
 .bb8-edge--ui-right .bb8-edge-bubble { right: auto; left: 34px; border-radius: 13px 13px 13px 3px; }
 .bb8-edge--ui-right .bb8-edge-bubble::after { right: auto; left: 9px; }
 

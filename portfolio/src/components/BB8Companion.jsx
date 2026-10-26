@@ -3,14 +3,16 @@ import { createPortal } from "react-dom";
 import { useRoute } from "../App";
 import { createBB8Scene } from "../bb8/createBB8Scene";
 import { createBB8Roaming } from "./createBB8Roaming";
+import { createEmetBehaviorDirector } from "./createEmetBehaviorDirector";
 import EmetChatPanel from "./EmetChatPanel";
 import "./BB8Companion.css";
 
 const ROUTINES = ["peek", "guide", "sleepy", "mischief"];
-const FIRST_APPEARANCE_DELAY = 1400;
+const FIRST_APPEARANCE_DELAY = 4200;
 const GUIDE_IDLE_TIMEOUT = 12000;
 const ROUTINE_COPY = {
   peek: { message: "Bweep! Need a quick tour?" },
+  silent: { message: "" },
   guide: { message: "Psst… I know the interesting shortcuts." },
   sleepy: { message: "Power-saving mode…" },
   mischief: { message: "That panel was already loose." },
@@ -46,10 +48,11 @@ function writeSession(key, value) {
 }
 
 function quietDelay() {
-  return 6500 + Math.random() * 6500;
+  return 22000 + Math.random() * 16000;
 }
 
 function observingDelay(routine) {
+  if (routine === "contextual") return 9500;
   const base = routine === "mischief" ? 2800 : 3400;
   return base + Math.random() * 2200;
 }
@@ -68,6 +71,9 @@ export default function BB8Companion() {
   const guideRef = useRef(null);
   const experienceRef = useRef(null);
   const roamingRef = useRef(null);
+  const behaviorDirectorRef = useRef(null);
+  const contextualOfferRef = useRef(null);
+  const availabilityRef = useRef(null);
   const firstAppearance = useRef(true);
   const waypointsRemainingRef = useRef(0);
   const visitorBusyUntilRef = useRef(0);
@@ -80,7 +86,11 @@ export default function BB8Companion() {
   const [renderFailed, setRenderFailed] = useState(false);
   const [guideOpen, setGuideOpen] = useState(false);
   const [chatOpen, setChatOpen] = useState(false);
+  const [chatInitialQuestion, setChatInitialQuestion] = useState("");
+  const [contextualOffer, setContextualOffer] = useState(null);
   const [panelSide, setPanelSide] = useState("right");
+
+  availabilityRef.current = { route, routeHidden, phase, reducedMotion, guideOpen, chatOpen, dismissed };
 
   useEffect(() => {
     const query = window.matchMedia("(prefers-reduced-motion: reduce)");
@@ -88,6 +98,45 @@ export default function BB8Companion() {
     query.addEventListener("change", updatePreference);
     return () => query.removeEventListener("change", updatePreference);
   }, []);
+
+  useEffect(() => {
+    if (dismissed) return undefined;
+    const director = createEmetBehaviorDirector({
+      getRoute: () => availabilityRef.current.route,
+      canOffer: () => {
+        const current = availabilityRef.current;
+        return !current.dismissed
+          && !current.reducedMotion
+          && !current.routeHidden
+          && !current.guideOpen
+          && !current.chatOpen
+          && current.phase === "waiting";
+      },
+      onOffer: (offer) => {
+        contextualOfferRef.current = offer;
+        setContextualOffer(offer);
+        waypointsRemainingRef.current = 0;
+        setRoutine("contextual");
+        setStarted(true);
+        setPhase("peeking");
+      },
+      onRetreat: () => {
+        const current = availabilityRef.current;
+        if (!contextualOfferRef.current || current.guideOpen || current.chatOpen) return;
+        contextualOfferRef.current = null;
+        setContextualOffer(null);
+        setPhase((value) => (
+          value === "peeking" || value === "observing" || value === "traveling" ? "leaving" : value
+        ));
+        if (current.phase === "waiting") setRoutine("peek");
+      },
+    });
+    behaviorDirectorRef.current = director;
+    return () => {
+      behaviorDirectorRef.current = null;
+      director.dispose();
+    };
+  }, [dismissed]);
 
   useEffect(() => {
     const markBusy = (duration) => {
@@ -158,7 +207,12 @@ export default function BB8Companion() {
     const roaming = createBB8Roaming(edgeRef.current, {
       reducedMotion,
       onWaypoint: () => setPhase((current) => current === "traveling" ? "observing" : current),
-      onExit: () => setPhase((current) => current === "leaving" ? "waiting" : current),
+      onExit: () => {
+        contextualOfferRef.current = null;
+        setContextualOffer(null);
+        setRoutine("peek");
+        setPhase((current) => current === "leaving" ? "waiting" : current);
+      },
       onMotion: (dx, dy) => experienceRef.current?.setScreenMotion(dx, dy),
       onRest: () => experienceRef.current?.stopScreenMotion(),
     });
@@ -197,13 +251,17 @@ export default function BB8Companion() {
         timer = window.setTimeout(attemptAppearance, 1800);
         return;
       }
-      const nextRoutine = firstAppearance.current
-        ? "peek"
+      const isFirstAppearance = firstAppearance.current;
+      const nextRoutine = isFirstAppearance
+        ? "silent"
         : ROUTINES[Math.floor(Math.random() * ROUTINES.length)];
       firstAppearance.current = false;
       // Give each cameo enough movement to feel intentional without turning
       // Emet into a permanent overlay.
-      waypointsRemainingRef.current = 1 + Math.floor(Math.random() * 3);
+      contextualOfferRef.current = null;
+      setContextualOffer(null);
+      behaviorDirectorRef.current?.snooze(isFirstAppearance ? 15000 : 20000);
+      waypointsRemainingRef.current = isFirstAppearance ? 0 : 1 + Math.floor(Math.random() * 2);
       setRoutine(nextRoutine);
       setStarted(true);
       setPhase("peeking");
@@ -225,7 +283,10 @@ export default function BB8Companion() {
       advance();
     };
     if (phase === "peeking") {
-      timer = window.setTimeout(() => advanceWhenCalm(() => setPhase("traveling")), 1900);
+      timer = window.setTimeout(
+        () => advanceWhenCalm(() => setPhase(routine === "contextual" ? "observing" : "traveling")),
+        routine === "contextual" ? 1050 : 1900,
+      );
     } else if (phase === "observing") {
       timer = window.setTimeout(() => advanceWhenCalm(() => {
         if (waypointsRemainingRef.current > 0) {
@@ -305,26 +366,34 @@ export default function BB8Companion() {
     setSoundEnabled(false);
     setGuideOpen(false);
     setChatOpen(false);
+    setChatInitialQuestion("");
+    setContextualOffer(null);
+    contextualOfferRef.current = null;
     setDismissed(true);
   };
 
   const openGuide = () => {
+    behaviorDirectorRef.current?.acknowledge();
     placePanel();
     setPhase("observing");
     setChatOpen(false);
     setGuideOpen(true);
   };
 
-  const openChat = () => {
+  const openChat = (initialQuestion = "") => {
+    behaviorDirectorRef.current?.acknowledge();
     placePanel();
     experienceRef.current?.react();
     setPhase("observing");
     setGuideOpen(false);
+    setChatInitialQuestion(initialQuestion);
     setChatOpen(true);
   };
 
   const closeChat = () => {
     setChatOpen(false);
+    setChatInitialQuestion("");
+    if (routine === "contextual") setPhase("leaving");
     window.requestAnimationFrame(() => chatTriggerRef.current?.focus({ preventScroll: true }));
   };
 
@@ -378,7 +447,7 @@ export default function BB8Companion() {
   }
 
   const active = phase === "peeking" || phase === "traveling" || phase === "observing";
-  const copy = ROUTINE_COPY[routine];
+  const copy = contextualOffer || ROUTINE_COPY[routine] || ROUTINE_COPY.peek;
   const panelOpen = guideOpen || chatOpen;
 
   const guidePanel = guideOpen ? (
@@ -422,13 +491,18 @@ export default function BB8Companion() {
   ) : null;
 
   const chatPanel = chatOpen ? (
-    <EmetChatPanel panelSide={panelSide} onClose={closeChat} onDestination={followChatDestination} />
+    <EmetChatPanel
+      initialQuestion={chatInitialQuestion}
+      panelSide={panelSide}
+      onClose={closeChat}
+      onDestination={followChatDestination}
+    />
   ) : null;
 
   return (
     <aside
       ref={edgeRef}
-      className={`bb8-edge bb8-edge--${phase} bb8-edge--${routine}${panelOpen ? " bb8-edge--panel-open" : ""}${routeHidden ? " bb8-edge--route-hidden" : ""}`}
+      className={`bb8-edge bb8-edge--${phase} bb8-edge--${routine}${routine !== "contextual" ? " bb8-edge--quiet" : ""}${panelOpen ? " bb8-edge--panel-open" : ""}${routeHidden ? " bb8-edge--route-hidden" : ""}`}
       aria-label="Emet portfolio companion"
       aria-hidden={routeHidden || undefined}
     >
@@ -440,7 +514,12 @@ export default function BB8Companion() {
       <div className="bb8-edge-bubble">
         <span role="status">{copy.message}</span>
         <div className="bb8-edge-bubble-actions">
-          <button ref={chatTriggerRef} type="button" tabIndex={panelOpen ? -1 : 0} onClick={openChat}>Ask me</button>
+          <button
+            ref={chatTriggerRef}
+            type="button"
+            tabIndex={panelOpen ? -1 : 0}
+            onClick={() => openChat(contextualOffer?.question || "")}
+          >{contextualOffer?.actionLabel || "Ask me"}</button>
           <button ref={guideTriggerRef} type="button" tabIndex={panelOpen ? -1 : 0} onClick={openGuide}>Explore</button>
         </div>
       </div>
@@ -468,7 +547,7 @@ export default function BB8Companion() {
             aria-label="Open Emet portfolio guide"
             aria-expanded={panelOpen}
             aria-controls={chatOpen ? "emet-ai-chat" : guideOpen ? "bb8-portfolio-guide" : undefined}
-            onClick={openChat}
+            onClick={() => openChat()}
             onKeyDown={(event) => {
               if (event.key !== "Enter" && event.key !== " ") return;
               experienceRef.current?.react();
