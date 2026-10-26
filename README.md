@@ -23,6 +23,8 @@ Other projects live in their own repositories:
 - [data-delivery](https://github.com/kmsmohamedansar/data-delivery)
 - [integration-in-a-box](https://github.com/kmsmohamedansar/integration-in-a-box)
 - [sitescout](https://github.com/kmsmohamedansar/sitescout)
+- [site-recon](https://github.com/kmsmohamedansar/site-recon)
+- [storyera](https://github.com/kmsmohamedansar/storyera)
 - [mcp-analytics-stub](https://github.com/kmsmohamedansar/mcp-analytics-stub)
 - [mv3-sidepanel-starter](https://github.com/kmsmohamedansar/mv3-sidepanel-starter)
 

@@ -22,8 +22,8 @@ const FALLBACKS = [
     destination: "contact",
   },
   {
-    matches: ["ai", "model", "experiment", "rea", "storyera"],
-    answer: "Ansar tests AI ideas instead of only describing them. His work includes decision-model and REA studies, StoryEra, and an interactive digital double.",
+    matches: ["ai", "model", "experiment", "rea", "storyera", "site recon", "skill", "plugin"],
+    answer: "Ansar tests AI ideas and packages useful methods. His work includes the Jev and REA studies, StoryEra for novel continuity, Site Recon for understanding website stacks and animation, and an interactive digital double.",
     destination: "ai",
   },
   {

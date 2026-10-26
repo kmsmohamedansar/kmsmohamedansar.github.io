@@ -7,7 +7,7 @@ import { EASE_OUT } from "../lib/motion";
 // project's own page at #project/<slug>. Hidden projects stay out, same as
 // on the main page.
 const GROUPS = [
-  { label: "Open source & experiments", projects: OPEN_SOURCE_PROJECTS },
+  { label: "Studies, skills & plugins", projects: OPEN_SOURCE_PROJECTS },
   { label: "Featured", projects: [...FEATURED, ...FEATURED_GRID] },
   { label: "More projects", projects: MORE_PROJECTS },
   { label: "Earlier work", projects: EARLIER_PROJECTS },

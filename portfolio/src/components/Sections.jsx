@@ -3,7 +3,7 @@ import { AnimatePresence, motion, useReducedMotion, useInView } from "framer-mot
 import { ArrowDown, ArrowRight, ArrowUpRight, ExternalLink, Info, Mail } from "lucide-react";
 import NameParticles from "./NameParticles";
 import { ABOUT, CONTACT, HERO, RECEIPTS, ROLES } from "../data/content";
-import { EARLIER_PROJECTS, EXPERIMENTS, FEATURED, FEATURED_GRID, LISTED_PROJECTS, MORE_PROJECTS, OPEN_SOURCE_PROJECTS } from "../data/projects";
+import { EARLIER_PROJECTS, EXPERIMENTS, FEATURED, FEATURED_GRID, LISTED_PROJECTS, MORE_PROJECTS, OPEN_SOURCE_GROUPS } from "../data/projects";
 import { TOOL_INFO } from "../data/tools";
 import { EASE_REVEAL } from "../lib/motion";
 import { media } from "../lib/media";
@@ -31,6 +31,7 @@ const BUILT = [
   ["Integration-in-a-box", "Keycloak", "a working integration"],
   ["My Take on Jev", "Python", "an AI study"],
   ["StoryEra", "Codex", "a skill for writers"],
+  ["Site Recon", "Playwright", "a site inspector"],
   ["my digital double", "Claude Code", "a 3D head"],
   ["a catalogue checker", "embeddings", "a data quality check"],
   ["a weekly data delivery", "DuckDB", "a pipeline that stops itself"],
@@ -174,21 +175,35 @@ function FeaturedSpread({ project, index }) {
   </Enter>;
 }
 
-// Every project stays visible within the shared collection.
+function OpenSourceProject({ project }) {
+  return <article className="ed-open-source-project" aria-labelledby={`open-source-title-${project.slug}`}>
+    <a id={`card-${project.slug}`} href={`#project/${project.slug}`} aria-label={`Read ${project.title}`} className="ed-feature-image" data-cursor="View"><ProjectPlate project={project} compact /></a>
+    <div className="ed-feature-body">
+      <p className="ed-label">{project.kind}</p>
+      <h4 id={`open-source-title-${project.slug}`}><a href={`#project/${project.slug}`}>{project.title}</a></h4>
+      <p className="ed-copy">{firstSentence(project.hook)}</p>
+      <p className="ed-project-status">{project.status}</p>
+      <div className="ed-open-source-links"><ArrowLink href={`#project/${project.slug}`}>Read the story</ArrowLink>{project.spotlightLink && <ArrowLink href={project.spotlightLink.href}>{project.spotlightLink.label}</ArrowLink>}</div>
+    </div>
+  </article>;
+}
+
+// Keep four individual project stories, but introduce them as two clearer ideas.
 function OpenSourceSpotlight() {
   return <Enter className="ed-open-source" >
     <div className="ed-open-source-heading">
-      <div><p className="ed-label"><span>01</span>Open source & experiments</p><h3>Ideas worth <em>trying.</em></h3></div>
-      <p>Studies I ran. Skills I built.<br />Code and findings you can inspect.</p>
+      <div><p className="ed-label"><span>01</span>Open source & experiments</p><h3>Test the claim.<br /><em>Share the method.</em></h3></div>
+      <p>Independent studies and reusable agent skills.<br />The evidence, code and limits stay public.</p>
     </div>
     <div className="ed-open-source-grid">
-      {OPEN_SOURCE_PROJECTS.map((project) => <article key={project.slug} className="ed-open-source-card" aria-labelledby={`open-source-title-${project.slug}`}>
-        <a id={`card-${project.slug}`} href={`#project/${project.slug}`} aria-label={`Read ${project.title}`} className="ed-feature-image" data-cursor="View"><ProjectPlate project={project} /></a>
-        <div className="ed-feature-body"><p className="ed-label">{project.kind}</p><h3 id={`open-source-title-${project.slug}`}><a href={`#project/${project.slug}`}>{project.title}</a></h3><p className="ed-copy">{project.hook}</p><p className="ed-project-status">{project.status}</p>
-          {project.stats && <dl className="ed-project-stats">{project.stats.map((stat) => <div key={stat.label}><dt>{stat.value}</dt><dd>{stat.short || stat.label}</dd></div>)}</dl>}
-          <div className="ed-open-source-links"><ArrowLink href={`#project/${project.slug}`}>Read the story</ArrowLink>{project.spotlightLink && <ArrowLink href={project.spotlightLink.href}>{project.spotlightLink.label}</ArrowLink>}</div>
-        </div>
-      </article>)}
+      {OPEN_SOURCE_GROUPS.map((group) => <section key={group.id} className={`ed-open-source-group ed-open-source-group-${group.id}`} aria-labelledby={`open-source-group-${group.id}`}>
+        <header className="ed-open-source-group-heading">
+          <p className="ed-label">{group.label}</p>
+          <h3 id={`open-source-group-${group.id}`}>{group.title}</h3>
+          <p>{group.description}</p>
+        </header>
+        <div className="ed-open-source-items">{group.projects.map((project) => <OpenSourceProject key={project.slug} project={project} />)}</div>
+      </section>)}
     </div>
   </Enter>;
 }

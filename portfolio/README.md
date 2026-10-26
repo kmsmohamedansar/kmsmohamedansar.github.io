@@ -8,7 +8,7 @@ React 19, Vite, Tailwind v4, Framer Motion, and three.js for the interactive exp
 One scrolling page, then a detail page per project:
 
 1. **Hero**: particles gather into my name, then morph into what I build. The rotating project/tool line stays underneath, and the pointer disperses either text shape.
-2. **Projects**: one manually controlled Open Source & Experiments feature for JEV, REA and StoryEra, followed by the other featured stories and project grid.
+2. **Projects**: one open-source feature split into two collections: the JEV and REA studies, then the StoryEra and Site Recon agent skills. The other featured stories and project grid follow.
 3. **Built with AI**: the EMET terminal, solar system, and infinity loop.
 4. **Skills ticker** and **About**.
 5. **Experience**.
@@ -64,10 +64,15 @@ npm run lint
 
 `.github/workflows/deploy-portfolio.yml` builds and publishes to GitHub Pages on every push to `main` that touches `portfolio/**`. Pages must be set to the **GitHub Actions** source.
 
-## Open source spotlight and StoryEra
+## Studies, skills and plugins
 
-JEV and REA remain independent studies with their original report links. StoryEra is the third slide, a reusable agent skill rather than another model benchmark. Its detail page documents the workflow, Codex and Claude Code installation, curated novel examples, saved evaluation limits and links to the public repository. The original novel is not included.
+The homepage no longer presents JEV, REA and StoryEra as three equivalent cards. It introduces two clearer collections:
 
-The collection displays all three projects together: cards across on desktop, image-and-detail rows on tablets, and stacked cards on phones. Each retains its image, details, story and report links. Existing project anchors scroll to the corresponding card. The full project index and command palette still expose each project individually.
+- **Independent AI studies:** My Take on Jev and My Take on REA, each with its original report, methods, saved results and individual project page.
+- **Open-source skills & plugins:** StoryEra and Site Recon, each with Codex and Claude Code installation, documentation, limitations and a public repository.
+
+The homepage renders two editorial collection cards on desktop and stacks them on smaller screens. Inside each collection, every project still has its own artwork or type treatment, summary, story link and repository/report link. Existing project anchors, the full project index and command palette continue to expose all four projects individually.
+
+StoryEra documents a continuity-audit workflow for novels. Site Recon documents and automates public website inspection, including stack evidence, exact browser-visible animation values, mobile and reduced-motion comparison, and clean-room rebuild guidance.
 
 `public/shots/spotlight/storyera.webp` is original AI-generated editorial artwork, made as a companion to the existing covers. It is an illustration, not an application screenshot. The two StoryEra diagrams in `public/shots/storyera/` come from the MIT-licensed StoryEra repository.
