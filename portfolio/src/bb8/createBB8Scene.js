@@ -7,11 +7,13 @@ import { createBB8Locomotion } from "./createBB8Locomotion";
 import { createBB8Sound } from "./createBB8Sound";
 
 const COLORS = {
-  ceramic: 0xe8dfcf,
-  copper: 0xad6a43,
-  graphite: 0x11171b,
-  lens: 0x041116,
-  cyan: 0x42ddeb,
+  ceramic: 0xe6ded0,
+  ceramicLight: 0xf2ede3,
+  copper: 0x9f6248,
+  copperDark: 0x66392d,
+  graphite: 0x10171b,
+  lens: 0x020b10,
+  cyan: 0x55dce6,
 };
 
 function standard(color, roughness = 0.45, metalness = 0.05) {
@@ -23,6 +25,13 @@ function mesh(geometry, material, { cast = true, receive = true } = {}) {
   result.castShadow = cast;
   result.receiveShadow = receive;
   return result;
+}
+
+function addFastener(parent, x, y, z, material, radius = 0.025) {
+  const fastener = mesh(new THREE.CylinderGeometry(radius, radius, 0.018, 12), material, { cast: false });
+  fastener.rotation.x = Math.PI / 2;
+  fastener.position.set(x, y, z);
+  parent.add(fastener);
 }
 
 function addSurfaceModule(parent, normal, size, materials, rotation = 0, illuminated = false) {
@@ -41,6 +50,12 @@ function addSurfaceModule(parent, normal, size, materials, rotation = 0, illumin
   );
   inset.position.z = 0.065;
   panel.add(outer, inset);
+  const fastenerX = size[0] * 0.36;
+  const fastenerY = size[1] * 0.38;
+  addFastener(panel, -fastenerX, -fastenerY, 0.105, materials.fastener, 0.018);
+  addFastener(panel, fastenerX, -fastenerY, 0.105, materials.fastener, 0.018);
+  addFastener(panel, -fastenerX, fastenerY, 0.105, materials.fastener, 0.018);
+  addFastener(panel, fastenerX, fastenerY, 0.105, materials.fastener, 0.018);
   parent.add(panel);
 }
 
@@ -57,9 +72,13 @@ function addPanelSeams(body, materials) {
     body.add(ring);
   });
 
-  const copperBand = mesh(new THREE.TorusGeometry(1.412, 0.044, 10, 96), materials.copper, { cast: false });
-  copperBand.rotation.set(Math.PI / 2, 0.18, -0.16);
-  body.add(copperBand);
+  // Broken arcs feel like service rails rather than the continuous orange
+  // circles associated with BB-8's body panels.
+  const upperRail = mesh(new THREE.TorusGeometry(1.413, 0.032, 8, 72, Math.PI * 1.24), materials.copper, { cast: false });
+  upperRail.rotation.set(Math.PI / 2, 0.2, 0.42);
+  const lowerRail = mesh(new THREE.TorusGeometry(1.414, 0.022, 8, 56, Math.PI * 0.72), materials.copperDark, { cast: false });
+  lowerRail.rotation.set(0.18, Math.PI / 2, -1.12);
+  body.add(upperRail, lowerRail);
 }
 
 function createBody(materials) {
@@ -71,35 +90,53 @@ function createBody(materials) {
   body.add(shell);
   addPanelSeams(body, materials);
 
-  addSurfaceModule(body, [0.18, 0.12, 1], [0.28, 0.72], materials, 0.04, true);
-  addSurfaceModule(body, [0.92, 0.16, 0.35], [0.5, 0.3], materials, -0.28);
-  addSurfaceModule(body, [-0.78, -0.18, 0.58], [0.34, 0.62], materials, 0.36);
+  addSurfaceModule(body, [0.18, 0.12, 1], [0.25, 0.74], materials, 0.04, true);
+  addSurfaceModule(body, [0.92, 0.16, 0.35], [0.54, 0.28], materials, -0.28);
+  addSurfaceModule(body, [-0.78, -0.18, 0.58], [0.31, 0.59], materials, 0.36);
+  addSurfaceModule(body, [0.42, -0.74, 0.52], [0.38, 0.2], materials, -0.16);
 
   const sideHub = new THREE.Group();
   sideHub.position.set(-1.34, 0.05, 0.22);
   sideHub.rotation.z = Math.PI / 2;
   const hubOuter = mesh(new THREE.CylinderGeometry(0.38, 0.38, 0.09, 48), materials.graphite);
-  const hubRing = mesh(new THREE.TorusGeometry(0.27, 0.045, 10, 48), materials.copper);
+  const hubRing = mesh(new THREE.TorusGeometry(0.27, 0.038, 10, 48), materials.copper);
   hubRing.rotation.x = Math.PI / 2;
   hubRing.position.y = -0.055;
-  sideHub.add(hubOuter, hubRing);
+  const hubCore = mesh(new THREE.CylinderGeometry(0.12, 0.12, 0.11, 24), materials.fastener);
+  hubCore.position.y = -0.09;
+  sideHub.add(hubOuter, hubRing, hubCore);
   body.add(sideHub);
+
+  const serviceBadge = new THREE.Group();
+  serviceBadge.position.set(0.57, 0.48, 1.18);
+  serviceBadge.rotation.set(-0.35, 0.43, -0.18);
+  const badgePlate = mesh(new RoundedBoxGeometry(0.36, 0.16, 0.045, 3, 0.04), materials.copperDark, { cast: false });
+  const badgeLight = mesh(new RoundedBoxGeometry(0.18, 0.035, 0.03, 2, 0.012), materials.cyan, { cast: false });
+  badgeLight.position.z = 0.037;
+  serviceBadge.add(badgePlate, badgeLight);
+  body.add(serviceBadge);
 
   return body;
 }
 
 function addLens(group, materials, position, radius, glow = false) {
-  const mount = mesh(new THREE.CylinderGeometry(radius * 1.28, radius * 1.28, 0.09, 36), materials.graphite);
+  const mount = mesh(new THREE.CylinderGeometry(radius * 1.38, radius * 1.38, 0.11, 36), materials.graphite);
   mount.rotation.x = Math.PI / 2;
   mount.position.set(...position);
   const glass = mesh(new THREE.SphereGeometry(radius, 30, 20, 0, Math.PI * 2, 0, Math.PI / 2), materials.lens);
   glass.rotation.x = Math.PI / 2;
   glass.position.set(position[0], position[1], position[2] + 0.07);
-  group.add(mount, glass);
+  const outerRing = mesh(new THREE.TorusGeometry(radius * 1.16, radius * 0.11, 10, 48), materials.copper, { cast: false });
+  outerRing.position.set(position[0], position[1], position[2] + 0.12);
+  const iris = mesh(new THREE.TorusGeometry(radius * 0.58, radius * 0.075, 10, 40), materials.cyan, { cast: false });
+  iris.position.set(position[0], position[1], position[2] + radius * 0.95);
+  const pupil = mesh(new THREE.CircleGeometry(radius * 0.34, 30), materials.graphite, { cast: false });
+  pupil.position.set(position[0], position[1], position[2] + radius * 1.02);
+  group.add(mount, glass, outerRing, iris, pupil);
   if (glow) {
-    const glint = mesh(new THREE.SphereGeometry(radius * 0.19, 12, 8), materials.glint, { cast: false });
+    const glint = mesh(new THREE.SphereGeometry(radius * 0.15, 12, 8), materials.glint, { cast: false });
     glint.name = "EMET_LENS_GLINT";
-    glint.position.set(position[0] - radius * 0.3, position[1] + radius * 0.3, position[2] + radius * 0.9);
+    glint.position.set(position[0] - radius * 0.25, position[1] + radius * 0.27, position[2] + radius * 1.08);
     group.add(glint);
   }
 }
@@ -110,52 +147,85 @@ function createHead(materials) {
   head.position.y = 2.77;
   head.rotation.y = -0.08;
 
-  const neck = mesh(new THREE.CylinderGeometry(0.31, 0.43, 0.24, 36), materials.graphite);
+  const neck = mesh(new THREE.CylinderGeometry(0.3, 0.43, 0.24, 36), materials.graphite);
   neck.position.y = 0.08;
-  const neckRing = mesh(new THREE.TorusGeometry(0.37, 0.045, 10, 48), materials.copper);
+  const neckRing = mesh(new THREE.TorusGeometry(0.37, 0.035, 10, 48), materials.copper);
   neckRing.rotation.x = Math.PI / 2;
   neckRing.position.y = 0.12;
-  const shell = mesh(new RoundedBoxGeometry(1.82, 0.76, 1.12, 6, 0.2), materials.graphite);
-  shell.position.y = 0.55;
+  const neckBearing = mesh(new THREE.CylinderGeometry(0.23, 0.29, 0.13, 24), materials.fastener);
+  neckBearing.position.y = 0.23;
+  const shell = mesh(new RoundedBoxGeometry(1.94, 0.8, 1.16, 6, 0.22), materials.graphite);
+  shell.position.y = 0.57;
   shell.rotation.z = -0.035;
-  const rearArmor = mesh(new RoundedBoxGeometry(0.66, 0.56, 1.14, 5, 0.16), materials.ceramic);
-  rearArmor.position.set(-0.58, 0.55, -0.01);
+  const rearArmor = mesh(new RoundedBoxGeometry(0.7, 0.59, 1.18, 5, 0.16), materials.ceramic);
+  rearArmor.position.set(-0.61, 0.57, -0.01);
   rearArmor.rotation.z = -0.035;
-  const face = mesh(new RoundedBoxGeometry(1.12, 0.48, 0.08, 5, 0.12), materials.lens);
-  face.position.set(0.28, 0.56, 0.57);
-  head.add(neck, neckRing, shell, rearArmor, face);
+  const crown = mesh(new RoundedBoxGeometry(1.37, 0.22, 1.17, 4, 0.09), materials.ceramicLight);
+  crown.position.set(0.15, 0.91, -0.01);
+  crown.rotation.z = -0.035;
+  const face = mesh(new RoundedBoxGeometry(1.18, 0.48, 0.075, 5, 0.12), materials.lens);
+  face.position.set(0.3, 0.57, 0.595);
+  const brow = mesh(new RoundedBoxGeometry(1.1, 0.075, 0.07, 3, 0.025), materials.copperDark);
+  brow.position.set(0.26, 0.84, 0.61);
+  brow.rotation.z = -0.025;
+  const chinRail = mesh(new RoundedBoxGeometry(0.92, 0.055, 0.065, 3, 0.02), materials.copper);
+  chinRail.position.set(0.33, 0.31, 0.61);
+  head.add(neck, neckRing, neckBearing, shell, rearArmor, crown, face, brow, chinRail);
 
-  addLens(head, materials, [0.42, 0.58, 0.63], 0.25, true);
-  const cyanRing = mesh(new THREE.TorusGeometry(0.285, 0.035, 10, 48), materials.cyan, { cast: false });
-  cyanRing.position.set(0.42, 0.58, 0.69);
-  head.add(cyanRing);
-  const statusSlot = mesh(new RoundedBoxGeometry(0.075, 0.3, 0.045, 4, 0.025), materials.cyan, { cast: false });
-  statusSlot.position.set(-0.26, 0.56, 0.64);
-  head.add(statusSlot);
+  addLens(head, materials, [0.43, 0.59, 0.64], 0.245, true);
+  const statusRail = mesh(new RoundedBoxGeometry(0.08, 0.3, 0.045, 4, 0.025), materials.copperDark, { cast: false });
+  statusRail.position.set(-0.28, 0.57, 0.65);
+  head.add(statusRail);
+  [-0.095, 0, 0.095].forEach((offset, index) => {
+    const light = mesh(new THREE.CircleGeometry(index === 1 ? 0.026 : 0.019, 16), index === 2 ? materials.copper : materials.cyan, { cast: false });
+    light.position.set(-0.28, 0.57 + offset, 0.682);
+    head.add(light);
+  });
 
-  const sidePanel = mesh(new THREE.CylinderGeometry(0.19, 0.19, 0.08, 32), materials.copper);
-  sidePanel.position.set(0.88, 0.53, 0.02);
+  const sensorCluster = new THREE.Group();
+  sensorCluster.position.set(-0.02, 0.57, 0.66);
+  [0.055, 0, -0.055].forEach((offset, index) => {
+    const sensor = mesh(new THREE.CircleGeometry(index === 0 ? 0.027 : 0.02, 16), index === 0 ? materials.lens : materials.fastener, { cast: false });
+    sensor.position.set(offset, index === 2 ? -0.05 : 0.04, index * 0.004);
+    sensorCluster.add(sensor);
+  });
+  head.add(sensorCluster);
+
+  const sidePanel = mesh(new THREE.CylinderGeometry(0.19, 0.19, 0.08, 32), materials.copperDark);
+  sidePanel.position.set(0.95, 0.55, 0.02);
   sidePanel.rotation.z = Math.PI / 2;
-  head.add(sidePanel);
+  const sidePanelInset = mesh(new THREE.CylinderGeometry(0.095, 0.095, 0.095, 24), materials.copper);
+  sidePanelInset.position.copy(sidePanel.position);
+  sidePanelInset.rotation.z = Math.PI / 2;
+  head.add(sidePanel, sidePanelInset);
+
+  const ventGroup = new THREE.Group();
+  ventGroup.position.set(-0.64, 0.57, 0.59);
+  for (let index = -2; index <= 2; index += 1) {
+    const vent = mesh(new RoundedBoxGeometry(0.035, 0.22, 0.025, 2, 0.012), materials.graphite, { cast: false });
+    vent.position.x = index * 0.065;
+    ventGroup.add(vent);
+  }
+  head.add(ventGroup);
 
   const tallAntennaRig = new THREE.Group();
   tallAntennaRig.name = "EMET_ANTENNA_TALL";
-  tallAntennaRig.position.set(-0.38, 0.96, -0.13);
+  tallAntennaRig.position.set(-0.38, 1.0, -0.13);
   tallAntennaRig.rotation.z = -0.025;
-  const antennaTall = mesh(new THREE.ConeGeometry(0.13, 0.72, 4), materials.graphite);
-  antennaTall.position.y = 0.31;
-  antennaTall.scale.z = 0.32;
-  const antennaInset = mesh(new THREE.BoxGeometry(0.035, 0.34, 0.025), materials.copper);
-  antennaInset.position.set(0, 0.3, 0.045);
-  tallAntennaRig.add(antennaTall, antennaInset);
+  const antennaTall = mesh(new THREE.CylinderGeometry(0.027, 0.055, 0.7, 10), materials.graphite);
+  antennaTall.position.y = 0.32;
+  const antennaTip = mesh(new THREE.CylinderGeometry(0.038, 0.038, 0.11, 10), materials.copper);
+  antennaTip.position.y = 0.69;
+  tallAntennaRig.add(antennaTall, antennaTip);
   const shortAntennaRig = new THREE.Group();
   shortAntennaRig.name = "EMET_ANTENNA_SHORT";
-  shortAntennaRig.position.set(-0.7, 0.9, -0.12);
+  shortAntennaRig.position.set(-0.7, 0.94, -0.12);
   shortAntennaRig.rotation.z = 0.035;
-  const antennaShort = mesh(new THREE.ConeGeometry(0.11, 0.55, 4), materials.graphite);
-  antennaShort.position.y = 0.23;
-  antennaShort.scale.z = 0.32;
-  shortAntennaRig.add(antennaShort);
+  const antennaShort = mesh(new THREE.CylinderGeometry(0.024, 0.048, 0.47, 10), materials.graphite);
+  antennaShort.position.y = 0.21;
+  const shortTip = mesh(new THREE.SphereGeometry(0.052, 12, 8), materials.cyan, { cast: false });
+  shortTip.position.y = 0.47;
+  shortAntennaRig.add(antennaShort, shortTip);
   head.add(tallAntennaRig, shortAntennaRig);
 
   return head;
@@ -163,12 +233,15 @@ function createHead(materials) {
 
 function createMaterials() {
   return {
-    ceramic: standard(COLORS.ceramic, 0.38, 0.04),
-    copper: standard(COLORS.copper, 0.28, 0.62),
-    seam: standard(0x555d62, 0.48, 0.42),
-    graphite: standard(COLORS.graphite, 0.28, 0.55),
-    lens: new THREE.MeshPhysicalMaterial({ color: COLORS.lens, roughness: 0.08, metalness: 0.18, clearcoat: 1, clearcoatRoughness: 0.08 }),
-    cyan: new THREE.MeshStandardMaterial({ color: COLORS.cyan, emissive: COLORS.cyan, emissiveIntensity: 2.2, roughness: 0.22 }),
+    ceramic: new THREE.MeshPhysicalMaterial({ color: COLORS.ceramic, roughness: 0.46, metalness: 0.025, clearcoat: 0.22, clearcoatRoughness: 0.42 }),
+    ceramicLight: new THREE.MeshPhysicalMaterial({ color: COLORS.ceramicLight, roughness: 0.4, metalness: 0.02, clearcoat: 0.3, clearcoatRoughness: 0.34 }),
+    copper: standard(COLORS.copper, 0.34, 0.66),
+    copperDark: standard(COLORS.copperDark, 0.4, 0.52),
+    seam: standard(0x4f595e, 0.52, 0.36),
+    fastener: standard(0x7c8587, 0.32, 0.72),
+    graphite: standard(COLORS.graphite, 0.34, 0.58),
+    lens: new THREE.MeshPhysicalMaterial({ color: COLORS.lens, roughness: 0.055, metalness: 0.16, clearcoat: 1, clearcoatRoughness: 0.045 }),
+    cyan: new THREE.MeshStandardMaterial({ color: COLORS.cyan, emissive: COLORS.cyan, emissiveIntensity: 1.8, roughness: 0.25, toneMapped: false }),
     glint: new THREE.MeshBasicMaterial({ color: 0xc8faff }),
   };
 }
@@ -192,7 +265,7 @@ export function createBB8Scene(container, { variant = "preview" } = {}) {
   renderer.shadowMap.type = THREE.PCFShadowMap;
   renderer.outputColorSpace = THREE.SRGBColorSpace;
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
-  renderer.toneMappingExposure = 1.15;
+  renderer.toneMappingExposure = 1.08;
   container.appendChild(renderer.domElement);
 
   const materials = createMaterials();
@@ -213,16 +286,16 @@ export function createBB8Scene(container, { variant = "preview" } = {}) {
   scene.add(ground);
 
   const contactShadow = new THREE.Mesh(
-    new THREE.CircleGeometry(1.35, 64),
-    new THREE.MeshBasicMaterial({ color: 0x000000, transparent: true, opacity: 0.32, depthWrite: false }),
+    new THREE.CircleGeometry(1.28, 64),
+    new THREE.MeshBasicMaterial({ color: 0x000000, transparent: true, opacity: 0.27, depthWrite: false }),
   );
   contactShadow.rotation.x = -Math.PI / 2;
   contactShadow.position.y = 0.045;
   contactShadow.scale.set(1, 0.42, 1);
   scene.add(contactShadow);
 
-  const hemi = new THREE.HemisphereLight(0xbcd8f2, 0x24180f, 1.35);
-  const key = new THREE.DirectionalLight(0xfff1d8, 5.8);
+  const hemi = new THREE.HemisphereLight(0xc6def2, 0x2a1c15, 1.5);
+  const key = new THREE.DirectionalLight(0xfff3df, 4.9);
   key.position.set(4.5, 7, 5.5);
   key.castShadow = true;
   key.shadow.mapSize.set(companion ? 1024 : 1536, companion ? 1024 : 1536);
@@ -231,11 +304,12 @@ export function createBB8Scene(container, { variant = "preview" } = {}) {
   key.shadow.camera.top = 5;
   key.shadow.camera.bottom = -2;
   key.shadow.bias = -0.0003;
-  const rim = new THREE.DirectionalLight(0x6eb8ff, 3.4);
+  key.shadow.radius = 3;
+  const rim = new THREE.DirectionalLight(0x79bfff, 2.75);
   rim.position.set(-5, 4, -3);
-  const copperFill = new THREE.PointLight(0xc7794b, 16, 9, 2);
+  const copperFill = new THREE.PointLight(0xc7794b, 9, 8, 2);
   copperFill.position.set(3.2, 1.3, -1.5);
-  const cyanFill = new THREE.PointLight(0x42ddeb, 7, 5, 2);
+  const cyanFill = new THREE.PointLight(0x42ddeb, 4.2, 5, 2);
   cyanFill.position.set(-1.4, 3.2, 3.2);
   scene.add(hemi, key, rim, copperFill, cyanFill);
 
