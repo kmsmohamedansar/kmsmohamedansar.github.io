@@ -504,6 +504,47 @@ a:hover .ed-poster-plate .ed-project-image { transform: rotate(0) scale(1.025); 
 .ed-project-motion.is-active .ed-study-meter i, .ed-feature-image:hover .ed-study-meter i, .ed-feature-image:focus-visible .ed-study-meter i { transform: scaleX(1); }
 .ed-study-readout { position: absolute; left: 16%; bottom: 7%; color: #f4e5cf; font: 500 .42rem/1 var(--font-mono); letter-spacing: .08em; }
 
+/* Haloscript: the manuscript, planning board and private sync stay connected. */
+.ed-motion-haloscript { background: linear-gradient(120deg,transparent 25%,rgb(25 12 45 / .26)); }
+.ed-halo-sheet { position: absolute; left: 12%; top: 17%; width: 40%; height: 58%; padding: 14% 8% 0; border: 1px solid rgb(245 235 255 / .72); border-radius: 5px; background: rgb(244 229 207 / .92); box-shadow: 10px 12px 0 rgb(16 16 16 / .18); transform: rotate(-3deg) translateY(8px); transition: transform .55s var(--ease-out); }
+.ed-halo-sheet i { display: block; height: 2px; margin-bottom: 14%; background: rgb(16 16 16 / .24); transform: scaleX(.32); transform-origin: left; transition: transform .7s cubic-bezier(.22,1,.36,1); }
+.ed-halo-sheet i:nth-child(2) { width: 82%; transition-delay: .08s; }
+.ed-halo-sheet i:nth-child(3) { width: 64%; transition-delay: .16s; }
+.ed-halo-sheet b { position: absolute; left: 12%; top: 24%; width: 2px; height: 16%; background: #7c3aed; animation: ed-halo-caret .8s steps(1,end) infinite; animation-play-state: paused; }
+@keyframes ed-halo-caret { 0%,45% { opacity: 1; } 46%,100% { opacity: 0; } }
+.ed-halo-card, .ed-halo-sync { position: absolute; border: 1px solid rgb(244 229 207 / .62); background: rgb(16 16 16 / .88); color: #f4e5cf; font: 500 clamp(.37rem,.6vw,.52rem)/1 var(--font-mono); letter-spacing: .08em; }
+.ed-halo-card { right: 10%; width: 29%; padding: 11% 5% 5%; box-shadow: 6px 7px 0 rgb(124 58 237 / .28); transition: transform .42s var(--ease-out); }
+.ed-halo-card::before { content: ""; position: absolute; left: 12%; right: 12%; top: 25%; height: 1px; background: #a78bfa; box-shadow: 0 7px 0 rgb(244 229 207 / .26),0 14px 0 rgb(244 229 207 / .18); }
+.ed-halo-card-draft { top: 17%; transform: rotate(5deg) translateY(7px); }
+.ed-halo-card-board { bottom: 16%; transform: rotate(-4deg) translateY(7px); transition-delay: .07s; }
+.ed-halo-sync { right: 7%; bottom: 5%; padding: 6px 8px; border-color: #a78bfa; opacity: 0; transform: translateY(5px); transition: opacity .22s ease,transform .35s var(--ease-out); }
+.ed-project-motion.is-active .ed-halo-sheet, .ed-feature-image:hover .ed-halo-sheet, .ed-feature-image:focus-visible .ed-halo-sheet { transform: rotate(0) translateY(0); }
+.ed-project-motion.is-active .ed-halo-sheet i, .ed-feature-image:hover .ed-halo-sheet i, .ed-feature-image:focus-visible .ed-halo-sheet i { transform: scaleX(1); }
+.ed-project-motion.is-active .ed-halo-sheet b, .ed-feature-image:hover .ed-halo-sheet b, .ed-feature-image:focus-visible .ed-halo-sheet b { animation-play-state: running; }
+.ed-project-motion.is-active .ed-halo-card, .ed-feature-image:hover .ed-halo-card, .ed-feature-image:focus-visible .ed-halo-card { transform: rotate(0) translateY(0); }
+.ed-project-motion.is-active .ed-halo-sync, .ed-feature-image:hover .ed-halo-sync, .ed-feature-image:focus-visible .ed-halo-sync { opacity: 1; transform: translateY(0); }
+
+/* Digital Me: capture points resolve into a tracked, browser-rendered face. */
+.ed-motion-double { background: radial-gradient(circle at 53% 43%,transparent 0 22%,rgb(16 16 16 / .24) 62%); }
+.ed-double-grid { position: absolute; inset: 0; opacity: .38; background-image: radial-gradient(circle,#f4e5cf 0 1px,transparent 1.4px); background-size: 18px 18px; mask-image: radial-gradient(circle at 53% 43%,#000,transparent 64%); transform: scale(1.08); transition: transform .8s cubic-bezier(.22,1,.36,1); }
+.ed-double-orbit { position: absolute; left: 53%; top: 43%; border: 1px solid rgb(244 229 207 / .62); border-radius: 50%; transform: translate(-50%,-50%) rotate(18deg); transition: transform .8s cubic-bezier(.22,1,.36,1); }
+.ed-double-orbit-a { width: 36%; aspect-ratio: 1 / 1.24; }
+.ed-double-orbit-b { width: 48%; aspect-ratio: 1 / .72; border-color: rgb(244 81 30 / .7); transform: translate(-50%,-50%) rotate(-12deg); }
+.ed-double-reticle { position: absolute; left: 53%; top: 43%; width: 38px; aspect-ratio: 1; border: 1px solid #f4511e; border-radius: 50%; transform: translate(-50%,-50%); box-shadow: 0 0 18px rgb(244 81 30 / .38); }
+.ed-double-reticle::before, .ed-double-reticle::after { content: ""; position: absolute; background: #f4511e; }
+.ed-double-reticle::before { left: 50%; top: -10px; width: 1px; height: 56px; }
+.ed-double-reticle::after { top: 50%; left: -10px; width: 56px; height: 1px; }
+.ed-double-reticle i { position: absolute; z-index: 1; left: 50%; top: 50%; width: 8px; aspect-ratio: 1; border-radius: 50%; background: #f4e5cf; transform: translate(-50%,-50%); transition: transform .35s var(--ease-out); }
+.ed-double-label { position: absolute; padding: 5px 7px; border: 1px solid rgb(244 81 30 / .75); background: rgb(16 16 16 / .88); color: #f4e5cf; font: 500 clamp(.37rem,.6vw,.52rem)/1 var(--font-mono); letter-spacing: .08em; opacity: 0; transition: opacity .2s ease; }
+.ed-double-label-capture { left: 7%; top: 14%; }
+.ed-double-label-build { right: 7%; top: 26%; transition-delay: .08s; }
+.ed-double-label-live { right: 8%; bottom: 8%; transition-delay: .16s; }
+.ed-project-motion.is-active .ed-double-grid, .ed-feature-image:hover .ed-double-grid, .ed-feature-image:focus-visible .ed-double-grid { transform: scale(1); }
+.ed-project-motion.is-active .ed-double-orbit-a, .ed-feature-image:hover .ed-double-orbit-a, .ed-feature-image:focus-visible .ed-double-orbit-a { transform: translate(-50%,-50%) rotate(32deg); }
+.ed-project-motion.is-active .ed-double-orbit-b, .ed-feature-image:hover .ed-double-orbit-b, .ed-feature-image:focus-visible .ed-double-orbit-b { transform: translate(-50%,-50%) rotate(-25deg); }
+.ed-project-motion.is-active .ed-double-reticle i, .ed-feature-image:hover .ed-double-reticle i, .ed-feature-image:focus-visible .ed-double-reticle i { transform: translate(-10%,-80%); }
+.ed-project-motion.is-active .ed-double-label, .ed-feature-image:hover .ed-double-label, .ed-feature-image:focus-visible .ed-double-label { opacity: 1; }
+
 /* The artwork follows the reader into the story and becomes a small demo. */
 .project-signature-art { margin-top: 1.5rem; overflow: hidden; border: 1px solid rgb(16 16 16 / .20); border-radius: 24px; background: rgb(16 16 16 / .06); box-shadow: 0 24px 70px rgb(16 16 16 / .14); }
 .project-signature-frame { position: relative; aspect-ratio: 16 / 9; overflow: hidden; background: #c5ab89; }
@@ -519,14 +560,21 @@ a:hover .ed-poster-plate .ed-project-image { transform: rotate(0) scale(1.025); 
  .ed-story-node { transform: scale(1); }
  .ed-study-pulse { animation: none; box-shadow: 0 0 0 7px rgb(255 90 33 / .18); }
  .ed-study-meter i { transform: scaleX(1); }
+ .ed-halo-sheet { transform: rotate(0) translateY(0); }
+ .ed-halo-sheet i { transform: scaleX(1); }
+ .ed-halo-card { transform: rotate(0) translateY(0); }
+ .ed-halo-sync, .ed-double-label { opacity: 1; transform: none; }
+ .ed-double-grid { transform: scale(1); }
  .project-signature-frame { aspect-ratio: 1 / 1; }
  .project-signature-art .ed-recon-readout { display: none; }
 }
 
 @media (prefers-reduced-motion: reduce) {
  .ed-paper-grain { animation: none; opacity: .018; }
- .ed-project-motion, .ed-recon-layer, .ed-recon-readout, .ed-story-node, .ed-study-meter i { transition: none; }
- .ed-recon-beam, .ed-study-pulse { animation: none; }
+ .ed-project-motion, .ed-recon-layer, .ed-recon-readout, .ed-story-node, .ed-study-meter i, .ed-halo-sheet, .ed-halo-sheet i, .ed-halo-card, .ed-halo-sync, .ed-double-grid, .ed-double-orbit, .ed-double-reticle i, .ed-double-label { transition: none; }
+ .ed-recon-beam, .ed-study-pulse, .ed-halo-sheet b { animation: none; }
  .ed-recon-beam { top: 54%; }
  .ed-project-motion.is-active .ed-recon-layer, .ed-project-motion.is-active .ed-recon-readout { opacity: 1; transform: none; }
+ .ed-project-motion.is-active .ed-halo-sheet, .ed-project-motion.is-active .ed-halo-card { transform: none; }
+ .ed-project-motion.is-active .ed-halo-sync, .ed-project-motion.is-active .ed-double-label { opacity: 1; transform: none; }
 }
