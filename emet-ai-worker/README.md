@@ -2,6 +2,12 @@
 
 This Cloudflare Worker gives the Emet companion a real hosted language model without exposing credentials in the portfolio frontend. It uses the Workers AI binding, a free-plan-compatible model, a six-requests-per-minute session limit and a fixed set of verified portfolio facts.
 
+## Cost guardrail
+
+Deploy this Worker only on **Cloudflare Workers Free**. Do not upgrade the account to Workers Paid and do not add prepaid AI Gateway credits for this project. On the Free plan, Cloudflare stops AI operations when the daily free allocation is exhausted instead of charging an overage.
+
+The model identifier is deliberately pinned in `src/index.js` to `@cf/zai-org/glm-4.7-flash`, which is currently eligible for Workers Free. It cannot be changed through an environment variable or visitor input. If Cloudflare later removes that model from the Free plan, leave the Worker undeployed or update it only after verifying another free-plan model in Cloudflare's official pricing documentation.
+
 ## Local setup
 
 1. Create or sign in to a Cloudflare account.
@@ -25,4 +31,5 @@ The Worker accepts requests only from origins listed in `wrangler.jsonc`. Add an
 - Answers are capped and prompted to remain under 70 words.
 - The model receives curated portfolio facts, not private data or a database.
 - The session rate limiter is approximate and protects the free allocation from ordinary abuse.
+- No paid-model fallback is configured. If free inference is unavailable or exhausted, the request fails and the browser uses deterministic guidance.
 - Model errors return a generic response and the browser falls back to deterministic guidance.

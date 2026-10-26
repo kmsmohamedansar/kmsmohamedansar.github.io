@@ -1,6 +1,8 @@
 import { PORTFOLIO_CONTEXT } from "./portfolioContext.js";
 
-const DEFAULT_MODEL = "@cf/zai-org/glm-4.7-flash";
+// Deliberately pinned to a model available on Cloudflare Workers Free. Do not
+// make this visitor-controlled or configurable through a deployment variable.
+const MODEL = "@cf/zai-org/glm-4.7-flash";
 const MAX_QUESTION_LENGTH = 280;
 const MAX_ANSWER_LENGTH = 700;
 
@@ -76,7 +78,7 @@ export default {
     }
 
     if (request.method === "GET" && url.pathname === "/health") {
-      return json({ ok: true, model: env.MODEL || DEFAULT_MODEL }, 200, origin, env);
+      return json({ ok: true, model: MODEL }, 200, origin, env);
     }
 
     if (request.method !== "POST" || url.pathname !== "/chat") {
@@ -104,7 +106,7 @@ export default {
     if (!rate.success) return json({ error: "Emet needs a quick recharge. Try again in a minute." }, 429, origin, env);
 
     try {
-      const result = await env.AI.run(env.MODEL || DEFAULT_MODEL, {
+      const result = await env.AI.run(MODEL, {
         messages: [
           { role: "system", content: SYSTEM_PROMPT },
           { role: "user", content: question },

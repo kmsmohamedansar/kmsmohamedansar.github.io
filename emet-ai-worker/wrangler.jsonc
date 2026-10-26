@@ -17,8 +17,7 @@
     }
   ],
   "vars": {
-    "ALLOWED_ORIGINS": "https://ansarbuilds.dev,http://localhost:5173,http://0.0.0.0:5173",
-    "MODEL": "@cf/zai-org/glm-4.7-flash"
+    "ALLOWED_ORIGINS": "https://ansarbuilds.dev,http://localhost:5173,http://0.0.0.0:5173"
   },
   "observability": {
     "enabled": true

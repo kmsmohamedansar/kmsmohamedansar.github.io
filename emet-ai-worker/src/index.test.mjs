@@ -11,7 +11,6 @@ function environment({ rateAllowed = true, modelResponse = "Ansar builds useful 
     calls,
     env: {
       ALLOWED_ORIGINS: ORIGIN,
-      MODEL: "@cf/zai-org/glm-4.7-flash",
       EMET_RATE_LIMITER: {
         async limit(input) {
           calls.push({ type: "rate", input });
