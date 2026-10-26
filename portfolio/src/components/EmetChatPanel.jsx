@@ -1,12 +1,13 @@
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { askEmet, createEmetId, EMET_SUGGESTIONS } from "../emet/emetChat";
 
 const MAX_QUESTION_LENGTH = 280;
 
-export default function EmetChatPanel({ panelSide = "right", onClose, onDestination }) {
+export default function EmetChatPanel({ initialQuestion = "", panelSide = "right", onClose, onDestination }) {
   const dialogRef = useRef(null);
   const inputRef = useRef(null);
   const messagesRef = useRef(null);
+  const initialSubmittedRef = useRef(false);
   const [question, setQuestion] = useState("");
   const [messages, setMessages] = useState([
     { id: "welcome", role: "assistant", text: "Ask me about Ansar’s work, projects, or experience." },
@@ -43,7 +44,7 @@ export default function EmetChatPanel({ panelSide = "right", onClose, onDestinat
     messagesRef.current?.scrollTo({ top: messagesRef.current.scrollHeight, behavior: "smooth" });
   }, [messages, loading]);
 
-  const submit = async (value) => {
+  const submit = useCallback(async (value) => {
     const cleanQuestion = value.trim().slice(0, MAX_QUESTION_LENGTH);
     if (!cleanQuestion || loading) return;
     setQuestion("");
@@ -67,7 +68,13 @@ export default function EmetChatPanel({ panelSide = "right", onClose, onDestinat
       setLoading(false);
       window.requestAnimationFrame(() => inputRef.current?.focus({ preventScroll: true }));
     }
-  };
+  }, [loading]);
+
+  useEffect(() => {
+    if (!initialQuestion || initialSubmittedRef.current) return;
+    initialSubmittedRef.current = true;
+    submit(initialQuestion);
+  }, [initialQuestion, submit]);
 
   return (
     <section
