@@ -6,8 +6,10 @@ import { DEPTH } from "../data/depth";
 import { TOOL_INFO } from "../data/tools";
 import { BEFORE_AFTER, STEP_TOOLS } from "../data/summaries";
 import FlowDiagram, { FlourishTitle, Kicker, TagPill } from "./ui";
+import ProjectMotionPreview from "./ProjectMotionPreview";
 import { EASE_REVEAL } from "../lib/motion";
 import { media } from "../lib/media";
+import { cursorAction } from "../lib/projectMotion";
 
 /* Big headline numbers under a project's hook. */
 function StatTiles({ stats, accent }) {
@@ -80,6 +82,26 @@ function pageTheme(project, index) {
 
 function PageTitle({ project }) {
   return <FlourishTitle text={project.title} accent={project.accent} />;
+}
+
+function SignatureArtwork({ project, reduced }) {
+  const art = project.spotlightArt || project.cardArt;
+  if (!art) return null;
+  return (
+    <motion.figure
+      className={`project-signature-art project-signature-${project.slug}`}
+      initial={reduced ? false : { opacity: 0, y: 18, scale: .985 }}
+      whileInView={{ opacity: 1, y: 0, scale: 1 }}
+      viewport={{ once: true, amount: .18 }}
+      transition={{ duration: .5, ease: EASE_REVEAL }}
+    >
+      <div className="project-signature-frame">
+        <img src={media(art)} alt={`${project.title} conceptual artwork`} loading="eager" />
+        <ProjectMotionPreview project={project} active expanded />
+      </div>
+      <figcaption>{project.slug === "site-recon" ? "A public page, separated into the evidence a browser can verify." : `${project.title} · project visual`}</figcaption>
+    </motion.figure>
+  );
 }
 
 /* A one-picture summary of the project, folded away by default so the
@@ -378,9 +400,9 @@ export default function ProjectPage({ slug }) {
   return (
     <div style={{ background: theme.bg }} className="ed-case-study min-h-full">
     <motion.article
-      initial={reduced ? false : { opacity: 0, y: 10 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.35, ease: EASE_REVEAL }}
+      initial={reduced ? false : { opacity: 0, y: 18, clipPath: "inset(0 0 5% 0 round 24px)" }}
+      animate={{ opacity: 1, y: 0, clipPath: "inset(0 0 0% 0 round 24px)" }}
+      transition={{ duration: 0.48, ease: EASE_REVEAL }}
       className="mx-auto w-full max-w-4xl px-5 pt-28 pb-24"
     >
       <a href={LISTED_PROJECTS.some((p) => p.slug === slug) ? `#card-${slug}` : "#projects"} className="inline-flex min-h-11 items-center gap-2 font-mono text-xs uppercase tracking-[.12em] text-[color:var(--ink-200)] transition-colors duration-200 hover:text-[color:var(--ink-100)]">
@@ -395,8 +417,10 @@ export default function ProjectPage({ slug }) {
           <span className={`font-semibold ${a.text}`}>{project.kind}</span>
           <span className="text-[color:var(--ink-300)]">{project.status}</span>
         </div>
-        <h1 aria-label={project.title} className="mt-4 text-[color:var(--ink-100)] leading-[.92] text-[clamp(3rem,8vw,6.5rem)]">
-          <PageTitle project={project} style={theme.title} />
+        <h1 aria-label={project.title} className="mt-4 overflow-hidden text-[color:var(--ink-100)] leading-[.92] text-[clamp(3rem,8vw,6.5rem)]">
+          <motion.span className="block" initial={reduced ? false : { y: "108%" }} animate={{ y: "0%" }} transition={{ duration: .52, delay: .06, ease: EASE_REVEAL }}>
+            <PageTitle project={project} style={theme.title} />
+          </motion.span>
         </h1>
         <p className="mt-5 text-lg leading-relaxed text-[color:var(--ink-100)]">{project.hook}</p>
         {project.stats && <StatTiles stats={project.stats} accent={project.accent} />}
@@ -417,6 +441,8 @@ export default function ProjectPage({ slug }) {
           ))}
         </div>
       </header>
+
+      <SignatureArtwork project={project} reduced={reduced} />
 
       <SummaryChart project={project} />
 
@@ -590,6 +616,7 @@ export default function ProjectPage({ slug }) {
 
       <a
         href={`#project/${next.slug}`}
+        data-cursor={cursorAction(next)}
         className="group panel mt-6 rounded-2xl p-5 flex items-center justify-between gap-4 transition-[border-color,transform] duration-200 hover:border-blue/30 active:scale-[.99]"
       >
         <span>
