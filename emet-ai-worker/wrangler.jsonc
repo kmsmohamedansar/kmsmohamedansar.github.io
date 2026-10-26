@@ -1,0 +1,25 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "emet-portfolio-ai",
+  "main": "src/index.js",
+  "compatibility_date": "2026-10-25",
+  "ai": {
+    "binding": "AI"
+  },
+  "ratelimits": [
+    {
+      "name": "EMET_RATE_LIMITER",
+      "namespace_id": "2026102501",
+      "simple": {
+        "limit": 6,
+        "period": 60
+      }
+    }
+  ],
+  "vars": {
+    "ALLOWED_ORIGINS": "https://ansarbuilds.dev"
+  },
+  "observability": {
+    "enabled": false
+  }
+}

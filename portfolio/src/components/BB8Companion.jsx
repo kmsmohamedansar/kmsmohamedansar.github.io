@@ -3,6 +3,7 @@ import { createPortal } from "react-dom";
 import { useRoute } from "../App";
 import { createBB8Scene } from "../bb8/createBB8Scene";
 import { createBB8Roaming } from "./createBB8Roaming";
+import EmetChatPanel from "./EmetChatPanel";
 import "./BB8Companion.css";
 
 const ROUTINES = ["peek", "guide", "sleepy", "mischief"];
@@ -59,6 +60,7 @@ export default function BB8Companion() {
   const edgeRef = useRef(null);
   const viewportRef = useRef(null);
   const guideTriggerRef = useRef(null);
+  const chatTriggerRef = useRef(null);
   const guideRef = useRef(null);
   const experienceRef = useRef(null);
   const roamingRef = useRef(null);
@@ -77,6 +79,7 @@ export default function BB8Companion() {
   const [soundEnabled, setSoundEnabled] = useState(false);
   const [renderFailed, setRenderFailed] = useState(false);
   const [guideOpen, setGuideOpen] = useState(false);
+  const [chatOpen, setChatOpen] = useState(false);
 
   useEffect(() => {
     const query = window.matchMedia("(prefers-reduced-motion: reduce)");
@@ -218,7 +221,7 @@ export default function BB8Companion() {
 
   useEffect(() => {
     if (reducedMotion || routeHidden) return undefined;
-    if (guideOpen) return undefined;
+    if (guideOpen || chatOpen) return undefined;
     let timer;
     const advanceWhenCalm = (advance) => {
       if (visitorIsBusy()) {
@@ -241,7 +244,7 @@ export default function BB8Companion() {
       }), routine === "mischief" ? 4200 : 5000);
     }
     return () => window.clearTimeout(timer);
-  }, [guideOpen, phase, reducedMotion, routeHidden, routine]);
+  }, [chatOpen, guideOpen, phase, reducedMotion, routeHidden, routine]);
 
   useEffect(() => {
     if (!guideOpen) return undefined;
@@ -299,16 +302,41 @@ export default function BB8Companion() {
     writeSession("emet-companion-dismissed", true);
     setSoundEnabled(false);
     setGuideOpen(false);
+    setChatOpen(false);
     setDismissed(true);
   };
 
   const openGuide = () => {
     setPhase("observing");
+    setChatOpen(false);
     setGuideOpen(true);
+  };
+
+  const openChat = () => {
+    experienceRef.current?.react();
+    setPhase("observing");
+    setGuideOpen(false);
+    setChatOpen(true);
+  };
+
+  const closeChat = () => {
+    setChatOpen(false);
+    window.requestAnimationFrame(() => chatTriggerRef.current?.focus({ preventScroll: true }));
   };
 
   const followGuideLink = () => {
     setGuideOpen(false);
+    if (reducedMotion) {
+      setPhase("waiting");
+      setStarted(false);
+    } else {
+      setPhase("leaving");
+    }
+  };
+
+  const followChatDestination = (destination) => {
+    setChatOpen(false);
+    navigate(destination);
     if (reducedMotion) {
       setPhase("waiting");
       setStarted(false);
@@ -347,6 +375,7 @@ export default function BB8Companion() {
 
   const active = phase === "peeking" || phase === "traveling" || phase === "observing";
   const copy = ROUTINE_COPY[routine];
+  const panelOpen = guideOpen || chatOpen;
 
   const guidePanel = guideOpen ? (
     <div
@@ -388,10 +417,14 @@ export default function BB8Companion() {
     </div>
   ) : null;
 
+  const chatPanel = chatOpen ? (
+    <EmetChatPanel onClose={closeChat} onDestination={followChatDestination} />
+  ) : null;
+
   return (
     <aside
       ref={edgeRef}
-      className={`bb8-edge bb8-edge--${phase} bb8-edge--${routine}${guideOpen ? " bb8-edge--guide-open" : ""}${routeHidden ? " bb8-edge--route-hidden" : ""}`}
+      className={`bb8-edge bb8-edge--${phase} bb8-edge--${routine}${panelOpen ? " bb8-edge--panel-open" : ""}${routeHidden ? " bb8-edge--route-hidden" : ""}`}
       aria-label="Emet portfolio companion"
       aria-hidden={routeHidden || undefined}
     >
@@ -402,10 +435,14 @@ export default function BB8Companion() {
 
       <div className="bb8-edge-bubble">
         <span role="status">{copy.message}</span>
-        <button ref={guideTriggerRef} type="button" tabIndex={guideOpen ? -1 : 0} onClick={openGuide}>Show me</button>
+        <div className="bb8-edge-bubble-actions">
+          <button ref={chatTriggerRef} type="button" tabIndex={panelOpen ? -1 : 0} onClick={openChat}>Ask me</button>
+          <button ref={guideTriggerRef} type="button" tabIndex={panelOpen ? -1 : 0} onClick={openGuide}>Explore</button>
+        </div>
       </div>
 
       {narrowViewport && guidePanel ? createPortal(guidePanel, document.body) : guidePanel}
+      {narrowViewport && chatPanel ? createPortal(chatPanel, document.body) : chatPanel}
 
       {routine === "sleepy" && (
         <div className="bb8-edge-zzzs" aria-hidden="true"><span>Z</span><span>Z</span><span>Z</span></div>
@@ -425,9 +462,9 @@ export default function BB8Companion() {
             tabIndex={active ? 0 : -1}
             aria-hidden={!active}
             aria-label="Open Emet portfolio guide"
-            aria-expanded={guideOpen}
-            aria-controls={guideOpen ? "bb8-portfolio-guide" : undefined}
-            onClick={openGuide}
+            aria-expanded={panelOpen}
+            aria-controls={chatOpen ? "emet-ai-chat" : guideOpen ? "bb8-portfolio-guide" : undefined}
+            onClick={openChat}
             onKeyDown={(event) => {
               if (event.key !== "Enter" && event.key !== " ") return;
               experienceRef.current?.react();
