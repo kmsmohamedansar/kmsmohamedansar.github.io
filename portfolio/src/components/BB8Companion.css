@@ -190,8 +190,9 @@
 
 .bb8-edge--peeking .bb8-edge-bubble,
 .bb8-edge--observing .bb8-edge-bubble { opacity: 1; transform: translateY(0) scale(1); pointer-events: auto; }
-.bb8-edge--guide-open .bb8-edge-bubble { opacity: 0; pointer-events: none; }
+.bb8-edge--panel-open .bb8-edge-bubble { opacity: 0; pointer-events: none; }
 .bb8-edge-bubble span { display: block; }
+.bb8-edge-bubble-actions { display: flex; gap: 9px; }
 .bb8-edge-bubble button {
   margin: 5px 0 -2px;
   padding: 0;
@@ -303,6 +304,152 @@
 .bb8-edge-guide-links strong { color: #f2eee7; font-size: .57rem; font-weight: 600; letter-spacing: .03em; }
 .bb8-edge-guide-links small { color: #96999e; font-size: .45rem; line-height: 1.35; }
 
+.bb8-edge-chat {
+  position: absolute;
+  z-index: 7;
+  right: calc(100% - 18px);
+  bottom: 18px;
+  width: min(320px, calc(100vw - 28px));
+  max-height: min(560px, calc(100vh - 92px));
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border: 1px solid rgb(230 213 189 / .22);
+  border-radius: 17px;
+  color: #e8e1d5;
+  background: rgb(9 11 14 / .96);
+  box-shadow: 0 24px 60px rgb(0 0 0 / .46);
+  animation: bb8-guide-enter .32s cubic-bezier(.22, .8, .2, 1) both;
+  backdrop-filter: blur(18px);
+  pointer-events: auto;
+}
+
+.bb8-edge--ui-right .bb8-edge-chat { right: auto; left: calc(100% - 18px); }
+
+.bb8-edge-chat-heading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 14px 13px 12px 15px;
+  border-bottom: 1px solid rgb(230 213 189 / .12);
+}
+
+.bb8-edge-chat-heading div { display: grid; gap: 3px; }
+.bb8-edge-chat-heading span { color: #53dce8; font-size: .43rem; letter-spacing: .11em; text-transform: uppercase; }
+.bb8-edge-chat-heading strong { font-family: var(--font-display, sans-serif); font-size: .9rem; font-weight: 500; }
+.bb8-edge-chat-heading button {
+  width: 27px;
+  height: 27px;
+  display: grid;
+  place-items: center;
+  padding: 0;
+  border: 1px solid rgb(230 213 189 / .2);
+  border-radius: 50%;
+  color: #aaa7a0;
+  background: transparent;
+  font: 400 1rem/1 sans-serif;
+  cursor: pointer;
+}
+
+.bb8-edge-chat-messages {
+  min-height: 92px;
+  max-height: 240px;
+  display: grid;
+  gap: 8px;
+  overflow-y: auto;
+  padding: 12px;
+  align-content: start;
+  overscroll-behavior: contain;
+}
+
+.bb8-edge-chat-message { display: grid; justify-items: start; }
+.bb8-edge-chat-message p {
+  max-width: 88%;
+  margin: 0;
+  padding: 8px 10px;
+  border-radius: 11px 11px 11px 3px;
+  color: #dcd8d0;
+  background: rgb(255 255 255 / .07);
+  font: 400 .55rem/1.55 var(--font-mono);
+}
+.bb8-edge-chat-message--user { justify-items: end; }
+.bb8-edge-chat-message--user p {
+  border-radius: 11px 11px 3px;
+  color: #07151d;
+  background: #77dce6;
+}
+.bb8-edge-chat-message button {
+  margin: 5px 2px 0;
+  padding: 0;
+  border: 0;
+  color: #53dce8;
+  background: none;
+  font: 500 .43rem/1.4 var(--font-mono);
+  letter-spacing: .07em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+.bb8-edge-chat-thinking { color: #92969c; font-size: .48rem; }
+.bb8-edge-chat-thinking span { animation: bb8-chat-pulse 1s ease-in-out infinite; }
+
+.bb8-edge-chat-suggestions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  padding: 0 12px 11px;
+}
+.bb8-edge-chat-suggestions button {
+  padding: 6px 8px;
+  border: 1px solid rgb(83 220 232 / .25);
+  border-radius: 999px;
+  color: #b9dfe2;
+  background: rgb(83 220 232 / .06);
+  font: 400 .43rem/1.35 var(--font-mono);
+  cursor: pointer;
+}
+
+.bb8-edge-chat-form {
+  display: grid;
+  gap: 6px;
+  padding: 10px 12px;
+  border-top: 1px solid rgb(230 213 189 / .12);
+}
+.bb8-edge-chat-form label {
+  color: #92969c;
+  font-size: .4rem;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+.bb8-edge-chat-form div { display: grid; grid-template-columns: 1fr auto; gap: 6px; }
+.bb8-edge-chat-form input {
+  min-width: 0;
+  padding: 9px 10px;
+  border: 1px solid rgb(230 213 189 / .2);
+  border-radius: 9px;
+  color: #f1ede6;
+  background: rgb(255 255 255 / .05);
+  font: 400 .52rem/1.4 var(--font-mono);
+}
+.bb8-edge-chat-form input:focus { outline: 1px solid rgb(83 220 232 / .72); border-color: transparent; }
+.bb8-edge-chat-form button {
+  padding: 0 11px;
+  border: 0;
+  border-radius: 9px;
+  color: #07151d;
+  background: #77dce6;
+  font: 600 .45rem/1 var(--font-mono);
+  cursor: pointer;
+}
+.bb8-edge-chat-form button:disabled { opacity: .45; cursor: default; }
+.bb8-edge-chat-note { margin: 0; padding: 0 12px 11px; color: #777c82; font-size: .39rem; line-height: 1.4; }
+
+@keyframes bb8-chat-pulse {
+  0%, 100% { opacity: .3; }
+  50% { opacity: 1; }
+}
+
 @keyframes bb8-guide-enter {
   from { opacity: 0; transform: translate(12px, 8px) scale(.96); }
   to { opacity: 1; transform: translate(0) scale(1); }
@@ -329,7 +476,9 @@
      pinned to the viewport instead of to wherever Emet has rolled to, and
      sits above the fixed nav rather than sliding under it. */
   .bb8-edge-guide,
-  .bb8-edge--ui-right .bb8-edge-guide {
+  .bb8-edge--ui-right .bb8-edge-guide,
+  .bb8-edge-chat,
+  .bb8-edge--ui-right .bb8-edge-chat {
     position: fixed;
     z-index: 120;
     inset: auto 12px 12px 12px;
@@ -349,5 +498,6 @@
   .bb8-edge { transition: none; }
   .bb8-edge--mischief.bb8-edge--observing .bb8-edge-character,
   .bb8-edge-zzzs span,
-  .bb8-edge-guide { animation: none; }
+  .bb8-edge-guide,
+  .bb8-edge-chat { animation: none; }
 }
