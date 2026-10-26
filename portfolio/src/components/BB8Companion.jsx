@@ -7,7 +7,6 @@ import EmetChatPanel from "./EmetChatPanel";
 import "./BB8Companion.css";
 
 const ROUTINES = ["peek", "guide", "sleepy", "mischief"];
-const NARROW_VIEWPORT = "(max-width: 720px)";
 const FIRST_APPEARANCE_DELAY = 1400;
 const GUIDE_IDLE_TIMEOUT = 12000;
 const ROUTINE_COPY = {
@@ -47,7 +46,12 @@ function writeSession(key, value) {
 }
 
 function quietDelay() {
-  return 10000 + Math.random() * 10000;
+  return 6500 + Math.random() * 6500;
+}
+
+function observingDelay(routine) {
+  const base = routine === "mischief" ? 2800 : 3400;
+  return base + Math.random() * 2200;
 }
 
 function isEditableTarget(target) {
@@ -68,10 +72,6 @@ export default function BB8Companion() {
   const waypointsRemainingRef = useRef(0);
   const visitorBusyUntilRef = useRef(0);
   const [reducedMotion, setReducedMotion] = useState(() => window.matchMedia("(prefers-reduced-motion: reduce)").matches);
-  // The companion is moved with a transform, which makes it the containing
-  // block for fixed descendants. On narrow viewports the guide is therefore
-  // portalled to the body so it can be pinned to the viewport instead.
-  const [narrowViewport, setNarrowViewport] = useState(() => window.matchMedia(NARROW_VIEWPORT).matches);
   const [dismissed, setDismissed] = useState(() => readSessionFlag("emet-companion-dismissed"));
   const [started, setStarted] = useState(false);
   const [phase, setPhase] = useState("waiting");
@@ -80,6 +80,7 @@ export default function BB8Companion() {
   const [renderFailed, setRenderFailed] = useState(false);
   const [guideOpen, setGuideOpen] = useState(false);
   const [chatOpen, setChatOpen] = useState(false);
+  const [panelSide, setPanelSide] = useState("right");
 
   useEffect(() => {
     const query = window.matchMedia("(prefers-reduced-motion: reduce)");
@@ -89,17 +90,10 @@ export default function BB8Companion() {
   }, []);
 
   useEffect(() => {
-    const query = window.matchMedia(NARROW_VIEWPORT);
-    const updateWidth = (event) => setNarrowViewport(event.matches);
-    query.addEventListener("change", updateWidth);
-    return () => query.removeEventListener("change", updateWidth);
-  }, []);
-
-  useEffect(() => {
     const markBusy = (duration) => {
       visitorBusyUntilRef.current = Math.max(visitorBusyUntilRef.current, performance.now() + duration);
     };
-    const onScroll = () => markBusy(1400);
+    const onScroll = () => markBusy(650);
     const onPointerDown = () => markBusy(900);
     const onSelectionChange = () => {
       const selection = window.getSelection();
@@ -207,9 +201,9 @@ export default function BB8Companion() {
         ? "peek"
         : ROUTINES[Math.floor(Math.random() * ROUTINES.length)];
       firstAppearance.current = false;
-      // Keep each cameo brief: one or two destinations followed by a short,
-      // varied pause before Emet turns up somewhere else.
-      waypointsRemainingRef.current = Math.floor(Math.random() * 2);
+      // Give each cameo enough movement to feel intentional without turning
+      // Emet into a permanent overlay.
+      waypointsRemainingRef.current = 1 + Math.floor(Math.random() * 3);
       setRoutine(nextRoutine);
       setStarted(true);
       setPhase("peeking");
@@ -241,7 +235,7 @@ export default function BB8Companion() {
         } else {
           setPhase("leaving");
         }
-      }), routine === "mischief" ? 4200 : 5000);
+      }), observingDelay(routine));
     }
     return () => window.clearTimeout(timer);
   }, [chatOpen, guideOpen, phase, reducedMotion, routeHidden, routine]);
@@ -297,6 +291,14 @@ export default function BB8Companion() {
     setSoundEnabled(Boolean(enabled));
   };
 
+  const placePanel = () => {
+    const rect = edgeRef.current?.getBoundingClientRect();
+    if (!rect) return;
+    // Keep the conversation visible without covering the character that
+    // invited it: left-side Emet opens a right-side panel and vice versa.
+    setPanelSide(rect.left + rect.width / 2 < window.innerWidth / 2 ? "right" : "left");
+  };
+
   const dismiss = () => {
     experienceRef.current?.sound.setEnabled(false);
     writeSession("emet-companion-dismissed", true);
@@ -307,12 +309,14 @@ export default function BB8Companion() {
   };
 
   const openGuide = () => {
+    placePanel();
     setPhase("observing");
     setChatOpen(false);
     setGuideOpen(true);
   };
 
   const openChat = () => {
+    placePanel();
     experienceRef.current?.react();
     setPhase("observing");
     setGuideOpen(false);
@@ -381,7 +385,7 @@ export default function BB8Companion() {
     <div
       ref={guideRef}
       id="bb8-portfolio-guide"
-      className="bb8-edge-guide"
+      className={`bb8-edge-guide bb8-edge-panel--${panelSide}`}
       role="dialog"
       aria-modal="true"
       aria-labelledby="bb8-guide-title"
@@ -418,7 +422,7 @@ export default function BB8Companion() {
   ) : null;
 
   const chatPanel = chatOpen ? (
-    <EmetChatPanel onClose={closeChat} onDestination={followChatDestination} />
+    <EmetChatPanel panelSide={panelSide} onClose={closeChat} onDestination={followChatDestination} />
   ) : null;
 
   return (
@@ -441,8 +445,8 @@ export default function BB8Companion() {
         </div>
       </div>
 
-      {narrowViewport && guidePanel ? createPortal(guidePanel, document.body) : guidePanel}
-      {narrowViewport && chatPanel ? createPortal(chatPanel, document.body) : chatPanel}
+      {guidePanel ? createPortal(guidePanel, document.body) : null}
+      {chatPanel ? createPortal(chatPanel, document.body) : null}
 
       {routine === "sleepy" && (
         <div className="bb8-edge-zzzs" aria-hidden="true"><span>Z</span><span>Z</span><span>Z</span></div>

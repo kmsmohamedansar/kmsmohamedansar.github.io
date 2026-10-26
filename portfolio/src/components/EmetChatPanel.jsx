@@ -3,7 +3,7 @@ import { askEmet, createEmetId, EMET_SUGGESTIONS } from "../emet/emetChat";
 
 const MAX_QUESTION_LENGTH = 280;
 
-export default function EmetChatPanel({ onClose, onDestination }) {
+export default function EmetChatPanel({ panelSide = "right", onClose, onDestination }) {
   const dialogRef = useRef(null);
   const inputRef = useRef(null);
   const messagesRef = useRef(null);
@@ -73,7 +73,7 @@ export default function EmetChatPanel({ onClose, onDestination }) {
     <section
       ref={dialogRef}
       id="emet-ai-chat"
-      className="bb8-edge-chat"
+      className={`bb8-edge-chat bb8-edge-panel--${panelSide}`}
       role="dialog"
       aria-modal="true"
       aria-labelledby="emet-chat-title"
