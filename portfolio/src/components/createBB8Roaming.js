@@ -1,9 +1,10 @@
 const SAFE_MARGIN = 14;
 const BOTTOM_MARGIN = 4;
 const NAV_CLEARANCE = 76;
-// Matches the companion's CSS breakpoint in BB8Companion.css.
-const NARROW_VIEWPORT_WIDTH = 720;
-const BLOCKING_CONTENT = "h1,h2,h3,p,a,button,input,textarea,select,label,[role='button'],[contenteditable='true']";
+// True phone widths stay in the bottom lane. The compact companion has enough
+// room to use side lanes on small tablets and narrow desktop panes.
+const MOBILE_LANE_WIDTH = 480;
+const BLOCKING_CONTENT = "h1,h2,h3,p,li,main span,a,button,input,textarea,select,label,[role='button'],[contenteditable='true']";
 
 function clamp(value, min, max) {
   return Math.min(max, Math.max(min, value));
@@ -112,7 +113,7 @@ export function createBB8Roaming(element, { onWaypoint, onExit, onMotion, onRest
     const middleY = clamp(window.innerHeight * 0.46 - bounds.height * 0.5, NAV_CLEARANCE, bounds.maxY);
     // Narrow viewports have no room beside the copy. Desktop destinations can
     // use the side lanes as long as the overlap scoring considers them safe.
-    const lowerLaneOnly = window.innerWidth <= NARROW_VIEWPORT_WIDTH;
+    const lowerLaneOnly = window.innerWidth <= MOBILE_LANE_WIDTH;
 
     // Edges get first refusal because they feel like a character sharing the
     // page rather than a modal floating over its centre.
