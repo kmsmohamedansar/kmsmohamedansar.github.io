@@ -341,6 +341,7 @@ export const PROJECTS = [
     kind: "An agent skill for understanding websites",
     accent: "green",
     status: "Open source skill + browser inspector",
+    spotlightArt: "/shots/spotlight/site-recon.webp",
     hook: "Give it a public website and it works out how the page is built, how its animations behave, what changes on phones, and what stops under reduced motion. It keeps facts separate from guesses, then helps rebuild the technique with original code.",
     stats: [
       { value: "3", label: "browser profiles in every automated run: desktop, mobile and reduced motion", short: "browser profiles per run" },
