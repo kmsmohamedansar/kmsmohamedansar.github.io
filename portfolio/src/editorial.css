@@ -166,7 +166,7 @@ a:hover .ed-experiment-image img { transform: scale(1.04); }
 .ed-case-study .rounded-2xl, .ed-case-study .rounded-3xl { border-radius: 0; }
 .ed-case-study :is(section,figure,aside,details) { border-color: var(--ed-rule); }
 .ed-case-study .ed-flow-surface { background: var(--diagram-surface); border-color: var(--ed-rule); }
-.ed-case-study .project-panel { background: rgb(16 16 16 / .035) !important; }
+.ed-case-study .project-panel { background: rgb(16 16 16 / .035) !important; border-color: var(--ed-rule) !important; box-shadow: none !important; backdrop-filter: none !important; }
 .ed-case-study :is(.text-green,.text-rose,.text-cyan) { color: #74200d; }
 @media (min-width: 1400px) { .ed-hero { min-height: min(100dvh,1000px); } }
 @media (max-width: 900px) {
