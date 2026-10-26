@@ -35,6 +35,7 @@ export const TOOL_INFO = {
   "Tailwind CSS": "A way of styling web pages with small ready-made classes, instead of writing a separate stylesheet.",
   Vite: "A build tool. It turns source code into the small, fast files a browser or extension actually loads.",
   "Node.js": "Lets JavaScript and TypeScript run on a server, not just in a browser.",
+  Playwright: "A tool that drives a real browser from code. Site Recon uses it to inspect desktop, mobile and reduced-motion versions of the same public page.",
   Fastify: "A fast, lightweight framework for building web servers and APIs in Node.js.",
   SVG: "A format for drawings made of shapes and lines, so they stay sharp at any size.",
   "Static HTML": "Plain web pages with no server behind them. Cheap to host and hard to break.",

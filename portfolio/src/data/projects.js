@@ -33,6 +33,7 @@ export const PROJECTS = [
     slug: "decision-models",
     featured: true,
     spotlightGroup: "open-source",
+    spotlightCategory: "studies",
     spotlightLink: { label: "Read the report", href: "/p/decision-models/report.html" },
     theme: { bg: "#e6d5bd", title: "display" },
     title: "My Take on Jev",
@@ -143,6 +144,7 @@ export const PROJECTS = [
     slug: "rea-study",
     featured: true,
     spotlightGroup: "open-source",
+    spotlightCategory: "studies",
     spotlightLink: { label: "Read the report", href: "/p/rea-study/report.html" },
     theme: { bg: "#e6d5bd", title: "display" },
     title: "My Take on REA",
@@ -245,6 +247,7 @@ export const PROJECTS = [
     slug: "storyera",
     featured: true,
     spotlightGroup: "open-source",
+    spotlightCategory: "skills",
     spotlightLink: { label: "Get the skill", href: "https://github.com/kmsmohamedansar/storyera" },
     theme: { bg: "#e6d5bd", title: "display" },
     title: "StoryEra",
@@ -325,6 +328,91 @@ export const PROJECTS = [
     links: [
       { label: "Read the documentation", href: "https://github.com/kmsmohamedansar/storyera", external: true, primary: true },
       { label: "Install in Codex or Claude Code", href: "https://github.com/kmsmohamedansar/storyera/blob/main/docs/installation.md", external: true },
+    ],
+  },
+  {
+    slug: "site-recon",
+    featured: true,
+    spotlightGroup: "open-source",
+    spotlightCategory: "skills",
+    spotlightLink: { label: "Get the skill", href: "https://github.com/kmsmohamedansar/site-recon" },
+    theme: { bg: "#e6d5bd", title: "display" },
+    title: "Site Recon",
+    kind: "An agent skill for understanding websites",
+    accent: "green",
+    status: "Open source skill + browser inspector",
+    hook: "Give it a public website and it works out how the page is built, how its animations behave, what changes on phones, and what stops under reduced motion. It keeps facts separate from guesses, then helps rebuild the technique with original code.",
+    stats: [
+      { value: "3", label: "browser profiles in every automated run: desktop, mobile and reduced motion", short: "browser profiles per run" },
+      { value: "4", label: "extraction files for keyframes, animation evidence, public assets and a rebuild plan", short: "evidence files per extraction" },
+      { value: "5", label: "automated checks for artifact output and stack-detection regressions", short: "checks for the tooling" },
+      { value: "2", label: "documented agent hosts: Codex and Claude Code", short: "agent hosts documented" },
+    ],
+    role: "I shaped the idea, chose the evidence rules, tested it on my portfolio and an unrelated studio site, and turned the corrections into repeatable checks with Codex.",
+    tags: ["Agent Skills", "Playwright", "Web animation", "Codex", "Claude Code"],
+    stack: ["Agent Skills", "Node.js", "Playwright", "JavaScript", "Codex", "Claude Code", "Markdown"],
+    stackUsage: {
+      "Agent Skills": "The portable SKILL.md workflow tells an existing agent how to inspect, explain and rebuild a site without pretending compiled code is the original source.",
+      "Node.js": "Runs the command-line inspector, evidence exporters and tests.",
+      Playwright: "Opens a real Chromium browser three ways and records the page's public runtime evidence.",
+      JavaScript: "Collects CSS keyframes, active browser animations, fonts, canvases, resources and library signatures.",
+      Codex: "The first host used to build and test the skill, inspect live sites and generate clean-room starter code.",
+      "Claude Code": "A documented installation target using the same skill folder and workflow.",
+      Markdown: "Holds the skill instructions, installation guide, architecture notes, case study and rebuild rules.",
+    },
+    story: [
+      "I wanted a practical answer to a common portfolio question: what did this site use, and how did that animation actually work? Browser extensions can name a framework, but they rarely explain the motion, the responsive changes or the difference between a fact and a guess.",
+      "Site Recon pairs a portable agent skill with a Playwright inspector. It opens a site at desktop and mobile sizes, then opens it again with reduced motion requested. It records the scripts, styles, fonts, keyframes, active animations, canvases and public assets that a normal visitor receives.",
+      "The first independent test was Kigo Studio. The early detector called Vue's reactive code React and mistook the English phrase ‘all three.’ for the Three.js namespace. I traced both signals, tightened the rules and kept the mistakes as regression tests.",
+      "The extraction mode saves exact browser-visible keyframes and short bundle clues, but it does not claim to recover private source. The rebuild mode uses those facts to write new components and assets. The repository includes an original React petal field built from the observed motion grammar, not the studio's artwork or code.",
+    ],
+    how: [
+      "Install the same folder in .agents/skills for Codex or .claude/skills for Claude Code. Playwright is optional for the written workflow and required for the repeatable browser inspector.",
+      "Run the site at 1440 by 1000, 390 by 844, and once more with reduced motion. Record the public DOM, CSS, runtime animations, fonts, assets, response headers and console errors.",
+      "Label each claim as verified, strongly inferred, possible or unknown. A frontend framework does not reveal the backend, and a production bundle is not the original source tree.",
+      "When code-level evidence is requested, export exact browser-visible keyframes, selectors and timings, a public asset list, short bundle signatures and any advertised source-map references.",
+      "Rebuild the interaction with new components, names, content and artwork. Test keyboard focus, phones and reduced motion before calling it finished.",
+    ],
+    sample: {
+      label: "The first outside test",
+      title: "Kigo Studio showed what the detector got right, and what it needed to fix.",
+      headers: ["Question", "Browser evidence", "Result"],
+      rows: [
+        ["What is it built with?", "Nuxt asset paths, Vue scoped styles and GSAP ScrollTrigger signatures.", "Nuxt, Vue and GSAP, hosted on Netlify."],
+        ["How does the atmosphere move?", "18 keyframe families, staggered SVG blossoms, long falling petals and six-second sway loops.", "A detailed motion recipe with exact public timings."],
+        ["What happens for reduced motion?", "The normal run had many active animations; the reduced-motion run had none at the sample point.", "The rebuild must preserve the same accessibility choice."],
+        ["What was wrong at first?", "The words ‘reactive’ and ‘all three.’ triggered overly broad rules.", "Both false positives became automated regression tests."],
+      ],
+    },
+    learned: [
+      "A detector should show the exact signal and its source. A technology name without evidence is just a guess.",
+      "Reduced motion needs its own browser run. Reading CSS alone does not prove what is active at runtime.",
+      "Compiled code can reveal mechanisms and exact values without revealing the original source structure.",
+      "The most reusable output is not a copied bundle. It is a clear motion recipe plus original code that fits the destination site.",
+    ],
+    flow: {
+      caption: "From a public URL to evidence and an original rebuild.",
+      columns: [
+        { label: "Open", nodes: ["Desktop", "Mobile", "Reduced motion"] },
+        { label: "Observe", nodes: ["Stack and assets", "Keyframes and runtime motion"] },
+        { label: "Explain", nodes: ["Verified facts", "Inference and unknowns"] },
+        { label: "Rebuild", nodes: ["Original components", "Responsive and accessible"] },
+      ],
+    },
+    reportCta: {
+      kicker: "Open source · inspect and rebuild",
+      title: "The skill, inspector and case study",
+      text: "The repository includes Codex and Claude Code installation, the Playwright inspector, extraction artifacts, responsible-use rules, regression tests and an original React motion starter.",
+      contents: ["Codex and Claude Code setup", "Desktop, mobile and reduced-motion inspection", "Exact browser-visible keyframe extraction", "Evidence-backed stack detection", "Kigo Studio validation case study", "Original React ambient-motion starter"],
+      links: [
+        { label: "Install Site Recon", href: "https://github.com/kmsmohamedansar/site-recon/blob/main/docs/installation.md", external: true, primary: true },
+        { label: "Read how it works", href: "https://github.com/kmsmohamedansar/site-recon/blob/main/docs/how-it-works.md", external: true },
+        { label: "Code and documentation", href: "https://github.com/kmsmohamedansar/site-recon", external: true },
+      ],
+    },
+    links: [
+      { label: "Read the documentation", href: "https://github.com/kmsmohamedansar/site-recon", external: true, primary: true },
+      { label: "Install in Codex or Claude Code", href: "https://github.com/kmsmohamedansar/site-recon/blob/main/docs/installation.md", external: true },
     ],
   },
   {
@@ -1584,6 +1672,22 @@ export const PROJECTS = [
 // out of every list on the site.
 const listed = (p) => !p.hidden;
 export const OPEN_SOURCE_PROJECTS = PROJECTS.filter((p) => p.spotlightGroup === "open-source" && listed(p));
+export const OPEN_SOURCE_GROUPS = [
+  {
+    id: "studies",
+    label: "Independent AI studies",
+    title: "Claims, tested.",
+    description: "Two public experiments with written methods, saved runs and results that include the inconvenient parts.",
+    projects: OPEN_SOURCE_PROJECTS.filter((p) => p.spotlightCategory === "studies"),
+  },
+  {
+    id: "skills",
+    label: "Open-source skills & plugins",
+    title: "Methods, packaged.",
+    description: "Reusable workflows for Codex and Claude Code, with installation guides, examples, limits and code anyone can inspect.",
+    projects: OPEN_SOURCE_PROJECTS.filter((p) => p.spotlightCategory === "skills"),
+  },
+];
 export const FEATURED = PROJECTS.filter((p) => p.featured && !p.grid && !p.spotlightGroup && listed(p));
 export const FEATURED_GRID = PROJECTS.filter((p) => p.featured && p.grid && listed(p));
 // Archived course-era work is listed compactly under "Earlier work" instead of in the rail.

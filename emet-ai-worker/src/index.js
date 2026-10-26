@@ -47,7 +47,7 @@ function destinationFor(question) {
   if (/contact|email|reach|hire|linkedin/.test(normalized)) return "contact";
   if (/experience|career|job|work history|datasembly|amazon/.test(normalized)) return "experience";
   if (/about|background|who is|skill|tool/.test(normalized)) return "about";
-  if (/ai|model|rea|storyera|digital me|experiment/.test(normalized)) return "ai";
+  if (/ai|model|rea|storyera|site recon|skill|plugin|digital me|experiment/.test(normalized)) return "ai";
   if (/project|build|app|reptrack|haloscript|sitescout/.test(normalized)) return "projects";
   return null;
 }

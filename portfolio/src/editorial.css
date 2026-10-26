@@ -419,37 +419,43 @@ a:hover .ed-poster-plate .ed-project-image { transform: rotate(0) scale(1.025); 
  .ed-hero-bottom > div { height: 110px; min-height: 110px; }
 }
 
-/* Every project is visible in one shared collection. */
+/* Four individual stories, introduced as two clearer collections. */
 .ed-open-source { position: relative; margin-bottom: 85px; padding: 30px; border: 1px solid var(--ed-rule); border-radius: 24px; background: rgb(255 255 255 / .18); }
 .ed-open-source-heading { display: flex; justify-content: space-between; align-items: end; gap: 24px; margin-bottom: 25px; }
 .ed-open-source-heading h3 { margin-top: 12px; font: 400 clamp(2rem,3.8vw,3.2rem)/1.1 var(--font-condensed); text-transform: uppercase; }
 .ed-open-source-heading h3 em { font-family: var(--font-serif); text-transform: none; }
 .ed-open-source-heading > p { font-size: .76rem; line-height: 1.7; color: var(--ed-blue); }
-.ed-open-source-grid { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 24px; padding-top: 28px; border-top: 1px solid var(--ed-rule); }
-.ed-open-source-card { min-width: 0; display: flex; flex-direction: column; }
-.ed-open-source-card .ed-feature-image { display: block; margin-bottom: 24px; scroll-margin-top: 100px; }
-.ed-open-source-card .ed-project-plate { aspect-ratio: 4 / 3; min-height: 0; }
-.ed-open-source-card .ed-feature-body { display: flex; flex-direction: column; flex: 1; min-width: 0; }
-.ed-open-source-card .ed-feature-body h3 { margin-top: 14px; font: 400 clamp(1.8rem,2.7vw,2.6rem)/1.05 var(--font-condensed); text-transform: uppercase; }
-.ed-open-source-card .ed-feature-body .ed-label { font-size: .58rem; letter-spacing: .08em; }
-.ed-open-source-card .ed-copy { margin-top: 18px; font-size: .85rem; line-height: 1.75; }
-.ed-open-source-card .ed-project-status { font-size: .62rem; }
-.ed-open-source-card .ed-project-stats { grid-template-columns: repeat(2,minmax(0,1fr)); gap: 18px 12px; margin-top: auto; padding-top: 24px; }
-.ed-open-source-card .ed-project-stats dt { font-size: 2rem; }
-.ed-open-source-card .ed-project-stats dd { font-size: .57rem; max-width: 150px; }
-.ed-open-source-links { display: flex; gap: 18px; flex-wrap: wrap; margin-top: 25px; }
+.ed-open-source-grid { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 18px; padding-top: 28px; border-top: 1px solid var(--ed-rule); }
+.ed-open-source-group { min-width: 0; padding: 24px; border: 1px solid var(--ed-rule); border-radius: 18px; background: rgb(230 213 189 / .34); }
+.ed-open-source-group-skills { background: rgb(213 54 12 / .055); }
+.ed-open-source-group-heading { min-height: 158px; padding-bottom: 22px; border-bottom: 1px solid var(--ed-rule); }
+.ed-open-source-group-heading h3 { margin-top: 10px; font: 400 clamp(2rem,3.2vw,3rem)/1 var(--font-condensed); text-transform: uppercase; }
+.ed-open-source-group-heading > p:last-child { max-width: 34rem; margin-top: 13px; color: var(--ed-blue); font-size: .76rem; line-height: 1.65; }
+.ed-open-source-items { display: grid; gap: 0; }
+.ed-open-source-project { display: grid; grid-template-columns: minmax(112px,.72fr) minmax(0,1.28fr); gap: 18px; align-items: start; padding: 22px 0; }
+.ed-open-source-project + .ed-open-source-project { border-top: 1px solid var(--ed-rule); }
+.ed-open-source-project .ed-feature-image { display: block; margin: 0; scroll-margin-top: 100px; }
+.ed-open-source-project .ed-project-plate { min-height: 0; aspect-ratio: 4 / 3; border-radius: 10px; }
+.ed-open-source-project .ed-poster-word { font-size: clamp(2.4rem,6vw,4rem); }
+.ed-open-source-project .ed-plate-caption { font-size: .48rem; }
+.ed-open-source-project .ed-feature-body { min-width: 0; }
+.ed-open-source-project .ed-feature-body h4 { margin-top: 8px; font: 400 clamp(1.55rem,2.35vw,2.15rem)/1.05 var(--font-condensed); text-transform: uppercase; }
+.ed-open-source-project .ed-feature-body .ed-label { font-size: .51rem; letter-spacing: .08em; }
+.ed-open-source-project .ed-copy { margin-top: 11px; font-size: .76rem; line-height: 1.65; }
+.ed-open-source-project .ed-project-status { margin-top: 12px; font-size: .55rem; }
+.ed-open-source-links { display: flex; gap: 14px; flex-wrap: wrap; margin-top: 16px; }
 .ed-open-source-links .ed-link { gap: 8px; font-size: .67rem; }
 @media (max-width: 900px) {
  .ed-open-source { padding: 23px; }
  .ed-open-source-grid { grid-template-columns: 1fr; gap: 28px; }
- .ed-open-source-card { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
- .ed-open-source-card + .ed-open-source-card { border-top: 1px solid var(--ed-rule); padding-top: 28px; }
- .ed-open-source-card .ed-feature-image { margin-bottom: 0; }
+ .ed-open-source-group-heading { min-height: 0; }
+ .ed-open-source-project { grid-template-columns: minmax(170px,.8fr) minmax(0,1.2fr); }
 }
 @media (max-width: 640px) {
  .ed-open-source { padding: 18px; margin-bottom: 65px; border-radius: 18px; }
  .ed-open-source-heading { display: block; }
  .ed-open-source-heading > p { margin-top: 13px; }
- .ed-open-source-card { grid-template-columns: 1fr; gap: 22px; }
- .ed-open-source-card .ed-feature-body h3 { font-size: 2.5rem; }
+ .ed-open-source-group { padding: 18px; }
+ .ed-open-source-project { grid-template-columns: 1fr; gap: 17px; }
+ .ed-open-source-project .ed-feature-body h4 { font-size: 2rem; }
 }
