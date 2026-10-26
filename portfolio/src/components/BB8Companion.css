@@ -3,8 +3,8 @@
   z-index: 60;
   top: 0;
   left: 0;
-  width: clamp(132px, 14vw, 154px);
-  height: clamp(180px, 19vw, 208px);
+  width: clamp(104px, 10vw, 118px);
+  height: clamp(142px, 13.7vw, 162px);
   color: #e6d5bd;
   font-family: var(--font-mono);
   filter: drop-shadow(0 22px 24px rgb(0 0 0 / .38));
@@ -57,7 +57,7 @@
 .bb8-edge-controls {
   position: absolute;
   z-index: 4;
-  top: 46px;
+  top: 34px;
   right: 4px;
   display: flex;
   gap: 5px;
@@ -152,9 +152,10 @@
 .bb8-edge-bubble {
   position: absolute;
   z-index: 4;
-  top: 8px;
-  right: 34px;
-  max-width: 178px;
+  top: 22px;
+  right: calc(100% - 10px);
+  width: 166px;
+  max-width: calc(100vw - 118px);
   padding: 8px 10px;
   border: 1px solid rgb(230 213 189 / .2);
   border-radius: 13px 13px 3px 13px;
@@ -172,18 +173,15 @@
 }
 
 .bb8-edge--traveling .bb8-edge-bubble { opacity: 0; pointer-events: none; }
-.bb8-edge--silent .bb8-edge-bubble { opacity: 0; pointer-events: none; }
-.bb8-edge--quiet .bb8-edge-bubble { opacity: 0; pointer-events: none; }
-.bb8-edge--quiet:hover .bb8-edge-bubble,
-.bb8-edge--quiet:focus-within .bb8-edge-bubble { opacity: 1; transform: translateY(0) scale(1); pointer-events: auto; }
-.bb8-edge--ui-right .bb8-edge-bubble { right: auto; left: 34px; border-radius: 13px 13px 13px 3px; }
-.bb8-edge--ui-right .bb8-edge-bubble::after { right: auto; left: 9px; }
+.bb8-edge--ui-right .bb8-edge-bubble { right: auto; left: calc(100% - 10px); border-radius: 13px 13px 13px 3px; }
+.bb8-edge--ui-right .bb8-edge-bubble::after { right: auto; left: -6px; }
 
 .bb8-edge-bubble::after {
   content: "";
   position: absolute;
-  right: 9px;
-  bottom: -6px;
+  top: 29px;
+  right: -6px;
+  bottom: auto;
   width: 10px;
   height: 10px;
   border-right: 1px solid rgb(230 213 189 / .2);
@@ -194,6 +192,10 @@
 
 .bb8-edge--peeking .bb8-edge-bubble,
 .bb8-edge--observing .bb8-edge-bubble { opacity: 1; transform: translateY(0) scale(1); pointer-events: auto; }
+.bb8-edge--silent .bb8-edge-bubble,
+.bb8-edge--quiet .bb8-edge-bubble { opacity: 0; pointer-events: none; }
+.bb8-edge--quiet:hover .bb8-edge-bubble,
+.bb8-edge--quiet:focus-within .bb8-edge-bubble { opacity: 1; transform: translateY(0) scale(1); pointer-events: auto; }
 .bb8-edge--panel-open .bb8-edge-bubble { opacity: 0; pointer-events: none; }
 .bb8-edge-bubble span { display: block; }
 .bb8-edge-bubble-actions { display: flex; gap: 9px; }
@@ -474,10 +476,10 @@
 }
 
 @media (max-width: 720px) {
-  .bb8-edge { width: min(122px, 33vw); height: min(168px, 36vh); }
-  .bb8-edge-bubble { right: 18px; max-width: 150px; font-size: .48rem; }
-  .bb8-edge--ui-right .bb8-edge-bubble { right: auto; left: 22px; }
-  .bb8-edge-controls { top: 38px; right: 0; }
+  .bb8-edge { width: min(96px, 26vw); height: min(132px, 30vh); }
+  .bb8-edge-bubble { right: calc(100% - 8px); width: 148px; max-width: calc(100vw - 104px); font-size: .48rem; }
+  .bb8-edge--ui-right .bb8-edge-bubble { right: auto; left: calc(100% - 8px); }
+  .bb8-edge-controls { top: 29px; right: -2px; }
   .bb8-edge-guide,
   .bb8-edge-chat,
   .bb8-edge-panel--left,
