@@ -5,6 +5,7 @@ export const STEP_TOOLS = {
   "decision-models": [[], [], ["Ollama", "qwen2.5:7b", "Strands Decider 2B", "Kev-0.8B", "Laya", "MLX"], ["Python"]],
   "rea-study": [[], ["REA", "Ghidra", "Model Context Protocol"], ["Claude Code", "Claude Sonnet 5.5"], ["Python"]],
   "site-recon": [["Playwright"], ["JavaScript"], ["Agent Skills", "Markdown"], ["React"]],
+  "authorized-web-exposure-audit": [["Agent Skills"], ["Python"], ["Python"], ["Markdown", "JSON"]],
   sitescout: [["React", "Side panel"], ["Chrome extension (Manifest V3)"], ["TypeScript"], ["React", "Framer Motion"]],
   integration: [["React"], ["Node.js", "Fastify", "OAuth 2.0 / OpenID Connect"], ["Keycloak", "SQLite"], ["Fastify", "SQLite"]],
   "analytics-assistant": [["React"], ["Ollama (qwen2.5:7b)", "TypeScript"], ["Model Context Protocol", "Zod", "SQLite"], ["React", "Framer Motion"]],

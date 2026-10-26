@@ -34,6 +34,7 @@ const BUILT = [
   ["My Take on Jev", "Python", "an AI study"],
   ["StoryEra", "Codex", "a skill for writers"],
   ["Site Recon", "Playwright", "a site inspector"],
+  ["Exposure Audit", "Python", "a safe public-surface checker"],
   ["my digital double", "Claude Code", "a 3D head"],
   ["a catalogue checker", "embeddings", "a data quality check"],
   ["a weekly data delivery", "DuckDB", "a pipeline that stops itself"],

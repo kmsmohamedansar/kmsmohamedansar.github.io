@@ -15,6 +15,7 @@ export const TOOL_INFO = {
   TypeScript: "JavaScript with labels on every piece of data (\"this is a number\", \"this might be missing\"), so many mistakes are caught before the code runs.",
   JavaScript: "The language every web browser runs. It makes web pages interactive.",
   Python: "A popular, readable programming language, widely used for data work, automation and machine learning.",
+  JSON: "A plain-text format for structured data. Programs use it to exchange settings, records and results in a predictable shape.",
   Swift: "Apple's programming language for iPhone, iPad and Mac apps.",
 
   SQL: "The standard language for asking questions of a database: pick the rows you want, join tables together, add things up.",
