@@ -89,6 +89,7 @@ export default function BB8Companion() {
   const [chatInitialQuestion, setChatInitialQuestion] = useState("");
   const [contextualOffer, setContextualOffer] = useState(null);
   const [panelSide, setPanelSide] = useState("right");
+  const [uiOnRight, setUiOnRight] = useState(false);
 
   availabilityRef.current = { route, routeHidden, phase, reducedMotion, guideOpen, chatOpen, dismissed };
 
@@ -215,6 +216,7 @@ export default function BB8Companion() {
       },
       onMotion: (dx, dy) => experienceRef.current?.setScreenMotion(dx, dy),
       onRest: () => experienceRef.current?.stopScreenMotion(),
+      onUiSideChange: setUiOnRight,
     });
     roamingRef.current = roaming;
     return () => {
@@ -502,7 +504,7 @@ export default function BB8Companion() {
   return (
     <aside
       ref={edgeRef}
-      className={`bb8-edge bb8-edge--${phase} bb8-edge--${routine}${routine !== "contextual" ? " bb8-edge--quiet" : ""}${panelOpen ? " bb8-edge--panel-open" : ""}${routeHidden ? " bb8-edge--route-hidden" : ""}`}
+      className={`bb8-edge bb8-edge--${phase} bb8-edge--${routine}${routine !== "contextual" ? " bb8-edge--quiet" : ""}${uiOnRight ? " bb8-edge--ui-right" : ""}${panelOpen ? " bb8-edge--panel-open" : ""}${routeHidden ? " bb8-edge--route-hidden" : ""}`}
       aria-label="Emet portfolio companion"
       aria-hidden={routeHidden || undefined}
     >

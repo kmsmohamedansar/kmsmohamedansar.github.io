@@ -10,7 +10,14 @@ function clamp(value, min, max) {
   return Math.min(max, Math.max(min, value));
 }
 
-export function createBB8Roaming(element, { onWaypoint, onExit, onMotion, onRest, reducedMotion = false }) {
+export function createBB8Roaming(element, {
+  onWaypoint,
+  onExit,
+  onMotion,
+  onRest,
+  onUiSideChange,
+  reducedMotion = false,
+}) {
   // createBB8Locomotion moves the mesh through Three.js world space and maps
   // clicks through the scene camera. This controller deliberately operates in
   // viewport pixels: one compositor transform moves the whole companion UI.
@@ -22,6 +29,7 @@ export function createBB8Roaming(element, { onWaypoint, onExit, onMotion, onRest
   let mode = "idle";
   let speed = 220;
   let externallyPaused = false;
+  let uiOnRight = null;
 
   function readBounds() {
     const width = Math.max(element.offsetWidth, 1);
@@ -38,7 +46,12 @@ export function createBB8Roaming(element, { onWaypoint, onExit, onMotion, onRest
     element.style.transform = `translate3d(${position.x.toFixed(2)}px, ${position.y.toFixed(2)}px, 0)`;
     // The guide normally opens to the droid's left. Near the left edge it
     // flips to the right, and the smaller speech bubble mirrors with it.
-    element.classList.toggle("bb8-edge--ui-right", position.x < 270);
+    const nextUiOnRight = position.x < 270;
+    element.classList.toggle("bb8-edge--ui-right", nextUiOnRight);
+    if (nextUiOnRight !== uiOnRight) {
+      uiOnRight = nextUiOnRight;
+      onUiSideChange?.(nextUiOnRight);
+    }
   }
 
   function setPosition(next) {
