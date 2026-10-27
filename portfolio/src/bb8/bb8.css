@@ -14,7 +14,7 @@ body { overflow: hidden; }
 button, a { font: inherit; }
 
 .bb8-page {
-  --accent: #53dce8;
+  --accent: #d5360c;
   position: relative;
   width: 100%;
   height: 100dvh;
@@ -77,7 +77,7 @@ button, a { font: inherit; }
   cursor: pointer;
 }
 .bb8-sound b { color: var(--accent); font-weight: 500; }
-.bb8-sound:hover { border-color: rgba(83,220,232,.55); color: #d7d8da; }
+.bb8-sound:hover { border-color: rgba(213,54,12,.65); color: #d7d8da; }
 .bb8-sound[aria-pressed="true"] { border-color: rgba(126,214,154,.42); }
 .bb8-sound[aria-pressed="true"] b { color: #7ed69a; }
 .bb8-sound:disabled { cursor: default; opacity: .45; }
@@ -117,7 +117,7 @@ button, a { font: inherit; }
 .bb8-viewport { position: absolute; z-index: 4; inset: 0; cursor: grab; touch-action: none; }
 .bb8-viewport:active { cursor: grabbing; }
 .bb8-viewport:focus { outline: none; }
-.bb8-viewport:focus-visible { box-shadow: inset 0 0 0 1px rgba(83, 220, 232, .72); }
+.bb8-viewport:focus-visible { box-shadow: inset 0 0 0 1px rgba(213, 54, 12, .82); }
 .bb8-viewport canvas { display: block; width: 100%; height: 100%; outline: none; }
 
 .bb8-footer {

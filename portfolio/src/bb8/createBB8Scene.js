@@ -7,13 +7,15 @@ import { createBB8Locomotion } from "./createBB8Locomotion";
 import { createBB8Sound } from "./createBB8Sound";
 
 const COLORS = {
-  ceramic: 0xe6ded0,
-  ceramicLight: 0xf2ede3,
-  copper: 0x9f6248,
-  copperDark: 0x66392d,
-  graphite: 0x10171b,
-  lens: 0x020b10,
-  cyan: 0x55dce6,
+  // Match the portfolio's editorial palette. The material keys retain their
+  // original names because they describe finishes, not literal paint colors.
+  ceramic: 0xe6d5bd,
+  ceramicLight: 0xf4ece0,
+  copper: 0xd5360c,
+  copperDark: 0x74200d,
+  graphite: 0x101010,
+  lens: 0x101010,
+  accent: 0xd5360c,
 };
 
 function standard(color, roughness = 0.45, metalness = 0.05) {
@@ -45,7 +47,7 @@ function addSurfaceModule(parent, normal, size, materials, rotation = 0, illumin
   outer.position.z = 0.01;
   const inset = mesh(
     new RoundedBoxGeometry(size[0] * 0.52, size[1] * 0.58, 0.085, 4, 0.045),
-    illuminated ? materials.cyan : materials.copper,
+    illuminated ? materials.accent : materials.copper,
     { cast: false },
   );
   inset.position.z = 0.065;
@@ -111,7 +113,7 @@ function createBody(materials) {
   serviceBadge.position.set(0.57, 0.48, 1.18);
   serviceBadge.rotation.set(-0.35, 0.43, -0.18);
   const badgePlate = mesh(new RoundedBoxGeometry(0.36, 0.16, 0.045, 3, 0.04), materials.copperDark, { cast: false });
-  const badgeLight = mesh(new RoundedBoxGeometry(0.18, 0.035, 0.03, 2, 0.012), materials.cyan, { cast: false });
+  const badgeLight = mesh(new RoundedBoxGeometry(0.18, 0.035, 0.03, 2, 0.012), materials.accent, { cast: false });
   badgeLight.position.z = 0.037;
   serviceBadge.add(badgePlate, badgeLight);
   body.add(serviceBadge);
@@ -128,7 +130,7 @@ function addLens(group, materials, position, radius, glow = false) {
   glass.position.set(position[0], position[1], position[2] + 0.07);
   const outerRing = mesh(new THREE.TorusGeometry(radius * 1.16, radius * 0.11, 10, 48), materials.copper, { cast: false });
   outerRing.position.set(position[0], position[1], position[2] + 0.12);
-  const iris = mesh(new THREE.TorusGeometry(radius * 0.58, radius * 0.075, 10, 40), materials.cyan, { cast: false });
+  const iris = mesh(new THREE.TorusGeometry(radius * 0.58, radius * 0.075, 10, 40), materials.accent, { cast: false });
   iris.position.set(position[0], position[1], position[2] + radius * 0.95);
   const pupil = mesh(new THREE.CircleGeometry(radius * 0.34, 30), materials.graphite, { cast: false });
   pupil.position.set(position[0], position[1], position[2] + radius * 1.02);
@@ -177,7 +179,7 @@ function createHead(materials) {
   statusRail.position.set(-0.28, 0.57, 0.65);
   head.add(statusRail);
   [-0.095, 0, 0.095].forEach((offset, index) => {
-    const light = mesh(new THREE.CircleGeometry(index === 1 ? 0.026 : 0.019, 16), index === 2 ? materials.copper : materials.cyan, { cast: false });
+    const light = mesh(new THREE.CircleGeometry(index === 1 ? 0.026 : 0.019, 16), index === 2 ? materials.copper : materials.accent, { cast: false });
     light.position.set(-0.28, 0.57 + offset, 0.682);
     head.add(light);
   });
@@ -223,7 +225,7 @@ function createHead(materials) {
   shortAntennaRig.rotation.z = 0.035;
   const antennaShort = mesh(new THREE.CylinderGeometry(0.024, 0.048, 0.47, 10), materials.graphite);
   antennaShort.position.y = 0.21;
-  const shortTip = mesh(new THREE.SphereGeometry(0.052, 12, 8), materials.cyan, { cast: false });
+  const shortTip = mesh(new THREE.SphereGeometry(0.052, 12, 8), materials.accent, { cast: false });
   shortTip.position.y = 0.47;
   shortAntennaRig.add(antennaShort, shortTip);
   head.add(tallAntennaRig, shortAntennaRig);
@@ -237,12 +239,12 @@ function createMaterials() {
     ceramicLight: new THREE.MeshPhysicalMaterial({ color: COLORS.ceramicLight, roughness: 0.4, metalness: 0.02, clearcoat: 0.3, clearcoatRoughness: 0.34 }),
     copper: standard(COLORS.copper, 0.34, 0.66),
     copperDark: standard(COLORS.copperDark, 0.4, 0.52),
-    seam: standard(0x4f595e, 0.52, 0.36),
-    fastener: standard(0x7c8587, 0.32, 0.72),
+    seam: standard(0x332820, 0.52, 0.36),
+    fastener: standard(0x51463c, 0.32, 0.72),
     graphite: standard(COLORS.graphite, 0.34, 0.58),
     lens: new THREE.MeshPhysicalMaterial({ color: COLORS.lens, roughness: 0.055, metalness: 0.16, clearcoat: 1, clearcoatRoughness: 0.045 }),
-    cyan: new THREE.MeshStandardMaterial({ color: COLORS.cyan, emissive: COLORS.cyan, emissiveIntensity: 1.8, roughness: 0.25, toneMapped: false }),
-    glint: new THREE.MeshBasicMaterial({ color: 0xc8faff }),
+    accent: new THREE.MeshStandardMaterial({ color: COLORS.accent, emissive: COLORS.accent, emissiveIntensity: 1.8, roughness: 0.25, toneMapped: false }),
+    glint: new THREE.MeshBasicMaterial({ color: 0xf4ece0 }),
   };
 }
 
@@ -294,7 +296,7 @@ export function createBB8Scene(container, { variant = "preview" } = {}) {
   contactShadow.scale.set(1, 0.42, 1);
   scene.add(contactShadow);
 
-  const hemi = new THREE.HemisphereLight(0xc6def2, 0x2a1c15, 1.5);
+  const hemi = new THREE.HemisphereLight(0xf4ece0, 0x332820, 1.5);
   const key = new THREE.DirectionalLight(0xfff3df, 4.9);
   key.position.set(4.5, 7, 5.5);
   key.castShadow = true;
@@ -305,13 +307,13 @@ export function createBB8Scene(container, { variant = "preview" } = {}) {
   key.shadow.camera.bottom = -2;
   key.shadow.bias = -0.0003;
   key.shadow.radius = 3;
-  const rim = new THREE.DirectionalLight(0x79bfff, 2.75);
+  const rim = new THREE.DirectionalLight(0xe6d5bd, 2.75);
   rim.position.set(-5, 4, -3);
-  const copperFill = new THREE.PointLight(0xc7794b, 9, 8, 2);
+  const copperFill = new THREE.PointLight(0xd5360c, 9, 8, 2);
   copperFill.position.set(3.2, 1.3, -1.5);
-  const cyanFill = new THREE.PointLight(0x42ddeb, 4.2, 5, 2);
-  cyanFill.position.set(-1.4, 3.2, 3.2);
-  scene.add(hemi, key, rim, copperFill, cyanFill);
+  const accentFill = new THREE.PointLight(0x74200d, 4.2, 5, 2);
+  accentFill.position.set(-1.4, 3.2, 3.2);
+  scene.add(hemi, key, rim, copperFill, accentFill);
 
   const controls = new OrbitControls(camera, renderer.domElement);
   controls.target.set(0, 1.85, 0);
