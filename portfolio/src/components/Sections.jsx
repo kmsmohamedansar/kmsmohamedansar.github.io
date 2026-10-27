@@ -129,13 +129,19 @@ export function Hero({ ready = true }) {
   </>;
 }
 
+// The title starts below its own mask, so the mask (not the clipped title)
+// has to be what we watch - otherwise it never counts as in view and the
+// reveal never runs.
 function PunchTitle({ text }) {
   const reduced = useReducedMotion();
-  return <span className="ed-title-mask" aria-hidden="true"><motion.span
+  const maskRef = useRef(null);
+  // "some" rather than a share of the box: a long title in the narrow rail
+  // never shows 72% of itself, and would stay hidden for good.
+  const inView = useInView(maskRef, { once: true });
+  return <span className="ed-title-mask" ref={maskRef} aria-hidden="true"><motion.span
     className="ed-punch-title"
     initial={reduced ? false : { y: "112%" }}
-    whileInView={{ y: "0%" }}
-    viewport={{ once: true, amount: 0.72 }}
+    animate={reduced ? undefined : { y: inView ? "0%" : "112%" }}
     transition={{ duration: 0.48, ease: EASE_REVEAL }}
   ><i>{text[0]}</i><span>{text.slice(1)}</span></motion.span></span>;
 }
@@ -229,7 +235,7 @@ export function ProjectsSection() {
     <div className="ed-section-watermark" aria-hidden="true">PROJECTS</div>
     <div className="ed-wrap"><Enter className="ed-section-heading"><div><IndexLabel number="02">Selected projects</IndexLabel><h2>Things I’ve <em>built.</em></h2></div><div className="ed-heading-aside"><p>Apps, data systems, and questions I wanted to test for myself.</p><ArrowLink href="#work">The full project index</ArrowLink></div></Enter>
       <div className="ed-feature-list"><OpenSourceSpotlight />{FEATURED.map((project, i) => <FeaturedSpread key={project.slug} project={project} index={i + 1} />)}</div>
-      <div className="ed-grid-heading"><h3>More from the workbench.</h3><span>Keep exploring ↘</span></div>
+      <div className="ed-grid-heading"><h3>More from the workbench.</h3><span>Scroll across →</span></div>
       <div className="ed-project-grid">{FEATURED_GRID.map((project, i) => <ProjectTile key={project.slug} project={project} index={i} />)}</div>
       <div className="ed-work-list"><IndexLabel number="↳">Behind the scenes</IndexLabel><p className="ed-copy">Professional work is described without client names or private data. Public practice versions use unrelated public or sample data.</p>
         {MORE_PROJECTS.map((project, i) => <a key={project.slug} id={`card-${project.slug}`} href={`#project/${project.slug}`} data-cursor={cursorAction(project)} className="ed-work-row"><span className="ed-row-number">{String(i + 1).padStart(2, "0")}</span><div><h3>{project.title}</h3><p>{project.kind}</p></div><ArrowUpRight size={22} aria-hidden="true" /></a>)}
