@@ -393,8 +393,25 @@ function Backdrop() {
   return <div className="fixed inset-0 z-0 bg-ink" aria-hidden="true" />;
 }
 
+// BB-8 brings three.js with it, the heaviest chunk on the page. Waiting for
+// the browser to go idle after the intro keeps it out of the first paint.
+function useIdleAfter(ready) {
+  const [idle, setIdle] = useState(false);
+  useEffect(() => {
+    if (!ready) return undefined;
+    if ("requestIdleCallback" in window) {
+      const id = window.requestIdleCallback(() => setIdle(true), { timeout: 2500 });
+      return () => window.cancelIdleCallback(id);
+    }
+    const t = setTimeout(() => setIdle(true), 1200);
+    return () => clearTimeout(t);
+  }, [ready]);
+  return idle;
+}
+
 function AppShell({ bootDone }) {
   const scrollContainerRef = useRef(null);
+  const companionReady = useIdleAfter(bootDone);
   return (
     <ScrollContext.Provider value={scrollContainerRef}>
       <RouteProvider>
@@ -403,7 +420,7 @@ function AppShell({ bootDone }) {
           <div className="relative z-10 h-full flex flex-col">
             <Nav />
             <ScrollProgress />
-            {bootDone && <Suspense fallback={null}><BB8Companion /></Suspense>}
+            {companionReady && <Suspense fallback={null}><BB8Companion /></Suspense>}
             {/* No page-level `perspective` here on purpose: setting it on an
                 ancestor this high up turns it into the CSS containing block
                 for every `position: fixed` descendant (modals, overlays)

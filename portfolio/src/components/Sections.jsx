@@ -8,7 +8,6 @@ import { EARLIER_PROJECTS, EXPERIMENTS, FEATURED, FEATURED_GRID, LISTED_PROJECTS
 import { TOOL_INFO } from "../data/tools";
 import { EASE_REVEAL } from "../lib/motion";
 import { media } from "../lib/media";
-import { cursorAction } from "../lib/projectMotion";
 import { useStaticHero } from "../lib/staticHero";
 import { useRoute } from "../appContexts";
 import "../editorial.css";
@@ -184,7 +183,7 @@ function ProjectPlate({ project, compact = false }) {
 }
 function FeaturedSpread({ project, index }) {
   return <Enter className={`ed-feature ${index % 2 ? "ed-feature-reverse" : ""}`}>
-    <a href={`#project/${project.slug}`} id={`card-${project.slug}`} aria-label={`Read ${project.title}${project.stats?.[0] ? `. ${project.stats[0].value} ${project.stats[0].label}` : ""}`} data-cursor={cursorAction(project)} className="ed-feature-image"><ProjectPlate project={project} /></a>
+    <a href={`#project/${project.slug}`} id={`card-${project.slug}`} aria-label={`Read ${project.title}${project.stats?.[0] ? `. ${project.stats[0].value} ${project.stats[0].label}` : ""}`} className="ed-feature-image"><ProjectPlate project={project} /></a>
     <div className="ed-feature-body"><p className="ed-label"><span>0{index + 1}</span>{project.kind}</p>
       <h3><a href={`#project/${project.slug}`} aria-label={project.title}><PunchTitle text={project.title} /></a></h3>
       <p className="ed-copy">{project.hook}</p>
@@ -197,7 +196,7 @@ function FeaturedSpread({ project, index }) {
 
 function OpenSourceProject({ project }) {
   return <article className="ed-open-source-project" aria-labelledby={`open-source-title-${project.slug}`}>
-    <a id={`card-${project.slug}`} href={`#project/${project.slug}`} aria-label={`Read ${project.title}`} className="ed-feature-image" data-cursor={cursorAction(project)}><ProjectPlate project={project} compact /></a>
+    <a id={`card-${project.slug}`} href={`#project/${project.slug}`} aria-label={`Read ${project.title}`} className="ed-feature-image"><ProjectPlate project={project} compact /></a>
     <div className="ed-feature-body">
       <p className="ed-label">{project.cardTitle ? project.title : project.kind}</p>
       <h4 id={`open-source-title-${project.slug}`}><a href={`#project/${project.slug}`}>{project.cardTitle || project.title}</a></h4>
@@ -229,7 +228,7 @@ function OpenSourceSpotlight({ number }) {
 }
 function ProjectTile({ project, index }) {
   return <Enter delay={(index % 2) * 0.08} className="ed-project-tile">
-    <a id={`card-${project.slug}`} href={`#project/${project.slug}`} data-cursor={cursorAction(project)}><ProjectPlate project={project} compact /><div className="ed-tile-heading"><h3 aria-label={project.title}><PunchTitle text={project.title} /></h3><ArrowUpRight size={26} aria-hidden="true" /></div><p className="ed-copy">{firstSentence(project.hook)}</p><p className="ed-tile-tags">{project.tags.slice(0, 3).join(" / ")}</p></a>
+    <a id={`card-${project.slug}`} href={`#project/${project.slug}`}><ProjectPlate project={project} compact /><div className="ed-tile-heading"><h3 aria-label={project.title}><PunchTitle text={project.title} /></h3><ArrowUpRight size={26} aria-hidden="true" /></div><p className="ed-copy">{firstSentence(project.hook)}</p><p className="ed-tile-tags">{project.tags.slice(0, 3).join(" / ")}</p></a>
   </Enter>;
 }
 // Hiring managers look for the data work first, so it leads; RepTrack, the
@@ -246,7 +245,7 @@ export function ProjectsSection() {
       <div className="ed-project-grid">{DATA_FIRST.map((project, i) => <ProjectTile key={project.slug} project={project} index={i} />)}</div>
       <div className="ed-feature-list">{SPREADS.map((project, i) => <FeaturedSpread key={project.slug} project={project} index={i} />)}<OpenSourceSpotlight number={String(SPREADS.length + 1).padStart(2, "0")} /></div>
       <div className="ed-work-list"><IndexLabel number="↳">Behind the scenes</IndexLabel><p className="ed-copy">Professional work is described without client names or private data. Public practice versions use unrelated public or sample data.</p>
-        {MORE_PROJECTS.map((project, i) => <a key={project.slug} id={`card-${project.slug}`} href={`#project/${project.slug}`} data-cursor={cursorAction(project)} className="ed-work-row"><span className="ed-row-number">{String(i + 1).padStart(2, "0")}</span><div><h3>{project.title}</h3><p>{project.kind}</p></div><ArrowUpRight size={22} aria-hidden="true" /></a>)}
+        {MORE_PROJECTS.map((project, i) => <a key={project.slug} id={`card-${project.slug}`} href={`#project/${project.slug}`} className="ed-work-row"><span className="ed-row-number">{String(i + 1).padStart(2, "0")}</span><div><h3>{project.title}</h3><p>{project.kind}</p></div><ArrowUpRight size={22} aria-hidden="true" /></a>)}
         <details className="ed-archive"><summary>Earlier work <span>{EARLIER_PROJECTS.length} projects</span></summary><ul>{EARLIER_PROJECTS.map((project) => <li key={project.slug}><a id={`card-${project.slug}`} href={`#project/${project.slug}`}>{project.title}<ArrowUpRight size={16} /></a></li>)}</ul></details>
       </div>
     </div>
@@ -262,7 +261,7 @@ function ExperimentImage({ experiment }) {
 export function ExperimentsSection() {
   return <section id="ai" className="ed-experiments ed-section"><div className="ed-wrap">
     <Enter className="ed-section-heading"><div><IndexLabel number="03">The curiosity department</IndexLabel><h2>What if<br /><em>I tried this?</em></h2></div><p className="ed-heading-aside">Small experiments, made with AI as a coding partner. Open one and have a play.</p></Enter>
-    <div className="ed-experiment-grid">{EXPERIMENTS.map((experiment, i) => <Enter key={experiment.id} delay={i * 0.07}><a href={experiment.href} data-cursor="Play" className="ed-experiment"><div className="ed-experiment-image"><ExperimentImage experiment={experiment} /><span>0{i + 1} / Interactive</span></div><div className="ed-experiment-title"><h3>{experiment.title}</h3><ArrowUpRight size={22} /></div><p>{experiment.hook}</p><span className="ed-experiment-cta">{experiment.cta}<ArrowRight size={16} /></span></a></Enter>)}</div>
+    <div className="ed-experiment-grid">{EXPERIMENTS.map((experiment, i) => <Enter key={experiment.id} delay={i * 0.07}><a href={experiment.href} className="ed-experiment"><div className="ed-experiment-image"><ExperimentImage experiment={experiment} /><span>0{i + 1} / Interactive</span></div><div className="ed-experiment-title"><h3>{experiment.title}</h3><ArrowUpRight size={22} /></div><p>{experiment.hook}</p><span className="ed-experiment-cta">{experiment.cta}<ArrowRight size={16} /></span></a></Enter>)}</div>
   </div></section>;
 }
 
@@ -284,6 +283,6 @@ export function ExperienceSection() {
 }
 export function ContactSection() {
   const { navigate } = useRoute();
-  return <section id="contact" className="ed-contact ed-light"><div className="ed-wrap"><IndexLabel number="06">Something in mind?</IndexLabel><h2>Let's make<br /><em>something work.</em></h2><div className="ed-contact-bottom"><a href={`mailto:${CONTACT.email}`} className="ed-contact-email" data-cursor="Email">Say hello<ArrowUpRight aria-hidden="true" /></a><div><p>Questions about a project, or want to talk data?<br />I read every message.</p><div className="ed-socials"><a href={CONTACT.linkedin} target="_blank" rel="noopener noreferrer">LinkedIn<ExternalLink size={14} /></a><a href={CONTACT.github} target="_blank" rel="noopener noreferrer">GitHub<ExternalLink size={14} /></a><a href={`mailto:${CONTACT.email}`}><Mail size={14} />Email</a></div></div></div><footer className="ed-footer"><span>Mohamed Ansar © {new Date().getFullYear()}</span><span>Made with curiosity. And a lot of testing.</span><button onClick={() => navigate("deck")} aria-label="Back to top">Back to top ↑</button></footer></div></section>;
+  return <section id="contact" className="ed-contact ed-light"><div className="ed-wrap"><IndexLabel number="06">Something in mind?</IndexLabel><h2>Let's make<br /><em>something work.</em></h2><div className="ed-contact-bottom"><a href={`mailto:${CONTACT.email}`} className="ed-contact-email">Say hello<ArrowUpRight aria-hidden="true" /></a><div><p>Questions about a project, or want to talk data?<br />I read every message.</p><div className="ed-socials"><a href={CONTACT.linkedin} target="_blank" rel="noopener noreferrer">LinkedIn<ExternalLink size={14} /></a><a href={CONTACT.github} target="_blank" rel="noopener noreferrer">GitHub<ExternalLink size={14} /></a><a href={`mailto:${CONTACT.email}`}><Mail size={14} />Email</a></div></div></div><footer className="ed-footer"><span>Mohamed Ansar © {new Date().getFullYear()}</span><span>Made with curiosity. And a lot of testing.</span><button onClick={() => navigate("deck")} aria-label="Back to top">Back to top ↑</button></footer></div></section>;
 }
 
