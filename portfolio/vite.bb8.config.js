@@ -9,6 +9,9 @@ export default defineConfig({
   build: {
     outDir: "dist-bb8",
     emptyOutDir: true,
+    // This standalone page is the complete Three.js droid experience. It has
+    // one entry by design, so use a limit that reflects that deliberate bundle.
+    chunkSizeWarningLimit: 800,
     rollupOptions: {
       input: "bb8.html",
     },

@@ -1,9 +1,10 @@
 import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
-import { useRoute } from "../App";
+import { useRoute } from "../appContexts";
 import { createBB8Scene } from "../bb8/createBB8Scene";
 import { createBB8Roaming } from "./createBB8Roaming";
 import { createEmetBehaviorDirector } from "./createEmetBehaviorDirector";
+import { shouldObserveCompanionInput } from "./companionMotion";
 import EmetChatPanel from "./EmetChatPanel";
 import "./BB8Companion.css";
 
@@ -264,7 +265,7 @@ export default function BB8Companion() {
   // the scrolling from the whole window instead, and let the behaviour
   // decide what is close enough to be worth a reaction.
   useEffect(() => {
-    if (dismissed || reducedMotion || routeHidden || !started) return undefined;
+    if (!shouldObserveCompanionInput({ dismissed, reducedMotion, routeHidden, started })) return undefined;
 
     let frame = 0;
     let pending = null;
@@ -278,6 +279,10 @@ export default function BB8Companion() {
       if (event.pointerType === "touch") return;
       pending = { x: event.clientX, y: event.clientY };
       if (!frame) frame = window.requestAnimationFrame(flush);
+    };
+    const onPointerDown = (event) => {
+      if (event.pointerType !== "touch") return;
+      experienceRef.current?.watchPoint(event.clientX, event.clientY);
     };
     const onPointerLeave = () => experienceRef.current?.forgetPointer();
 
@@ -311,12 +316,14 @@ export default function BB8Companion() {
     };
 
     window.addEventListener("pointermove", onPointerMove, { passive: true });
+    window.addEventListener("pointerdown", onPointerDown, { passive: true });
     document.addEventListener("pointerleave", onPointerLeave);
     window.addEventListener("scroll", onScroll, { passive: true, capture: true });
     return () => {
       if (frame) window.cancelAnimationFrame(frame);
       if (scrollFrame) window.cancelAnimationFrame(scrollFrame);
       window.removeEventListener("pointermove", onPointerMove);
+      window.removeEventListener("pointerdown", onPointerDown);
       document.removeEventListener("pointerleave", onPointerLeave);
       window.removeEventListener("scroll", onScroll, { capture: true });
     };
@@ -603,7 +610,7 @@ export default function BB8Companion() {
       </div>
 
       <div className="bb8-edge-bubble">
-        <span role="status">{copy.message}</span>
+        <span aria-live={contextualOffer ? "polite" : "off"} aria-atomic="true">{copy.message}</span>
         <div className="bb8-edge-bubble-actions">
           <button
             ref={chatTriggerRef}
@@ -635,7 +642,7 @@ export default function BB8Companion() {
             className="bb8-edge-hit-target"
             tabIndex={active ? 0 : -1}
             aria-hidden={!active}
-            aria-label="Open Emet portfolio guide"
+            aria-label="Open Emet chat"
             aria-expanded={panelOpen}
             aria-controls={chatOpen ? "emet-ai-chat" : guideOpen ? "bb8-portfolio-guide" : undefined}
             onClick={() => openChat()}

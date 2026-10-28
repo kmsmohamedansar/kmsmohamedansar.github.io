@@ -9,10 +9,12 @@ export default function EmetChatPanel({ initialQuestion = "", panelSide = "right
   const inputRef = useRef(null);
   const messagesRef = useRef(null);
   const initialSubmittedRef = useRef(false);
+  const contextEntryIdRef = useRef(null);
   const [question, setQuestion] = useState("");
   const [messages, setMessages] = useState([
     { id: "welcome", role: "assistant", text: "Ask me about Ansar’s work, projects, or experience." },
   ]);
+  const [followUps, setFollowUps] = useState(suggestions);
   const [loading, setLoading] = useState(false);
   const [notice, setNotice] = useState("");
 
@@ -50,17 +52,22 @@ export default function EmetChatPanel({ initialQuestion = "", panelSide = "right
     if (!cleanQuestion || loading) return;
     setQuestion("");
     setNotice("");
+    setFollowUps([]);
     setMessages((current) => [...current, { id: createEmetId(), role: "user", text: cleanQuestion }]);
     setLoading(true);
     try {
-      const reply = await askEmet(cleanQuestion);
+      const reply = await askEmet(cleanQuestion, { contextEntryId: contextEntryIdRef.current });
+      contextEntryIdRef.current = reply.entryId || contextEntryIdRef.current;
       setMessages((current) => [...current, {
         id: createEmetId(),
         role: "assistant",
         text: reply.answer,
         destination: reply.destination,
+        actionLabel: reply.actionLabel,
       }]);
+      setFollowUps(reply.suggestions || suggestions);
       if (reply.source === "fallback") setNotice("AI link offline, so that answer came from Emet’s built-in guide.");
+      if (reply.source === "local") setNotice("Using Emet’s built-in portfolio guide.");
     } catch (error) {
       setNotice(error?.status === 429
         ? "Emet needs a quick recharge. Try again in a minute."
@@ -69,7 +76,7 @@ export default function EmetChatPanel({ initialQuestion = "", panelSide = "right
       setLoading(false);
       window.requestAnimationFrame(() => inputRef.current?.focus({ preventScroll: true }));
     }
-  }, [loading]);
+  }, [loading, suggestions]);
 
   useEffect(() => {
     if (!initialQuestion || initialSubmittedRef.current) return;
@@ -96,16 +103,16 @@ export default function EmetChatPanel({ initialQuestion = "", panelSide = "right
           <div key={message.id} className={`bb8-edge-chat-message bb8-edge-chat-message--${message.role}`}>
             <p>{message.text}</p>
             {message.destination && message.role === "assistant" && (
-              <button type="button" onClick={() => onDestination(message.destination)}>Show me</button>
+              <button type="button" onClick={() => onDestination(message.destination)}>{message.actionLabel || "Open section"}</button>
             )}
           </div>
         ))}
         {loading && <div className="bb8-edge-chat-thinking" role="status">Emet is thinking<span>…</span></div>}
       </div>
 
-      {messages.length === 1 && (
+      {!loading && followUps.length > 0 && (
         <div className="bb8-edge-chat-suggestions" aria-label="Suggested questions">
-          {suggestions.map((suggestion) => (
+          {followUps.map((suggestion) => (
             <button key={suggestion} type="button" onClick={() => submit(suggestion)}>{suggestion}</button>
           ))}
         </div>
@@ -133,7 +140,7 @@ export default function EmetChatPanel({ initialQuestion = "", panelSide = "right
           <button type="submit" disabled={loading || !question.trim()}>Send</button>
         </div>
       </form>
-      <p className="bb8-edge-chat-note">{notice || "AI-generated answers may make mistakes. Portfolio topics only."}</p>
+      <p className="bb8-edge-chat-note">{notice || "Answers stay within the facts published in this portfolio."}</p>
     </section>
   );
 }

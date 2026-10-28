@@ -10,7 +10,7 @@ import { EASE_REVEAL } from "../lib/motion";
 import { media } from "../lib/media";
 import { cursorAction } from "../lib/projectMotion";
 import { useStaticHero } from "../lib/staticHero";
-import { useRoute } from "../App";
+import { useRoute } from "../appContexts";
 import "../editorial.css";
 
 const firstSentence = (text) => text.match(/[^.!?]+[.!?]+(?:\s|$)/)?.[0]?.trim() || text;

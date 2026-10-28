@@ -10,7 +10,7 @@
 import { ABOUT, CONTACT, HERO, ROLES } from "../data/content.js";
 import { EXPERIMENTS, FEATURED, FEATURED_GRID, LISTED_PROJECTS, OPEN_SOURCE_PROJECTS } from "../data/projects.js";
 import { TOOL_INFO } from "../data/tools.js";
-import { createMatcher } from "./emetMatcher.js";
+import { createMatcher, normalize, tokenize } from "./emetMatcher.js";
 
 const EMAIL = CONTACT.email;
 
@@ -195,7 +195,7 @@ const INTENT_ENTRIES = [
     group: "intent",
     destination: "projects",
     answer: `${LISTED_PROJECTS.length} projects are on the site. The headline ones are ${list([...FEATURED, ...FEATURED_GRID].map((project) => project.title), 4)}. Ask me about any of them by name.`,
-    phrases: ["what has he built", "his projects", "what does he build", "show me his work", "portfolio"],
+    phrases: ["what has he built", "what else has he built", "his projects", "what does he build", "show me his work", "portfolio"],
     strong: ["project", "built", "build", "portfolio", "shipped", "made", "app"],
     weak: ["thing", "stuff", "demo"],
   },
@@ -257,12 +257,44 @@ export const getEmetEntry = (id) => byId.get(id) || null;
 
 const FALLBACK_LABELS = ["his projects", "his experience", "the tools he uses", "how to reach him"];
 
+const FOLLOW_UP_WORDS = new Set([
+  "it", "that", "this", "they", "them", "those", "stack", "tool", "technology", "status", "result", "code", "source",
+]);
+
+function asksAboutPreviousEntry(text) {
+  const normalized = normalize(text);
+  const tokens = tokenize(text);
+  return /\b(what|how|where|why) about\b/.test(normalized)
+    || /\b(it|that|this|they|them|those|one)\b/.test(normalized)
+    || (tokens.length <= 4 && tokens.some((token) => FOLLOW_UP_WORDS.has(token)));
+}
+
+function questionFor(entry) {
+  if (!entry) return null;
+  if (entry.group === "projects" || entry.group === "fun" || entry.group === "tools") return `What is ${entry.label}?`;
+  const label = entry.label.replace(/^(His|How|What|Whether|Where)\s+/i, "").replace(/[?.]$/, "");
+  return `What about ${label.charAt(0).toLowerCase()}${label.slice(1)}?`;
+}
+
+function destinationAction(entry) {
+  if (!entry?.destination) return null;
+  if (entry.destination.startsWith("project/")) return `Open ${entry.label}`;
+  const labels = {
+    about: "Open about",
+    ai: "Open AI projects",
+    contact: "Open contact",
+    experience: "Open experience",
+    projects: "Open projects",
+  };
+  return labels[entry.destination] || "Open section";
+}
+
 /**
  * Emet's local answer. It always returns something: a confident answer when
  * the question matches an entry well enough, and otherwise an honest "not
  * sure" that names the nearest topics it does know.
  */
-export function answerLocally(question) {
+export function answerLocally(question, { contextEntryId = null } = {}) {
   const text = String(question || "").trim();
   if (!text) {
     return {
@@ -270,12 +302,34 @@ export function answerLocally(question) {
       destination: null,
       confident: false,
       entryId: null,
+      suggestions: DEFAULT_SUGGESTIONS.slice(0, 3),
+      actionLabel: null,
     };
   }
 
-  const { entry, score, confident, alternatives } = emetMatcher.match(text);
+  const contextEntry = contextEntryId ? getEmetEntry(contextEntryId) : null;
+  const useContext = contextEntry && asksAboutPreviousEntry(text);
+  const contextual = useContext
+    ? emetMatcher.match(`${contextEntry.label} ${text}`)
+    : null;
+  const direct = emetMatcher.match(text);
+  const result = contextual?.confident
+    ? contextual
+    : useContext
+      ? { entry: contextEntry, score: contextual?.score || 0, confident: true, alternatives: direct.entry ? [direct.entry, ...direct.alternatives] : [] }
+      : direct;
+  const { entry, score, confident, alternatives } = result;
+  const suggestions = alternatives.map(questionFor).filter(Boolean).slice(0, 3);
   if (entry && confident) {
-    return { answer: entry.answer, destination: entry.destination, confident: true, entryId: entry.id, score };
+    return {
+      answer: entry.answer,
+      destination: entry.destination,
+      confident: true,
+      entryId: entry.id,
+      score,
+      suggestions: suggestions.length ? suggestions : emetSuggestions(entry.destination || "main").slice(0, 3),
+      actionLabel: destinationAction(entry),
+    };
   }
 
   const nearby = (entry ? [entry, ...alternatives] : [])
@@ -289,6 +343,8 @@ export function answerLocally(question) {
     confident: false,
     entryId: null,
     score,
+    suggestions: suggestions.length ? suggestions : DEFAULT_SUGGESTIONS.slice(0, 3),
+    actionLabel: entry ? destinationAction(entry) : "Open projects",
   };
 }
 

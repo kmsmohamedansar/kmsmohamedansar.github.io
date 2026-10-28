@@ -264,8 +264,8 @@ function ToolList({ tools, usage = {}, accent }) {
   // A tap focuses the button and then clicks it. Remember when focus opened it,
   // so that same tap's click doesn't immediately close it again.
   const openedAt = useRef(0);
-  const open = (t) => {
-    openedAt.current = Date.now();
+  const open = (t, timestamp) => {
+    openedAt.current = timestamp;
     setActive(t);
   };
   const a = ACCENTS[accent];
@@ -291,9 +291,9 @@ function ToolList({ tools, usage = {}, accent }) {
             <li key={t}>
               <button
                 type="button"
-                onPointerEnter={(e) => e.pointerType === "mouse" && open(t)}
-                onFocus={() => open(t)}
-                onClick={() => (on && Date.now() - openedAt.current > 400 ? setActive(null) : open(t))}
+                onPointerEnter={(e) => e.pointerType === "mouse" && open(t, e.timeStamp)}
+                onFocus={(e) => open(t, e.timeStamp)}
+                onClick={(e) => (on && e.timeStamp - openedAt.current > 400 ? setActive(null) : open(t, e.timeStamp))}
                 aria-expanded={on}
                 aria-controls="tool-explainer"
                 className={`inline-flex min-h-11 items-center gap-1.5 font-mono text-micro uppercase tracking-wide px-3 py-2 rounded-full border transition-colors duration-200 ${

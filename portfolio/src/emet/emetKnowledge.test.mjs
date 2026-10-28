@@ -101,8 +101,18 @@ test("answerLocally returns the entry's own answer and destination", () => {
   assert.equal(reply.destination, "project/reptrack");
   assert.match(reply.answer, /RepTrack/);
   assert.match(reply.answer, /App Store/i);
+  assert.equal(reply.actionLabel, "Open RepTrack");
+  assert.ok(reply.suggestions.length > 0);
 
   assert.equal(answerLocally("how do I email him?").destination, "contact");
+});
+
+test("answerLocally carries the matched project into a vague follow-up", () => {
+  const first = answerLocally("what is RepTrack?");
+  const followUp = answerLocally("what about the stack?", { contextEntryId: first.entryId });
+  assert.equal(followUp.entryId, "project:reptrack");
+  assert.match(followUp.answer, /Built with/i);
+  assert.equal(answerLocally("what else has he built?", { contextEntryId: first.entryId }).entryId, "projects");
 });
 
 test("suggestions follow the route", () => {

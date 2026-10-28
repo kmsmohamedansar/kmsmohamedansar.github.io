@@ -68,6 +68,10 @@ function validSession(value) {
   return typeof value === "string" && /^[a-zA-Z0-9-]{16,64}$/.test(value);
 }
 
+function validContextEntry(value) {
+  return value == null || (typeof value === "string" && /^[a-zA-Z0-9:._ -]{1,80}$/.test(value));
+}
+
 function rateLimitKey(request, sessionId) {
   // Cloudflare sets this header at the edge. Falling back to the session keeps
   // local development and unit tests usable without weakening production.
@@ -116,6 +120,7 @@ export default {
       return json({ error: `Question must be between 1 and ${MAX_QUESTION_LENGTH} characters.` }, 400, origin, env);
     }
     if (!validSession(body.sessionId)) return json({ error: "Invalid session." }, 400, origin, env);
+    if (!validContextEntry(body.contextEntryId)) return json({ error: "Invalid conversation context." }, 400, origin, env);
 
     const rate = await env.EMET_RATE_LIMITER.limit({ key: rateLimitKey(request, body.sessionId) });
     if (!rate.success) return json({ error: "Emet needs a quick recharge. Try again in a minute." }, 429, origin, env);
@@ -124,14 +129,19 @@ export default {
       const result = await env.AI.run(MODEL, {
         messages: [
           { role: "system", content: SYSTEM_PROMPT },
-          { role: "user", content: question },
+          {
+            role: "user",
+            content: body.contextEntryId
+              ? `The previous matched portfolio topic was ${body.contextEntryId}. Treat this as context only, then answer the follow-up question: ${question}`
+              : question,
+          },
         ],
         max_completion_tokens: 160,
         temperature: 0.3,
       });
       const answer = cleanAnswer(result);
       if (!answer) throw new Error("Empty model response");
-      return json({ answer, destination: destinationFor(question) }, 200, origin, env);
+      return json({ answer, destination: destinationFor(`${question} ${body.contextEntryId || ""}`) }, 200, origin, env);
     } catch {
       return json({ error: "Emet's AI link is unavailable right now." }, 503, origin, env);
     }

@@ -2,6 +2,7 @@ import { answerLocally, emetSuggestions, EMET_SUGGESTIONS } from "./emetKnowledg
 
 const ENDPOINT = import.meta.env.VITE_EMET_AI_URL?.trim();
 const SESSION_KEY = "emet-ai-session";
+const UNANSWERED_KEY = "emet-unanswered-questions";
 const REQUEST_TIMEOUT = 12000;
 
 export function createEmetId() {
@@ -12,9 +13,8 @@ export function createEmetId() {
 
 export { emetSuggestions, EMET_SUGGESTIONS };
 
-function fallbackFor(question) {
-  const local = answerLocally(question);
-  return { answer: local.answer, destination: local.destination };
+function fallbackFor(question, options) {
+  return answerLocally(question, options);
 }
 
 function sessionId() {
@@ -29,8 +29,23 @@ function sessionId() {
   }
 }
 
-export async function askEmet(question) {
-  if (!ENDPOINT) return { ...fallbackFor(question), source: "local" };
+function recordUnanswered(question, contextEntryId) {
+  const detail = { question, contextEntryId: contextEntryId || null };
+  try {
+    const saved = JSON.parse(window.sessionStorage.getItem(UNANSWERED_KEY) || "[]");
+    const queue = Array.isArray(saved) ? saved : [];
+    window.sessionStorage.setItem(UNANSWERED_KEY, JSON.stringify([...queue, detail].slice(-20)));
+  } catch {
+    // Storage may be unavailable, but the event still lets an opt-in analytics
+    // adapter observe misses without coupling the chat to a vendor.
+  }
+  window.dispatchEvent(new CustomEvent("emet:unanswered", { detail }));
+}
+
+export async function askEmet(question, { contextEntryId = null } = {}) {
+  const local = fallbackFor(question, { contextEntryId });
+  if (!local.confident) recordUnanswered(question, contextEntryId);
+  if (!ENDPOINT) return { ...local, source: "local" };
 
   const controller = new AbortController();
   const timeout = window.setTimeout(() => controller.abort(), REQUEST_TIMEOUT);
@@ -38,7 +53,7 @@ export async function askEmet(question) {
     const response = await fetch(ENDPOINT, {
       method: "POST",
       headers: { "content-type": "application/json" },
-      body: JSON.stringify({ question, sessionId: sessionId() }),
+      body: JSON.stringify({ question, sessionId: sessionId(), contextEntryId }),
       signal: controller.signal,
     });
     const payload = await response.json().catch(() => ({}));
@@ -49,12 +64,15 @@ export async function askEmet(question) {
     }
     return {
       answer: payload.answer,
-      destination: typeof payload.destination === "string" ? payload.destination : null,
+      destination: local.destination || (typeof payload.destination === "string" ? payload.destination : null),
+      entryId: local.entryId,
+      suggestions: local.suggestions,
+      actionLabel: local.actionLabel,
       source: "ai",
     };
   } catch (error) {
     if (error?.status === 429) throw error;
-    return { ...fallbackFor(question), source: "fallback" };
+    return { ...local, source: "fallback" };
   } finally {
     window.clearTimeout(timeout);
   }

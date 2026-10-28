@@ -1,4 +1,4 @@
-import { Component, createContext, createRef, lazy, Suspense, useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
+import { Component, createRef, lazy, Suspense, useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import EmetSection from "./components/EmetSection";
 import { Hero, ProjectsSection, SkillsTicker, ExperienceSection, AboutSection, ExperimentsSection, ContactSection } from "./components/Sections";
@@ -12,6 +12,7 @@ import IntroCurtain from "./components/IntroCurtain";
 import { shouldPlayIntro } from "./lib/intro";
 import { EASE_OUT } from "./lib/motion";
 import { titleForRoute } from "./lib/routeTitle";
+import { RouteContext, SandboxContext, ScrollContext, ThemeContext, useRoute, useSandbox } from "./appContexts";
 
 const SolarSystemExplorer = lazy(() => import("./components/SolarSystemExplorer"));
 const DataLineageExplorer = lazy(() => import("./components/DataLineageExplorer"));
@@ -44,16 +45,10 @@ function readRoute() {
   return parseRoute(window.location.hash.replace(/^#/, ""));
 }
 
-const RouteContext = createContext(null);
-export const useRoute = () => useContext(RouteContext);
-
 // Shared with the hero's InfinityLoop so it can read scroll position
 // off the same element Stage renders as <main> — set once, read every
 // frame via a plain ref rather than React state so scrolling never
 // triggers a re-render.
-const ScrollContext = createContext(null);
-export const useScrollContainer = () => useContext(ScrollContext);
-
 // Coming back from a project page, the main document only mounts once the
 // page's exit animation finishes, so keep looking for the section for a
 // moment instead of giving up after one frame.
@@ -142,7 +137,7 @@ function RouteProvider({ children }) {
     return () => { cancelled = true; };
   }, [route]);
 
-  const navigate = (id) => {
+  const navigate = useCallback((id) => {
     if (id === "deck") {
       if (window.location.hash) window.location.hash = "";
       const scroller = scrollContainerRef?.current;
@@ -152,9 +147,9 @@ function RouteProvider({ children }) {
       return;
     }
     window.location.hash = id;
-  };
+  }, [scrollContainerRef]);
 
-  const value = useMemo(() => ({ route, navigate }), [route]);
+  const value = useMemo(() => ({ route, navigate }), [navigate, route]);
   return <RouteContext.Provider value={value}>{children}</RouteContext.Provider>;
 }
 
@@ -164,9 +159,6 @@ function RouteProvider({ children }) {
    to; the context stays only because a few permanently-dark surfaces
    (the CRT chassis) key off document.documentElement.dataset.theme.
    ============================================================ */
-const ThemeContext = createContext(null);
-export const useTheme = () => useContext(ThemeContext);
-
 function ThemeProvider({ children }) {
   useEffect(() => {
     document.documentElement.dataset.theme = "dark";
@@ -180,9 +172,6 @@ function ThemeProvider({ children }) {
    SANDBOX STATE — dev_mode toggle, reachable from the EMET
    terminal input ("dev_mode") or the command palette.
    ============================================================ */
-const SandboxContext = createContext(null);
-export const useSandbox = () => useContext(SandboxContext);
-
 function SandboxProvider({ children }) {
   const [devMode, setDevMode] = useState(false);
   const value = useMemo(

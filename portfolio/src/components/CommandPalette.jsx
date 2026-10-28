@@ -2,7 +2,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { Search, CornerDownLeft, ArrowUp, ArrowDown, X, Hash, Link2, Terminal } from "lucide-react";
 import { COMMAND_ITEMS } from "../data/content";
-import { useSandbox } from "../App";
+import { useSandbox } from "../appContexts";
 
 const GROUP_ICONS = { Sections: Hash, Projects: Hash, Fun: Terminal, Links: Link2, System: Terminal };
 
@@ -32,6 +32,10 @@ export default function CommandPalette() {
       const isCmdK = (e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "k";
       if (isCmdK) {
         e.preventDefault();
+        if (!open) {
+          setQuery("");
+          setActiveIndex(0);
+        }
         setOpen((prev) => !prev);
         return;
       }
@@ -45,16 +49,10 @@ export default function CommandPalette() {
 
   useEffect(() => {
     if (open) {
-      setQuery("");
-      setActiveIndex(0);
       const id = setTimeout(() => inputRef.current?.focus(), 30);
       return () => clearTimeout(id);
     }
   }, [open]);
-
-  useEffect(() => {
-    setActiveIndex(0);
-  }, [query]);
 
   function runItem(item) {
     if (!item) return;
@@ -118,7 +116,10 @@ export default function CommandPalette() {
               <input
                 ref={inputRef}
                 value={query}
-                onChange={(e) => setQuery(e.target.value)}
+                onChange={(e) => {
+                  setQuery(e.target.value);
+                  setActiveIndex(0);
+                }}
                 onKeyDown={onKeyDownList}
                 placeholder="Jump to a section or link…"
                 className="flex-1 bg-transparent outline-none text-sm font-mono text-[color:var(--ink-100)] placeholder:text-[color:var(--ink-400)]"

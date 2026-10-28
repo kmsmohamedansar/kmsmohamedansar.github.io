@@ -1,6 +1,14 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { arcAmplitude, arcPoint, settleOffset, travelVelocity } from "./createBB8Roaming.js";
+import {
+  arcAmplitude,
+  arcPoint,
+  contentPenaltyFor,
+  createBB8Roaming,
+  pickWaypointFor,
+  settleOffset,
+  travelVelocity,
+} from "./createBB8Roaming.js";
 
 const near = (actual, expected, label) =>
   assert.ok(Math.abs(actual - expected) < 1e-6, `${label}: expected about ${expected}, got ${actual}`);
@@ -71,4 +79,79 @@ test("settleOffset rocks and dies away", () => {
   const late = Math.abs(settleOffset(0.84));
   assert.ok(early > late, `the rock should shrink: ${early} then ${late}`);
   assert.ok(early > 0.5, "the first rock is visible");
+});
+
+test("contentPenaltyFor rejects a waypoint covering readable DOM", () => {
+  const heading = {
+    getBoundingClientRect: () => ({ left: 20, right: 280, top: 80, bottom: 220, width: 260, height: 140 }),
+    matches: (selector) => selector.includes("h1"),
+    closest: () => null,
+  };
+  const element = { contains: () => false };
+  const documentRef = {
+    querySelectorAll: (selector) => selector === "canvas" ? [] : [heading],
+    elementsFromPoint: () => [],
+  };
+  const bounds = { width: 180, height: 220 };
+
+  assert.ok(contentPenaltyFor({ x: 40, y: 70 }, bounds, element, { documentRef, viewportWidth: 800, viewportHeight: 600 }) >= 4);
+  assert.equal(contentPenaltyFor({ x: 580, y: 340 }, bounds, element, { documentRef, viewportWidth: 800, viewportHeight: 600 }), 0);
+});
+
+test("pickWaypointFor chooses the safe lane and keeps phones on the bottom", () => {
+  const bounds = { width: 180, height: 220, maxX: 286, maxY: 376 };
+  const picked = pickWaypointFor(
+    bounds,
+    { x: 14, y: 376 },
+    (candidate) => candidate.x < 200 ? 3 : 0,
+    { random: () => 0, viewportWidth: 480, viewportHeight: 600 },
+  );
+  assert.deepEqual(picked, { x: 286, y: 376 });
+});
+
+test("reduced motion starts parked and schedules no roaming frames", () => {
+  const previousWindow = global.window;
+  const previousDocument = global.document;
+  const previousRequestAnimationFrame = global.requestAnimationFrame;
+  const previousCancelAnimationFrame = global.cancelAnimationFrame;
+  let frames = 0;
+  const listeners = new Map();
+  global.window = {
+    innerWidth: 800,
+    innerHeight: 600,
+    addEventListener: (name, callback) => listeners.set(`window:${name}`, callback),
+    removeEventListener: () => {},
+    setTimeout: () => 1,
+    clearTimeout: () => {},
+  };
+  global.document = {
+    hidden: false,
+    addEventListener: (name, callback) => listeners.set(`document:${name}`, callback),
+    removeEventListener: () => {},
+    querySelectorAll: () => [],
+    elementsFromPoint: () => [],
+  };
+  global.requestAnimationFrame = () => { frames += 1; return frames; };
+  global.cancelAnimationFrame = () => {};
+  const style = {
+    transform: "",
+    removeProperty(name) { if (name === "transform") this.transform = ""; },
+  };
+  const element = {
+    offsetWidth: 180,
+    offsetHeight: 220,
+    style,
+    classList: { toggle: () => {}, remove: () => {} },
+    contains: () => false,
+  };
+
+  const roaming = createBB8Roaming(element, { reducedMotion: true });
+  assert.equal(style.transform, "translate3d(606.00px, 376.00px, 0)");
+  assert.equal(frames, 0);
+  roaming.dispose();
+
+  global.window = previousWindow;
+  global.document = previousDocument;
+  global.requestAnimationFrame = previousRequestAnimationFrame;
+  global.cancelAnimationFrame = previousCancelAnimationFrame;
 });
