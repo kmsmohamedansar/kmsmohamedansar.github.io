@@ -254,7 +254,7 @@ export const PROJECTS = [
     kind: "A local black box for AI agents",
     accent: "amber",
     status: "Open source Python package · v1.1.0 beta",
-    spotlightArt: "/shots/spotlight/agent-flight-recorder.svg",
+    spotlightArt: "/shots/spotlight/agent-flight-recorder.jpg",
     hook: "When an AI agent breaks a test, its final error rarely tells you which earlier edit mattered. Flight Recorder keeps the tool calls, file changes and failures in a local timeline, then points to a suspect edit with the diff and evidence that led to it.",
     stats: [
       { value: "17", label: "repository tests passed in a clean Python 3.12 install, including the MCP protocol smoke test", short: "tests passed" },
@@ -509,6 +509,7 @@ export const PROJECTS = [
     kind: "An authorization-first website audit skill",
     accent: "rose",
     status: "Open source skill + safe localhost fixture",
+    spotlightArt: "/shots/spotlight/exposure-audit.jpg",
     hook: "A deliberately careful way to check a website's public surface for exposed API documentation, client-side secrets, endpoint references, indexable documents and risky headers. Production targets require a written scope; the included fake site makes the whole workflow safe to demonstrate locally.",
     stats: [
       { value: "9", label: "bounded requests in the recorded localhost validation", short: "requests in the local demo" },

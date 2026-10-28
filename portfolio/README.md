@@ -77,4 +77,4 @@ StoryEra documents a continuity-audit workflow for novels. Site Recon documents 
 
 Agent Flight Recorder records agent actions and file changes locally, then ranks the edit most likely to explain a failed step. Its project page links the full case study, reproducible demo script and published package.
 
-`public/shots/spotlight/storyera.webp` is original AI-generated editorial artwork, made as a companion to the existing covers. It is an illustration, not an application screenshot. The two StoryEra diagrams in `public/shots/storyera/` come from the MIT-licensed StoryEra repository.
+`public/shots/spotlight/storyera.webp`, `agent-flight-recorder.jpg`, and `exposure-audit.jpg` are original AI-generated editorial illustrations, not application screenshots. The prompts for the two newer covers are in [ARTWORK_PROMPTS.md](ARTWORK_PROMPTS.md). The two StoryEra diagrams in `public/shots/storyera/` come from the MIT-licensed StoryEra repository.
