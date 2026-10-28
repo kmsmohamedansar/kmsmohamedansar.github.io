@@ -421,19 +421,21 @@ a:hover .ed-poster-plate .ed-project-image { transform: rotate(0) scale(1.025); 
  .ed-hero-bottom > div { height: 110px; min-height: 110px; }
 }
 
-/* Four individual stories, introduced as two clearer collections. */
-.ed-open-source { position: relative; margin-bottom: 85px; padding: 30px; border: 1px solid var(--ed-rule); border-radius: 24px; background: rgb(255 255 255 / .18); }
+/* The two collections keep their headings in view while their cards scroll. */
+.ed-open-source { position: relative; margin-bottom: 85px; padding: 24px; border: 1px solid var(--ed-rule); border-radius: 24px; background: rgb(255 255 255 / .18); }
 .ed-open-source-heading { display: flex; justify-content: space-between; align-items: end; gap: 24px; margin-bottom: 25px; }
 .ed-open-source-heading h3 { margin-top: 12px; font: 400 clamp(2rem,3.8vw,3.2rem)/1.1 var(--font-condensed); text-transform: uppercase; }
 .ed-open-source-heading h3 em { font-family: var(--font-serif); text-transform: none; }
 .ed-open-source-heading > p { font-size: .76rem; line-height: 1.7; color: var(--ed-blue); }
 .ed-open-source-grid { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 18px; padding-top: 28px; border-top: 1px solid var(--ed-rule); }
-.ed-open-source-group { min-width: 0; padding: 24px; border: 1px solid var(--ed-rule); border-radius: 18px; background: rgb(230 213 189 / .34); }
+.ed-open-source-group { min-width: 0; padding: 20px; border: 1px solid var(--ed-rule); border-radius: 18px; background: rgb(230 213 189 / .34); }
 .ed-open-source-group-skills { background: rgb(213 54 12 / .055); }
-.ed-open-source-group-heading { min-height: 158px; padding-bottom: 22px; border-bottom: 1px solid var(--ed-rule); }
+.ed-open-source-group-heading { min-height: 160px; padding-bottom: 16px; border-bottom: 1px solid var(--ed-rule); }
 .ed-open-source-group-heading h3 { margin-top: 10px; font: 400 clamp(2rem,3.2vw,3rem)/1 var(--font-condensed); text-transform: uppercase; }
-.ed-open-source-group-heading > p:last-child { max-width: 34rem; margin-top: 13px; color: var(--ed-blue); font-size: .76rem; line-height: 1.65; }
-.ed-open-source-items { display: grid; gap: 0; }
+.ed-open-source-group-heading > h3 + p { max-width: 34rem; margin-top: 13px; color: var(--ed-blue); font-size: .76rem; line-height: 1.65; }
+.ed-open-source-group-heading > .ed-open-source-scroll-hint { display: flex; align-items: center; gap: 8px; margin-top: 12px; color: var(--ed-coral-ink); font: .6rem/1.4 var(--font-mono); text-transform: uppercase; letter-spacing: .08em; }
+.ed-open-source-items { display: grid; gap: 0; max-height: 420px; overflow-y: auto; padding-right: 10px; scrollbar-color: var(--ed-coral-ink) rgb(16 16 16 / .1); scrollbar-width: thin; }
+.ed-open-source-items:focus-visible { outline: 2px solid var(--ed-coral-ink); outline-offset: 3px; border-radius: 4px; }
 .ed-open-source-project { display: grid; grid-template-columns: minmax(112px,.72fr) minmax(0,1.28fr); gap: 18px; align-items: start; padding: 22px 0; }
 .ed-open-source-project + .ed-open-source-project { border-top: 1px solid var(--ed-rule); }
 .ed-open-source-project .ed-feature-image { display: block; margin: 0; scroll-margin-top: 100px; }
@@ -458,6 +460,7 @@ a:hover .ed-poster-plate .ed-project-image { transform: rotate(0) scale(1.025); 
  .ed-open-source-heading { display: block; }
  .ed-open-source-heading > p { margin-top: 13px; }
  .ed-open-source-group { padding: 18px; }
+ .ed-open-source-items { max-height: min(480px, 62vh); padding-right: 8px; }
  .ed-open-source-project { grid-template-columns: 1fr; gap: 17px; }
  .ed-open-source-project .ed-feature-body h4 { font-size: 2rem; }
 }

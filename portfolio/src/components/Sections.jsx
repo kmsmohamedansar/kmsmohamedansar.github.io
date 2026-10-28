@@ -206,12 +206,12 @@ function OpenSourceProject({ project }) {
   </article>;
 }
 
-// Keep four individual project stories, but introduce them as two clearer ideas.
+// Keep every project story discoverable while the two collections stay compact.
 function OpenSourceSpotlight() {
   return <Enter className="ed-open-source" >
     <div className="ed-open-source-heading">
       <div><p className="ed-label"><span>01</span>Open source & experiments</p><h3>Test the claim.<br /><em>Share the method.</em></h3></div>
-      <p>Independent studies and reusable agent skills.<br />The evidence, code and limits stay public.</p>
+      <p>Independent studies and reusable agent tools.<br />The evidence, code and limits stay public.</p>
     </div>
     <div className="ed-open-source-grid">
       {OPEN_SOURCE_GROUPS.map((group) => <section key={group.id} className={`ed-open-source-group ed-open-source-group-${group.id}`} aria-labelledby={`open-source-group-${group.id}`}>
@@ -219,8 +219,9 @@ function OpenSourceSpotlight() {
           <p className="ed-label">{group.label}</p>
           <h3 id={`open-source-group-${group.id}`}>{group.title}</h3>
           <p>{group.description}</p>
+          <p className="ed-open-source-scroll-hint" id={`open-source-hint-${group.id}`}>Scroll to explore {group.projects.length} projects <span aria-hidden="true">↓</span></p>
         </header>
-        <div className="ed-open-source-items">{group.projects.map((project) => <OpenSourceProject key={project.slug} project={project} />)}</div>
+        <div className="ed-open-source-items" role="region" aria-labelledby={`open-source-group-${group.id}`} aria-describedby={`open-source-hint-${group.id}`} tabIndex={0}>{group.projects.map((project) => <OpenSourceProject key={project.slug} project={project} />)}</div>
       </section>)}
     </div>
   </Enter>;
