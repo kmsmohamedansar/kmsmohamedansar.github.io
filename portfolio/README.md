@@ -64,15 +64,17 @@ npm run lint
 
 `.github/workflows/deploy-portfolio.yml` builds and publishes to GitHub Pages on every push to `main` that touches `portfolio/**`. Pages must be set to the **GitHub Actions** source.
 
-## Studies, skills and plugins
+## Studies, tools and skills
 
 The homepage no longer presents JEV, REA and StoryEra as three equivalent cards. It introduces two clearer collections:
 
 - **Independent AI studies:** My Take on Jev and My Take on REA, each with its original report, methods, saved results and individual project page.
-- **Open-source skills & plugins:** StoryEra and Site Recon, each with Codex and Claude Code installation, documentation, limitations and a public repository.
+- **Open-source tools & skills:** Agent Flight Recorder, StoryEra, Site Recon and Exposure Audit. Each has its own documentation, limits and public repository; Flight Recorder is also published on PyPI.
 
-The homepage renders two editorial collection cards on desktop and stacks them on smaller screens. Inside each collection, every project still has its own artwork or type treatment, summary, story link and repository/report link. Existing project anchors, the full project index and command palette continue to expose all four projects individually.
+The homepage renders two editorial collection cards on desktop and stacks them on smaller screens. Inside each collection, every project has its own artwork or type treatment, summary, story link and repository/report link. Project anchors, the full project index and command palette expose the entries individually.
 
 StoryEra documents a continuity-audit workflow for novels. Site Recon documents and automates public website inspection, including stack evidence, exact browser-visible animation values, mobile and reduced-motion comparison, and clean-room rebuild guidance.
+
+Agent Flight Recorder records agent actions and file changes locally, then ranks the edit most likely to explain a failed step. Its project page links the full case study, reproducible demo script and published package.
 
 `public/shots/spotlight/storyera.webp` is original AI-generated editorial artwork, made as a companion to the existing covers. It is an illustration, not an application screenshot. The two StoryEra diagrams in `public/shots/storyera/` come from the MIT-licensed StoryEra repository.
