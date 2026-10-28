@@ -65,8 +65,10 @@ export default function DigitalDouble() {
   const mountRef = useRef(null);
   const [loaded, setLoaded] = useState(false);
   const [failed, setFailed] = useState(false);
+  const [loadModel, setLoadModel] = useState(() => !navigator.connection?.saveData);
 
   useEffect(() => {
+    if (!loadModel) return undefined;
     const mount = mountRef.current;
     const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
@@ -175,13 +177,19 @@ export default function DigitalDouble() {
       renderer.dispose();
       mount.removeChild(renderer.domElement);
     };
-  }, []);
+  }, [loadModel]);
 
   return (
     <div className="bg-[#050506]">
       <section className="relative h-[100svh]">
         <div ref={mountRef} className="absolute inset-0" style={{ touchAction: "pan-y" }} />
-        {!loaded && !failed && (
+        {!loadModel && (
+          <div className="absolute inset-0 grid place-items-center">
+            <img src={IMG("final_front.jpg")} alt="The finished digital double" className="absolute inset-0 h-full w-full object-contain opacity-60" />
+            <button onClick={() => setLoadModel(true)} className="relative rounded-full bg-white px-5 py-3 text-sm font-semibold text-black">Load the 3D model (about 8 MB)</button>
+          </div>
+        )}
+        {loadModel && !loaded && !failed && (
           <div className="absolute inset-0 grid place-items-center font-mono text-xs text-[color:var(--ink-200)]">
             Loading the model…
           </div>
