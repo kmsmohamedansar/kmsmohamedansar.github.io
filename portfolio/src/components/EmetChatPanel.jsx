@@ -1,9 +1,10 @@
-import { useCallback, useEffect, useRef, useState } from "react";
-import { askEmet, createEmetId, EMET_SUGGESTIONS } from "../emet/emetChat";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { askEmet, createEmetId, emetSuggestions } from "../emet/emetChat";
 
 const MAX_QUESTION_LENGTH = 280;
 
-export default function EmetChatPanel({ initialQuestion = "", panelSide = "right", onClose, onDestination }) {
+export default function EmetChatPanel({ initialQuestion = "", panelSide = "right", context = "main", onClose, onDestination }) {
+  const suggestions = useMemo(() => emetSuggestions(context), [context]);
   const dialogRef = useRef(null);
   const inputRef = useRef(null);
   const messagesRef = useRef(null);
@@ -59,7 +60,7 @@ export default function EmetChatPanel({ initialQuestion = "", panelSide = "right
         text: reply.answer,
         destination: reply.destination,
       }]);
-      if (reply.source === "fallback") setNotice("AI link offline — showing Emet’s built-in guide.");
+      if (reply.source === "fallback") setNotice("AI link offline, so that answer came from Emet’s built-in guide.");
     } catch (error) {
       setNotice(error?.status === 429
         ? "Emet needs a quick recharge. Try again in a minute."
@@ -104,7 +105,7 @@ export default function EmetChatPanel({ initialQuestion = "", panelSide = "right
 
       {messages.length === 1 && (
         <div className="bb8-edge-chat-suggestions" aria-label="Suggested questions">
-          {EMET_SUGGESTIONS.map((suggestion) => (
+          {suggestions.map((suggestion) => (
             <button key={suggestion} type="button" onClick={() => submit(suggestion)}>{suggestion}</button>
           ))}
         </div>

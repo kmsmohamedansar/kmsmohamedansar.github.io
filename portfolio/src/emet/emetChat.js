@@ -1,3 +1,5 @@
+import { answerLocally, emetSuggestions, EMET_SUGGESTIONS } from "./emetKnowledge.js";
+
 const ENDPOINT = import.meta.env.VITE_EMET_AI_URL?.trim();
 const SESSION_KEY = "emet-ai-session";
 const REQUEST_TIMEOUT = 12000;
@@ -8,43 +10,11 @@ export function createEmetId() {
   return `emet-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 12)}`;
 }
 
-export const EMET_SUGGESTIONS = [
-  "What does Ansar build?",
-  "Show me his AI projects",
-  "What is his data experience?",
-  "How can I contact him?",
-];
-
-const FALLBACKS = [
-  {
-    matches: ["contact", "email", "reach", "hire"],
-    answer: "You can reach Ansar at mohamedansarkms@gmail.com, or use the contact section below.",
-    destination: "contact",
-  },
-  {
-    matches: ["ai", "model", "experiment", "rea", "storyera", "site recon", "skill", "plugin"],
-    answer: "Ansar tests AI ideas and packages useful methods. His work includes the Jev and REA studies, StoryEra for novel continuity, Site Recon for understanding website stacks and animation, and an interactive digital double.",
-    destination: "ai",
-  },
-  {
-    matches: ["data", "sql", "work", "experience", "career"],
-    answer: "Ansar is a Solutions Engineer working with retail pricing data. His background includes SQL, Snowflake, reporting, data quality, and client-facing problem solving.",
-    destination: "experience",
-  },
-  {
-    matches: ["project", "build", "app", "portfolio"],
-    answer: "Ansar builds data tools, Apple apps, browser extensions, and AI experiments. RepTrack, Haloscript, Sitescout, and his independent AI studies are good places to start.",
-    destination: "projects",
-  },
-];
+export { emetSuggestions, EMET_SUGGESTIONS };
 
 function fallbackFor(question) {
-  const normalized = question.toLowerCase();
-  const match = FALLBACKS.find((item) => item.matches.some((keyword) => normalized.includes(keyword)));
-  return match || {
-    answer: "My AI link is unavailable right now, but I can still guide you through Ansar’s projects, experience, and contact details.",
-    destination: "projects",
-  };
+  const local = answerLocally(question);
+  return { answer: local.answer, destination: local.destination };
 }
 
 function sessionId() {
@@ -60,7 +30,7 @@ function sessionId() {
 }
 
 export async function askEmet(question) {
-  if (!ENDPOINT) return { ...fallbackFor(question), source: "fallback" };
+  if (!ENDPOINT) return { ...fallbackFor(question), source: "local" };
 
   const controller = new AbortController();
   const timeout = window.setTimeout(() => controller.abort(), REQUEST_TIMEOUT);

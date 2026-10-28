@@ -497,6 +497,7 @@ export default function BB8Companion() {
       initialQuestion={chatInitialQuestion}
       panelSide={panelSide}
       onClose={closeChat}
+      context={route === "main" ? (contextualOffer?.id || "main") : route}
       onDestination={followChatDestination}
     />
   ) : null;
