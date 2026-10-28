@@ -1,6 +1,6 @@
 # kmsmohamedansar.github.io
 
-Live portfolio for **Mohamed Ansar** — Solutions Engineer building data systems, pipelines, and shipped native apps.
+Live portfolio for **Mohamed Ansar** — Solutions Engineer building reliable data systems, evidence-backed AI tools, and apps.
 
 **Live site:** [ansarbuilds.dev](https://ansarbuilds.dev)
 
@@ -25,10 +25,13 @@ Other projects live in their own repositories:
 - [sitescout](https://github.com/kmsmohamedansar/sitescout)
 - [site-recon](https://github.com/kmsmohamedansar/site-recon)
 - [storyera](https://github.com/kmsmohamedansar/storyera)
+- [agent-flight-recorder](https://github.com/kmsmohamedansar/agent-flight-recorder)
+- [rea-study](https://github.com/kmsmohamedansar/rea-study)
+- [authorized-web-exposure-audit](https://github.com/kmsmohamedansar/authorized-web-exposure-audit)
 - [mcp-analytics-stub](https://github.com/kmsmohamedansar/mcp-analytics-stub)
 - [mv3-sidepanel-starter](https://github.com/kmsmohamedansar/mv3-sidepanel-starter)
 
-RepTrack and Cerebra now live in their own repositories — reach out if you'd like access.
+RepTrack and Haloscript live in their own repositories — reach out if you'd like a walkthrough.
 
 ## How it's built
 

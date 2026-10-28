@@ -96,7 +96,7 @@ export default function HaloscriptPage() {
           <div>
             <h1 className="font-display text-4xl font-semibold text-white sm:text-5xl">Haloscript</h1>
             <p className="mt-1 font-mono text-xs uppercase tracking-[.12em]" style={{ color: VIOLET }}>
-              Mac · iPad · iPhone · In TestFlight, App Store soon
+              Mac · iPad · iPhone · In TestFlight
             </p>
           </div>
         </div>

@@ -373,3 +373,6 @@
   .route-loader > span { animation: none; border-color: #d5360c; }
 }
 
+/* Expose the main content shortcut when navigating by keyboard. */
+.skip-link { position: fixed; top: .5rem; left: .5rem; z-index: 10000; padding: .75rem 1rem; background: #fff; color: #101010; transform: translateY(-200%); }
+.skip-link:focus { transform: translateY(0); outline: 3px solid #74200d; }

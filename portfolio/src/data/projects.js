@@ -592,7 +592,7 @@ export const PROJECTS = [
     title: "Haloscript",
     kind: "Mac, iPad and iPhone app",
     accent: "violet",
-    status: "In testing · App Store soon",
+    status: "In testing · TestFlight",
     spotlightArt: "/shots/spotlight/haloscript.webp",
     icon: "/shots/haloscript/icon.png",
     preferIcon: true,

@@ -254,7 +254,7 @@ function Stage({ bootDone }) {
   }, [route, scrollContainerRef]);
 
   return (
-    <main ref={scrollContainerRef} className="relative flex-1 min-h-0 overflow-y-auto mono-scroll">
+    <main id="main-content" tabIndex={-1} ref={scrollContainerRef} className="relative flex-1 min-h-0 overflow-y-auto mono-scroll">
       <div className="ed-paper-grain" aria-hidden="true" />
       <AnimatePresence mode="wait">
         {route === "emet" ? (
@@ -418,6 +418,7 @@ function AppShell({ bootDone }) {
         <div className="relative bg-ink text-slate-100 h-[100dvh] overflow-hidden">
           <Backdrop />
           <div className="relative z-10 h-full flex flex-col">
+            <a className="skip-link" href="#main-content" onClick={(event) => { event.preventDefault(); document.getElementById("main-content")?.focus(); }}>Skip to main content</a>
             <Nav />
             <ScrollProgress />
             {companionReady && <Suspense fallback={null}><BB8Companion /></Suspense>}
