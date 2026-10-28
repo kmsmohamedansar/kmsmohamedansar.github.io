@@ -33,6 +33,8 @@ jobs:
       - run: npm run lint
       - run: npm run test:emet
       - run: node --test scripts/share-pages.test.mjs
+      - run: npx playwright install --with-deps chromium
+      - run: npx playwright test
       - run: npm run build
 
   emet-worker:
