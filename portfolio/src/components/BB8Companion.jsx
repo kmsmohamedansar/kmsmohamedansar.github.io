@@ -10,12 +10,31 @@ import "./BB8Companion.css";
 const ROUTINES = ["peek", "guide", "sleepy", "mischief"];
 const FIRST_APPEARANCE_DELAY = 4200;
 const GUIDE_IDLE_TIMEOUT = 12000;
+// One line per routine was the same line on every visit. These rotate, and
+// each one says what Emet is actually for now: it can answer about any
+// project, tool or role on the site, not just hand out four shortcuts.
 const ROUTINE_COPY = {
-  peek: { message: "Bweep! Need a quick tour?" },
-  silent: { message: "" },
-  guide: { message: "Psst… I know the interesting shortcuts." },
-  sleepy: { message: "Power-saving mode…" },
-  mischief: { message: "That panel was already loose." },
+  peek: [
+    { message: "Bweep! Need a quick tour?" },
+    { message: "Ask me about any project here. I know them all.", actionLabel: "Ask me anything" },
+    { message: "I read this whole site. Try me.", actionLabel: "Ask me anything" },
+  ],
+  silent: [{ message: "" }],
+  guide: [
+    { message: "Psst… I know the interesting shortcuts." },
+    { message: "Want the short way round?" },
+    { message: "I can tell you which project is worth your time.", actionLabel: "Ask me" },
+  ],
+  sleepy: [
+    { message: "Power-saving mode…" },
+    { message: "Resting. Still listening, though.", actionLabel: "Ask me anything" },
+    { message: "Low power. Questions still work." },
+  ],
+  mischief: [
+    { message: "That panel was already loose." },
+    { message: "I touched nothing. Probably." },
+    { message: "Ask me something before anyone notices.", actionLabel: "Ask me" },
+  ],
 };
 
 const GUIDE_LINKS = [
@@ -88,6 +107,9 @@ export default function BB8Companion() {
   const [chatOpen, setChatOpen] = useState(false);
   const [chatInitialQuestion, setChatInitialQuestion] = useState("");
   const [contextualOffer, setContextualOffer] = useState(null);
+  // Picked once per visit, so the droid does not greet everyone with the
+  // same sentence forever, and does not reshuffle while you are reading it.
+  const [lineOffset] = useState(() => Math.floor(Math.random() * 12));
   const [panelSide, setPanelSide] = useState("right");
   const [uiOnRight, setUiOnRight] = useState(false);
 
@@ -449,7 +471,8 @@ export default function BB8Companion() {
   }
 
   const active = phase === "peeking" || phase === "traveling" || phase === "observing";
-  const copy = contextualOffer || ROUTINE_COPY[routine] || ROUTINE_COPY.peek;
+  const lines = ROUTINE_COPY[routine] || ROUTINE_COPY.peek;
+  const copy = contextualOffer || lines[lineOffset % lines.length];
   const panelOpen = guideOpen || chatOpen;
 
   const guidePanel = guideOpen ? (
@@ -522,7 +545,7 @@ export default function BB8Companion() {
             type="button"
             tabIndex={panelOpen ? -1 : 0}
             onClick={() => openChat(contextualOffer?.question || "")}
-          >{contextualOffer?.actionLabel || "Ask me"}</button>
+          >{copy.actionLabel || "Ask me"}</button>
           <button ref={guideTriggerRef} type="button" tabIndex={panelOpen ? -1 : 0} onClick={openGuide}>Explore</button>
         </div>
       </div>

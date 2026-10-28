@@ -205,23 +205,51 @@
 .bb8-edge--quiet .bb8-edge-bubble { opacity: 0; pointer-events: none; }
 .bb8-edge--quiet:hover .bb8-edge-bubble,
 .bb8-edge--quiet:focus-within .bb8-edge-bubble { opacity: 1; transform: translateY(0) scale(1); pointer-events: auto; }
+/* A quiet companion still has to say it can be asked something. While the
+   droid has stopped and is looking at you, the bubble shows; it fades again
+   as soon as it moves on, so it stays an offer rather than a nag. The
+   exclusions are spelled out because this rule outranks the ones above it:
+   a silent routine stays silent, and an open panel owns the screen. */
+.bb8-edge--quiet.bb8-edge--peeking:not(.bb8-edge--silent):not(.bb8-edge--panel-open):not(.bb8-edge--route-hidden) .bb8-edge-bubble,
+.bb8-edge--quiet.bb8-edge--observing:not(.bb8-edge--silent):not(.bb8-edge--panel-open):not(.bb8-edge--route-hidden) .bb8-edge-bubble {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+  pointer-events: auto;
+}
 .bb8-edge--panel-open .bb8-edge-bubble { opacity: 0; pointer-events: none; }
 .bb8-edge-bubble span { display: block; }
-.bb8-edge-bubble-actions { display: flex; gap: 9px; }
+.bb8-edge-bubble-actions { display: flex; gap: 8px; align-items: center; }
 .bb8-edge-bubble button {
-  margin: 5px 0 -2px;
-  padding: 0;
-  border: 0;
+  position: relative;
+  margin: 6px 0 0;
+  padding: 5px 9px;
+  border: 1px solid rgb(230 213 189 / .22);
+  border-radius: 999px;
   color: var(--emet-accent);
-  background: none;
+  background: rgb(230 213 189 / .06);
   font: inherit;
   font-size: .46rem;
   letter-spacing: .07em;
   text-transform: uppercase;
   cursor: pointer;
+  transition: color .18s ease, background .18s ease, border-color .18s ease;
+}
+/* The label is tiny by design, so the target is widened past it rather than
+   the type being grown. This keeps the chip at a thumb-sized 44px. */
+.bb8-edge-bubble button::before {
+  content: "";
+  position: absolute;
+  inset: -11px -8px;
+}
+.bb8-edge-bubble button:first-child {
+  color: #0b0c0f;
+  border-color: transparent;
+  background: var(--emet-accent);
 }
 .bb8-edge-bubble button:hover,
-.bb8-edge-bubble button:focus-visible { color: #fff; outline: none; text-decoration: underline; text-underline-offset: 3px; }
+.bb8-edge-bubble button:focus-visible { color: #fff; border-color: var(--emet-accent); background: rgb(213 54 12 / .5); outline: none; }
+.bb8-edge-bubble button:first-child:hover,
+.bb8-edge-bubble button:first-child:focus-visible { color: #fff; background: rgb(213 54 12 / .88); }
 
 .bb8-edge-zzzs {
   position: absolute;
