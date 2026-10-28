@@ -160,7 +160,8 @@ function ProjectPlate({ project, compact = false }) {
     <img className="ed-spotlight-art ed-lazy-media" src={media(coverArt)} alt="" loading="lazy" onLoad={revealImage} onError={() => setArtBroken(true)} />
     <ProjectMotionPreview project={project} />
     <span className="ed-poster-cross">✳</span>
-    <span className="ed-plate-caption">{project.kind}</span>
+    {/* Compact cards print the kind beside the plate already. */}
+    {!compact && <span className="ed-plate-caption">{project.kind}</span>}
   </div>;
   const screenshot = project.cardShot || project.shots?.[0];
   const study = project.slug === "decision-models" || project.slug === "rea-study";
@@ -197,9 +198,9 @@ function OpenSourceProject({ project }) {
   return <article className="ed-open-source-project" aria-labelledby={`open-source-title-${project.slug}`}>
     <a id={`card-${project.slug}`} href={`#project/${project.slug}`} aria-label={`Read ${project.title}`} className="ed-feature-image" data-cursor={cursorAction(project)}><ProjectPlate project={project} compact /></a>
     <div className="ed-feature-body">
-      <p className="ed-label">{project.kind}</p>
-      <h4 id={`open-source-title-${project.slug}`}><a href={`#project/${project.slug}`}>{project.title}</a></h4>
-      <p className="ed-copy">{firstSentence(project.hook)}</p>
+      <p className="ed-label">{project.cardTitle ? project.title : project.kind}</p>
+      <h4 id={`open-source-title-${project.slug}`}><a href={`#project/${project.slug}`}>{project.cardTitle || project.title}</a></h4>
+      <p className="ed-copy">{project.cardTitle ? firstSentence(project.hook.slice(firstSentence(project.hook).length).trim()) : firstSentence(project.hook)}</p>
       <p className="ed-project-status">{project.status}</p>
       <div className="ed-open-source-links"><ArrowLink href={`#project/${project.slug}`}>Read the story</ArrowLink>{project.spotlightLink && <ArrowLink href={project.spotlightLink.href}>{project.spotlightLink.label}</ArrowLink>}</div>
     </div>

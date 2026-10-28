@@ -65,7 +65,7 @@ export const ROLES = [
   {
     company: "Datasembly",
     logo: "/logos/datasembly-wordmark.png",
-    title: "Tech Support",
+    title: "Technical Support",
     when: "Aug 2024 to Dec 2025 · Remote, Canada",
     accent: "violet",
     summary: "Helped clients and coworkers get reliable answers from retail pricing data.",
