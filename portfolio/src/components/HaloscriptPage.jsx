@@ -3,6 +3,7 @@ import { DEPTH } from "../data/depth";
 
 const IMG = (name) => `${import.meta.env.BASE_URL}shots/haloscript/${name}`;
 const SITE_URL = "https://ansarbuilds.dev/haloscript-site/";
+const APP_STORE_URL = "https://apps.apple.com/ca/app/haloscript/id6820670080";
 const VIOLET = "#b9a8ff";
 const D = DEPTH.haloscript;
 
@@ -64,7 +65,7 @@ const ROAD = [
   ["done", "CloudKit schema deployed to production; iOS, iPadOS and macOS builds uploaded to TestFlight"],
   ["done", "App Store listing, privacy policy and screenshots for all three platforms"],
   ["next", "Two-device sync test on real hardware"],
-  ["next", "App Store review and launch, free"],
+  ["done", "Launched on the App Store"],
 ];
 
 const LESSONS = [
@@ -96,7 +97,7 @@ export default function HaloscriptPage() {
           <div>
             <h1 className="font-display text-4xl font-semibold text-white sm:text-5xl">Haloscript</h1>
             <p className="mt-1 font-mono text-xs uppercase tracking-[.12em]" style={{ color: VIOLET }}>
-              Mac · iPad · iPhone · In TestFlight
+              Mac · iPad · iPhone · Live on the App Store
             </p>
           </div>
         </div>
@@ -106,6 +107,7 @@ export default function HaloscriptPage() {
           iCloud. No accounts, no ads, no analytics.
         </p>
         <div className="mt-6 flex flex-wrap gap-3">
+          <a href={APP_STORE_URL} target="_blank" rel="noopener noreferrer" className="inline-flex min-h-11 items-center gap-2 rounded-full px-5 py-3 text-sm font-bold text-[#07070b] hover:brightness-110" style={{ background: VIOLET }}>Get it on the App Store <ArrowUpRight size={15} /></a>
           <a href={SITE_URL} target="_blank" rel="noopener noreferrer"
             className="inline-flex min-h-11 items-center gap-2 rounded-full px-5 py-3 text-sm font-bold text-[#07070b] hover:brightness-110"
             style={{ background: VIOLET }}>
@@ -234,8 +236,8 @@ export default function HaloscriptPage() {
         </ul>
 
         <div className="mt-16 flex flex-wrap items-center gap-4">
-          <a href="#contact" className="inline-flex items-center gap-2 rounded-full px-5 py-3 text-sm font-semibold text-[#07070b] hover:-translate-y-0.5 transition-transform" style={{ background: VIOLET }}>
-            Want to beta test? Get in touch
+          <a href={APP_STORE_URL} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 rounded-full px-5 py-3 text-sm font-semibold text-[#07070b] hover:-translate-y-0.5 transition-transform" style={{ background: VIOLET }}>
+            Get Haloscript on the App Store
           </a>
           <a href="#card-haloscript" className="text-sm text-white/70 hover:text-white">Back to projects</a>
         </div>

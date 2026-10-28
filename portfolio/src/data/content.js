@@ -13,7 +13,7 @@ export const HERO = {
 
 // Quick proof, right under the intro, before anyone reads a paragraph.
 export const RECEIPTS = [
-  { value: "2", label: "apps for Apple devices built, one live on the App Store", accent: "amber" },
+  { value: "2", label: "apps for Apple devices live on the App Store", accent: "amber" },
   { value: "2", label: "independent AI studies, each with a full report", accent: "rose" },
   { value: "PROJECTS", label: "projects with code, write-ups or live demos", accent: "green" },
   { value: "2019", label: "the year I started working with data", accent: "cyan" },
