@@ -1,0 +1,48 @@
+name: Checks
+
+# Runs on every pull request so a broken build or failing test shows up
+# before it reaches main and the Pages deploy.
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: checks-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  portfolio:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: portfolio
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: "npm"
+          cache-dependency-path: portfolio/package-lock.json
+
+      - run: npm ci
+      - run: npm run lint
+      - run: npm run test:emet
+      - run: npm run build
+
+  emet-worker:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      # The worker tests use only node:test, so no install is needed.
+      - run: node --test src/index.test.mjs
+        working-directory: emet-ai-worker

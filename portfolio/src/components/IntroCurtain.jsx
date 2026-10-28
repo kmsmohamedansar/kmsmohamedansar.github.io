@@ -21,7 +21,7 @@ export default function IntroCurtain({ onReveal, onGone }) {
     } catch {
       /* storage unavailable: shouldPlayIntro already handled that case */
     }
-    const t = setTimeout(() => setLifting(true), 650);
+    const t = setTimeout(() => setLifting(true), 300);
     return () => clearTimeout(t);
   }, []);
 
@@ -35,7 +35,7 @@ export default function IntroCurtain({ onReveal, onGone }) {
       onClick={() => setLifting(true)}
       initial={{ clipPath: "inset(0% 0% 0% 0%)" }}
       animate={lifting ? { clipPath: "inset(0% 0% 100% 0%)" } : undefined}
-      transition={{ duration: 0.42, ease: CURTAIN_EASE }}
+      transition={{ duration: 0.32, ease: CURTAIN_EASE }}
       onAnimationComplete={() => lifting && onGone()}
       className="fixed inset-0 z-[400] grid place-items-center bg-ink px-5"
     >
@@ -51,7 +51,7 @@ export default function IntroCurtain({ onReveal, onGone }) {
               key={i}
               className="inline-block"
               variants={{ hidden: { y: "110%" }, shown: { y: "0%" } }}
-              transition={{ duration: 0.35, ease: EASE_REVEAL }}
+              transition={{ duration: 0.25, ease: EASE_REVEAL }}
             >
               {ch === " " ? " " : ch}
             </motion.span>
@@ -61,13 +61,13 @@ export default function IntroCurtain({ onReveal, onGone }) {
           className="mx-auto mt-5 h-px origin-left bg-coral"
           initial={{ scaleX: 0 }}
           animate={{ scaleX: 1 }}
-          transition={{ duration: 0.45, delay: 0.1, ease: EASE_REVEAL }}
+          transition={{ duration: 0.3, delay: 0.05, ease: EASE_REVEAL }}
         />
         <motion.p
           className="mt-4 font-mono text-xs uppercase tracking-[.3em] text-[color:var(--ink-300)]"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ duration: 0.2, delay: 0.25 }}
+          transition={{ duration: 0.15, delay: 0.12 }}
         >
           solutions engineer
         </motion.p>

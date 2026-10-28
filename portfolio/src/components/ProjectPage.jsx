@@ -9,7 +9,6 @@ import FlowDiagram, { FlourishTitle, Kicker, TagPill } from "./ui";
 import ProjectMotionPreview from "./ProjectMotionPreview";
 import { EASE_REVEAL } from "../lib/motion";
 import { media } from "../lib/media";
-import { cursorAction } from "../lib/projectMotion";
 
 /* Big headline numbers under a project's hook. */
 function StatTiles({ stats, accent }) {
@@ -616,7 +615,7 @@ export default function ProjectPage({ slug }) {
 
       <a
         href={`#project/${next.slug}`}
-        data-cursor={cursorAction(next)}
+       
         className="group panel mt-6 rounded-2xl p-5 flex items-center justify-between gap-4 transition-[border-color,transform] duration-200 hover:border-blue/30 active:scale-[.99]"
       >
         <span>
