@@ -5,21 +5,15 @@
 
 export const HERO = {
   eyebrow: "Solutions Engineer · Remote, Canada",
-  title: "Retail data into answers. Ideas into working apps.",
+  title: "Reliable data systems. Evidence-backed AI tools.",
   lede: [
-    { text: "By day I use " },
-    { text: "SQL", cls: "text-marigold font-semibold" },
-    { text: " to study retail prices and help teams get answers they can trust. The rest of the time I build things: an " },
-    { text: "iPhone app", cls: "text-marigold font-semibold" },
-    { text: " on the App Store, a novel-writing app in testing, and a 3D model of my own head built with " },
-    { text: "AI", cls: "text-marigold font-semibold" },
-    { text: " that looks back at you." },
+    { text: "I turn business questions into data work teams can trust. Outside work I build and test AI agent tools, run independent evaluations, and ship apps from idea to release. I document what works, what fails, and what I still don't know." },
   ],
 };
 
 // Quick proof, right under the intro, before anyone reads a paragraph.
 export const RECEIPTS = [
-  { value: "2", label: "apps for Apple devices built, one live on the App Store", accent: "amber" },
+  { value: "2", label: "apps for Apple devices live on the App Store", accent: "amber" },
   { value: "2", label: "independent AI studies, each with a full report", accent: "rose" },
   { value: "PROJECTS", label: "projects with code, write-ups or live demos", accent: "green" },
   { value: "2019", label: "the year I started working with data", accent: "cyan" },

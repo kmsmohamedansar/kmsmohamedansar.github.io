@@ -592,7 +592,7 @@ export const PROJECTS = [
     title: "Haloscript",
     kind: "Mac, iPad and iPhone app",
     accent: "violet",
-    status: "In testing · App Store soon",
+    status: "Live on the App Store",
     spotlightArt: "/shots/spotlight/haloscript.webp",
     icon: "/shots/haloscript/icon.png",
     preferIcon: true,
@@ -628,6 +628,7 @@ export const PROJECTS = [
       ],
     },
     links: [
+      { label: "Get Haloscript on the App Store", href: "https://apps.apple.com/ca/app/haloscript/id6820670080", external: true, primary: true },
       { label: "See the full tour", href: "#project/haloscript", primary: true },
       { label: "Support and privacy", href: "https://ansarbuilds.dev/haloscript-site/", external: true },
       { label: "Source is private. Walkthrough on request.", href: "#contact", locked: true },

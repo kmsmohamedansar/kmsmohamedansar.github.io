@@ -31,6 +31,8 @@ const BUILT = [
   ["Sitescout", "TypeScript", "a Chrome extension"],
   ["Integration-in-a-box", "Keycloak", "a working integration"],
   ["My Take on Jev", "Python", "an AI study"],
+  ["Agent Flight Recorder", "Python", "a local agent debugging tool"],
+  ["My Take on REA", "Python", "an independent AI study"],
   ["StoryEra", "Codex", "a skill for writers"],
   ["Site Recon", "Playwright", "a site inspector"],
   ["Exposure Audit", "Python", "a safe public-surface checker"],
@@ -117,7 +119,7 @@ export function Hero({ ready = true }) {
       <div className="ed-wrap">
         <Enter className="ed-intro-grid">
           <IndexLabel number="01">A bit of context</IndexLabel>
-          <div><p className="ed-intro-copy">I work with retail data.<br />Then I <em>keep building.</em></p>
+          <div><p className="ed-intro-copy">Reliable data systems.<br /><em>Evidence-backed AI tools.</em></p>
             <blockquote className="ed-intro-quote">Bad data rarely shows up as an error. It shows up two teams later as a <em>wrong decision.</em></blockquote>
             <p className="ed-copy">{HERO.lede.map((part) => part.text).join("")}</p>
             <ArrowLink href="#about">More about me</ArrowLink>
