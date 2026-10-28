@@ -259,6 +259,69 @@ export default function BB8Companion() {
     else if (phase === "leaving") roaming.leave();
   }, [phase, reducedMotion, routeHidden]);
 
+  // Emet's own canvas is a small patch of the page, so on its own it only
+  // ever sees a cursor that is already on top of it. Feed it the pointer and
+  // the scrolling from the whole window instead, and let the behaviour
+  // decide what is close enough to be worth a reaction.
+  useEffect(() => {
+    if (dismissed || reducedMotion || routeHidden || !started) return undefined;
+
+    let frame = 0;
+    let pending = null;
+    const flush = () => {
+      frame = 0;
+      if (!pending) return;
+      experienceRef.current?.watchPoint(pending.x, pending.y);
+      pending = null;
+    };
+    const onPointerMove = (event) => {
+      if (event.pointerType === "touch") return;
+      pending = { x: event.clientX, y: event.clientY };
+      if (!frame) frame = window.requestAnimationFrame(flush);
+    };
+    const onPointerLeave = () => experienceRef.current?.forgetPointer();
+
+    // The portfolio scrolls an inner container rather than the document, so
+    // read the position off whichever element raised the event and keep the
+    // previous value per element.
+    const scrollPositions = new WeakMap();
+    let documentScroll = window.scrollY;
+    let scrollFrame = 0;
+    const scrollTopOf = (node) => (
+      !node || node === document || node === document.documentElement || node === window
+        ? null
+        : node.scrollTop
+    );
+    const onScroll = (event) => {
+      const node = event.target;
+      if (scrollFrame) return;
+      scrollFrame = window.requestAnimationFrame(() => {
+        scrollFrame = 0;
+        const top = scrollTopOf(node);
+        if (top === null) {
+          const next = window.scrollY;
+          experienceRef.current?.noticeScroll(next - documentScroll);
+          documentScroll = next;
+          return;
+        }
+        const previous = scrollPositions.get(node);
+        scrollPositions.set(node, top);
+        if (previous !== undefined) experienceRef.current?.noticeScroll(top - previous);
+      });
+    };
+
+    window.addEventListener("pointermove", onPointerMove, { passive: true });
+    document.addEventListener("pointerleave", onPointerLeave);
+    window.addEventListener("scroll", onScroll, { passive: true, capture: true });
+    return () => {
+      if (frame) window.cancelAnimationFrame(frame);
+      if (scrollFrame) window.cancelAnimationFrame(scrollFrame);
+      window.removeEventListener("pointermove", onPointerMove);
+      document.removeEventListener("pointerleave", onPointerLeave);
+      window.removeEventListener("scroll", onScroll, { capture: true });
+    };
+  }, [dismissed, reducedMotion, routeHidden, started]);
+
   useEffect(() => {
     const updatePlayback = () => experienceRef.current?.setPaused(phase === "waiting" || routeHidden || document.hidden);
     updatePlayback();

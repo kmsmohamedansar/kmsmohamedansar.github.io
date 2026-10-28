@@ -9,7 +9,7 @@
     "build": "vite build",
     "build:bb8": "vite build --config vite.bb8.config.js",
     "lint": "oxlint",
-    "test:emet": "node --test src/components/createEmetBehaviorDirector.test.mjs src/components/createBB8Roaming.test.mjs src/emet/emetKnowledge.test.mjs",
+    "test:emet": "node --test src/components/createEmetBehaviorDirector.test.mjs src/components/createBB8Roaming.test.mjs src/emet/emetKnowledge.test.mjs src/bb8/reactionMath.test.mjs",
     "preview": "vite preview",
     "check:tools": "node scripts/check-tools.mjs"
   },

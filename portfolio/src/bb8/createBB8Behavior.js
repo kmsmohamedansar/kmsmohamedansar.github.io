@@ -1,4 +1,5 @@
 import * as THREE from "three";
+import { SCROLL_DURATION_MS, SCROLL_TRIGGER_PX, WATCH_MEMORY_MS, scrollPose, watchPose } from "./reactionMath.js";
 
 const STARTLE_DURATION = 1050;
 const ALERT_DURATION = 620;
@@ -24,6 +25,13 @@ export function createBB8Behavior({ container, camera, droid }) {
   let nextScanAt = performance.now() + randomBetween(4800, 7600);
   let reactionDirection = 1;
   let pointerX = 0;
+  // Set from outside: the cursor anywhere on the page, and the page being
+  // scrolled. The droid's own canvas is small, so without these it only ever
+  // notices the fraction of the page it happens to be standing on.
+  let watchTarget = null;
+  let watchedAt = -Infinity;
+  let scrollStartedAt = -Infinity;
+  let scrollAmount = 0;
 
   const emitSound = (cue) => {
     container.dispatchEvent(new CustomEvent("bb8:sound", { detail: cue }));
@@ -90,9 +98,40 @@ export function createBB8Behavior({ container, camera, droid }) {
   container.addEventListener("pointermove", onPointerMove, { passive: true });
   container.addEventListener("pointerdown", onPointerDown);
 
+  const droidScreenPoint = () => {
+    const bounds = container.getBoundingClientRect();
+    if (!bounds.width || !bounds.height) return null;
+    droid.getWorldPosition(droidScreen);
+    droidScreen.project(camera);
+    return {
+      x: bounds.left + (droidScreen.x + 1) * 0.5 * bounds.width,
+      y: bounds.top + (1 - droidScreen.y) * 0.5 * bounds.height,
+    };
+  };
+
   return {
     react() {
       triggerStartle(Math.random() > 0.5 ? 1 : -1);
+    },
+    /** A cursor seen somewhere on the page, in client coordinates. */
+    watchPoint(clientX, clientY) {
+      const origin = droidScreenPoint();
+      if (!origin) return;
+      watchTarget = { dx: clientX - origin.x, dy: clientY - origin.y };
+      watchedAt = performance.now();
+    },
+    forgetPointer() {
+      watchTarget = null;
+    },
+    /** The page scrolled by `amount` pixels, positive for downward. */
+    noticeScroll(amount) {
+      if (Math.abs(amount) < SCROLL_TRIGGER_PX) return;
+      const now = performance.now();
+      // Let one reaction finish before starting another, so a long scroll
+      // does not turn into a shudder.
+      if (now - scrollStartedAt < SCROLL_DURATION_MS) return;
+      scrollStartedAt = now;
+      scrollAmount = amount;
     },
     getPose(elapsed, now = performance.now()) {
       if (motionQuery.matches) return null;
@@ -148,6 +187,21 @@ export function createBB8Behavior({ container, camera, droid }) {
         };
       }
 
+      const scrollProgress = (now - scrollStartedAt) / SCROLL_DURATION_MS;
+      const scrolling = scrollPose(scrollAmount, scrollProgress);
+      if (scrolling) {
+        return {
+          priority: 2,
+          yaw: THREE.MathUtils.clamp(pointerX * 0.1, -0.1, 0.1),
+          pitch: scrolling.pitch,
+          roll: scrolling.roll,
+          lift: scrolling.lift,
+          glint: 1.2,
+          antenna: scrolling.antenna,
+          speed: 6.2,
+        };
+      }
+
       if (now < curiousUntil) {
         return {
           priority: 1,
@@ -159,6 +213,22 @@ export function createBB8Behavior({ container, camera, droid }) {
           antenna: -pointerX * 0.025,
           speed: 4.7,
         };
+      }
+
+      if (watchTarget && now - watchedAt < WATCH_MEMORY_MS) {
+        const watching = watchPose(watchTarget.dx, watchTarget.dy);
+        if (watching) {
+          return {
+            priority: 1,
+            yaw: watching.yaw,
+            pitch: watching.pitch,
+            roll: watching.roll,
+            lift: watching.strength * 0.012,
+            glint: 1 + watching.strength * 0.22,
+            antenna: -watching.yaw * 0.05,
+            speed: 3.4 + watching.strength * 1.8,
+          };
+        }
       }
 
       return null;
