@@ -712,6 +712,17 @@ export default function SolarSystemExplorer() {
       )}
 
       {!failed && ready && (
+        <div className="absolute top-20 left-4 z-20 glass rounded-xl p-3">
+          <label htmlFor="planet-select" className="block text-xs text-white mb-1">Explore a planet</label>
+          <select id="planet-select" value={selected || ""} onChange={(event) => { const name = event.target.value || null; setSelected(name); recenterRef.current(name); }} className="bg-slate-900 text-white rounded p-2">
+            <option value="">Select a body</option>
+            <option value="Sun">Sun</option>
+            {PLANETS.map((planet) => <option key={planet.name} value={planet.name}>{planet.name}</option>)}
+          </select>
+        </div>
+      )}
+
+      {!failed && ready && (
         <div className="absolute bottom-6 inset-x-0 flex justify-center px-4 z-20">
           <div className="glass rounded-full flex items-center gap-3 px-4 py-2.5">
             <button

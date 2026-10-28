@@ -573,3 +573,7 @@ a:hover .ed-poster-plate .ed-project-image { transform: rotate(0) scale(1.025); 
  .ed-project-motion.is-active .ed-halo-sheet, .ed-project-motion.is-active .ed-halo-card { transform: none; }
  .ed-project-motion.is-active .ed-halo-sync, .ed-project-motion.is-active .ed-double-label { opacity: 1; transform: none; }
 }
+.ed-start-links { display: grid; grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr)); gap: 1rem; margin: 1.5rem 0 3rem; }
+.ed-start-links a { display: flex; flex-direction: column; gap: .35rem; padding: 1.25rem; border: 1px solid currentColor; color: inherit; text-decoration: none; }
+.ed-start-links a:hover, .ed-start-links a:focus-visible { background: #74200d; color: #fff; }
+.ed-start-links span { font-size: .9rem; }

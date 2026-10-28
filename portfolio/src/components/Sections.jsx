@@ -243,6 +243,8 @@ export function ProjectsSection() {
   return <section id="projects" className="ed-projects ed-light ed-section">
     <div className="ed-section-watermark" aria-hidden="true">PROJECTS</div>
     <div className="ed-wrap"><Enter className="ed-section-heading"><div><IndexLabel number="02">Selected projects</IndexLabel><h2>Things I’ve <em>built.</em></h2></div><div className="ed-heading-aside"><p>Apps, data systems, and questions I wanted to test for myself.</p><ArrowLink href="#work">The full project index</ArrowLink></div></Enter>
+      <div className="ed-grid-heading"><h3>Start here.</h3><p>Three ways into the work: a shipped app, an agent tool, and an independent study.</p></div>
+      <div className="ed-start-links"><a href="#project/haloscript"><strong>Haloscript</strong><span>Writing app · live on the App Store</span></a><a href="#project/agent-flight-recorder"><strong>Agent Flight Recorder</strong><span>Local debugging for AI agents</span></a><a href="#project/rea-study"><strong>REA Study</strong><span>An independent evaluation</span></a></div>
       <div className="ed-grid-heading"><h3>Data work, built to hold up.</h3></div>
       <div className="ed-project-grid">{DATA_FIRST.map((project, i) => <ProjectTile key={project.slug} project={project} index={i} />)}</div>
       <div className="ed-feature-list">{SPREADS.map((project, i) => <FeaturedSpread key={project.slug} project={project} index={i} />)}<OpenSourceSpotlight number={String(SPREADS.length + 1).padStart(2, "0")} /></div>
