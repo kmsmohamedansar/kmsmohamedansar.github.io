@@ -291,22 +291,6 @@
   }
 }
 
-/* Continuous ticker: the track holds two identical halves, so sliding it
-   by exactly -50% lands on a frame identical to the start. */
-@keyframes marquee {
-  to {
-    transform: translateX(-50%);
-  }
-}
-.marquee-track {
-  animation: marquee 28s linear infinite;
-}
-@media (prefers-reduced-motion: reduce) {
-  .marquee-track {
-    animation: none;
-  }
-}
-
 .blink-cursor {
   animation: blink 0.75s step-end infinite;
 }
@@ -389,71 +373,3 @@
   .route-loader > span { animation: none; border-color: #d5360c; }
 }
 
-/* ============================================================
-   CUSTOM CURSOR — a dot + trailing ring, desktop/fine-pointer only.
-   ============================================================ */
-.has-custom-cursor,
-.has-custom-cursor * {
-  cursor: none !important;
-}
-.ma-cursor-dot,
-.ma-cursor-ring {
-  position: fixed;
-  top: 0;
-  left: 0;
-  pointer-events: none;
-  z-index: 9999;
-  border-radius: 50%;
-  /* White, difference-blended: dark over the light hero, light over every
-     dark block, with no per-section color swapping. */
-  mix-blend-mode: difference;
-  /* Hidden until the first pointermove places it (CustomCursor.jsx). */
-  opacity: 0;
-  transition: opacity 0.2s ease, width 0.18s ease, height 0.18s ease, background 0.18s ease;
-}
-.ma-cursor-dot {
-  width: 6px;
-  height: 6px;
-  margin: -3px 0 0 -3px;
-  background: #fff;
-}
-.ma-cursor-ring {
-  width: 34px;
-  height: 34px;
-  margin: -17px 0 0 -17px;
-  border: 1px solid rgba(255, 255, 255, 0.6);
-}
-.ma-cursor-ring[data-label]:not([data-label=""]) {
-  width: 84px;
-  height: 84px;
-  margin: -42px 0 0 -42px;
-  background: #fff;
-  border-color: #fff;
-}
-.ma-cursor-ring::after {
-  content: attr(data-label);
-  position: absolute;
-  inset: 0;
-  display: grid;
-  place-items: center;
-  font-family: var(--font-mono);
-  font-size: 0.62rem;
-  font-weight: 600;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  /* Black on the white bubble, which the difference blend flips to the
-     page's inverse; it stays legible on every block. */
-  color: #000;
-  opacity: 0;
-  transition: opacity 0.15s ease;
-}
-.ma-cursor-ring[data-label]:not([data-label=""])::after {
-  opacity: 1;
-}
-.ma-cursor-ring[data-active="1"]:not([data-label]:not([data-label=""])) {
-  width: 52px;
-  height: 52px;
-  margin: -26px 0 0 -26px;
-  border-color: #fff;
-  background: rgba(255, 255, 255, 0.12);
-}
