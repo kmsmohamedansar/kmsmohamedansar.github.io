@@ -253,16 +253,16 @@ export const PROJECTS = [
     title: "Agent Flight Recorder",
     kind: "A local black box for AI agents",
     accent: "amber",
-    status: "Open source Python package · v1.1.0 beta",
+    status: "Open source Python package · independently evaluated beta",
     spotlightArt: "/shots/spotlight/agent-flight-recorder.jpg",
     hook: "When an AI agent breaks a test, its final error rarely tells you which earlier edit mattered. Flight Recorder keeps the tool calls, file changes and failures in a local timeline, then points to a suspect edit with the diff and evidence that led to it.",
     stats: [
-      { value: "17", label: "repository tests passed in a clean Python 3.12 install, including the MCP protocol smoke test", short: "tests passed" },
+      { value: "23", label: "repository tests passed in Python 3.12 after adding regressions for the independent evaluation, including the MCP protocol path", short: "tests passed" },
       { value: "5/5", label: "deterministic failure-localization reference cases passed; not a real-world accuracy rate", short: "reference cases" },
       { value: "0", label: "third-party runtime dependencies in the Python core", short: "core dependencies" },
       { value: "3", label: "ways to inspect a run: CLI, local web view and MCP tools", short: "inspection interfaces" },
     ],
-    role: "I designed and released the project as a solo open-source package, using Codex as a coding collaborator. I reviewed its behavior through tests, clean installs and recorded runs.",
+    role: "I designed and released the project as a solo open-source package, using Codex as a coding collaborator. I commissioned an independent Claude Code evaluation, reproduced its findings and added regression-backed fixes.",
     tags: ["Python", "Agent tooling", "SQLite", "MCP", "Open source"],
     stack: ["Python", "SQLite", "Model Context Protocol", "Codex"],
     stackUsage: {
@@ -273,13 +273,14 @@ export const PROJECTS = [
     },
     story: [
       "An agent can read files, call tools and make several edits before a test fails. The final error says what broke; a Git diff shows what changed. Neither alone preserves the order of actions and the outputs that shaped the run. I wanted a local record that kept those pieces together.",
-      "Flight Recorder wraps synchronous or asynchronous Python tools, capturing inputs, outputs and errors while leaving their normal control flow intact. It can snapshot watched text files before and after a call, add Git context, and keep the ordered evidence in SQLite. The same records are available through a command-line tool, a local searchable view and an optional MCP server.",
+      "Flight Recorder wraps synchronous or asynchronous Python tools, capturing inputs, outputs and errors while leaving their normal control flow intact. It can snapshot watched text files before and after a call, optionally add Git context, and keep the ordered evidence in SQLite. The same records are available through a command-line tool, a local searchable view and an optional MCP server.",
       "The investigator starts at the first failing step and ranks earlier file edits. It uses paths implicated by the failure, filenames in error text, words removed by an edit and recency. It shows the leading change and its diff with reasons, so the developer can check the lead rather than trust an unexplained verdict.",
       "I used the included payment workflow as a live end-to-end check. A simulated agent removed the two-line guard that rejected duplicate charges. The next test failed. Flight Recorder pointed to that edit; I restored the guard in the disposable demo workspace and recorded a passing run. The comparison showed the opposite edits and the changed test result.",
+      "A blind first-time-user evaluation then tested the published 1.1.0 wheel through the library, CLI and MCP paths. It confirmed that the investigator found the correct edit and diff on three workflows, while uncovering a non-UTF-8 Git crash, a missing MCP change contract, privacy gaps and broken count-based pruning. I reproduced the failures and fixed them on the main branch instead of treating the five-case benchmark as sufficient evidence.",
     ],
     how: [
       "Wrap agent tools in Python, or have an MCP client explicitly send meaningful steps to the local server. MCP does not automatically intercept Codex's built-in tools.",
-      "Store ordered actions, bounded text-file snapshots, errors and optional Git state in SQLite. Redact common credential patterns before persistence.",
+      "Store ordered actions, bounded text-file snapshots and errors in owner-only SQLite. Git state is an explicit opt-in; credential key names and high-confidence value patterns are redacted before persistence.",
       "On a failure, return the first suspect with its recorded diff and evidence. Compare two runs at their first recorded difference, or feed recorded tool outputs back to deterministic tests.",
       "Inspect the same record from the CLI, local web view or MCP tools. Pruning previews its effect until explicitly confirmed.",
     ],
@@ -296,8 +297,9 @@ export const PROJECTS = [
     learned: [
       "A useful investigation names the path, shows the diff and explains why that edit ranks first. A suspect is not proof of causation.",
       "Replay can safely return recorded tool outputs and errors, but cannot reproduce an AI model's choices or a changed external service.",
-      "Local-first storage reduces setup, but heuristic redaction is imperfect. Review a run before sharing it.",
-      "Five synthetic benchmark cases protect known behavior; the next measure of value is independent use on real agent failures.",
+      "Local-first storage reduces setup, but heuristic redaction is imperfect. Git capture is opt-in, and every run still needs review before sharing.",
+      "Five synthetic cases only protect known behavior. Independent use confirmed the investigator's value and exposed defects the self-authored suite missed.",
+      "The published 1.1.0 wheel is the evaluated build; the regression-backed fixes are on the main branch pending a maintenance release.",
     ],
     flow: {
       caption: "From an agent action to an evidence-backed debugging lead.",
@@ -311,8 +313,8 @@ export const PROJECTS = [
     reportCta: {
       kicker: "Open source · case study and demo",
       title: "See the failure, edit and evidence",
-      text: "The full write-up explains the design choices, recorded payment regression, clean-install checks and limits. The demo script gives a short walkthrough you can reproduce locally.",
-      contents: ["Why agent failures need a timeline", "Python, SQLite and MCP architecture", "The removed duplicate-payment guard", "Investigation and successful comparison", "Clean-install and benchmark evidence", "Privacy and replay limits"],
+      text: "The full write-up explains the design, payment regression, independent first-time-user evaluation, confirmed defects and regression-backed fixes. The demo script gives a short walkthrough you can reproduce locally.",
+      contents: ["Why agent failures need a timeline", "Python, SQLite and MCP architecture", "The removed duplicate-payment guard", "Independent evaluation and confirmed defects", "Regression-backed fixes", "Privacy and replay limits"],
       links: [
         { label: "Read the case study", href: "https://github.com/kmsmohamedansar/agent-flight-recorder/blob/main/PORTFOLIO.md", external: true, primary: true },
         { label: "Run the demo", href: "https://github.com/kmsmohamedansar/agent-flight-recorder/blob/main/docs/demo-script.md", external: true },
