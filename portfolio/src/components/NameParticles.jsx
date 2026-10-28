@@ -8,7 +8,7 @@ import { COARSE_OR_NARROW_QUERY, REDUCED_MOTION_QUERY } from "../lib/staticHero"
 const LOOP_HOLD = 0.05;
 const NAME_FORM = 0.52;
 const STAGGER = 0.12;
-const NAME_PAUSE = 0.72;
+const NAME_PAUSE = 0.4;
 const MORPH_START = LOOP_HOLD + NAME_FORM + STAGGER + NAME_PAUSE;
 const MORPH_DURATION = 0.56;
 const clamp01 = (v) => Math.max(0, Math.min(1, v));

@@ -4,7 +4,7 @@ const NAV_CLEARANCE = 76;
 // True phone widths stay in the bottom lane. The compact companion has enough
 // room to use side lanes on small tablets and narrow desktop panes.
 const MOBILE_LANE_WIDTH = 480;
-const BLOCKING_CONTENT = "h1,h2,h3,p,li,main span,a,button,input,textarea,select,label,[role='button'],[contenteditable='true']";
+const BLOCKING_CONTENT = "h1,h2,h3,h4,p,li,dt,dd,main span,a,button,input,textarea,select,label,[role='button'],[contenteditable='true']";
 
 // Pixels per second squared. Emet leans into a roll and brakes into a stop
 // rather than starting and stopping at full speed, which is most of what

@@ -1,13 +1,12 @@
 import { Component, createRef, lazy, Suspense, useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import EmetSection from "./components/EmetSection";
-import { Hero, ProjectsSection, SkillsTicker, ExperienceSection, AboutSection, ExperimentsSection, ContactSection } from "./components/Sections";
+import { Hero, ProjectsSection, ExperienceSection, AboutSection, ExperimentsSection, ContactSection } from "./components/Sections";
 import ProjectPage from "./components/ProjectPage";
 import ProjectWorkPage from "./components/ProjectWorkPage";
 import SandboxStubs from "./components/SandboxStubs";
 import CommandPalette from "./components/CommandPalette";
 import { MatrixBackground } from "./components/RouteBackgrounds";
-import CustomCursor from "./components/CustomCursor";
 import IntroCurtain from "./components/IntroCurtain";
 import { shouldPlayIntro } from "./lib/intro";
 import { EASE_OUT } from "./lib/motion";
@@ -237,7 +236,6 @@ function MainDocument({ bootDone }) {
       <Hero ready={bootDone} scrollContainerRef={scrollContainerRef} />
       <ProjectsSection scrollContainerRef={scrollContainerRef} />
       <ExperimentsSection />
-      <SkillsTicker scrollContainerRef={scrollContainerRef} />
       <AboutSection scrollContainerRef={scrollContainerRef} />
       <ExperienceSection />
       <ContactSection />
@@ -483,7 +481,6 @@ export default function App() {
   return (
     <ErrorBoundary>
       {intro && <IntroCurtain onReveal={reveal} onGone={gone} />}
-      <CustomCursor />
       <ThemeProvider>
         <SandboxProvider>
           <AppShell bootDone={bootDone} />

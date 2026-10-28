@@ -18,7 +18,7 @@ const revealImage = (event) => event.currentTarget.classList.add("is-loaded");
 
 function Enter({ children, className = "", delay = 0 }) {
   const reduced = useReducedMotion();
-  return <motion.div className={className} initial={reduced ? false : { opacity: 0, y: 12 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, amount: 0.08 }} transition={{ duration: 0.3, delay: Math.min(delay, 0.06), ease: EASE_REVEAL }}>{children}</motion.div>;
+  return <motion.div className={className} initial={reduced ? false : { opacity: 0, y: 12 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, amount: 0, margin: "0px 0px 20% 0px" }} transition={{ duration: 0.3, delay: Math.min(delay, 0.06), ease: EASE_REVEAL }}>{children}</motion.div>;
 }
 function IndexLabel({ number, children }) {
   return <p className="ed-label"><span>{number}</span>{children}</p>;
@@ -119,6 +119,7 @@ export function Hero({ ready = true }) {
         <Enter className="ed-intro-grid">
           <IndexLabel number="01">A bit of context</IndexLabel>
           <div><p className="ed-intro-copy">I work with retail data.<br />Then I <em>keep building.</em></p>
+            <blockquote className="ed-intro-quote">Bad data rarely shows up as an error. It shows up two teams later as a <em>wrong decision.</em></blockquote>
             <p className="ed-copy">{HERO.lede.map((part) => part.text).join("")}</p>
             <ArrowLink href="#about">More about me</ArrowLink>
           </div>
@@ -137,7 +138,7 @@ function PunchTitle({ text }) {
   const maskRef = useRef(null);
   // "some" rather than a share of the box: a long title in the narrow rail
   // never shows 72% of itself, and would stay hidden for good.
-  const inView = useInView(maskRef, { once: true });
+  const inView = useInView(maskRef, { once: true, margin: "0px 0px 20% 0px" });
   return <span className="ed-title-mask" ref={maskRef} aria-hidden="true"><motion.span
     className="ed-punch-title"
     initial={reduced ? false : { y: "112%" }}
@@ -160,7 +161,8 @@ function ProjectPlate({ project, compact = false }) {
     <img className="ed-spotlight-art ed-lazy-media" src={media(coverArt)} alt="" loading="lazy" onLoad={revealImage} onError={() => setArtBroken(true)} />
     <ProjectMotionPreview project={project} />
     <span className="ed-poster-cross">✳</span>
-    <span className="ed-plate-caption">{project.kind}</span>
+    {/* Compact cards print the kind beside the plate already. */}
+    {!compact && <span className="ed-plate-caption">{project.kind}</span>}
   </div>;
   const screenshot = project.cardShot || project.shots?.[0];
   const study = project.slug === "decision-models" || project.slug === "rea-study";
@@ -197,9 +199,9 @@ function OpenSourceProject({ project }) {
   return <article className="ed-open-source-project" aria-labelledby={`open-source-title-${project.slug}`}>
     <a id={`card-${project.slug}`} href={`#project/${project.slug}`} aria-label={`Read ${project.title}`} className="ed-feature-image" data-cursor={cursorAction(project)}><ProjectPlate project={project} compact /></a>
     <div className="ed-feature-body">
-      <p className="ed-label">{project.kind}</p>
-      <h4 id={`open-source-title-${project.slug}`}><a href={`#project/${project.slug}`}>{project.title}</a></h4>
-      <p className="ed-copy">{firstSentence(project.hook)}</p>
+      <p className="ed-label">{project.cardTitle ? project.title : project.kind}</p>
+      <h4 id={`open-source-title-${project.slug}`}><a href={`#project/${project.slug}`}>{project.cardTitle || project.title}</a></h4>
+      <p className="ed-copy">{project.cardTitle ? firstSentence(project.hook.slice(firstSentence(project.hook).length).trim()) : firstSentence(project.hook)}</p>
       <p className="ed-project-status">{project.status}</p>
       <div className="ed-open-source-links"><ArrowLink href={`#project/${project.slug}`}>Read the story</ArrowLink>{project.spotlightLink && <ArrowLink href={project.spotlightLink.href}>{project.spotlightLink.label}</ArrowLink>}</div>
     </div>
@@ -207,10 +209,10 @@ function OpenSourceProject({ project }) {
 }
 
 // Keep every project story discoverable while the two collections stay compact.
-function OpenSourceSpotlight() {
+function OpenSourceSpotlight({ number }) {
   return <Enter className="ed-open-source" >
     <div className="ed-open-source-heading">
-      <div><p className="ed-label"><span>01</span>Open source & experiments</p><h3>Test the claim.<br /><em>Share the method.</em></h3></div>
+      <div><p className="ed-label"><span>{number}</span>Open source & experiments</p><h3>Test the claim.<br /><em>Share the method.</em></h3></div>
       <p>Independent studies and reusable agent tools.<br />The evidence, code and limits stay public.</p>
     </div>
     <div className="ed-open-source-grid">
@@ -219,9 +221,8 @@ function OpenSourceSpotlight() {
           <p className="ed-label">{group.label}</p>
           <h3 id={`open-source-group-${group.id}`}>{group.title}</h3>
           <p>{group.description}</p>
-          <p className="ed-open-source-scroll-hint" id={`open-source-hint-${group.id}`}>Scroll to explore {group.projects.length} projects <span aria-hidden="true">↓</span></p>
         </header>
-        <div className="ed-open-source-items" role="region" aria-labelledby={`open-source-group-${group.id}`} aria-describedby={`open-source-hint-${group.id}`} tabIndex={0}>{group.projects.map((project) => <OpenSourceProject key={project.slug} project={project} />)}</div>
+        <div className="ed-open-source-items">{group.projects.map((project) => <OpenSourceProject key={project.slug} project={project} />)}</div>
       </section>)}
     </div>
   </Enter>;
@@ -231,13 +232,19 @@ function ProjectTile({ project, index }) {
     <a id={`card-${project.slug}`} href={`#project/${project.slug}`} data-cursor={cursorAction(project)}><ProjectPlate project={project} compact /><div className="ed-tile-heading"><h3 aria-label={project.title}><PunchTitle text={project.title} /></h3><ArrowUpRight size={26} aria-hidden="true" /></div><p className="ed-copy">{firstSentence(project.hook)}</p><p className="ed-tile-tags">{project.tags.slice(0, 3).join(" / ")}</p></a>
   </Enter>;
 }
+// Hiring managers look for the data work first, so it leads; RepTrack, the
+// app that is live on the App Store, opens the larger spreads.
+const GRID_ORDER = ["data-delivery", "integration", "analytics-assistant", "catalogue-checker", "sitescout"];
+const DATA_FIRST = GRID_ORDER.map((slug) => FEATURED_GRID.find((p) => p.slug === slug)).filter(Boolean)
+  .concat(FEATURED_GRID.filter((p) => !GRID_ORDER.includes(p.slug) && p.slug !== "reptrack"));
+const SPREADS = [...FEATURED_GRID.filter((p) => p.slug === "reptrack"), ...FEATURED];
 export function ProjectsSection() {
   return <section id="projects" className="ed-projects ed-light ed-section">
     <div className="ed-section-watermark" aria-hidden="true">PROJECTS</div>
     <div className="ed-wrap"><Enter className="ed-section-heading"><div><IndexLabel number="02">Selected projects</IndexLabel><h2>Things I’ve <em>built.</em></h2></div><div className="ed-heading-aside"><p>Apps, data systems, and questions I wanted to test for myself.</p><ArrowLink href="#work">The full project index</ArrowLink></div></Enter>
-      <div className="ed-feature-list"><OpenSourceSpotlight />{FEATURED.map((project, i) => <FeaturedSpread key={project.slug} project={project} index={i + 1} />)}</div>
-      <div className="ed-grid-heading"><h3>More from the workbench.</h3><span>Scroll across →</span></div>
-      <div className="ed-project-grid">{FEATURED_GRID.map((project, i) => <ProjectTile key={project.slug} project={project} index={i} />)}</div>
+      <div className="ed-grid-heading"><h3>Data work, built to hold up.</h3></div>
+      <div className="ed-project-grid">{DATA_FIRST.map((project, i) => <ProjectTile key={project.slug} project={project} index={i} />)}</div>
+      <div className="ed-feature-list">{SPREADS.map((project, i) => <FeaturedSpread key={project.slug} project={project} index={i} />)}<OpenSourceSpotlight number={String(SPREADS.length + 1).padStart(2, "0")} /></div>
       <div className="ed-work-list"><IndexLabel number="↳">Behind the scenes</IndexLabel><p className="ed-copy">Professional work is described without client names or private data. Public practice versions use unrelated public or sample data.</p>
         {MORE_PROJECTS.map((project, i) => <a key={project.slug} id={`card-${project.slug}`} href={`#project/${project.slug}`} data-cursor={cursorAction(project)} className="ed-work-row"><span className="ed-row-number">{String(i + 1).padStart(2, "0")}</span><div><h3>{project.title}</h3><p>{project.kind}</p></div><ArrowUpRight size={22} aria-hidden="true" /></a>)}
         <details className="ed-archive"><summary>Earlier work <span>{EARLIER_PROJECTS.length} projects</span></summary><ul>{EARLIER_PROJECTS.map((project) => <li key={project.slug}><a id={`card-${project.slug}`} href={`#project/${project.slug}`}>{project.title}<ArrowUpRight size={16} /></a></li>)}</ul></details>
@@ -259,11 +266,6 @@ export function ExperimentsSection() {
   </div></section>;
 }
 
-export function SkillsTicker() {
-  const reduced = useReducedMotion();
-  const items = ["SQL", "Python", "Swift", "React", "Curiosity", "Build. Test. Repeat."];
-  return <div className="ed-ticker" aria-hidden="true"><div className="ed-ticker-content"><div className={`marquee-track ${reduced ? "motion-reduce:animate-none" : ""}`}>{[0, 1].map((half) => <span key={half}>{items.map((item, i) => <span key={item} className={i % 2 ? "ed-ticker-serif" : ""}>{item}<b>✳</b></span>)}</span>)}</div></div></div>;
-}
 function SkillGroup({ group }) {
   const [active, setActive] = useState(null);
   const id = `ed-skill-${group.title.toLowerCase().replace(/\W+/g, "-")}`;
