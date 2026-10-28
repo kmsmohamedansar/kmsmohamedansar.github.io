@@ -3,6 +3,7 @@ import { useRef, useState } from "react";
 import { ArrowDown, ArrowLeft, ArrowRight, ArrowUpRight, ChevronDown, Info, Lock } from "lucide-react";
 import { ACCENTS, LISTED_PROJECTS, PROJECTS, getProject } from "../data/projects";
 import { DEPTH } from "../data/depth";
+import { CASE_SUMMARIES } from "../data/caseSummaries";
 import { TOOL_INFO } from "../data/tools";
 import { BEFORE_AFTER, STEP_TOOLS } from "../data/summaries";
 import FlowDiagram, { FlourishTitle, Kicker, TagPill } from "./ui";
@@ -395,6 +396,7 @@ export default function ProjectPage({ slug }) {
   const next = LISTED_PROJECTS[(li + 1) % LISTED_PROJECTS.length];
   const theme = pageTheme(project, i);
   const depth = DEPTH[slug];
+  const summary = CASE_SUMMARIES[slug];
 
   return (
     <div style={{ background: theme.bg }} className="ed-case-study min-h-full">
@@ -440,6 +442,13 @@ export default function ProjectPage({ slug }) {
           ))}
         </div>
       </header>
+
+      {summary && <section aria-labelledby="case-summary-title" className="mt-6 rounded-3xl border border-black/15 bg-white/50 p-6 sm:p-8">
+        <h2 id="case-summary-title" className="font-display text-2xl font-semibold text-[color:var(--ink-100)]">At a glance</h2>
+        <dl className="mt-4 grid gap-4 sm:grid-cols-2">
+          {[["Problem", summary.problem], ["My role", project.role], ["Outcome", summary.outcome], ["Proof", summary.proof], ["Limits", summary.limits], ["Status", project.status]].map(([label, value]) => <div key={label}><dt className="font-mono text-xs uppercase tracking-wide text-[color:var(--ink-300)]">{label}</dt><dd className="mt-1 text-sm leading-relaxed text-[color:var(--ink-100)]">{value}</dd></div>)}
+        </dl>
+      </section>}
 
       <SignatureArtwork project={project} reduced={reduced} />
 

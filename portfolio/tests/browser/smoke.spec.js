@@ -7,6 +7,7 @@ test('homepage and project navigation work', async ({ page }) => {
   await expect(page.getByRole('link', { name: 'Skip to main content' })).toBeAttached();
   await page.goto('/#project/storyera');
   await expect(page.getByRole('heading', { name: 'StoryEra', level: 1 })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'At a glance' })).toBeVisible();
 });
 
 test('homepage has no critical automated accessibility violations', async ({ page }) => {
