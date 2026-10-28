@@ -35,7 +35,7 @@ export const SECTION_LINKS = [
 export const ABOUT = {
   title: "What I do, and what I know",
   story: [
-    "At Amazon Prime Video I learned that bad data rarely shows up as an error. It shows up two teams later as a wrong decision. Since then I've wanted to build the systems that move and check data, not just read the results. I check my own numbers before anyone else has to.",
+    "I learned that at Amazon Prime Video. Since then I've wanted to build the systems that move and check data, not just read the results. I check my own numbers before anyone else has to.",
     "Outside work I keep building. Two apps for Apple devices, two independent AI studies, data tools with honest tests, and a growing pile of things made with AI as a coding partner. None of it was assigned. It's just how I learn.",
   ],
   groups: [
