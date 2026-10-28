@@ -119,13 +119,6 @@ a:hover .ed-experiment-image img { transform: scale(1.04); }
 .ed-experiment-title svg { flex-shrink: 0; }
 .ed-experiment p { font-size: .72rem; line-height: 1.7; margin-block: 16px 24px; }
 .ed-experiment-cta { margin-top: auto; display: flex; align-items: center; gap: 16px; font-size: .65rem; color: var(--ed-ivory); }
-.ed-ticker { background: var(--ed-coral); color: var(--ed-deep); overflow: hidden; padding-block: 23px; }
-.ed-ticker-content { white-space: nowrap; }
-.ed-ticker .marquee-track { display: inline-flex; animation-duration: 50s; }
-.ed-ticker .marquee-track > span { display: inline-flex; }
-.ed-ticker .marquee-track > span > span { display: inline-flex; align-items: center; font: 550 clamp(2rem,4.5vw,4rem)/1.1 var(--font-body); letter-spacing: -.06em; }
-.ed-ticker .ed-ticker-serif { font-family: var(--font-serif) !important; font-weight: 400 !important; font-style: italic; }
-.ed-ticker b { font-size: .6em; font-weight: 400; margin-inline: .9em; }
 .ed-about-grid { display: grid; grid-template-columns: 1fr 1.2fr; gap: 100px; }
 .ed-about h2 { font-size: clamp(3rem,6vw,5.2rem); }
 .ed-about-mark { width: 150px; height: 150px; border: 1px solid var(--ed-rule); display: grid; place-items: center; position: relative; margin-top: 65px; font: italic 6rem/1 var(--font-serif); letter-spacing: -.15em; padding-right: 15px; }
@@ -402,8 +395,6 @@ a:hover .ed-poster-plate .ed-project-image { transform: rotate(0) scale(1.025); 
 .ed-section + .ed-section { border-top: 1px solid var(--ed-rule); }
 .ed-contact-email { box-shadow: 8px 8px 0 var(--ed-deep); transition: transform .18s var(--ease-out), box-shadow .18s var(--ease-out); }
 .ed-contact-email:hover { transform: translate(-3px,-3px); box-shadow: 12px 12px 0 var(--ed-deep); }
-.ed-ticker { border-block: 1px solid #101010; }
-.ed-ticker .marquee-track { animation-duration: 32s; }
 @media (max-width: 640px) {
  .ed-hero::before { background-size: 100% 100%,100% 70px; }
  .ed-hero::after { right: -28%; top: 20%; opacity: .07; }
