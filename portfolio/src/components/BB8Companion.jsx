@@ -67,7 +67,7 @@ function writeSession(key, value) {
 }
 
 function quietDelay() {
-  return 22000 + Math.random() * 16000;
+  return 16000 + Math.random() * 14000;
 }
 
 function observingDelay(routine) {
@@ -285,7 +285,9 @@ export default function BB8Companion() {
       contextualOfferRef.current = null;
       setContextualOffer(null);
       behaviorDirectorRef.current?.snooze(isFirstAppearance ? 15000 : 20000);
-      waypointsRemainingRef.current = isFirstAppearance ? 0 : 1 + Math.floor(Math.random() * 2);
+      // Each cameo now covers a few stops instead of one, so Emet reads as
+      // something moving around the page rather than parking next to it.
+      waypointsRemainingRef.current = isFirstAppearance ? 1 : 2 + Math.floor(Math.random() * 3);
       setRoutine(nextRoutine);
       setStarted(true);
       setPhase("peeking");

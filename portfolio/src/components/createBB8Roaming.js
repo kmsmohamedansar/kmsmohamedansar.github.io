@@ -6,8 +6,69 @@ const NAV_CLEARANCE = 76;
 const MOBILE_LANE_WIDTH = 480;
 const BLOCKING_CONTENT = "h1,h2,h3,p,li,main span,a,button,input,textarea,select,label,[role='button'],[contenteditable='true']";
 
+// Pixels per second squared. Emet leans into a roll and brakes into a stop
+// rather than starting and stopping at full speed, which is most of what
+// makes the movement read as a droid instead of a sliding sprite.
+const ACCELERATION = 560;
+const BRAKING = 760;
+// How far a trip bows away from the straight line, as a share of its length.
+const ARC_RATIO = 0.14;
+const ARC_MAX = 90;
+// The little rock backwards and forwards on arriving, like a ball that has
+// stopped itself a touch too eagerly.
+const SETTLE_MS = 460;
+const SETTLE_PX = 5;
+// A parked droid does not stand perfectly still. Every so often it scoots a
+// short distance and looks somewhere else.
+const FIDGET_MIN_DELAY = 2600;
+const FIDGET_MAX_DELAY = 6200;
+const FIDGET_MIN_PX = 26;
+const FIDGET_MAX_PX = 86;
+
 function clamp(value, min, max) {
   return Math.min(max, Math.max(min, value));
+}
+
+function moveToward(current, target, amount) {
+  if (Math.abs(target - current) <= amount) return target;
+  return current + Math.sign(target - current) * amount;
+}
+
+/**
+ * Speed for the next frame: accelerate towards the cruising speed, but never
+ * faster than what can still be braked away in the distance that is left.
+ */
+export function travelVelocity(velocity, remaining, cruise, delta) {
+  const arrivalCap = Math.sqrt(2 * BRAKING * Math.max(remaining, 0));
+  const desired = Math.min(cruise, arrivalCap);
+  const response = desired > velocity ? ACCELERATION : BRAKING;
+  return Math.max(0, moveToward(velocity, desired, response * delta));
+}
+
+/**
+ * A point `progress` of the way along a path that bows sideways by
+ * `amplitude` at its middle and meets the straight line at both ends.
+ */
+export function arcPoint(origin, target, amplitude, progress) {
+  const dx = target.x - origin.x;
+  const dy = target.y - origin.y;
+  const length = Math.hypot(dx, dy);
+  const x = origin.x + dx * progress;
+  const y = origin.y + dy * progress;
+  if (!length || !amplitude) return { x, y };
+  const bow = Math.sin(Math.PI * progress) * amplitude;
+  return { x: x + (-dy / length) * bow, y: y + (dx / length) * bow };
+}
+
+/** How far a trip is allowed to bow, given how far it travels. */
+export function arcAmplitude(length, sign) {
+  return Math.min(length * ARC_RATIO, ARC_MAX) * sign;
+}
+
+/** A damped rock along the direction of travel, in pixels, 0 once settled. */
+export function settleOffset(progress) {
+  if (progress >= 1 || progress < 0) return 0;
+  return Math.sin(progress * Math.PI * 3) * SETTLE_PX * (1 - progress);
 }
 
 export function createBB8Roaming(element, {
@@ -23,6 +84,7 @@ export function createBB8Roaming(element, {
   // viewport pixels: one compositor transform moves the whole companion UI.
   const position = { x: 0, y: 0 };
   const target = { x: 0, y: 0 };
+  const origin = { x: 0, y: 0 };
   let bounds = readBounds();
   let frameId = 0;
   let lastFrameAt = 0;
@@ -30,6 +92,17 @@ export function createBB8Roaming(element, {
   let speed = 220;
   let externallyPaused = false;
   let uiOnRight = null;
+  // Set per trip: how long the path is, how far it bows, and how much of it
+  // has been covered so far.
+  let pathLength = 0;
+  let pathArc = 0;
+  let travelled = 0;
+  let velocity = 0;
+  let settleStartedAt = 0;
+  let fidgetTimer = 0;
+  let fidgetingAllowed = false;
+  let settleAllowed = true;
+  let completedMode = "idle";
 
   function readBounds() {
     const width = Math.max(element.offsetWidth, 1);
@@ -178,12 +251,27 @@ export function createBB8Roaming(element, {
   }
 
   function arrive() {
-    const completedMode = mode;
+    const finished = completedMode;
     mode = "idle";
+    completedMode = "idle";
     frameId = 0;
+    velocity = 0;
     onRest?.();
-    if (completedMode === "waypoint") onWaypoint?.();
-    if (completedMode === "exit") onExit?.();
+    if (finished === "fidget") {
+      scheduleFidget();
+      return;
+    }
+    if (finished === "waypoint") onWaypoint?.();
+    if (finished === "exit") onExit?.();
+  }
+
+  function moveBy(nextX, nextY) {
+    const moveX = nextX - position.x;
+    const moveY = nextY - position.y;
+    position.x = nextX;
+    position.y = nextY;
+    if (moveX || moveY) onMotion?.(moveX, moveY);
+    updateElement();
   }
 
   function step(now) {
@@ -191,58 +279,140 @@ export function createBB8Roaming(element, {
     if (externallyPaused || document.hidden || mode === "idle") return;
     const delta = Math.min((now - lastFrameAt) / 1000, 0.05);
     lastFrameAt = now;
-    const dx = target.x - position.x;
-    const dy = target.y - position.y;
-    const distance = Math.hypot(dx, dy);
-    const travel = speed * delta;
-    if (distance <= Math.max(travel, 0.75)) {
-      const finalDx = target.x - position.x;
-      const finalDy = target.y - position.y;
-      setPosition(target);
-      if (finalDx || finalDy) onMotion?.(finalDx, finalDy);
-      arrive();
+
+    // The rock on arrival. It runs after the path is finished, so the droid
+    // is already where it was sent and only the look of it is still moving.
+    if (mode === "settling") {
+      const progress = (now - settleStartedAt) / SETTLE_MS;
+      const offset = settleOffset(progress);
+      const length = Math.hypot(target.x - origin.x, target.y - origin.y) || 1;
+      moveBy(
+        target.x + ((target.x - origin.x) / length) * offset,
+        target.y + ((target.y - origin.y) / length) * offset,
+      );
+      if (progress >= 1) {
+        moveBy(target.x, target.y);
+        arrive();
+        return;
+      }
+      frameId = requestAnimationFrame(step);
       return;
     }
-    const moveX = (dx / distance) * travel;
-    const moveY = (dy / distance) * travel;
-    position.x += moveX;
-    position.y += moveY;
-    onMotion?.(moveX, moveY);
-    updateElement();
+
+    velocity = travelVelocity(velocity, pathLength - travelled, speed, delta);
+    travelled = Math.min(pathLength, travelled + velocity * delta);
+    const progress = pathLength ? travelled / pathLength : 1;
+    const point = arcPoint(origin, target, pathArc, progress);
+    moveBy(point.x, point.y);
+
+    if (progress >= 1) {
+      // An exit is on its way off screen, so there is nothing to settle into.
+      if (mode === "exit" || !settleAllowed) {
+        arrive();
+        return;
+      }
+      settleStartedAt = now;
+      mode = "settling";
+    }
     frameId = requestAnimationFrame(step);
   }
 
-  function moveTo(next, nextMode, nextSpeed) {
+  function moveTo(next, nextMode, nextSpeed, { arc = 0, settle = true } = {}) {
+    origin.x = position.x;
+    origin.y = position.y;
     target.x = next.x;
     target.y = next.y;
+    pathLength = Math.hypot(target.x - origin.x, target.y - origin.y);
+    pathArc = arc;
+    travelled = 0;
+    velocity = 0;
+    settleAllowed = settle;
     mode = nextMode;
+    completedMode = nextMode;
     speed = nextSpeed;
     startLoop();
   }
 
+  // Three ways in. Rolling up from the bottom is the original; the two side
+  // entries have Emet lean out from behind the edge of the screen, which is
+  // the move everyone remembers the droid for.
   function peek() {
     bounds = readBounds();
+    stopFidgeting();
     const fromLeft = Math.random() < 0.5;
     const x = fromLeft ? SAFE_MARGIN : bounds.maxX;
     const y = Math.max(NAV_CLEARANCE, window.innerHeight - bounds.height * 0.46);
+    const fromSide = Math.random() < 0.6;
+    if (fromSide) {
+      setPosition({ x: fromLeft ? -bounds.width * 0.82 : window.innerWidth + bounds.width * 0.82, y });
+      moveTo({ x, y }, "peek", 430);
+      return;
+    }
     setPosition({ x, y: window.innerHeight + 8 });
     moveTo({ x, y }, "peek", 520);
   }
 
   function travel() {
     bounds = readBounds();
-    moveTo(pickWaypoint(), "waypoint", 165 + Math.random() * 70);
+    stopFidgeting();
+    const next = pickWaypoint();
+    const length = Math.hypot(next.x - position.x, next.y - position.y);
+    moveTo(next, "waypoint", 190 + Math.random() * 110, {
+      arc: arcAmplitude(length, Math.random() < 0.5 ? -1 : 1),
+    });
+  }
+
+  function stopFidgeting() {
+    fidgetingAllowed = false;
+    if (fidgetTimer) window.clearTimeout(fidgetTimer);
+    fidgetTimer = 0;
+  }
+
+  // A short scoot while parked, kept inside the lane the droid is already in
+  // and only taken if it lands somewhere as clear as where it is standing.
+  function fidget() {
+    fidgetTimer = 0;
+    if (!fidgetingAllowed || externallyPaused || document.hidden || mode !== "idle") return;
+    bounds = readBounds();
+    const reach = FIDGET_MIN_PX + Math.random() * (FIDGET_MAX_PX - FIDGET_MIN_PX);
+    const angle = Math.random() * Math.PI * 2;
+    const next = {
+      x: clamp(position.x + Math.cos(angle) * reach, SAFE_MARGIN, bounds.maxX),
+      y: clamp(position.y + Math.sin(angle) * reach * 0.45, NAV_CLEARANCE, bounds.maxY),
+    };
+    if (Math.hypot(next.x - position.x, next.y - position.y) < 8) {
+      scheduleFidget();
+      return;
+    }
+    if (contentPenalty(next) > contentPenalty(position)) {
+      scheduleFidget();
+      return;
+    }
+    const length = Math.hypot(next.x - position.x, next.y - position.y);
+    moveTo(next, "fidget", 90 + Math.random() * 70, {
+      arc: arcAmplitude(length, Math.random() < 0.5 ? -1 : 1),
+    });
+  }
+
+  function scheduleFidget() {
+    if (!fidgetingAllowed || fidgetTimer) return;
+    fidgetTimer = window.setTimeout(fidget, FIDGET_MIN_DELAY + Math.random() * (FIDGET_MAX_DELAY - FIDGET_MIN_DELAY));
   }
 
   function hold() {
     if (frameId) cancelAnimationFrame(frameId);
     frameId = 0;
     mode = "idle";
+    completedMode = "idle";
+    velocity = 0;
     onRest?.();
+    fidgetingAllowed = true;
+    scheduleFidget();
   }
 
   function leave() {
     bounds = readBounds();
+    stopFidgeting();
     const distances = [
       { edge: "left", value: position.x },
       { edge: "right", value: window.innerWidth - (position.x + bounds.width) },
@@ -254,12 +424,17 @@ export function createBB8Roaming(element, {
       right: { x: window.innerWidth + 20, y: position.y },
       bottom: { x: position.x, y: window.innerHeight + 20 },
     };
-    moveTo(exits[nearest], "exit", 460);
+    moveTo(exits[nearest], "exit", 460, { settle: false });
   }
 
   function showStatic() {
     bounds = readBounds();
-    hold();
+    stopFidgeting();
+    if (frameId) cancelAnimationFrame(frameId);
+    frameId = 0;
+    mode = "idle";
+    completedMode = "idle";
+    onRest?.();
     setPosition({ x: bounds.maxX, y: bounds.maxY });
   }
 
@@ -293,13 +468,17 @@ export function createBB8Roaming(element, {
       if (paused) {
         if (frameId) cancelAnimationFrame(frameId);
         frameId = 0;
+        if (fidgetTimer) window.clearTimeout(fidgetTimer);
+        fidgetTimer = 0;
         onRest?.();
-      } else if (!paused) {
+      } else {
         startLoop();
+        scheduleFidget();
       }
     },
     dispose() {
       if (frameId) cancelAnimationFrame(frameId);
+      stopFidgeting();
       onRest?.();
       window.removeEventListener("resize", onResize);
       window.removeEventListener("orientationchange", onResize);
