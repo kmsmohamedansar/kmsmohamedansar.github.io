@@ -32,6 +32,7 @@ jobs:
       - run: npm ci
       - run: npm run lint
       - run: npm run test:emet
+      - run: node --test scripts/share-pages.test.mjs
       - run: npm run build
 
   emet-worker:
