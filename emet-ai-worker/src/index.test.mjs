@@ -53,6 +53,19 @@ test("answers a valid portfolio question with a safe destination", async () => {
   assert.match(calls[1].input.messages[0].content, /Never invent facts/);
 });
 
+test("passes a validated previous topic into a follow-up", async () => {
+  const { env, calls } = environment({ modelResponse: "RepTrack uses SwiftUI and SwiftData." });
+  const response = await worker.fetch(chatRequest({
+    question: "What about the stack?",
+    sessionId: SESSION_ID,
+    contextEntryId: "project:reptrack",
+  }), env);
+  assert.equal(response.status, 200);
+  const aiCall = calls.find((call) => call.type === "ai");
+  assert.match(aiCall.input.messages[1].content, /project:reptrack/);
+  assert.match(aiCall.input.messages[1].content, /What about the stack/);
+});
+
 test("health check does not disclose the model identifier", async () => {
   const { env } = environment();
   const response = await worker.fetch(new Request("https://emet.example/health"), env);

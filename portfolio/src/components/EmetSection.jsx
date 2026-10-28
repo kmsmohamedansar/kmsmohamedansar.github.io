@@ -1,8 +1,9 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
 import { EMET_TOPICS } from "../data/content";
-import { useSandbox } from "../App";
+import { useSandbox } from "../appContexts";
 import { HEAVY_OBJECT, EASE_OUT } from "../lib/motion";
+import { answerLocally } from "../emet/emetKnowledge";
 
 const prefersReducedMotion = () =>
   typeof window !== "undefined" &&
@@ -17,34 +18,28 @@ const EASE = EASE_OUT;
 const SCRIPT = [
   { text: "emet\n", cls: "text-glow-green font-bold", speed: 12 },
   { text: "──────────────────\n\n", cls: "opacity-40", speed: 5 },
-  { text: "Hi, I'm Mohamed.\n\n", cls: "", speed: 20 },
+  { text: "Hi, I'm Emet.\n\n", cls: "", speed: 20 },
   {
     text:
-      "I'm a solutions engineer. I work with retail data every day, and in my spare time I build apps and tools, including an iOS app that's on the App Store.\n\n",
+      "I can answer questions about Ansar's work. He's a solutions engineer who works with retail data and builds apps, tools and AI studies.\n\n",
     cls: "",
     speed: 15,
   },
   { text: "What do you want to know?\n", cls: "opacity-40", speed: 22 },
 ];
 
-const FALLBACK_ANSWER = [
-  { text: "Not sure about that one, try 1-4 below, or ask me about " },
-  { text: "SQL, Snowflake, iOS", cls: "font-bold" },
-  { text: ", or how to " },
-  { text: "reach me", cls: "font-bold" },
-  { text: "." },
-];
+const EMPHASIS = /\b(Ansar|Datasembly|Amazon Prime Video|RepTrack|Haloscript|Sitescout|Snowflake|SQL|SwiftUI|App Store|LinkedIn|GitHub)\b/g;
+const EMPHASIS_ONLY = /^(Ansar|Datasembly|Amazon Prime Video|RepTrack|Haloscript|Sitescout|Snowflake|SQL|SwiftUI|App Store|LinkedIn|GitHub)$/;
+const SHORTCUT_QUESTIONS = ["What is his current job?", "Where has he worked?", "What has he built?", "How do I contact him?"];
 
-// Freeform input is matched against each topic's keyword list; the
-// number "1"-"4" still works as a direct shortcut. First match wins,
-// so more specific keywords (company names) are listed before generic
-// ones in content.js.
-function matchTopic(raw) {
-  const q = raw.trim().toLowerCase();
-  if (!q) return null;
-  const byNumber = EMET_TOPICS.find((t) => String(t.n) === q);
-  if (byNumber) return byNumber;
-  return EMET_TOPICS.find((t) => t.keywords.some((k) => q.includes(k))) || null;
+// The shared knowledge layer returns plain text because the edge chat is a
+// normal conversation. The terminal renders styled segments, so adapt that
+// text here instead of maintaining a second answer matcher and fact set.
+function answerSegments(answer) {
+  return String(answer).split(EMPHASIS).filter(Boolean).map((text) => ({
+    text,
+    cls: EMPHASIS_ONLY.test(text) ? "font-bold" : undefined,
+  }));
 }
 
 /* A single emet response: types its segments out once on mount (or
@@ -138,7 +133,7 @@ function EmetAnswer({ msg }) {
           transition={{ duration: 0.3 }}
           className="mt-0.5 inline-flex items-center gap-1 text-[.68rem] text-green/55 hover:text-green underline decoration-green/25 underline-offset-2 transition-colors"
         >
-          → open full page
+          → {msg.actionLabel || "open full page"}
         </motion.a>
       )}
     </div>
@@ -309,6 +304,7 @@ export default function EmetSection() {
   const scrollRef = useRef(null);
   const inputRef = useRef(null);
   const lastQueryRef = useRef("");
+  const contextEntryRef = useRef(null);
 
   useEffect(() => {
     if (!done) return;
@@ -346,16 +342,19 @@ export default function EmetSection() {
       return;
     }
 
-    const topic = matchTopic(trimmed);
+    const shortcut = EMET_TOPICS.find((topic) => String(topic.n) === trimmed.toLowerCase());
+    const reply = answerLocally(shortcut ? SHORTCUT_QUESTIONS[shortcut.n - 1] : trimmed, { contextEntryId: contextEntryRef.current });
+    if (reply.entryId) contextEntryRef.current = reply.entryId;
     setHistory((h) => [
       ...h,
       { id: youId, kind: "you", text: displayLabel || trimmed },
       {
         id: emetId,
         kind: "emet",
-        segments: topic ? topic.answer : FALLBACK_ANSWER,
-        go: topic ? topic.go : null,
-        label: topic ? topic.label : null,
+        segments: answerSegments(reply.answer),
+        go: reply.destination ? `#${reply.destination}` : null,
+        actionLabel: reply.actionLabel || null,
+        label: shortcut?.label || null,
       },
     ]);
   }

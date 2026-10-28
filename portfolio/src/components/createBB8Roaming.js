@@ -71,6 +71,93 @@ export function settleOffset(progress) {
   return Math.sin(progress * Math.PI * 3) * SETTLE_PX * (1 - progress);
 }
 
+export function contentPenaltyFor(candidate, bounds, element, {
+  documentRef = document,
+  viewportWidth = window.innerWidth,
+  viewportHeight = window.innerHeight,
+} = {}) {
+  const footprint = {
+    left: candidate.x + bounds.width * 0.08,
+    right: candidate.x + bounds.width * 0.92,
+    top: candidate.y + bounds.height * 0.02,
+    bottom: candidate.y + bounds.height * 0.96,
+  };
+  let penalty = 0;
+  documentRef.querySelectorAll(BLOCKING_CONTENT).forEach((node) => {
+    if (element.contains(node)) return;
+    const rect = node.getBoundingClientRect();
+    if (rect.width === 0 || rect.height === 0 || rect.bottom < 0 || rect.top > viewportHeight) return;
+    const overlaps = rect.right > footprint.left
+      && rect.left < footprint.right
+      && rect.bottom > footprint.top
+      && rect.top < footprint.bottom;
+    if (overlaps) penalty += node.matches("h1,h2,h3") ? 4 : 2;
+  });
+
+  documentRef.querySelectorAll("canvas").forEach((canvas) => {
+    if (element.contains(canvas)) return;
+    const rect = canvas.getBoundingClientRect();
+    if (rect.width < viewportWidth * 0.6 || rect.height < viewportHeight * 0.45) return;
+    const protectedArea = {
+      left: rect.left + rect.width * 0.12,
+      right: rect.right - rect.width * 0.12,
+      top: rect.top + rect.height * 0.18,
+      bottom: rect.top + rect.height * 0.72,
+    };
+    const overlapWidth = Math.max(0, Math.min(footprint.right, protectedArea.right) - Math.max(footprint.left, protectedArea.left));
+    const overlapHeight = Math.max(0, Math.min(footprint.bottom, protectedArea.bottom) - Math.max(footprint.top, protectedArea.top));
+    const footprintArea = (footprint.right - footprint.left) * (footprint.bottom - footprint.top);
+    penalty += Math.ceil((overlapWidth * overlapHeight / footprintArea) * 10);
+  });
+
+  const samples = [[0.5, 0.54], [0.32, 0.7], [0.68, 0.7], [0.5, 0.86]];
+  return samples.reduce((score, [xRatio, yRatio]) => {
+    const x = clamp(candidate.x + bounds.width * xRatio, 1, viewportWidth - 1);
+    const y = clamp(candidate.y + bounds.height * yRatio, 1, viewportHeight - 1);
+    const blocked = documentRef.elementsFromPoint(x, y).some((node) => (
+      !element.contains(node)
+      && (node.matches?.(BLOCKING_CONTENT) || node.closest?.(BLOCKING_CONTENT))
+    ));
+    return score + (blocked ? 1 : 0);
+  }, penalty);
+}
+
+export function pickWaypointFor(bounds, position, scoreCandidate, {
+  random = Math.random,
+  viewportWidth = window.innerWidth,
+  viewportHeight = window.innerHeight,
+} = {}) {
+  const candidates = [];
+  const lowerY = bounds.maxY;
+  const middleY = clamp(viewportHeight * 0.46 - bounds.height * 0.5, NAV_CLEARANCE, bounds.maxY);
+  const lowerLaneOnly = viewportWidth <= MOBILE_LANE_WIDTH;
+  candidates.push({ x: SAFE_MARGIN, y: lowerY }, { x: bounds.maxX, y: lowerY });
+  if (!lowerLaneOnly) candidates.push({ x: SAFE_MARGIN, y: middleY }, { x: bounds.maxX, y: middleY });
+  for (let index = 0; index < 16; index += 1) {
+    candidates.push({
+      x: SAFE_MARGIN + random() * Math.max(0, bounds.maxX - SAFE_MARGIN),
+      y: lowerLaneOnly ? lowerY : NAV_CLEARANCE + random() * Math.max(0, bounds.maxY - NAV_CLEARANCE),
+    });
+  }
+
+  const safeCandidates = [];
+  let best = candidates[0];
+  let bestPenalty = Infinity;
+  for (const candidate of candidates) {
+    const penalty = scoreCandidate(candidate);
+    if (penalty === 0) safeCandidates.push(candidate);
+    else if (penalty < bestPenalty) {
+      best = candidate;
+      bestPenalty = penalty;
+    }
+  }
+  if (!safeCandidates.length) return best;
+  const minimumTravel = Math.min(viewportWidth * 0.22, 240);
+  const distant = safeCandidates.filter((candidate) => Math.hypot(candidate.x - position.x, candidate.y - position.y) >= minimumTravel);
+  const pool = distant.length ? distant : safeCandidates;
+  return pool[Math.floor(random() * pool.length)];
+}
+
 export function createBB8Roaming(element, {
   onWaypoint,
   onExit,
@@ -138,110 +225,11 @@ export function createBB8Roaming(element, {
     // hit-test stack at a few body points. The portfolio's particle canvas can
     // sit above the hero copy, so inspecting only elementFromPoint's first
     // result would incorrectly treat that headline as empty space.
-    const footprint = {
-      left: candidate.x + bounds.width * 0.08,
-      right: candidate.x + bounds.width * 0.92,
-      top: candidate.y + bounds.height * 0.02,
-      bottom: candidate.y + bounds.height * 0.96,
-    };
-    let penalty = 0;
-    document.querySelectorAll(BLOCKING_CONTENT).forEach((node) => {
-      if (element.contains(node)) return;
-      const rect = node.getBoundingClientRect();
-      if (rect.width === 0 || rect.height === 0 || rect.bottom < 0 || rect.top > window.innerHeight) return;
-      const overlaps = rect.right > footprint.left
-        && rect.left < footprint.right
-        && rect.bottom > footprint.top
-        && rect.top < footprint.bottom;
-      if (overlaps) penalty += node.matches("h1,h2,h3") ? 4 : 2;
-    });
-
-    // The hero's visible headline is drawn into a large canvas while its
-    // accessible H1 is intentionally only 1px. Reserve the visually busy
-    // centre of any viewport-scale canvas, weighted by overlap, so a small
-    // accessibility proxy cannot make the headline look like empty space.
-    document.querySelectorAll("canvas").forEach((canvas) => {
-      if (element.contains(canvas)) return;
-      const rect = canvas.getBoundingClientRect();
-      if (rect.width < window.innerWidth * 0.6 || rect.height < window.innerHeight * 0.45) return;
-      const protectedArea = {
-        left: rect.left + rect.width * 0.12,
-        right: rect.right - rect.width * 0.12,
-        top: rect.top + rect.height * 0.18,
-        bottom: rect.top + rect.height * 0.72,
-      };
-      const overlapWidth = Math.max(0, Math.min(footprint.right, protectedArea.right) - Math.max(footprint.left, protectedArea.left));
-      const overlapHeight = Math.max(0, Math.min(footprint.bottom, protectedArea.bottom) - Math.max(footprint.top, protectedArea.top));
-      const footprintArea = (footprint.right - footprint.left) * (footprint.bottom - footprint.top);
-      penalty += Math.ceil((overlapWidth * overlapHeight / footprintArea) * 10);
-    });
-
-    const samples = [
-      [0.5, 0.54],
-      [0.32, 0.7],
-      [0.68, 0.7],
-      [0.5, 0.86],
-    ];
-    return samples.reduce((score, [xRatio, yRatio]) => {
-      const x = clamp(candidate.x + bounds.width * xRatio, 1, window.innerWidth - 1);
-      const y = clamp(candidate.y + bounds.height * yRatio, 1, window.innerHeight - 1);
-      const blocked = document.elementsFromPoint(x, y).some((node) => (
-        !element.contains(node)
-        && (node.matches?.(BLOCKING_CONTENT) || node.closest?.(BLOCKING_CONTENT))
-      ));
-      return score + (blocked ? 1 : 0);
-    }, penalty);
+    return contentPenaltyFor(candidate, bounds, element);
   }
 
   function pickWaypoint() {
-    const candidates = [];
-    const lowerY = bounds.maxY;
-    const middleY = clamp(window.innerHeight * 0.46 - bounds.height * 0.5, NAV_CLEARANCE, bounds.maxY);
-    // Narrow viewports have no room beside the copy. Desktop destinations can
-    // use the side lanes as long as the overlap scoring considers them safe.
-    const lowerLaneOnly = window.innerWidth <= MOBILE_LANE_WIDTH;
-
-    // Edges get first refusal because they feel like a character sharing the
-    // page rather than a modal floating over its centre.
-    candidates.push({ x: SAFE_MARGIN, y: lowerY }, { x: bounds.maxX, y: lowerY });
-    if (!lowerLaneOnly) {
-      candidates.push({ x: SAFE_MARGIN, y: middleY }, { x: bounds.maxX, y: middleY });
-    }
-    for (let index = 0; index < 16; index += 1) {
-      candidates.push({
-        x: SAFE_MARGIN + Math.random() * Math.max(0, bounds.maxX - SAFE_MARGIN),
-        y: lowerLaneOnly
-          ? lowerY
-          : NAV_CLEARANCE + Math.random() * Math.max(0, bounds.maxY - NAV_CLEARANCE),
-      });
-    }
-
-    const safeCandidates = [];
-    let best = candidates[0];
-    let bestPenalty = Infinity;
-    for (const candidate of candidates) {
-      const penalty = contentPenalty(candidate);
-      if (penalty === 0) {
-        safeCandidates.push(candidate);
-        continue;
-      }
-      if (penalty < bestPenalty) {
-        best = candidate;
-        bestPenalty = penalty;
-      }
-    }
-    // Choose among every safe option instead of always returning the first
-    // left-edge candidate. Prefer a meaningful change of scenery so successive
-    // stops read as curious roaming rather than positional jitter.
-    if (safeCandidates.length) {
-      const minimumTravel = Math.min(window.innerWidth * 0.22, 240);
-      const distantCandidates = safeCandidates.filter((candidate) => (
-        Math.hypot(candidate.x - position.x, candidate.y - position.y) >= minimumTravel
-      ));
-      const pool = distantCandidates.length ? distantCandidates : safeCandidates;
-      return pool[Math.floor(Math.random() * pool.length)];
-    }
-    return best;
+    return pickWaypointFor(bounds, position, contentPenalty);
   }
 
   function startLoop() {

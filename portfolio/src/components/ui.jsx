@@ -3,7 +3,7 @@ import { motion, useReducedMotion, useScroll, useTransform } from "framer-motion
 import { ArrowDown, ArrowRight, ArrowUpRight } from "lucide-react";
 import { EASE_REVEAL } from "../lib/motion";
 import { ACCENTS } from "../data/projects";
-import { useScrollContainer } from "../App";
+import { useScrollContainer } from "../appContexts";
 import { media } from "../lib/media";
 
 const clamp01 = (v) => Math.min(1, Math.max(0, v));

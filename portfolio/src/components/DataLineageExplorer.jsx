@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 import { motion } from "framer-motion";
-import { useRoute } from "../App";
+import { useRoute } from "../appContexts";
 import { LINEAGE_NODES, LINEAGE_EDGES } from "../data/lineageData";
 
 // Layout: each node's column is its longest-path depth from any node

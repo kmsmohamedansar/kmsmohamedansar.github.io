@@ -594,6 +594,16 @@ const FIT_TALL = 0.8;
 const SWAY_RADIANS = 0.15;
 const SWAY_PERIOD_S = 22;
 
+function browserSupportsWebGL() {
+  if (typeof document === "undefined") return false;
+  try {
+    const canvas = document.createElement("canvas");
+    return Boolean(canvas.getContext("webgl2") || canvas.getContext("webgl"));
+  } catch {
+    return false;
+  }
+}
+
 /**
  * The hero's signature visual: an infinity-shaped (lemniscate) particle
  * loop floating in deep-blue space, rendered into whatever box its
@@ -608,7 +618,7 @@ const SWAY_PERIOD_S = 22;
 export default function InfinityLoop({ scrollContainerRef }) {
   const wrapRef = useRef(null);
   const canvasRef = useRef(null);
-  const [failed, setFailed] = useState(false);
+  const [failed] = useState(() => !browserSupportsWebGL());
   const [ready, setReady] = useState(false);
 
   useEffect(() => {
@@ -617,17 +627,7 @@ export default function InfinityLoop({ scrollContainerRef }) {
     if (!wrap || !canvas) return;
 
     const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    let supportsWebGL = false;
-    try {
-      const test = document.createElement("canvas");
-      supportsWebGL = !!(test.getContext("webgl2") || test.getContext("webgl"));
-    } catch {
-      supportsWebGL = false;
-    }
-    if (!supportsWebGL) {
-      setFailed(true);
-      return;
-    }
+    if (failed) return;
 
     let width = Math.max(wrap.clientWidth, 1);
     let height = Math.max(wrap.clientHeight, 1);
@@ -858,7 +858,7 @@ export default function InfinityLoop({ scrollContainerRef }) {
       particles.haloMaterial.dispose();
       renderer.dispose();
     };
-  }, [scrollContainerRef]);
+  }, [failed, scrollContainerRef]);
 
   return (
     <div ref={wrapRef} aria-hidden="true" className="absolute inset-0">

@@ -64,6 +64,12 @@ npm run lint
 
 `.github/workflows/deploy-portfolio.yml` builds and publishes to GitHub Pages on every push to `main` that touches `portfolio/**`. Pages must be set to the **GitHub Actions** source.
 
+## Emet answers
+
+The terminal and edge chat share `src/emet/emetKnowledge.js`, including scored matching, short conversation context and follow-up suggestions. Without `VITE_EMET_AI_URL`, every answer stays local and deterministic. With the variable set, the same matched topic is sent as context to the separately deployed worker.
+
+Questions the local matcher cannot answer are kept only in the visitor's session storage under `emet-unanswered-questions` (the latest 20) and emit an `emet:unanswered` browser event. Nothing sends those questions off-device. Connect analytics only with an explicit privacy decision and an updated visitor notice.
+
 ## Studies, tools and skills
 
 The homepage no longer presents JEV, REA and StoryEra as three equivalent cards. It introduces two clearer collections:

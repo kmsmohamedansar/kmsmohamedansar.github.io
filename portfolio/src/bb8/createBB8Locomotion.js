@@ -1,4 +1,5 @@
 import * as THREE from "three";
+import { createMotionCueTracker } from "./motionCues";
 
 const BODY_RADIUS = 1.4;
 const MAX_SPEED = 1.15;
@@ -53,6 +54,7 @@ export function createBB8Locomotion({ container, camera, droid, body, contactSha
   const emitSound = (cue) => {
     container.dispatchEvent(new CustomEvent("bb8:sound", { detail: cue }));
   };
+  const screenMotionCues = createMotionCueTracker(emitSound);
 
   const updateShadow = () => {
     contactShadow.position.x = droid.position.x;
@@ -118,6 +120,8 @@ export function createBB8Locomotion({ container, camera, droid, body, contactSha
       const distance = Math.hypot(dx, dy);
       if (motionQuery.matches || distance < 0.001) return;
 
+      screenMotionCues.start();
+
       // Viewport roaming moves the surrounding DOM element rather than the
       // Three.js droid. Convert that screen-space displacement into the same
       // visual body roll while leaving the standalone world-space controller
@@ -136,6 +140,7 @@ export function createBB8Locomotion({ container, camera, droid, body, contactSha
     },
     stopScreenMotion() {
       screenTravelPose = null;
+      screenMotionCues.stop();
     },
     update(delta) {
       desiredVelocity.set(0, 0, 0);
@@ -210,6 +215,7 @@ export function createBB8Locomotion({ container, camera, droid, body, contactSha
       };
     },
     dispose() {
+      screenMotionCues.reset();
       container.removeEventListener("pointerdown", onPointerDown);
       container.removeEventListener("pointerup", onPointerUp);
       container.removeEventListener("pointercancel", onPointerCancel);
