@@ -627,6 +627,7 @@ export const PROJECTS = [
         { label: "Everywhere", nodes: ["Your other devices"] },
       ],
     },
+    companions: [{ slug: "reptrack", label: "Also on the App Store: RepTrack, my iPhone workout log" }],
     links: [
       { label: "Get Haloscript on the App Store", href: "https://apps.apple.com/ca/app/haloscript/id6820670080", external: true, primary: true },
       { label: "See the full tour", href: "#project/haloscript", primary: true },

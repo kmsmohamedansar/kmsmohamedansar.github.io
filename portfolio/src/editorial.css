@@ -414,6 +414,8 @@ a:hover .ed-poster-plate .ed-project-image { transform: rotate(0) scale(1.025); 
 }
 
 /* The two collections keep their headings in view while their cards scroll. */
+.ed-companion-link { display: inline-flex; align-items: center; gap: 6px; margin-top: 14px; font-size: .82rem; font-weight: 600; color: var(--ed-blue); text-decoration: underline; text-underline-offset: 3px; }
+.ed-companion-link:hover { color: var(--portfolio-accent); }
 .ed-open-source { position: relative; margin-bottom: 85px; padding: 24px; border: 1px solid var(--ed-rule); border-radius: 24px; background: rgb(255 255 255 / .18); }
 .ed-open-source-heading { display: flex; justify-content: space-between; align-items: end; gap: 24px; margin-bottom: 25px; }
 .ed-open-source-heading h3 { margin-top: 12px; font: 400 clamp(2rem,3.8vw,3.2rem)/1.1 var(--font-condensed); text-transform: uppercase; }

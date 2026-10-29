@@ -190,6 +190,7 @@ function FeaturedSpread({ project, index }) {
       <h3><a href={`#project/${project.slug}`} aria-label={project.title}><PunchTitle text={project.title} /></a></h3>
       <p className="ed-copy">{project.hook}</p>
       <p className="ed-project-status">{project.status}</p>
+      {project.companions?.map((companion) => <a key={companion.slug} href={`#project/${companion.slug}`} className="ed-companion-link">{companion.label}<ArrowUpRight size={16} aria-hidden="true" /></a>)}
       {project.stats && <dl className="ed-project-stats">{project.stats.map((stat) => <div key={stat.label}><dt>{stat.value}</dt><dd>{stat.short || stat.label}</dd></div>)}</dl>}
       <ArrowLink href={`#project/${project.slug}`}>Read the story</ArrowLink>
     </div>
@@ -233,21 +234,24 @@ function ProjectTile({ project, index }) {
     <a id={`card-${project.slug}`} href={`#project/${project.slug}`}><ProjectPlate project={project} compact /><div className="ed-tile-heading"><h3 aria-label={project.title}><PunchTitle text={project.title} /></h3><ArrowUpRight size={26} aria-hidden="true" /></div><p className="ed-copy">{firstSentence(project.hook)}</p><p className="ed-tile-tags">{project.tags.slice(0, 3).join(" / ")}</p></a>
   </Enter>;
 }
-// Hiring managers look for the data work first, so it leads; RepTrack, the
-// app that is live on the App Store, opens the larger spreads.
+// The big spreads lead: Jarvis, then the apps (Haloscript carries a link to
+// RepTrack, the other App Store app), then Digital Me. The studies and
+// open-source tools follow straight after, and the data work comes next.
+const SPREAD_ORDER = ["jarvis", "haloscript", "digital-double"];
+const SPREADS = SPREAD_ORDER.map((slug) => FEATURED.find((p) => p.slug === slug)).filter(Boolean)
+  .concat(FEATURED.filter((p) => !SPREAD_ORDER.includes(p.slug)));
 const GRID_ORDER = ["data-delivery", "integration", "analytics-assistant", "catalogue-checker", "sitescout"];
 const DATA_FIRST = GRID_ORDER.map((slug) => FEATURED_GRID.find((p) => p.slug === slug)).filter(Boolean)
   .concat(FEATURED_GRID.filter((p) => !GRID_ORDER.includes(p.slug) && p.slug !== "reptrack"));
-const SPREADS = [...FEATURED_GRID.filter((p) => p.slug === "reptrack"), ...FEATURED];
 export function ProjectsSection() {
   return <section id="projects" className="ed-projects ed-light ed-section">
     <div className="ed-section-watermark" aria-hidden="true">PROJECTS</div>
     <div className="ed-wrap"><Enter className="ed-section-heading"><div><IndexLabel number="02">Selected projects</IndexLabel><h2>Things I’ve <em>built.</em></h2></div><div className="ed-heading-aside"><p>Apps, data systems, and questions I wanted to test for myself.</p><ArrowLink href="#work">The full project index</ArrowLink></div></Enter>
-      <div className="ed-grid-heading"><h3>Start here.</h3><p>Three ways into the work: a shipped app, an agent tool, and an independent study.</p></div>
-      <div className="ed-start-links"><a href="#project/haloscript"><strong>Haloscript</strong><span>Writing app · live on the App Store</span></a><a href="#project/agent-flight-recorder"><strong>Agent Flight Recorder</strong><span>Local debugging for AI agents</span></a><a href="#project/rea-study"><strong>REA Study</strong><span>An independent evaluation</span></a></div>
+      <div className="ed-grid-heading"><h3>Start here.</h3><p>Three ways into the work: an AI agent, a shipped app, and an independent study.</p></div>
+      <div className="ed-start-links"><a href="#project/jarvis"><strong>Jarvis</strong><span>Personal AI agent · runs on my Mac</span></a><a href="#project/haloscript"><strong>Haloscript</strong><span>Writing app · live on the App Store</span></a><a href="#project/rea-study"><strong>REA Study</strong><span>An independent evaluation</span></a></div>
+      <div className="ed-feature-list">{SPREADS.map((project, i) => <FeaturedSpread key={project.slug} project={project} index={i} />)}<OpenSourceSpotlight number={String(SPREADS.length + 1).padStart(2, "0")} /></div>
       <div className="ed-grid-heading"><h3>Data work, built to hold up.</h3></div>
       <div className="ed-project-grid">{DATA_FIRST.map((project, i) => <ProjectTile key={project.slug} project={project} index={i} />)}</div>
-      <div className="ed-feature-list">{SPREADS.map((project, i) => <FeaturedSpread key={project.slug} project={project} index={i} />)}<OpenSourceSpotlight number={String(SPREADS.length + 1).padStart(2, "0")} /></div>
       <div className="ed-work-list"><IndexLabel number="↳">Behind the scenes</IndexLabel><p className="ed-copy">Professional work is described without client names or private data. Public practice versions use unrelated public or sample data.</p>
         {MORE_PROJECTS.map((project, i) => <a key={project.slug} id={`card-${project.slug}`} href={`#project/${project.slug}`} className="ed-work-row"><span className="ed-row-number">{String(i + 1).padStart(2, "0")}</span><div><h3>{project.title}</h3><p>{project.kind}</p></div><ArrowUpRight size={22} aria-hidden="true" /></a>)}
         <details className="ed-archive"><summary>Earlier work <span>{EARLIER_PROJECTS.length} projects</span></summary><ul>{EARLIER_PROJECTS.map((project) => <li key={project.slug}><a id={`card-${project.slug}`} href={`#project/${project.slug}`}>{project.title}<ArrowUpRight size={16} /></a></li>)}</ul></details>
