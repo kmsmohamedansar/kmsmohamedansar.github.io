@@ -148,6 +148,21 @@ export const DEPTH = {
     },
   },
 
+  jarvis: {
+    found:
+      "I kept doing the same small jobs by hand: reading job postings against my own wish list, looking up companies, checking my repos for loose ends. I wanted an agent that does them for me, without a new bill and without letting it act in my name.",
+    tradeoffs: [
+      { chose: "Running on my laptop", over: "a cloud server that is always on", because: "it costs nothing and my data stays with me. The downside: it only works while my Mac is on." },
+      { chose: "My existing Claude subscription", over: "a pay-per-use AI key", because: "there is no surprise bill. Jarvis refuses to run if a paid key is even present, and caps itself at 20 calls a day." },
+      { chose: "Reports only", over: "letting it apply or send messages", because: "I always make the final call. It can be wrong, so it never acts for me." },
+      { chose: "Plain CSS and SVG for the dashboard", over: "a JavaScript app", because: "there is nothing to run in the browser, so there is less that can go wrong." },
+    ],
+    ai: {
+      label: "Where AI fits",
+      text: "In two places. Claude does the thinking inside Jarvis, with every tool switched off so a web page can't steer it. AI also helped me build it: Claude Code wrote code with me step by step, and Codex reviewed it twice as an outsider.",
+    },
+  },
+
   reptrack: {
     found:
       "A learning project with a real use. I wanted to find out what building and releasing an iPhone app really involves, and how long it takes. I didn't know Swift, Apple's programming language, so I wanted to see how far describing things in plain English and giving steady feedback to an AI could take me. I use it at the gym myself.",

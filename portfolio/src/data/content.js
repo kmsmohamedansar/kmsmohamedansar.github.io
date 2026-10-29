@@ -192,6 +192,7 @@ export const COMMAND_ITEMS = [
   { label: "Built with AI · experiments", go: "#ai", group: "Sections" },
   { label: "Contact", go: "#contact", group: "Sections" },
   { label: "RepTrack, project page", go: "#project/reptrack", group: "Projects" },
+  { label: "Jarvis, personal AI agent", go: "#project/jarvis", group: "Projects" },
   { label: "My Take on Jev, project page", go: "#project/decision-models", group: "Projects" },
   { label: "My Take on REA, project page", go: "#project/rea-study", group: "Projects" },
   { label: "StoryEra, novel continuity skill", go: "#project/storyera", group: "Projects" },

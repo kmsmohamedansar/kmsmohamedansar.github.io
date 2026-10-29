@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import { readFile, access } from 'node:fs/promises';
 import { resolve } from 'node:path';
 
-const slugs = ['agent-flight-recorder', 'storyera', 'site-recon', 'authorized-web-exposure-audit', 'reptrack'];
+const slugs = ['agent-flight-recorder', 'storyera', 'site-recon', 'authorized-web-exposure-audit', 'reptrack', 'jarvis'];
 
 test('share pages have their own URLs, case-study links and existing images', async () => {
   const sitemap = await readFile('public/sitemap.xml', 'utf8');
