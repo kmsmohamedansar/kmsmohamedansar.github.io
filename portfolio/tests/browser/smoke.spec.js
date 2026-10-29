@@ -27,3 +27,13 @@ test('data saver visitors choose whether to load the 3D model', async ({ page })
   await page.getByRole('button', { name: 'Load the 3D model (about 8 MB)' }).click();
   await expect.poll(() => modelRequested).toBe(true);
 });
+
+test('Jarvis project page renders and links its sample-data demo', async ({ page }) => {
+  await page.goto('/#project/jarvis');
+  await expect(page.getByRole('heading', { name: 'Jarvis', level: 1 })).toBeVisible();
+  const demo = page.getByRole('link', { name: /Try the demo/ });
+  await expect(demo).toHaveAttribute('href', '/p/jarvis/demo/');
+  // The dev server doesn't map folder URLs in public/ to index.html; GitHub Pages does.
+  await page.goto('/p/jarvis/demo/index.html');
+  await expect(page.getByText('Portfolio demo with made-up sample data.')).toBeVisible();
+});

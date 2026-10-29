@@ -23,6 +23,7 @@ const PROJECT_ALIASES = {
   "authorized-web-exposure-audit": ["exposure audit", "web audit", "security audit"],
   "digital-double": ["digital double", "digital me", "3d head", "avatar"],
   reptrack: ["rep track", "workout app", "gym app", "fitness app"],
+  jarvis: ["personal agent", "job agent", "personal assistant"],
   haloscript: ["halo script", "handwriting", "ipad app"],
   sitescout: ["site scout", "scout"],
   "sql-playground": ["sql playground", "sandbox"],

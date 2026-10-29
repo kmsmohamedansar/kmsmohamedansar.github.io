@@ -11,6 +11,7 @@ export const STEP_TOOLS = {
   integration: [["React"], ["Node.js", "Fastify", "OAuth 2.0 / OpenID Connect"], ["Keycloak", "SQLite"], ["Fastify", "SQLite"]],
   "analytics-assistant": [["React"], ["Ollama (qwen2.5:7b)", "TypeScript"], ["Model Context Protocol", "Zod", "SQLite"], ["React", "Framer Motion"]],
   reptrack: [["SwiftUI"], ["SwiftUI"], ["SwiftData"], ["SwiftUI"]],
+  jarvis: [[], ["Python"], ["Claude Code"], ["SQLite"]],
   "data-delivery": [["Python"], ["YAML", "Dagster"], ["dbt", "DuckDB"], ["Dagster", "pytest"]],
   "catalogue-checker": [["Open Food Facts", "pandas"], ["sentence-transformers"], ["facebook/bart-large-mnli"], ["pandas", "matplotlib"]],
   "mcp-workflow": [["Cursor"], ["Cursor"], ["Model Context Protocol", "TypeScript", "Zod"], ["Stateless HTTP transport"]],

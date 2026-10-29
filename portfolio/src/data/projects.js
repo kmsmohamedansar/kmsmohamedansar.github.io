@@ -987,6 +987,57 @@ export const PROJECTS = [
       { label: "Source is private. Walkthrough on request.", href: "#contact", locked: true },
     ],
   },
+  {
+    slug: "jarvis",
+    featured: true,
+    grid: true,
+    title: "Jarvis",
+    kind: "Personal AI agent",
+    accent: "green",
+    status: "Running on my Mac",
+    cardArt: "/shots/project-covers/jarvis.webp",
+    shots: ["/shots/jarvis/dashboard.webp"],
+    hook: "A personal AI agent that lives on my laptop. It checks job postings against my profile, researches companies and ideas, reviews my GitHub repos, and remembers everything it did. It costs nothing on top of the subscriptions I already pay for.",
+    role: "Built on my own, with Claude Code as the engine and Codex as an outside reviewer.",
+    tags: ["AI agents", "Claude Code", "Python", "Local-first"],
+    stack: ["Claude Code", "Python", "SQLite", "GitHub Actions", "Codex", "HTML, CSS and SVG"],
+    stackUsage: {
+      "Claude Code": "Anthropic's AI coding tool, signed in with my Claude subscription. It is the agent's brain, and it helped me write the code.",
+      Python: "The agent itself, using only Python's built-in library. No extra packages to pay for or keep updated.",
+      SQLite: "A database that lives in one file on my laptop. It keeps the history of every task.",
+      "GitHub Actions": "Free automatic testing. Every change runs the full test suite on Linux and macOS before it's merged.",
+      Codex: "OpenAI's coding agent, through my ChatGPT subscription. I used it as an independent auditor of the whole codebase.",
+      "HTML, CSS and SVG": "The dashboard: an animated office drawn and moved with plain CSS, with no JavaScript at all.",
+    },
+    story: [
+      "I wanted an assistant that does real jobs for me, not just a chat window. Jarvis reads a job posting and tells me how well it fits, what the red flags are and what to ask. It writes research reports on companies and startup ideas. It checks my GitHub projects for gaps. Every task goes into a small history, so nothing gets lost.",
+      "I set two rules before writing any code. It must not cost anything beyond my existing Claude and ChatGPT subscriptions. And it must never act for me. It reads and writes reports, but it never sends an email, applies to a job, buys anything or publishes anything.",
+      "I built it in seven steps and had Codex audit the code twice. The audits found 23 issues, from small to serious. I fixed every one and added a test so it stays fixed.",
+    ],
+    how: [
+      "When the AI reads a web page or a job posting, every tool is switched off. A page that says \"ignore your instructions\" can only change the words in a report.",
+      "Before every AI call it checks that no paid API key is set and that today's limit of 20 calls isn't used up. If my subscription limit is reached, it stops instead of retrying.",
+      "Scheduled jobs come from an approved list in a settings file, and one command pauses everything.",
+      "The dashboard is an animated office with four robots. A robot only sits at its desk if it really did something in the last 15 minutes. Otherwise it wanders the hallway, labelled idle.",
+    ],
+    learned: [
+      "The safety rules shaped the design more than the features did. Writing them down first made every later decision easier.",
+      "An outside reviewer finds what you stop seeing. Both audits caught real bugs that my own tests had missed.",
+    ],
+    flow: {
+      caption: "What happens when I ask Jarvis to evaluate a job.",
+      columns: [
+        { label: "Me", nodes: ["Paste a job posting"] },
+        { label: "Checks", nodes: ["No paid keys", "Daily limit left"] },
+        { label: "Think", nodes: ["Claude reads it, tools off"] },
+        { label: "Result", nodes: ["Report with a fit score", "Saved to history"] },
+      ],
+    },
+    links: [
+      { label: "Try the demo (sample data)", href: "/p/jarvis/demo/", external: true, primary: true },
+      { label: "Source is private. Walkthrough on request.", href: "#contact", locked: true },
+    ],
+  },
   /* ───────────── more projects ───────────── */
   {
     slug: "data-delivery",
