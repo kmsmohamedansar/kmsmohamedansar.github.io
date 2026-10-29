@@ -4,7 +4,7 @@ export const CASE_SUMMARIES = {
     problem: 'Agent failures can be hard to trace back through earlier actions and edits.',
     outcome: 'A local recorder and investigator with command-line, web and MCP interfaces.',
     proof: 'A payment failure walkthrough, regression tests and an independent first-time-user evaluation.',
-    limits: 'A ranked suspect is not proof of causation; redaction is imperfect. Fixes found after the 1.1.0 evaluation are on the main branch.',
+    limits: 'A ranked suspect is not proof of causation; redaction is imperfect. The independent evaluation tested 1.1.0, not the 1.1.1 release.',
   },
   storyera: {
     problem: 'Long stories need continuity checks that distinguish mistakes from intentional mysteries.',
