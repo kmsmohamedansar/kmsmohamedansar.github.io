@@ -301,7 +301,7 @@ export const PROJECTS = [
       "Replay can safely return recorded tool outputs and errors, but cannot reproduce an AI model's choices or a changed external service.",
       "Local-first storage reduces setup, but heuristic redaction is imperfect. Git capture is opt-in, and every run still needs review before sharing.",
       "Five synthetic cases only protect known behavior. Independent use confirmed the investigator's value and exposed defects the self-authored suite missed.",
-      "The published 1.1.0 wheel is the evaluated build; the regression-backed fixes are on the main branch pending a maintenance release.",
+      "The independent evaluation tested the 1.1.0 wheel; the regression-backed fixes are included in the 1.1.1 maintenance release.",
     ],
     flow: {
       caption: "From an agent action to an evidence-backed debugging lead.",
