@@ -995,7 +995,7 @@ export const PROJECTS = [
     kind: "Personal AI agent",
     accent: "green",
     status: "Running on my Mac",
-    cardArt: "/shots/project-covers/jarvis.webp",
+    spotlightArt: "/shots/spotlight/jarvis.webp",
     shots: ["/shots/jarvis/dashboard.webp"],
     stats: [
       { value: "$0", label: "extra cost: it runs on my existing Claude subscription, with no pay-per-use AI keys", short: "extra cost" },
