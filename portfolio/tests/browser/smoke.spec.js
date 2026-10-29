@@ -10,6 +10,24 @@ test('homepage and project navigation work', async ({ page }) => {
   await expect(page.getByRole('heading', { name: 'At a glance' })).toBeVisible();
 });
 
+test('share pages open their matching case studies', async ({ page }) => {
+  const projects = [
+    ['agent-flight-recorder', 'Agent Flight Recorder'],
+    ['storyera', 'StoryEra'],
+    ['site-recon', 'Site Recon'],
+    ['authorized-web-exposure-audit', 'Exposure Audit'],
+    ['reptrack', 'RepTrack'],
+  ];
+  for (const [slug, title] of projects) {
+    // Vite serves the explicit file; GitHub Pages also serves the folder URL.
+    const response = await page.goto(`/p/${slug}/index.html`);
+    expect(response.status()).toBe(200);
+    await page.getByRole('link', { name: 'Read the full case study' }).click();
+    await expect(page).toHaveURL(new RegExp(`/#project/${slug}$`));
+    await expect(page.getByRole('heading', { name: title, level: 1 })).toBeVisible();
+  }
+});
+
 test('homepage has no critical automated accessibility violations', async ({ page }) => {
   await page.goto('/');
   await expect(page.getByRole('main')).toBeVisible();
