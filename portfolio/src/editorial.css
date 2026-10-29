@@ -427,7 +427,14 @@ a:hover .ed-poster-plate .ed-project-image { transform: rotate(0) scale(1.025); 
 .ed-open-source-group-heading { min-height: 160px; padding-bottom: 16px; border-bottom: 1px solid var(--ed-rule); }
 .ed-open-source-group-heading h3 { margin-top: 10px; font: 400 clamp(2rem,3.2vw,3rem)/1 var(--font-condensed); text-transform: uppercase; }
 .ed-open-source-group-heading > h3 + p { max-width: 34rem; margin-top: 13px; color: var(--ed-blue); font-size: .76rem; line-height: 1.65; }
-.ed-open-source-items { display: grid; gap: 0; }
+.ed-open-source-items { display: grid; gap: 0; max-height: 660px; overflow-y: auto; overscroll-behavior: contain; scroll-snap-type: y proximity; padding: 0 10px 48px 0; scrollbar-width: thin; scrollbar-color: var(--ed-coral) transparent; -webkit-mask-image: linear-gradient(to bottom, #000 calc(100% - 56px), transparent); mask-image: linear-gradient(to bottom, #000 calc(100% - 56px), transparent); }
+.ed-open-source-items:focus-visible { outline: 2px solid var(--ed-coral); outline-offset: 6px; border-radius: 10px; }
+.ed-open-source-items .ed-open-source-project { scroll-snap-align: start; }
+.ed-scroll-hint { display: none; align-items: center; gap: 6px; margin-top: 12px; font-size: .62rem; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--ed-coral-ink); }
+.ed-scroll-hint.is-many { display: flex; }
+.ed-scroll-hint span { display: inline-block; animation: ed-hint-bob 1.6s ease-in-out infinite; }
+@keyframes ed-hint-bob { 0%,100% { transform: translateY(0); } 50% { transform: translateY(3px); } }
+@media (prefers-reduced-motion: reduce) { .ed-scroll-hint span { animation: none; } .ed-open-source-items { scroll-snap-type: none; } }
 .ed-open-source-items:focus-visible { outline: 2px solid var(--ed-coral-ink); outline-offset: 3px; border-radius: 4px; }
 .ed-open-source-project { display: grid; grid-template-columns: minmax(112px,.72fr) minmax(0,1.28fr); gap: 18px; align-items: start; padding: 22px 0; }
 .ed-open-source-project + .ed-open-source-project { border-top: 1px solid var(--ed-rule); }
@@ -455,6 +462,8 @@ a:hover .ed-poster-plate .ed-project-image { transform: rotate(0) scale(1.025); 
  .ed-open-source-group { padding: 18px; }
  .ed-open-source-project { grid-template-columns: 1fr; gap: 17px; }
  .ed-open-source-project .ed-feature-body h4 { font-size: 2rem; }
+ .ed-open-source-items { max-height: min(620px, 74vh); }
+ .ed-scroll-hint { display: flex; }
 }
 
 /* A restrained tactile layer and project-specific motion language. */
