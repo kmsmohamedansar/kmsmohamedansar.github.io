@@ -8,3 +8,7 @@ venv/
 .agents/
 .claude/
 skills-lock.json
+
+# Private career/research notes - must never be published in this public repo
+reports/
+research_notes/
