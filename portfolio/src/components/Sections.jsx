@@ -295,10 +295,8 @@ function OpenSourceSpotlight({ number }) {
           <p className="ed-label">{group.label}</p>
           <h3 id={`open-source-group-${group.id}`}>{group.title}</h3>
           <p>{group.description}</p>
-          {group.projects.length > 1 && <p className={`ed-scroll-hint ${group.projects.length > 2 ? "is-many" : ""}`} aria-hidden="true">Scroll to see all {group.projects.length} <span>↓</span></p>}
         </header>
-        {/* A capped, scrollable list keeps the homepage short; it is focusable so keyboard users can scroll it too. */}
-        <div className="ed-open-source-items" tabIndex={0} role="region" aria-label={`${group.label}: ${group.projects.length} projects`}>{group.projects.map((project) => <OpenSourceProject key={project.slug} project={project} />)}</div>
+        <div className="ed-open-source-items">{group.projects.map((project) => <OpenSourceProject key={project.slug} project={project} />)}</div>
       </section>)}
     </div>
   </Enter>;

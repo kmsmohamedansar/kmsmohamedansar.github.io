@@ -55,3 +55,22 @@ test('Jarvis project page renders and links its sample-data demo', async ({ page
   await page.goto('/p/jarvis/demo/index.html');
   await expect(page.getByText('Portfolio demo with made-up sample data.')).toBeVisible();
 });
+
+test('scrolling over the open-source collections moves the page, not a box inside it', async ({ page, isMobile }) => {
+  test.skip(isMobile, 'wheel input is a desktop concern; touch scrolls the page directly');
+  await page.goto('/');
+  const main = page.getByRole('main');
+  const list = page.locator('.ed-open-source-items').last();
+  await list.scrollIntoViewIfNeeded();
+  // Nothing in the collections may be a scroll box of its own.
+  const scrollers = await page.locator('.ed-open-source *').evaluateAll((nodes) => nodes.filter((node) => {
+    const { overflowY } = getComputedStyle(node);
+    return (overflowY === 'auto' || overflowY === 'scroll') && node.scrollHeight > node.clientHeight;
+  }).length);
+  expect(scrollers).toBe(0);
+  const box = await list.boundingBox();
+  await page.mouse.move(box.x + box.width / 2, box.y + Math.min(box.height / 2, 200));
+  const before = await main.evaluate((node) => node.scrollTop);
+  await page.mouse.wheel(0, 1200);
+  await expect.poll(() => main.evaluate((node) => node.scrollTop)).toBeGreaterThan(before + 600);
+});
