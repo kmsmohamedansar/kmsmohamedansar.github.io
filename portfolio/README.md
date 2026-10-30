@@ -20,7 +20,9 @@ palette (`src/lib/palettes.js`): sections tagged `data-palette` swap the colour
 tokens as they reach the middle of the screen, and the page eases between them
 (more briefly on phones). Project pages use the palette of the section that
 lists them, and the companion's bubble follows the current accent. Contact is the
-one dark ending, in midnight navy with a bright red button.
+one dark ending, in midnight navy with a bright red button. A swatch card in
+the bottom-left corner (`src/components/PaletteSwatch.jsx`) names the palette
+on screen and opens into its colours and hex codes.
 `src/lib/palettes.test.mjs` holds every palette to AA contrast. `src/editorial.css` contains the homepage's layout and light/dark
 surfaces. Shared compatibility tokens live in `src/index.css`. The main page uses
 oversized condensed headings, illustrated covers using the original project

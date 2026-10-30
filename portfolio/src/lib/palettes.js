@@ -28,6 +28,24 @@ export const PALETTES = {
 
 export const DEFAULT_PALETTE = "lumen";
 
+// What the swatch card in the corner calls each palette and its colours,
+// in the reels' style: a name, then each colour's name and hex.
+export const PALETTE_LABELS = {
+  lumen: { title: "Lumen", paper: "Warm Ivory", ink: "Soft Black", accent: "Burnt Orange" },
+  bloom: { title: "Bloom", paper: "Warm Ivory", ink: "Deep Editorial Blue", accent: "Coral Orange" },
+  lumora: { title: "Lumora", paper: "Warm Ivory", ink: "Ink Black", accent: "Electric Teal" },
+  neon: { title: "Human Next", paper: "Cool White", ink: "Jet Black", accent: "Neon Rose" },
+  choreo: { title: "Choreo", paper: "Pale Lavender", ink: "Deep Mocha", accent: "Mocha Brown" },
+  field: { title: "Field / Form", paper: "Bone", ink: "Charcoal", accent: "Burnt Amber" },
+  blueBloom: { title: "Blue Bloom", paper: "Ice White", ink: "Midnight Navy", accent: "Bright Red" },
+};
+
+// applyPalette and clearPalette announce the palette now showing, so
+// anything that displays it can follow without its own scroll handler.
+export const PALETTE_EVENT = "palettechange";
+let current = DEFAULT_PALETTE;
+export const currentPalette = () => current;
+
 // CSS custom property for each palette key. --ed-blue and --ed-ivory are the
 // site's original names for ink and paper; --ed-deep has always matched ink.
 export const PALETTE_VARS = {
@@ -49,6 +67,14 @@ function luminance(hex) {
 export function contrast(a, b) {
   const [hi, lo] = [luminance(a), luminance(b)].sort((x, y) => y - x);
   return (hi + 0.05) / (lo + 0.05);
+}
+
+// Text colour for a chip of colour bg: the first candidate that reads at
+// AA, else black or white, whichever reads better.
+export function readableOn(bg, candidates) {
+  const ok = candidates.find((c) => contrast(c, bg) >= 4.5);
+  if (ok) return ok;
+  return contrast("#000000", bg) >= contrast("#ffffff", bg) ? "#000000" : "#ffffff";
 }
 
 // A palette holds from the moment its element's top passes the line until
@@ -82,6 +108,8 @@ export function applyPalette(root, name) {
     for (const v of vars) root.style.setProperty(v, palette[key]);
   }
   setThemeColor(root, palette.paper);
+  current = PALETTES[name] ? name : DEFAULT_PALETTE;
+  root.dispatchEvent(new CustomEvent(PALETTE_EVENT, { detail: current }));
 }
 
 export function clearPalette(root) {
@@ -89,4 +117,6 @@ export function clearPalette(root) {
     for (const v of vars) root.style.removeProperty(v);
   }
   setThemeColor(root, PALETTES[DEFAULT_PALETTE].paper);
+  current = DEFAULT_PALETTE;
+  root.dispatchEvent(new CustomEvent(PALETTE_EVENT, { detail: current }));
 }

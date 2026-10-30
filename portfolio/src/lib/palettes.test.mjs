@@ -1,6 +1,6 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { PALETTES, contrast, paletteForRoute, pickPalette } from "./palettes.js";
+import { PALETTES, PALETTE_LABELS, contrast, paletteForRoute, pickPalette, readableOn } from "./palettes.js";
 
 test("the contact button keeps its large light type legible on the accent", () => {
   assert.ok(contrast(PALETTES.blueBloom.paper, PALETTES.blueBloom.accent) >= 3);
@@ -44,4 +44,19 @@ test("project pages use the palette of the section that lists them", () => {
   assert.equal(paletteForRoute("work", openSource), "bloom");
   assert.equal(paletteForRoute("main", openSource), null);
   assert.equal(paletteForRoute("emet", openSource), null);
+});
+
+test("every palette has a name and colour names for the swatch card", () => {
+  assert.deepEqual(Object.keys(PALETTE_LABELS).sort(), Object.keys(PALETTES).sort());
+  for (const label of Object.values(PALETTE_LABELS)) {
+    for (const key of ["title", "paper", "ink", "accent"]) assert.ok(label[key], key);
+  }
+});
+
+test("every swatch chip's label reads at AA on its own colour", () => {
+  for (const p of Object.values(PALETTES)) {
+    for (const key of ["paper", "ink", "accent"]) {
+      assert.ok(contrast(readableOn(p[key], [p.ink, p.paper]), p[key]) >= 4.5, `${key} ${p[key]}`);
+    }
+  }
 });

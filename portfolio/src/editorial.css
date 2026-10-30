@@ -673,3 +673,23 @@ a:hover .ed-poster-plate .ed-project-image { transform: rotate(0) scale(1.025); 
  .ed-jarvis-cap, .ed-jarvis-log, .ed-jarvis-log i, .ed-jarvis-log i::before, .ed-data-table i, .ed-data-gate, .ed-data-readout { transition: none; }
  .ed-jarvis-log i:last-child::after { animation: none; }
 }
+
+/* The palette card in the corner: chips and a name, opening upward into the
+   three colours the way the reels list theirs. */
+.ed-swatch { position: fixed; z-index: 85; left: 16px; bottom: 16px; font: 500 .55rem/1 var(--font-mono); text-transform: uppercase; letter-spacing: .12em; }
+.ed-swatch-toggle { display: flex; align-items: center; gap: 10px; min-height: 44px; padding: 8px 14px 8px 9px; background: var(--ed-ivory); color: var(--ed-blue); border: 1px solid var(--ed-rule); border-radius: 999px; box-shadow: 0 10px 26px color-mix(in srgb, var(--ed-blue) 18%, transparent); cursor: pointer; }
+.ed-swatch-chips { display: flex; }
+.ed-swatch-chips b { width: 16px; height: 22px; border: 1px solid color-mix(in srgb, var(--ed-blue) 25%, transparent); transition: background-color .9s var(--ease-out); }
+.ed-swatch-chips b:first-child { border-radius: 4px 0 0 4px; }
+.ed-swatch-chips b:last-child { border-radius: 0 4px 4px 0; }
+.ed-swatch-chips b + b { border-left: 0; }
+.ed-swatch-panel { position: absolute; left: 0; bottom: calc(100% + 10px); display: grid; gap: 6px; width: 200px; }
+.ed-swatch-panel li { display: flex; flex-direction: column; justify-content: end; gap: 7px; min-height: 76px; padding: 12px; border: 1px solid color-mix(in srgb, currentColor 22%, transparent); border-radius: 6px; box-shadow: 0 10px 24px rgb(0 0 0 / .18); }
+.ed-swatch-panel li i { display: block; width: 18px; height: 1px; background: currentColor; opacity: .6; }
+@media (pointer: coarse) { .ed-swatch-chips b { transition-duration: .3s; } }
+@media (max-width: 640px) {
+ .ed-swatch { left: 12px; bottom: 12px; }
+ .ed-swatch-name { display: none; }
+ .ed-swatch-toggle { padding: 8px 10px; }
+}
+@media (prefers-reduced-motion: reduce) { .ed-swatch-chips b { transition: none; } }
