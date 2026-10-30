@@ -1,7 +1,8 @@
 /* Each part of the home page has its own three-colour palette, and the
    whole page eases into it as that part reaches the middle of the screen.
-   Sections opt in with data-palette="<name>"; anything untagged uses the
-   opening palette, which is also what editorial.css declares on :root.
+   Sections opt in with data-palette="<name>"; anything above the first
+   tagged element uses the opening palette, which is also what
+   editorial.css declares on :root.
 
    paper     light surface, and text on dark sections
    ink       body text, and the dark sections' background
@@ -12,7 +13,7 @@ export const PALETTES = {
   // Opening: burnt orange, warm ivory, soft black.
   lumen: { paper: "#e6d5bd", ink: "#101010", accent: "#d5360c", accentInk: "#74200d", onDark: "#ff8a5f" },
   // 02 Things I've built: warm ivory, deep editorial blue, coral orange.
-  bloom: { paper: "#eae6de", ink: "#1b4e76", accent: "#ef8557", accentInk: "#a3401a", onDark: "#ffc2a6" },
+  bloom: { paper: "#eae6de", ink: "#1b4e76", accent: "#ef8557", accentInk: "#953812", onDark: "#ffc2a6" },
   // Test the claim: ink black, warm ivory, electric teal.
   lumora: { paper: "#e8e4d3", ink: "#031211", accent: "#00aebb", accentInk: "#00616a", onDark: "#00aebb" },
   // 03 What if I tried this?: jet black, cerulean blue, neon rose.
@@ -50,15 +51,29 @@ export function contrast(a, b) {
   return (hi + 0.05) / (lo + 0.05);
 }
 
-// The last tagged element (in document order) crossing the line wins, so a
-// tagged block inside a tagged section overrides it while it is in view.
+// A palette holds from the moment its element's top passes the line until
+// the next tagged element's does. So a tagged block inside a section (Test
+// the claim inside Projects) carries on to the end of that section instead
+// of handing back to the section's palette for a second change.
 export function pickPalette(elements, lineY) {
   let name = DEFAULT_PALETTE;
   for (const el of elements) {
-    const r = el.getBoundingClientRect();
-    if (r.top <= lineY && r.bottom > lineY && PALETTES[el.dataset.palette]) name = el.dataset.palette;
+    if (el.getBoundingClientRect().top <= lineY && PALETTES[el.dataset.palette]) name = el.dataset.palette;
   }
   return name;
+}
+
+// Project pages take the palette of the home page section they are listed
+// in: the open-source studies and tools sit under Test the claim.
+export function paletteForRoute(route, openSourceSlugs) {
+  if (route === "work") return "bloom";
+  if (!route.startsWith("project/")) return null;
+  return openSourceSlugs.has(route.slice("project/".length)) ? "lumora" : "bloom";
+}
+
+// The browser's own chrome (theme-color) follows the paper colour too.
+function setThemeColor(root, color) {
+  root.ownerDocument?.querySelector('meta[name="theme-color"]')?.setAttribute("content", color);
 }
 
 export function applyPalette(root, name) {
@@ -66,10 +81,12 @@ export function applyPalette(root, name) {
   for (const [key, vars] of Object.entries(PALETTE_VARS)) {
     for (const v of vars) root.style.setProperty(v, palette[key]);
   }
+  setThemeColor(root, palette.paper);
 }
 
 export function clearPalette(root) {
   for (const vars of Object.values(PALETTE_VARS)) {
     for (const v of vars) root.style.removeProperty(v);
   }
+  setThemeColor(root, PALETTES[DEFAULT_PALETTE].paper);
 }

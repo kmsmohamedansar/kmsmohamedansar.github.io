@@ -9,6 +9,9 @@
 @property --ed-on-dark { syntax: "<color>"; inherits: true; initial-value: #ff8a5f; }
 :root { --ed-ivory: #e6d5bd; --ed-blue: #101010; --ed-coral: #d5360c; --ed-coral-ink: #74200d; --ed-on-dark: #ff8a5f; --ed-deep: #101010; --ed-rule: color-mix(in srgb, var(--ed-blue) 22%, transparent);
   transition: --ed-ivory .9s var(--ease-out), --ed-blue .9s var(--ease-out), --ed-deep .9s var(--ease-out), --ed-coral .9s var(--ease-out), --ed-coral-ink .9s var(--ease-out), --ed-on-dark .9s var(--ease-out); }
+/* Every element inherits these, so each frame of the fade restyles the whole
+   page. Phones get a quarter of the frames; reduced motion gets none. */
+@media (pointer: coarse) { :root { transition-duration: .3s; } }
 @media (prefers-reduced-motion: reduce) { :root { transition: none; } }
 .ed-light { color: var(--ed-blue); background: var(--ed-ivory); }
 .ed-wrap { width: min(100% - 96px, 1200px); margin-inline: auto; }
@@ -166,7 +169,7 @@ a:hover .ed-experiment-image img { transform: scale(1.04); }
 .ed-footer { display: flex; align-items: center; justify-content: space-between; gap: 25px; padding-block: 24px; border-top: 1px solid var(--ed-rule); font: .52rem/1.7 var(--font-mono); }
 .ed-footer button { padding-block: 10px; white-space: nowrap; }
 /* Project stories inherit the light editorial palette without touching scenes. */
-.ed-case-study { --ink-50: var(--ed-deep); --ink-100: var(--ed-deep); --ink-200: #332b24; --ink-300: #51463c; --ink-400: #51463c; --portfolio-accent: var(--ed-coral-ink); --diagram-surface: color-mix(in srgb, var(--ed-ivory) 90%, var(--ed-blue)); color: var(--ed-blue); background: var(--ed-ivory); }
+.ed-case-study { --color-coral: var(--ed-coral); --color-blue: var(--ed-blue); --ink-50: var(--ed-deep); --ink-100: var(--ed-deep); --ink-200: color-mix(in srgb, var(--ed-blue) 94%, var(--ed-ivory)); --ink-300: color-mix(in srgb, var(--ed-blue) 88%, var(--ed-ivory)); --ink-400: color-mix(in srgb, var(--ed-blue) 88%, var(--ed-ivory)); --portfolio-accent: var(--ed-coral-ink); --diagram-surface: color-mix(in srgb, var(--ed-ivory) 90%, var(--ed-blue)); color: var(--ed-blue); background: var(--ed-ivory); }
 .ed-case-study article { max-width: 1100px; }
 .ed-case-study article > header { border-radius: 0; border: 0; border-block: 1px solid var(--ed-rule); background: none !important; padding-inline: 0; margin-top: 32px; }
 .ed-case-study article > header h1 { font-family: var(--font-body); letter-spacing: -.055em; font-size: clamp(2.6rem,7vw,5rem); }

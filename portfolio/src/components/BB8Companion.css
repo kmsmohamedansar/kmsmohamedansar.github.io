@@ -6,6 +6,9 @@
   --emet-ink: #101010;
   --emet-ivory: #e6d5bd;
 }
+/* The droid's bubble and controls sit on near-black glass, so they take the
+   current section's on-dark accent (lib/palettes.js) and change with it. */
+.bb8-edge { --emet-accent: var(--ed-on-dark, #ff8a5f); }
 
 .bb8-edge {
   position: fixed;
@@ -42,7 +45,7 @@
 .bb8-edge-character { transform-origin: 60% 100%; }
 .bb8-edge-viewport { pointer-events: none; touch-action: none; }
 .bb8-edge-viewport:focus { outline: none; }
-.bb8-edge-viewport:focus-visible { border-radius: 50%; box-shadow: inset 0 0 0 1px rgb(213 54 12 / .8); }
+.bb8-edge-viewport:focus-visible { border-radius: 50%; box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--emet-accent) 80%, transparent); }
 .bb8-edge-viewport canvas { position: absolute; z-index: 0; inset: 0; display: block; width: 100%; height: 100%; pointer-events: none; }
 .bb8-edge-hit-target {
   position: absolute;
@@ -58,7 +61,7 @@
   cursor: pointer;
 }
 .bb8-edge-hit-target:focus { outline: none; }
-.bb8-edge-hit-target:focus-visible { box-shadow: 0 0 0 2px rgb(213 54 12 / .86); }
+.bb8-edge-hit-target:focus-visible { box-shadow: 0 0 0 2px color-mix(in srgb, var(--emet-accent) 86%, transparent); }
 .bb8-edge--waiting .bb8-edge-hit-target,
 .bb8-edge--leaving .bb8-edge-hit-target,
 .bb8-edge--route-hidden .bb8-edge-hit-target { pointer-events: none; }
@@ -154,7 +157,7 @@
 .bb8-edge-controls button:hover,
 .bb8-edge-controls button:focus-visible,
 .bb8-edge-show:hover,
-.bb8-edge-show:focus-visible { color: #fff; border-color: rgb(213 54 12 / .78); }
+.bb8-edge-show:focus-visible { color: #fff; border-color: color-mix(in srgb, var(--emet-accent) 78%, transparent); }
 
 .bb8-edge-controls button[aria-pressed="true"] { color: #85dda2; border-color: rgb(133 221 162 / .48); }
 
@@ -247,9 +250,9 @@
   background: var(--emet-accent);
 }
 .bb8-edge-bubble button:hover,
-.bb8-edge-bubble button:focus-visible { color: #fff; border-color: var(--emet-accent); background: rgb(213 54 12 / .5); outline: none; }
+.bb8-edge-bubble button:focus-visible { color: #fff; border-color: var(--emet-accent); background: color-mix(in srgb, var(--emet-accent) 30%, transparent); outline: none; }
 .bb8-edge-bubble button:first-child:hover,
-.bb8-edge-bubble button:first-child:focus-visible { color: #fff; background: rgb(213 54 12 / .88); }
+.bb8-edge-bubble button:first-child:focus-visible { color: #0b0c0f; background: color-mix(in srgb, var(--emet-accent) 82%, #fff); }
 
 .bb8-edge-zzzs {
   position: absolute;

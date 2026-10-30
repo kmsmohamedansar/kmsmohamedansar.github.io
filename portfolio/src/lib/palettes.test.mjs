@@ -1,6 +1,6 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { PALETTES, contrast, pickPalette } from "./palettes.js";
+import { PALETTES, contrast, paletteForRoute, pickPalette } from "./palettes.js";
 
 test("the contact palette keeps large ink type legible on its accent button", () => {
   assert.ok(contrast(PALETTES.slow.ink, PALETTES.slow.accent) >= 3);
@@ -21,14 +21,27 @@ for (const [name, p] of Object.entries(PALETTES)) {
 
 const el = (palette, top, bottom) => ({ dataset: { palette }, getBoundingClientRect: () => ({ top, bottom }) });
 
-test("the innermost tagged block on the line wins", () => {
+test("a palette holds until the next tagged element reaches the line", () => {
   const section = el("bloom", -500, 3000);
   const block = el("lumora", 200, 900);
-  assert.equal(pickPalette([section, block], 400), "lumora");
-  assert.equal(pickPalette([section, block], 1000), "bloom");
+  const next = el("neon", 3000, 4000);
+  assert.equal(pickPalette([section, block, next], 100), "bloom");
+  assert.equal(pickPalette([section, block, next], 400), "lumora");
+  // Past the block but still inside its section: no hand-back to bloom.
+  assert.equal(pickPalette([section, block, next], 1000), "lumora");
+  assert.equal(pickPalette([section, block, next], 3100), "neon");
 });
 
-test("untagged stretches and unknown names fall back to the opening palette", () => {
+test("above the first tagged element, and for unknown names, the opening palette applies", () => {
   assert.equal(pickPalette([el("bloom", 600, 900)], 400), "lumen");
   assert.equal(pickPalette([el("nope", 0, 900)], 400), "lumen");
+});
+
+test("project pages use the palette of the section that lists them", () => {
+  const openSource = new Set(["jev"]);
+  assert.equal(paletteForRoute("project/jev", openSource), "lumora");
+  assert.equal(paletteForRoute("project/jarvis", openSource), "bloom");
+  assert.equal(paletteForRoute("work", openSource), "bloom");
+  assert.equal(paletteForRoute("main", openSource), null);
+  assert.equal(paletteForRoute("emet", openSource), null);
 });

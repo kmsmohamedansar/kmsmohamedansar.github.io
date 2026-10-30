@@ -12,7 +12,8 @@ import { shouldPlayIntro } from "./lib/intro";
 import { EASE_OUT } from "./lib/motion";
 import { titleForRoute } from "./lib/routeTitle";
 import { CONTACT } from "./data/content";
-import { applyPalette, clearPalette, pickPalette, PALETTES } from "./lib/palettes";
+import { applyPalette, clearPalette, paletteForRoute, pickPalette } from "./lib/palettes";
+import { OPEN_SOURCE_PROJECTS } from "./data/projects";
 import { RouteContext, SandboxContext, ScrollContext, ThemeContext, useRoute, useSandbox } from "./appContexts";
 
 const SolarSystemExplorer = lazy(() => import("./components/SolarSystemExplorer"));
@@ -231,16 +232,18 @@ function RouteLoader({ label = "Loading interactive" }) {
   return <div className="route-loader" role="status"><span aria-hidden="true" /><p>{label}</p></div>;
 }
 
-// Each section brings its own palette: whichever tagged section crosses the
-// middle of the screen sets the page's colour tokens, and :root eases
-// between them. Leaving the home page puts the opening palette back.
+// Each section brings its own palette: whichever tagged section has most
+// recently crossed the middle of the screen sets the page's colour tokens,
+// and :root eases between them. Leaving the home page clears them, and
+// useRoutePalette sets the palette for the page being opened.
 function useSectionPalette(scrollContainerRef) {
+  const { route } = useRoute();
   useEffect(() => {
     const scroller = scrollContainerRef?.current;
-    if (!scroller) return;
+    // MainDocument stays mounted through its exit animation, so key off the
+    // route rather than mount state to let go as soon as it changes.
+    if (!scroller || route !== "main") return;
     const root = document.documentElement;
-    const themeMeta = document.querySelector('meta[name="theme-color"]');
-    const initialTheme = themeMeta?.getAttribute("content");
     let current = null;
     let raf = null;
     const update = () => {
@@ -250,7 +253,6 @@ function useSectionPalette(scrollContainerRef) {
       if (name === current) return;
       current = name;
       applyPalette(root, name);
-      themeMeta?.setAttribute("content", PALETTES[name].paper);
     };
     const onScroll = () => {
       if (raf === null) raf = requestAnimationFrame(update);
@@ -263,9 +265,19 @@ function useSectionPalette(scrollContainerRef) {
       window.removeEventListener("resize", onScroll);
       if (raf !== null) cancelAnimationFrame(raf);
       clearPalette(root);
-      if (initialTheme) themeMeta.setAttribute("content", initialTheme);
     };
-  }, [scrollContainerRef]);
+  }, [route, scrollContainerRef]);
+}
+
+const OPEN_SOURCE_SLUGS = new Set(OPEN_SOURCE_PROJECTS.map((p) => p.slug));
+function useRoutePalette(route) {
+  useEffect(() => {
+    const name = paletteForRoute(route, OPEN_SOURCE_SLUGS);
+    if (!name) return;
+    const root = document.documentElement;
+    applyPalette(root, name);
+    return () => clearPalette(root);
+  }, [route]);
 }
 
 function MainDocument({ bootDone }) {
@@ -285,6 +297,7 @@ function MainDocument({ bootDone }) {
 
 function Stage({ bootDone }) {
   const { route } = useRoute();
+  useRoutePalette(route);
   const { devMode, toggleDevMode } = useSandbox();
   const scrollContainerRef = useContext(ScrollContext);
   const reduced = useReducedMotion();

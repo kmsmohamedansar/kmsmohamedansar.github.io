@@ -17,7 +17,9 @@ One scrolling page, then a detail page per project:
 The portfolio opens in warm ivory (`#e6d5bd`), near-black ink (`#101010`), and
 coral (`#d5360c`, with `#74200d` for coral text). Each later section has its own
 palette (`src/lib/palettes.js`): sections tagged `data-palette` swap the colour
-tokens as they reach the middle of the screen, and the page eases between them.
+tokens as they reach the middle of the screen, and the page eases between them
+(more briefly on phones). Project pages use the palette of the section that
+lists them, and the companion's bubble follows the current accent.
 `src/lib/palettes.test.mjs` holds every palette to AA contrast. `src/editorial.css` contains the homepage's layout and light/dark
 surfaces. Shared compatibility tokens live in `src/index.css`. The main page uses
 oversized condensed headings, illustrated covers using the original project

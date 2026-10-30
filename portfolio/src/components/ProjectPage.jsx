@@ -11,13 +11,17 @@ import ProjectMotionPreview from "./ProjectMotionPreview";
 import { EASE_REVEAL } from "../lib/motion";
 import { media } from "../lib/media";
 
+// The accent is a CSS colour (the current palette's accent ink), so its
+// translucent tints are mixed rather than built by appending hex alpha.
+const tint = (color, alpha) => `color-mix(in srgb, ${color} ${Math.round(alpha / 2.55)}%, transparent)`;
+
 /* Big headline numbers under a project's hook. */
 function StatTiles({ stats, accent }) {
   const a = ACCENTS[accent];
   return (
     <dl className="mt-6 grid grid-cols-2 gap-3 lg:grid-cols-4">
       {stats.map((s, index) => (
-        <div key={s.label} className={`project-stat-tile rounded-2xl border p-4 ${index === 0 ? "project-stat-primary" : ""}`} style={{ borderColor: `${a.hex}40`, background: `${a.hex}12` }}>
+        <div key={s.label} className={`project-stat-tile rounded-2xl border p-4 ${index === 0 ? "project-stat-primary" : ""}`} style={{ borderColor: `${tint(a.hex, 0x40)}`, background: `${tint(a.hex, 0x12)}` }}>
           <dt className="sr-only">{s.label}</dt>
           <dd className={`font-condensed text-[clamp(2rem,5vw,3rem)] leading-none ${a.text}`}>{s.value}</dd>
           <dd className="mt-2 text-sm leading-snug text-[color:var(--ink-200)]">{s.label}</dd>
@@ -45,7 +49,7 @@ function ReportCta({ cta, accent }) {
   return (
     <section
       className="mt-6 rounded-3xl border p-6 sm:p-10"
-      style={{ background: `radial-gradient(120% 120% at 100% 0%, ${a.hex}35, transparent 60%), rgba(16, 16, 16, 0.04)`, borderColor: `${a.hex}55` }}
+      style={{ background: `radial-gradient(120% 120% at 100% 0%, ${tint(a.hex, 0x35)}, transparent 60%), rgba(16, 16, 16, 0.04)`, borderColor: `${tint(a.hex, 0x55)}` }}
     >
       <p className={`font-mono text-xs uppercase tracking-[.16em] ${a.text}`}>{cta.kicker}</p>
       <h2 className="mt-3 font-display text-[clamp(1.8rem,4vw,2.8rem)] font-semibold leading-tight text-[color:var(--ink-100)]">{cta.title}</h2>
@@ -69,13 +73,12 @@ function ReportCta({ cta, accent }) {
   );
 }
 
-/* Project stories share the ivory surface and editorial typography. */
-const PAGE_TONES = ["#e6d5bd"];
+/* Project stories share the editorial typography. Their surface comes from
+   .ed-case-study, in the palette of the home page section they sit in. */
 const TITLE_STYLES = ["condensed", "serif", "mono", "display"];
 
 function pageTheme(project, index) {
   return {
-    bg: project.theme?.bg ?? PAGE_TONES[index % PAGE_TONES.length],
     title: project.theme?.title ?? TITLE_STYLES[index % TITLE_STYLES.length],
   };
 }
@@ -123,7 +126,7 @@ function BeforeAfter({ data, accent }) {
   const col = (title, items, on) => (
     <div
       className="flex-1 rounded-xl border p-4 text-sm leading-relaxed"
-      style={on ? { borderColor: `${a.hex}55`, background: `${a.hex}14` } : { borderColor: "rgba(255,255,255,.12)", background: "rgba(255,255,255,.02)" }}
+      style={on ? { borderColor: `${tint(a.hex, 0x55)}`, background: `${tint(a.hex, 0x14)}` } : { borderColor: "rgba(255,255,255,.12)", background: "rgba(255,255,255,.02)" }}
     >
       <p className={`font-mono text-micro uppercase tracking-[.14em] ${on ? a.text : "text-[color:var(--ink-300)]"}`}>{title}</p>
       <ul className={`mt-2 space-y-1.5 ${on ? "text-[color:var(--ink-100)]" : "text-[color:var(--ink-300)]"}`}>
@@ -178,7 +181,7 @@ function SummaryChart({ project }) {
             className="overflow-hidden"
           >
             <div className="flex flex-col px-5 pb-6 sm:px-7">
-              <div className={box} style={{ borderColor: `${a.hex}55`, background: `${a.hex}14` }}>
+              <div className={box} style={{ borderColor: `${tint(a.hex, 0x55)}`, background: `${tint(a.hex, 0x14)}` }}>
                 <p className={`font-mono text-micro uppercase tracking-[.14em] ${a.text}`}>Why</p>
                 <p className="mt-2 text-[color:var(--ink-100)]">{why}</p>
               </div>
@@ -201,7 +204,7 @@ function SummaryChart({ project }) {
                       {tools[n]?.length > 0 && (
                         <div className="mt-3 flex flex-wrap gap-1.5">
                           {tools[n].map((t) => (
-                            <span key={t} className="rounded-full border px-2 py-0.5 font-mono text-[.62rem] break-words" style={{ borderColor: `${a.hex}50`, color: a.hex }}>
+                            <span key={t} className="rounded-full border px-2 py-0.5 font-mono text-[.62rem] break-words" style={{ borderColor: `${tint(a.hex, 0x50)}`, color: a.hex }}>
                               {t}
                             </span>
                           ))}
@@ -216,7 +219,7 @@ function SummaryChart({ project }) {
                   <div aria-hidden="true" className="grid place-items-center py-1 text-[color:var(--ink-300)]">
                     <ArrowDown size={16} />
                   </div>
-                  <div className={box} style={{ borderColor: `${a.hex}55`, background: `${a.hex}14` }}>
+                  <div className={box} style={{ borderColor: `${tint(a.hex, 0x55)}`, background: `${tint(a.hex, 0x14)}` }}>
                     <p className={`font-mono text-micro uppercase tracking-[.14em] ${a.text}`}>Result</p>
                     <p className="mt-2 text-[color:var(--ink-100)]">{result}</p>
                   </div>
@@ -399,7 +402,7 @@ export default function ProjectPage({ slug }) {
   const summary = CASE_SUMMARIES[slug];
 
   return (
-    <div style={{ background: theme.bg }} className="ed-case-study min-h-full">
+    <div className="ed-case-study min-h-full">
     <motion.article
       initial={reduced ? false : { opacity: 0, y: 18, clipPath: "inset(0 0 5% 0 round 24px)" }}
       animate={{ opacity: 1, y: 0, clipPath: "inset(0 0 0% 0 round 24px)" }}
@@ -412,7 +415,7 @@ export default function ProjectPage({ slug }) {
 
       <header
         className="mt-5 rounded-3xl border p-6 sm:p-10"
-        style={{ background: `radial-gradient(130% 100% at 0% 0%, ${a.hex}30, transparent 62%), rgba(16, 16, 16, 0.04)`, borderColor: `${a.hex}40` }}
+        style={{ background: `radial-gradient(130% 100% at 0% 0%, ${tint(a.hex, 0x30)}, transparent 62%), rgba(16, 16, 16, 0.04)`, borderColor: `${tint(a.hex, 0x40)}` }}
       >
         <div className="flex flex-wrap items-center gap-x-4 gap-y-1 font-mono text-xs uppercase tracking-[.16em]">
           <span className={`font-semibold ${a.text}`}>{project.kind}</span>
