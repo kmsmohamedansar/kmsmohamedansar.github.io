@@ -32,17 +32,20 @@ function CountUp({ value }) {
   const [, prefix = "", digits = "", suffix = ""] = String(value).match(/^(\D*)(\d+)(.*)$/) || [];
   const target = Number(digits);
   const counts = digits && target >= 10 && digits.length < 4 && !reduced;
+  // Start most of the way there: a fast scroll past "0+" reads as a broken
+  // stat, while the last stretch still gives the number its tick.
+  const start = Math.round(target * 0.6);
   useEffect(() => {
     if (!counts || !inView || !ref.current) return;
-    const controls = animate(0, target, {
+    const controls = animate(start, target, {
       duration: Math.min(1.4, 0.7 + target / 600),
       ease: EASE_REVEAL,
       onUpdate: (v) => { if (ref.current) ref.current.textContent = `${prefix}${Math.round(v)}${suffix}`; },
     });
     return () => controls.stop();
-  }, [counts, inView, target, prefix, suffix]);
+  }, [counts, inView, start, target, prefix, suffix]);
   if (!counts) return value;
-  return <><span ref={ref} aria-hidden="true" className="ed-count">{`${prefix}${inView ? target : 0}${suffix}`}</span><span className="sr-only">{value}</span></>;
+  return <><span ref={ref} aria-hidden="true" className="ed-count">{`${prefix}${inView ? target : start}${suffix}`}</span><span className="sr-only">{value}</span></>;
 }
 function IndexLabel({ number, children }) {
   return <p className="ed-label"><span>{number}</span>{children}</p>;
@@ -65,6 +68,11 @@ const BUILT = [
   ["a catalogue checker", "embeddings", "a data quality check"],
   ["a weekly data delivery", "DuckDB", "a pipeline that stops itself"],
 ];
+const START_HERE = [
+  ["jarvis", "Jarvis", "Personal AI agent · runs on my Mac"],
+  ["haloscript", "Haloscript", "Writing app · live on the App Store"],
+  ["rea-study", "My Take on REA", "An independent AI study"],
+];
 const PROJECT_STYLES = [
   "font-serif italic text-[#74200d]",
   "font-condensed uppercase tracking-[.02em] text-[#101010]",
@@ -84,12 +92,24 @@ const TOOL_STYLES = [
    with a ResizeObserver also catches the late web-font swap. */
 function SwapWord({ text, cls, reduced }) {
   const measureRef = useRef(null);
-  const [width, setWidth] = useState(null);
+  // The slot and the words take turns so a word never runs into its
+  // neighbour or gets clipped ("HALOSCRIP"). The incoming word is only shown
+  // once it has been measured, so it knows whether to wait for the slot to
+  // open; a shorter word arrives at once and the slot closes in behind it.
+  // The slot clips top and bottom only (see .ed-swap-word) as a backstop.
+  const [{ width, grows }, setSize] = useState({ width: null, grows: false });
+  const [shown, setShown] = useState({ text, cls });
   useLayoutEffect(() => {
     const el = measureRef.current;
     if (!el) return;
-    const measure = () => setWidth(el.getBoundingClientRect().width);
+    const measure = () => {
+      const next = el.getBoundingClientRect().width;
+      setSize((size) => (size.width != null && Math.abs(next - size.width) < 0.5
+        ? size
+        : { width: next, grows: size.width != null && next > size.width }));
+    };
     measure();
+    setShown({ text, cls });
     const ro = new ResizeObserver(measure);
     ro.observe(el);
     return () => ro.disconnect();
@@ -99,19 +119,19 @@ function SwapWord({ text, cls, reduced }) {
       className="ed-swap-word"
       initial={false}
       animate={width == null ? undefined : { width }}
-      transition={reduced ? { duration: 0 } : { duration: 0.42, ease: EASE_REVEAL }}
+      transition={reduced ? { duration: 0 } : grows ? { duration: 0.24, ease: "easeOut" } : { duration: 0.3, delay: 0.2, ease: EASE_REVEAL }}
     >
       <span ref={measureRef} className={`ed-swap-measure ${cls}`} aria-hidden="true">{text}</span>
       <AnimatePresence initial={false}>
         <motion.span
-          key={text}
+          key={`${shown.text}|${shown.cls}`}
           initial={reduced ? false : { y: "120%" }}
           animate={{ y: "0%" }}
-          exit={reduced ? undefined : { y: "-120%" }}
-          transition={{ duration: 0.42, ease: EASE_REVEAL }}
-          className={`ed-swap-text ${cls}`}
+          exit={reduced ? undefined : { y: "-120%", transition: { duration: 0.3, ease: EASE_REVEAL } }}
+          transition={{ duration: 0.42, delay: grows ? 0.2 : 0, ease: EASE_REVEAL }}
+          className={`ed-swap-text ${shown.cls}`}
         >
-          {text}
+          {shown.text}
         </motion.span>
       </AnimatePresence>
       {/* Holds the line's height and baseline; the words above are absolute. */}
@@ -238,7 +258,7 @@ function ProjectPlate({ project, compact = false }) {
 function FeaturedSpread({ project, index }) {
   return <Enter className={`ed-feature ${index % 2 ? "ed-feature-reverse" : ""}`}>
     <a href={`#project/${project.slug}`} id={`card-${project.slug}`} aria-label={`Read ${project.title}${project.stats?.[0] ? `. ${project.stats[0].value} ${project.stats[0].label}` : ""}`} className="ed-feature-image"><ProjectPlate project={project} /></a>
-    <div className="ed-feature-body"><p className="ed-label"><span>0{index + 1}</span>{project.kind}</p>
+    <div className="ed-feature-body"><p className="ed-label"><span>02.{index + 1}</span>{project.kind}</p>
       <h3><a href={`#project/${project.slug}`} aria-label={project.title}><PunchTitle text={project.title} /></a></h3>
       <p className="ed-copy">{project.hook}</p>
       <p className="ed-project-status">{project.status}</p>
@@ -302,8 +322,8 @@ export function ProjectsSection() {
     <div className="ed-section-watermark" aria-hidden="true">PROJECTS</div>
     <div className="ed-wrap"><Enter className="ed-section-heading"><div><IndexLabel number="02">Selected projects</IndexLabel><h2>Things I’ve <em>built.</em></h2></div><div className="ed-heading-aside"><p>Apps, data systems, and questions I wanted to test for myself.</p><ArrowLink href="#work">The full project index</ArrowLink></div></Enter>
       <div className="ed-grid-heading"><h3>Start here.</h3><p>Three ways into the work: an AI agent, a shipped app, and an independent study.</p></div>
-      <div className="ed-start-links"><a href="#project/jarvis"><strong>Jarvis</strong><span>Personal AI agent · runs on my Mac</span></a><a href="#project/haloscript"><strong>Haloscript</strong><span>Writing app · live on the App Store</span></a><a href="#project/rea-study"><strong>REA Study</strong><span>An independent evaluation</span></a></div>
-      <div className="ed-feature-list">{SPREADS.map((project, i) => <FeaturedSpread key={project.slug} project={project} index={i} />)}<OpenSourceSpotlight number={String(SPREADS.length + 1).padStart(2, "0")} /></div>
+      <div className="ed-start-links">{START_HERE.map(([slug, title, detail]) => <a key={slug} href={`#project/${slug}`}><strong>{title}</strong><span>{detail}</span><ArrowUpRight size={20} aria-hidden="true" /></a>)}</div>
+      <div className="ed-feature-list">{SPREADS.map((project, i) => <FeaturedSpread key={project.slug} project={project} index={i} />)}<OpenSourceSpotlight number={`02.${SPREADS.length + 1}`} /></div>
       <div className="ed-grid-heading"><h3>Data work, built to hold up.</h3></div>
       <div className="ed-project-grid">{DATA_FIRST.map((project, i) => <ProjectTile key={project.slug} project={project} index={i} />)}</div>
       <div className="ed-work-list"><IndexLabel number="↳">Behind the scenes</IndexLabel><p className="ed-copy">Professional work is described without client names or private data. Public practice versions use unrelated public or sample data.</p>
@@ -345,6 +365,6 @@ export function ExperienceSection() {
 }
 export function ContactSection() {
   const { navigate } = useRoute();
-  return <section id="contact" className="ed-contact ed-light"><div className="ed-wrap"><IndexLabel number="06">Something in mind?</IndexLabel><h2>Let's make<br /><em>something work.</em></h2><div className="ed-contact-bottom"><a href={`mailto:${CONTACT.email}`} className="ed-contact-email">Say hello<ArrowUpRight aria-hidden="true" /></a><div><p>Questions about a project, or want to talk data?<br />I read every message.</p><div className="ed-socials"><a href={CONTACT.linkedin} target="_blank" rel="noopener noreferrer">LinkedIn<ExternalLink size={14} /></a><a href={CONTACT.github} target="_blank" rel="noopener noreferrer">GitHub<ExternalLink size={14} /></a><a href={`mailto:${CONTACT.email}`}><Mail size={14} />Email</a></div></div></div><footer className="ed-footer"><span>Mohamed Ansar © {new Date().getFullYear()}</span><span>Made with curiosity. And a lot of testing.</span><button onClick={() => navigate("deck")} aria-label="Back to top">Back to top ↑</button></footer></div></section>;
+  return <section id="contact" className="ed-contact ed-light"><div className="ed-wrap"><IndexLabel number="06">Something in mind?</IndexLabel><h2>Let's make<br /><em>something work.</em></h2><div className="ed-contact-bottom"><a href={`mailto:${CONTACT.email}`} className="ed-contact-email">Say hello<ArrowUpRight aria-hidden="true" /></a><div><p>Questions about a project, or want to talk data?<br />I read every message.</p><div className="ed-socials"><a href={CONTACT.linkedin} target="_blank" rel="noopener noreferrer">LinkedIn<ExternalLink size={14} /></a><a href={CONTACT.github} target="_blank" rel="noopener noreferrer">GitHub<ExternalLink size={14} /></a><a href={`mailto:${CONTACT.email}`}><Mail size={14} />Email</a>{CONTACT.resume && <a href={CONTACT.resume} target="_blank" rel="noopener noreferrer">CV (PDF)<ArrowUpRight size={14} aria-hidden="true" /></a>}</div></div></div><footer className="ed-footer"><span>Mohamed Ansar © {new Date().getFullYear()}</span><span>Made with curiosity. And a lot of testing.</span><button onClick={() => navigate("deck")} aria-label="Back to top">Back to top ↑</button></footer></div></section>;
 }
 

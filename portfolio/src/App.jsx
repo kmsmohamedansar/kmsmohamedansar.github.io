@@ -11,6 +11,7 @@ import IntroCurtain from "./components/IntroCurtain";
 import { shouldPlayIntro } from "./lib/intro";
 import { EASE_OUT } from "./lib/motion";
 import { titleForRoute } from "./lib/routeTitle";
+import { CONTACT } from "./data/content";
 import { RouteContext, SandboxContext, ScrollContext, ThemeContext, useRoute, useSandbox } from "./appContexts";
 
 const SolarSystemExplorer = lazy(() => import("./components/SolarSystemExplorer"));
@@ -189,7 +190,7 @@ function Nav() {
   }
   return <nav className="ed-nav" aria-label="Main navigation"><div className="ed-nav-inner">
     <button onClick={() => navigate("deck")} className="ed-wordmark" aria-label="Mohamed Ansar, home"><span className="ed-wordmark-symbol" aria-hidden="true">ma</span><span>mohamed ansar<small>Solutions engineer</small></span></button>
-    <div className="ed-nav-links">{editorial ? <><a href="#projects">Work</a><a href="#about" className="ed-nav-wide">About</a><a href="#experience" className="ed-nav-wide">Experience</a><a href="#contact" className="ed-nav-contact">Let's talk ↗</a></> : <button onClick={() => navigate("deck")}>← Home</button>}
+    <div className="ed-nav-links">{editorial ? <><a href="#projects">Work</a><a href="#about" className="ed-nav-wide">About</a><a href="#experience" className="ed-nav-wide">Experience</a>{CONTACT.resume && <a href={CONTACT.resume} className="ed-nav-wide" target="_blank" rel="noopener noreferrer">CV</a>}<a href="#contact" className="ed-nav-contact">Let's talk ↗</a></> : <button onClick={() => navigate("deck")}>← Home</button>}
       <button onClick={openPalette} className="ed-nav-command" aria-label="Open command palette">⌘ K</button>
     </div>
   </div></nav>;
@@ -395,23 +396,36 @@ function Backdrop() {
 
 // BB-8 brings three.js with it, the heaviest chunk on the page. Waiting for
 // the browser to go idle after the intro keeps it out of the first paint.
-function useIdleAfter(ready) {
+// The companion pulls in three.js, the heaviest thing on the page. Waiting
+// for the visitor's first scroll, tap or key (then an idle moment) keeps it
+// off the first load, and off quick bounces entirely. It only appears a few
+// seconds in anyway, so nobody sees the difference.
+const FIRST_INPUT_EVENTS = ["pointerdown", "pointermove", "wheel", "touchstart", "keydown", "scroll"];
+function useIdleAfterFirstInput(ready) {
   const [idle, setIdle] = useState(false);
   useEffect(() => {
     if (!ready) return undefined;
-    if ("requestIdleCallback" in window) {
-      const id = window.requestIdleCallback(() => setIdle(true), { timeout: 2500 });
-      return () => window.cancelIdleCallback(id);
-    }
-    const t = setTimeout(() => setIdle(true), 1200);
-    return () => clearTimeout(t);
+    let idleId = 0;
+    let timer = 0;
+    const listen = { passive: true, capture: true };
+    const start = () => {
+      FIRST_INPUT_EVENTS.forEach((name) => window.removeEventListener(name, start, listen));
+      if ("requestIdleCallback" in window) idleId = window.requestIdleCallback(() => setIdle(true), { timeout: 2500 });
+      else timer = setTimeout(() => setIdle(true), 600);
+    };
+    FIRST_INPUT_EVENTS.forEach((name) => window.addEventListener(name, start, listen));
+    return () => {
+      FIRST_INPUT_EVENTS.forEach((name) => window.removeEventListener(name, start, listen));
+      if (idleId) window.cancelIdleCallback(idleId);
+      clearTimeout(timer);
+    };
   }, [ready]);
   return idle;
 }
 
 function AppShell({ bootDone }) {
   const scrollContainerRef = useRef(null);
-  const companionReady = useIdleAfter(bootDone);
+  const companionReady = useIdleAfterFirstInput(bootDone);
   return (
     <ScrollContext.Provider value={scrollContainerRef}>
       <RouteProvider>

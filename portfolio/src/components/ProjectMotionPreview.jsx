@@ -1,4 +1,4 @@
-import { DATA_PREVIEW_PROJECTS, PREVIEWABLE_PROJECTS } from "../lib/projectMotion";
+import { DATA_PREVIEW_PROJECTS, DATA_PREVIEW_READOUTS, PREVIEWABLE_PROJECTS } from "../lib/projectMotion";
 
 const JARVIS_STEPS = ["CHECK JOB POSTINGS", "RESEARCH A COMPANY", "REVIEW GITHUB REPOS", "REMEMBER IT ALL"];
 
@@ -57,7 +57,7 @@ export default function ProjectMotionPreview({ project, active = false, expanded
       <div className={`ed-project-motion ed-motion-data ${active ? "is-active" : ""}`} aria-hidden="true">
         <span className="ed-data-table"><i /><i /><i className="is-held" /><i /></span>
         <span className="ed-data-gate" />
-        <span className="ed-data-readout">IN → CHECK → OUT</span>
+        <span className="ed-data-readout">{DATA_PREVIEW_READOUTS[project.slug]}</span>
       </div>
     );
   }

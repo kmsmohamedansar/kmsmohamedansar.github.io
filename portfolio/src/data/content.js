@@ -29,7 +29,7 @@ export const SECTION_LINKS = [
 export const ABOUT = {
   title: "What I do, and what I know",
   story: [
-    "I learned that at Amazon Prime Video. Since then I've wanted to build the systems that move and check data, not just read the results. I check my own numbers before anyone else has to.",
+    "Amazon Prime Video taught me that bad data rarely looks like an error. It looks like a confident report. Since then I've wanted to build the systems that move and check data, not just read the results. I check my own numbers before anyone else has to.",
     "Outside work I keep building. Two apps for Apple devices, two independent AI studies, data tools with honest tests, and a growing pile of things made with AI as a coding partner. None of it was assigned. It's just how I learn.",
   ],
   groups: [
@@ -74,7 +74,7 @@ export const ROLES = [
     company: "Spongelii",
     compact: true,
     logo: "/logos/spongelii.png",
-    title: "Business Development Intern, Business Analysis",
+    title: "Business Analyst Intern",
     when: "Jan to Apr 2024 · Remote, Canada",
     accent: "amber",
     summary: "Used data tools to turn business questions into reports and dashboards.",
@@ -152,15 +152,17 @@ export const EMET_TOPICS = [
     n: 3,
     label: "What have you built?",
     go: "#projects",
-    keywords: ["shipped", "built", "projects", "ios", "app", "reptrack", "swift", "demo", "extension", "chrome"],
+    keywords: ["shipped", "built", "projects", "ios", "app", "reptrack", "haloscript", "jarvis", "swift", "demo", "extension", "chrome", "study"],
     answer: [
-      { text: "The one I'm proudest of is " },
-      { text: "RepTrack", cls: "font-bold" },
-      { text: ", a workout log on the " },
+      { text: "Start with " },
+      { text: "Jarvis", cls: "font-bold" },
+      { text: ", a personal AI agent that runs on my Mac. I also have two apps on the " },
       { text: "App Store", cls: "font-bold" },
+      { text: " (Haloscript for novelists, RepTrack for workouts), " },
+      { text: "two independent AI studies", cls: "font-bold" },
       {
         text:
-          ". I also ran an independent study of open AI decision models, with a full technical report, and I build data tools that test themselves. Most have a live demo or a write-up.",
+          " with full technical reports, open-source agent skills, and data tools that test themselves. Most have a live demo or a write-up.",
       },
     ],
   },
@@ -183,6 +185,9 @@ export const CONTACT = {
   email: "mohamedansarkms@gmail.com",
   linkedin: "https://www.linkedin.com/in/kmsmohamedansar/",
   github: "https://github.com/kmsmohamedansar",
+  // Drop a PDF in public/ and point this at it ("/mohamed-ansar-cv.pdf") to
+  // show a CV link in Contact and the nav. Left empty, no link renders.
+  resume: "",
 };
 
 export const COMMAND_ITEMS = [
