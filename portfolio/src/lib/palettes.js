@@ -22,8 +22,8 @@ export const PALETTES = {
   choreo: { paper: "#e6e0f0", ink: "#2e1f16", accent: "#6f4e37", accentInk: "#6f4e37", onDark: "#cdb8e8" },
   // 05 Experience: charcoal, earth brown, burnt amber.
   field: { paper: "#e9dfcf", ink: "#090907", accent: "#b99d73", accentInk: "#6c5636", onDark: "#b99d73" },
-  // 06 Contact: ice silver, deep aubergine, marigold.
-  slow: { paper: "#dde3e8", ink: "#3a0f34", accent: "#eaaa00", accentInk: "#7a4c00", onDark: "#eaaa00" },
+  // 06 Contact, the one dark ending: midnight navy, cobalt blue, bright red.
+  blueBloom: { paper: "#e8ecf8", ink: "#021861", accent: "#de1110", accentInk: "#255dce", onDark: "#ff6b5e" },
 };
 
 export const DEFAULT_PALETTE = "lumen";
