@@ -155,7 +155,7 @@ export const DEPTH = {
       { chose: "Running on my laptop", over: "a cloud server that is always on", because: "it costs nothing and my data stays with me. The downside: it only works while my Mac is on." },
       { chose: "My existing Claude subscription", over: "a pay-per-use AI key", because: "there is no surprise bill. Jarvis refuses to run if a paid key is even present, and caps itself at 20 calls a day." },
       { chose: "Reports only", over: "letting it apply or send messages", because: "I always make the final call. It can be wrong, so it never acts for me." },
-      { chose: "Plain CSS and SVG for the dashboard", over: "a JavaScript app", because: "there is nothing to run in the browser, so there is less that can go wrong." },
+      { chose: "A hand-written canvas for the Command Lab", over: "a 3D library like three.js", because: "the whole page is one file served from my laptop. Its security policy blocks anything from the internet, so there is nothing outside to load or trust." },
     ],
     ai: {
       label: "Where AI fits",
