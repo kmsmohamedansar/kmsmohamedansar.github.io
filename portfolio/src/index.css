@@ -96,6 +96,9 @@
     outline: 2px solid currentColor;
     outline-offset: 3px;
   }
+  /* RouteProvider focuses the new page's heading so the change is announced.
+     It is not a control, so a ring around it only looks like a stray box. */
+  :where(h1, h2)[tabindex="-1"]:focus-visible { outline: none; }
   html {
     scroll-behavior: smooth;
     font-size: 18px;
