@@ -120,9 +120,9 @@ a:hover .ed-project-image { transform: scale(1.025); }
 .ed-archive li a { display: flex; justify-content: space-between; gap: 20px; padding-block: 12px; font-size: .8rem; }
 /* Black is the deliberate full-width change of pace. */
 .ed-experiments { background: var(--ed-blue); color: var(--ed-ivory); }
-.ed-experiments .ed-label > span:first-child, .ed-experience .ed-label > span:first-child { color: var(--ed-on-dark); }
+.ed-experiments .ed-label > span:first-child, .ed-experience .ed-label > span:first-child, .ed-contact .ed-label > span:first-child { color: var(--ed-on-dark); }
 /* On the dark sections the italic half of the heading carries the palette. */
-.ed-experiments h2 em, .ed-experience h2 em { color: var(--ed-on-dark); }
+.ed-experiments h2 em, .ed-experience h2 em, .ed-contact h2 em { color: var(--ed-on-dark); }
 .ed-experiment-grid { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 30px; }
 .ed-experiment { display: flex; flex-direction: column; height: 100%; }
 .ed-experiment-image { aspect-ratio: 1.25; position: relative; overflow: hidden; background: var(--ed-deep); }
@@ -158,10 +158,12 @@ a:hover .ed-experiment-image img { transform: scale(1.04); }
 .ed-role li + li { margin-top: 8px; }
 .ed-role-arrow { color: var(--ed-coral); font-size: 1.7rem; }
 .ed-role-compact h3 { font-size: 1.4rem; }
-.ed-contact { padding-block: 95px 0; scroll-margin-top: 76px; }
+/* Contact closes the page on dark, with the red button as the last event. */
+.ed-contact { padding-block: 95px 0; scroll-margin-top: 76px; background: var(--ed-deep); color: var(--ed-ivory); border-top: 1px solid color-mix(in srgb, var(--ed-ivory) 28%, transparent); }
+.ed-contact .ed-footer { border-top-color: color-mix(in srgb, var(--ed-ivory) 28%, transparent); }
 .ed-contact h2 { font-size: clamp(3.2rem,9vw,8rem); margin-top: 35px; }
 .ed-contact-bottom { margin-block: 55px 80px; display: flex; align-items: center; justify-content: space-between; gap: 50px; }
-.ed-contact-email { display: inline-flex; align-items: center; gap: 50px; background: var(--ed-coral); color: var(--ed-deep); padding: 22px 30px; font: 500 1.8rem var(--font-body); letter-spacing: -.05em; }
+.ed-contact-email { display: inline-flex; align-items: center; gap: 50px; background: var(--ed-coral); color: var(--ed-ivory); padding: 22px 30px; font: 500 1.8rem var(--font-body); letter-spacing: -.05em; }
 .ed-contact-email svg { width: 30px; height: 30px; }
 .ed-contact-bottom p { font-size: .78rem; line-height: 1.8; }
 .ed-socials { display: flex; gap: 25px; margin-top: 22px; }
@@ -408,8 +410,8 @@ a:hover .ed-poster-plate .ed-project-image { transform: rotate(0) scale(1.025); 
 .ed-feature-image:hover .ed-poster-cross, .ed-project-tile > a:hover .ed-poster-cross { transform: rotate(30deg); }
 .ed-poster-cross { transition: transform .22s var(--ease-out); }
 .ed-section + .ed-section { border-top: 1px solid var(--ed-rule); }
-.ed-contact-email { box-shadow: 8px 8px 0 var(--ed-deep); transition: transform .18s var(--ease-out), box-shadow .18s var(--ease-out); }
-.ed-contact-email:hover { transform: translate(-3px,-3px); box-shadow: 12px 12px 0 var(--ed-deep); }
+.ed-contact-email { box-shadow: 8px 8px 0 var(--ed-ivory); transition: transform .18s var(--ease-out), box-shadow .18s var(--ease-out); }
+.ed-contact-email:hover { transform: translate(-3px,-3px); box-shadow: 12px 12px 0 var(--ed-ivory); }
 @media (max-width: 640px) {
  .ed-hero::before { background-size: 100% 100%,100% 70px; }
  .ed-hero::after { right: -28%; top: 20%; opacity: .07; }
@@ -417,7 +419,7 @@ a:hover .ed-poster-plate .ed-project-image { transform: rotate(0) scale(1.025); 
  .ed-poster-cross { top: 18px; right: 20px; width: 36px; height: 36px; }
  .ed-poster-plate .ed-project-image { inset: 9% 8% 15%; width: 84%; height: 76%; }
  .ed-poster-word { font-size: clamp(4rem,24vw,7rem); }
- .ed-contact-email { box-shadow: 6px 6px 0 var(--ed-deep); }
+ .ed-contact-email { box-shadow: 6px 6px 0 var(--ed-ivory); }
 }
 @media (prefers-reduced-motion: reduce) {
  .ed-wordmark, .ed-nav-links a, .ed-poster-cross, .ed-contact-email { transition: none; }

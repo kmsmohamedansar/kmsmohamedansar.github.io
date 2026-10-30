@@ -2,8 +2,8 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 import { PALETTES, contrast, paletteForRoute, pickPalette } from "./palettes.js";
 
-test("the contact palette keeps large ink type legible on its accent button", () => {
-  assert.ok(contrast(PALETTES.slow.ink, PALETTES.slow.accent) >= 3);
+test("the contact button keeps its large light type legible on the accent", () => {
+  assert.ok(contrast(PALETTES.blueBloom.paper, PALETTES.blueBloom.accent) >= 3);
 });
 
 for (const [name, p] of Object.entries(PALETTES)) {
