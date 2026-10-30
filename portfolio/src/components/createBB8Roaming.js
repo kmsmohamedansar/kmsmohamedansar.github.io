@@ -24,6 +24,11 @@ const FIDGET_MIN_DELAY = 2600;
 const FIDGET_MAX_DELAY = 6200;
 const FIDGET_MIN_PX = 26;
 const FIDGET_MAX_PX = 86;
+// The speech bubble hangs off the side facing the page, outside the droid's
+// own box, so a parking spot has to leave room for it too.
+const BUBBLE_ALLOWANCE = 160;
+// Matches updateElement: left of this the guide and bubble open to the right.
+const UI_FLIP_X = 270;
 
 function clamp(value, min, max) {
   return Math.min(max, Math.max(min, value));
@@ -75,10 +80,12 @@ export function contentPenaltyFor(candidate, bounds, element, {
   documentRef = document,
   viewportWidth = window.innerWidth,
   viewportHeight = window.innerHeight,
+  bubbleWidth = 0,
 } = {}) {
+  const bubbleOnRight = candidate.x < UI_FLIP_X;
   const footprint = {
-    left: candidate.x + bounds.width * 0.08,
-    right: candidate.x + bounds.width * 0.92,
+    left: candidate.x + bounds.width * 0.08 - (bubbleOnRight ? 0 : bubbleWidth),
+    right: candidate.x + bounds.width * 0.92 + (bubbleOnRight ? bubbleWidth : 0),
     top: candidate.y + bounds.height * 0.02,
     bottom: candidate.y + bounds.height * 0.96,
   };
@@ -141,17 +148,16 @@ export function pickWaypointFor(bounds, position, scoreCandidate, {
   }
 
   const safeCandidates = [];
-  let best = candidates[0];
-  let bestPenalty = Infinity;
-  for (const candidate of candidates) {
+  const penalties = candidates.map((candidate) => {
     const penalty = scoreCandidate(candidate);
     if (penalty === 0) safeCandidates.push(candidate);
-    else if (penalty < bestPenalty) {
-      best = candidate;
-      bestPenalty = penalty;
-    }
-  }
-  if (!safeCandidates.length) return best;
+    return penalty;
+  });
+  // Nowhere is clear, which is most of a dense page. Parking on the "least
+  // bad" spot mid-column still sat on top of copy, so wait in whichever
+  // bottom corner covers less instead: that is where people expect a widget.
+  // A tie goes right, where left-aligned copy has its ragged, shorter ends.
+  if (!safeCandidates.length) return penalties[0] < penalties[1] ? candidates[0] : candidates[1];
   const minimumTravel = Math.min(viewportWidth * 0.22, 240);
   const distant = safeCandidates.filter((candidate) => Math.hypot(candidate.x - position.x, candidate.y - position.y) >= minimumTravel);
   const pool = distant.length ? distant : safeCandidates;
@@ -206,7 +212,7 @@ export function createBB8Roaming(element, {
     element.style.transform = `translate3d(${position.x.toFixed(2)}px, ${position.y.toFixed(2)}px, 0)`;
     // The guide normally opens to the droid's left. Near the left edge it
     // flips to the right, and the smaller speech bubble mirrors with it.
-    const nextUiOnRight = position.x < 270;
+    const nextUiOnRight = position.x < UI_FLIP_X;
     element.classList.toggle("bb8-edge--ui-right", nextUiOnRight);
     if (nextUiOnRight !== uiOnRight) {
       uiOnRight = nextUiOnRight;
@@ -225,7 +231,7 @@ export function createBB8Roaming(element, {
     // hit-test stack at a few body points. The portfolio's particle canvas can
     // sit above the hero copy, so inspecting only elementFromPoint's first
     // result would incorrectly treat that headline as empty space.
-    return contentPenaltyFor(candidate, bounds, element);
+    return contentPenaltyFor(candidate, bounds, element, { bubbleWidth: BUBBLE_ALLOWANCE });
   }
 
   function pickWaypoint() {

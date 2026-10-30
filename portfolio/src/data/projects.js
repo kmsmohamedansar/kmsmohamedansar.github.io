@@ -1003,7 +1003,7 @@ export const PROJECTS = [
       { value: "23", label: "issues found by two independent Codex audits, all fixed and covered by tests", short: "audit findings fixed" },
       { value: "453", label: "automated tests run on Linux and macOS for every change", short: "automated tests" },
     ],
-    hook: "A personal AI agent that lives on my laptop. It checks job postings against my profile, researches companies and ideas, reviews my GitHub repos, and remembers everything it did. It costs nothing on top of the subscriptions I already pay for.",
+    hook: "A personal AI agent that lives on my Mac. It checks job postings against my profile, researches companies and ideas, reviews my GitHub repos, and remembers everything it did. It costs nothing on top of the subscriptions I already pay for.",
     role: "Built on my own, with Claude Code as the engine and Codex as an outside reviewer.",
     tags: ["AI agents", "Claude Code", "Python", "Local-first"],
     stack: ["Claude Code", "Python", "SQLite", "GitHub Actions", "Codex", "HTML, CSS and Canvas"],

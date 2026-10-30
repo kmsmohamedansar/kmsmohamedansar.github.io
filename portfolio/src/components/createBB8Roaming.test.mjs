@@ -109,6 +109,33 @@ test("pickWaypointFor chooses the safe lane and keeps phones on the bottom", () 
   assert.deepEqual(picked, { x: 286, y: 376 });
 });
 
+test("pickWaypointFor waits in the clearer bottom corner when nowhere is safe", () => {
+  const bounds = { width: 120, height: 160, maxX: 666, maxY: 436 };
+  const picked = pickWaypointFor(
+    bounds,
+    { x: 14, y: 436 },
+    (candidate) => (candidate.x === 666 && candidate.y === 436 ? 1 : 5),
+    { random: () => 0.5, viewportWidth: 800, viewportHeight: 600 },
+  );
+  assert.deepEqual(picked, { x: 666, y: 436 });
+});
+
+test("contentPenaltyFor counts the speech bubble beside the droid", () => {
+  const copy = {
+    getBoundingClientRect: () => ({ left: 380, right: 470, top: 300, bottom: 340, width: 90, height: 40 }),
+    matches: () => false,
+  };
+  const element = { contains: () => false };
+  const documentRef = {
+    querySelectorAll: (selector) => (selector === "canvas" ? [] : [copy]),
+    elementsFromPoint: () => [],
+  };
+  const bounds = { width: 120, height: 160 };
+  const options = { documentRef, viewportWidth: 800, viewportHeight: 600 };
+  assert.equal(contentPenaltyFor({ x: 480, y: 260 }, bounds, element, options), 0);
+  assert.ok(contentPenaltyFor({ x: 480, y: 260 }, bounds, element, { ...options, bubbleWidth: 160 }) > 0);
+});
+
 test("reduced motion starts parked and schedules no roaming frames", () => {
   const previousWindow = global.window;
   const previousDocument = global.document;

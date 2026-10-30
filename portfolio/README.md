@@ -14,8 +14,8 @@ One scrolling page, then a detail page per project:
 5. **Experience**.
 6. **Contact**.
 
-The portfolio uses warm ivory (`#EAE6DE`), editorial blue (`#226192`), and
-coral (`#EF8557`). `src/editorial.css` contains the homepage's layout and light/dark
+The portfolio uses warm ivory (`#e6d5bd`), near-black ink (`#101010`), and
+coral (`#d5360c`, with `#74200d` for coral text). `src/editorial.css` contains the homepage's layout and light/dark
 surfaces. Shared compatibility tokens live in `src/index.css`. The main page uses
 oversized condensed headings, illustrated covers using the original project
 icons, an open project grid, an experience timeline, and a blue
