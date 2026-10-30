@@ -17,10 +17,10 @@ const revealImage = (event) => event.currentTarget.classList.add("is-loaded");
 
 // "is-in" lets CSS run the slower media reveals (cover apertures, image
 // settle) off the same trigger as the fade, so both start together.
-function Enter({ children, className = "", delay = 0 }) {
+function Enter({ children, className = "", delay = 0, ...rest }) {
   const reduced = useReducedMotion();
   const [shown, setShown] = useState(false);
-  return <motion.div className={`${className} ${shown || reduced ? "is-in" : ""}`} initial={reduced ? false : { opacity: 0, y: 12 }} whileInView={{ opacity: 1, y: 0 }} onViewportEnter={() => setShown(true)} viewport={{ once: true, amount: 0, margin: "0px 0px 20% 0px" }} transition={{ duration: 0.3, delay: Math.min(delay, 0.06), ease: EASE_REVEAL }}>{children}</motion.div>;
+  return <motion.div {...rest} className={`${className} ${shown || reduced ? "is-in" : ""}`} initial={reduced ? false : { opacity: 0, y: 12 }} whileInView={{ opacity: 1, y: 0 }} onViewportEnter={() => setShown(true)} viewport={{ once: true, amount: 0, margin: "0px 0px 20% 0px" }} transition={{ duration: 0.3, delay: Math.min(delay, 0.06), ease: EASE_REVEAL }}>{children}</motion.div>;
 }
 /* A stat that counts up the first time it comes into view. Small numbers
    and years print as they are: counting to 2, or from 0 to 2019, reads as
@@ -174,7 +174,7 @@ export function Hero({ ready = true }) {
   const [settled, setSettled] = useState(false);
   const onSettled = useCallback(() => setSettled(true), []);
   return <>
-    <section ref={heroRef} id="hero" aria-labelledby="hero-name" className="ed-hero ed-light">
+    <section ref={heroRef} id="hero" aria-labelledby="hero-name" className="ed-hero ed-light" data-palette="lumen">
       <div className="ed-hero-meta"><span>Mohamed Ansar / Selected work</span><span>Solutions engineer · Canada</span></div>
       <h1 id="hero-name" className="sr-only">Hi, I'm Mohamed Ansar</h1>
       <div className="ed-hero-canvas"><NameParticles ready={ready} onSettled={onSettled} /></div>
@@ -187,7 +187,7 @@ export function Hero({ ready = true }) {
       </div>
       <div className="ed-hero-edge" aria-hidden="true"><span>DATA / APPS / EXPERIMENTS</span><span>A little curiosity goes a long way.</span></div>
     </section>
-    <section className="ed-intro ed-light" aria-label="What I build">
+    <section className="ed-intro ed-light" aria-label="What I build" data-palette="lumen">
       <div className="ed-wrap">
         <Enter className="ed-intro-grid">
           <IndexLabel number="01">A bit of context</IndexLabel>
@@ -284,7 +284,7 @@ function OpenSourceProject({ project }) {
 
 // Keep every project story discoverable while the two collections stay compact.
 function OpenSourceSpotlight({ number }) {
-  return <Enter className="ed-open-source" >
+  return <Enter className="ed-open-source" data-palette="lumora">
     <div className="ed-open-source-heading">
       <div><p className="ed-label"><span>{number}</span>Open source & experiments</p><h3>Test the claim.<br /><em>Share the method.</em></h3></div>
       <p>Independent studies and reusable agent tools.<br />The evidence, code and limits stay public.</p>
@@ -318,7 +318,7 @@ const GRID_ORDER = ["data-delivery", "integration", "analytics-assistant", "cata
 const DATA_FIRST = GRID_ORDER.map((slug) => FEATURED_GRID.find((p) => p.slug === slug)).filter(Boolean)
   .concat(FEATURED_GRID.filter((p) => !GRID_ORDER.includes(p.slug) && p.slug !== "reptrack"));
 export function ProjectsSection() {
-  return <section id="projects" className="ed-projects ed-light ed-section">
+  return <section id="projects" className="ed-projects ed-light ed-section" data-palette="bloom">
     <div className="ed-section-watermark" aria-hidden="true">PROJECTS</div>
     <div className="ed-wrap"><Enter className="ed-section-heading"><div><IndexLabel number="02">Selected projects</IndexLabel><h2>Things I’ve <em>built.</em></h2></div><div className="ed-heading-aside"><p>Apps, data systems, and questions I wanted to test for myself.</p><ArrowLink href="#work">The full project index</ArrowLink></div></Enter>
       <div className="ed-grid-heading"><h3>Start here.</h3><p>Three ways into the work: an AI agent, a shipped app, and an independent study.</p></div>
@@ -341,7 +341,7 @@ function ExperimentImage({ experiment }) {
 }
 
 export function ExperimentsSection() {
-  return <section id="ai" className="ed-experiments ed-section"><div className="ed-wrap">
+  return <section id="ai" className="ed-experiments ed-section" data-palette="neon"><div className="ed-wrap">
     <Enter className="ed-section-heading"><div><IndexLabel number="03">The curiosity department</IndexLabel><h2>What if<br /><em>I tried this?</em></h2></div><p className="ed-heading-aside">Small experiments, made with AI as a coding partner. Open one and have a play.</p></Enter>
     <div className="ed-experiment-grid">{EXPERIMENTS.map((experiment, i) => <Enter key={experiment.id} delay={i * 0.07}><a href={experiment.href} className="ed-experiment"><div className="ed-experiment-image"><ExperimentImage experiment={experiment} /><span>0{i + 1} / Interactive</span></div><div className="ed-experiment-title"><h3>{experiment.title}</h3><ArrowUpRight size={22} /></div><p>{experiment.hook}</p><span className="ed-experiment-cta">{experiment.cta}<ArrowRight size={16} /></span></a></Enter>)}</div>
   </div></section>;
@@ -353,18 +353,18 @@ function SkillGroup({ group }) {
   return <div className="ed-skill-group"><h3>{group.title}</h3><div className="ed-skills">{group.items.map((item) => <button key={item} type="button" aria-expanded={active === item} aria-controls={id} onClick={() => setActive((value) => value === item ? null : item)}>{item}{TOOL_INFO[item] && <Info size={12} aria-hidden="true" />}</button>)}</div><div id={id} aria-live="polite">{active && TOOL_INFO[active] && <p className="ed-skill-definition"><strong>{active}.</strong> {TOOL_INFO[active]}</p>}</div></div>;
 }
 export function AboutSection() {
-  return <section id="about" className="ed-about ed-light ed-section"><div className="ed-wrap ed-about-grid">
+  return <section id="about" className="ed-about ed-light ed-section" data-palette="choreo"><div className="ed-wrap ed-about-grid">
     <Enter><IndexLabel number="04">The person behind the projects</IndexLabel><h2>Always<br /><em>learning.</em><br />Usually<br />building.</h2><div className="ed-about-mark" aria-hidden="true">ma<span>✳</span></div></Enter>
     <div><Enter className="ed-about-story">{ABOUT.story.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}</Enter><div className="ed-skill-groups">{ABOUT.groups.map((group) => <SkillGroup key={group.title} group={group} />)}</div></div>
   </div></section>;
 }
 export function ExperienceSection() {
-  return <section id="experience" className="ed-experience ed-section"><div className="ed-wrap"><Enter className="ed-section-heading"><div><IndexLabel number="05">Experience</IndexLabel><h2>The path<br /><em>so far.</em></h2></div><p className="ed-heading-aside">From checking content catalogues to working with retail pricing data. More responsibility. More things to figure out.</p></Enter>
+  return <section id="experience" className="ed-experience ed-section" data-palette="field"><div className="ed-wrap"><Enter className="ed-section-heading"><div><IndexLabel number="05">Experience</IndexLabel><h2>The path<br /><em>so far.</em></h2></div><p className="ed-heading-aside">From checking content catalogues to working with retail pricing data. More responsibility. More things to figure out.</p></Enter>
     <div className="ed-timeline">{ROLES.map((role) => <Enter key={role.company + role.title} className={`ed-role ${role.compact ? "ed-role-compact" : ""}`}><div className="ed-role-when"><span>{role.when}</span>{role.current && <b>Currently here</b>}</div><div><p className="ed-role-company">{role.company}</p><h3>{role.title}</h3>{!role.compact && <><p className="ed-role-summary">{role.summary}</p><ul>{role.bullets.map((bullet) => <li key={bullet}>{bullet}</li>)}</ul></>}</div><span className="ed-role-arrow" aria-hidden="true">↗</span></Enter>)}</div>
   </div></section>;
 }
 export function ContactSection() {
   const { navigate } = useRoute();
-  return <section id="contact" className="ed-contact ed-light"><div className="ed-wrap"><IndexLabel number="06">Something in mind?</IndexLabel><h2>Let's make<br /><em>something work.</em></h2><div className="ed-contact-bottom"><a href={`mailto:${CONTACT.email}`} className="ed-contact-email">Say hello<ArrowUpRight aria-hidden="true" /></a><div><p>Questions about a project, or want to talk data?<br />I read every message.</p><div className="ed-socials"><a href={CONTACT.linkedin} target="_blank" rel="noopener noreferrer">LinkedIn<ExternalLink size={14} /></a><a href={CONTACT.github} target="_blank" rel="noopener noreferrer">GitHub<ExternalLink size={14} /></a><a href={`mailto:${CONTACT.email}`}><Mail size={14} />Email</a>{CONTACT.resume && <a href={CONTACT.resume} target="_blank" rel="noopener noreferrer">CV (PDF)<ArrowUpRight size={14} aria-hidden="true" /></a>}</div></div></div><footer className="ed-footer"><span>Mohamed Ansar © {new Date().getFullYear()}</span><span>Made with curiosity. And a lot of testing.</span><button onClick={() => navigate("deck")} aria-label="Back to top">Back to top ↑</button></footer></div></section>;
+  return <section id="contact" className="ed-contact ed-light" data-palette="slow"><div className="ed-wrap"><IndexLabel number="06">Something in mind?</IndexLabel><h2>Let's make<br /><em>something work.</em></h2><div className="ed-contact-bottom"><a href={`mailto:${CONTACT.email}`} className="ed-contact-email">Say hello<ArrowUpRight aria-hidden="true" /></a><div><p>Questions about a project, or want to talk data?<br />I read every message.</p><div className="ed-socials"><a href={CONTACT.linkedin} target="_blank" rel="noopener noreferrer">LinkedIn<ExternalLink size={14} /></a><a href={CONTACT.github} target="_blank" rel="noopener noreferrer">GitHub<ExternalLink size={14} /></a><a href={`mailto:${CONTACT.email}`}><Mail size={14} />Email</a>{CONTACT.resume && <a href={CONTACT.resume} target="_blank" rel="noopener noreferrer">CV (PDF)<ArrowUpRight size={14} aria-hidden="true" /></a>}</div></div></div><footer className="ed-footer"><span>Mohamed Ansar © {new Date().getFullYear()}</span><span>Made with curiosity. And a lot of testing.</span><button onClick={() => navigate("deck")} aria-label="Back to top">Back to top ↑</button></footer></div></section>;
 }
 

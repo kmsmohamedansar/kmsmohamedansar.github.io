@@ -14,11 +14,14 @@ One scrolling page, then a detail page per project:
 5. **Experience**.
 6. **Contact**.
 
-The portfolio uses warm ivory (`#e6d5bd`), near-black ink (`#101010`), and
-coral (`#d5360c`, with `#74200d` for coral text). `src/editorial.css` contains the homepage's layout and light/dark
+The portfolio opens in warm ivory (`#e6d5bd`), near-black ink (`#101010`), and
+coral (`#d5360c`, with `#74200d` for coral text). Each later section has its own
+palette (`src/lib/palettes.js`): sections tagged `data-palette` swap the colour
+tokens as they reach the middle of the screen, and the page eases between them.
+`src/lib/palettes.test.mjs` holds every palette to AA contrast. `src/editorial.css` contains the homepage's layout and light/dark
 surfaces. Shared compatibility tokens live in `src/index.css`. The main page uses
 oversized condensed headings, illustrated covers using the original project
-icons, an open project grid, an experience timeline, and a blue
+icons, an open project grid, an experience timeline, and a dark
 interactive experiments section. The particle name-to-statement sequence and
 rotating project/tool line remain in the opening. The terminal and 3D scenes
 keep their own colors. The opening pauses offscreen and in hidden tabs, caps
