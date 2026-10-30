@@ -12,6 +12,7 @@ import { shouldPlayIntro } from "./lib/intro";
 import { EASE_OUT } from "./lib/motion";
 import { titleForRoute } from "./lib/routeTitle";
 import { CONTACT } from "./data/content";
+import { applyPalette, clearPalette, pickPalette, PALETTES } from "./lib/palettes";
 import { RouteContext, SandboxContext, ScrollContext, ThemeContext, useRoute, useSandbox } from "./appContexts";
 
 const SolarSystemExplorer = lazy(() => import("./components/SolarSystemExplorer"));
@@ -230,8 +231,46 @@ function RouteLoader({ label = "Loading interactive" }) {
   return <div className="route-loader" role="status"><span aria-hidden="true" /><p>{label}</p></div>;
 }
 
+// Each section brings its own palette: whichever tagged section crosses the
+// middle of the screen sets the page's colour tokens, and :root eases
+// between them. Leaving the home page puts the opening palette back.
+function useSectionPalette(scrollContainerRef) {
+  useEffect(() => {
+    const scroller = scrollContainerRef?.current;
+    if (!scroller) return;
+    const root = document.documentElement;
+    const themeMeta = document.querySelector('meta[name="theme-color"]');
+    const initialTheme = themeMeta?.getAttribute("content");
+    let current = null;
+    let raf = null;
+    const update = () => {
+      raf = null;
+      const box = scroller.getBoundingClientRect();
+      const name = pickPalette(scroller.querySelectorAll("[data-palette]"), box.top + scroller.clientHeight * 0.5);
+      if (name === current) return;
+      current = name;
+      applyPalette(root, name);
+      themeMeta?.setAttribute("content", PALETTES[name].paper);
+    };
+    const onScroll = () => {
+      if (raf === null) raf = requestAnimationFrame(update);
+    };
+    update();
+    scroller.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll);
+    return () => {
+      scroller.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onScroll);
+      if (raf !== null) cancelAnimationFrame(raf);
+      clearPalette(root);
+      if (initialTheme) themeMeta.setAttribute("content", initialTheme);
+    };
+  }, [scrollContainerRef]);
+}
+
 function MainDocument({ bootDone }) {
   const scrollContainerRef = useContext(ScrollContext);
+  useSectionPalette(scrollContainerRef);
   return (
     <>
       <Hero ready={bootDone} scrollContainerRef={scrollContainerRef} />
