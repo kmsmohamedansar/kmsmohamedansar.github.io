@@ -8,6 +8,7 @@ import SandboxStubs from "./components/SandboxStubs";
 import CommandPalette from "./components/CommandPalette";
 import { MatrixBackground } from "./components/RouteBackgrounds";
 import IntroCurtain from "./components/IntroCurtain";
+import PaletteSwatch from "./components/PaletteSwatch";
 import { shouldPlayIntro } from "./lib/intro";
 import { EASE_OUT } from "./lib/motion";
 import { titleForRoute } from "./lib/routeTitle";
@@ -487,6 +488,7 @@ function AppShell({ bootDone }) {
             <a className="skip-link" href="#main-content" onClick={(event) => { event.preventDefault(); document.getElementById("main-content")?.focus(); }}>Skip to main content</a>
             <Nav />
             <ScrollProgress />
+            <PaletteSwatch />
             {companionReady && <Suspense fallback={null}><BB8Companion /></Suspense>}
             {/* No page-level `perspective` here on purpose: setting it on an
                 ancestor this high up turns it into the CSS containing block
