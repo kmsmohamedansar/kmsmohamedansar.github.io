@@ -1,5 +1,5 @@
-import { useCallback, useEffect, useRef, useState } from "react";
-import { AnimatePresence, motion, useReducedMotion, useInView } from "framer-motion";
+import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
+import { AnimatePresence, animate, motion, useReducedMotion, useInView } from "framer-motion";
 import { ArrowDown, ArrowRight, ArrowUpRight, ExternalLink, Info, Mail } from "lucide-react";
 import NameParticles from "./NameParticles";
 import ProjectMotionPreview from "./ProjectMotionPreview";
@@ -15,9 +15,34 @@ import "../editorial.css";
 const firstSentence = (text) => text.match(/[^.!?]+[.!?]+(?:\s|$)/)?.[0]?.trim() || text;
 const revealImage = (event) => event.currentTarget.classList.add("is-loaded");
 
+// "is-in" lets CSS run the slower media reveals (cover apertures, image
+// settle) off the same trigger as the fade, so both start together.
 function Enter({ children, className = "", delay = 0 }) {
   const reduced = useReducedMotion();
-  return <motion.div className={className} initial={reduced ? false : { opacity: 0, y: 12 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, amount: 0, margin: "0px 0px 20% 0px" }} transition={{ duration: 0.3, delay: Math.min(delay, 0.06), ease: EASE_REVEAL }}>{children}</motion.div>;
+  const [shown, setShown] = useState(false);
+  return <motion.div className={`${className} ${shown || reduced ? "is-in" : ""}`} initial={reduced ? false : { opacity: 0, y: 12 }} whileInView={{ opacity: 1, y: 0 }} onViewportEnter={() => setShown(true)} viewport={{ once: true, amount: 0, margin: "0px 0px 20% 0px" }} transition={{ duration: 0.3, delay: Math.min(delay, 0.06), ease: EASE_REVEAL }}>{children}</motion.div>;
+}
+/* A stat that counts up the first time it comes into view. Small numbers
+   and years print as they are: counting to 2, or from 0 to 2019, reads as
+   noise. Screen readers get the final value only. */
+function CountUp({ value }) {
+  const reduced = useReducedMotion();
+  const ref = useRef(null);
+  const inView = useInView(ref, { once: true, margin: "0px 0px -10% 0px" });
+  const [, prefix = "", digits = "", suffix = ""] = String(value).match(/^(\D*)(\d+)(.*)$/) || [];
+  const target = Number(digits);
+  const counts = digits && target >= 10 && digits.length < 4 && !reduced;
+  useEffect(() => {
+    if (!counts || !inView || !ref.current) return;
+    const controls = animate(0, target, {
+      duration: Math.min(1.4, 0.7 + target / 600),
+      ease: EASE_REVEAL,
+      onUpdate: (v) => { if (ref.current) ref.current.textContent = `${prefix}${Math.round(v)}${suffix}`; },
+    });
+    return () => controls.stop();
+  }, [counts, inView, target, prefix, suffix]);
+  if (!counts) return value;
+  return <><span ref={ref} aria-hidden="true" className="ed-count">{`${prefix}${inView ? target : 0}${suffix}`}</span><span className="sr-only">{value}</span></>;
 }
 function IndexLabel({ number, children }) {
   return <p className="ed-label"><span>{number}</span>{children}</p>;
@@ -52,6 +77,49 @@ const TOOL_STYLES = [
   "font-mono font-semibold text-[#74200d]",
 ];
 
+/* One swapping word. The slot eases to the incoming word's width while the
+   old word leaves upward and the new one rises in, so the rest of the
+   sentence glides instead of jumping, and neither word ever leaves a gap.
+   A hidden copy of the incoming word is what gets measured; watching it
+   with a ResizeObserver also catches the late web-font swap. */
+function SwapWord({ text, cls, reduced }) {
+  const measureRef = useRef(null);
+  const [width, setWidth] = useState(null);
+  useLayoutEffect(() => {
+    const el = measureRef.current;
+    if (!el) return;
+    const measure = () => setWidth(el.getBoundingClientRect().width);
+    measure();
+    const ro = new ResizeObserver(measure);
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, [text, cls]);
+  return (
+    <motion.span
+      className="ed-swap-word"
+      initial={false}
+      animate={width == null ? undefined : { width }}
+      transition={reduced ? { duration: 0 } : { duration: 0.42, ease: EASE_REVEAL }}
+    >
+      <span ref={measureRef} className={`ed-swap-measure ${cls}`} aria-hidden="true">{text}</span>
+      <AnimatePresence initial={false}>
+        <motion.span
+          key={text}
+          initial={reduced ? false : { y: "120%" }}
+          animate={{ y: "0%" }}
+          exit={reduced ? undefined : { y: "-120%" }}
+          transition={{ duration: 0.42, ease: EASE_REVEAL }}
+          className={`ed-swap-text ${cls}`}
+        >
+          {text}
+        </motion.span>
+      </AnimatePresence>
+      {/* Holds the line's height and baseline; the words above are absolute. */}
+      <span className="ed-swap-strut" aria-hidden="true">{"\u00a0"}</span>
+    </motion.span>
+  );
+}
+
 /* "I built RepTrack with Swift." The project and tool swap every few
    seconds, each rising in from below in a new font and colour. */
 function BuiltLine({ run }) {
@@ -63,27 +131,11 @@ function BuiltLine({ run }) {
     return () => clearInterval(id);
   }, [run, reduced]);
   const [project, tool, what] = BUILT[i];
-  const word = (text, cls, key) => (
-    <span className="relative inline-grid overflow-hidden align-bottom px-1 -mx-1 pb-[.12em] -mb-[.12em]">
-      <AnimatePresence mode="popLayout" initial={false}>
-        <motion.span
-          key={key}
-          initial={reduced ? false : { y: "110%", opacity: 0 }}
-          animate={{ y: "0%", opacity: 1 }}
-          exit={reduced ? undefined : { y: "-110%", opacity: 0 }}
-          transition={{ duration: 0.32, ease: EASE_REVEAL }}
-          className={`inline-block whitespace-nowrap ${cls}`}
-        >
-          {text}
-        </motion.span>
-      </AnimatePresence>
-    </span>
-  );
   return (
     <div>
       <p className="font-display text-[clamp(1.25rem,2.4vw,2rem)] leading-snug text-[#101010]">
-        I built {word(project, PROJECT_STYLES[i % PROJECT_STYLES.length], "p" + i)} with{" "}
-        {word(tool, TOOL_STYLES[i % TOOL_STYLES.length], "t" + i)}
+        I built <SwapWord text={project} cls={PROJECT_STYLES[i % PROJECT_STYLES.length]} reduced={reduced} /> with{" "}
+        <SwapWord text={tool} cls={TOOL_STYLES[i % TOOL_STYLES.length]} reduced={reduced} />
       </p>
       <p className="mt-2 font-mono text-xs uppercase tracking-[.18em] text-[#51463c]">
         <span className="sr-only">That's </span>
@@ -125,7 +177,7 @@ export function Hero({ ready = true }) {
             <ArrowLink href="#about">More about me</ArrowLink>
           </div>
         </Enter>
-        <dl className="ed-receipts">{RECEIPTS.map((item) => <div key={item.label}><dt>{item.value === "PROJECTS" ? `${LISTED_PROJECTS.length}+` : item.value}</dt><dd>{item.label}</dd></div>)}</dl>
+        <dl className="ed-receipts">{RECEIPTS.map((item) => <div key={item.label}><dt><CountUp value={item.value === "PROJECTS" ? `${LISTED_PROJECTS.length}+` : item.value} /></dt><dd>{item.label}</dd></div>)}</dl>
       </div>
     </section>
   </>;
@@ -191,7 +243,7 @@ function FeaturedSpread({ project, index }) {
       <p className="ed-copy">{project.hook}</p>
       <p className="ed-project-status">{project.status}</p>
       {project.companions?.map((companion) => <a key={companion.slug} href={`#project/${companion.slug}`} className="ed-companion-link">{companion.label}<ArrowUpRight size={16} aria-hidden="true" /></a>)}
-      {project.stats && <dl className="ed-project-stats">{project.stats.map((stat) => <div key={stat.label}><dt>{stat.value}</dt><dd>{stat.short || stat.label}</dd></div>)}</dl>}
+      {project.stats && <dl className="ed-project-stats">{project.stats.map((stat) => <div key={stat.label}><dt><CountUp value={stat.value} /></dt><dd>{stat.short || stat.label}</dd></div>)}</dl>}
       <ArrowLink href={`#project/${project.slug}`}>Read the story</ArrowLink>
     </div>
   </Enter>;

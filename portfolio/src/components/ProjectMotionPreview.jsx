@@ -1,4 +1,6 @@
-import { PREVIEWABLE_PROJECTS } from "../lib/projectMotion";
+import { DATA_PREVIEW_PROJECTS, PREVIEWABLE_PROJECTS } from "../lib/projectMotion";
+
+const JARVIS_STEPS = ["CHECK JOB POSTINGS", "RESEARCH A COMPANY", "REVIEW GITHUB REPOS", "REMEMBER IT ALL"];
 
 export default function ProjectMotionPreview({ project, active = false, expanded = false }) {
   if (!PREVIEWABLE_PROJECTS.has(project.slug)) return null;
@@ -34,6 +36,28 @@ export default function ProjectMotionPreview({ project, active = false, expanded
         <span className="ed-halo-card ed-halo-card-draft">DRAFT</span>
         <span className="ed-halo-card ed-halo-card-board">WHITEBOARD</span>
         <span className="ed-halo-sync">ICLOUD / SYNCED</span>
+      </div>
+    );
+  }
+
+  if (project.slug === "jarvis") {
+    return (
+      <div className={`ed-project-motion ed-motion-jarvis ${active ? "is-active" : ""} ${expanded ? "is-expanded" : ""}`} aria-hidden="true">
+        <span className="ed-jarvis-cap">20 / DAY · LOCAL</span>
+        <span className="ed-jarvis-log">
+          <b>JARVIS ›</b>
+          {JARVIS_STEPS.map((step) => <i key={step}>{step}</i>)}
+        </span>
+      </div>
+    );
+  }
+
+  if (DATA_PREVIEW_PROJECTS.has(project.slug)) {
+    return (
+      <div className={`ed-project-motion ed-motion-data ${active ? "is-active" : ""}`} aria-hidden="true">
+        <span className="ed-data-table"><i /><i /><i className="is-held" /><i /></span>
+        <span className="ed-data-gate" />
+        <span className="ed-data-readout">IN → CHECK → OUT</span>
       </div>
     );
   }
