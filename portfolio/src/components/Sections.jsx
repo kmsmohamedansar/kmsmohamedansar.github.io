@@ -215,7 +215,7 @@ export function Hero({ ready = true }) {
       {staticHero && <p className={reduced ? "ed-static-statement" : "ed-mobile-statement"}>{HERO.title}</p>}
       <div className="ed-hero-bottom">
         <motion.div initial={reduced ? false : { opacity: 0, y: 12 }} animate={settled || reduced ? { opacity: 1, y: 0 } : { opacity: 0, y: 12 }} transition={{ duration: 0.28 }}><BuiltLine run={(settled || reduced) && visible} /></motion.div>
-        <a href="#projects" className="ed-scroll-link">Explore the work <ArrowDown size={20} aria-hidden="true" /></a>
+        <div className="ed-hero-actions"><a href="#projects" className="ed-scroll-link">Explore the work <ArrowDown size={20} aria-hidden="true" /></a><a href="#work" className="ed-hero-index">Browse all projects ↗</a></div>
       </div>
       <div className="ed-hero-edge" aria-hidden="true"><span>DATA / APPS / EXPERIMENTS</span><span>A little curiosity goes a long way.</span></div>
     </section>

@@ -188,15 +188,30 @@ function SandboxProvider({ children }) {
 function Nav() {
   const { route, navigate } = useRoute();
   const editorial = route === "main";
+  const [menuOpen, setMenuOpen] = useState(false);
+  const menuButton = useRef(null);
+  useEffect(() => {
+    const closeMenu = () => setMenuOpen(false);
+    window.addEventListener("hashchange", closeMenu);
+    return () => window.removeEventListener("hashchange", closeMenu);
+  }, []);
   function openPalette() {
     window.dispatchEvent(new KeyboardEvent("keydown", { key: "k", metaKey: true }));
   }
-  return <nav className="ed-nav" aria-label="Main navigation"><div className="ed-nav-inner">
+  return <nav className="ed-nav" aria-label="Main navigation" onKeyDown={(event) => {
+    if (event.key === "Escape" && menuOpen) { setMenuOpen(false); menuButton.current?.focus(); }
+  }}><div className="ed-nav-inner">
     <button onClick={() => navigate("deck")} className="ed-wordmark" aria-label="Mohamed Ansar, home"><span className="ed-wordmark-symbol" aria-hidden="true">ma</span><span>mohamed ansar<small>Solutions engineer</small></span></button>
     <div className="ed-nav-links">{editorial ? <><a href="#projects">Work</a><a href="#about" className="ed-nav-wide">About</a><a href="#experience" className="ed-nav-wide">Experience</a>{CONTACT.resume && <a href={CONTACT.resume} className="ed-nav-wide" target="_blank" rel="noopener noreferrer">CV</a>}<a href="#contact" className="ed-nav-contact">Let's talk ↗</a></> : <button onClick={() => navigate("deck")}>← Home</button>}
+      {editorial && <button ref={menuButton} className="ed-mobile-menu-toggle" aria-expanded={menuOpen} aria-controls="mobile-navigation" onClick={() => setMenuOpen(!menuOpen)}>{menuOpen ? "Close" : "Menu"}</button>}
       <button onClick={openPalette} className="ed-nav-command" aria-label="Open command palette">⌘ K</button>
     </div>
-  </div></nav>;
+  </div>
+    {editorial && menuOpen && <div id="mobile-navigation" className="ed-mobile-menu" onClick={(event) => { if (event.target.closest("a")) setMenuOpen(false); }}>
+      <a href="#work">All projects ↗</a><a href="#about">About me</a><a href="#experience">Experience</a><a href="#ai">Experiments</a>
+      {CONTACT.resume && <a href={CONTACT.resume} target="_blank" rel="noopener noreferrer">Download CV ↗</a>}
+    </div>}
+  </nav>;
 }
 
 function ScrollProgress() {
