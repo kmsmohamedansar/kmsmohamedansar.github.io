@@ -664,7 +664,7 @@ npx tauri dev</code></pre><button class="copy" type="button">Copy</button></div>
       </details>
       <details class="faq-item" open>
         <summary>Does anything leave my computer?</summary>
-        <p>Camera frames are read in memory for face, yaw, and lip movement, then dropped immediately. Speech recognition (Whisper) and voice activity detection (Silero VAD) run on-device. After downloading a speech model (~75 MB), saywhen works completely offline.</p>
+        <p>Camera frames are read in memory for face, yaw, and lip movement, then dropped immediately. Speech recognition (Whisper Tiny.en, Base.en, Small.en, and Large v3 Turbo) and voice activity detection (Silero VAD + optional 3-phrase voice enrollment) run on-device. After downloading a speech model, saywhen works completely offline.</p>
       </details>
       <details class="faq-item">
         <summary>What if I don't want it pressing Enter for me?</summary>
@@ -948,7 +948,7 @@ npx tauri dev</code></pre><button class="copy" type="button">Copy</button></div>
     pause: {
       kicker: "Mode 01 · Just pause",
       heading: "Counts down 1.8s, then presses Enter in allowlisted terminals.",
-      body: "If you keep talking, shake your head, press Esc, or switch to another window mid-countdown, nothing is sent. In browsers, email, or chat apps, saywhen types without pressing Enter.",
+      body: "If you pause to think and keep talking during the countdown, saywhen resumes listening and adds to your draft. Shake your head, press Esc, say \"scratch that\", or switch to another window mid-countdown and nothing is sent. In browsers, email, or chat apps, saywhen types without pressing Enter.",
       src: "/p/saywhen/loops/send-styles.mp4", poster: "/p/saywhen/loops/send-styles.webp",
     },
     nod: {

@@ -18,6 +18,7 @@ projects/
 
 Other projects live in their own repositories:
 
+- [saywhen](https://github.com/ansarbuilds/saywhen)
 - [analytics-assistant](https://github.com/ansarbuilds/analytics-assistant)
 - [catalogue-checker](https://github.com/ansarbuilds/catalogue-checker)
 - [data-delivery](https://github.com/ansarbuilds/data-delivery)
